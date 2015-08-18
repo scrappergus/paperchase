@@ -5,6 +5,23 @@
             <h1>Archive</h1>
         </div>
     </div>
+    {{#each volumes}}
+    <div class="row">
+    	<div class="col s12">
+    		<h2>Volume {{volume}}</h2>
+    	</div>
+    </div> 
+    <div class="row">
+    {{#each issues}}
+    	<div class="col s12 m4">
+    		<h3>Issue {{issue}}</h3>
+    		<p>pp {{page_start}} - {{page_end}}</p>
+    		<img src="/images/covers/cover_v1n1.png"/>
+    	</div>
+    {{/each}}
+    </div>
+    {{/each}}
 </div>
 </template>
 
+<!-- TODO: add check for pagination -->
