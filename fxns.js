@@ -7,7 +7,7 @@ Meteor.organize = {
 
 		//group issues by volume
 		var issues = []
-		for(var i = 0; i < iss.length ; i++){
+		for(var i = 0; i < issL ; i++){
 			var issue = iss[i];
 			if(!issues[issue['volume']]){
 				issues[issue['volume']] = [];
@@ -21,5 +21,18 @@ Meteor.organize = {
 			vol[idx]['issues'] = issues[vol[idx]['volume']];
 		}
 		return vol;
+	},
+	groupArticles: function(articles) {
+		var articlesL = articles.length;
+		var grouped = [];
+		for(var i = 0 ; i < articlesL ; i++){
+			var type = articles[i]['article_type']['short_name'];
+			if(!grouped[type]){
+				grouped[type] = [];
+				 articles[i]['start_group'] = true;
+			}
+			//grouped[type].push(articles[i]);
+		}
+		return articles;
 	}
 }
