@@ -7,20 +7,22 @@
             <p>pp {{page_start}} - {{page_end}}</p>
         </div>
     </div>
+    <div class="row">
+    <ul class="collection with-header">
     {{#each articles}}
     {{#if start_group}}
-    <div class="row">
-    	<h3>{{article_type.type}}</h3>
-    </div>
+    <li class="collection-header"><h3>{{article_type.type}}</h3></li>
     {{/if}}
-    <div class="row">
+    <li class="collection-item">
     	<h4>{{title}}</h4>
     	{{>AuthorsList}}
     	<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
     	<a class="waves-effect waves-light btn" href="{{pathFor 'Article'}}">Full Text</a>
     	<a class="waves-effect waves-light btn">PDF</a>
-    </div>
+    </li>
     {{/each}}
+    </ul>
+    </div>
 </div>
 {{/with}}
 </template>
