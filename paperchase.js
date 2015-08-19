@@ -16,14 +16,22 @@ if (Meteor.isClient) {
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
-                    Meteor.subscribe('issues')
+                    Meteor.subscribe('issues'),
+                    Meteor.subscribe('articles'),
                 ]
             },
             data: function(){
                 if(this.ready()){
                     var iss = this.params._issue;
                     var vol = parseInt(this.params._volume);
+                    //get issue metadata
                     var issueData = issues.findOne({'issue': iss, 'volume': vol});
+                    //get articles in issue
+                    var issueArticles = articles.find({'issue_id':issueData._id}).fetch();
+                    //group articles by type
+                    issueArticles = Meteor.organize.groupArticles(issueArticles);
+                    issueData['articles'] = issueArticles;
+                    //console.log(issueData);
                     return {
                         issue: issueData
                     };
