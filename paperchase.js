@@ -11,7 +11,7 @@ if (Meteor.isClient) {
             layoutTemplate: 'Visitor',
         });
 
-    Router.route('/volume/:volume/issue/:issue', { 
+    Router.route('/volume/:_volume/issue/:_issue', { 
             name: 'issue',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -21,11 +21,9 @@ if (Meteor.isClient) {
             },
             data: function(){
                 if(this.ready()){
-                    iss = this.params.issue;
-                    vol = this.params.volume;
-                    // console.log(vol);console.log(iss);console.log(issues.find().fetch());
-                    var issueData = issues.findOne({'issue':iss,'volume':vol});
-                    // console.log('issueData');console.log(issueData);
+                    var iss = this.params._issue;
+                    var vol = parseInt(this.params._volume);
+                    var issueData = issues.findOne({'issue': iss, 'volume': vol});
                     return {
                         issue: issueData
                     };
