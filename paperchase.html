@@ -1,44 +1,62 @@
-<!--
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-<title>Aging</title>
--->
+<template name="Login">
+{{>loginButtons}}
+</template>
 
-<!-- CSS  -->
-<!--
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-</head>
-<body>
-<nav class="aging-nav" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><img src="/images/aging-logo.png"></a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="/">Home</a></li>
-            <li><a href="/current-issue">Latest Issue</a></li>
-            <li><a href="/archive">Archive</a></li>
-            <li><a href="/advance">Advance Online Publications</a></li>
-            <li><a href="/recent-breakthroughs">Recent Breakthroughs</a></li>
-            <li><a href="/for-authors">For Authors</a></li>
-            <li><a href="/about">About the journal</a></li>
-            <li><a href="/editorial-board">Editorial Board</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
+<template name="AdminHome">
+Home for admin pages
+</template>
 
-        <ul id="nav-mobile" class="side-nav">
-            <li><a href="#">Navbar Link</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+<template name="Home">
+Aging Home page
+{{clientIP}}
+{{#if isSubscribedIP}}
+You are viewing from a subscribed IP address.
+{{/if}}
+</template>
+
+<template name="AdminInstitution">
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+
+            <h3>Institutions</h3>
+            <a href="/admin/institution/add">Add institution</a>
+
+            {{#each institutions}}
+            <div class="row">
+                <div class="col s12 m5">
+                    <div class="card-panel light-blue lighten-5">
+                        <span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
-</nav>
--->
+</div>
+</template>
 
+<template name="AdminInstitutionAdd">
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h3>Add an Institution</h3>
+            <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
+            {{> quickForm collection="Institutions" id="InstitutionForm" type="insert"}}
+        </div>
+    </div>
+</div>
+</template>
 
-<!--  Scripts-->
-<!--<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="../../bin/materialize.js"></script>
-<script src="js/init.js"></script>
--->
+<template name="AdminInstitutionEdit">
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h3>{{institution}}</h3>
+            <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
+            {{> quickForm collection="Institutions" doc=this id="InstitutionForm" type="update"}}
+        </div>
+    </div>
+</div>
+</template>
 
-<!--</body>-->

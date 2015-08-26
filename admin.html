@@ -13,8 +13,8 @@
 <nav class="aging-nav" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><img src="/images/aging-logo.png"></a>
         <ul class="right hide-on-med-and-down">
-            <li><a href="/">Home</a></li>
-            <li><a href="/subscribers">Latest Issue</a></li>
+            <li><a href="/admin/institution">Institutions</a></li>
+            <li>{{> loginButtons}}</li>
         </ul>
 
         <ul id="nav-mobile" class="side-nav">
@@ -24,6 +24,7 @@
     </div>
 </nav>
 
+{{>yield}}
 
 <!--  Scripts-->
 <!--<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

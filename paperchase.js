@@ -1,33 +1,188 @@
+Institutions = new Mongo.Collection("institutions");
+IPRanges = new Mongo.Collection("ipranges");
+
+var Schemas = {};
+
+Schemas.Institutions = new SimpleSchema({
+    institution: {
+        type: String,
+        label: "Institution",
+        max: 200
+    },
+    IPRanges: {
+        type: Array,
+        label: "IP Ranges",
+        optional: true,
+        minCount: 0,
+        maxCount: 20
+    },
+    "IPRanges.$": {
+        type: Object
+    },
+    "IPRanges.$.startIP": {
+        type: String 
+    },
+    "IPRanges.$.endIP": {
+        type: String
+    }
+});
+
+
+Schemas.IPRanges = new SimpleSchema({
+    institutionID: {
+        type: String,
+        max: 200
+    },
+    "startIP": {
+        type: String 
+    },
+    "endIP": {
+        type: String
+    },
+    "startNum": {
+        type: Number
+    },
+    "endNum": {
+        type: Number
+    }
+
+});
+
+IPRanges.attachSchema(Schemas.IPRanges);
+Institutions.attachSchema(Schemas.Institutions);
+
+institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
+        var iprnew = [];
+        var iprid = IPRanges.find({institutionID: doc._id});
+        iprid.forEach(function(rec) {
+                IPRanges.remove({_id: rec._id});
+            });
+
+        doc.IPRanges.forEach(function(ipr) {
+                IPRanges.insert({
+                        institutionID: doc._id
+                        ,startIP: ipr.startIP
+                        ,endIP: ipr.endIP
+                        ,startNum: dot2num(ipr.startIP)
+                        ,endNum: dot2num(ipr.endIP)
+                    });
+            });
+    }
+
+Institutions.after.insert(institutionUpdateInsertHook);
+Institutions.after.update(institutionUpdateInsertHook);
+
+
 if (Meteor.isClient) {
+    Template.registerHelper('clientIP', function() {
+            return headers.getClientIP();
+        });
+
+    Template.registerHelper('isSubscribedIP', function() {
+            ip = dot2num(headers.getClientIP());
+
+            var match = IPRanges.findOne( { 
+                    startNum: {$lte: ip} 
+                    ,endNum: {$gte: ip}
+                }
+            );
+
+            return match !== undefined;
+        });
+
+    Template.AdminInstitution.helpers({
+            'institutions': function() {
+                return Institutions.find({});
+            }
+        });
+
+    Template.AdminInstitutionEdit.helpers({
+            'institution': function() {
+                return Institutions.findOne({_id:this.params._id});
+            }
+        });
+
+
+    Router.plugin('ensureSignedIn', {
+            only: ['admin.home']
+        });
 
     Router.route('/', { 
             name: "home",
             layoutTemplate: 'Visitor'
         });
 
-
     Router.route('/archive', { 
             name: "archive",
             layoutTemplate: 'Visitor',
         });
 
-
     Router.route('/admin', {
-            layoutTemplate: 'admin',
-            template: 'archive'
+            name: 'admin.home'
+            ,layoutTemplate: 'Admin'
+        });
+
+    Router.route('/admin/institution', {
+            name: 'admin.institution'
+            ,layoutTemplate: 'Admin'
         });
 
 
-//    Router.route('/', {
-//            name: 'home',
-//            template: 'home'
-//        });
+
+    Router.route('/admin/institution/add', {
+            name: 'admin.institution.add'
+            ,layoutTemplate: 'Admin'
+        }, function() {
+            Router.go('/admin/institutions');
+        });
+    
+    Router.route('/admin/institution/edit/:_id', 
+        function() {
+            this.layout("Admin");
+            var institution = Institutions.findOne({_id:this.params._id});
+
+
+            this.render('AdminInstitutionEdit', {data: institution});
+            
+        });
+
+
+
+
+    //    Router.map(function(){
+    //            this.route('login', {
+    //                    path: '/login',
+    //                    redirectOnLogin: true
+    //                });
+    //        });
+
+
+    //    Router.route('/', {
+    //            name: 'home',
+    //            template: 'home'
+    //        });
 
 
 }
 
 if (Meteor.isServer) {
     Meteor.startup(function () {
-            // code to run on server at startup
         });
 }
+
+var toType = function(obj) {
+  return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+}
+
+function dot2num(dot) {
+    var d = dot.split('.');
+    return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);}
+
+function num2dot(num) {
+    var d = num%256;
+    for (var i = 3; i > 0; i--) { 
+        num = Math.floor(num/256);
+        d = num%256 + '.' + d;}
+    return d;}
+
+

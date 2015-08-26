@@ -9,3 +9,17 @@ autopublish
 insecure
 materialize:materialize
 iron:router
+accounts-password
+service-configuration
+accounts-ui
+useraccounts:iron-routing
+useraccounts:core
+useraccounts:materialize
+mizzao:user-status
+meteortoys:allthings
+gadicohen:headers
+aldeed:autoform
+gildaspk:autoform-materialize
+aldeed:collection2
+meteorhacks:kadira
+matb33:collection-hooks
