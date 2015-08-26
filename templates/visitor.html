@@ -1,17 +1,12 @@
-<template name="Visitor">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-<title>Aging</title>
-
-<!-- CSS  -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>Aging</title>
 </head>
-<body>
+
+<template name="Visitor">
 <nav class="aging-nav" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><img src="/images/aging-logo.png"></a>
+    <div class="nav-wrapper"><a id="logo-container" href="#" class="brand-logo"><img src="/images/aging-logo.png"></a>
         <ul class="right hide-on-med-and-down">
             <li><a href="/">Home</a></li>
             <li><a href="/current-issue">Latest Issue</a></li>
@@ -19,7 +14,7 @@
             <li><a href="/advance">Advance Online Publications</a></li>
         <!--    <li><a href="/recent-breakthroughs">Recent Breakthroughs</a></li>
             <li><a href="/for-authors">For Authors</a></li>
-            <li><a href="/about">About the journal</a></li>
+            <li><a href="/about">About the Journal</a></li>
             <li><a href="/editorial-board">Editorial Board</a></li>
             <li><a href="/contact">Contact</a></li>
             -->
@@ -33,12 +28,4 @@
     </div>
 </nav>
 {{>yield}}
-<!--  Scripts-->
-<!--
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="../../bin/materialize.js"></script>
-<script src="js/init.js"></script>
--->
-
-</body>
 </template>

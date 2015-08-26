@@ -1,0 +1,42 @@
+<template name="Archive">
+<div class="container">
+	<div class="row">
+		<div class="col s12">
+			<h1>Archive</h1>
+		</div>
+	</div>
+	{{#each volumes}}
+	<div class="row">
+		<div class="col s12">
+			<h2>Volume {{volume}}</h2>
+		</div>
+	</div> 
+	<div class="row">
+	{{#each issues}}
+		<div class="col s12 m3">
+			<div class="card">
+				<div class="card-image waves-effect waves-block waves-light">
+					<a href="/volume/{{volume}}/issue/{{issue}}"><img class="activator" src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
+				</div>
+				<div class="card-content">
+					<span class="card-title activator grey-text text-darken-4"><a href="/volume/{{volume}}/issue/{{issue}}">Issue {{issue}}</a></span>
+					<p>pp {{page_start}} - {{page_end}}</p>
+				</div>
+				<!-- <div class="card-reveal">
+					<span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+
+					<p>pp {{page_start}} - {{page_end}}</p>
+				</div> -->
+			</div>        
+			<!-- 
+			<h3><a href="/volume/{{volume}}/issue/{{issue}}">Issue {{issue}}</a></h3>
+			<p>pp {{page_start}} - {{page_end}}</p>
+			<a href="/volume/{{volume}}/issue/{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"/></a> -->
+		</div>
+	{{/each}}
+	</div>
+	{{/each}}
+</div>
+</template>
+
+<!-- TODO: add check for pagination -->
