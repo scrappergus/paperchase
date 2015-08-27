@@ -10,7 +10,14 @@
             <div class="row">
                 <div class="col s12 m5">
                     <div class="card-panel light-blue lighten-5">
-                        <span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
+                        <div class="row">
+                            <div class="col s8">
+                                <span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
+                            </div>
+                            <div class="col s2 right-align">
+                                {{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -33,12 +40,17 @@
 </template>
 
 <template name="AdminInstitutionEdit">
-<div class="container">
+<div class="container z-depth-2">
     <div class="row">
-        <div class="col s12">
+        <div class="col s10 offset-s1">
             <h3>{{institution}}</h3>
             <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
             {{> quickForm collection="Institutions" doc=this id="InstitutionForm" type="update"}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 right-align">
+            {{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
         </div>
     </div>
 </div>

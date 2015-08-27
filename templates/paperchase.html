@@ -3,15 +3,27 @@
 </template>
 
 <template name="AdminHome">
-Home for admin pages
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            Home for admin pages
+        </div>
+    </div>
+</div>
+
 </template>
 
 <template name="Home">
-Aging Home page
-{{clientIP}}
-{{#if isSubscribedIP}}
-You are viewing from a subscribed IP address.
-{{/if}}
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h3>You are viewing Aging from this IP address: {{clientIP}}</h3>
+            {{#if isSubscribedIP}}
+            <h3>You are subcribed at this institution: {{getInstitutionByIP.institution}}</h3>
+            {{/if}}
+        </div>
+    </div>
+</div>
 </template>
 
 <!--</body>-->

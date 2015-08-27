@@ -5,6 +5,7 @@ accounts-ui-unstyled@1.1.7
 alanning:roles@1.2.13
 aldeed:autoform@5.4.1
 aldeed:collection2@2.3.3
+aldeed:delete-button@1.0.0
 aldeed:simple-schema@1.3.3
 aldeed:template-extension@3.4.3
 autopublish@1.0.3

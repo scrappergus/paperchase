@@ -26,4 +26,5 @@ if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
 	Meteor.subscribe('volumes');
 	Meteor.subscribe('issues');
+	Meteor.subscribe('users');
 }
