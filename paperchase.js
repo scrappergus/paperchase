@@ -171,18 +171,36 @@ ADMIN PAGES
         });
 
     Router.route('/admin/users', {
-    	name: 'admin.users',
+    	name: 'AdminUsers',
     	layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('articles')
+				Meteor.subscribe('allUsers')
 			]
 		},
 		data: function(){
 			if(this.ready()){
-				var users = Meteor.users.find().fetch();//TODO: limit publishing users list to admin
+				var users = Meteor.users.find().fetch();
 				return {
 					users: users
+				};
+			}
+		}
+	});
+
+    Router.route('/admin/user/:_id', {
+    	name: 'AdminUser',
+    	layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+			]
+		},
+		data: function(){
+			if(this.ready()){
+                var id = this.params._id;
+				var user = Meteor.users.findOne({'_id':id});
+				return {
+					user: user
 				};
 			}
 		}
