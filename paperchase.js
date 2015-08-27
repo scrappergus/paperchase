@@ -196,9 +196,9 @@ if (Meteor.isClient) {
         });
 
 
-/*
-ADMIN PAGES
-*/
+	/*
+	ADMIN PAGES
+	*/
 
     Router.route('/admin', {
             name: 'admin.home'
@@ -228,14 +228,24 @@ ADMIN PAGES
     	layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
+				Meteor.subscribe('userData',this.params._id)
 			]
 		},
 		data: function(){
 			if(this.ready()){
                 var id = this.params._id;
-				var user = Meteor.users.findOne({'_id':id});
+				var u = Meteor.users.findOne({'_id':id});
+				//user permissions
+				u['adminRole'] = '';
+				u['superRole'] = '';
+				u['articlesRole'] = '';
+				var r = u.roles;
+				var rL = r.length;
+				for(var i = 0 ; i < rL ; i++){
+					u[r[i]+'Role'] = 'checked';
+				}
 				return {
-					user: user
+					u: u
 				};
 			}
 		}
