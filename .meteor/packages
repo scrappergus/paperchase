@@ -5,24 +5,21 @@
 # but you can also edit it by hand.
 
 meteor-platform
-insecure
 materialize:materialize
 iron:router
-service-configuration
-mizzao:user-status
+accounts-password
+meteortoys:allthings
 gadicohen:headers
 aldeed:autoform
-gildaspk:autoform-materialize
+aldeed:collection2
 meteorhacks:kadira
-matb33:collection-hooks
 less
-manuelschoebel:ms-seo
 autopublish
-aldeed:collection2@2.3.3
-meteortoys:allthings
-useraccounts:core
-useraccounts:materialize
-accounts-password
-accounts-ui
-useraccounts:iron-routing
 aldeed:delete-button
+mizzao:user-status
+matb33:collection-hooks
+service-configuration
+gildaspk:autoform-materialize
+accounts-ui
+alanning:roles
+manuelschoebel:ms-seo

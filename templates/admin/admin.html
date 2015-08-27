@@ -10,10 +10,12 @@
 <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
+{{#if isInRole 'admin'}}
 <nav class="aging-nav" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><img src="/images/aging-logo.png"></a>
         <ul class="right hide-on-med-and-down">
             <li><a href="/admin/institution">Institutions</a></li>
+            <li><a href="/admin/users">Users</a></li>
             <li>{{> loginButtons}}</li>
         </ul>
 
@@ -31,6 +33,8 @@
 <script src="../../bin/materialize.js"></script>
 <script src="js/init.js"></script>
 -->
-
+{{else}}
+<h1>NO ACCESS</h1>
+{{/if}}
 </body>
 </template>

@@ -137,11 +137,6 @@ if (Meteor.isClient) {
             }
         });
 
-
-//    Router.plugin('ensureSignedIn', {
-//            only: ['admin.home']
-//        });
-
     Router.route('/', { 
             name: "home",
             layoutTemplate: 'Visitor'
@@ -201,17 +196,37 @@ if (Meteor.isClient) {
         });
 
 
+/*
+ADMIN PAGES
+*/
+
     Router.route('/admin', {
             name: 'admin.home'
             ,layoutTemplate: 'Admin'
         });
 
+    Router.route('/admin/users', {
+    	name: 'admin.users',
+    	layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articles')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var users = Meteor.users.find().fetch();//TODO: limit publishing users list to admin
+				return {
+					users: users
+				};
+			}
+		}
+	});
+
     Router.route('/admin/institution', {
             name: 'admin.institution'
             ,layoutTemplate: 'Admin'
         });
-
-
 
     Router.route('/admin/institution/add', {
             name: 'admin.institution.add'
