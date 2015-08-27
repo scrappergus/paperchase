@@ -3,6 +3,21 @@ issues = new Mongo.Collection('issues');
 articles = new Mongo.Collection('articles');
 articleTypes = new Mongo.Collection('articleTypes'); //when saving an article query this db and add the name, short_name and id as an object to the article
 
+Meteor.users.allow({
+  update: function (userId, doc, fields, modifier) {
+    if (userId && doc._id === userId) {
+      // user can modify own
+      return true;
+    }
+    // admin can modify any
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+
+
 if (Meteor.isServer) {
   Meteor.publish('volumes', function () {
     return volumes.find({},{sort : {volume:-1}});
@@ -21,10 +36,17 @@ if (Meteor.isServer) {
       return;
      }
   });  
+  Meteor.publish('userData', function(id){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return Meteor.users.find({'_id':id});
+     }else{
+      this.stop();
+      return;
+     }
+  });  
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
 	Meteor.subscribe('volumes');
 	Meteor.subscribe('issues');
-	Meteor.subscribe('users');
 }
