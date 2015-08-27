@@ -13,6 +13,14 @@ if (Meteor.isServer) {
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {page_start:1}});
   });
+  Meteor.publish('allUsers', function(){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return Meteor.users.find();
+     }else{
+      this.stop();
+      return;
+     }
+  });  
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
