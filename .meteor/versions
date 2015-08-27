@@ -3,8 +3,9 @@ accounts-password@1.1.1
 accounts-ui@1.1.5
 accounts-ui-unstyled@1.1.7
 aldeed:autoform@5.4.1
-aldeed:collection2@2.3.2
-aldeed:simple-schema@1.3.0
+aldeed:collection2@2.3.3
+aldeed:delete-button@1.0.0
+aldeed:simple-schema@1.3.2
 aldeed:template-extension@3.4.3
 autopublish@1.0.3
 autoupdate@1.2.1
@@ -100,8 +101,8 @@ tracker@1.0.7
 ui@1.0.6
 underscore@1.0.3
 url@1.0.4
-useraccounts:core@1.12.2
-useraccounts:iron-routing@1.12.2
-useraccounts:materialize@1.12.2
+useraccounts:core@1.12.3
+useraccounts:iron-routing@1.12.3
+useraccounts:materialize@1.12.3
 webapp@1.2.0
 webapp-hashing@1.0.3

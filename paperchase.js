@@ -1,3 +1,4 @@
+
 Institutions = new Mongo.Collection("institutions");
 IPRanges = new Mongo.Collection("ipranges");
 
@@ -8,6 +9,15 @@ Schemas.Institutions = new SimpleSchema({
         type: String,
         label: "Institution",
         max: 200
+    },
+    address: {
+        type: String
+        ,label: "Address"
+        ,max: 200
+        ,optional:true
+        ,autoform: {
+            rows: 5
+        }
     },
     IPRanges: {
         type: Array,
@@ -71,6 +81,12 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
 
 Institutions.after.insert(institutionUpdateInsertHook);
 Institutions.after.update(institutionUpdateInsertHook);
+Institutions.after.remove(function(userId, doc) {
+        var iprid = IPRanges.find({institutionID: doc._id});
+        iprid.forEach(function(rec) {
+                IPRanges.remove({_id: rec._id});
+            });
+});
 
 
 if (Meteor.isClient) {
@@ -90,6 +106,25 @@ if (Meteor.isClient) {
             return match !== undefined;
         });
 
+    Template.registerHelper('getInstitutionByIP', function() {
+            ip = dot2num(headers.getClientIP());
+
+            var match = IPRanges.findOne( { 
+                    startNum: {$lte: ip} 
+                    ,endNum: {$gte: ip}
+                }
+            );
+
+            if(match) {
+               inst_match = Institutions.findOne({
+                       "_id": match.institutionID
+                   });
+            }
+
+            return inst_match || false;
+        });
+
+
     Template.AdminInstitution.helpers({
             'institutions': function() {
                 return Institutions.find({});
@@ -103,9 +138,9 @@ if (Meteor.isClient) {
         });
 
 
-    Router.plugin('ensureSignedIn', {
-            only: ['admin.home']
-        });
+//    Router.plugin('ensureSignedIn', {
+//            only: ['admin.home']
+//        });
 
     Router.route('/', { 
             name: "home",
@@ -189,7 +224,6 @@ if (Meteor.isClient) {
         function() {
             this.layout("Admin");
             var institution = Institutions.findOne({_id:this.params._id});
-
 
             this.render('AdminInstitutionEdit', {data: institution});
             
