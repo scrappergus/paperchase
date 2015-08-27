@@ -47,6 +47,15 @@ Meteor.adminUser = {
 		});
 		return roles;
 	},
+	clickedRole: function(e){
+		var role = $(e.target).attr('id');
+		if($(e.target).is(':checked') && role === 'super-role'){
+			$('#admin-role').prop('checked',true);
+			$('#articles-role').prop('checked',true);
+		}else if($(e.target).is(':checked') && role === 'admin-role'){
+			$('#articles-role').prop('checked',true);
+		}
+	},
 	getFormUpdate: function(){
 		var user = {};
 		user.emails = [];

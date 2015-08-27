@@ -5,13 +5,7 @@ Template.AdminUser.events({
 		$('.user-edit').removeClass('hide');
 	},
 	'click .role-cb': function(e){
-		var role = $(e.target).attr('id');
-		if($(e.target).is(':checked') && role === 'super-role'){
-			$('#admin-role').prop('checked',true);
-			$('#articles-role').prop('checked',true);
-		}else if($(e.target).is(':checked') && role === 'admin-role'){
-			$('#articles-role').prop('checked',true);
-		}
+		Meteor.adminUser.clickedRole(e);
 	},
 	'submit form': function(e){
 		e.preventDefault();
@@ -36,6 +30,9 @@ Template.AdminUser.events({
 	}
 });
 Template.AdminAddUser.events({
+	'click .role-cb': function(e){
+		Meteor.adminUser.clickedRole(e);
+	},
 	'submit form': function(e){
 		e.preventDefault();
 		$('input').removeClass('invalid');
