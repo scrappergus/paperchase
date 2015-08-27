@@ -102,11 +102,6 @@ if (Meteor.isClient) {
             }
         });
 
-
-    Router.plugin('ensureSignedIn', {
-            only: ['admin.home']
-        });
-
     Router.route('/', { 
             name: "home",
             layoutTemplate: 'Visitor'
@@ -165,6 +160,10 @@ if (Meteor.isClient) {
             }
         });
 
+
+/*
+ADMIN PAGES
+*/
 
     Router.route('/admin', {
             name: 'admin.home'
