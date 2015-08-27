@@ -36,3 +36,29 @@ Meteor.organize = {
 		return articles;
 	}
 }
+
+Meteor.adminUser = {
+	getFormCheckBoxes: function(){
+		var roles = [];
+		$('.role-cb').each(function(){
+			if($(this).is(':checked')){
+				roles.push($(this).val());
+			}
+		});
+		return roles;
+	},
+	getFormUpdate: function(){
+		var user = {};
+		user.emails = [];
+		user.emails[0] = {};
+		user.emails[0].address = $('#email').val();
+		user.roles =  Meteor.adminUser.getFormCheckBoxes();
+		return user;		
+	},
+	getFormAdd: function(){
+		var user = {};
+		user.email = $('#email').val();
+		user.roles =  Meteor.adminUser.getFormCheckBoxes();
+		return user;		
+	}
+}

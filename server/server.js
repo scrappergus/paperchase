@@ -1,5 +1,5 @@
 Accounts.onCreateUser(function (options, user) {
-	Roles.setRolesOnUserObj(user, ['admin']);
+	//Roles.setRolesOnUserObj(user, ['admin']);
 
     if (options.profile) {
       user.profile = options.profile

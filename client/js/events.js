@@ -18,16 +18,7 @@ Template.AdminUser.events({
 		$('input').removeClass('invalid');
 		//gather info
 		var userId = $('#user-id').val();
-		var user = {};
-		user.emails = [];
-		user.emails[0] = {};
-		user.emails[0].address = $('#email').val();
-		user.roles = [];
-		$('.role-cb').each(function(){
-			if($(this).is(':checked')){
-				user.roles.push($(this).val());
-			}
-		});
+		var user = Meteor.adminUser.getFormUpdate();
 
 		//TODO: additional validate email 
 		// var emailValid = Meteor.validate.email(user.emails[0]);
@@ -35,7 +26,6 @@ Template.AdminUser.events({
 		// 	$('#email').addClass('invalid');
 		// }else{
 			Meteor.users.update({'_id':userId},{$set:user}, function (error) {
-				console.log(error);
 				if(error){
 					alert('Error '+error);
 				}else{
@@ -43,5 +33,23 @@ Template.AdminUser.events({
 				}
 			});
 		// }
+	}
+});
+Template.AdminAddUser.events({
+	'submit form': function(e){
+		e.preventDefault();
+		$('input').removeClass('invalid');
+		//gather info
+		var user = Meteor.adminUser.getFormAdd();
+		user.password = 'AgingPassword';
+
+		//TODO: additional validate email 
+		Meteor.call('addUser', user, function( error, result ){
+			if( error ){
+				alert('ERROR! ' + error );
+			}else{
+				alert('User was created!');
+			}
+		})	
 	}
 });

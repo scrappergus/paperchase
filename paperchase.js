@@ -205,6 +205,7 @@ if (Meteor.isClient) {
             ,layoutTemplate: 'Admin'
         });
 
+    /*users*/
     Router.route('/admin/users', {
     	name: 'AdminUsers',
     	layoutTemplate: 'Admin',
@@ -222,7 +223,6 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-
     Router.route('/admin/user/:_id', {
     	name: 'AdminUser',
     	layoutTemplate: 'Admin',
@@ -250,6 +250,11 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+    Router.route('/admin/adduser', {
+    	name: 'AdminAddUser',
+    	layoutTemplate: 'Admin'
+	});
+	//AddUser
 
     Router.route('/admin/institution', {
             name: 'admin.institution'
