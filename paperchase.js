@@ -1,7 +1,3 @@
-
-Institutions = new Mongo.Collection("institutions");
-IPRanges = new Mongo.Collection("ipranges");
-
 var Schemas = {};
 
 Schemas.Institutions = new SimpleSchema({
