@@ -87,6 +87,14 @@ if (Meteor.isServer) {
       return;
      }
   });  
+  Meteor.publish('institutions', function(){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return Institutions.find();
+     }else{
+      this.stop();
+      return;
+     }
+  });  
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections

@@ -1,57 +1,66 @@
 <template name="AdminInstitution">
-<div class="container">
-    <div class="row">
-        <div class="col s12">
-
-            <h3>Institutions</h3>
-            <a href="/admin/institution/add">Add institution</a>
-
-            {{#each institutions}}
-            <div class="row">
-                <div class="col s12 m5">
-                    <div class="card-panel light-blue lighten-5">
-                        <div class="row">
-                            <div class="col s8">
-                                <span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
-                            </div>
-                            <div class="col s2 right-align">
-                                {{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-    </div>
-</div>
+	<div class="row">
+		<div class="col s12">
+			<h3>Institutions</h3>
+			<a class="waves-effect waves-light btn" href="/admin/institution/add">Add institution</a>
+		</div>
+	</div>
+	{{#each institutions}}
+	<div class="row">
+		<div class="col s12 m5">
+			<div class="card-panel">
+				<div class="row">
+					<div class="col s8">
+						<span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
+					</div>
+					<div class="col s2 right-align">
+						{{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/each}}
 </template>
 
 <template name="AdminInstitutionAdd">
-<div class="container">
-    <div class="row">
-        <div class="col s12">
-            <h3>Add an Institution</h3>
-            <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
-            {{> quickForm collection="Institutions" id="InstitutionForm" type="insert"}}
-        </div>
-    </div>
-</div>
+	<div class="row">
+		<div class="col s12">
+			<h3>Add an Institution</h3>
+			<a href="/admin/institution" class="secondary-content">Back to Institution List</a>
+			{{> quickForm collection="Institutions" id="InstitutionForm" type="insert"}}
+		</div>
+	</div>
 </template>
 
 <template name="AdminInstitutionEdit">
-<div class="container z-depth-2">
-    <div class="row">
-        <div class="col s10 offset-s1">
-            <h3>{{institution}}</h3>
-            <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
-            {{> quickForm collection="Institutions" doc=this id="InstitutionForm" type="update"}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12 right-align">
-            {{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
-        </div>
-    </div>
-</div>
+		{{>AdminHeader header="Institution"}}
+		<div class="row">
+			<div class="col s12">
+				<div class="card">
+					<div class="card-content overview">
+						<div class="row">
+							<div class="col s12">
+								<a class="edit waves-effect waves-light btn" href="#">EDIT</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12"><h3>{{institution}}</h3><h4>{{address}}</h4><p>{{#each IPRanges}}{{this.startIP}} &mdash; {{this.endIP}}{{/each}}</p></div>
+						</div>
+					</div>
+					<div class="card-content edit hide">
+						<div class="row">
+							<div class="col s12">
+								{{> quickForm collection="Institutions" doc=this id="InstitutionForm" type="update"}}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12 right-align">
+								{{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 </template>

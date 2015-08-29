@@ -86,53 +86,6 @@ Institutions.after.remove(function(userId, doc) {
 
 
 if (Meteor.isClient) {
-    Template.registerHelper('clientIP', function() {
-            return headers.getClientIP();
-        });
-
-    Template.registerHelper('isSubscribedIP', function() {
-            ip = dot2num(headers.getClientIP());
-
-            var match = IPRanges.findOne( { 
-                    startNum: {$lte: ip} 
-                    ,endNum: {$gte: ip}
-                }
-            );
-
-            return match !== undefined;
-        });
-
-    Template.registerHelper('getInstitutionByIP', function() {
-            ip = dot2num(headers.getClientIP());
-
-            var match = IPRanges.findOne( { 
-                    startNum: {$lte: ip} 
-                    ,endNum: {$gte: ip}
-                }
-            );
-
-            if(match) {
-               inst_match = Institutions.findOne({
-                       "_id": match.institutionID
-                   });
-            }
-
-            return inst_match || false;
-        });
-
-
-    Template.AdminInstitution.helpers({
-            'institutions': function() {
-                return Institutions.find({});
-            }
-        });
-
-    Template.AdminInstitutionEdit.helpers({
-            'institution': function() {
-                return Institutions.findOne({_id:this.params._id});
-            }
-        });
-
     Router.route('/', { 
             name: "home",
             layoutTemplate: 'Visitor'
@@ -173,6 +126,25 @@ if (Meteor.isClient) {
 
     Router.route('/article/:_id', { 
             name: 'Article',
+            layoutTemplate: 'Visitor',
+            waitOn: function(){
+                return[
+                    Meteor.subscribe('articles')
+                ]
+            },
+            data: function(){
+                if(this.ready()){
+                    var id = this.params._id;
+                    var article = articles.findOne({'_id': id});
+                    // console.log('article = ');console.log(article);
+                    return {
+                        article: article
+                    };
+                }
+            }
+        });
+    Router.route('/article/:_id/text', { 
+            name: 'ArticleText',
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
@@ -264,14 +236,24 @@ if (Meteor.isClient) {
             this.go('/admin/institutions');
         });
     
-    Router.route('/admin/institution/edit/:_id', 
-        function() {
-            this.layout("Admin");
-            var institution = Institutions.findOne({_id:this.params._id});
 
-            this.render('AdminInstitutionEdit', {data: institution});
-            
-        });
+    Router.route('/admin/institution/edit/:_id', {
+        layoutTemplate: 'Admin',
+        name: 'AdminInstitutionEdit',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('institutions',this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var id = this.params._id;
+                var institution = Institutions.findOne({'_id':id});
+                console.log(institution);
+                return institution;
+            }
+        }
+    });    
 }
 
 if (Meteor.isServer) {

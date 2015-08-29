@@ -1,3 +1,11 @@
+Template.Admin.events({
+	'click .edit': function(e){
+		console.log('clicked!');
+		e.preventDefault();
+		$('.overview').addClass('hide');
+		$('.edit').removeClass('hide');
+	}
+});
 Template.AdminUser.events({
 	'click .edit-user': function(e){
 		e.preventDefault();
