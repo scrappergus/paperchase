@@ -5,8 +5,8 @@
 				<a class="edit-user waves-effect waves-light btn" href="{{pathFor 'AdminAddUser'}}">Add User</a>
 			</div>
 		</div>
-		<div class="card">
-			<div class="card-content user-overview">
+		<div class="card grey lighten-4">
+			<div class="card-content">
 				<div class="row">
 					<div class="col s12">
 						<table>
@@ -106,12 +106,8 @@
 </template>
 
 <template name="AdminAddUser">
-		<div class="row">
-			<div class="col s12">
-				<h1>Add User</h1>
-			</div>
-		</div>
-		<div class="card">			
+		{{>AdminHeader header="Add User"}}
+		<div class="card grey lighten-4">			
 			<div class="card-content user-edit">
 				<div class="row">
 					<form class="col s12">
