@@ -5,22 +5,43 @@
 			<a class="waves-effect waves-light btn" href="/admin/institution/add">Add institution</a>
 		</div>
 	</div>
-	{{#each institutions}}
+
 	<div class="row">
-		<div class="col s12 m5">
-			<div class="card-panel">
+		<div class="col s12">
+			<div class="card grey lighten-4">
+			<div class="card-content">
 				<div class="row">
-					<div class="col s8">
-						<span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
-					</div>
-					<div class="col s2 right-align">
-						{{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
+					<div class="col s12">
+						<table>
+							<thead>
+								<tr>
+									<th data-field="institution">Institution</th>
+									<th data-field="address">Address</th>
+									<th data-field="ip-start">IP Start</th>
+									<th data-field="ip-end">IP end</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each institutions}}
+								<tr>
+									<td><a href="/admin/institution/edit/{{_id}}">{{institution}}</a></td>
+									<td>{{address}}</td>
+									{{#each IPRanges}}
+									<td>{{this.startIP}}</td>
+									<td>{{this.endIP}}</td>
+									{{/each}}
+									<td>{{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}</td>
+								</tr>
+								{{/each}}
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
+			</div>
 		</div>
 	</div>
-	{{/each}}
 </template>
 
 <template name="AdminInstitutionAdd">
