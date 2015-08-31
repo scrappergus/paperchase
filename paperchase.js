@@ -1,62 +1,3 @@
-var Schemas = {};
-
-Schemas.Institutions = new SimpleSchema({
-    institution: {
-        type: String,
-        label: "Institution",
-        max: 200
-    },
-    address: {
-        type: String
-        ,label: "Address"
-        ,max: 200
-        ,optional:true
-        ,autoform: {
-            rows: 5
-        }
-    },
-    IPRanges: {
-        type: Array,
-        label: "IP Ranges",
-        optional: true,
-        minCount: 0,
-        maxCount: 20
-    },
-    "IPRanges.$": {
-        type: Object
-    },
-    "IPRanges.$.startIP": {
-        type: String 
-    },
-    "IPRanges.$.endIP": {
-        type: String
-    }
-});
-
-
-Schemas.IPRanges = new SimpleSchema({
-    institutionID: {
-        type: String,
-        max: 200
-    },
-    "startIP": {
-        type: String 
-    },
-    "endIP": {
-        type: String
-    },
-    "startNum": {
-        type: Number
-    },
-    "endNum": {
-        type: Number
-    }
-
-});
-
-IPRanges.attachSchema(Schemas.IPRanges);
-Institutions.attachSchema(Schemas.Institutions);
-
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
         var iprnew = [];
         var iprid = IPRanges.find({institutionID: doc._id});
@@ -64,15 +5,17 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
                 IPRanges.remove({_id: rec._id});
             });
 
-        doc.IPRanges.forEach(function(ipr) {
-                IPRanges.insert({
-                        institutionID: doc._id
-                        ,startIP: ipr.startIP
-                        ,endIP: ipr.endIP
-                        ,startNum: dot2num(ipr.startIP)
-                        ,endNum: dot2num(ipr.endIP)
-                    });
-            });
+        if(doc.IPRanges){
+            doc.IPRanges.forEach(function(ipr) {
+                    IPRanges.insert({
+                            institutionID: doc._id
+                            ,startIP: ipr.startIP
+                            ,endIP: ipr.endIP
+                            ,startNum: dot2num(ipr.startIP)
+                            ,endNum: dot2num(ipr.endIP)
+                        });
+                });            
+        }
     }
 
 Institutions.after.insert(institutionUpdateInsertHook);
@@ -84,8 +27,8 @@ Institutions.after.remove(function(userId, doc) {
             });
 });
 
-
 if (Meteor.isClient) {
+    Session.setDefault('formMethod','');
     Router.route('/', { 
             name: "home",
             layoutTemplate: 'Visitor'
@@ -230,12 +173,14 @@ if (Meteor.isClient) {
         });
 
     Router.route('/admin/institution/add', {
-            name: 'admin.institution.add'
-            ,layoutTemplate: 'Admin'
-        }, function() {
-            this.go('/admin/institutions');
-        });
-    
+        layoutTemplate: 'Admin',
+        name: 'AdminInstitutionAdd',
+        waitOn: function(){
+        },
+        data: function(){
+            Session.set('formType','insert');
+        }
+    });    
 
     Router.route('/admin/institution/edit/:_id', {
         layoutTemplate: 'Admin',
@@ -249,7 +194,8 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var id = this.params._id;
                 var institution = Institutions.findOne({'_id':id});
-                console.log(institution);
+                // console.log(institution);
+                Session.set('formType','update');
                 return institution;
             }
         }
