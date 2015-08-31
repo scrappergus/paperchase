@@ -51,6 +51,12 @@ if (Meteor.isClient) {
                 return Institutions.find({});
             }
         });
+    Template.AdminInstitutionForm.helpers({
+        'formType' : function(){
+            // console.log('... = '+Session.get('formType'));
+            return Session.get('formType');
+        }
+    })
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page. 

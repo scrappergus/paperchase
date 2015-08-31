@@ -1,0 +1,64 @@
+<template name="saving">
+	<div class="row saving hide">
+		<div class="col s12">
+			<h4>Saving</h4>
+			<img src="/images/saving.gif" style="width:100px;">
+		</div>
+	</div>
+</template>
+<template name="afArrayField_institutionIps">
+	<p>{{afFieldLabelText name=this.atts.name}}</p>
+
+    {{#if afFieldIsInvalid name=this.atts.name}}
+		<span class="red-text">{{{afFieldMessage name=this.atts.name}}}</span>
+    {{/if}}
+    <ul class="collection">
+	    {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}} 
+		<li class="collection-item">
+			<div class="row">
+				<div class="col s10">
+					{{> afQuickField name=this.name label=false options=afOptionsFromSchema template='institutionIpObj'}}       
+				</div>
+				<div class="col s2">
+					{{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount maxCount=../atts.maxCount}}
+					<button type="button" class="btn autoform-remove-item red right">
+						<span class="mdi-content-clear"></span>
+					</button>
+					{{/if}} 
+				</div>				
+			</div>
+		</li>
+	    {{/afEachArrayItem}}
+   	</ul>
+	{{#if afArrayFieldHasLessThanMaximum name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
+	<button type="button" class="btn autoform-add-item" data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}" data-autoform-maxCount="{{this.atts.maxCount}}">
+		<i class="mdi-content-add"></i>
+	</button>
+    {{/if}}    
+</template>
+<template name="afObjectField_institutionIpObj">
+  <div class="autoform-object-field">
+      {{#if afFieldIsInvalid name=this.name}}
+        <div class="red-text">{{{afFieldMessage name=this.name}}}</div>
+      {{/if}}
+      {{> afQuickFields name=this.name}}
+  </div>
+</template>
+
+<template name="AdminInstitutionForm">
+	{{#autoForm collection="Institutions" doc=this id="institutionForm" type=formType class="grey lighten-5"}}
+		<fieldset>
+			{{> afQuickField name='institution'}}
+		</fieldset>
+		<fieldset>
+			{{> afQuickField name='address'}}
+		</fieldset>
+		<fieldset>
+			{{> afArrayField name='IPRanges' template='institutionIps'}}
+		</fieldset>
+		<fieldset class="center-align">
+			<button type="submit" class="btn btn-large green save-btn">Save</button>
+			{{>saving}}
+		</fieldset>
+	{{/autoForm}}
+</template>
