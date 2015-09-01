@@ -1,0 +1,144 @@
+@import 'variables';
+@import 'mixins';
+
+html,body{
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/*
+TYPE
+*/
+h3{
+	text-transform: uppercase;
+}
+
+/*
+VISITOR
+*/
+.footer{
+	background-color: $blue-aging!important;
+	padding: $pad-lg 0;
+	.row{
+		margin-bottom: 0;
+	}
+	p{
+		color: $white;
+	}
+}
+.authors{
+	span{
+		&:last-child{
+			.comma{
+				display:none;
+			}
+		}
+	}
+}
+/*home*/
+.hero{
+	background-image: url(/images/backgrounds/home.jpg);
+}
+.ip-alert{
+	padding: $pad-md 0;
+	background: $blue-aging; 
+	p{
+		margin: 0;
+		color: $white-dark;
+	}
+}
+.list-pics{
+	margin: 0 -10px;
+	padding: 0;
+	width: 100%;
+	list-style: none;
+	li{
+		width: 33.333%;
+		display: inline-block;
+		margin: 0;
+		padding: 0;
+		float: left;
+		.list-p{
+			height: 100px;
+			background-size: cover;
+			margin:10px;
+			position: relative;
+			&:before{
+				background-color: rgba(204,204,204,0.7);
+				content: '';
+				height: 100%;
+				width: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			div{
+				width: 100%;
+				position: relative;
+				font-weight: bold;
+			}
+		}
+	}
+}
+.current-issue{
+	background-image: url(/images/backgrounds/stem.png);
+	background-size: cover;
+}
+.valign-pic{
+	min-height: 50vh;
+	position: relative;
+	background-size: cover;
+	background-attchment: fixed;
+	&:before{
+		background-color: rgba(0,0,0,0.7);
+		content: '';
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	.row{
+		margin:0;
+	}
+	.valign{
+		position: relative;
+	}
+	h1{
+		color: $white;
+	}
+	h2{
+		color: $white-dark;
+	}
+	h4{
+		color: $white-dark;
+	}
+}
+.current-issue{
+	img{
+		height: 40vh;
+	}
+}
+.latest{
+	button{
+		margin-top: 20px;
+	}
+}
+/*text*/
+	.columns{
+		@include columns-count(3);
+	}
+
+
+/*
+ADMIN
+*/ 
+#institution-form{
+	input,textarea{
+		margin: 0;
+	}
+}
+.admin-header{
+	margin-bottom: 0px;
+}
