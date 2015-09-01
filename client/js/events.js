@@ -1,6 +1,5 @@
 Template.Admin.events({
 	'click .edit-btn': function(e){
-		console.log('clicked!');
 		e.preventDefault();
 		$('.overview').addClass('hide');
 		$('.edit').removeClass('hide');
