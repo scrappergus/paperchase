@@ -14,16 +14,126 @@
 </template>
 
 <template name="Home">
-<div class="container">
-    <div class="row">
-        <div class="col s12">
-            <h3>You are viewing Aging from this IP address: {{clientIP}}</h3>
-            {{#if isSubscribedIP}}
-            <h3>You are subcribed at this institution: {{getInstitutionByIP.institution}}</h3>
-            {{/if}}
-        </div>
+<div class="ip-alert right-align">
+    <div class="container">
+        <p>You are viewing Aging from this IP address: {{clientIP}}</p>
+        {{#if isSubscribedIP}}
+        <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
+        {{/if}}        
     </div>
 </div>
+<section class="hero valign-pic valign-wrapper">
+    <div class="container valign hero-txt">
+        <div class="row">
+            <div class="hero-txt col s12">
+                <h1>Aging</h1>
+                <h2>Impact Factor = 6.432</h2>
+                <button class="btn waves-effect waves-light" alt="">Read More</button>
+            </div>
+        </div>  
+    </div>
+</section>    
+<section class="container">
+    <div class="row">
+        <div class="col s12">
+            <h3>Scientific Publication <br>With Newspaper Speed</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 columns">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+    </div>
+</section>
+<section class="container">
+    <div class="row">
+        <div class="col s12">
+            <ul class="list-pics">
+                {{#each cards}}
+                    <li>
+                        <div class="list-p valign-wrapper" style="background-image:url(/images/cards/{{src}})">
+                            <div class="valign center-align"><h5>{{name}}</h5></div>
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="current-issue valign-pic valign-wrapper">
+    <div class="container valign">
+        <div class="row valign-wrapper">
+            <div class="col s12 m3 offset-m1">
+                <h4>Our Latest Issue: July, 2015</h4>
+            </div>
+            <div class="col s12 m4 center-align">
+                <img src="/images/covers/cover_v7n7.png" alt="Volume 7, Issue 7">
+            </div>
+        </div>        
+    </div>
+</section>
+<section class="container">
+    <div class="row">
+        <div class="col s12">
+            <h2 class="center-align">Latest Publications</h2>
+        </div>
+    </div>
+    <div class="row latest">
+        <div class="col s4">
+            <div class="card">
+                <div class="card-image">
+                    <img src="/images/articles/1.png">
+                </div>
+                <div class="card-content">
+                    <h5>Age cutoff in lymphoma diagnosis</h5>
+                    <p>Aging is characterized by immunosenescence, decreased immune response and dysregulated coordination between inflammatory and inflammation-neutralizing processes. The decline in immune competence is invariably seen with aging....</p>
+                    <button class="btn waves-effect waves-light" alt="">Read More</button>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-image">
+                    <img src="/images/articles/2.jpg">
+                </div>
+                <div class="card-content">
+                    <h5>Heterotrimeric G proteins as emerging targets for network based therapy in cancer: <i>End of a long futile campaign striking heads of a Hydra</i></h5>
+                    <p>Most common diseases, e.g., cancer are driven by not one, but multiple cell surface receptors that trigger and sustain a pathologic signaling network....</p>
+                    <button class="btn waves-effect waves-light" alt="">Read More</button>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-image">
+                    <img src="/images/articles/3.jpg">
+                </div>
+                <div class="card-content">
+                    <h5>Removal of growth hormone receptor (GHR) in muscle of male mice replicates some of the health benefits seen in global GHR-/- mice</h5>
+                    <p>Global disruption of the GH receptor in mice (GHR-/-) produces a large and reproducible extension in lifespan....</p>
+                    <button class="btn waves-effect waves-light" alt="">Read More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </template>
 
 <!--</body>-->
