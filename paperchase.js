@@ -133,7 +133,7 @@ if (Meteor.isClient) {
 
     Template.AdminInstitutionEdit.helpers({
             'institution': function() {
-                return Institutions.findOne({_id:this.params._id});
+                return Institutions.findOne({_id:this._id});
             }
         });
 
