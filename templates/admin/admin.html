@@ -1,15 +1,4 @@
 <template name="Admin">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-<title>Aging Admin</title>
-
-<!-- CSS  -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-</head>
-<body>
 {{#if isInRole 'admin'}}
 <nav class="aging-nav" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
@@ -26,15 +15,27 @@
     </div>
 </nav>
 
+<div class="container">
 {{>yield}}
+</div>
 
-<!--  Scripts-->
-<!--<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="../../bin/materialize.js"></script>
-<script src="js/init.js"></script>
--->
 {{else}}
-<h1>NO ACCESS</h1>
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h1>NO ACCESS</h1>
+            {{> loginButtons}}
+        </div>
+    </div>
+</div>
 {{/if}}
-</body>
+</template>
+
+
+<template name="AdminHeader">
+    <div class="row">
+        <div class="col s12">
+            <h3 class="admin-header">{{header}}</h3>
+        </div>
+    </div>    
 </template>

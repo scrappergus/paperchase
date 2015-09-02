@@ -13,7 +13,6 @@ gadicohen:headers
 aldeed:autoform
 aldeed:collection2
 meteorhacks:kadira
-less
 autopublish
 aldeed:delete-button
 mizzao:user-status
@@ -23,3 +22,4 @@ gildaspk:autoform-materialize
 accounts-ui
 alanning:roles
 manuelschoebel:ms-seo
+fourseven:scss

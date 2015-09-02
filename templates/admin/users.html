@@ -1,17 +1,12 @@
 <template name="AdminUsers">
-	<div class="container">
+		{{>AdminHeader header="Users"}}
 		<div class="row">
 			<div class="col s12">
-				<h1>Users</h1>
+				<a class="edit-user waves-effect waves-light btn light-blue accent-4" href="{{pathFor 'AdminAddUser'}}">Add User</a>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col s12">
-				<a class="edit-user waves-effect waves-light btn" href="{{pathFor 'AdminAddUser'}}">Add User</a>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-content user-overview">
+		<div class="card grey lighten-4">
+			<div class="card-content">
 				<div class="row">
 					<div class="col s12">
 						<table>
@@ -40,87 +35,79 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </template>
 
 <template name="AdminUser">
 <!-- TODO: Emails, will users have more than 1 email, if so then update user-edit to allow for multiple emails. Also, need to update the update script if keeping track of verifying emails -->
 {{#with u}}
-	<div class="container">
+		{{>AdminHeader header="User Profile"}}
 		<div class="row">
 			<div class="col s12">
-				<h1>User Profile</h1>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-content user-overview">
-				<div class="row">
-					<div class="col s12">
-						<a class="edit-user waves-effect waves-light btn" href="#">EDIT</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s12">
-						<h4>Email</h4>
-						<p>{{#each emails}}{{address}}{{/each}}</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s12">
-						<h4>Permissions</h4>
-						<ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
-					</div>
-				</div>			
-			</div>
-			<div class="card-content user-edit hide">
-				<div class="row">
-					<form class="col s12">
-								<input type="hidden" id="user-id" value="{{_id}}"/>
+				<div class="card grey lighten-4">
+					<div class="card-content overview">
 						<div class="row">
-							<div class="input-field col s12">
+							<div class="col s12">
+								<a class="edit waves-effect waves-light btn" href="#">EDIT</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12">
 								<h4>Email</h4>
-								<input id="email" type="email" class="validate" value="{{#each emails}}{{address}}{{/each}}">
+								<p>{{#each emails}}{{address}}{{/each}}</p>
 							</div>
 						</div>
-						{{#if isInRole 'super'}}
 						<div class="row">
-							<div class="input-field col s12">
+							<div class="col s12">
 								<h4>Permissions</h4>
-								<div class="clearfix"></div>
-								<input type="checkbox" class="role-cb filled-in" id="admin-role" value="admin" {{adminRole}}/>
-								<label for="admin-role">admin</label>
-
-								<div class="clearfix"></div>
-								<input type="checkbox" class="role-cb filled-in" id="super-role" value="super" {{superRole}}/>
-								<label for="super-role">super admin</label>
-
-								<div class="clearfix"></div>
-								<input type="checkbox" class="role-cb filled-in" id="articles-role" value="articles" {{articlesRole}}/>
-								<label for="articles-role">article</label>
+								<ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
 							</div>
-						</div>
-						{{/if}}
+						</div>			
+					</div>
+					<div class="card-content edit hide">
 						<div class="row">
-							<div class="input-field col s12">
-								<button class="submit btn waves-effect waves-light light-blue accent-4" type="submit" name="action" alt="Save User Profile">Save</button>
-							</div>
-						</div>
-					</form>
-				</div>			
-			</div>			
+							<form class="col s12">
+										<input type="hidden" id="user-id" value="{{_id}}"/>
+								<div class="row">
+									<div class="input-field col s12">
+										<h4>Email</h4>
+										<input id="email" type="email" class="validate" value="{{#each emails}}{{address}}{{/each}}">
+									</div>
+								</div>
+								{{#if isInRole 'super'}}
+								<div class="row">
+									<div class="input-field col s12">
+										<h4>Permissions</h4>
+										<div class="clearfix"></div>
+										<input type="checkbox" class="role-cb filled-in" id="admin-role" value="admin" {{adminRole}}/>
+										<label for="admin-role">admin</label>
+
+										<div class="clearfix"></div>
+										<input type="checkbox" class="role-cb filled-in" id="super-role" value="super" {{superRole}}/>
+										<label for="super-role">super admin</label>
+
+										<div class="clearfix"></div>
+										<input type="checkbox" class="role-cb filled-in" id="articles-role" value="articles" {{articlesRole}}/>
+										<label for="articles-role">article</label>
+									</div>
+								</div>
+								{{/if}}
+								<div class="row">
+									<div class="input-field col s12">
+										<button class="submit btn waves-effect waves-light light-blue accent-4" type="submit" name="action" alt="Save User Profile">Save</button>
+									</div>
+								</div>
+							</form>
+						</div>			
+					</div>			
+				</div>
+			</div>
 		</div>
-	</div>
 {{/with}}
 </template>
 
 <template name="AdminAddUser">
-	<div class="container">
-		<div class="row">
-			<div class="col s12">
-				<h1>Add User</h1>
-			</div>
-		</div>
-		<div class="card">			
+		{{>AdminHeader header="Add User"}}
+		<div class="card grey lighten-4">			
 			<div class="card-content user-edit">
 				<div class="row">
 					<form class="col s12">
@@ -157,5 +144,4 @@
 				</div>			
 			</div>		
 		</div>	
-	</div>
 </template>

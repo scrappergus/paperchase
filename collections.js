@@ -2,6 +2,9 @@ volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
 articles = new Mongo.Collection('articles');
 articleTypes = new Mongo.Collection('articleTypes'); //when saving an article query this db and add the name, short_name and id as an object to the article
+Institutions = new Mongo.Collection("institutions");
+IPRanges = new Mongo.Collection("ipranges");
+
 
 Meteor.users.allow({
   update: function (userId, doc, fields, modifier) {
@@ -17,6 +20,46 @@ Meteor.users.allow({
   }
 });
 
+Institutions.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+IPRanges.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
 
 if (Meteor.isServer) {
   Meteor.publish('volumes', function () {
@@ -39,6 +82,14 @@ if (Meteor.isServer) {
   Meteor.publish('userData', function(id){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return Meteor.users.find({'_id':id});
+     }else{
+      this.stop();
+      return;
+     }
+  });  
+  Meteor.publish('institutions', function(){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return Institutions.find();
      }else{
       this.stop();
       return;

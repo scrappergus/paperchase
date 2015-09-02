@@ -71,3 +71,14 @@ Meteor.adminUser = {
 		return user;		
 	}
 }
+
+Meteor.formActions = {
+	saving: function(){
+		$('.save-btn').hide();
+		$('.saving').show();
+	},
+	error: function(){
+		$('.save-btn').show();
+		$('.saving').hide();
+	}
+}

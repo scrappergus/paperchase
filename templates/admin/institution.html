@@ -1,57 +1,93 @@
 <template name="AdminInstitution">
-<div class="container">
-    <div class="row">
-        <div class="col s12">
+	{{>AdminHeader header="Institutions"}}
+	<div class="row">
+		<div class="col s12">
+			<a class="waves-effect waves-light btn light-blue accent-4" href="/admin/institution/add">Add institution</a>
+		</div>
+	</div>
 
-            <h3>Institutions</h3>
-            <a href="/admin/institution/add">Add institution</a>
-
-            {{#each institutions}}
-            <div class="row">
-                <div class="col s12 m5">
-                    <div class="card-panel light-blue lighten-5">
-                        <div class="row">
-                            <div class="col s8">
-                                <span class=""><a href="/admin/institution/edit/{{_id}}">{{institution}}</a> </span>
-                            </div>
-                            <div class="col s2 right-align">
-                                {{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
-        </div>
-    </div>
-</div>
+	<div class="row">
+		<div class="col s12">
+			<div class="card grey lighten-5">
+			<div class="card-content">
+				<div class="row">
+					<div class="col s12">
+						<table>
+							<thead>
+								<tr>
+									<th data-field="institution">Institution</th>
+									<th data-field="address">Address</th>
+									<th data-field="ip">IP Range</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each institutions}}
+								<tr>
+									<td><a href="/admin/institution/edit/{{_id}}">{{institution}}</a></td>
+									<td>{{address}}</td>
+									<td>{{#each IPRanges}}{{this.startIP}}{{/each}}</td>
+									<td>{{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}</td>
+									<td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminInstitutionEdit'}}">Profile</a></td>
+								</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <template name="AdminInstitutionAdd">
-<div class="container">
-    <div class="row">
-        <div class="col s12">
-            <h3>Add an Institution</h3>
-            <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
-            {{> quickForm collection="Institutions" id="InstitutionForm" type="insert"}}
-        </div>
-    </div>
-</div>
+	{{>AdminHeader header="Add an Institution"}}
+	<div class="row">
+		<div class="col s12">
+			<div class="row">
+				<div class="col s12">
+					{{>AdminInstitutionForm}}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<a href="/admin/institution" class="secondary-content">Back to Institution List</a>
+		</div>
+	</div>
 </template>
 
 <template name="AdminInstitutionEdit">
-<div class="container z-depth-2">
-    <div class="row">
-        <div class="col s10 offset-s1">
-            <h3>{{institution.institution}}</h3>
-            <a href="/admin/institution" class="secondary-content">Back to Institution List</a>
-            {{> quickForm collection="Institutions" doc=this id="InstitutionForm" type="update"}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12 right-align">
-            {{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
-        </div>
-    </div>
-</div>
+	{{>AdminHeader header="Institution"}}
+	<div class="row">
+			<div class="col s12">
+				<div class="card grey lighten-5">
+					<div class="card-content overview">
+						<div class="row">
+							<div class="col s12">
+								<a class="edit-btn waves-effect waves-light btn" href="#">EDIT</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12"><h3>{{institution}}</h3><h4>{{address}}</h4><p>{{#each IPRanges}}{{this.startIP}} &mdash; {{this.endIP}}{{/each}}</p></div>
+						</div>
+					</div>
+					<div class="card-content edit hide">
+						<div class="row">
+							<div class="col s12">
+								{{>AdminInstitutionForm}}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12 right-align">
+								{{> quickRemoveButton collection="Institutions" _id=this._id class="waves-effect waves-light btn red"}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
 </template>
