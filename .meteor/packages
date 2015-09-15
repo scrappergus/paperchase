@@ -27,3 +27,6 @@ gildaspk:autoform-file-materialize
 cfs:standard-packages
 cfs:filesystem
 cfs:gridfs
+tomi:upload-server
+tomi:upload-jquery
+gandev:server-eval
