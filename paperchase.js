@@ -160,9 +160,44 @@ if (Meteor.isClient) {
 	*/
 
     Router.route('/admin', {
-            name: 'admin.home'
+            name: 'admin.dashboard'
             ,layoutTemplate: 'Admin'
         });
+
+
+    /*archive browsing*/
+    Router.route('/admin/archive', {
+            name: 'admin.archive'
+            ,layoutTemplate: 'Admin'
+        });
+
+
+    /*issue control*/
+    Router.route('/admin/issue/:vi', {
+            name: 'admin.issue'
+            ,layoutTemplate: 'Admin'
+            ,waitOn: function(){
+                return[
+                Meteor.subscribe('institutions',this.params._id)
+                ]
+            }
+            ,data: function(){
+                if(this.ready()){
+                    vi = this.params.vi;
+                    matches = vi.match("v([0-9]+)i([0-9]+)");
+                    volume = matches[1];
+                    issue = matches[2]
+
+                    var data = {
+                        volume: volume
+                        ,issue: issue
+                    };
+                    return data;
+                }
+            }
+        });
+
+
 
     /*users*/
     Router.route('/admin/users', {
@@ -269,5 +304,3 @@ function num2dot(num) {
         num = Math.floor(num/256);
         d = num%256 + '.' + d;}
     return d;}
-
-

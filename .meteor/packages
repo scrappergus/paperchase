@@ -23,3 +23,7 @@ accounts-ui
 alanning:roles
 manuelschoebel:ms-seo
 fourseven:scss
+gildaspk:autoform-file-materialize
+cfs:standard-packages
+cfs:filesystem
+cfs:gridfs
