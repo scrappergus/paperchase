@@ -164,6 +164,11 @@ if (Meteor.isClient) {
             ,layoutTemplate: 'Admin'
         });
 
+    /*xml intake*/
+    Router.route('/admin/article-xml',{
+        name: 'adminArticleXmlIntake',
+        layoutTemplate: 'Admin'
+    });
 
     /*archive browsing*/
     Router.route('/admin/archive', {
