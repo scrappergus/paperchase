@@ -1,0 +1,6 @@
+<template name="AuthorsList">
+	<span class="authors">{{#each authors}}<span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}} {{name_last}}<span class="comma">, </span></span>{{/each}}</span>
+</template>
+<template name="prettyDate">
+	{{getMonthWord month}}{{#if day}} {{day}}{{/if}}{{#if year}}, {{year}}{{/if}}
+</template>

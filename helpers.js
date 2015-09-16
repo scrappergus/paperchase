@@ -1,37 +1,54 @@
 if (Meteor.isClient) {
-    Template.registerHelper('clientIP', function() {
-            return headers.getClientIP();
-        });
+	Template.registerHelper('getMonthWord', function(month) {
+		var d = new Date(month);
+		var month = new Array();
+		month[0] = 'January';
+		month[1] = 'February';
+		month[2] = 'March';
+		month[3] = 'April';
+		month[4] = 'May';
+		month[5] = 'June';
+		month[6] = 'July';
+		month[7] = 'August';
+		month[8] = 'September';
+		month[9] = 'October';
+		month[10] = 'November';
+		month[11] = 'December';		
+		return month[d.getMonth()];
+	});
+	Template.registerHelper('clientIP', function() {
+			return headers.getClientIP();
+		});
 
-    Template.registerHelper('isSubscribedIP', function() {
-            ip = dot2num(headers.getClientIP());
+	Template.registerHelper('isSubscribedIP', function() {
+			ip = dot2num(headers.getClientIP());
 
-            var match = IPRanges.findOne( { 
-                    startNum: {$lte: ip} 
-                    ,endNum: {$gte: ip}
-                }
-            );
+			var match = IPRanges.findOne( { 
+					startNum: {$lte: ip} 
+					,endNum: {$gte: ip}
+				}
+			);
 
-            return match !== undefined;
-        });
+			return match !== undefined;
+		});
 
-    Template.registerHelper('getInstitutionByIP', function() {
-            ip = dot2num(headers.getClientIP());
+	Template.registerHelper('getInstitutionByIP', function() {
+			ip = dot2num(headers.getClientIP());
 
-            var match = IPRanges.findOne( { 
-                    startNum: {$lte: ip} 
-                    ,endNum: {$gte: ip}
-                }
-            );
+			var match = IPRanges.findOne( { 
+					startNum: {$lte: ip} 
+					,endNum: {$gte: ip}
+				}
+			);
 
-            if(match) {
-               inst_match = Institutions.findOne({
-                       "_id": match.institutionID
-                   });
-            }
+			if(match) {
+			   inst_match = Institutions.findOne({
+					   "_id": match.institutionID
+				   });
+			}
 
-            return inst_match || false;
-        });
+			return inst_match || false;
+		});
 
 	Template.Archive.helpers({
 		volumes: function(){
@@ -42,82 +59,85 @@ if (Meteor.isClient) {
 			return res;
 		}
 	});
-    Template.Home.helpers({
-        cards: function(){
-            var cards = [
-                {
-                    'name' : 'Gerotarget',
-                    'src' : '1.jpg'
-                },
-                {
-                    'name' : 'Pathology',
-                    'src' : '2.jpg'
-                },
-                {
-                    'name' : 'Bioinformatics',
-                    'src' : '3.jpg'
-                },
-                {
-                    'name' : 'Pharmacology',
-                    'src' : '4.jpg'
-                },
-                {
-                    'name' : 'Stem Cell',
-                    'src' : '5.jpg'
-                },
-                {
-                    'name' : 'miRNA',
-                    'src' : '6.jpg'
-                },
-                {
-                    'name' : 'Immunology',
-                    'src' : '7.jpg'
-                },
-                {
-                    'name' : 'Neurobiology',
-                    'src' : '8.jpg'
-                },
-                {
-                    'name' : 'Cellular & Molecular Biology',
-                    'src' : '9.jpg'
-                }
-            ];
-            return cards;
-        }
-    });
+	Template.Home.helpers({
+		cards: function(){
+			var cards = [
+				{
+					'name' : 'Gerotarget',
+					'src' : '1.jpg'
+				},
+				{
+					'name' : 'Pathology',
+					'src' : '2.jpg'
+				},
+				{
+					'name' : 'Bioinformatics',
+					'src' : '3.jpg'
+				},
+				{
+					'name' : 'Pharmacology',
+					'src' : '4.jpg'
+				},
+				{
+					'name' : 'Stem Cell',
+					'src' : '5.jpg'
+				},
+				{
+					'name' : 'miRNA',
+					'src' : '6.jpg'
+				},
+				{
+					'name' : 'Immunology',
+					'src' : '7.jpg'
+				},
+				{
+					'name' : 'Neurobiology',
+					'src' : '8.jpg'
+				},
+				{
+					'name' : 'Cellular & Molecular Biology',
+					'src' : '9.jpg'
+				}
+			];
+			return cards;
+		}
+	});
 
 	/*
 	Admin
 	*/
-    Template.AdminInstitution.helpers({
-            'institutions': function() {
-                return Institutions.find({});
-            }
-        });
-    Template.AdminInstitutionForm.helpers({
-        'formType' : function(){
-            // console.log('... = '+Session.get('formType'));
-            return Session.get('formType');
-        }
-    });
-    Template.adminArticleXmlIntake.helpers({
-        myCallbacks: function() {
-            return {
-                finished: function(index, fileInfo, context) {
-                    console.log('get json - ' + fileInfo.name);
-                    Meteor.call('processXML', fileInfo.name, function (err, result) {
-                        if(result){
-                            console.log(result);
-                            return result;
-                        }
-                        if(err){
-                            console.log(err);
-                        }
-                    });
-                }
-            }
-        }
-    });
+	Template.AdminInstitution.helpers({
+			'institutions': function() {
+				return Institutions.find({});
+			}
+		});
+	Template.AdminInstitutionForm.helpers({
+		'formType' : function(){
+			// console.log('... = '+Session.get('formType'));
+			return Session.get('formType');
+		}
+	});
+	Template.adminArticleXmlIntake.helpers({
+		myCallbacks: function() {
+			return {
+				finished: function(index, fileInfo, context) {
+					Session.set('fileNameXML',fileInfo.name);
+					Router.go('adminArticleXmlProcess');
+				}
+			}
+		}
+	});
+	Template.adminArticleXmlProcess.helpers({
+		article : function(){
+			var fileName = Session.get('fileNameXML');
+			var article;
+			article =  ReactiveMethod.call('processXML',fileName);
+			if(article){
+				return article;				
+			}
+
+		}
+	});
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page. 

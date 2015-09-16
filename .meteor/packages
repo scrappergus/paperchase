@@ -35,3 +35,4 @@ peerlibrary:xml2js
 meteorhacks:npm
 autopublish
 npm-container
+simple:reactive-method
