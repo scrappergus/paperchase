@@ -219,3 +219,93 @@ Schemas.XMLIntake = new SimpleSchema ({
         }
     });
 
+/*
+Articles
+*/
+Schemas.articles = new SimpleSchema({
+    title: {
+        type: String,
+        optional: false
+    },
+    authors: {
+        type: Array
+    },
+    'authors.$':{
+        type: Object
+    },
+    'authors.$.name_first': {
+        type: String
+    },
+    'authors.$.name_last': {
+        type: String
+    },
+    page_start: {
+        type: String
+    },
+    page_end: {
+        type: String
+    },
+    volume: {
+        type: Number
+    },
+    issue: {
+        type: String
+    },
+    keywords: {
+        type: Array
+    },
+    'keywords.$':{
+        type: String
+    },
+    ids: {
+        type: Array
+    },
+    'ids.$':{
+        type: Object
+    },
+    'ids.$.type': {
+        type: String
+    },
+    'ids.$.id': {
+        type: String
+    },
+    dates: {
+        type: Array
+    },
+    'dates.$':{
+        type: Object
+    },
+    'dates.$.type': {
+        type: String
+    },
+    'dates.$.month': {
+        type: Number
+    },
+    'dates.$.day': {
+        type: Number
+    },
+    'dates.$.year': {
+        type: Number
+    },
+    history: {
+        type: Array
+    },
+    'history.$':{
+        type: Object
+    },
+    'history.$.type': {
+        type: String
+    },
+    'history.$.month': {
+        type: Number
+    },
+    'history.$.day': {
+        type: Number
+    },
+    'history.$.year': {
+        type: Number
+    },
+    doc_updates: {
+        type: Object
+    }
+});
