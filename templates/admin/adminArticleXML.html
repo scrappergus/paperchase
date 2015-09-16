@@ -1,5 +1,5 @@
 <template name="adminArticleXmlIntake">
-<h2>Article XML Intake</h2>
+	{{>AdminHeader header="Article XML Intake"}}
 
-   {{> upload_bootstrap contentType='xml'}}
+   {{> upload_bootstrap contentType='xml' callbacks=myCallbacks}}
 </template>

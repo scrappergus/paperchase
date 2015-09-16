@@ -99,7 +99,25 @@ if (Meteor.isClient) {
             // console.log('... = '+Session.get('formType'));
             return Session.get('formType');
         }
-    })
+    });
+    Template.adminArticleXmlIntake.helpers({
+        myCallbacks: function() {
+            return {
+                finished: function(index, fileInfo, context) {
+                    console.log('get json - ' + fileInfo.name);
+                    Meteor.call('processXML', fileInfo.name, function (err, result) {
+                        if(result){
+                            console.log(result);
+                            return result;
+                        }
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+                }
+            }
+        }
+    });
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page. 
