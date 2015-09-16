@@ -21,16 +21,24 @@ Meteor.methods({
 							if(err){
 								return 'ERROR';
 							}else{
+								
 								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
 
 								//Process JSON for meteor templating and mongo db
 								j['title'] = articleJSON['title-group'][0]['article-title'][0];
-								j['articleType'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'];
 								j['volume'] = parseInt(articleJSON['volume'][0]);
 								j['issue'] = articleJSON['issue'][0];
 								j['page_start'] = articleJSON['fpage'][0];
 								j['page_end'] = articleJSON['lpage'][0];
 								j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];
+
+								//ARTICLE TYPE
+								//TODO: These are nlm type, possible that publisher has its own type of articles
+								//TODO: Update article type collection if this type not present
+								j['article_type'] = {};
+								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'];
+								j['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
+
 
 								//IDS
 								j['ids'] = [];
