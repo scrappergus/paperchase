@@ -76,7 +76,7 @@ if (Meteor.isClient) {
         });
 
     Session.setDefault('formMethod','');
-     Session.setDefault('fileNameXML',''); //LIVE
+    Session.setDefault('fileNameXML',''); //LIVE
     // Session.setDefault('fileNameXML','PMC4100812.xml'); //LOCAL TESTING
 
     Router.route('/', { 
@@ -181,8 +181,39 @@ if (Meteor.isClient) {
            }else{
                 this.next();
            }
+        },
+        data: function(){
+            var fileName = Session.get('fileNameXML');
+            var article;
+            article =  ReactiveMethod.call('processXML',fileName);
+            if(article){
+                return {
+                    article: article 
+                }            
+            }
         }
     });
+
+    /*article*/
+    Router.route('/admin/article/:_id',{
+        name: 'adminArticle',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles')
+            ]
+        },        
+        data: function(){
+            if(this.ready()){
+                var id = this.params._id;
+                var article = articles.findOne({'_id': id});
+                console.log('article = ');console.log(article);
+                return {
+                    article: article
+                };
+            }
+        }
+    })
 
     /*archive browsing*/
     Router.route('/admin/archive', {

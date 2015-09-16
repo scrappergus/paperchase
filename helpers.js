@@ -127,17 +127,6 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-	Template.adminArticleXmlProcess.helpers({
-		article : function(){
-			var fileName = Session.get('fileNameXML');
-			var article;
-			article =  ReactiveMethod.call('processXML',fileName);
-			if(article){
-				return article;				
-			}
-
-		}
-	});
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page. 
