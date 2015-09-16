@@ -10,6 +10,7 @@ Meteor.startup(function () {
 		},
 		finished: function(fileInfo, formFields) {
 			console.log('finished!');
+			Router.go('home');
 			// perform a disk operation
 		},
 		checkCreateDirectories: true
