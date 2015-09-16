@@ -31,7 +31,7 @@ tomi:upload-jquery
 gandev:server-eval
 
 
-npm-container
 peerlibrary:xml2js
 meteorhacks:npm
 autopublish
+npm-container
