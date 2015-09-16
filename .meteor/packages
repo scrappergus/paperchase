@@ -13,7 +13,6 @@ gadicohen:headers
 aldeed:autoform
 aldeed:collection2
 meteorhacks:kadira
-autopublish
 aldeed:delete-button
 mizzao:user-status
 matb33:collection-hooks
@@ -30,3 +29,9 @@ cfs:gridfs
 tomi:upload-server
 tomi:upload-jquery
 gandev:server-eval
+
+
+npm-container
+peerlibrary:xml2js
+meteorhacks:npm
+autopublish
