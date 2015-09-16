@@ -1,0 +1,60 @@
+<template name="adminArticle">
+	{{>AdminHeader header="Article"}}
+	{{#with article}}{{>adminArticleData}}{{/with}}
+</template>
+<template name="adminArticleData">
+	{{#with article}}
+	<div class="card grey lighten-4">
+		<div class="card-content">
+			<div class="card-header">
+				<div class="row">
+					<div class="col s10">
+						<h4>{{title}}</h4>
+						<h5>{{>AuthorsList}}</h5>
+						<h6>Volume {{volume}}, Issue {{issue}}</h6>
+					</div>
+					<div class="col s2">
+						<span class="badge right">{{article_type.type}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<h5>IDs:</h5>
+					{{#each ids}}
+						<h6><label class="">{{type}}:</label> {{id}}</h6>
+					{{/each}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<h5>Dates:</h5>
+					{{#each dates}}
+					<h6><label>{{type}}:</label> {{#with .}}{{>prettyDate}}{{/with}}</h6>
+					{{/each}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<h5>History:</h5>
+					{{#each history}}
+					<h6><label>{{type}}:</label> {{#with .}}{{>prettyDate}}{{/with}}</h6>
+					{{/each}}
+				</div>
+			</div>
+			{{#if keywords}}
+			<div class="row">
+				<div class="col s12">
+					<h5>Keywords:</h5>
+					<ul>
+						{{#each keywords}}
+						<li><h6>{{.}}</h6></li>
+						{{/each}}						
+					</ul>
+				</div>
+			</div>
+			{{/if}}
+		</div>
+	</div>	
+	{{/with}}	
+</template>
