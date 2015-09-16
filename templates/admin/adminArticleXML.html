@@ -1,5 +1,23 @@
 <template name="adminArticleXmlIntake">
 	{{>AdminHeader header="Article XML Intake"}}
 
-   {{> upload_bootstrap contentType='xml' callbacks=myCallbacks}}
+	<div class="card grey lighten-4">
+		<div class="card-content">
+			<div class="row">
+				<div class="col s12">
+					{{> upload_bootstrap contentType='xml' callbacks=myCallbacks}}
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="adminArticleXmlProcess">
+	{{>AdminHeader header="Article XML Process"}}
+	<div class="row">
+		<div class="col s12">
+			<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Add Article">Add Article</button>
+		</div>
+	</div>
+	{{>adminArticleData}}
 </template>
