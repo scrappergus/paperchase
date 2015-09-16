@@ -57,3 +57,19 @@ Template.AdminAddUser.events({
 		})	
 	}
 });
+Template.adminArticleXmlProcess.events({
+	'click .submit': function(e,t){
+		e.preventDefault();
+		var articleData = t.data;
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['created_date'] = new Date(); 
+		articleData['doc_updates']['created_by'] = Meteor.user(); 
+		articles.insert(t.data, function(error, _id){
+			if(error){
+				alert('ERROR: '+error.message);
+			}else{
+				Router.go('adminArticle', {_id:_id});
+			}
+		});
+	}
+});
