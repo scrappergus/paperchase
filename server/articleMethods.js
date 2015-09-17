@@ -35,6 +35,7 @@ Meteor.methods({
 		fs.exists(file, function(fileok){
 			if(fileok){
 				fs.readFile(file, function(error, data) {
+					if(data)
 					xml = data.toString();
 					if(error){
 						return 'ERROR';
@@ -56,7 +57,12 @@ Meteor.methods({
 								j['issue'] = articleJSON['issue'][0];
 								j['page_start'] = articleJSON['fpage'][0];
 								j['page_end'] = articleJSON['lpage'][0];
-								j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];
+
+								//KEYWORDS
+								if(articleJSON['kwd-group']){
+									j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];	
+								}
+								
 
 								//ARTICLE TYPE
 								//TODO: These are nlm type, possible that publisher has its own type of articles
@@ -80,17 +86,20 @@ Meteor.methods({
 								}
 
 								//AUTHORS
-								j['authors'] = [];
-								var authorsList = articleJSON['contrib-group'][0]['contrib'];
-								var authorsListLength = authorsList.length;
-								for(var i = 0 ; i < authorsListLength ; i++){
-									var author = {};
-									var name_first = authorsList[i]['name'][0]['given-names'];
-									var name_last = authorsList[i]['name'][0]['surname'];
-									author['name_first'] = name_first;
-									author['name_last'] = name_last;
-									j['authors'].push(author);
+								if(articleJSON['contrib-group']){
+									j['authors'] = [];
+									var authorsList = articleJSON['contrib-group'][0]['contrib'];
+									var authorsListLength = authorsList.length;
+									for(var i = 0 ; i < authorsListLength ; i++){
+										var author = {};
+										var name_first = authorsList[i]['name'][0]['given-names'];
+										var name_last = authorsList[i]['name'][0]['surname'];
+										author['name_first'] = name_first;
+										author['name_last'] = name_last;
+										j['authors'].push(author);
+									}									
 								}
+
 
 								//PUB DATES
 								j['dates'] = []
@@ -112,22 +121,24 @@ Meteor.methods({
 								}
 
 								//HISOTRY DATES
-								j['history'] = []
-								var history = articleJSON['history'][0]['date'];
-								var historyLength = history.length;
-								for(var i = 0 ; i < historyLength ; i++){
-									var dateH = {};
-									dateH['type'] = history[i]['$']['date-type'];
-									if(history[i]['day']){
-										dateH['day'] = history[i]['day'][0];
-									}
-									if(history[i]['month']){
-										dateH['month'] = history[i]['month'][0];
-									}
-									if(history[i]['year']){
-										dateH['year'] = history[i]['year'][0];
-									}
-									j['history'].push(dateH);
+								if(articleJSON['history']){
+									j['history'] = []
+									var history = articleJSON['history'][0]['date'];
+									var historyLength = history.length;
+									for(var i = 0 ; i < historyLength ; i++){
+										var dateH = {};
+										dateH['type'] = history[i]['$']['date-type'];
+										if(history[i]['day']){
+											dateH['day'] = history[i]['day'][0];
+										}
+										if(history[i]['month']){
+											dateH['month'] = history[i]['month'][0];
+										}
+										if(history[i]['year']){
+											dateH['year'] = history[i]['year'][0];
+										}
+										j['history'].push(dateH);
+									}									
 								}
 
 								// console.log(j);
