@@ -58,3 +58,35 @@
 	</div>	
 	{{/with}}	
 </template>
+
+<template name="adminArticlesList">
+		{{>AdminHeader header="Articles"}}
+		<div class="card grey lighten-4">
+			<div class="card-content">
+				<div class="row">
+					<div class="col s12">
+						<table>
+							<thead>
+								<tr>
+									<th data-field="title">Title</th>
+									<th data-field="volume">Volume</th>
+									<th data-field="volume">Issue</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each articles}}
+								<tr>
+									<td>{{title}}</td>
+									<td>{{volume}}</td>
+									<td>{{issue}}</td>
+									<td><a class="waves-effect waves-light btn" href="{{pathFor 'adminArticle'}}">View</a></td>
+								</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+</template>

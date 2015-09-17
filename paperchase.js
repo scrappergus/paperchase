@@ -202,7 +202,22 @@ if (Meteor.isClient) {
         }
     });
 
-    /*article*/
+    /*article and articles*/
+
+    Router.route('/admin/articles',{
+        name: 'adminArticlesList',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles')
+            ]
+        },        
+        data: function(){
+            return {
+                articles : articles.find().fetch()
+            }
+        }
+    });    
     Router.route('/admin/article/:_id',{
         name: 'adminArticle',
         layoutTemplate: 'Admin',
