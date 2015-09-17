@@ -48,7 +48,7 @@ Meteor.methods({
 								//TITLE
 								var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
 								var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
-								titleTitle = titleTitle.replace('article-title>','');
+								titleTitle = titleTitle.replace('article-title>','').replace('<italic>','<i>').replace('</italic>','</i>');
 								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
 								j['title'] = titleTitle; 
 
