@@ -4,3 +4,12 @@
 <template name="prettyDate">
 	{{getMonthWord month}}{{#if day}} {{day}}{{/if}}{{#if year}}, {{year}}{{/if}}
 </template>
+
+<!--admin partials-->
+
+<template name="addArticleBtn">
+	<button class="add-article btn waves-effect waves-light btn-add" type="submit" name="action" alt="Add Article"><i class="zmdi zmdi-file-plus"></i> Add</button>
+</template>
+<template name="updateArticleBtn">
+	<button data-mongoid="{{_id}}" class="update-article btn waves-effect waves-light btn-update" type="submit" name="action" alt="Update Article"><i class="zmdi zmdi-edit"></i> Update</button>	
+</template>
