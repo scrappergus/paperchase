@@ -1,0 +1,2089 @@
+<?xml version="1.0"?>
+<!DOCTYPE pmc-articleset PUBLIC "-//NLM//DTD ARTICLE SET 2.0//EN" "http://dtd.nlm.nih.gov/ncbi/pmc/articleset/nlm-articleset-2.0.dtd">
+<pmc-articleset><article xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" article-type="research-article">
+  <?properties open_access?>
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Aging (Albany NY)</journal-id>
+      <journal-id journal-id-type="iso-abbrev">Aging (Albany NY)</journal-id>
+      <journal-id journal-id-type="publisher-id">ImpactJ</journal-id>
+      <journal-title-group>
+        <journal-title>Aging (Albany NY)</journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">1945-4589</issn>
+      <publisher>
+        <publisher-name>Impact Journals LLC</publisher-name>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="pmid">25596819</article-id>
+      <article-id pub-id-type="pmc">4356402</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Paper</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Aging-dependent alterations in gene expression and a mitochondrial signature of responsiveness to human influenza vaccination</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" equal-contrib="yes">
+          <name>
+            <surname>Thakar</surname>
+            <given-names>Juilee</given-names>
+          </name>
+          <xref ref-type="aff" rid="A1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="aff" rid="A8">
+            <sup>8</sup>
+          </xref>
+          <xref ref-type="aff" rid="A9">
+            <sup>9</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" equal-contrib="yes">
+          <name>
+            <surname>Mohanty</surname>
+            <given-names>Subhasis</given-names>
+          </name>
+          <xref ref-type="aff" rid="A3">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>West</surname>
+            <given-names>A. Phillip</given-names>
+          </name>
+          <xref ref-type="aff" rid="A4">
+            <sup>4</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Joshi</surname>
+            <given-names>Samit R.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A3">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Ueda</surname>
+            <given-names>Ikuyo</given-names>
+          </name>
+          <xref ref-type="aff" rid="A3">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Wilson</surname>
+            <given-names>Jean</given-names>
+          </name>
+          <xref ref-type="aff" rid="A3">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Meng</surname>
+            <given-names>Hailong</given-names>
+          </name>
+          <xref ref-type="aff" rid="A1">
+            <sup>1</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Blevins</surname>
+            <given-names>Tamara P.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A5">
+            <sup>5</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Tsang</surname>
+            <given-names>Sui</given-names>
+          </name>
+          <xref ref-type="aff" rid="A6">
+            <sup>6</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Trentalange</surname>
+            <given-names>Mark</given-names>
+          </name>
+          <xref ref-type="aff" rid="A6">
+            <sup>6</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Siconolfi</surname>
+            <given-names>Barbara</given-names>
+          </name>
+          <xref ref-type="aff" rid="A3">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Park</surname>
+            <given-names>Koonam</given-names>
+          </name>
+          <xref ref-type="aff" rid="A7">
+            <sup>7</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Gill</surname>
+            <given-names>Thomas M.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A6">
+            <sup>6</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Belshe</surname>
+            <given-names>Robert B.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A5">
+            <sup>5</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Kaech</surname>
+            <given-names>Susan M.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A7">
+            <sup>7</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Shadel</surname>
+            <given-names>Gerald S.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A4">
+            <sup>4</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Kleinstein</surname>
+            <given-names>Steven H.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="aff" rid="A2">
+            <sup>2</sup>
+          </xref>
+          <xref ref-type="aff" rid="A7">
+            <sup>7</sup>
+          </xref>
+          <xref ref-type="author-notes" rid="FN1">#</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Shaw</surname>
+            <given-names>Albert C.</given-names>
+          </name>
+          <xref ref-type="aff" rid="A3">
+            <sup>3</sup>
+          </xref>
+          <xref ref-type="author-notes" rid="FN1">#</xref>
+        </contrib>
+      </contrib-group>
+      <aff id="A1"><sup>1</sup> Department of Pathology, Yale School of Medicine, New Haven CT 06520, USA</aff>
+      <aff id="A2"><sup>2</sup> Interdepartmental Program in Computational Biology and Bioinformatics, Yale School of Medicine, New Haven, CT 06520, USA</aff>
+      <aff id="A3"><sup>3</sup> Section of Infectious Diseases, Department of Internal Medicine, Yale School of Medicine, New Haven, CT 06520, USA</aff>
+      <aff id="A4"><sup>4</sup> Department of Pathology and Genetics, Yale School of Medicine, New Haven CT 06520, USA</aff>
+      <aff id="A5"><sup>5</sup> Center for Vaccine Development, Saint Louis University, St. Louis, MO 63104, USA</aff>
+      <aff id="A6"><sup>6</sup> Department of Internal Medicine, Yale School of Medicine, New Haven, CT 0652, USA</aff>
+      <aff id="A7"><sup>7</sup> Department of Immunobiology, Yale School of Medicine, New Haven, CT 06520, USA</aff>
+      <aff id="A8"><sup>8</sup> Department of Microbiology and Immunology, University of Rochester, Rochester, NY 14642, USA</aff>
+      <aff id="A9"><sup>9</sup> Department of Biostatistics and Computational Biology, University of Rochester, Rochester NY 14642, USA</aff>
+      <author-notes>
+        <corresp id="cor1">
+          <bold>
+            <italic>Correspondence to:</italic>
+          </bold>
+          <italic>Steven Kleinstein, PhD;</italic>
+          <email>steven.kleinstein@yale.edu</email>
+        </corresp>
+        <corresp id="cor2">
+          <italic>Albert C. Shaw, PhD;</italic>
+          <email>albert.shaw@yale.edu</email>
+        </corresp>
+        <fn id="FN1">
+          <label>#</label>
+          <p>Co-senior authors</p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="collection">
+        <month>1</month>
+        <year>2015</year>
+      </pub-date>
+      <pub-date pub-type="epub">
+        <day>14</day>
+        <month>1</month>
+        <year>2015</year>
+      </pub-date>
+      <volume>7</volume>
+      <issue>1</issue>
+      <fpage>38</fpage>
+      <lpage>51</lpage>
+      <history>
+        <date date-type="received">
+          <day>25</day>
+          <month>11</month>
+          <year>2014</year>
+        </date>
+        <date date-type="accepted">
+          <day>12</day>
+          <month>1</month>
+          <year>2015</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-statement>Copyright: &#xA9; 2015 Thakar et al.</copyright-statement>
+        <copyright-year>2015</copyright-year>
+        <license license-type="open-access" xlink:href="http://creativecommons.org/licenses/by/2.5/">
+          <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited</license-p>
+        </license>
+      </permissions>
+      <abstract>
+        <p>To elucidate gene expression pathways underlying age-associated impairment in influenza vaccine response, we screened young (age 21-30) and older (age &#x2265;65) adults receiving influenza vaccine in two consecutive seasons and identified those with strong or absent response to vaccine, including a subset of older adults meeting criteria for frailty. PBMCs obtained prior to vaccination (Day 0) and at day 2 or 4, day 7 and day 28 post-vaccine were subjected to gene expression microarray analysis. We defined a response signature and also detected induction of a type I interferon response at day 2 and a plasma cell signature at day 7 post-vaccine in young responders. The response signature was dysregulated in older adults, with the plasma cell signature induced at day 2, and was never induced in frail subjects (who were all non-responders). We also identified a mitochondrial signature in young vaccine responders containing genes mediating mitochondrial biogenesis and oxidative phosphorylation that was consistent in two different vaccine seasons and verified by analyses of mitochondrial content and protein expression. These results represent the first genome-wide transcriptional profiling analysis of age-associated dynamics following influenza vaccination, and implicate changes in mitochondrial biogenesis and function as a critical factor in human vaccine responsiveness.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>aging</kwd>
+        <kwd>frailty</kwd>
+        <kwd>influenza vaccine</kwd>
+        <kwd>gene expression</kwd>
+        <kwd>microarray</kwd>
+        <kwd>mitochondria</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>INTRODUCTION</title>
+      <p>Influenza remains a major public health challenge in the 21<sup>st</sup> century, with older adults at particular risk for increased morbidity and mortality. A typical influenza season results in approximately 30,000 deaths in the United States, with 90% of deaths occurring in adults over age 65 [<xref rid="R1" ref-type="bibr">1</xref>]. While both live attenuated and inactivated versions of the influenza vaccine are available, it is recommended that older adults receive the inactivated vaccine; unfortunately, the efficacy rates of vaccination are generally under 30%, with worsened responses in older adults who meet criteria for frailty [<xref rid="R2" ref-type="bibr">2</xref>, <xref rid="R3" ref-type="bibr">3</xref>]. Poor vaccine efficacy in frail and non-frail older adults is related to impairments in immune responses associated with aging, termed immunosenescence. Age-associated alterations in adaptive immune responses are characterized by impaired B and T lymphopoiesis, as well as functional alterations in signaling and a marked decrease in antigen receptor gene repertoire diversity [<xref rid="R4" ref-type="bibr">4</xref>]. Immunosenescence also affects innate immunity, and is characterized by increased production of non-cell associated DNA, cytokines and acute phase reactants that may contribute to dysregulated innate immune activation [<xref rid="R5" ref-type="bibr">5</xref>]. Both adaptive and innate immunosenescence likely contribute to impaired vaccine responses and increased morbidity and mortality from infectious diseases among older adults. However, the molecular pathways underlying impaired vaccine responses among older adults remain incompletely understood. Elucidation of these pathways would identify potential targets for interventions designed to improve immune responses in older adults.</p>
+      <p>Systems vaccinology approaches have begun to identify gene signatures that correlate with hemagglutination-inhibition (HAI) antibody titers or viral neutralization assays post-vaccination [<xref rid="R6" ref-type="bibr">6</xref>-<xref rid="R8" ref-type="bibr">8</xref>]. Some signatures are common to different vaccines, while others are specific to influenza vaccination [<xref rid="R9" ref-type="bibr">9</xref>]. A signature for type I interferons early after vaccination, and a plasma cell signature seven days post-vaccination, have been observed following influenza vaccination in multiple studies [<xref rid="R6" ref-type="bibr">6</xref>, <xref rid="R7" ref-type="bibr">7</xref>, <xref rid="R9" ref-type="bibr">9</xref>]. While most of these studies have focused on young adults, a recent study including older subjects focused on the predictive power of pre-vaccination pathway activity [<xref rid="R10" ref-type="bibr">10</xref>]. Here, we have employed transcriptional profiling analyses in young (age 21-30) and older (age &#x2265; 65) adults using blood samples drawn prior to and at multiple time-points following influenza vaccine administration to provide, to our knowledge, the first genome-wide temporal assessment of vaccine response in the context of aging.</p>
+    </sec>
+    <sec id="s2">
+      <title>RESULTS</title>
+      <sec id="s2_1">
+        <title>Age is a strong determinant of vaccine response</title>
+        <p>We recruited 121 young (21-30 years old, n = 59) and older (&#x2265; 70 years old, n = 62) subjects in two consecutive vaccination seasons (n = 49 in 2010-2011; n = 72 in 2011-12) prior to immunization with the seasonal trivalent inactivated influenza vaccine (TIV). Older subjects were further classified for the geriatric syndrome of frailty using the clinically validated, operational definition of Fried et al. [<xref rid="R11" ref-type="bibr">11</xref>]. To assess the response to vaccination, antibody titers to the three viral strains in the vaccine (A/California/7/09 (H1N1)-like virus; A/Perth /16/2009 (H3N2); and B/Brisbane/60/2008), which were the same for both seasons, were measured pre-vaccination and 28 days post-vaccination by hemagglutination inhibition (HAI). In both seasons, pre-vaccination anti-H1 titers in older subjects were significantly lower than in young subjects (2010-11: p=0.015, 2011-12: p=0.002), while titers against the H3 and B strains were similar in both age groups (Figure <xref ref-type="fig" rid="F1">1B</xref>). After vaccination, 41% of young subjects and 59% of older subjects failed to show a four-fold increase in post-vaccine HAI titer to any of the three strains in the vaccine (Figure <xref ref-type="fig" rid="F1">1A</xref>). Among these non-responders, 92% of young and 36% of older subjects had pre-existing antibody titers greater than 1:16 against at least one of the three vaccine strains (Figures <xref ref-type="fig" rid="F1">1C and 1D</xref>). Thus, while a similar frequency of young and older subjects failed to show increases in antibody titers following vaccination, most of the young subjects had elevated pre-vaccine antibody titers against the vaccine strains.</p>
+        <fig id="F1" orientation="portrait" position="float">
+          <label>Figure 1</label>
+          <caption>
+            <title>Older subjects have lower baseline titers and a reduced vaccine response</title>
+            <p>The influenza antibody response to all three vaccine strains in the seasonal vaccine was measured pre-vaccination and 28 days post-vaccination by HAI. (<bold>A</bold>) The percentage of young (white bars) and older (grey bars) subjects showing &#x2265;4-fold increase in HAI assay on day 28 to the indicated number of strains. (<bold>B</bold>) Baseline titers for each of the three strains among young (white bars) and older (grey bars) subjects. Medians are indicated by the bold line, while the box boundaries indicate the 25<sup>th</sup> (lower line) and 75<sup>th</sup> (upper line) percentiles, with outliers indicated by (o). (<bold>C</bold>) and (<bold>D</bold>) Comparison of baseline (pre-vaccination) HAI titers with fold-change (day 28 vs. pre-vaccination). The size of the circles (small to large) depicts the number of subjects (1 to 7 for young and 4 to 11 for older). The set of vaccine responders and non-responders selected for microarray experiments are indicated by the plus and cross within the circle symbols, respectively. For simplicity, the response against the strain that induced the maximum fold-increase in HAI titer on day 28 in vaccine responders is plotted. For non-responders, the highest baseline titer among the three vaccine strains is depicted.</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g001"/>
+        </fig>
+        <p>To define the transcriptional program underlying a successful influenza vaccination, and how this might be altered with age, we identified a subset of individuals with particularly strong vaccine responses and a subset with poor responses for genome-wide transcriptional profiling. Strong vaccine responders were defined as having a four-fold or greater increase in HAI (comparing titers at day 28 to day 0) for at least two of three influenza vaccine strains, while vaccine non-responders were defined as having a less than four-fold increase in HAI titers for all three vaccine strains following immunization. Using these stringent criteria, we identified 10 responders and 6 non-responders for transcriptional profiling in the 2010-2011 cohort. In the 2011-12 cohort, transcriptional profiling was carried out on 11 responders and 21 non-responders; clinical characteristics of these individuals are outlined in Table <xref ref-type="table" rid="T1">1</xref>. Peripheral blood mononuclear cells (PBMC) were obtained pre-vaccination (day 0) and at days 2 (2011-12 cohort) or 4 (2010-11 cohort), 7 and 28 post-vaccination for gene expression microarray analysis. We focused our initial analysis on the 2011-12 season, as this cohort contained subjects with a range of vaccine responses in both young and older subjects. Specifically, we segmented the cohort into five groups: young responders (n=5), young non-responders (n=7), older responders (n=6), older non-responders (n=10) and frail non-responders (n=4). Because the smaller 2010-11 cohort contained predominantly young responders (n = 8) and older non-responders (n=5), it was used as an independent cohort to validate hypotheses generated in the 2011-12 cohort.</p>
+        <table-wrap id="T1" orientation="portrait" position="float">
+          <label>Table 1</label>
+          <caption>
+            <title>Characteristics of the subset of 32 young and older adults in the test cohort selected from 72 participants for gene expression microarray analysis using a stringent definition of vaccine response. Note that four participants in the older group (all vaccine non-responders) met criteria for frailty</title>
+          </caption>
+          <table frame="box" rules="groups">
+            <thead>
+              <tr>
+                <th align="left" valign="top" rowspan="1" colspan="1">Patient Characteristics(N=32)</th>
+                <th align="center" valign="top" rowspan="1" colspan="1">Young(N=12)</th>
+                <th align="center" valign="top" rowspan="1" colspan="1">Older(N=20)</th>
+                <th align="center" valign="top" rowspan="1" colspan="1">Probability<xref ref-type="table-fn" rid="tfn-001"><sup>a</sup></xref></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Age (years) range (22-93), mean (SD)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">25.75 (2.56)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">75.10 (7.09)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">&lt;0.0001</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Female, n (%)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">6 (50.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">6 (50.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">1.000</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Non-white Race, n (%)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">4 (33.33)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">4 (20.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.4325</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Influenza Vaccine Responder<xref ref-type="table-fn" rid="tfn-002"><sup>b</sup></xref>, n (%)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">5 (41.67)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">6 (30.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.7026</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Number of Comorbid Conditions, mean (SD)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.58 (0.90)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">3.85 (1.98)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">&lt;0.0001</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Number of Prescription Medications, mean (SD)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.50 (0.67)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">4.50 (2.04)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">&lt;0.0001</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Number of OTC Medications, mean (SD)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.67 (0.78)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">3.65 (1.76)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">&lt;0.0001</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Aspirin, n (%)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0 (0.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">14 (70.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.0003</td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" rowspan="1" colspan="1">Statin Medications, n (%)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0 (0.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">13 (65.00)</td>
+                <td align="center" valign="top" rowspan="1" colspan="1">0.0011</td>
+              </tr>
+            </tbody>
+          </table>
+          <table-wrap-foot>
+            <fn id="tfn-001">
+              <label>a</label>
+              <p>Probability for Student t-test (Continuous Measures), Chi-square test/Fisher's Exact test (Categorical Measures)</p>
+            </fn>
+            <fn id="tfn-002">
+              <label>b</label>
+              <p>A vaccine responder had a four-fold increase in hemagglutination inhibition (HAI) titer to at least two of the three strains in the seasonal vaccine. The remaining participants analyzed were all nonresponders without a four-fold increase in HAI titer to any strain in the vaccine.</p>
+            </fn>
+          </table-wrap-foot>
+        </table-wrap>
+        <p>Differentially-expressed genes (<xref ref-type="supplementary-material" rid="SD1">Supplementary Table 1</xref>) were identified in each of the five response groups by comparing expression levels at each time-point post-vaccination to their pre-vaccination levels using criteria described in Methods. Overall, we identified 2,542 genes that were differentially expressed following vaccination in young subjects, and 321 differentially expressed genes in older subjects (Figure <xref ref-type="fig" rid="F2">2A</xref>). Thus, young subjects exhibited a more robust gene expression program in response to influenza vaccination.</p>
+        <fig id="F2" orientation="portrait" position="float">
+          <label>Figure 2</label>
+          <caption>
+            <title>Young and older subjects exhibit qualitatively different responses to influenza vaccination</title>
+            <p>Differentially-expressed genes were determined by comparing gene expression levels pre- and post-vaccination (&#x2223;fold-change&#x2223; &gt; 1.25 and FDR&lt;0.05). Row-normalized fold-changes for all differentially expressed genes (rows) at each time point (columns) in the indicated cohorts are indicated in the heatmaps. Up-regulated or down-regulated response signatures were defined as the set of genes significantly up- or down-regulated in young responders. GSEA [<xref rid="R35" ref-type="bibr">35</xref>] was used to calculate the enrichment of these signatures in young, older and frail adults, plotted for responder and non-responder status to vaccine in the two graphs in the right-most column, where zero activity of up-regulated or down-regulated response signatures denotes absence of enrichment (note that all frail individuals were vaccine non-responders).</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g002"/>
+        </fig>
+      </sec>
+      <sec id="s2_2">
+        <title>The temporal gene expression response to vaccination is altered with age</title>
+        <p>We next sought to investigate the temporal dynamics of a successful vaccination response, and how this was altered by age. Two clusters of genes were found by hierarchical clustering of differentially expressed genes across different age groups and response groups (Figure <xref ref-type="fig" rid="F2">2</xref>). The first cluster or &#x201C;response signature&#x201D; consisted of 810 genes that were significantly induced at day 7 post-vaccination in young responders. Some of these gene expression changes likely reflected the transient migration of plasmablasts in the blood, which occurs between days 6-11 post-vaccination [<xref rid="R12" ref-type="bibr">12</xref>]. Indeed, plasma cell signature genes [<xref rid="R7" ref-type="bibr">7</xref>] were significantly enriched at day 7 post-vaccination in young responders (Figure <xref ref-type="fig" rid="F3">3</xref>). Surprisingly, 616 of the genes that were induced at day 7 remained significantly up-regulated at day 28 post-vaccination.</p>
+        <fig id="F3" orientation="portrait" position="float">
+          <label>Figure 3</label>
+          <caption>
+            <title>A plasma cell gene signature is enriched among vaccine responders</title>
+            <p>GSEA [<xref rid="R35" ref-type="bibr">35</xref>] was used to calculate the enrichment of the plasma cell signature from Nakaya et al. [<xref rid="R7" ref-type="bibr">7</xref>] in young, older and frail cohorts, broken down by responder and non-responder status. A signature activity of zero indicates the absence of enrichment. False discovery rates by GSEA were statistically significant for young vaccine responders at day 7 (FDR=0.01) and day 28 (FDR=0.03) post-vaccine, for young non-responders at day 28 (FDR=0.02) post-vaccine, and for frail non-responders at day 28 (FDR=0.04) post-vaccine. FDR values for all other time points and groups were not significant (FDR &gt; 0.05).</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g003"/>
+        </fig>
+        <p>The response signature displayed a qualitatively different pattern of activity in older subjects, with significant activity observed at day 2 post-vaccination (q&lt;0.05), followed by a trend toward down-regulation on day 7 and then up-regulation on day 28 (Figure <xref ref-type="fig" rid="F2">2</xref>). Interestingly, the response signature was never significantly induced at any time-point in frail individuals (Figure <xref ref-type="fig" rid="F2">2</xref>). These patterns in older adults were independent of vaccine response status, and were confirmed for young responders and older non-responders in the 2010-11 cohort (data not shown).</p>
+        <p>The second cluster was slightly up-regulated on day 2 in young subjects and was down-regulated on day 7 and 28. Notably, in older and frail adults, up-regulation of this cluster was delayed until day 7. Pathway analysis of this cluster revealed activation of several immune pathways such as NOD-like receptor signaling and T cell and B cell receptor signaling.</p>
+        <p>To test whether age-dependent differences in the transcriptional program induced by vaccination were associated with altered gene expression levels pre-vaccination, we directly compared baseline gene expression levels in young versus older adults and identified 40 differentially expressed genes (<xref ref-type="supplementary-material" rid="SD2">Supplementary Table 2</xref>). Interestingly, 31 genes up-regulated in older, compared to young subjects and only one up-regulated (LRRN3) in young relative to older subjects at baseline were also up-regulated in the response signature, suggesting that some vaccine-induced genes are already elevated at baseline in older adults. Notably, the NOD-like receptor and Toll-like receptor pathways showed higher basal expression in older adults in both the 2010-11 and 2011-12 cohorts. No pathways were differentially expressed between older and frail adults.</p>
+      </sec>
+      <sec id="s2_3">
+        <title>Pathways involved in age-specific vaccination response</title>
+        <p>To identify molecular mechanisms underlying vaccination response in young and older adults, we evaluated the temporal activity of blood transcription modules (BTMs, [<xref rid="R13" ref-type="bibr">13</xref>]) and immune-related pathways. We first evaluated a type I interferon response module (M127), in view of previous findings suggesting early upregulation of interferon stimulated genes following influenza vaccination. We found this module was significantly induced at day 2 post-vaccine specifically in young responders (p=0.01). Further BTM analyses revealed induction of B and T cell-associated modules, beginning at day 7 post-vaccine, in young vaccine responders that was not found in young non-responders. Interestingly, no significant induction of T cell module activity was found in older vaccine responders, and B cell module activity was induced at day 2 instead of day 7; in addition, modules related to monocyte and myeloid cell activity were induced at day 28 (e.g. M4.3, M11.0, and S4; <xref ref-type="supplementary-material" rid="SD7">Supplementary Figure 1</xref> and <xref ref-type="supplementary-material" rid="SD3">Supplementary Tables 3A</xref> and <xref ref-type="supplementary-material" rid="SD4">3B</xref>). Analysis of pathway activity showed one cluster (cluster A) whose temporal patterns followed the down-regulated response signature (compare Figures <xref ref-type="fig" rid="F2">2</xref> and <xref ref-type="fig" rid="F4">4</xref>). Cluster A included &#x201C;MAPK signaling&#x201D; and &#x201C;JAK-STAT signaling&#x201D;, as well as innate immune pathways such as TLR-signaling, and had higher activities at day 7 in older responders. Cluster B, including &#x201C;Fc gamma R mediated phagocytosis&#x201D; and lysosome-associated pathways, appeared similar to cluster A but showed lower activity, particularly in older non-responders compared to older responders. Cluster C contained several metabolic pathways and showed a temporal pattern that followed the up-regulated response signature, with higher activity at day 7 in young adults and day 2 in older adults (Figure <xref ref-type="fig" rid="F4">4</xref> and <xref ref-type="supplementary-material" rid="SD5">Supplementary Tables 4A</xref> and <xref ref-type="supplementary-material" rid="SD6">4B</xref>). The pathways in cluster C, including &#x201C;TCA cycle&#x201D; and &#x201C;Oxidative phosphory-lation&#x201D;, were strongly induced in young vaccine responders but not in young non-responders. However, non-responders showed a qualitatively similar dynamic pattern of pathway activity compared to age-matched responders.</p>
+        <fig id="F4" orientation="portrait" position="float">
+          <label>Figure 4</label>
+          <caption>
+            <title>Pathway activities in response to vaccine</title>
+            <p>QuSAGE [<xref rid="R34" ref-type="bibr">34</xref>] was used to screen a subset of immunological pathways from the KEGG database to identify pathways with significantly (FDR&lt;0.005) altered activity (rows) during one or more time-points (x-axis) in at least one of the age-groups. Three major clusters indicated by <bold>A</bold>, <bold>B</bold> and <bold>C</bold> were detected. Coloring represents down-regulated (yellow) to up-regulated (blue) activity relative to the pre-vaccination time-point. +R indicates vaccine responder status, -R indicates non-responder status. See <xref ref-type="supplementary-material" rid="SD5">Supplementary Table 4A</xref> for a tabulation of pathway activities and <xref ref-type="supplementary-material" rid="SD6">Supplementary Table 4B</xref> for a list of associated FDR values. In the figure, time-points with FDR&lt;0.05 are indicated with an asterisk.</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g004"/>
+        </fig>
+      </sec>
+      <sec id="s2_4">
+        <title>Increased mitochondrial biogenesis in responders</title>
+        <p>We found that the oxidative phosphorylation (OXPHOS) pathway was significantly induced in vaccine responders in both the 2009-10 and 2010-11 cohorts (Figure <xref ref-type="fig" rid="F5">5A and 5B</xref>). To further explore the relevance of this pathway to a successful vaccination response, we assessed the activity for the nuclear respiratory factor 1 (NRF1), nuclear respiratory factor 2 (NRF2) and E2F1 transcription factors by examining the behavior of their target genes. NRF1 and NRF2 function as transcription factors that activate the expression of key nuclear-encoded genes involved in cellular respiration, heme biosynthesis, and mitochondrial DNA (mtDNA) transcription and replication. We observed significantly higher enrichment of target genes of all three transcription factors in responders compared to non-responders (p&lt;0.05) in young subjects, implicating the activation of these factors in successful vaccination responses (Figure <xref ref-type="fig" rid="F5">5C</xref>). We also observed significant enrichment of target genes for other nuclear factors involved in regulation of mitochondrial biogenesis, such as CREB and YY1 in responders. However, induction of NRF1 appeared to be PGC1-alpha independent, since target genes of PGC1-alpha were not enriched in young responders or non-responders. These results support the importance of the OXPHOS signature in responding individuals.</p>
+        <fig id="F5" orientation="portrait" position="float">
+          <label>Figure 5</label>
+          <caption>
+            <title>Increased mitochondrial activity among young vaccine responders</title>
+            <p>QuSage [<xref rid="R34" ref-type="bibr">34</xref>] was used to quantify activity of the KEGG oxidative phosphorylation pathway for young responders (open symbols) and older non-responders (filled symbols). +R indicates responder status and &#x2013;R non-responder status. Results are shown for (<bold>A</bold>) the 2011-12 cohort and (<bold>B</bold>) the independent 2010-11 cohort. FDR values for (<bold>A</bold>) are provided in <xref ref-type="supplementary-material" rid="SD6">Supplementary Table 4B</xref>. For the 2010-11 cohort (<bold>B</bold>), statistically significant p values in young responders were at day 2 (p = 1.1e-05), day 7 (p = 2.3e-11), and day 28 (p = 2.4e-09) post-vaccine. For older non-responders significant p values were at day 2 (p=0.005) and day 28 (p = 2.1e-05) post-vaccine; the p value at day 7 was not significant (p &gt; 0.05). (<bold>C</bold>) Over-representation (&#x2212;log<sub>10</sub>(p-value)) of NRF1 (dashed lines), NRF2 (dash-dot lines) and E2F1 (solid lines) target genes calculated by the hypergeometric test in responders (open symbols) and non-responders (filled symbols) across time (x-axis). Target gene sets for NRF1, NRF2 and E2F1 were defined by the presence of promoter-region binding sites defined by V$NRF1_Q6, V$NRF2_Q4 and V$E2F1_Q4_01 TRANSFAC matrices, respectively. Significant p values were found for E2F1 in young responders at day 7 (FDR = 0.03) and day 28 (FDR = 1.76e-07) post-vaccine; for NRF1 in young responders at day 7 (FDR = 0.001) and day 28 (FDR = 2.3e-07) post-vaccine and in young non-responders at day 7 (FDR = 0.007) post-vaccine; and for NRF2 in young responders at day 28 (FDR = 0.03) post-vaccine. All remaining p values did not achieve statistical significance.</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g005"/>
+        </fig>
+        <p>To experimentally validate the OXPHOS gene expression signature of the responders and determine if this was associated with increased mitochondrial biogenesis (i.e. more mitochondria/cell), we examined mitochondrial DNA (mtDNA), which encodes 13 essential proteins of the OXPHOS chain and exists in multiple copies that usually correlate with organelle amount [<xref rid="R14" ref-type="bibr">14</xref>, <xref rid="R15" ref-type="bibr">15</xref>]. Real-time qPCR analysis of mtDNA content in a subset of our cohort showed a significant increase in mtDNA copy number of young responders compared with young non-responders at 7 days post-vaccination (Figure <xref ref-type="fig" rid="F6">6A</xref>). In addition, older responders displayed elevated mtDNA copy number at day 2 post-vaccination, correlating with induction of the OXPHOS gene signature in this group (Figure <xref ref-type="fig" rid="F6">6A</xref>). We subsequently found that expression of HSP60, a mitochondrial matrix chaperone, was significantly elevated in protein extracts analyzed in a subset of responder PBMCs, compared to non-responders (at day 7 post-vaccination in young subjects and on all days in older subjects). In addition, mitochondrial succinate dehydrogenase subunit A (SDHA), a subunit of mitochondrial OXPHOS complex II, was also significantly elevated at the protein level in young responders vs. young non-responders at day 2 after vaccination, as well as in older responders vs. older non-responders at day 2, 7 and 28 (Figure <xref ref-type="fig" rid="F6">6B and 6C</xref>). This correlated with SDHA and many other OXPHOS genes being elevated based on transcriptional profiling. Taken together, these data are consistent with a role for mitochondrial biogenesis, perhaps driving increased TCA cycle and OXPHOS activity, in vaccine responders.</p>
+        <fig id="F6" orientation="portrait" position="float">
+          <label>Figure 6</label>
+          <caption>
+            <title>Mitochondrial DNA and OXPHOS protein abundance confirm the elevated OXPHOS signature of responders</title>
+            <p>(<bold>A</bold>) Relative mtDNA abundance in young (left panel) and older subjects (right panel) is significantly altered between vaccine responders (open boxes) and non-responders (filled boxes) at day 7 for young responders, with a trend at day 2 for older responders, compared to non-responders. mtDNA values are normalized with respect to the pre-vaccination time point. A subset from the cohort of older responders (n=7), older non-responders (n=8), young responders (n=6) and young non-responders (n=5) was evaluated. Dashed lines indicate the lower and upper range of values, with outliers indicated by open circles, bars indicating the 25<sup>th</sup> and 75<sup>th</sup> percentiles and dark horizontal lines the medians ** p&lt;0.05, *p&lt;0.1 (<bold>B</bold>) Induction of the mitochondrial chaperone protein HSP60 and mitochondrial Complex II component SDHA after influenza vaccination in young (left panel) compared to older adults (right panel), stratified by vaccine status (n=5 for each of the categories of older responder, older non-responder, young responder and young non-responder; relative pixel intensities of HSP60 and SDHA using &#x3B2;-actin as a loading control are normalized to day 0). For HSP60, a statistically significant increase in protein expression was found for young responders compared to non-responders at day 7 (p=0.04), and for older responders compared to non-responders at days 2 (p=0.007), 7 (p=0.0001), and 28 (p=0.0001). For SDHA, a significant increase in expression in young responders compared to non-responders was found at day 2 (p=0.007), and in older responders vs. older non-responders at days 2 (p=0.006), 7 (p=0.002), and 28 (p=0.007; p values were calculated using a t-test). (C) Representative Western blot of HSP60 and SDHA expression for young and older vaccine responders and non-responders.</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g006"/>
+        </fig>
+      </sec>
+      <sec id="s2_5">
+        <title>Age-independent, response-specific alterations in metabolic gene-expression</title>
+        <p>Our pathway analysis predicted that successful vaccination responses would be associated with early activation of antiviral pathways followed by activation of metabolic pathways. We sought to confirm these predictions using previously published gene expression data from human studies of influenza vaccination [<xref rid="R7" ref-type="bibr">7</xref>-<xref rid="R9" ref-type="bibr">9</xref>, <xref rid="R16" ref-type="bibr">16</xref>]. This analysis confirmed the induction of genes in our identified response signature at day 7 (Figure <xref ref-type="fig" rid="F7">7</xref>). In some cohorts, these genes were induced as early as day 2 post-vaccination, but returned to baseline levels in most cohorts by day 28. Many antiviral pathways were activated starting around 1 day post-vaccination, and returned to baseline levels by day 2 post-vaccination. Notably, the &#x201C;Oxidative phosphorylation (OXPHOS)&#x201D; signature we found to be induced on day 7 in young responders was also enriched in other datasets examined (Figure <xref ref-type="fig" rid="F7">7</xref>).</p>
+        <fig id="F7" orientation="portrait" position="float">
+          <label>Figure 7</label>
+          <caption>
+            <title>Enrichment of response and OXPHOS signature in published studies of influenza vaccine response</title>
+            <p>Each row indicates a pathway gene set and each column represents a separate publicly available dataset (indicated by GEO accession number) evaluating influenza vaccine response. Average fold-changes for a gene set with respect to the study-specific baseline are shown for varying times after vaccination as indicated for general ranges at the top of the figure and in hours (h) or days (d) at the bottom of the figure following each GEO accession number. QuSAGE [<xref rid="R34" ref-type="bibr">34</xref>] was used to assess the activity of a subset of immunological pathways from the KEGG database and response signature in published studies, with significance (FDR&lt;0.05) depicted by an asterisk. Pathways enriched in a minimum of five columns are depicted. The vaccine response signature described in this report is denoted as &#x201C;Yale Response&#x201D; (arrow). Coloring represents down-regulated (blue) to up-regulated (red) activity relative to the pre-vaccination time-point.</p>
+          </caption>
+          <graphic xlink:href="aging-07-38-g007"/>
+        </fig>
+      </sec>
+    </sec>
+    <sec id="s3">
+      <title>DISCUSSION</title>
+      <p>We have carried out the first systems-level assessment of alterations in gene expression prior to and following administration of the seasonal trivalent inactivated influenza vaccine including both young (age 21-30) and older (age &#x2265; 70) adults. We screened 121 participants to identify 51 young and older subjects who met a stringent definition of vaccine response (at least a four-fold increase in post- versus pre-vaccine HAI titer for at least two of three strains in the seasonal vaccine), or non-response (no four-fold increase in post-vaccine titer to any of the three vaccine strains). Consistent with previous observations, we found that older subjects are frequently non-responders to vaccine. Interestingly, young non-responders had higher baseline titers to at least one of the vaccine strains (frequently the H1N1 strain), suggesting in some cases that non-response could reflect inability to further increase an already elevated baseline HAI titer. We tried to minimize this potential effect through our selection of responders and non-responders. For example, the highest pre-vaccine titer found in a young non-responder analyzed in our cohort was 1:256 for one vaccine strain (Figure <xref ref-type="fig" rid="F1">1</xref>); however, the two other strains showed four- to eight-fold lower baseline titers and a lack of four-fold response. Similarly, the highest baseline titer found in an older non-responder was 1:128 for one strain, but the two other strains showed no change following vaccination with baseline levels eight- to sixteen-fold lower. Thus, using these stringent definitions of vaccine response and non-response, we sought to elucidate gene expression signatures associated with successful vaccine antibody response, and whether such signatures are affected by age.</p>
+      <p>We identified two clusters of genes, one induced on day 2 and the other on day 7 in young individuals&#x2014;particularly in vaccine responders&#x2014;which were enriched for innate and adaptive immune pathways (Figure <xref ref-type="fig" rid="F4">4</xref> and <xref ref-type="supplementary-material" rid="SD5">Supplementary Tables 4A</xref> and <xref ref-type="supplementary-material" rid="SD6">4B</xref>). Notably, the day 7 signature was induced in older responders at day 2 with non-significant trends toward down-regulation at day 7 and up-regulation at day 28, suggesting age-associated dysregulation (Figure <xref ref-type="fig" rid="F4">4</xref>). No vaccine responders were found for subjects meeting criteria for the geriatric syndrome of frailty, characterized by impaired stress resistance and increased mortality and disability, and older frail non-responders to vaccine showed a complete absence of induction of this signature. These findings extend previous work identifying pre-vaccine gene expression patterns associated with influenza vaccine response in older adults [<xref rid="R10" ref-type="bibr">10</xref>] by analyzing samples obtained at both pre-and post-vaccine time points to provide a picture of immune system activation by the trivalent inactivated influenza vaccine. It is conceivable that previous exposures to influenza, expected to be more extensive in older adults, could contribute to some alterations in influenza vaccine response; for example, the composition of the vaccine used in both the 2010-11 and 2011-12 cohorts contained the A/California/7/09 (H1N1) strain for which older adults have been reported to have increased titers of cross-reactive antibodies [<xref rid="R17" ref-type="bibr">17</xref>, <xref rid="R18" ref-type="bibr">18</xref>]. However, in our cohort older adults generally had decreased pre-vaccine HAI titers compared to young adults and, for the transcriptional profiling, we specifically selected older individuals who failed to mount a fourfold increase (and in the majority of cases, had no change) in HAI titer to all strains in the vaccine, including the A/California/7/09 strain. Combined with evidence for dysregulated innate immune responses in older adults (also less likely to reflect previous exposure to influenza), we believe our results indicate that many molecular mechanisms underlying vaccine response differ between young and older adults.</p>
+      <p>Our analyses revealed elevation of an type I interferon response at day 2 post-vaccine and a plasma cell signature at day 7, in young vaccine responders&#x2014;findings in agreement with previous studies of influenza vaccine response in young cohorts [<xref rid="R6" ref-type="bibr">6</xref>-<xref rid="R8" ref-type="bibr">8</xref>, <xref rid="R19" ref-type="bibr">19</xref>]. BTM analysis revealed activation of modules associated with B and T cells, particularly beginning at day 7 in young responders. This pattern was altered in older responders, with induction of B cell modules at day 2, monocyte and myeloid modules at day 28, and a lack of T cell module induction. Interestingly, we also observed a novel age-independent response specific signature enriched in oxidative phosphorylation (OXPHOS) genes. This OXPHOS signature was enriched at day 7 and 2 post-vaccine in young and older responders, respectively, compared to non-responders and was validated in two independent cohorts from two successive influenza vaccine seasons in which the composition of the vaccine was unchanged. In addition, targets of the NRF1 and NRF2 transcription factors, governing OXPHOS activity via activation of nuclear genes involved in mitochondrial biogenesis and metabolism, were significantly enriched in young responders [<xref rid="R20" ref-type="bibr">20</xref>]. Moreover, several other nuclear factors involved in mitochondrial biogenesis such as YY1, CREB and E2F1 were also enriched in responders. That the OXPHOS signature appears to be driven by an increase in mitochondrial biogenesis is indicated by a significant increase in relative mtDNA content in PBMCs from young vaccine responders, compared to non-responders, at day 7 post-vaccine. In older responders versus non-responders, an increase in mtDNA (normalized to day 0 content) was found at day 2 but not day 7&#x2013;potentially reflecting a differential OXPHOS response, though this day 2 increase did not reach statistical significance. The substantial increase in both SDHA and Hsp60 protein expression at days 2 and 7 post-vaccine, relative to day 0, in both young and older vaccine responders is also consistent with an overall increase in mitochondrial biogenesis. However, this increase was blunted or absent in non-responders, particularly in the older group (Figure <xref ref-type="fig" rid="F6">6</xref>). Taken together, these findings indicate a novel role for enhanced mitochondrial biogenesis in the response to influenza vaccination in humans. Whether this indicates an enhanced need for TCA cycle and OXPHOS activity or some other critical metabolic or signaling function (e.g. innate immune signaling, discussed below) that mitochondria provide remains to be determined. In this regard, it is noteworthy that the mitochondrial biogenesis response is PGC-1&#x3B1;-independent. There are other PGC-1-related proteins with non-overlapping functions [<xref rid="R20" ref-type="bibr">20</xref>]. For example, PRC also co-activates NRF1 and NRF2 and has been implicated in pro-inflammatory responses [<xref rid="R21" ref-type="bibr">21</xref>]; it is attractive to speculate that this could contribute to the unique mitochondrial biogenesis response observed in this study.</p>
+      <p>The identity of the cell type(s) responsible for the OXPHOS signature remains to be determined. In this regard, it is notable that metabolic differences have been reported in T cell subsets, with a predominance of oxidative phosphorylation associated with resting or memory T cells and aerobic glycolysis associated with activation and T helper subsets [<xref rid="R22" ref-type="bibr">22</xref>]. Thus, the OXPHOS signature could reflect metabolic priming in memory T cells; however, activation of another T or B cell subset(s) remains possible. This signature could also indicate a need to alter mitochondrial biogenesis or dynamics to properly activate innate immune responses, as mitochondria are critically involved in innate immune signaling [<xref rid="R23" ref-type="bibr">23</xref>]. Nonetheless, the OXPHOS signature could serve as a biomarker for a successful vaccine response, and raises the possibility that interventions targeting mitochondrial pathways could enhance vaccine efficacy in older adults. One potential example of such an agent would be bezafibrate, a compound used to treat hyperlipidemia that stimulates mitochondrial biogenesis through its activity as a PPAR agonist [<xref rid="R24" ref-type="bibr">24</xref>]. In addition, mitochondria-derived reactive oxygen species (mROS) are required for normal physiology and cellular signaling [<xref rid="R25" ref-type="bibr">25</xref>], and could be modulated during aging. Several lines of evidence point to a role of mROS in proliferation and production of IL-2 following TCR/CD28 stimulation, indicating that mROS are required during early stages of T cell activation. Additionally, oral administration of antioxidants in mice reduced the expansion of T cells following viral infection, suggesting that ROS are required for T cell function in vivo [<xref rid="R26" ref-type="bibr">26</xref>]. These results, coupled with our findings, suggest that the enhanced expression of OXPHOS genes upon vaccination may be required to rewire mitochondrial metabolism to fine-tune mROS levels, thus properly licensing antigen receptor signaling and activation of T and B cells. Integrating these transcriptional profiling data with genotyping information could provide further insights [<xref rid="R27" ref-type="bibr">27</xref>]. Additional experiments should also clarify whether alternate formulations of influenza vaccine developed for older adults, such as high-dose or intradermal preparations [<xref rid="R28" ref-type="bibr">28</xref>], are able to modify these alterations in gene expression.</p>
+    </sec>
+    <sec sec-type="materials|methods" id="s4">
+      <title>MATERIALS AND METHODS</title>
+      <sec id="s4_1">
+        <title/>
+        <sec id="s4_1_1">
+          <title>Clinical Study Design and Recruitment of Participants</title>
+          <p>Healthy adults (older &#x2265; 70 years of age, young 21-30 years) were recruited at seasonal influenza vaccination clinics organized by Yale University Health Services during the 2010 &#x2013; 2011 and 2011-2012 vaccine seasons. Participants with an acute illness two weeks prior to recruitment were excluded from the study, as were individuals with primary or acquired immune-deficiency, use of immunomodulating medications including steroids or chemotherapy, a history of malignancy other than localized skin or prostate cancer, or a history of cirrhosis or renal failure requiring hemodialysis. All older subjects enrolled in the study were evaluated for frailty using the Fried protocol [<xref rid="R11" ref-type="bibr">11</xref>]. Briefly, frailty was determined based on a 5-point scale ranging from 0 to 5, with 1 point for each of five frailty criteria, including exhaustion (with or without effort), decreased grip strength, slow gait speed, report of decreased physical activity, and self-reported involuntary weight loss (&gt;10lb in past one year)&#x2014;all assessed using standardized instruments. Participants with zero criteria were considered non-frail, while those with 3 or more criteria were considered frail.</p>
+          <p>Blood samples were collected into Vacutainer sodium heparin tubes and serum tubes (Becton Dickinson) at four different time points, immediately prior to administration of vaccine (day 0) and on days 2 (2011-2012), 4 (2010-2011) 7 and 28.</p>
+        </sec>
+        <sec id="s4_1_2">
+          <title>Isolation of Biological samples</title>
+          <sec id="s4_1_2_1">
+            <title>Peripheral Blood Mononuclear Cells (PBMC)</title>
+            <p>Peripheral Blood Mononuclear Cells (PBMCs) were isolated from heparinized blood using Histopaque 1077 (Sigma) gradient centrifugation as described earlier [<xref rid="R29" ref-type="bibr">29</xref>-<xref rid="R31" ref-type="bibr">31</xref>]. PBMCs were washed once with 1x Hank's Balanced Salt Solution (HBSS) and suspended in 1x RPMI 1640 complete medium containing 10% Fetal Bovine Serum, Penicillin and Streptomycin until further use.</p>
+          </sec>
+          <sec id="s4_1_2_2">
+            <title>Serum</title>
+            <p>BD Vacutainer Serum tubes (Becton Dickinson) containing blood samples were allowed to clot and centrifuged to isolate serum. Serum samples were stored at &#x2212;80&#xB0;C until further use.</p>
+          </sec>
+          <sec id="s4_1_2_3">
+            <title>Total RNA isolation</title>
+            <p>About 5&#xD7;10<sup>6</sup> PBMCs freshly isolated at each time point (day 0, 2/4, 7 and 28) were suspended in Trizol (Life Technologies) and immediately stored at &#x2212;80&lt;sup&gt;00BA&lt;/sup&gt; C. Total RNA was isolated using the miRNeasy Mini Kit (Qiagen, CA) according to the manufacturer's instructions. Briefly, tubes containing PBMCs lysed with Trizol reagent was incubated at room temperature (15<sup>0</sup>C to 20<sup>0</sup>C) for 5 minutes. After chloroform extraction, the upper aqueous layer containing total RNA were collected to a clean sample tubes for processing using a QiaCube instrument (Qiagen, CA). The concentration of isolated total RNA was determined using the ND1000 Spectrophotometer, Nano Drop instrument. RNA samples were stored at &#x2212;80&#xB0;C until further use.</p>
+          </sec>
+        </sec>
+        <sec id="s4_1_3">
+          <title>RNA Processing and Array Analysis</title>
+          <p>For gene expression analyses, samples were processed at the Yale Center for Genome Analysis (YCGA). Each RNA sample was quantified and integrity assessed by the Agilent 2100 BioAnalyser (Agilent, CA). Samples were processed for cRNA generation using the Illumina TotalPrep cRNA Amplification Kit and subsequently hybridized to the Human HT12-V4.0 BeadChip (Illumina, CA).</p>
+        </sec>
+        <sec id="s4_1_4">
+          <title>HAI Titer Measurement</title>
+          <p>Hemagglutination inhibition (HAI) assays were performed as described [<xref rid="R32" ref-type="bibr">32</xref>] on serum samples collected at days 0 and 28 after vaccination to determine antibody titers against each strain of influenza included in the 2010-2011 and 2011-2012 vaccines (A/California/7/09 (H1N1)-like virus; A/Perth /16/2009 (H3N2); and B/Brisbane/60/2008).</p>
+        </sec>
+        <sec id="s4_1_5">
+          <title>mtDNA content analysis</title>
+          <p>Total DNA was isolated from PBMCs using DNeasy kits (QIAGEN). A convenience sample of 7 older responders, 8 older non-responders, 6 young responders and 5 young non-responders was evaluated. Samples were adjusted to 1 ng/&#x3BC;l final concentration and subjected to SYBR Green-based real-time qPCR analysis of both nuclear and mitochondrial DNA content as described in Venegas et al. [<xref rid="R33" ref-type="bibr">33</xref>]. Biological samples were analyzed in triplicate: day 0 samples were centered at 1, and day 2, 7, and 28 samples were displayed as fold change relative to day 0. A t-test was used to evaluate statistical significance. The following primers were utilized for qPCR:</p>
+          <p>mtDNA tRNALeu Fwd: CACCCAAGAACAGGGTTTGT</p>
+          <p>mtDNA tRNALeu Rev: TGGCCATGGGTATGTTGTTA</p>
+          <p>nDNA &#x3B2;2-microglobulin Fwd: TGCTGTCTCCATGTTTGATGTATCT</p>
+          <p>nDNA &#x3B2;2-microglobulin Rev: TCTCTGCTCCCCACCTCTAAGT</p>
+        </sec>
+        <sec id="s4_1_6">
+          <title>Western Blot Analysis</title>
+          <p>Approximately 1&#xD7; 10<sup>6</sup> PBMCs were treated with cell lysis buffer (Cell Signaling Technology) from a subset of 5 young responders, 5 young non-responders, 5 older responders, and 5 older non-responders for which sufficient cell amounts were available. Lysed samples were briefly sonicated, and kept on ice for an additional 10 minutes. Lysates were mixed with 2x Laemmli Sample buffer, boiled and loaded onto 4-20% mini protean ready gels (BioRad). Following transfer, membranes were blocked with 5% milk powder in 1X TBS-tween 20 buffer at room temperature for 1 hour. Blocked membranes were incubated with primary antibodies against human HSP60 (Cell Signaling Technology), Succinate Dehydrogenase (SDHA) (Cell Signaling Technology) and HRP conjugated beta actin (anti-human beta-actin, Sigma), following by an HRP conjugated anti-Rabbit secondary antibody (Cell Signaling Technology) in 1x TBS-tween 20 containing 5% milk powder. Membranes were washed and developed and pixel intensities of the specific protein band and corresponding actin band on autoradiographs were estimated using ImageJ software. The relative pixel intensities (signal/actin) were plotted and statistical significance evaluated using a t-test.</p>
+        </sec>
+        <sec id="s4_1_7">
+          <title>Microarray analysis</title>
+          <p>RNA samples were processed and hybridized to HumanHT-12v4 Expression BeadChip (Illumina San Diego, CA), NCBI RefSeq Release 38 (November 7, 2009) and selected from GenBank, dbEST, and RefSeq. Arrays were processed at Yale's Keck Biotechnology Resource Laboratory and raw expression data were output by the Illumina GenomeStudio software. Microarray data are available through the Gene Expression Omnibus (GEO) Database, accession number GSE59635 and GSE59654. The data were Quantile normalized. Genes with multiple probes were collapsed to keep genes (official gene symbol) with highest average expression within differentially expressed genes. Pathway activity was calculated using QuSage [<xref rid="R34" ref-type="bibr">34</xref>] upon collapsing multiple probe ids mapping to a single official gene symbol. Differential expression was defined for each gene at each post-vaccination time-point using two criteria: (1) an absolute fold-change of at least 1.25 relative to pre-vaccination time point and (2) a significant change in expression by LIMMA (BioConductor (doi: 10.1186/gb-2004-5-10-r80.) implementation) after correction for multiple hypothesis testing (q &lt;0.05). Differentially expressed genes were grouped into two clusters using hierarchical clustering by ward. All of this analysis was performed using BioConductor software packages (doi: 10.1186/gb-2004-5-10-r80) in R.</p>
+        </sec>
+        <sec id="s4_1_8">
+          <title>Transcription factor target identification</title>
+          <p>Using the UCSC Genome Bioinformatics site, we downloaded the transcription start site data (TSS) for all human RefSeq genes, defined by the January 2010 refGene table (doi: 10.1093/nar/gki476). The region +/&#x2212;2Kb around each TSS was identified within a genome-wide multiple alignment of 45 vertebrate species to the human genome (doi: 10.1101/gr.1933104), also available through the UCSC Genome Bioinformatics site. In order to identify putative transcription factor binding sites, the human sequences, along with aligned regions from mouse, were masked for repetitive elements using RepeatMasker (<ext-link ext-link-type="uri" xlink:href="http://www.repeatmasker.org">http://www.repeatmasker.org</ext-link>) and then analyzed using the TRANSFAC MATCH (doi: 10.1093/nar/gkg585) algorithm with a cutoff, as defined within the database, chosen to minimize the sum of false positives and false negatives. The analysis was performed for all high quality vertebrate transcription factor matrices in the 2011.1 release of TRANSFAC (doi: 10.1093/nar/gkg108), and putative binding sites were considered to be evolutionarily conserved if matches were also found at the aligned positions in the mouse sequences and had no gaps present in the multiple alignment between the species being compared. Each TRANSFAC matrix was linked to a set of gene symbols describing potential binding factors using annotations present in the "Binding Factor" field of the database. Only vertebrate TRANSFAC matrices that could be linked to a HGNC gene symbol, either directly or through an alias listed in NCBI gene, were included.</p>
+        </sec>
+      </sec>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title>SUPPLEMENTAL DATA</title>
+      <supplementary-material content-type="local-data" id="SD1">
+        <media mimetype="application" mime-subtype="doc" xlink:href="aging-07-38-s001.doc" orientation="portrait" xlink:type="simple" id="d35e965" position="anchor"/>
+      </supplementary-material>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title/>
+      <supplementary-material content-type="local-data" id="SD2">
+        <media mimetype="application" mime-subtype="doc" xlink:href="aging-07-38-s002.doc" orientation="portrait" xlink:type="simple" id="d35e969" position="anchor"/>
+      </supplementary-material>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title/>
+      <supplementary-material content-type="local-data" id="SD3">
+        <media mimetype="application" mime-subtype="doc" xlink:href="aging-07-38-s003.doc" orientation="portrait" xlink:type="simple" id="d35e973" position="anchor"/>
+      </supplementary-material>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title/>
+      <supplementary-material content-type="local-data" id="SD4">
+        <media mimetype="application" mime-subtype="doc" xlink:href="aging-07-38-s004.doc" orientation="portrait" xlink:type="simple" id="d35e977" position="anchor"/>
+      </supplementary-material>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title/>
+      <supplementary-material content-type="local-data" id="SD5">
+        <media mimetype="application" mime-subtype="doc" xlink:href="aging-07-38-s005.doc" orientation="portrait" xlink:type="simple" id="d35e981" position="anchor"/>
+      </supplementary-material>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title/>
+      <supplementary-material content-type="local-data" id="SD6">
+        <media mimetype="application" mime-subtype="doc" xlink:href="aging-07-38-s006.doc" orientation="portrait" xlink:type="simple" id="d35e985" position="anchor"/>
+      </supplementary-material>
+    </sec>
+    <sec sec-type="supplementary-material">
+      <title/>
+      <supplementary-material content-type="local-data" id="SD7">
+        <media mimetype="application" mime-subtype="pdf" xlink:href="aging-07-38-s007.pdf" orientation="portrait" xlink:type="simple" id="d35e989" position="anchor"/>
+      </supplementary-material>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <p>We thank Dr. Vincent Quagliarello for critical review of the manuscript. We are also grateful to Ann-Marie Cirkot RN from the Yale Health Services and to participants in this study. This work was supported by the National Institute of Allergy and Infectious Diseases (U19 AI089992 to S.M.K., S.H.K. and A.C.S.), and the National Institute on Aging (K24 AG042489 to A.C.S., R01 AG047632 to G.S.S., K07 AG043587 to T.M.G., and Yale Claude D. Pepper Older Americans Independence Center P30 AG021342) of the National Institutes of Health, and by an American Cancer Society Postdoctoral Fellowship (PF-13-035-01-DMC to A.P.W.).</p>
+    </ack>
+    <fn-group>
+      <fn fn-type="conflict">
+        <p>
+          <bold>Conflict of interest statement</bold>
+        </p>
+        <p>The authors have no conflict of interests to declare.</p>
+      </fn>
+    </fn-group>
+    <ref-list>
+      <title>REFERENCES</title>
+      <ref id="R1">
+        <label>1</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Thompson</surname>
+              <given-names>WW</given-names>
+            </name>
+            <name>
+              <surname>Shay</surname>
+              <given-names>DK</given-names>
+            </name>
+            <name>
+              <surname>Weintraub</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Brammer</surname>
+              <given-names>L</given-names>
+            </name>
+            <name>
+              <surname>Cox</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Anderson</surname>
+              <given-names>LJ</given-names>
+            </name>
+            <name>
+              <surname>Fukuda</surname>
+              <given-names>K</given-names>
+            </name>
+          </person-group>
+          <article-title>Mortality associated with influenza and respiratory syncytial virus in the United States</article-title>
+          <source>JAMA</source>
+          <year>2003</year>
+          <volume>289</volume>
+          <fpage>179</fpage>
+          <lpage>186</lpage>
+          <pub-id pub-id-type="pmid">12517228</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R2">
+        <label>2</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Rivetti</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Jefferson</surname>
+              <given-names>T</given-names>
+            </name>
+            <name>
+              <surname>Thomas</surname>
+              <given-names>R</given-names>
+            </name>
+            <name>
+              <surname>Rudin</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Rivetti</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Di Pietrantonj</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Demicheli</surname>
+              <given-names>V</given-names>
+            </name>
+          </person-group>
+          <article-title>Vaccines for preventing influenza in the elderly</article-title>
+          <source>Cochrane Database Syst Rev</source>
+          <year>2006</year>
+          <fpage>D004876</fpage>
+        </element-citation>
+      </ref>
+      <ref id="R3">
+        <label>3</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Yao</surname>
+              <given-names>X</given-names>
+            </name>
+            <name>
+              <surname>Hamilton</surname>
+              <given-names>RG</given-names>
+            </name>
+            <name>
+              <surname>Weng</surname>
+              <given-names>NP</given-names>
+            </name>
+            <name>
+              <surname>Xue</surname>
+              <given-names>QL</given-names>
+            </name>
+            <name>
+              <surname>Bream</surname>
+              <given-names>JH</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Tian</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Yeh</surname>
+              <given-names>SH</given-names>
+            </name>
+            <name>
+              <surname>Resnick</surname>
+              <given-names>B</given-names>
+            </name>
+            <name>
+              <surname>Xu</surname>
+              <given-names>X</given-names>
+            </name>
+            <name>
+              <surname>Walston</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Fried</surname>
+              <given-names>LP</given-names>
+            </name>
+            <name>
+              <surname>Leng</surname>
+              <given-names>SX</given-names>
+            </name>
+          </person-group>
+          <article-title>Frailty is associated with impairment of vaccine-induced antibody response and increase in post-vaccination influenza infection in community-dwelling older adults</article-title>
+          <source>Vaccine</source>
+          <year>2011</year>
+          <volume>29</volume>
+          <fpage>5015</fpage>
+          <lpage>5021</lpage>
+          <pub-id pub-id-type="pmid">21565245</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R4">
+        <label>4</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Goronzy</surname>
+              <given-names>JJ</given-names>
+            </name>
+            <name>
+              <surname>Weyand</surname>
+              <given-names>CM</given-names>
+            </name>
+          </person-group>
+          <article-title>Understanding immunosenescence to improve responses to vaccines</article-title>
+          <source>Nat Immunol</source>
+          <year>2013</year>
+          <volume>14</volume>
+          <fpage>428</fpage>
+          <lpage>436</lpage>
+          <pub-id pub-id-type="pmid">23598398</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R5">
+        <label>5</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Shaw</surname>
+              <given-names>AC</given-names>
+            </name>
+            <name>
+              <surname>Goldstein</surname>
+              <given-names>DR</given-names>
+            </name>
+            <name>
+              <surname>Montgomery</surname>
+              <given-names>RR</given-names>
+            </name>
+          </person-group>
+          <article-title>Age-dependent dysregulation of innate immunity</article-title>
+          <source>Nat Rev Immunol</source>
+          <year>2013</year>
+          <volume>13</volume>
+          <fpage>875</fpage>
+          <lpage>887</lpage>
+          <pub-id pub-id-type="pmid">24157572</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R6">
+        <label>6</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Bucasas</surname>
+              <given-names>KL</given-names>
+            </name>
+            <name>
+              <surname>Franco</surname>
+              <given-names>LM</given-names>
+            </name>
+            <name>
+              <surname>Shaw</surname>
+              <given-names>CA</given-names>
+            </name>
+            <name>
+              <surname>Bray</surname>
+              <given-names>MS</given-names>
+            </name>
+            <name>
+              <surname>Wells</surname>
+              <given-names>JM</given-names>
+            </name>
+            <name>
+              <surname>Nino</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Arden</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Quarles</surname>
+              <given-names>JM</given-names>
+            </name>
+            <name>
+              <surname>Couch</surname>
+              <given-names>RB</given-names>
+            </name>
+            <name>
+              <surname>Belmont</surname>
+              <given-names>JW</given-names>
+            </name>
+          </person-group>
+          <article-title>Early patterns of gene expression correlate with the humoral immune response to influenza vaccination in humans</article-title>
+          <source>J Infect Dis</source>
+          <year>2011</year>
+          <volume>203</volume>
+          <fpage>921</fpage>
+          <lpage>929</lpage>
+          <pub-id pub-id-type="pmid">21357945</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R7">
+        <label>7</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Nakaya</surname>
+              <given-names>HI</given-names>
+            </name>
+            <name>
+              <surname>Wrammert</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Lee</surname>
+              <given-names>EK</given-names>
+            </name>
+            <name>
+              <surname>Racioppi</surname>
+              <given-names>L</given-names>
+            </name>
+            <name>
+              <surname>Marie-Kunze</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Haining</surname>
+              <given-names>WN</given-names>
+            </name>
+            <name>
+              <surname>Means</surname>
+              <given-names>AR</given-names>
+            </name>
+            <name>
+              <surname>Kasturi</surname>
+              <given-names>SP</given-names>
+            </name>
+            <name>
+              <surname>Khan</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>GM</given-names>
+            </name>
+            <name>
+              <surname>McCausland</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Kanchan</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Kokko</surname>
+              <given-names>KE</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Systems biology of vaccination for seasonal influenza in humans</article-title>
+          <source>Nat Immunol</source>
+          <year>2011</year>
+          <volume>12</volume>
+          <fpage>786</fpage>
+          <lpage>795</lpage>
+          <pub-id pub-id-type="pmid">21743478</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R8">
+        <label>8</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Tsang</surname>
+              <given-names>JS</given-names>
+            </name>
+            <name>
+              <surname>Schwartzberg</surname>
+              <given-names>PL</given-names>
+            </name>
+            <name>
+              <surname>Kotliarov</surname>
+              <given-names>Y</given-names>
+            </name>
+            <name>
+              <surname>Biancotto</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Xie</surname>
+              <given-names>Z</given-names>
+            </name>
+            <name>
+              <surname>Germain</surname>
+              <given-names>RN</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Olnes</surname>
+              <given-names>MJ</given-names>
+            </name>
+            <name>
+              <surname>Narayanan</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Golding</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Moir</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Dickler</surname>
+              <given-names>HB</given-names>
+            </name>
+            <name>
+              <surname>Perl</surname>
+              <given-names>S</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Global analyses of human immune variation reveal baseline predictors of postvaccination responses</article-title>
+          <source>Cell</source>
+          <year>2014</year>
+          <volume>157</volume>
+          <fpage>499</fpage>
+          <lpage>513</lpage>
+          <pub-id pub-id-type="pmid">24725414</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R9">
+        <label>9</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Obermoser</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>Presnell</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Domico</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>Xu</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>Y</given-names>
+            </name>
+            <name>
+              <surname>Anguiano</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Thompson-Snipes</surname>
+              <given-names>L</given-names>
+            </name>
+            <name>
+              <surname>Ranganathan</surname>
+              <given-names>R</given-names>
+            </name>
+            <name>
+              <surname>Zeitner</surname>
+              <given-names>B</given-names>
+            </name>
+            <name>
+              <surname>Bjork</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Anderson</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Speake</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Ruchaud</surname>
+              <given-names>E</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Systems scale interactive exploration reveals quantitative and qualitative differences in response to influenza and pneumococcal vaccines</article-title>
+          <source>Immunity</source>
+          <year>2013</year>
+          <volume>38</volume>
+          <fpage>831</fpage>
+          <lpage>844</lpage>
+          <pub-id pub-id-type="pmid">23601689</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R10">
+        <label>10</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Furman</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Jojic</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Kidd</surname>
+              <given-names>B</given-names>
+            </name>
+            <name>
+              <surname>Shen-Orr</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Price</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Jarrell</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Tse</surname>
+              <given-names>T</given-names>
+            </name>
+            <name>
+              <surname>Huang</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Lund</surname>
+              <given-names>P</given-names>
+            </name>
+            <name>
+              <surname>Maecker</surname>
+              <given-names>HT</given-names>
+            </name>
+            <name>
+              <surname>Utz</surname>
+              <given-names>PJ</given-names>
+            </name>
+            <name>
+              <surname>Dekker</surname>
+              <given-names>CL</given-names>
+            </name>
+            <name>
+              <surname>Koller</surname>
+              <given-names>D</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Apoptosis and other immune biomarkers predict influenza vaccine responsiveness</article-title>
+          <source>Mol Syst Biol</source>
+          <year>2013</year>
+          <volume>9</volume>
+          <fpage>659</fpage>
+          <pub-id pub-id-type="pmid">23591775</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R11">
+        <label>11</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Fried</surname>
+              <given-names>LP</given-names>
+            </name>
+            <name>
+              <surname>Tangen</surname>
+              <given-names>CM</given-names>
+            </name>
+            <name>
+              <surname>Walston</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Newman</surname>
+              <given-names>AB</given-names>
+            </name>
+            <name>
+              <surname>Hirsch</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Gottdiener</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Seeman</surname>
+              <given-names>T</given-names>
+            </name>
+            <name>
+              <surname>Tracy</surname>
+              <given-names>R</given-names>
+            </name>
+            <name>
+              <surname>Kop</surname>
+              <given-names>WJ</given-names>
+            </name>
+            <name>
+              <surname>Burke</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>McBurnie</surname>
+              <given-names>MA</given-names>
+            </name>
+          </person-group>
+          <article-title>Frailty in older adults: evidence for a phenotype</article-title>
+          <source>J GerontolA BiolSciMedSci</source>
+          <year>2001</year>
+          <volume>56</volume>
+          <fpage>M146</fpage>
+          <lpage>M156</lpage>
+        </element-citation>
+      </ref>
+      <ref id="R12">
+        <label>12</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Henn</surname>
+              <given-names>AD</given-names>
+            </name>
+            <name>
+              <surname>Wu</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Qiu</surname>
+              <given-names>X</given-names>
+            </name>
+            <name>
+              <surname>Ruda</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Stover</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Yang</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>Z</given-names>
+            </name>
+            <name>
+              <surname>Welle</surname>
+              <given-names>SL</given-names>
+            </name>
+            <name>
+              <surname>Holden-Wiltse</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Wu</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Zand</surname>
+              <given-names>MS</given-names>
+            </name>
+          </person-group>
+          <article-title>High-resolution temporal response patterns to influenza vaccine reveal a distinct human plasma cell gene signature</article-title>
+          <source>Sci Rep</source>
+          <year>2013</year>
+          <volume>3</volume>
+          <fpage>2327</fpage>
+          <pub-id pub-id-type="pmid">23900141</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R13">
+        <label>13</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Li</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Rouphael</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Duraisingham</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Romero-Steiner</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Presnell</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Davis</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Schmidt</surname>
+              <given-names>DS</given-names>
+            </name>
+            <name>
+              <surname>Johnson</surname>
+              <given-names>SE</given-names>
+            </name>
+            <name>
+              <surname>Milton</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Rajam</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>Kasturi</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Carlone</surname>
+              <given-names>GM</given-names>
+            </name>
+            <name>
+              <surname>Quinn</surname>
+              <given-names>C</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Molecular signatures of antibody responses derived from a systems biology study of five human vaccines</article-title>
+          <source>Nat Immunol</source>
+          <year>2014</year>
+          <volume>15</volume>
+          <fpage>195</fpage>
+          <lpage>204</lpage>
+          <pub-id pub-id-type="pmid">24336226</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R14">
+        <label>14</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Bonawitz</surname>
+              <given-names>ND</given-names>
+            </name>
+            <name>
+              <surname>Clayton</surname>
+              <given-names>DA</given-names>
+            </name>
+            <name>
+              <surname>Shadel</surname>
+              <given-names>GS</given-names>
+            </name>
+          </person-group>
+          <article-title>Initiation and beyond: multiple functions of the human mitochondrial transcription machinery</article-title>
+          <source>Mol Cell</source>
+          <year>2006</year>
+          <volume>24</volume>
+          <fpage>813</fpage>
+          <lpage>825</lpage>
+          <pub-id pub-id-type="pmid">17189185</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R15">
+        <label>15</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Ryan</surname>
+              <given-names>MT</given-names>
+            </name>
+            <name>
+              <surname>Hoogenraad</surname>
+              <given-names>NJ</given-names>
+            </name>
+          </person-group>
+          <article-title>Mitochondrial-nuclear communications</article-title>
+          <source>Annu Rev Biochem</source>
+          <year>2007</year>
+          <volume>76</volume>
+          <fpage>701</fpage>
+          <lpage>722</lpage>
+          <pub-id pub-id-type="pmid">17227225</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R16">
+        <label>16</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Parnell</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>McLean</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Booth</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Huang</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Nalos</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Tang</surname>
+              <given-names>B</given-names>
+            </name>
+          </person-group>
+          <article-title>Aberrant cell cycle and apoptotic changes characterise severe influenza A infection--a meta-analysis of genomic signatures in circulating leukocytes</article-title>
+          <source>PLoS One</source>
+          <year>2011</year>
+          <volume>6</volume>
+          <fpage>e17186</fpage>
+          <pub-id pub-id-type="pmid">21408152</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R17">
+        <label>17</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Hancock</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>Veguilla</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Lu</surname>
+              <given-names>X</given-names>
+            </name>
+            <name>
+              <surname>Zhong</surname>
+              <given-names>W</given-names>
+            </name>
+            <name>
+              <surname>Butler</surname>
+              <given-names>EN</given-names>
+            </name>
+            <name>
+              <surname>Sun</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>F</given-names>
+            </name>
+            <name>
+              <surname>Dong</surname>
+              <given-names>L</given-names>
+            </name>
+            <name>
+              <surname>DeVos</surname>
+              <given-names>JR</given-names>
+            </name>
+            <name>
+              <surname>Gargiullo</surname>
+              <given-names>PM</given-names>
+            </name>
+            <name>
+              <surname>Brammer</surname>
+              <given-names>TL</given-names>
+            </name>
+            <name>
+              <surname>Cox</surname>
+              <given-names>NJ</given-names>
+            </name>
+            <name>
+              <surname>Tumpey</surname>
+              <given-names>TM</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Cross-reactive antibody responses to the 2009 pandemic H1N1 influenza virus</article-title>
+          <source>N Engl J Med</source>
+          <year>2009</year>
+          <volume>361</volume>
+          <fpage>1945</fpage>
+          <lpage>1952</lpage>
+          <pub-id pub-id-type="pmid">19745214</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R18">
+        <label>18</label>
+        <element-citation publication-type="journal">
+          <collab>Centers for Disease and C Prevention</collab>
+          <article-title>Serum cross-reactive antibody response to a novel influenza A (H1N1) virus after vaccination with seasonal influenza vaccine</article-title>
+          <source>MMWR Morb Mortal Wkly Rep</source>
+          <year>2009</year>
+          <volume>58</volume>
+          <fpage>521</fpage>
+          <lpage>524</lpage>
+          <pub-id pub-id-type="pmid">19478718</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R19">
+        <label>19</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Tan</surname>
+              <given-names>Y</given-names>
+            </name>
+            <name>
+              <surname>Tamayo</surname>
+              <given-names>P</given-names>
+            </name>
+            <name>
+              <surname>Nakaya</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Pulendran</surname>
+              <given-names>B</given-names>
+            </name>
+            <name>
+              <surname>Mesirov</surname>
+              <given-names>JP</given-names>
+            </name>
+            <name>
+              <surname>Haining</surname>
+              <given-names>WN</given-names>
+            </name>
+          </person-group>
+          <article-title>Gene signatures related to B-cell proliferation predict influenza vaccine-induced antibody response</article-title>
+          <source>Eur J Immunol</source>
+          <year>2014</year>
+          <volume>44</volume>
+          <fpage>285</fpage>
+          <lpage>295</lpage>
+          <pub-id pub-id-type="pmid">24136404</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R20">
+        <label>20</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Scarpulla</surname>
+              <given-names>RC</given-names>
+            </name>
+            <name>
+              <surname>Vega</surname>
+              <given-names>RB</given-names>
+            </name>
+            <name>
+              <surname>Kelly</surname>
+              <given-names>DP</given-names>
+            </name>
+          </person-group>
+          <article-title>Transcriptional integration of mitochondrial biogenesis</article-title>
+          <source>Trends Endocrinol Metab</source>
+          <year>2012</year>
+          <volume>23</volume>
+          <fpage>459</fpage>
+          <lpage>466</lpage>
+          <pub-id pub-id-type="pmid">22817841</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R21">
+        <label>21</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Gleyzer</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Scarpulla</surname>
+              <given-names>RC</given-names>
+            </name>
+          </person-group>
+          <article-title>PGC-1-related coactivator (PRC), a sensor of metabolic stress, orchestrates a redox-sensitive program of inflammatory gene expression</article-title>
+          <source>J Biol Chem</source>
+          <year>2011</year>
+          <volume>286</volume>
+          <fpage>39715</fpage>
+          <lpage>39725</lpage>
+          <pub-id pub-id-type="pmid">21937425</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R22">
+        <label>22</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>MacIver</surname>
+              <given-names>NJ</given-names>
+            </name>
+            <name>
+              <surname>Michalek</surname>
+              <given-names>RD</given-names>
+            </name>
+            <name>
+              <surname>Rathmell</surname>
+              <given-names>JC</given-names>
+            </name>
+          </person-group>
+          <article-title>Metabolic regulation of T lymphocytes</article-title>
+          <source>Annu Rev Immunol</source>
+          <year>2013</year>
+          <volume>31</volume>
+          <fpage>259</fpage>
+          <lpage>283</lpage>
+          <pub-id pub-id-type="pmid">23298210</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R23">
+        <label>23</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>West</surname>
+              <given-names>AP</given-names>
+            </name>
+            <name>
+              <surname>Shadel</surname>
+              <given-names>GS</given-names>
+            </name>
+            <name>
+              <surname>Ghosh</surname>
+              <given-names>S</given-names>
+            </name>
+          </person-group>
+          <article-title>Mitochondria in innate immune responses</article-title>
+          <source>Nat Rev Immunol</source>
+          <year>2011</year>
+          <volume>11</volume>
+          <fpage>389</fpage>
+          <lpage>402</lpage>
+          <pub-id pub-id-type="pmid">21597473</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R24">
+        <label>24</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Komen</surname>
+              <given-names>JC</given-names>
+            </name>
+            <name>
+              <surname>Thorburn</surname>
+              <given-names>DR</given-names>
+            </name>
+          </person-group>
+          <article-title>Turn up the power - pharmacological activation of mitochondrial biogenesis in mouse models</article-title>
+          <source>Br J Pharmacol</source>
+          <year>2014</year>
+          <volume>171</volume>
+          <fpage>1818</fpage>
+          <lpage>1836</lpage>
+          <pub-id pub-id-type="pmid">24102298</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R25">
+        <label>25</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Schieber</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Chandel</surname>
+              <given-names>NS</given-names>
+            </name>
+          </person-group>
+          <article-title>ROS function in redox signaling and oxidative stress</article-title>
+          <source>Curr Biol</source>
+          <year>2014</year>
+          <volume>24</volume>
+          <fpage>R453</fpage>
+          <lpage>462</lpage>
+          <pub-id pub-id-type="pmid">24845678</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R26">
+        <label>26</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Sena</surname>
+              <given-names>LA</given-names>
+            </name>
+            <name>
+              <surname>Chandel</surname>
+              <given-names>NS</given-names>
+            </name>
+          </person-group>
+          <article-title>Physiological roles of mitochondrial reactive oxygen species</article-title>
+          <source>Mol Cell</source>
+          <year>2012</year>
+          <volume>48</volume>
+          <fpage>158</fpage>
+          <lpage>167</lpage>
+          <pub-id pub-id-type="pmid">23102266</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R27">
+        <label>27</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Franco</surname>
+              <given-names>LM</given-names>
+            </name>
+            <name>
+              <surname>Bucasas</surname>
+              <given-names>KL</given-names>
+            </name>
+            <name>
+              <surname>Wells</surname>
+              <given-names>JM</given-names>
+            </name>
+            <name>
+              <surname>Nino</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>X</given-names>
+            </name>
+            <name>
+              <surname>Zapata</surname>
+              <given-names>GE</given-names>
+            </name>
+            <name>
+              <surname>Arden</surname>
+              <given-names>N</given-names>
+            </name>
+            <name>
+              <surname>Renwick</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Yu</surname>
+              <given-names>P</given-names>
+            </name>
+            <name>
+              <surname>Quarles</surname>
+              <given-names>JM</given-names>
+            </name>
+            <name>
+              <surname>Bray</surname>
+              <given-names>MS</given-names>
+            </name>
+            <name>
+              <surname>Couch</surname>
+              <given-names>RB</given-names>
+            </name>
+            <name>
+              <surname>Belmont</surname>
+              <given-names>JW</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Integrative genomic analysis of the human immune response to influenza vaccination</article-title>
+          <source>Elife</source>
+          <year>2013</year>
+          <volume>2</volume>
+          <fpage>e00299</fpage>
+          <pub-id pub-id-type="pmid">23878721</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R28">
+        <label>28</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Tsang</surname>
+              <given-names>P</given-names>
+            </name>
+            <name>
+              <surname>Gorse</surname>
+              <given-names>GJ</given-names>
+            </name>
+            <name>
+              <surname>Strout</surname>
+              <given-names>CB</given-names>
+            </name>
+            <name>
+              <surname>Sperling</surname>
+              <given-names>M</given-names>
+            </name>
+            <name>
+              <surname>Greenberg</surname>
+              <given-names>DP</given-names>
+            </name>
+            <name>
+              <surname>Ozol-Godfrey</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>DiazGranados</surname>
+              <given-names>C</given-names>
+            </name>
+            <name>
+              <surname>Landolfi</surname>
+              <given-names>V</given-names>
+            </name>
+          </person-group>
+          <article-title>Immunogenicity and safety of Fluzone((R)) intradermal and high-dose influenza vaccines in older adults &gt;/=65 years of age: a randomized, controlled, phase II trial</article-title>
+          <source>Vaccine</source>
+          <year>2014</year>
+          <volume>32</volume>
+          <fpage>2507</fpage>
+          <lpage>2517</lpage>
+          <pub-id pub-id-type="pmid">24120672</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R29">
+        <label>29</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>van Duin</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Mohanty</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Thomas</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Ginter</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Montgomery</surname>
+              <given-names>RR</given-names>
+            </name>
+            <name>
+              <surname>Fikrig</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Allore</surname>
+              <given-names>HG</given-names>
+            </name>
+            <name>
+              <surname>Medzhitov</surname>
+              <given-names>R</given-names>
+            </name>
+            <name>
+              <surname>Shaw</surname>
+              <given-names>AC</given-names>
+            </name>
+          </person-group>
+          <article-title>Age-associated defect in human TLR-1/2 function</article-title>
+          <source>J Immunol</source>
+          <year>2007</year>
+          <volume>178</volume>
+          <fpage>970</fpage>
+          <lpage>975</lpage>
+          <pub-id pub-id-type="pmid">17202359</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R30">
+        <label>30</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Panda</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Qian</surname>
+              <given-names>F</given-names>
+            </name>
+            <name>
+              <surname>Mohanty</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>van Duin</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Newman</surname>
+              <given-names>FK</given-names>
+            </name>
+            <name>
+              <surname>Zhang</surname>
+              <given-names>L</given-names>
+            </name>
+            <name>
+              <surname>Chen</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Towle</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Belshe</surname>
+              <given-names>RB</given-names>
+            </name>
+            <name>
+              <surname>Fikrig</surname>
+              <given-names>E</given-names>
+            </name>
+            <name>
+              <surname>Allore</surname>
+              <given-names>HG</given-names>
+            </name>
+            <name>
+              <surname>Montgomery</surname>
+              <given-names>RR</given-names>
+            </name>
+            <name>
+              <surname>Shaw</surname>
+              <given-names>AC</given-names>
+            </name>
+          </person-group>
+          <article-title>Age-associated decrease in TLR function in primary human dendritic cells predicts influenza vaccine response</article-title>
+          <source>J Immunol</source>
+          <year>2010</year>
+          <volume>184</volume>
+          <fpage>2518</fpage>
+          <lpage>2527</lpage>
+          <pub-id pub-id-type="pmid">20100933</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R31">
+        <label>31</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Mohanty</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Joshi</surname>
+              <given-names>SR</given-names>
+            </name>
+            <name>
+              <surname>Ueda</surname>
+              <given-names>I</given-names>
+            </name>
+            <name>
+              <surname>Wilson</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Blevins</surname>
+              <given-names>T</given-names>
+            </name>
+            <name>
+              <surname>Siconolfi</surname>
+              <given-names>B</given-names>
+            </name>
+            <name>
+              <surname>Meng</surname>
+              <given-names>H</given-names>
+            </name>
+            <name>
+              <surname>Devine</surname>
+              <given-names>L</given-names>
+            </name>
+            <name>
+              <surname>Raddassi</surname>
+              <given-names>K</given-names>
+            </name>
+            <name>
+              <surname>Tsang</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Belshe</surname>
+              <given-names>RB</given-names>
+            </name>
+            <name>
+              <surname>Hafler</surname>
+              <given-names>DA</given-names>
+            </name>
+            <name>
+              <surname>Kaech</surname>
+              <given-names>SM</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Prolonged Pro-Inflammatory Cytokine Production in Monocytes Following Influenza Vaccination is Modulated by IL-10 in Older Adults</article-title>
+          <source>J Infect Dis</source>
+          <year>2014</year>
+        </element-citation>
+      </ref>
+      <ref id="R32">
+        <label>32</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>van Duin</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Allore</surname>
+              <given-names>HG</given-names>
+            </name>
+            <name>
+              <surname>Mohanty</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Ginter</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Newman</surname>
+              <given-names>FK</given-names>
+            </name>
+            <name>
+              <surname>Belshe</surname>
+              <given-names>RB</given-names>
+            </name>
+            <name>
+              <surname>Medzhitov</surname>
+              <given-names>R</given-names>
+            </name>
+            <name>
+              <surname>Shaw</surname>
+              <given-names>AC</given-names>
+            </name>
+          </person-group>
+          <article-title>Prevaccine determination of the expression of costimulatory B7 molecules in activated monocytes predicts influenza vaccine responses in young and older adults</article-title>
+          <source>J Infect Dis</source>
+          <year>2007</year>
+          <volume>195</volume>
+          <fpage>1590</fpage>
+          <lpage>1597</lpage>
+          <pub-id pub-id-type="pmid">17471428</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R33">
+        <label>33</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Venegas</surname>
+              <given-names>V</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Dimmock</surname>
+              <given-names>D</given-names>
+            </name>
+            <name>
+              <surname>Wong</surname>
+              <given-names>LJ</given-names>
+            </name>
+          </person-group>
+          <article-title>Real-time quantitative PCR analysis of mitochondrial DNA content</article-title>
+          <source>Curr Protoc Hum Genet</source>
+          <year>2011</year>
+          <comment>Chapter 19:Unit 19 17</comment>
+        </element-citation>
+      </ref>
+      <ref id="R34">
+        <label>34</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Yaari</surname>
+              <given-names>G</given-names>
+            </name>
+            <name>
+              <surname>Bolen</surname>
+              <given-names>CR</given-names>
+            </name>
+            <name>
+              <surname>Thakar</surname>
+              <given-names>J</given-names>
+            </name>
+            <name>
+              <surname>Kleinstein</surname>
+              <given-names>SH</given-names>
+            </name>
+          </person-group>
+          <article-title>Quantitative set analysis for gene expression: a method to quantify gene set differential expression including gene-gene correlations</article-title>
+          <source>Nucleic Acids Res</source>
+          <year>2013</year>
+          <volume>41</volume>
+          <fpage>e170</fpage>
+          <pub-id pub-id-type="pmid">23921631</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="R35">
+        <label>35</label>
+        <element-citation publication-type="journal">
+          <person-group>
+            <name>
+              <surname>Subramanian</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Tamayo</surname>
+              <given-names>P</given-names>
+            </name>
+            <name>
+              <surname>Mootha</surname>
+              <given-names>VK</given-names>
+            </name>
+            <name>
+              <surname>Mukherjee</surname>
+              <given-names>S</given-names>
+            </name>
+            <name>
+              <surname>Ebert</surname>
+              <given-names>BL</given-names>
+            </name>
+            <name>
+              <surname>Gillette</surname>
+              <given-names>MA</given-names>
+            </name>
+            <name>
+              <surname>Paulovich</surname>
+              <given-names>A</given-names>
+            </name>
+            <name>
+              <surname>Pomeroy</surname>
+              <given-names>SL</given-names>
+            </name>
+            <name>
+              <surname>Golub</surname>
+              <given-names>TR</given-names>
+            </name>
+            <name>
+              <surname>Lander</surname>
+              <given-names>ES</given-names>
+            </name>
+            <name>
+              <surname>Mesirov</surname>
+              <given-names>JP</given-names>
+            </name>
+          </person-group>
+          <article-title>Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles</article-title>
+          <source>Proc Natl Acad Sci U S A</source>
+          <year>2005</year>
+          <volume>102</volume>
+          <fpage>15545</fpage>
+          <lpage>15550</lpage>
+          <pub-id pub-id-type="pmid">16199517</pub-id>
+        </element-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>
+</pmc-articleset>

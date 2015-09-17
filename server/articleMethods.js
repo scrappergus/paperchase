@@ -43,11 +43,15 @@ Meteor.methods({
 							if(err){
 								return 'ERROR';
 							}else{
-								
-								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
 
 								//Process JSON for meteor templating and mongo db
-								j['title'] = articleJSON['title-group'][0]['article-title'][0];
+								//TITLE
+								var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
+								var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
+								titleTitle = titleTitle.replace('article-title>','');
+								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
+								j['title'] = titleTitle; 
+
 								j['volume'] = parseInt(articleJSON['volume'][0]);
 								j['issue'] = articleJSON['issue'][0];
 								j['page_start'] = articleJSON['fpage'][0];
