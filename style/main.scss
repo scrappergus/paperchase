@@ -144,8 +144,13 @@ ADMIN
 }
 
 /*
-CARDS
+CONTAINERS
 */
+.box{
+	padding: $pad-lg;
+}
+/*CARDS*/
 .card-header{
 	border-bottom: 2px solid $gray;
 }
+
