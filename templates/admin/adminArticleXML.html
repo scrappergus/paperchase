@@ -14,10 +14,19 @@
 
 <template name="adminArticleXmlProcess">
 	{{>AdminHeader header="Article XML Process"}}
+	{{#if articleExists}}
 	<div class="row">
 		<div class="col s12">
-			<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Add Article">Add Article</button>
+			<div class="box orange"><h3>Article Already Exists</h3><button data-mongoid="{{articleExists._id}}" class="update-article btn waves-effect waves-light green" type="submit" name="action" alt="Update Article">Update Article</button></div>
+			
 		</div>
 	</div>
+	{{else}}
+	<div class="row">
+		<div class="col s12">
+			<button class="add-article btn waves-effect waves-light green" type="submit" name="action" alt="Add Article">Add Article</button>
+		</div>
+	</div>
+	{{/if}}
 	{{>adminArticleData}}
 </template>

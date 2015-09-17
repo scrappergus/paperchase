@@ -58,13 +58,28 @@ Template.AdminAddUser.events({
 	}
 });
 Template.adminArticleXmlProcess.events({
-	'click .submit': function(e,t){
+	'click .update-article': function(e,t){
+		e.preventDefault();
+		var articleData = t.data['article'];
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['last_update_date'] = new Date(); 
+		articleData['doc_updates']['last_update__by'] = Meteor.user(); 
+		var mongoId = $(e.target).attr('data-mongoid');
+		articles.update({'_id' : mongoId}, {$set: articleData}, function(error, _id){
+			if(error){
+				alert('ERROR: '+error.message);
+			}else{
+				Router.go('adminArticle', {_id:mongoId});
+			}
+		});
+	},
+	'click .add-article': function(e,t){
 		e.preventDefault();
 		var articleData = t.data['article'];
 		articleData['doc_updates'] = {};
 		articleData['doc_updates']['created_date'] = new Date(); 
 		articleData['doc_updates']['created_by'] = Meteor.user(); 
-		articles.insert(articleData , function(error, _id){
+		articles.insert(articleData, function(error, _id){
 			if(error){
 				alert('ERROR: '+error.message);
 			}else{

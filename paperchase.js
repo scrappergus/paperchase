@@ -182,13 +182,21 @@ if (Meteor.isClient) {
                 this.next();
            }
         },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles')
+            ]
+        },
         data: function(){
             var fileName = Session.get('fileNameXML');
             var article;
             article =  ReactiveMethod.call('processXML',fileName);
             if(article){
+                //TODO: better way of checking if article exists, title could change during production.
+                var articleExists = articles.findOne({'title' : article['title']});
                 return {
-                    article: article 
+                    article: article,
+                    articleExists: articleExists
                 }            
             }
         }
@@ -207,7 +215,7 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var id = this.params._id;
                 var article = articles.findOne({'_id': id});
-                console.log('article = ');console.log(article);
+                // console.log('article = ');console.log(article);
                 return {
                     article: article
                 };
