@@ -23,9 +23,6 @@ alanning:roles
 manuelschoebel:ms-seo
 fourseven:scss
 gildaspk:autoform-file-materialize
-cfs:standard-packages
-cfs:filesystem
-cfs:gridfs
 tomi:upload-server
 tomi:upload-jquery
 gandev:server-eval
@@ -36,3 +33,4 @@ meteorhacks:npm
 autopublish
 npm-container
 simple:reactive-method
+ixdi:material-design-iconic-font
