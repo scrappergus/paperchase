@@ -50,12 +50,11 @@ if (Meteor.isClient) {
 			return inst_match || false;
 		});
 
-	Template.Archive.helpers({
+	Template.adminArchive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
 			var iss = issues.find({},{sort : {page_start:1}}).fetch();
 			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-			// console.log('res = ');console.log(res);
 			return res;
 		}
 	});
