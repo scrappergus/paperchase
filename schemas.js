@@ -329,5 +329,19 @@ Schemas.issues = new SimpleSchema({
     },
     page_end:{
         type: Number
+    },
+    doc_updates: {
+        type: Object
+    }
+});
+Schemas.volumes = new SimpleSchema({
+    volume:{
+        type: Number
+    },
+    releases:{
+        type: String
+    },
+    year:{
+        type: Number
     }
 });
