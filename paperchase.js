@@ -100,14 +100,15 @@ if (Meteor.isClient) {
             },
             data: function(){
                 if(this.ready()){
-                    var iss = this.params._issue;
-                    var vol = parseInt(this.params._volume);
+                    var issue = this.params._issue;
+                    var volume = parseInt(this.params._volume);
                     //get issue metadata
-                    var issueData = issues.findOne({'issue': iss, 'volume': vol});
+                    var issueData = issues.findOne({'issue': issue, 'volume': volume});
+
+                    var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
                     //get articles in issue
-                    var issueArticles = articles.find({'issue_id':issueData._id},{sort : {page_start:1}}).fetch();
                     //test for start of article type
-                    issueArticles = Meteor.organize.groupArticles(issueArticles);
+                    
                     issueData['articles'] = issueArticles;
                     // console.log(issueData);
                     return {
@@ -211,7 +212,6 @@ if (Meteor.isClient) {
     });
 
     /*article and articles*/
-
     Router.route('/admin/articles',{
         name: 'adminArticlesList',
         layoutTemplate: 'Admin',
@@ -254,29 +254,31 @@ if (Meteor.isClient) {
 
 
     /*issue control*/
+    //TODO: LIMIT subscription of articles to just issue
     Router.route('/admin/issue/:vi', {
-            name: 'admin.issue'
-            ,layoutTemplate: 'Admin'
-            ,waitOn: function(){
-                return[
-                Meteor.subscribe('institutions',this.params._id)
-                ]
+        name: 'admin.issue',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                vi = this.params.vi;
+                matches = vi.match("v([0-9]+)i([0-9]+)");
+                volume = matches[1];
+                issue = matches[2];
+                var issueData = issues.findOne({'volume' : parseInt(volume), 'issue':issue});
+                var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
+                issueData['articles'] = issueArticles;
+                var data = {
+                    issue: issueData
+                };
+                return data;
             }
-            ,data: function(){
-                if(this.ready()){
-                    vi = this.params.vi;
-                    matches = vi.match("v([0-9]+)i([0-9]+)");
-                    volume = matches[1];
-                    issue = matches[2]
-
-                    var data = {
-                        volume: volume
-                        ,issue: issue
-                    };
-                    return data;
-                }
-            }
-        });
+        }
+    });
 
 
 
@@ -363,7 +365,8 @@ if (Meteor.isClient) {
                 return institution;
             }
         }
-    });    
+    });   
+
 }
 
 if (Meteor.isServer) {
