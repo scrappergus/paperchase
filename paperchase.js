@@ -85,9 +85,9 @@ if (Meteor.isClient) {
         });
 
     Router.route('/archive', { 
-            name: "archive",
-            layoutTemplate: 'Visitor',
-        });
+        name: 'archive',
+        layoutTemplate: 'Visitor',
+    });
 
     Router.route('/volume/:_volume/issue/:_issue', { 
             name: 'issue',
