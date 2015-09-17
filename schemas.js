@@ -240,10 +240,10 @@ Schemas.articles = new SimpleSchema({
         type: String
     },
     page_start: {
-        type: String
+        type: Number
     },
     page_end: {
-        type: String
+        type: Number
     },
     volume: {
         type: Number
