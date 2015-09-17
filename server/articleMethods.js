@@ -3,6 +3,28 @@ parseString = Meteor.npmRequire('xml2js').parseString;
 future = Npm.require('fibers/future');
 
 Meteor.methods({
+	addArticle: function(articleData){
+		if(!articleData['issue_id']){
+			var issueData = {
+				'volume' : articleData['volume'],
+				'issue' : articleData['issue']
+			}
+			issueData['doc_updates'] = {};
+			issueData['doc_updates']['created_date'] = new Date(); 
+			issueData['doc_updates']['created_by'] = articleData['doc_updates']['created_by'];
+			Meteor.call('addIssue',issueData, function(error,_id){
+				if(error){
+					console.log('ERROR: ' + error.message);
+				}else{
+					articleData['issue_id'] = _id;
+				}
+			});
+		}
+		return articles.insert(articleData);		
+	},
+	updateArticle: function(mongoId, articleData){
+		return articles.update({'_id' : mongoId}, {$set: articleData});		
+	},
 	processXML: function(fileName){
 		var j = {}, 
 			xml;

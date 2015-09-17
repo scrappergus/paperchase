@@ -61,11 +61,14 @@ Template.adminArticleXmlProcess.events({
 	'click .update-article': function(e,t){
 		e.preventDefault();
 		var articleData = t.data['article'];
+
+		//add who UPDATED this article doc
 		articleData['doc_updates'] = {};
 		articleData['doc_updates']['last_update_date'] = new Date(); 
-		articleData['doc_updates']['last_update__by'] = Meteor.user(); 
+		articleData['doc_updates']['last_update_by'] = Meteor.userId(); 
+
 		var mongoId = $(e.target).attr('data-mongoid');
-		articles.update({'_id' : mongoId}, {$set: articleData}, function(error, _id){
+		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
 			if(error){
 				alert('ERROR: '+error.message);
 			}else{
@@ -75,13 +78,17 @@ Template.adminArticleXmlProcess.events({
 	},
 	'click .add-article': function(e,t){
 		e.preventDefault();
+
 		var articleData = t.data['article'];
+
+		//add who CREATED this article doc
 		articleData['doc_updates'] = {};
 		articleData['doc_updates']['created_date'] = new Date(); 
-		articleData['doc_updates']['created_by'] = Meteor.user(); 
-		articles.insert(articleData, function(error, _id){
+		articleData['doc_updates']['created_by'] = Meteor.userId(); 
+
+		Meteor.call('addArticle', articleData, function(error,_id){
 			if(error){
-				alert('ERROR: '+error.message);
+				alert('ERROR: ' + error.message);
 			}else{
 				Router.go('adminArticle', {_id:_id});
 			}
