@@ -143,14 +143,25 @@ ADMIN
 	margin-bottom: 0px;
 }
 
-/*
-CONTAINERS
-*/
-.box{
-	padding: $pad-lg;
-}
 /*CARDS*/
 .card-header{
 	border-bottom: 2px solid $gray;
 }
-
+/*
+BUTTONS
+*/
+.btn-primary{
+	background-color: $btn-color-primary;
+}
+.btn-secondary{
+	background-color: $btn-color-secondary;
+}
+.btn-update{
+	background-color: $btn-color-update;
+}
+.btn-add{
+	background-color: $btn-color-add;
+}
+.btn-delete{
+	background-color: $btn-color-delete;
+}
