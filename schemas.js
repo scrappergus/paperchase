@@ -251,6 +251,9 @@ Schemas.articles = new SimpleSchema({
     issue: {
         type: String
     },
+    issue_id:{
+        type: String
+    },
     keywords: {
         type: Array
     },
@@ -307,5 +310,24 @@ Schemas.articles = new SimpleSchema({
     },
     doc_updates: {
         type: Object
+    }
+});
+
+
+/*
+Issues
+*/
+Schemas.issues = new SimpleSchema({
+    issue:{
+        type: String
+    },
+    volume:{
+        type: Number
+    },
+    page_start:{
+        type: Number
+    },
+    page_end:{
+        type: Number
     }
 });
