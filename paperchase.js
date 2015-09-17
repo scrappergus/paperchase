@@ -77,7 +77,7 @@ if (Meteor.isClient) {
 
     Session.setDefault('formMethod','');
     Session.setDefault('fileNameXML',''); //LIVE
-    // Session.setDefault('fileNameXML','PMC4100812.xml'); //LOCAL TESTING
+    // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
             name: "home",
@@ -184,18 +184,26 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-                Meteor.subscribe('articles')
+                Meteor.subscribe('articles'),
+                Meteor.subscribe('issues')
             ]
         },
         data: function(){
             var fileName = Session.get('fileNameXML');
-            var article;
-            article =  ReactiveMethod.call('processXML',fileName);
-            if(article){
+            var newArticle;
+            newArticle =  ReactiveMethod.call('processXML',fileName);
+            if(newArticle){
+                //add issue_id if exists, 
+                //later when INSERT into articles, check for if issue_id in doc (in meteor method addArticle)
+                var articleIssue = issues.findOne({'volume' : newArticle['volume'], 'issue': newArticle['issue']});
+                if(articleIssue){
+                    newArticle['issue_id'] = articleIssue['_id'];
+                }
+
                 //TODO: better way of checking if article exists, title could change during production.
-                var articleExists = articles.findOne({'title' : article['title']});
+                var articleExists = articles.findOne({'title' : newArticle['title']});
                 return {
-                    article: article,
+                    article: newArticle,
                     articleExists: articleExists
                 }            
             }
