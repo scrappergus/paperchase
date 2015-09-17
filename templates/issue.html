@@ -5,7 +5,7 @@
         <div class="col s12">
             <img style="float:left;margin:20px 10px 0px 0px;" src="/images/covers/cover_v{{volume}}n{{issue}}.png">
             <h1>Volume {{volume}}, Issue {{issue}}</h1>
-            <h4>pp {{page_start}} - {{page_end}}</h4>
+            <!-- <h4>pp {{page_start}} - {{page_end}}</h4> -->
             <div class="clearfix"></div>
             <ul>
 			    {{#each articles}}
@@ -17,20 +17,22 @@
         </div>
     </div>
     <div class="row">
-    <ul class="collection with-header">
-    {{#each articles}}
-    {{#if start_group}}
-    <li class="collection-header"><h3 id="{{article_type.short_name}}">{{article_type.type}}</h3></li>
-    {{/if}}
-    <li class="collection-item">
-    	<h4>{{title}}</h4>
-    	{{>AuthorsList}}
-    	<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
-    	<a class="waves-effect waves-light btn" href="{{pathFor 'Article'}}">Full Text</a>
-    	<a class="waves-effect waves-light btn">PDF</a>
-    </li>
-    {{/each}}
-    </ul>
+        <div class="col s12">
+            <ul class="collection with-header">
+                {{#each articles}}
+                {{#if start_group}}
+                <li class="collection-header"><h4 id="{{article_type.short_name}}">{{article_type.type}}</h4></li>
+                {{/if}}
+                <li class="collection-item">
+                	<h5>{{{title}}}</h5>
+                	<p>{{>AuthorsList}}</p>
+                	<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
+                	<a class="waves-effect waves-light btn" href="{{pathFor 'Article'}}">Full Text</a>
+                	<a class="waves-effect waves-light btn">PDF</a>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </div>
 {{/with}}
