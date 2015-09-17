@@ -22,6 +22,11 @@ Meteor.organize = {
 		}
 		return vol;
 	},
+	getIssueArticlesByID: function(id){
+		var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();
+		issueArticles = Meteor.organize.groupArticles(issueArticles);
+		return issueArticles;
+	},
 	groupArticles: function(articles) {
 		var articlesL = articles.length;
 		var grouped = [];
