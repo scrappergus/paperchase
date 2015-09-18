@@ -89,7 +89,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
     });
 
-    Router.route('/:vi', { 
+    Router.route('/issue/:vi', { 
             name: 'issue',
             layoutTemplate: 'Visitor',
             waitOn: function(){
