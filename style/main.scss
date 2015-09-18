@@ -5,15 +5,39 @@ html,body{
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
+	background: $blue-gray;
 }
 
 /*
 TYPE
 */
+h1{
+	color: $black-0;
+}
+h2{
+	color: $black-1;
+}
+h3{
+	color: $black-2;
+}
+h4{
+	color: $black-0;
+}
+h5{
+	color: $black-1;
+}
+h6{
+	color: $black-2;
+}
+p{
+	color: $black-0;
+}
+
+
+
 h3{
 	text-transform: uppercase;
 }
-
 /*
 VISITOR
 */
@@ -141,6 +165,18 @@ ADMIN
 }
 .admin-header{
 	margin-bottom: 0px;
+	color: $blue-aging;
+}
+.xml-upload{
+	padding: $pad-lg;
+	@include border-radius(5px);
+	.btn{
+		@include border-radius(5px);
+	}
+}
+
+.border-gray{
+	border: 1px solid $gray;
 }
 
 /*CARDS*/
@@ -164,4 +200,14 @@ BUTTONS
 }
 .btn-delete{
 	background-color: $btn-color-delete;
+}
+
+
+/*
+NAV
+*/
+nav{
+	a{
+		text-align: center;
+	}
 }
