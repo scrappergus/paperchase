@@ -96,42 +96,18 @@
         </div>
     </div>
     <div class="row latest">
+        {{#each feature}}
         <div class="col s4">
             <div class="card">
-                <div class="card-image">
-                    <img src="/images/articles/1.png">
-                </div>
                 <div class="card-content">
-                    <h5>Age cutoff in lymphoma diagnosis</h5>
-                    <p>Aging is characterized by immunosenescence, decreased immune response and dysregulated coordination between inflammatory and inflammation-neutralizing processes. The decline in immune competence is invariably seen with aging....</p>
-                    <button class="btn waves-effect waves-light" alt="">Read More</button>
+                    <h5>{{{title}}}</h5>
+                    <p>{{>AuthorsList}}</p>
+                    <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
+                     <button class="btn waves-effect waves-light" alt="{{pathFor 'article'}}">Read More</button>
                 </div>
             </div>
         </div>
-        <div class="col s4">
-            <div class="card">
-                <div class="card-image">
-                    <img src="/images/articles/2.jpg">
-                </div>
-                <div class="card-content">
-                    <h5>Heterotrimeric G proteins as emerging targets for network based therapy in cancer: <i>End of a long futile campaign striking heads of a Hydra</i></h5>
-                    <p>Most common diseases, e.g., cancer are driven by not one, but multiple cell surface receptors that trigger and sustain a pathologic signaling network....</p>
-                    <button class="btn waves-effect waves-light" alt="">Read More</button>
-                </div>
-            </div>
-        </div>
-        <div class="col s4">
-            <div class="card">
-                <div class="card-image">
-                    <img src="/images/articles/3.jpg">
-                </div>
-                <div class="card-content">
-                    <h5>Removal of growth hormone receptor (GHR) in muscle of male mice replicates some of the health benefits seen in global GHR-/- mice</h5>
-                    <p>Global disruption of the GH receptor in mice (GHR-/-) produces a large and reproducible extension in lifespan....</p>
-                    <button class="btn waves-effect waves-light" alt="">Read More</button>
-                </div>
-            </div>
-        </div>
+        {{/each}}
     </div>
 </section>
 </template>

@@ -82,6 +82,17 @@ if (Meteor.isClient) {
     Router.route('/', { 
         name: 'home',
         layoutTemplate: 'Visitor',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('feature')
+            ]
+        },        
+        data: function(){
+            var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
+            return {
+                feature : featureList
+            }
+        }
     });
 
 
