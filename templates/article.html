@@ -3,47 +3,50 @@
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h4><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h4>
+            <h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h5>
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <span class="badge">{{article_type.type}}</span>
+                            <h2>{{{title}}}</h2>
+                            <h4>{{>AuthorsList}}</h4>
+                            <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
+                            {{#if dates}}
+                                {{#each dates}}
+                                {{#if equals 'epub' type}}
+                                       epub: {{getMonthWord month}}, {{day}} {{year}}
+                                {{/if}}
+                                {{/each}}
+                            {{/if}}        
+                        </div>
+                    </div>
+                    {{#if abstract}}
+                    <div class="row">
+                        <div class="col s12">
+                            {{{abstract}}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    <div class="row">
+                        <div class="col s12">
+                            <a class="waves-effect waves-light btn btn-lg">PDF</a>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col s12">
-            <span class="badge">{{article_type.type}}</span>
-        	<h2>{{{title}}}</h2>
-        	<h4>{{>AuthorsList}}</h4>
-            <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
-            {{#if dates}}
-                {{#each dates}}
-                {{#if equals 'epub' type}}
-                       epub: {{getMonthWord month}}, {{day}} {{year}}
-                {{/if}}
-                {{/each}}
-            {{/if}}        
-        </div>
-    </div>
+
     {{#if keywords}}
     <div class="row">
         <div class="col s12">
-            <ul>
-                {{#each keywords}}
-                <li>{{{.}}}</li>
-                {{/each}}
-            </ul>
+            {{#each keywords}}
+                <a class="btn waves-effect waves-light kw deep-orange lighten-2">{{{.}}}</a>
+            {{/each}}
         </div>
     </div>
-    {{/if}}
-    {{#if abstract}}
-    <div class="row">
-        <div class="col s12">
-        	{{{abstract}}}
-        </div>
-    </div>
-    {{/if}}
-    <div class="row">
-        <div class="col s12">
-    		<a class="waves-effect waves-light btn">PDF</a>
-        </div>
-    </div>
+    {{/if}}    
 </div>
 {{/with}}
 </template>
