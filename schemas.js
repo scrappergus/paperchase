@@ -308,6 +308,12 @@ Schemas.articles = new SimpleSchema({
     'history.$.year': {
         type: Number
     },
+    'feature':{
+        type: Boolean
+    },
+    'advance':{
+        type: Boolean
+    },
     doc_updates: {
         type: Object
     }

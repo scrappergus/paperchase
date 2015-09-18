@@ -57,6 +57,46 @@ Template.AdminAddUser.events({
 		})	
 	}
 });
+
+/*
+ARTICLE
+*/
+Template.adminArticle.events({
+	'submit form': function(e,t){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var mongoId = t.data.article._id;
+		var articleUpdateObj = {};
+
+		//feature
+		if($('#feature-checkbox').prop('checked')){
+			articleUpdateObj['feature'] = true;
+		}else{
+			articleUpdateObj['feature'] = false;	
+		}
+
+		//advance
+		if($('#advance-checkbox').prop('checked')){
+			articleUpdateObj['advance'] = true;
+		}else{
+			articleUpdateObj['advance'] = false;
+		}
+
+		//save to db
+		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
+			if(error){
+				alert(error.message);
+				Meteor.formActions.error();
+			}else{
+				Meteor.formActions.success();
+			}
+		});
+	},
+	'click #close-success-msg': function(e){
+		e.preventDefault();
+		$('.success').addClass('hide');
+	}
+});
 Template.adminArticleXmlProcess.events({
 	'click .update-article': function(e,t){
 		e.preventDefault();

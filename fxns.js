@@ -79,11 +79,18 @@ Meteor.adminUser = {
 
 Meteor.formActions = {
 	saving: function(){
-		$('.save-btn').hide();
-		$('.saving').show();
+		$('.save-btn').addClass('hide');
+		$('.saving').removeClass('hide');
+		$('.success').addClass('hide');
 	},
 	error: function(){
-		$('.save-btn').show();
-		$('.saving').hide();
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').addClass('hide');
+	},
+	success: function(){
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').removeClass('hide');
 	}
 }
