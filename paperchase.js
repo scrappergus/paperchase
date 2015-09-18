@@ -81,7 +81,24 @@ if (Meteor.isClient) {
 
     Router.route('/', { 
         name: 'home',
-        layoutTemplate: 'Visitor'
+        layoutTemplate: 'Visitor',
+    });
+
+
+    Router.route('/advance', { 
+        name: 'advance',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('advance')
+            ]
+        },        
+        data: function(){
+            var advanceList = articles.find({'advance':true},{sort:{'_id':1}}).fetch();
+            return {
+                advance : advanceList
+            }
+        }
     });
 
     Router.route('/archive', { 
@@ -227,7 +244,21 @@ if (Meteor.isClient) {
     /*article and articles*/
     Router.route('/admin/articles',{
         name: 'adminArticlesDashboard',
-        layoutTemplate: 'Admin'
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('feature'),
+                Meteor.subscribe('advance'),
+            ]
+        },        
+        data: function(){
+            var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
+            var advanceList = articles.find({'advance':true},{sort:{'_id':1}}).fetch();
+            return {
+                feature : featureList,
+                advance : advanceList,
+            }
+        }
     });
     Router.route('/admin/articles/list',{
         name: 'adminArticlesList',

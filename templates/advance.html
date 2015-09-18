@@ -1,0 +1,21 @@
+<template name="advance">
+<div class="container">
+	<div class="row">
+		<div class="col s12">
+			<h1>Advance Online Publications</h1>
+		</div>
+	</div>
+    <div class="row">
+        <div class="col s12">
+        	<ul class="collection">
+        		{{#each advance}}
+        			<li class="collection-item">
+        				<h5>{{{title}}}</h5>
+        				<p>{{>AuthorsList}}</p>
+        			</li>
+        		{{/each}}
+        	</ul>
+        </div>
+    </div>
+</div>s
+</template>

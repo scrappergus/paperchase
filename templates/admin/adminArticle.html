@@ -7,6 +7,38 @@
 				<li class="collection-item"><a href="{{pathFor 'adminArticlesList'}}">Articles List</a></li>
 			</ul>			
 		</div>
+		<div class="col s4">
+			<div class="card">
+				<div class="card-content">
+					<h5>Feature Articles</h5>
+					<div class="row">
+						<div class="col s12">
+							<ul class="collection">
+							{{#each feature}}
+								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
+							{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col s4">
+			<div class="card">
+				<div class="card-content">
+					<h5>Advance Articles</h5>
+					<div class="row">
+						<div class="col s12">
+							<ul class="collection">
+							{{#each advance}}
+								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
+							{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -34,7 +66,7 @@
 				</div>		
 			</form>
 			{{>saving}}
-			<div class="row success">
+			<div class="row success hide">
 				<div class="col m4 offset-m4 s12 green lighten-4 center-align">
 					<h5>Article Saved <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
 				</div>
