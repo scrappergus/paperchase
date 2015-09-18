@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.update({'_id' : mongoId}, {$push: {'ids':{'type' : 'pii', 'id':pii}}});		
 	},
 	processXML: function(fileName){
-		console.log('--processXML '+fileName);
+		if(fileName)
 		var j = {}, 
 			xml;
 		var fut = new future();
