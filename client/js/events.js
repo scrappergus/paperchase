@@ -59,6 +59,41 @@ Template.AdminAddUser.events({
 });
 
 /*
+FORMS
+*/
+Template.successMessage.events({
+	'click #close-success-msg': function(e){
+		e.preventDefault();
+		$('.success').addClass('hide');
+	}
+});
+
+/*
+Issue
+*/
+Template.adminIssue.events({
+	'submit form': function(e,t){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var mongoId = t.data.issue._id;
+		var date = $('#issue-date').val();
+		date = new Date(date);
+		var updateObj = {
+			'pub_date' : date
+		}
+		Meteor.call('updateIssue', mongoId, updateObj, function(error, result){
+			if(error){
+				console.log('ERROR');
+				console.log(error);
+				Meteor.formActions.error();
+			}else{
+				Meteor.formActions.success();
+			}
+		});
+	}
+});
+
+/*
 ARTICLE
 */
 Template.adminArticle.events({
@@ -91,10 +126,6 @@ Template.adminArticle.events({
 				Meteor.formActions.success();
 			}
 		});
-	},
-	'click #close-success-msg': function(e){
-		e.preventDefault();
-		$('.success').addClass('hide');
 	}
 });
 Template.adminArticleXmlProcess.events({

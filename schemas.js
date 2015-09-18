@@ -336,6 +336,9 @@ Schemas.issues = new SimpleSchema({
     page_end:{
         type: Number
     },
+    pub_date: {
+        type: Date
+    },
     doc_updates: {
         type: Object
     }

@@ -175,7 +175,6 @@ if (Meteor.isClient) {
         }
     });
 
-
 	/*
 	ADMIN PAGES
 	*/
@@ -306,7 +305,7 @@ if (Meteor.isClient) {
 
     /*archive browsing*/
     Router.route('/admin/archive', {
-            name: 'admin.archive'
+            name: 'adminArchive'
             ,layoutTemplate: 'Admin'
         });
 
@@ -317,8 +316,13 @@ if (Meteor.isClient) {
         name: 'admin.issue',
         layoutTemplate: 'Admin',
         waitOn: function(){
+            var vi = this.params.vi;
+            var matches = vi.match('v([0-9]+)i([0-9]+)');
+            var volume = parseInt(matches[1]);
+            var issue = parseInt(matches[2]);
             return[
-                Meteor.subscribe('articles')
+                Meteor.subscribe('articles'),
+                Meteor.subscribe('issue',volume,issue)
             ]
         },
         data: function(){
@@ -333,6 +337,7 @@ if (Meteor.isClient) {
                 var data = {
                     issue: issueData
                 };
+                //do not change issue variable name in data, we need this to get mongoid to update the doc
                 return data;
             }
         }
@@ -389,8 +394,8 @@ if (Meteor.isClient) {
     	name: 'AdminAddUser',
     	layoutTemplate: 'Admin'
 	});
-	//AddUser
 
+	//AddUser
     Router.route('/admin/institution', {
             name: 'admin.institution'
             ,layoutTemplate: 'Admin'
@@ -432,10 +437,36 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin'
     }); 
 }
-
+// Router.route('/xml/:_filename',{
+//     name: 'xml',
+//     where: 'server',
+//     data: function(){
+//         Meteor.call('getXML',this.params._filename,function(e,xml){
+//             if(e){
+//                 console.log('error');
+//                 console.log(e);
+//             }else{
+//                 // xml;
+//                 // console.log(xml);
+//                 return xml;
+//             }
+//         });
+//     },
+//     action: function(r) {
+//         if (this.ready()) {
+//             console.log(this.params._filename);
+//             // console.log(r);
+//             console.log(this);
+//             var headers = {'Content-type': 'application/xml', 'charset' : 'ISO-8859-1'};
+//             this.response.writeHead(200, headers);
+//             this.response.end('<xml></xml>');         
+//         }           
+//     }
+// });   
 if (Meteor.isServer) {
     Meteor.startup(function () {
-        });
+ 
+    });
 }
 
 var toType = function(obj) {

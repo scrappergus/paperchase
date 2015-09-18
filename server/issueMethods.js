@@ -24,6 +24,9 @@ Meteor.methods({
 		}
 		return issueId;
 	},
+	updateIssue: function(mongoId, update){
+		return issues.update({'_id':mongoId},{$set:update})
+	},
 	addVolume: function( vol){
 		return volumes.insert({'volume':vol});
 	}
