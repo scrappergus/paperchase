@@ -89,7 +89,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
     });
 
-    Router.route('/volume/:_volume/issue/:_issue', { 
+    Router.route('/:vi', { 
             name: 'issue',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -100,8 +100,10 @@ if (Meteor.isClient) {
             },
             data: function(){
                 if(this.ready()){
-                    var issue = this.params._issue;
-                    var volume = parseInt(this.params._volume);
+                    var vi = this.params.vi;
+                    var matches = vi.match('v([0-9]+)i([0-9]+)');
+                    var volume = parseInt(matches[1]);
+                    var issue = parseInt(matches[2]);
                     //get issue metadata
                     var issueData = issues.findOne({'issue': issue, 'volume': volume});
 
@@ -276,10 +278,10 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                vi = this.params.vi;
-                matches = vi.match("v([0-9]+)i([0-9]+)");
-                volume = matches[1];
-                issue = matches[2];
+                var vi = this.params.vi;
+                var matches = vi.match('v([0-9]+)i([0-9]+)');
+                var volume = parseInt(matches[1]);
+                var issue = parseInt(matches[2]);
                 var issueData = issues.findOne({'volume' : parseInt(volume), 'issue':issue});
                 var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
                 issueData['articles'] = issueArticles;
