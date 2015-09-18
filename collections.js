@@ -130,6 +130,13 @@ if (Meteor.isServer) {
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {page_start:1}});
   });
+  Meteor.publish('articleInfo', function (mongoId) {
+    return articles.find({'_id':mongoId},{});
+  });
+  /*TODO: RECENT define. By pub date?*/
+  Meteor.publish('articlesRecentFive', function () {
+    return articles.find({},{sort:{'_id':1},limit : 5});
+  });
   Meteor.publish('allUsers', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return Meteor.users.find();
