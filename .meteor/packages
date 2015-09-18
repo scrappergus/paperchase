@@ -30,7 +30,8 @@ gandev:server-eval
 
 peerlibrary:xml2js
 meteorhacks:npm
-autopublish
 npm-container
 simple:reactive-method
 ixdi:material-design-iconic-font
+momentjs:moment
+autopublish
