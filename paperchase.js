@@ -119,53 +119,64 @@ if (Meteor.isClient) {
         });
 
     Router.route('/article/:_id', { 
-            name: 'Article',
-            layoutTemplate: 'Visitor',
-            waitOn: function(){
-                return[
-                    Meteor.subscribe('articles')
-                ]
-            },
-            data: function(){
-                if(this.ready()){
-                    var id = this.params._id;
-                    var article = articles.findOne({'_id': id});
-                    // console.log('article = ');console.log(article);
-                    return {
-                        article: article
-                    };
-                }
+        name: 'Article',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+        return[
+                Meteor.subscribe('articleInfo',this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var id = this.params._id;
+                var article = articles.findOne({'_id': id});
+                return {
+                    article: article
+                };
             }
-        });
+        }
+    });
     Router.route('/article/:_id/text', { 
-            name: 'ArticleText',
-            layoutTemplate: 'Visitor',
-            waitOn: function(){
-                return[
-                    Meteor.subscribe('articles')
-                ]
-            },
-            data: function(){
-                if(this.ready()){
-                    var id = this.params._id;
-                    var article = articles.findOne({'_id': id});
-                    // console.log('article = ');console.log(article);
-                    return {
-                        article: article
-                    };
-                }
+        name: 'ArticleText',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articleInfo',this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var id = this.params._id;
+                var article = articles.findOne({'_id': id});
+                // console.log('article = ');console.log(article);
+                return {
+                    article: article
+                };
             }
-        });
+        }
+    });
 
 
 	/*
 	ADMIN PAGES
 	*/
-
     Router.route('/admin', {
-            name: 'admin.dashboard'
-            ,layoutTemplate: 'Admin'
-        });
+        name: 'admin.dashboard',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articlesRecentFive')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var articlesList = articles.find({}).fetch();
+                return {
+                    articles: articlesList
+                };
+            }
+        }
+    });
 
     /*xml intake*/
     Router.route('/admin/article-xml',{
@@ -231,7 +242,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-                Meteor.subscribe('articles')
+                Meteor.subscribe('articleInfo',this.params._id)
             ]
         },        
         data: function(){
@@ -366,7 +377,6 @@ if (Meteor.isClient) {
             }
         }
     });   
-
 }
 
 if (Meteor.isServer) {
