@@ -128,7 +128,7 @@ if (Meteor.isServer) {
     return issues.find({},{sort : {volume:1}});
   });
   Meteor.publish('articles', function () {
-    return articles.find({},{sort : {page_start:1}});
+    return articles.find({},{sort : {volume:-1,issue:-1}});
   });
   Meteor.publish('articleInfo', function (mongoId) {
     return articles.find({'_id':mongoId},{});
