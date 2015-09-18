@@ -80,9 +80,9 @@ if (Meteor.isClient) {
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
-            name: "home",
-            layoutTemplate: 'Visitor'
-        });
+        name: 'home',
+        layoutTemplate: 'Visitor'
+    });
 
     Router.route('/archive', { 
         name: 'archive',
@@ -226,6 +226,10 @@ if (Meteor.isClient) {
 
     /*article and articles*/
     Router.route('/admin/articles',{
+        name: 'adminArticlesDashboard',
+        layoutTemplate: 'Admin'
+    });
+    Router.route('/admin/articles/list',{
         name: 'adminArticlesList',
         layoutTemplate: 'Admin',
         waitOn: function(){
@@ -251,9 +255,19 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var id = this.params._id;
                 var article = articles.findOne({'_id': id});
+                var feature = '';
+                var advance = '';
                 // console.log('article = ');console.log(article);
+                if(article.feature){
+                    feature = 'checked';
+                }
+                if(article.advance){
+                    advance = 'checked';
+                }
                 return {
-                    article: article
+                    article: article,
+                    feature: feature,
+                    advance: advance
                 };
             }
         }

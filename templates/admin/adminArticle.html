@@ -1,5 +1,46 @@
+<template name="adminArticlesDashboard">
+	{{>AdminHeader header="Article Dashboard"}}
+	<div class="row">
+		<div class="col s4">
+			<ul class="collection card">
+				<li class="collection-item"><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="zmdi zmdi-upload"></i> XML</a></li>
+				<li class="collection-item"><a href="{{pathFor 'adminArticlesList'}}">Articles List</a></li>
+			</ul>			
+		</div>
+	</div>
+</template>
+
 <template name="adminArticle">
 	{{>AdminHeader header="Article"}}
+	<div class="card">
+		<div class="card-content">
+			<h5 class="center-align">Article Settings</h5>
+			<!--TODO: auto form this -->
+			<form>
+				<div class="row">
+					<div class="col s6 center-align">
+						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" {{feature}}/>
+						<label for="feature-checkbox">Feature</label>				
+					</div>
+					<div class="col s6 center-align">
+						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox" {{advance}}/>
+						<label for="advance-checkbox">Advance</label>				
+					</div>
+				</div>		
+				<div class="row">
+					<div class="col s12 center-align">
+						<button class="submit btn waves-effect waves-light save-btn" type="submit" name="action" alt="Add User">Save</button>
+					</div>
+				</div>		
+			</form>
+			{{>saving}}
+			<div class="row success">
+				<div class="col m4 offset-m4 s12 green lighten-4 center-align">
+					<h5>Article Saved <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
+				</div>
+			</div>
+		</div>
+	</div>
 	{{>adminArticleData}}
 </template>
 <template name="adminArticleData">
