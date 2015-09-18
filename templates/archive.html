@@ -11,7 +11,16 @@
 			{{#each volumes}}
 				<li class="collection-item collection-header"><h3>Volume {{volume}}</h3></li>
 				{{#each issues}}
-					<li class="collection-item"><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></li>
+					<li class="collection-item">
+						<div class="row">
+							<div class="col s2">
+								<a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
+							</div>
+							<div class="col s10">
+								<h4><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h4>
+							</div>
+						</div>
+					</li>
 				{{/each}}	
 			{{/each}}
 			</ul>
