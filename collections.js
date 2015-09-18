@@ -127,6 +127,9 @@ if (Meteor.isServer) {
   Meteor.publish('issues', function () {
     return issues.find({},{sort : {volume:1}});
   });
+  Meteor.publish('issue', function (v,i) {
+    return issues.find({'volume': parseInt(v), 'issue': parseInt(i)});
+  });
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
@@ -136,6 +139,12 @@ if (Meteor.isServer) {
   /*TODO: RECENT define. By pub date?*/
   Meteor.publish('articlesRecentFive', function () {
     return articles.find({},{sort:{'_id':1},limit : 5});
+  });
+  Meteor.publish('feature', function () {
+    return articles.find({'feature':true},{sort:{'_id':1}});
+  });
+  Meteor.publish('advance', function () {
+    return articles.find({'advance':true},{sort:{'_id':1}});
   });
   Meteor.publish('allUsers', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
@@ -165,5 +174,5 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
 	Meteor.subscribe('volumes');
-	Meteor.subscribe('issues');
+	// Meteor.subscribe('issues');
 }
