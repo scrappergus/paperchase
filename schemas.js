@@ -314,6 +314,9 @@ Schemas.articles = new SimpleSchema({
     'advance':{
         type: Boolean
     },
+    'abstract' : {
+        type: String
+    },
     doc_updates: {
         type: Object
     }

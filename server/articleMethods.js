@@ -49,7 +49,6 @@ Meteor.methods({
 							if(err){
 								return 'ERROR';
 							}else{
-
 								//Process JSON for meteor templating and mongo db
 								//TITLE
 								var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
@@ -57,6 +56,7 @@ Meteor.methods({
 								titleTitle = titleTitle.replace('article-title>','').replace('<italic>','<i>').replace('</italic>','</i>');
 								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
 								j['title'] = titleTitle; 
+
 
 								j['volume'] = parseInt(articleJSON['volume'][0]);
 								j['issue'] = parseInt(articleJSON['issue'][0]);
@@ -68,6 +68,15 @@ Meteor.methods({
 									j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];	
 								}
 								
+								//ABSTRACT
+								if(articleJSON['abstract']){
+									var abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
+									abstract = abstract.replace('abstract>\n ', '');
+									abstract = abstract.replace('</p>\n','</p>');
+									abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
+									j['abstract'] = abstract;
+									console.log(abstract);
+								}
 
 								//ARTICLE TYPE
 								//TODO: These are nlm type, possible that publisher has its own type of articles
@@ -159,6 +168,34 @@ Meteor.methods({
 			}
 		});
 		return fut.wait();
-	}
+	},
+	// getXML: function(fileName){
+	// 	console.log('..getXML');
+	// 	if(fileName)
+	// 	var j = {}, 
+	// 		xml;
+	// 	var fut = new future();
+
+	// 	var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
+	// 	var file = filePath + fileName;
+	// 	fs.exists(file, function(fileok){
+	// 		if(fileok){
+	// 			fs.readFile(file, function(error, data) {
+	// 				if(data)
+					
+	// 				if(error){
+	// 					return 'ERROR';
+	// 				}else{
+	// 					xml = data.toString();
+	// 					fut['return'](xml);
+	// 				}
+	// 			});
+	// 		}else{
+	// 			console.log('file not found');
+	// 		}
+	// 	});		
+	// 	return fut.wait();
+	// 	//TODO: use this in processXML 
+	// }
 })
 

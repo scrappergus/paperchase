@@ -3,42 +3,50 @@
 <div class="container">
     <div class="row">
         <div class="col s12">
-        	<h1>{{{title}}}</h1>
-        	<p>{{>AuthorsList}}</p>
+            <h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h5>
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <span class="badge">{{article_type.type}}</span>
+                            <h2>{{{title}}}</h2>
+                            <h4>{{>AuthorsList}}</h4>
+                            <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
+                            {{#if dates}}
+                                {{#each dates}}
+                                {{#if equals 'epub' type}}
+                                       epub: {{getMonthWord month}}, {{day}} {{year}}
+                                {{/if}}
+                                {{/each}}
+                            {{/if}}        
+                        </div>
+                    </div>
+                    {{#if abstract}}
+                    <div class="row">
+                        <div class="col s12">
+                            {{{abstract}}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    <div class="row">
+                        <div class="col s12">
+                            <a class="waves-effect waves-light btn btn-lg">PDF</a>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
         </div>
     </div>
+
+    {{#if keywords}}
     <div class="row">
         <div class="col s12">
-        	<h2>Lorem ipsum dolor sit amet</h2>
+            {{#each keywords}}
+                <a class="btn waves-effect waves-light kw deep-orange lighten-2">{{{.}}}</a>
+            {{/each}}
         </div>
     </div>
-    <div class="row">
-        <div class="col s12">
-        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-    		<a class="waves-effect waves-light btn">PDF</a>
-        </div>
-    </div>
+    {{/if}}    
 </div>
 {{/with}}
 </template>
