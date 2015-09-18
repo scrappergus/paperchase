@@ -103,7 +103,7 @@
                     <h5>{{{title}}}</h5>
                     <p>{{>AuthorsList}}</p>
                     <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
-                     <button class="btn waves-effect waves-light" alt="{{pathFor 'article'}}">Read More</button>
+                    <a class="btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Read More</a>
                 </div>
             </div>
         </div>
