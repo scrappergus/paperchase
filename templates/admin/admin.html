@@ -1,25 +1,7 @@
 <template name="Admin">
 {{#if isInRole 'admin'}}
-<ul id="articles-dropdown" class="dropdown-content">
-  <li><a href="{{pathFor 'adminArticleXmlIntake'}}">Upload XML</a></li>
-  <li><a href="{{pathFor 'adminArticlesList'}}">Articles List</a></li>
-</ul>
-<nav class="aging-nav" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="/admin/">Dashboard</a></li>
-            <li><a href="/admin/institution">Institutions</a></li>
-            <li><a href="/admin/users">Users</a></li>
-            <li><a class="dropdown-button" href="#!" data-activates="articles-dropdown">Articles</a></li>
-            <li>{{> loginButtons}}</li>
-        </ul>
 
-        <ul id="nav-mobile" class="side-nav">
-            <li><a href="#">Navbar Link</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-</nav>
+{{>adminNav}}
 
 <div class="container">
 {{>yield}}
@@ -29,7 +11,7 @@
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h1>NO ACCESS</h1>
+            <h3><i class="zmdi zmdi-alert-triangle"></i> NO ACCESS</h3>
             {{> loginButtons}}
         </div>
     </div>
@@ -41,7 +23,30 @@
 <template name="AdminHeader">
     <div class="row">
         <div class="col s12">
-            <h3 class="admin-header">{{header}}</h3>
+            <h4 class="admin-header">{{header}}</h4>
         </div>
     </div>    
+</template>
+
+<template name="adminNav">
+    <ul id="articles-dropdown" class="dropdown-content">
+      <li><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="zmdi zmdi-upload"></i> XML</a></li>
+      <li><a href="{{pathFor 'adminArticlesList'}}">Articles List</a></li>
+    </ul>
+    <nav class="aging-nav" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/admin/">Dashboard</a></li>
+                <li><a href="/admin/institution">Institutions</a></li>
+                <li><a href="/admin/users">Users</a></li>
+                <li><a class="dropdown-button" href="#!" data-activates="articles-dropdown">Articles</a></li>
+                <li>{{> loginButtons}}</li>
+            </ul>
+
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="#">Navbar Link</a></li>
+            </ul>
+            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
 </template>
