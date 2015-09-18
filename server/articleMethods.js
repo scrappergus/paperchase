@@ -35,7 +35,7 @@ Meteor.methods({
 			xml;
 		var fut = new future();
 
-		var filePath = '/Users/jl/sites/paperchase/.uploads/xml/';//TODO: add paths
+		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
 		var file = filePath + fileName;
 		fs.exists(file, function(fileok){
 			if(fileok){
