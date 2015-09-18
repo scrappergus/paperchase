@@ -1,14 +1,8 @@
 <template name="adminArticleXmlIntake">
 	{{>AdminHeader header="Article XML Intake"}}
 
-	<div class="card grey lighten-4">
-		<div class="card-content">
-			<div class="row">
-				<div class="col s12">
-					{{> upload_bootstrap contentType='xml' callbacks=myCallbacks}}
-				</div>
-			</div>
-		</div>
+	<div class="col s12">
+		<div class="xml-upload border-gray">{{> upload_bootstrap contentType='xml' callbacks=myCallbacks}}</div>
 	</div>
 </template>
 
