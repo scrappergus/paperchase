@@ -3,7 +3,7 @@
 	<div class="row">
 		<div class="col s12">
 			<h3>Volume {{volume}}, Issue {{issue}}</h3>
-			<h5>{{formatDate pub_date}}</h5>
+			{{#if pub_date}}<h5>{{formatDate pub_date}}</h5>{{/if}}
 		</div>
 	</div>
 

@@ -19,6 +19,9 @@ if (Meteor.isClient) {
 	Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MMMM DD, YYYY');
 	});	
+	Template.registerHelper('formatIssueDate', function(date) {
+		return moment(date).format('MMMM YYYY');
+	});	
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
 		});
