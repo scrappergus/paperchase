@@ -377,6 +377,13 @@ if (Meteor.isClient) {
             }
         }
     });   
+
+
+    //this route is used to query pmc for all xml.. don't go here.
+    Router.route('/admin/batchprocessxml', {
+        name: 'adminBatchXml',
+        layoutTemplate: 'Admin'
+    }); 
 }
 
 if (Meteor.isServer) {

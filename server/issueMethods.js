@@ -4,6 +4,8 @@ Meteor.methods({
 		var vol, 
 			iss, 
 			issueId;
+		issueData['issue'] = parseInt(issueData['issue']);
+		issueData['volume'] = parseInt(issueData['volume']);
 		vol = volumes.findOne({'volume':issueData['volume']});
 		//double check that issue does not exit 
 		iss = issues.findOne({'volume':issueData['volume'],'issue':issueData['issue']});

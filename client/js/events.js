@@ -95,3 +95,42 @@ Template.adminArticleXmlProcess.events({
 		});
 	}
 });
+
+Template.adminBatchXml.events({
+	'click #get-pmc-xml': function(e){
+		e.preventDefault();
+		Meteor.call('getXMLFromPMC',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
+			}		
+		});
+	},
+	'click #save-pmc-xml': function(e){
+		e.preventDefault();
+		Meteor.call('saveXMLFromPMC',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
+			}		
+		});
+	},
+	'click #get-all-pii': function(e){
+		e.preventDefault();
+		Meteor.call('getAllPii',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
+			}		
+		});
+	}
+});

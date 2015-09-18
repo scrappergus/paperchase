@@ -249,7 +249,7 @@ Schemas.articles = new SimpleSchema({
         type: Number
     },
     issue: {
-        type: String
+        type: Number
     },
     issue_id:{
         type: String
@@ -319,7 +319,7 @@ Issues
 */
 Schemas.issues = new SimpleSchema({
     issue:{
-        type: String
+        type: Number
     },
     volume:{
         type: Number

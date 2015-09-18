@@ -6,7 +6,7 @@ Meteor.methods({
 	addArticle: function(articleData){
 		if(!articleData['issue_id']){
 			var issueData = {
-				'volume' : articleData['volume'],
+				'volume' : parseInt(articleData['volume']),
 				'issue' : articleData['issue']
 			}
 			issueData['doc_updates'] = {};
@@ -25,12 +25,17 @@ Meteor.methods({
 	updateArticle: function(mongoId, articleData){
 		return articles.update({'_id' : mongoId}, {$set: articleData});		
 	},
+	pushPiiArticle: function(mongoId, pii){
+		//used for batch processing of XML from PMC
+		return articles.update({'_id' : mongoId}, {$push: {'ids':{'type' : 'pii', 'id':pii}}});		
+	},
 	processXML: function(fileName){
+		console.log('--processXML '+fileName);
 		var j = {}, 
 			xml;
 		var fut = new future();
 
-		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
+		var filePath = '/Users/jl/sites/paperchase/uploads/pmc_xml/';//TODO: add paths
 		var file = filePath + fileName;
 		fs.exists(file, function(fileok){
 			if(fileok){
@@ -54,7 +59,7 @@ Meteor.methods({
 								j['title'] = titleTitle; 
 
 								j['volume'] = parseInt(articleJSON['volume'][0]);
-								j['issue'] = articleJSON['issue'][0];
+								j['issue'] = parseInt(articleJSON['issue'][0]);
 								j['page_start'] = articleJSON['fpage'][0];
 								j['page_end'] = articleJSON['lpage'][0];
 
@@ -84,7 +89,6 @@ Meteor.methods({
 									articleId['id'] = idCharacters;
 									j['ids'].push(articleId);
 								}
-
 								//AUTHORS
 								if(articleJSON['contrib-group']){
 									j['authors'] = [];
