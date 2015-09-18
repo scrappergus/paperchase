@@ -59,7 +59,7 @@ if (Meteor.isClient) {
 	Template.archive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-			var iss = issues.find({},{sort : {page_start:1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
 			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
 			return res;
 		}
@@ -67,7 +67,7 @@ if (Meteor.isClient) {
 	Template.adminArchive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-			var iss = issues.find({},{sort : {page_start:1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
 			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
 			return res;
 		}
