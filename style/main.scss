@@ -1,11 +1,17 @@
 @import 'variables';
 @import 'mixins';
 
+.aging-nav {
+    background: $blue-aging;
+    height: 66px;
+}
+
 html,body{
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
-	background: $blue-gray;
+    background-image: url(/images/backgrounds/exclusive_paper.png);
+   font-family: "Lora", sans-serif;
 }
 
 /*
@@ -78,7 +84,7 @@ VISITOR
 	width: 100%;
 	list-style: none;
 	li{
-		width: 33.333%;
+		width: 433px;
 		display: inline-block;
 		margin: 0;
 		padding: 0;

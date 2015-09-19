@@ -1,3 +1,25 @@
+// async loader for fonts
+// https://github.com/typekit/webfontloader
+
+if (Meteor.isClient) {
+
+    WebFontConfig = {
+        google: { families: [ 'Lora:400,400italic,700,700italic:latin' ] }
+    };
+    (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+            console.log("async fonts loaded", WebFontConfig);
+        })();
+
+}
+
+
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
         var iprnew = [];
         var iprid = IPRanges.find({institutionID: doc._id});

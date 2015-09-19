@@ -14,14 +14,58 @@
 </template>
 
 <template name="Home">
-<div class="ip-alert right-align">
-    <div class="container">
-        <p>You are viewing Aging from this IP address: {{clientIP}}</p>
-        {{#if isSubscribedIP}}
-        <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
-        {{/if}}        
+
+<section class="container">
+    <div class="row">
+        <div class="col s8">
+            <h2 class="">Latest Publications</h2>
+                {{#each feature}}
+                    <div class="card">
+                        <div class="card-content">
+                            <h5>{{{title}}}</h5>
+                            <p>{{>AuthorsList}}</p>
+                            <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
+                            <a class="btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a>
+                        </div>
+                    </div>
+                {{/each}}
+        </div>
+        <div class="col s4">
+            <h2 class="">Current Issue</h2>
+            <div class="card">
+                <div class="card-content">
+                    <img src="/images/covers/cover_v7n7.png" alt="Volume 7, Issue 7" style="width:180px;float:left; margin-right: 16px; margin-bottom: 16px;">
+                    <h5>Volume 7, Issue 7</h5>
+                    <h6>July 2015</h6>
+                    <a class="btn waves-effect waves-light" href="/issue/v7i7">View Issue</a>
+
+                </div>
+            </div>
+
+            <ul class="list-pics">
+                {{#each cards}}
+                    <li>
+                        <div class="list-p valign-wrapper" style="background-image:url(/images/cards/{{src}})">
+                            <div class="valign center-align"><h5>{{name}}</h5></div>
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+
+        </div>
     </div>
-</div>
+</section>
+
+
+</template>
+
+<!--</body>-->
+
+<template name="home">
+</template>
+
+
+<template name="oldHomeStuf">
 <section class="hero valign-pic valign-wrapper">
     <div class="container valign hero-txt">
         <div class="row">
@@ -62,6 +106,21 @@
         </div>
     </div>
 </section>
+
+
+<section class="current-issue valign-pic valign-wrapper">
+    <div class="container valign">
+        <div class="row valign-wrapper">
+            <div class="col s12 m3 offset-m1">
+                <h4>Our Latest Issue: July, 2015</h4>
+            </div>
+            <div class="col s12 m4 center-align">
+                <img src="/images/covers/cover_v7n7.png" alt="Volume 7, Issue 7">
+            </div>
+        </div>        
+    </div>
+</section>
+
 <section class="container">
     <div class="row">
         <div class="col s12">
@@ -77,42 +136,6 @@
         </div>
     </div>
 </section>
-<section class="current-issue valign-pic valign-wrapper">
-    <div class="container valign">
-        <div class="row valign-wrapper">
-            <div class="col s12 m3 offset-m1">
-                <h4>Our Latest Issue: July, 2015</h4>
-            </div>
-            <div class="col s12 m4 center-align">
-                <img src="/images/covers/cover_v7n7.png" alt="Volume 7, Issue 7">
-            </div>
-        </div>        
-    </div>
-</section>
-<section class="container">
-    <div class="row">
-        <div class="col s12">
-            <h2 class="center-align">Latest Publications</h2>
-        </div>
-    </div>
-    <div class="row latest">
-        {{#each feature}}
-        <div class="col s4">
-            <div class="card">
-                <div class="card-content">
-                    <h5>{{{title}}}</h5>
-                    <p>{{>AuthorsList}}</p>
-                    <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
-                    <a class="btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a>
-                </div>
-            </div>
-        </div>
-        {{/each}}
-    </div>
-</section>
-</template>
 
-<!--</body>-->
 
-<template name="home">
 </template>

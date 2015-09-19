@@ -2,16 +2,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>Aging</title>
+<link href='//fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 </head>
 
 <template name="Visitor">
 <nav class="aging-nav" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
+    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.gif"></a>
         <ul class="right hide-on-med-and-down">
             <li><a href="/">Home</a></li>
-            <li><a href="/issue/v7i7">Latest Issue</a></li>
+            <li><a href="/advance">Advance Online</a></li>
+            <li><a href="/issue/v7i7">Current Issue</a></li>
             <li><a href="/archive">Archive</a></li>
-            <li><a href="/advance">Advance Online Publications</a></li>
         <!--    <li><a href="/recent-breakthroughs">Recent Breakthroughs</a></li>
             <li><a href="/for-authors">For Authors</a></li>
             <li><a href="/about">About the Journal</a></li>
@@ -42,3 +43,15 @@
         </div>
     </footer>
 </template>
+
+<template name="IP address">
+<div class="ip-alert right-align">
+    <div class="container">
+        <p>You are viewing Aging from this IP address: {{clientIP}}</p>
+        {{#if isSubscribedIP}}
+        <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
+        {{/if}}        
+    </div>
+</div>
+</template>
+
