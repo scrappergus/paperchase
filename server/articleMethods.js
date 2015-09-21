@@ -25,9 +25,9 @@ Meteor.methods({
 	updateArticle: function(mongoId, articleData){
 		return articles.update({'_id' : mongoId}, {$set: articleData});		
 	},
-	pushPiiArticle: function(mongoId, pii){
+	pushPiiArticle: function(mongoId, ids){
 		//used for batch processing of XML from PMC
-		return articles.update({'_id' : mongoId}, {$push: {'ids':{'type' : 'pii', 'id':pii}}});		
+		return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});		
 	},
 	processXML: function(fileName){
 		if(fileName)
@@ -87,17 +87,26 @@ Meteor.methods({
 
 
 								//IDS
-								j['ids'] = [];
+								// j['ids'] = [];
+								// var idList = articleJSON['article-id'];
+								// var idListLength = idList.length;
+								// for(var i = 0 ; i < idListLength ; i++){
+								// 	var articleId = {};
+								// 	var type = idList[i]['$']['pub-id-type'];
+								// 	var idCharacters = idList[i]['_'];
+								// 	articleId['type'] = type;
+								// 	articleId['id'] = idCharacters;
+								// 	j['ids'].push(articleId);
+								// }
+								j['ids'] = {};
 								var idList = articleJSON['article-id'];
 								var idListLength = idList.length;
 								for(var i = 0 ; i < idListLength ; i++){
-									var articleId = {};
 									var type = idList[i]['$']['pub-id-type'];
 									var idCharacters = idList[i]['_'];
-									articleId['type'] = type;
-									articleId['id'] = idCharacters;
-									j['ids'].push(articleId);
+									j['ids'][type] = idCharacters;
 								}
+
 								//AUTHORS
 								if(articleJSON['contrib-group']){
 									j['authors'] = [];

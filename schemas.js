@@ -261,16 +261,7 @@ Schemas.articles = new SimpleSchema({
         type: String
     },
     ids: {
-        type: Array
-    },
-    'ids.$':{
         type: Object
-    },
-    'ids.$.type': {
-        type: String
-    },
-    'ids.$.id': {
-        type: String
     },
     dates: {
         type: Array

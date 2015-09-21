@@ -25,6 +25,11 @@ if (Meteor.isClient) {
 	Template.registerHelper('equals', function (a, b) {
 		return a === b;
     });	
+	Template.registerHelper('arrayify',function(obj){
+		result = [];
+		for (var key in obj) result.push({name:key,value:obj[key]});
+		return result;
+	});    
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
 		});
