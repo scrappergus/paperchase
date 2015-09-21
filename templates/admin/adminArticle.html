@@ -72,11 +72,7 @@
 				</div>		
 			</form>
 			{{>saving}}
-			<div class="row success hide">
-				<div class="col m4 offset-m4 s12 green lighten-4 center-align">
-					<h5>Article Saved <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
-				</div>
-			</div>
+			{{>successMessage what='Article'}}
 		</div>
 	</div>
 	{{>adminArticleData}}
