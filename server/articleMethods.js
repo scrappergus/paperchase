@@ -102,8 +102,8 @@ Meteor.methods({
 									var authorsListLength = authorsList.length;
 									for(var i = 0 ; i < authorsListLength ; i++){
 										var author = {};
-										var name_first = authorsList[i]['name'][0]['given-names'];
-										var name_last = authorsList[i]['name'][0]['surname'];
+										var name_first = authorsList[i]['name'][0]['given-names'][0];
+										var name_last = authorsList[i]['name'][0]['surname'][0];
 										author['name_first'] = name_first;
 										author['name_last'] = name_last;
 										j['authors'].push(author);
@@ -134,7 +134,7 @@ Meteor.methods({
 									j['dates'][dateType] = dd;
 								}
 
-								//HISOTRY DATES
+								//HISTORY DATES
 								if(articleJSON['history']){
 									j['history'] = {};
 									var history = articleJSON['history'][0]['date'];
