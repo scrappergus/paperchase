@@ -81,7 +81,7 @@ Meteor.methods({
 								//TODO: These are nlm type, possible that publisher has its own type of articles
 								//TODO: Update article type collection if this type not present
 								j['article_type'] = {};
-								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'];
+								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'][0];
 								j['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
 
 
