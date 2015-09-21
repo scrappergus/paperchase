@@ -264,40 +264,13 @@ Schemas.articles = new SimpleSchema({
         type: Object
     },
     dates: {
-        type: Array
-    },
-    'dates.$':{
         type: Object
     },
-    'dates.$.type': {
-        type: String
-    },
-    'dates.$.month': {
-        type: Number
-    },
-    'dates.$.day': {
-        type: Number
-    },
-    'dates.$.year': {
-        type: Number
-    },
     history: {
-        type: Array
+        type: Object
     },
     'history.$':{
         type: Object
-    },
-    'history.$.type': {
-        type: String
-    },
-    'history.$.month': {
-        type: Number
-    },
-    'history.$.day': {
-        type: Number
-    },
-    'history.$.year': {
-        type: Number
     },
     'feature':{
         type: Boolean

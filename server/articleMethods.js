@@ -75,7 +75,6 @@ Meteor.methods({
 									abstract = abstract.replace('</p>\n','</p>');
 									abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
 									j['abstract'] = abstract;
-									console.log(abstract);
 								}
 
 								//ARTICLE TYPE
@@ -113,42 +112,48 @@ Meteor.methods({
 
 
 								//PUB DATES
-								j['dates'] = []
+								j['dates'] = {}
 								var dates = articleJSON['pub-date'];
 								var datesLength = dates.length;
 								for(var i = 0 ; i < datesLength ; i++){
-									var date = {};
-									date['type'] = dates[i]['$']['pub-type'];
-									if(dates[i]['day']){
-										date['day'] = dates[i]['day'][0];
-									}
+									var dateType =  dates[i]['$']['pub-type'];
+									var d = '';
 									if(dates[i]['month']){
-										date['month'] = dates[i]['month'][0];
+										d += dates[i]['month'][0] + ' ';
+									}
+									if(dates[i]['day']){
+										d += dates[i]['day'][0] + ', ';
+									}else{
+										d += 1 + ', ';
 									}
 									if(dates[i]['year']){
-										date['year'] = dates[i]['year'][0];
+										d += dates[i]['year'][0];
 									}
-									j['dates'].push(date);
+									var dd = new Date(d);
+
+									j['dates'][dateType] = dd;
 								}
 
 								//HISOTRY DATES
 								if(articleJSON['history']){
-									j['history'] = []
+									j['history'] = {};
 									var history = articleJSON['history'][0]['date'];
 									var historyLength = history.length;
+									
 									for(var i = 0 ; i < historyLength ; i++){
-										var dateH = {};
-										dateH['type'] = history[i]['$']['date-type'];
-										if(history[i]['day']){
-											dateH['day'] = history[i]['day'][0];
-										}
+										var dateType = history[i]['$']['date-type'];
+										var d = '';
 										if(history[i]['month']){
-											dateH['month'] = history[i]['month'][0];
+											d += history[i]['month'][0] + ' ';
+										}
+										if(history[i]['day']){
+											d += history[i]['day'][0] + ', ';
 										}
 										if(history[i]['year']){
-											dateH['year'] = history[i]['year'][0];
+											d += history[i]['year'][0] + ' ';
 										}
-										j['history'].push(dateH);
+										var dd = new Date(d);
+										j['history'][dateType] = dd;
 									}									
 								}
 

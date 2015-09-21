@@ -106,8 +106,8 @@
 			<div class="row">
 				<div class="col s12">
 					<h5>Dates:</h5>
-					{{#each dates}}
-					<h6><label>{{type}}:</label> {{#with .}}{{>prettyDate}}{{/with}}</h6>
+					{{#each arrayify dates}}
+					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
 					{{/each}}
 				</div>
 			</div>
@@ -116,8 +116,8 @@
 			<div class="row">
 				<div class="col s12">
 					<h5>History:</h5>
-					{{#each history}}
-					<h6><label>{{type}}:</label> {{#with .}}{{>prettyDate}}{{/with}}</h6>
+					{{#each arrayify history}}
+					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
 					{{/each}}
 				</div>
 			</div>
