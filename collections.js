@@ -191,6 +191,23 @@ if (Meteor.isServer) {
       return;
      }
   });  
+  //AUTHORS
+  Meteor.publish('authorsList', function(){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return authors.find();
+     }else{
+      this.stop();
+      return;
+     }
+  });  
+  Meteor.publish('authorData', function(id){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return authors.find({'_id':id});
+     }else{
+      this.stop();
+      return;
+     }
+  });  
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections

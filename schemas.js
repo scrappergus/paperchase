@@ -239,6 +239,9 @@ Schemas.articles = new SimpleSchema({
     'authors.$.name_last': {
         type: String
     },
+    'authors.$.mongo_id': {
+        type: String
+    },
     page_start: {
         type: Number
     },
@@ -284,6 +287,22 @@ Schemas.articles = new SimpleSchema({
     doc_updates: {
         type: Object
     }
+});
+
+
+/*
+Authors
+*/
+Schemas.authors = new SimpleSchema({
+    name_first:{
+        type: String
+    },
+    name_last:{
+        type: String
+    },
+    // article_ids: {
+    //     type: Array
+    // }
 });
 
 
