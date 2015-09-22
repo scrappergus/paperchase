@@ -17,16 +17,16 @@
 				{{name_first}}
 				{{#if name_middle}} {{name_middle}}{{/if}}
 				{{#if name_last}} {{name_last}}{{/if}}
-				{{#if affiliations_list}}
-					<sup>{{#each affiliations_list}}{{formatReference .}}{{/each}}</sup>
+				{{#if affiliations}}
+					<sup>{{#each affiliations}}{{formatReference .}}{{/each}}</sup>
 				{{/if}}
 				<span class="comma">, </span>
 			</span>
 		{{/each}}
 	</span>
-	{{#if affiliations_list}}
+	{{#if affiliations}}
 	<span class="affiliations">
-		{{#each arrayify affiliations_list}}
+		{{#each arrayify affiliations}}
 		<div class="clearfix"></div>
 			{{formatReference name}}. {{value}}
 		{{/each}}
