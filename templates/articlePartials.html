@@ -1,5 +1,37 @@
 <template name="AuthorsList">
-	<span class="authors">{{#each authors}}<span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}} {{name_last}}<span class="comma">, </span></span>{{/each}}</span>
+	<span class="authors">
+		{{#each authors}}
+			<span class="author">
+				{{name_first}}
+				{{#if name_middle}} {{name_middle}}{{/if}}
+				{{#if name_last}} {{name_last}}{{/if}}
+				<span class="comma">, </span>
+			</span>
+		{{/each}}
+	</span>
+</template>
+<template name="AuthorsRefList">
+	<span class="authors">
+		{{#each authors}}
+			<span class="author">
+				{{name_first}}
+				{{#if name_middle}} {{name_middle}}{{/if}}
+				{{#if name_last}} {{name_last}}{{/if}}
+				{{#if affiliations_list}}
+					<sup>{{#each affiliations_list}}{{formatReference .}}{{/each}}</sup>
+				{{/if}}
+				<span class="comma">, </span>
+			</span>
+		{{/each}}
+	</span>
+	{{#if affiliations_list}}
+	<span class="affiliations">
+		{{#each arrayify affiliations_list}}
+		<div class="clearfix"></div>
+			{{formatReference name}}. {{value}}
+		{{/each}}
+	</span>
+	{{/if}}
 </template>
 <template name="prettyDate">
 	{{getMonthWord month}}{{#if day}} {{day}}{{/if}}{{#if year}}, {{year}}{{/if}}
