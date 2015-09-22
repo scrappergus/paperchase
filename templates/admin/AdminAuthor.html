@@ -9,12 +9,24 @@
 							{{#with author}}<h3>{{name_first}} {{name_last}}</h3>{{/with}}
 						</div>
 					</div>
+					{{#if affiliations}}
+					<div class="row">
+						<div class="col s12">
+							<h4>Affiliations</h4>
+							<ul>
+								{{#each affiliations}}
+								<li>{{.}}</li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+					{{/if}}
 					<div class="row">
 						<div class="col s12">
 							<h4>Articles</h4>
-							<ul>
+							<ul class="collection">
 								{{#each articles}}
-								<li><h5>{{{title}}}</h5><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
+								<li class="collection-item"><h5>{{{title}}}</h5><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
 								{{/each}}
 							</ul>
 						</div>
