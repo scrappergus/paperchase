@@ -74,15 +74,16 @@ Meteor.methods({
 		}	
 	},
 	getAllArticlesPii: function(){
+		console.log('--getAllArticlesPii');
 		var allArticles = articles.find().fetch();
 		var articlesLength = allArticles.length;
 
 		for(var i = 0 ; i < articlesLength ; i++){
-		
 			var articleIds = allArticles[i]['ids'];
 			idsLength = articleIds.length;
 			var pmid = allArticles[i]['ids']['pmid'];
 			var pii = allArticles[i]['ids']['pii'];
+			console.log('.. ' + i + ' / pmid = '+pmid);
 			
 			if(!pii){
 				Meteor.call('getPiiFromPmid',pmid,function(error,pii){
@@ -104,10 +105,10 @@ Meteor.methods({
 		}
 	},
 	getAllAuthorsAffiliationsPubMed: function(){
-		// console.log('getAllAuthorsAffiliationsPubMed')
+		// console.log('getAllAuthorsAffiliationsPubMed');
 		var articlesList = articles.find().fetch();
 		for(var i = 0 ; i < articlesList.length ; i++){
-			console.log('--getAllAuthorsAffiliationsPubMed pmid = ' + articlesList[i]['ids']['pmid']);
+			console.log('.. ' + i + ' / pmid = ' + articlesList[i]['ids']['pmid']);
 			if(articlesList[i]['ids']['pmid']){
 				var articlePmid = articlesList[i]['ids']['pmid'];
 				var authorsListDb = articlesList[i]['authors'];
@@ -144,10 +145,9 @@ Meteor.methods({
 										var authorNameLast = authorsJson[i]['LastName'][0];
 										var mongoId;
 										for(var a = 0 ; a < authorsListDb.length ; a++){
-											// console.log(authorsListDb[a]['name_first'] + ' ' + authorsListDb[a]['name_last'] + ' == ' + authorNameFirst + ' ' + authorNameLast);
-											if(authorsListDb[a]['name_first'] === authorNameFirst && authorsListDb[a]['name_last'] === authorNameLast ){
+											if(authorsListDb[a]['name_first'].replace('.','') === authorNameFirst.replace('.','') && authorsListDb[a]['name_last'].replace('.','') === authorNameLast.replace('.','') ){
 												//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
-												
+												// console.log('... match: ' + authorNameFirst + ' ' + authorNameLast + ' / ' +authorAffiliation );
 												if(!authorsListDb[a]['affiliations']){
 													authorsListDb[a]['affiliations'] = [];
 												}
@@ -156,34 +156,14 @@ Meteor.methods({
 
 												//update the authorsList (from the article doc)
 												//add this affiliaton string to the array of affiliations for the author object, but only if not already present
-												if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) == -1){
+												if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
 													authorsListDb[a]['affiliations'].push(authorAffiliation);	
 												}
 												
 											}
 										}
 
-										//try to match just the last name then
-										if(!mongoId){
-											for(var a = 0 ; a < authorsListDb.length ; a++){
-												// console.log(authorsListDb[a]['name_first'] + ' ' + authorsListDb[a]['name_last'] + ' == ' + authorNameFirst + ' ' + authorNameLast);
-												if(authorsListDb[a]['name_last'] === authorNameLast ){
-													//we found a match. the last name in the returned xml from pubmed and the name in the db are the same.
-													
-													if(!authorsListDb[a]['affiliations']){
-														authorsListDb[a]['affiliations'] = [];
-													}
-
-													mongoId = authorsListDb[a]['ids']['mongo_id']; //for testing if we found a match and updating author doc
-
-													//update the authorsList (from the article doc) and add this affiliaton string to the array of affiliations for the author object
-													authorsListDb[a]['affiliations'].push(authorAffiliation);
-												}
-											}
-										}
-
 										if(mongoId){
-											// console.log('match: ' + mongoId + ' / ' + authorAffiliation);
 											//we matched the author in the xml response to a saved author
 											//create object for updating the article doc
 											var articleUpdate = {
