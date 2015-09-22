@@ -168,7 +168,7 @@ Template.adminArticleXmlProcess.events({
 });
 
 Template.adminBatchXml.events({
-	'click #get-pmc-xml': function(e){
+	'click #download-pmc-xml': function(e){
 		e.preventDefault();
 		Meteor.call('getXMLFromPMC',function(e,r){
 			if(e){
@@ -194,7 +194,7 @@ Template.adminBatchXml.events({
 	},
 	'click #get-all-pii': function(e){
 		e.preventDefault();
-		Meteor.call('getAllPii',function(e,r){
+		Meteor.call('getAllArticlesPii',function(e,r){
 			if(e){
 				console.log('ERROR');
 				console.log(e);
@@ -203,5 +203,14 @@ Template.adminBatchXml.events({
 				console.log(r);
 			}		
 		});
+	},
+	'click #get-all-authors-affiliations': function(e,t){
+		e.preventDefault();
+		Meteor.call('getAllAuthorsAffiliationsPubMed', function(error,result){
+			if(error){
+				console.log('ERROR');
+				console.log(error);
+			}
+		});	
 	}
 });

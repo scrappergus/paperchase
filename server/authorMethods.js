@@ -5,7 +5,8 @@ Meteor.methods({
 	addAuthor: function(authorData){
 		return authors.insert(authorData);		
 	},
-	addArticleToAuthor: function(mongoId, articleId ){
-		return authors.update({'_id' : mongoId}, {$addToSet: {'article_ids':articleId}});		
+	addAffiliationToAuthor: function(mongoId,affiliation){
+		// console.log('--addAffiliationToAuthor | mongoId = '+ mongoId + ' / affiliation = ' + affiliation);
+		return authors.update({'_id' : mongoId}, {$addToSet: {'affiliations':affiliation}});
 	}
 });

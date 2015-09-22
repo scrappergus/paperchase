@@ -4,14 +4,19 @@ future = Npm.require('fibers/future');
 
 Meteor.methods({
 	addArticle: function(articleData){
+		// console.log('--addArticle | pmid = '+articleData['ids']['pmid']);
 		if(!articleData['issue_id']){
 			var issueData = {
 				'volume' : parseInt(articleData['volume']),
 				'issue' : articleData['issue']
 			}
+
+			//who created
 			issueData['doc_updates'] = {};
 			issueData['doc_updates']['created_date'] = new Date(); 
 			issueData['doc_updates']['created_by'] = articleData['doc_updates']['created_by'];
+			
+			//INSERT into issues collection
 			Meteor.call('addIssue',issueData, function(error,_id){
 				if(error){
 					console.log('ERROR: ' + error.message);
@@ -20,22 +25,61 @@ Meteor.methods({
 				}
 			});
 		}
+
+		if(articleData['authors']){
+			var authorsList = articleData['authors'];
+			for(var author = 0 ; author < authorsList.length; author++){
+				//check if author doc exists in authors collection
+				var authorDoc;
+				authorsList[author]['ids'] = {};
+				authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
+				if(!authorDoc){
+					//INSERT into authors
+					Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
+						if(error){
+							console.log('ERROR');
+							console.log(error);
+						}else{
+							authorsList[author]['ids']['mongo_id'] = mongo_id;
+						}
+					});
+				}else{
+					//author doc already exists
+					authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
+				}
+			}
+		}
+
+		//INSERT into articles colection
 		return articles.insert(articleData);		
 	},
 	updateArticle: function(mongoId, articleData){
+		// console.log('--updateArticle |  mongoId = ' + mongoId);
 		return articles.update({'_id' : mongoId}, {$set: articleData});		
+	},
+	updateArticleByPmid: function(pmid, articleData){
+		// console.log('--updateArticleByPmid |  pmid = '+pmid);
+		return articles.update({'ids.pmid' : pmid}, {$set: articleData});		
+	},
+	addToArticleAffiliationsByPmid: function(pmid, affiliation){
+		// console.log('--addToArticleAffiliationsByPmid | pmid = ' + pmid  + ' / affiliation = ' + affiliation);
+		return  articles.update({'ids.pmid' : pmid}, {$addToSet: {'affiliations' : affiliation}});
 	},
 	pushPiiArticle: function(mongoId, ids){
 		//used for batch processing of XML from PMC
 		return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});		
 	},
-	processXML: function(fileName){
+	processXML: function(fileName,batch){
 		if(fileName)
 		var j = {}, 
 			xml;
 		var fut = new future();
 
-		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
+		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths 
+		if(batch){
+			filePath = '/Users/jl/sites/paperchase/uploads/pmc_xml/';
+		}
+
 		var file = filePath + fileName;
 		fs.exists(file, function(fileok){
 			if(fileok){
@@ -60,8 +104,8 @@ Meteor.methods({
 
 								j['volume'] = parseInt(articleJSON['volume'][0]);
 								j['issue'] = parseInt(articleJSON['issue'][0]);
-								j['page_start'] = articleJSON['fpage'][0];
-								j['page_end'] = articleJSON['lpage'][0];
+								j['page_start'] = parseInt(articleJSON['fpage'][0]);
+								j['page_end'] = parseInt(articleJSON['lpage'][0]);
 
 								//KEYWORDS
 								if(articleJSON['kwd-group']){
@@ -83,7 +127,6 @@ Meteor.methods({
 								j['article_type'] = {};
 								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'][0];
 								j['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
-
 
 								//IDS
 								j['ids'] = {};
@@ -109,7 +152,6 @@ Meteor.methods({
 										j['authors'].push(author);
 									}									
 								}
-
 
 								//PUB DATES
 								j['dates'] = {}
@@ -161,8 +203,7 @@ Meteor.methods({
 
 								fut['return'](j);	//this what is returned. j = is the fixed json.
 							}
-						});
-						
+						});					
 					}
 
 				});
