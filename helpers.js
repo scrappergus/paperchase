@@ -19,6 +19,9 @@ if (Meteor.isClient) {
 	Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MMMM DD, YYYY');
 	});	
+	Template.registerHelper('formatReference', function(ref) {
+		return parseInt(parseInt(ref) + 1);
+	});	
 	Template.registerHelper('formatIssueDate', function(date) {
 		return moment(date).format('MMMM YYYY');
 	});	
