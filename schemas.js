@@ -239,8 +239,8 @@ Schemas.articles = new SimpleSchema({
     'authors.$.name_last': {
         type: String
     },
-    'authors.$.mongo_id': {
-        type: String
+    'authors.$.ids': {
+        type: Object
     },
     page_start: {
         type: Number
@@ -294,15 +294,15 @@ Schemas.articles = new SimpleSchema({
 Authors
 */
 Schemas.authors = new SimpleSchema({
-    name_first:{
+    'name_first':{
         type: String
     },
-    name_last:{
+    'name_last':{
         type: String
     },
-    // article_ids: {
-    //     type: Array
-    // }
+    'ids' : {
+        type: Object
+    }
 });
 
 
