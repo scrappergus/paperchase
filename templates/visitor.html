@@ -6,28 +6,33 @@
 </head>
 
 <template name="Visitor">
-<nav class="aging-nav" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.gif"></a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="/">Home</a></li>
-            <li><a href="/advance">Advance Online</a></li>
-            <li><a href="/issue/v7i7">Current Issue</a></li>
-            <li><a href="/archive">Archive</a></li>
-        <!--    <li><a href="/recent-breakthroughs">Recent Breakthroughs</a></li>
+
+
+<div class="navbar-fixed">
+    <nav class="aging-nav z-depth-0" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/">Home</a></li>
+                <li><a href="/advance">Advance Online</a></li>
+                <li><a href="/issue/v7i7">Current Issue</a></li>
+                <li><a href="/archive">Archive</a></li>
+                <!--    <li><a href="/recent-breakthroughs">Recent Breakthroughs</a></li>
             <li><a href="/for-authors">For Authors</a></li>
             <li><a href="/about">About the Journal</a></li>
             <li><a href="/editorial-board">Editorial Board</a></li>
             <li><a href="/contact">Contact</a></li>
             -->
-            <li>{{> loginButtons}}</li>
-        </ul>
+                <li>{{> loginButtons}}</li>
+            </ul>
 
-        <ul id="nav-mobile" class="side-nav">
-            <li><a href="#">Navbar Link</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-</nav>
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="#">Navbar Link</a></li>
+            </ul>
+            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+</div>
+
 {{>yield}}
 {{>footer}}
 </template>

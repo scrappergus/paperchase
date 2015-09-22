@@ -20,6 +20,7 @@ if (Meteor.isClient) {
 }
 
 
+
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
         var iprnew = [];
         var iprid = IPRanges.find({institutionID: doc._id});
@@ -106,19 +107,30 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         waitOn: function(){
             return[
-                Meteor.subscribe('feature')
+                Meteor.subscribe('feature'),
+                Meteor.subscribe('director'),
+                Meteor.subscribe('eic'),
+                Meteor.subscribe('eb')
             ]
         },        
         data: function(){
             var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
             return {
-                feature : featureList
+                feature : featureList,
+                director: edboard.find({role:"Impact Journals Director"}),
+                eic:edboard.find({role:"Editor-in-Chief"}) ,
+                eb:edboard.find({role:"Founding editorial board"}) 
             }
         }
     });
 
+Template.Home.rendered = function () {
+    $('.collapsible').collapsible({
+            accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
+};
 
-    Router.route('/advance', { 
+Router.route('/advance', { 
         name: 'advance',
         layoutTemplate: 'Visitor',
         waitOn: function(){
