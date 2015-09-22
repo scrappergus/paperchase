@@ -72,11 +72,7 @@
 				</div>		
 			</form>
 			{{>saving}}
-			<div class="row success hide">
-				<div class="col m4 offset-m4 s12 green lighten-4 center-align">
-					<h5>Article Saved <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
-				</div>
-			</div>
+			{{>successMessage what='Article'}}
 		</div>
 	</div>
 	{{>adminArticleData}}
@@ -101,27 +97,31 @@
 			<div class="row">
 				<div class="col s12">
 					<h5>IDs:</h5>
-					{{#each ids}}
-						<h6><label class="">{{type}}:</label> {{id}}</h6>
+					{{#each arrayify ids}}
+						<h6><label class="">{{name}}:</label> {{value}}</h6>
 					{{/each}}
 				</div>
 			</div>
+			{{#if dates}}
 			<div class="row">
 				<div class="col s12">
 					<h5>Dates:</h5>
-					{{#each dates}}
-					<h6><label>{{type}}:</label> {{#with .}}{{>prettyDate}}{{/with}}</h6>
+					{{#each arrayify dates}}
+					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
 					{{/each}}
 				</div>
 			</div>
+			{{/if}}
+			{{#if history}}
 			<div class="row">
 				<div class="col s12">
 					<h5>History:</h5>
-					{{#each history}}
-					<h6><label>{{type}}:</label> {{#with .}}{{>prettyDate}}{{/with}}</h6>
+					{{#each arrayify history}}
+					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
 					{{/each}}
 				</div>
 			</div>
+			{{/if}}
 			{{#if keywords}}
 			<div class="row">
 				<div class="col s12">

@@ -22,9 +22,17 @@ if (Meteor.isClient) {
 	Template.registerHelper('formatIssueDate', function(date) {
 		return moment(date).format('MMMM YYYY');
 	});	
+	Template.registerHelper('articleDate', function(date) {
+		return moment(date).format('MMMM D, YYYY');
+	});	
 	Template.registerHelper('equals', function (a, b) {
 		return a === b;
     });	
+	Template.registerHelper('arrayify',function(obj){
+		result = [];
+		for (var key in obj) result.push({name:key,value:obj[key]});
+		return result;
+	});    
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
 		});

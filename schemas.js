@@ -239,6 +239,9 @@ Schemas.articles = new SimpleSchema({
     'authors.$.name_last': {
         type: String
     },
+    'authors.$.mongo_id': {
+        type: String
+    },
     page_start: {
         type: Number
     },
@@ -261,52 +264,16 @@ Schemas.articles = new SimpleSchema({
         type: String
     },
     ids: {
-        type: Array
-    },
-    'ids.$':{
         type: Object
-    },
-    'ids.$.type': {
-        type: String
-    },
-    'ids.$.id': {
-        type: String
     },
     dates: {
-        type: Array
-    },
-    'dates.$':{
         type: Object
     },
-    'dates.$.type': {
-        type: String
-    },
-    'dates.$.month': {
-        type: Number
-    },
-    'dates.$.day': {
-        type: Number
-    },
-    'dates.$.year': {
-        type: Number
-    },
     history: {
-        type: Array
+        type: Object
     },
     'history.$':{
         type: Object
-    },
-    'history.$.type': {
-        type: String
-    },
-    'history.$.month': {
-        type: Number
-    },
-    'history.$.day': {
-        type: Number
-    },
-    'history.$.year': {
-        type: Number
     },
     'feature':{
         type: Boolean
@@ -320,6 +287,22 @@ Schemas.articles = new SimpleSchema({
     doc_updates: {
         type: Object
     }
+});
+
+
+/*
+Authors
+*/
+Schemas.authors = new SimpleSchema({
+    name_first:{
+        type: String
+    },
+    name_last:{
+        type: String
+    },
+    // article_ids: {
+    //     type: Array
+    // }
 });
 
 

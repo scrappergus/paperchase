@@ -19,6 +19,9 @@ if (Meteor.isClient) {
 
 }
 
+Router.configure({
+    loadingTemplate: 'Loading'
+});
 
 
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
@@ -440,7 +443,48 @@ Router.route('/advance', {
     	layoutTemplate: 'Admin'
 	});
 
-	//AddUser
+
+    Router.route('/admin/authors', {
+        name: 'AdminAuthors',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('authorsList'),
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var authorsList = authors.find().fetch();
+                return {
+                    authors : authorsList
+                };
+            }
+        }
+    });
+    //TODO AdminAuthors: limit articles subscription 
+    Router.route('/admin/author/:_id', {
+        name: 'AdminAuthor',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles'),
+                Meteor.subscribe('authorData',this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var id = this.params._id;
+                var authorsData = authors.findOne({'_id':id});
+                var authorArticleIdsList = authorsData['article_ids'];
+                var authorArticlesList = articles.find({'_id' : {$in : authorArticleIdsList}}).fetch();
+                return {
+                    author : authorsData,
+                    articles: authorArticlesList
+                };
+            }
+        }
+    });
+
     Router.route('/admin/institution', {
             name: 'admin.institution'
             ,layoutTemplate: 'Admin'

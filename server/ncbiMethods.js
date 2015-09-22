@@ -42,18 +42,14 @@ Meteor.methods({
 		for(var i = 0 ; i < articlesLength ; i++){
 			var articleIds = allArticles[i]['ids'];
 			idsLength = articleIds.length;
-			var pmid;
-			for(var id = 0 ; id < idsLength ; id++){
-				if(articleIds[id]['type'] === 'pmid'){
-					pmid = articleIds[id]['id'];
-				}
-			}
+			var pmid = allArticles[i]['ids']['pmid'];
 			Meteor.call('getPIIFromPmid',pmid,function(error,pii){
 				if(error){
 					console.log('ERROR: Could not get PII');
 					console.log(error);
 				}else{
-					Meteor.call('pushPiiArticle',allArticles[i]['_id'],pii,function(err,res){
+					articleIds['pii'] = pii;
+					Meteor.call('pushPiiArticle',allArticles[i]['_id'],articleIds,function(err,res){
 						if(err){
 							console.log('ERROR: Could not save PII '+allArticles[i]['_id']);
 							piiFail.push(allArticles[i]['_id']);

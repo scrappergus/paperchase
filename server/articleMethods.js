@@ -25,9 +25,9 @@ Meteor.methods({
 	updateArticle: function(mongoId, articleData){
 		return articles.update({'_id' : mongoId}, {$set: articleData});		
 	},
-	pushPiiArticle: function(mongoId, pii){
+	pushPiiArticle: function(mongoId, ids){
 		//used for batch processing of XML from PMC
-		return articles.update({'_id' : mongoId}, {$push: {'ids':{'type' : 'pii', 'id':pii}}});		
+		return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});		
 	},
 	processXML: function(fileName){
 		if(fileName)
@@ -75,29 +75,26 @@ Meteor.methods({
 									abstract = abstract.replace('</p>\n','</p>');
 									abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
 									j['abstract'] = abstract;
-									console.log(abstract);
 								}
 
 								//ARTICLE TYPE
 								//TODO: These are nlm type, possible that publisher has its own type of articles
 								//TODO: Update article type collection if this type not present
 								j['article_type'] = {};
-								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'];
+								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'][0];
 								j['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
 
 
 								//IDS
-								j['ids'] = [];
+								j['ids'] = {};
 								var idList = articleJSON['article-id'];
 								var idListLength = idList.length;
 								for(var i = 0 ; i < idListLength ; i++){
-									var articleId = {};
 									var type = idList[i]['$']['pub-id-type'];
 									var idCharacters = idList[i]['_'];
-									articleId['type'] = type;
-									articleId['id'] = idCharacters;
-									j['ids'].push(articleId);
+									j['ids'][type] = idCharacters;
 								}
+
 								//AUTHORS
 								if(articleJSON['contrib-group']){
 									j['authors'] = [];
@@ -105,8 +102,8 @@ Meteor.methods({
 									var authorsListLength = authorsList.length;
 									for(var i = 0 ; i < authorsListLength ; i++){
 										var author = {};
-										var name_first = authorsList[i]['name'][0]['given-names'];
-										var name_last = authorsList[i]['name'][0]['surname'];
+										var name_first = authorsList[i]['name'][0]['given-names'][0];
+										var name_last = authorsList[i]['name'][0]['surname'][0];
 										author['name_first'] = name_first;
 										author['name_last'] = name_last;
 										j['authors'].push(author);
@@ -115,42 +112,48 @@ Meteor.methods({
 
 
 								//PUB DATES
-								j['dates'] = []
+								j['dates'] = {}
 								var dates = articleJSON['pub-date'];
 								var datesLength = dates.length;
 								for(var i = 0 ; i < datesLength ; i++){
-									var date = {};
-									date['type'] = dates[i]['$']['pub-type'];
-									if(dates[i]['day']){
-										date['day'] = dates[i]['day'][0];
-									}
+									var dateType =  dates[i]['$']['pub-type'];
+									var d = '';
 									if(dates[i]['month']){
-										date['month'] = dates[i]['month'][0];
+										d += dates[i]['month'][0] + ' ';
+									}
+									if(dates[i]['day']){
+										d += dates[i]['day'][0] + ', ';
+									}else{
+										d += 1 + ', ';
 									}
 									if(dates[i]['year']){
-										date['year'] = dates[i]['year'][0];
+										d += dates[i]['year'][0];
 									}
-									j['dates'].push(date);
+									var dd = new Date(d);
+
+									j['dates'][dateType] = dd;
 								}
 
-								//HISOTRY DATES
+								//HISTORY DATES
 								if(articleJSON['history']){
-									j['history'] = []
+									j['history'] = {};
 									var history = articleJSON['history'][0]['date'];
 									var historyLength = history.length;
+									
 									for(var i = 0 ; i < historyLength ; i++){
-										var dateH = {};
-										dateH['type'] = history[i]['$']['date-type'];
-										if(history[i]['day']){
-											dateH['day'] = history[i]['day'][0];
-										}
+										var dateType = history[i]['$']['date-type'];
+										var d = '';
 										if(history[i]['month']){
-											dateH['month'] = history[i]['month'][0];
+											d += history[i]['month'][0] + ' ';
+										}
+										if(history[i]['day']){
+											d += history[i]['day'][0] + ', ';
 										}
 										if(history[i]['year']){
-											dateH['year'] = history[i]['year'][0];
+											d += history[i]['year'][0] + ' ';
 										}
-										j['history'].push(dateH);
+										var dd = new Date(d);
+										j['history'][dateType] = dd;
 									}									
 								}
 

@@ -13,10 +13,8 @@
                             <h4>{{>AuthorsList}}</h4>
                             <p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
                             {{#if dates}}
-                                {{#each dates}}
-                                {{#if equals 'epub' type}}
-                                       epub: {{getMonthWord month}}, {{day}} {{year}}
-                                {{/if}}
+                                {{#each arrayify dates}}
+                                    <p>{{name}}: {{articleDate value}}</p>
                                 {{/each}}
                             {{/if}}        
                         </div>

@@ -5,6 +5,7 @@ articleTypes = new Mongo.Collection('articleTypes'); //when saving an article qu
 Institutions = new Mongo.Collection("institutions");
 IPRanges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
+authors = new Mongo.Collection('authors');
 
 
 Meteor.users.allow({
@@ -63,6 +64,26 @@ issues.allow({
   }  
 });
 volumes.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }  
+});
+authors.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -188,6 +209,23 @@ if (Meteor.isServer) {
 
 
 
+  //AUTHORS
+  Meteor.publish('authorsList', function(){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return authors.find();
+     }else{
+      this.stop();
+      return;
+     }
+  });  
+  Meteor.publish('authorData', function(id){
+     if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return authors.find({'_id':id});
+     }else{
+      this.stop();
+      return;
+     }
+  });  
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
