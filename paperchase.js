@@ -461,10 +461,9 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                var id = this.params._id;
-                var authorsData = authors.findOne({'_id':id});
-                var authorArticleIdsList = authorsData['article_ids'];
-                var authorArticlesList = articles.find({'_id' : {$in : authorArticleIdsList}}).fetch();
+                var mongoId = this.params._id;
+                var authorsData = authors.findOne({'_id':mongoId});
+                var authorArticlesList = articles.find({ 'authors' : { '$elemMatch' : { 'ids.mongo_id' :  mongoId } } });
                 return {
                     author : authorsData,
                     articles: authorArticlesList
@@ -511,7 +510,12 @@ if (Meteor.isClient) {
     //this route is used to query pmc for all xml.. don't go here.
     Router.route('/admin/batchprocessxml', {
         name: 'adminBatchXml',
-        layoutTemplate: 'Admin'
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles')
+            ]
+        },
     }); 
 }
 // Router.route('/xml/:_filename',{
