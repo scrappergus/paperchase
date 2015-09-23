@@ -335,6 +335,7 @@ if (Meteor.isClient) {
                 if(article.advance){
                     advance = 'checked';
                 }
+                article = Meteor.article.affiliationsNumbers(article);
                 return {
                     article: article,
                     feature: feature,
