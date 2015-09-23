@@ -113,7 +113,6 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('feature'),
-                Meteor.subscribe('director'),
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('eb')
             ]
