@@ -158,6 +158,12 @@ if (Meteor.isClient) {
 				}
 				return articlesList;				
 			}
+		},
+		query: function(){
+			return Session.get('data-submission-data');
+		},
+		queryType: function(){
+			return Session.get('data-submission-type');
 		}
 	});
 	Template.AdminInstitution.helpers({

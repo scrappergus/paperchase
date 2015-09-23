@@ -52,6 +52,31 @@
 			</div>
 		</div>
 	</div>
+	{{#if query}}
+		{{#if articles}}
+		{{else}}
+		<div class="row">
+			<div class="col s12">
+				<button class="waves-effect waves-light btn right clear">clear</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s12">
+				<h4>No Articles Found</h4>
+				{{#if equals queryType 'issue'}}
+					<p>Issue ID: {{query}}</p>
+				{{else}}
+					<p>PII:</p>
+					<ul>
+					{{#each query}}
+						<li>{{.}}</li>
+					{{/each}}
+					</ul>
+				{{/if}}
+			</div>
+		</div>
+		{{/if}}
+	{{/if}}
 	{{#if articles}}
 	<div class="row">
 		<div class="col s6">
