@@ -172,7 +172,7 @@ Template.AdminDataSubmissions.events({
 		//get articles
 		var queryType = 'pii',
 			queryParams = piiList;
-			
+
 		Meteor.dataSubmissions.getArticles(queryType,queryParams);
 	},
 	'submit .form-issue': function(e,t){
@@ -188,7 +188,9 @@ Template.AdminDataSubmissions.events({
 	'click .clear': function(e){
 		e.preventDefault();
 		Session.set('submission_list',null);
+		Session.set('error',false);
 		$('.data-submission-pii').remove();
+		$('#processing-response').addClass('hide');
 	}
 })
 
