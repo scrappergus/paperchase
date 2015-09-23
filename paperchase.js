@@ -102,8 +102,8 @@ if (Meteor.isClient) {
 
     Session.setDefault('formMethod','');
     Session.setDefault('fileNameXML',''); //LIVE
-    Session.setDefault('data-submission-type','');
-    Session.setDefault('data-submission-data','');
+    Session.setDefault('submission_list',null);
+    Session.setDefault('error',false);
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
@@ -248,7 +248,7 @@ if (Meteor.isClient) {
     });
 
     /*xml intake*/
-    Router.route('/admin/article-xml',{
+    Router.route('/admin/article_xml',{
         name: 'adminArticleXmlIntake',
         layoutTemplate: 'Admin'
     });

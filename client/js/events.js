@@ -154,7 +154,6 @@ Template.AdminDataSubmissions.events({
 	},
 	'submit .form-pii': function(e,t){
 		e.preventDefault();
-		Session.set('data-submission-type', 'pii');
 		
 		var piiList = Meteor.dataSubmissions.getPiiList();
 
@@ -169,19 +168,26 @@ Template.AdminDataSubmissions.events({
 		if(piiList.length === 0){
 			alert('no PII to search');
 		}
-		Session.set('data-submission-data',piiList);
+
+		//get articles
+		var queryType = 'pii',
+			queryParams = piiList;
+			
+		Meteor.dataSubmissions.getArticles(queryType,queryParams);
 	},
 	'submit .form-issue': function(e,t){
 		e.preventDefault();
 		var issueId = $('#submissions_search_issue').val();
-		Session.set('data-submission-type', 'issue');
-		Session.set('data-submission-data',issueId);
+
+		//get articles
+		var queryType = 'issue',
+			queryParams = issueId;
+		Meteor.dataSubmissions.getArticles(queryType,queryParams);
+
 	},
 	'click .clear': function(e){
 		e.preventDefault();
-		Session.set('data-submission-type', '');
-		Session.set('data-submission-data', '');
-		//remove all pii list
+		Session.set('submission_list',null);
 		$('.data-submission-pii').remove();
 	}
 })
@@ -270,5 +276,14 @@ Template.AdminBatchXml.events({
 				console.log(error);
 			}
 		});	
+	},
+	'click #get-all-pub-status': function(e){
+		e.preventDefault();
+		Meteor.call('updateAllArticlesPubStatusNumber', function(error,result){
+			if(error){
+				console.log('ERROR - updateAllArticlesPubStatusNumber');
+				console.log(error);
+			}
+		});			
 	}
 });

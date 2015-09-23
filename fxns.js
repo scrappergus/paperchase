@@ -50,6 +50,31 @@ Meteor.dataSubmissions = {
 			piiList.push(pii);
 		});
 		return piiList;
+	},
+	getArticles:function(queryType,queryParams){
+		Meteor.dataSubmissions.processing();
+		Session.set('submission_list',null);
+		Session.set('error',false);
+		Meteor.call('getArticlesForDataSubmission', queryType, queryParams, function(error,result){
+			if(error){
+				console.log('ERROR - getArticlesForDataSubmission');
+				console.log(error);
+				Meteor.dataSubmissions.errorProcessing();
+			}else{
+				Meteor.dataSubmissions.doneProcessing();
+				Session.set('submission_list',result);
+			}
+		});
+	},
+	processing: function(){
+		$('#processing-response').removeClass('hide');
+	},
+	doneProcessing: function(){
+		$('#processing-response').addClass('hide');
+	},
+	errorProcessing: function(){
+		Session.set('error',true);
+		$('#processing-response').addClass('hide');
 	}
 }
 
