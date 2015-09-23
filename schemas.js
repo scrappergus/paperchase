@@ -204,21 +204,6 @@ Schemas.User = new SimpleSchema({
 Meteor.users.attachSchema(Schemas.User);
 
 
-XMLIntake = new Meteor.Collection('xml-intake');
-
-Schemas.XMLIntake = new SimpleSchema ({
-        picture: {
-            type: String
-            ,autoform: {
-                afFieldInput: {
-                    type: 'fileUpload'
-                    ,collection: 'xml-intake-fs'
-                }
-                ,label: 'Choose file' 
-            }
-        }
-    });
-
 /*
 Articles
 */
