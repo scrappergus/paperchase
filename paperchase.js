@@ -236,7 +236,7 @@ if (Meteor.isClient) {
     });
 
     /*data submissions*/
-    Router.route('/admin/datasubmissions',{
+    Router.route('/admin/data_submissions',{
         name: 'AdminDataSubmissions',
         layoutTemplate: 'Admin',
         waitOn: function(){
