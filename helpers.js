@@ -32,7 +32,7 @@ if (Meteor.isClient) {
 		return moment(date).format('MMMM YYYY');
 	});
 	Template.registerHelper('equals', function (a, b) {
-		return a === b;
+		return a == b;
     });	
 	Template.registerHelper('arrayify',function(obj){
 		result = [];
@@ -147,23 +147,10 @@ if (Meteor.isClient) {
 			return res;
 		},
 		articles: function(){
-			var type = Session.get('data-submission-type'),
-				data = Session.get('data-submission-data');
-			if(type && data){
-				var articlesList;
-				if(type === 'issue'){
-					articlesList = articles.find({'issue_id':data}).fetch();
-				}else{
-					articlesList = articles.find({'ids.pii':{'$in':data}}).fetch();
-				}
-				return articlesList;				
-			}
+			return Session.get('submission_list');
 		},
-		query: function(){
-			return Session.get('data-submission-data');
-		},
-		queryType: function(){
-			return Session.get('data-submission-type');
+		error: function(){
+			return Session.get('error');
 		}
 	});
 	Template.AdminInstitution.helpers({

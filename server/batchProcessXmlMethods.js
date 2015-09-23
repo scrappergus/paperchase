@@ -1,6 +1,8 @@
 var saved = [];
 var failed = [];
 var failedSavedDB = [];
+
+//processing XML, saving MX
 Meteor.methods({
 	getXMLFromPMC: function(){
 		console.log('-getXMLFromPMC');
@@ -235,12 +237,28 @@ Meteor.methods({
 			}
 		}
 	},
+	updateAllArticlesPubStatusNumber: function(){
+		// console.log('--updateAllArticlesPubStatusNumber');
+		var articlesList = articles.find().fetch();
+
+		for(var i = 0 ; i < articlesList.length ; i++){
+			var pmid = articlesList[i]['ids']['pmid'];
+			Meteor.call('getPubStatusNumberFromPmid',pmid, function(error,result){
+				if(error){
+					console.log('ERROR - getPubStatusNumberFromPmid');
+					console.log(error);
+				}else{
+					var update = {
+						'pub_status' : parseInt(result)
+					}
+					Meteor.call('updateArticle',articlesList[i]['_id'], update, function(e,r){
+						if(e){
+							console.log('ERROR - updateArticle');
+							console.log(e);
+						}
+					})
+				}
+			});
+		}		
+	}	
 })
-
-
-//for associating affilation with authors
-Meteor.methods({
-	addTempAffiliationToAuthor: function(mongoId, affiliation ){
-		return authors.update({'_id' : mongoId}, {$addToSet: {'affiliations' : affiliation}});		
-	}
-});

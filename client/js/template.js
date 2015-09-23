@@ -9,7 +9,7 @@ Template.adminIssue.rendered = function(){
 }
 Template.AdminDataSubmissions.rendered = function(){
 	$('select').material_select();
-	Session.set('data-submission-type','');
-	Session.set('data-submission-data','');
+	Session.set('submission_list',null);
 }
+
 

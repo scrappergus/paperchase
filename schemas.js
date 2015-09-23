@@ -269,6 +269,9 @@ Schemas.articles = new SimpleSchema({
     'abstract' : {
         type: String
     },
+    'pub_status': {
+        type: Number
+    },
     doc_updates: {
         type: Object
     }
