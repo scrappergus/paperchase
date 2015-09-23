@@ -122,7 +122,7 @@ if (Meteor.isClient) {
                 feature : featureList,
                 director: edboard.find({role:"Impact Journals Director"}),
                 eic:edboard.find({role:"Editor-in-Chief"}) ,
-                eb:edboard.find({role:"Founding editorial board"}) 
+                eb:edboard.find({role:"Founding Editorial Board"}) 
             }
         }
     });
@@ -153,6 +153,12 @@ Router.route('/advance', {
         name: 'archive',
         layoutTemplate: 'Visitor',
     });
+
+    Router.route('/editorial-board', { 
+        name: 'edboard',
+        layoutTemplate: 'Visitor',
+    });
+
 
     Router.route('/issue/:vi', { 
             name: 'issue',
