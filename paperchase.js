@@ -523,8 +523,8 @@ if (Meteor.isClient) {
 
 
     //this route is used to query pmc for all xml.. don't go here.
-    Router.route('/admin/batchprocessxml', {
-        name: 'adminBatchXml',
+    Router.route('/admin/batch_process', {
+        name: 'AdminBatchXml',
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[

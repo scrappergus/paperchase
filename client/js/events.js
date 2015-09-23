@@ -225,7 +225,7 @@ Template.adminArticleXmlProcess.events({
 	}
 });
 
-Template.adminBatchXml.events({
+Template.AdminBatchXml.events({
 	'click #download-pmc-xml': function(e){
 		e.preventDefault();
 		Meteor.call('getXMLFromPMC',function(e,r){
