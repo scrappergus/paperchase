@@ -249,6 +249,17 @@ FORMS
 		padding: $pad-lg;
 	}
 }
+.clear{
+	background-color: $red;
+}
 #close-success-msg{
 	cursor: pointer;
+}
+
+/*
+MAtERIALIZE
+*/
+.chip{
+	padding: $pad-sm;
+	margin-right: $margin-sm;
 }
