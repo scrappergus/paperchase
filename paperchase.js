@@ -184,10 +184,15 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var id = this.params._id;
-                var article = articles.findOne({'_id': id});
-                return {
-                    article: article
-                };
+                var article;
+                article = articles.findOne({'_id': id});
+                if(article){
+                    article = Meteor.article.affiliationsNumbers(article);
+                    return {
+                        article: article
+                    };                    
+                }
+
             }
         }
     });

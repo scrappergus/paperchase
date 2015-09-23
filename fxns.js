@@ -42,6 +42,26 @@ Meteor.organize = {
 	}
 }
 
+Meteor.article = {
+	affiliationsNumbers: function(article){
+		if(article['authors']){
+			var authorsList = article['authors'];
+			var affiliationsList = article['affiliations'];
+			for(var i = 0 ; i < authorsList.length ; i++){
+				if(article['authors'][i]['affiliations']){
+					article['authors'][i]['affiliation_numbers'] = [];
+					var authorAffiliations = article['authors'][i]['affiliations'];
+					for(var a = 0 ; a < authorAffiliations.length ; a++){
+						article['authors'][i]['affiliation_numbers'].push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
+					}					
+				}
+			}			
+		}
+		console.log(article);
+		return article;
+	}
+}
+
 Meteor.adminUser = {
 	getFormCheckBoxes: function(){
 		var roles = [];
