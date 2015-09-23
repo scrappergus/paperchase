@@ -28,6 +28,9 @@ if (Meteor.isClient) {
 	Template.registerHelper('articleDate', function(date) {
 		return moment(date).format('MMMM D, YYYY');
 	});	
+	Template.registerHelper('collectionDate',function(date) {
+		return moment(date).format('MMMM YYYY');
+	});
 	Template.registerHelper('equals', function (a, b) {
 		return a === b;
     });	
