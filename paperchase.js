@@ -186,13 +186,9 @@ if (Meteor.isClient) {
                 var id = this.params._id;
                 var article;
                 article = articles.findOne({'_id': id});
-                if(article){
-                    article = Meteor.article.affiliationsNumbers(article);
-                    return {
-                        article: article
-                    };                    
-                }
-
+                return {
+                    article: article
+                };   
             }
         }
     });
@@ -335,7 +331,6 @@ if (Meteor.isClient) {
                 if(article.advance){
                     advance = 'checked';
                 }
-                article = Meteor.article.affiliationsNumbers(article);
                 return {
                     article: article,
                     feature: feature,
