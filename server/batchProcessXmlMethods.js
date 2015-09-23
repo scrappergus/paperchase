@@ -105,7 +105,7 @@ Meteor.methods({
 		}
 	},
 	getAllAuthorsAffiliationsPubMed: function(){
-		// console.log('getAllAuthorsAffiliationsPubMed');
+		console.log('getAllAuthorsAffiliationsPubMed');
 		var articlesList = articles.find().fetch();
 		for(var i = 0 ; i < articlesList.length ; i++){
 			console.log('.. ' + i + ' / pmid = ' + articlesList[i]['ids']['pmid']);
@@ -139,64 +139,70 @@ Meteor.methods({
 										//Then UPDATE the article doc (two UPDATES to article doc)
 										//Then UPDATE the known affiliations of author doc
 
+										//loop through all affiliations
 										//match the found affiliation with the saved author, to get the authors mongo_id 
-										var authorAffiliation = authorsJson[i]['AffiliationInfo'][0]['Affiliation'][0];
-										var authorNameFirst = authorsJson[i]['ForeName'][0]; 
-										var authorNameLast = authorsJson[i]['LastName'][0];
-										var mongoId;
-										for(var a = 0 ; a < authorsListDb.length ; a++){
-											if(authorsListDb[a]['name_first'].replace('.','') === authorNameFirst.replace('.','') && authorsListDb[a]['name_last'].replace('.','') === authorNameLast.replace('.','') ){
-												//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
-												// console.log('... match: ' + authorNameFirst + ' ' + authorNameLast + ' / ' +authorAffiliation );
-												if(!authorsListDb[a]['affiliations']){
-													authorsListDb[a]['affiliations'] = [];
-												}
+										var authorAffiliations = authorsJson[i]['AffiliationInfo'];
+										
+										for(var aff = 0 ; aff < authorAffiliations.length ; aff++){
+											var authorAffiliation = authorAffiliations[aff]['Affiliation'][0];
+											var authorMongoId = '';
+											var authorNameFirst = authorsJson[i]['ForeName'][0]; 
+											var authorNameLast = authorsJson[i]['LastName'][0];
+											
+											for(var a = 0 ; a < authorsListDb.length ; a++){
+												if(authorsListDb[a]['name_first'].replace('.','').replace(' ','') === authorNameFirst.replace('.','').replace(' ','') && authorsListDb[a]['name_last'].replace('.','').replace(' ','') === authorNameLast.replace('.','').replace(' ','') ){
+													//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
+													if(!authorsListDb[a]['affiliations']){
+														authorsListDb[a]['affiliations'] = [];
+													}
 
-												mongoId = authorsListDb[a]['ids']['mongo_id']; //for testing if we found a match and updating author doc
+													authorMongoId = authorsListDb[a]['ids']['mongo_id']; //for testing if we found a match and updating author doc
 
-												//update the authorsList (from the article doc)
-												//add this affiliaton string to the array of affiliations for the author object, but only if not already present
-												if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
-													authorsListDb[a]['affiliations'].push(authorAffiliation);	
+													//update the authorsList (from the article doc)
+													//add this affiliaton string to the array of affiliations for the author object, but only if not already present
+													if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
+														authorsListDb[a]['affiliations'].push(authorAffiliation);	
+													}
+													
 												}
-												
 											}
-										}
 
-										if(mongoId){
-											//we matched the author in the xml response to a saved author
-											//create object for updating the article doc
-											var articleUpdate = {
-												'authors' : authorsListDb
-											};
+											if(authorMongoId != ''){
+												//we matched the author in the xml response to a saved author
+												//create object for updating the article doc
+												var articleUpdate = {
+													'authors' : authorsListDb
+												};
 
-											//ARTICLE doc - updates
-											//UPDATE - affiliation in author object
-											Meteor.call('updateArticleByPmid',articlePmid, articleUpdate, function(err,res){
-												if(err){
-													console.log('updateArticle ERROR');
-													console.log(err);
-												}else{
-													//UPDATE - AddToSet affiliation
-													Meteor.call('addToArticleAffiliationsByPmid', articlePmid, authorAffiliation, function(e,r){
-														if(e){
-															console.log('addToArticleAffiliationsByPmid ERROR');
-															console.log(e);
-														}
-													});
-												}
-											});
+												//ARTICLE doc - updates
+												//UPDATE - affiliation in author object
+												Meteor.call('updateArticleByPmid',articlePmid, articleUpdate, function(err,res){
+													if(err){
+														console.log('updateArticle ERROR');
+														console.log(err);
+													}else{
+														//UPDATE - AddToSet affiliation
+														Meteor.call('addToArticleAffiliationsByPmid', articlePmid, authorAffiliation, function(e,r){
+															if(e){
+																console.log('addToArticleAffiliationsByPmid ERROR');
+																console.log(e);
+															}
+														});
+													}
+												});
 
-											//AUTHOR doc - updates
-											Meteor.call('addAffiliationToAuthor',mongoId, authorAffiliation, function(err,res){
-												if(err){
-													console.log('addAffiliationToAuthor ERROR');
-													console.log(err);
-												}
-											});
-										}else{
-											console.log('----ERROR: could not match / authorNameFirst = ' + authorNameFirst  + ' / authorNameLast = ' + authorNameLast + ' / affi = ' + authorAffiliation);
-										}					
+												//AUTHOR doc - updates
+												Meteor.call('addAffiliationToAuthor',authorMongoId, authorAffiliation, function(err,res){
+													if(err){
+														console.log('addAffiliationToAuthor ERROR');
+														console.log(err);
+													}
+												});
+											}else{
+												console.log('----ERROR: could not match');
+												console.log('    authorNameFirst = ' + authorNameFirst  + ' / authorNameLast = ' + authorNameLast + ' / affi = ' + authorAffiliation);
+											}	
+										}				
 									}
 								}								
 							}
