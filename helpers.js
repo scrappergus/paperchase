@@ -35,7 +35,10 @@ if (Meteor.isClient) {
 		result = [];
 		for (var key in obj) result.push({name:key,value:obj[key]});
 		return result;
-	});    
+	});   
+	Template.registerHelper('countItems', function(items) {
+		return items.length;
+	});	 
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
 		});
@@ -133,6 +136,27 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
+	Template.AdminDataSubmissions.helpers({
+		volumes: function(){
+			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
+			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
+			return res;
+		},
+		articles: function(){
+			var type = Session.get('data-submission-type'),
+				data = Session.get('data-submission-data');
+			if(type && data){
+				var articlesList;
+				if(type === 'issue'){
+					articlesList = articles.find({'issue_id':data}).fetch();
+				}else{
+					articlesList = articles.find({'ids.pii':{'$in':data}}).fetch();
+				}
+				return articlesList;				
+			}
+		}
+	});
 	Template.AdminInstitution.helpers({
 			'institutions': function() {
 				return Institutions.find({});

@@ -42,6 +42,17 @@ Meteor.organize = {
 	}
 }
 
+Meteor.dataSubmissions = {
+	getPiiList: function(){
+		var piiList = [];
+		$('.data-submission-pii').each(function(){
+			var pii = $(this).attr('data-pii');
+			piiList.push(pii);
+		});
+		return piiList;
+	}
+}
+
 Meteor.article = {
 	affiliationsNumbers: function(article){
 		if(article['authors']){

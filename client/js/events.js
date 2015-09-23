@@ -128,6 +128,64 @@ Template.adminArticle.events({
 		});
 	}
 });
+
+Template.AdminDataSubmissions.events({
+	'keydown input': function(e,t){
+		var tag = '<div class="chip">Tag<i class="material-icons">close</i></div>'
+		if(e.which == 13) {
+			e.preventDefault();
+			var pii = $(e.target).val();
+
+			//first check if already present
+			var piiList = Meteor.dataSubmissions.getPiiList();
+
+			if(piiList.indexOf(pii) === -1){
+				$('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="zmdi zmdi-close-circle-o" data-pii="' + pii + '"></i></span>');
+			}else{
+				alert('PII already in list');
+			}
+		}
+	},
+	'click .zmdi-close-circle-o': function(e,t){
+		e.preventDefault();
+		var pii = $(e.target).attr('data-pii');
+		pii = pii.trim();
+		$('#chip-'+pii).remove();
+	},
+	'submit .form-pii': function(e,t){
+		e.preventDefault();
+		Session.set('data-submission-type', 'pii');
+		
+		var piiList = Meteor.dataSubmissions.getPiiList();
+
+		//check if there's anything to add to the array of pii
+		if($('#submissions_search_pii').val()){
+			var addPii = $('#submissions_search_pii').val();
+			//do not add if already present 
+			if(piiList.indexOf(addPii) === -1){
+				piiList.push(addPii);
+			}
+		}
+		if(piiList.length === 0){
+			alert('no PII to search');
+		}
+		Session.set('data-submission-data',piiList);
+	},
+	'submit .form-issue': function(e,t){
+		e.preventDefault();
+		var issueId = $('#submissions_search_issue').val();
+		Session.set('data-submission-type', 'issue');
+		Session.set('data-submission-data',issueId);
+	},
+	'click .clear': function(e){
+		e.preventDefault();
+		Session.set('data-submission-type', '');
+		Session.set('data-submission-data', '');
+		//remove all pii list
+		$('.data-submission-pii').remove();
+	}
+})
+
 Template.adminArticleXmlProcess.events({
 	'click .update-article': function(e,t){
 		e.preventDefault();

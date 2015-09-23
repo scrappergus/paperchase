@@ -102,6 +102,8 @@ if (Meteor.isClient) {
 
     Session.setDefault('formMethod','');
     Session.setDefault('fileNameXML',''); //LIVE
+    Session.setDefault('data-submission-type','');
+    Session.setDefault('data-submission-data','');
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
@@ -231,6 +233,18 @@ if (Meteor.isClient) {
                 };
             }
         }
+    });
+
+    /*data submissions*/
+    Router.route('/admin/datasubmissions',{
+        name: 'AdminDataSubmissions',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('issues'),
+                Meteor.subscribe('volumes')
+            ]
+        },
     });
 
     /*xml intake*/
