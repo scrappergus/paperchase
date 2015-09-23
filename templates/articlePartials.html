@@ -36,6 +36,16 @@
 	{{/if}}
 </template>
 
+<template name="ArticleDates">
+	{{#each arrayify dates}}
+		{{#if equals name 'collection'}}
+			<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+			{{else}}
+			<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+		{{/if}}
+	{{/each}}	
+</template>
+
 <template name="ArticleMeta">
 	<span class="badge">{{article_type.type}}</span>
 	<h4>{{{title}}}</h4>
@@ -43,13 +53,7 @@
 	<h6>Volume {{volume}}, Issue {{issue}}</h6>
 	{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
 	{{#if dates}}
-		{{#each arrayify dates}}
-			{{#if equals name 'collection'}}
-				<h6>{{name}}: {{collectionDate value}}</h6>
-				{{else}}
-				<h6>{{name}}: {{articleDate value}}</h6>
-			{{/if}}
-		{{/each}}
+		{{>ArticleDates}}
 	{{/if}}	
 </template>
 

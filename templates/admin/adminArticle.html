@@ -103,9 +103,7 @@
 			<div class="row">
 				<div class="col s12">
 					<h5>Dates:</h5>
-					{{#each arrayify dates}}
-					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-					{{/each}}
+					{{>ArticleDates}}
 				</div>
 			</div>
 			{{/if}}
