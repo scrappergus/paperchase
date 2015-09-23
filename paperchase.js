@@ -108,7 +108,7 @@ if (Meteor.isClient) {
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
-        name: 'home',
+        name: 'Home',
         layoutTemplate: 'Visitor',
         waitOn: function(){
             return[
@@ -122,7 +122,6 @@ if (Meteor.isClient) {
             var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
             return {
                 feature : featureList,
-                director: edboard.find({role:"Impact Journals Director"}),
                 eic:edboard.find({role:"Editor-in-Chief"}) ,
                 eb:edboard.find({role:"Founding Editorial Board"}) 
             }
@@ -157,8 +156,14 @@ Router.route('/advance', {
     });
 
     Router.route('/editorial-board', { 
-        name: 'edboard',
+        name: 'EdBoard',
         layoutTemplate: 'Visitor',
+        data: function(){
+            return {
+                eic:edboard.find({role:"Editor-in-Chief"}),
+                fullBoard:edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]})
+            }
+        }
     });
 
 
