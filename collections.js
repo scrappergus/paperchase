@@ -40,6 +40,7 @@ articles.allow({
     }
   }  
 });
+
 issues.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
@@ -200,9 +201,9 @@ if (Meteor.isServer) {
       return;
      }
   });  
-  Meteor.publish('authorData', function(id){
+  Meteor.publish('authorData', function(mongoId){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
-      return authors.find({'_id':id});
+      return  authors.find({'_id':mongoId})
      }else{
       this.stop();
       return;
