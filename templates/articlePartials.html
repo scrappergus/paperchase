@@ -25,12 +25,14 @@
 		{{/each}}
 	</span>
 	{{#if affiliations}}
-	<span class="affiliations">
-		{{#each arrayify affiliations}}
-		<div class="clearfix"></div>
-			{{affiliationNumber name}}. {{value}}
-		{{/each}}
-	</span>
+	<h6>
+		<span class="affiliations">
+			{{#each arrayify affiliations}}
+			<div class="clearfix"></div>
+				{{affiliationNumber name}}. {{value}}
+			{{/each}}
+		</span>		
+	</h6>
 	{{/if}}
 </template>
 
