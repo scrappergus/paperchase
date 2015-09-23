@@ -19,12 +19,18 @@ if (Meteor.isClient) {
 	Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MMMM DD, YYYY');
 	});	
+	Template.registerHelper('affiliationNumber', function(affiliation) {
+		return parseInt(parseInt(affiliation) + 1);
+	});	
 	Template.registerHelper('formatIssueDate', function(date) {
 		return moment(date).format('MMMM YYYY');
 	});	
 	Template.registerHelper('articleDate', function(date) {
 		return moment(date).format('MMMM D, YYYY');
 	});	
+	Template.registerHelper('collectionDate',function(date) {
+		return moment(date).format('MMMM YYYY');
+	});
 	Template.registerHelper('equals', function (a, b) {
 		return a === b;
     });	
@@ -32,7 +38,10 @@ if (Meteor.isClient) {
 		result = [];
 		for (var key in obj) result.push({name:key,value:obj[key]});
 		return result;
-	});    
+	});   
+	Template.registerHelper('countItems', function(items) {
+		return items.length;
+	});	 
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
 		});
@@ -130,6 +139,33 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
+	Template.AdminDataSubmissions.helpers({
+		volumes: function(){
+			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
+			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
+			return res;
+		},
+		articles: function(){
+			var type = Session.get('data-submission-type'),
+				data = Session.get('data-submission-data');
+			if(type && data){
+				var articlesList;
+				if(type === 'issue'){
+					articlesList = articles.find({'issue_id':data}).fetch();
+				}else{
+					articlesList = articles.find({'ids.pii':{'$in':data}}).fetch();
+				}
+				return articlesList;				
+			}
+		},
+		query: function(){
+			return Session.get('data-submission-data');
+		},
+		queryType: function(){
+			return Session.get('data-submission-type');
+		}
+	});
 	Template.AdminInstitution.helpers({
 			'institutions': function() {
 				return Institutions.find({});

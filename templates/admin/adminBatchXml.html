@@ -1,24 +1,90 @@
-<template name="adminBatchXml">
-    {{>AdminHeader header="Get all XML from PMC"}}
+<template name="AdminBatchXml">
+    {{>AdminHeader header="XML Intake"}}
     <div class="row">
-    	<div class="col s12">
-    		<h4>DO NOT USE THIS PAGE</h4>
-    		<p>Well if you really want to, talk to Jessica</p>
-    	</div>
+        <div class="col s12">
+            <h3>DO NOT USE THIS PAGE</h3>
+        </div>
     </div>
     <div class="row">
-    	<div class="col s12">
-    		<button id="get-pmc-xml" class="btn waves-effect waves-light">Get XML</button>
-    	</div>
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h3>XML from PMC</h3>
+                            <h4>based on list of PMID, in pmid.js</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>Save XML to /uploads/pmc_xml/PMID.xml</h5>
+                            <button id="download-pmc-xml" class="btn waves-effect waves-light">Download XML</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>Save all XML to DB</h5>
+                            <p>Method 'saveXMLFromPMC', loops through all articles pmid list, pmid.js, to retrieve saved XML in /uploads/pmc_xml. Converts XML to JSON in method 'processXML'</p>
+                            <h6>Queries</h6>
+                            <ol>
+                                <li>GET issue doc from issues collection</li>
+                                <li>If no Issues doc, then INSERT issues collection</li>
+                                <li>Add issue mongo id to <i>article doc</i></li>
+                                <li>GET author doc from authors collection</li>
+                                <li>If no author doc, then INSERT author collection</li>
+                                <li>Add author mongo id to <i>article doc</i></li>
+                                <li>INSERT <i>article doc</i> into articles collection</li>
+                            </ol>
+                            <button id="save-pmc-xml" class="btn waves-effect waves-light">Save XML to DB</button>
+                        </div>
+                    </div>             
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
-    	<div class="col s12">
-    		<button id="save-pmc-xml" class="btn waves-effect waves-light">Save XML to DB</button>
-    	</div>
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h3>Get PII</h3>
+                            <h4>for All Articles</h4>
+                            <p>Based on articles in articles collection. Uses 'ids.pmid' in article doc to query PubMed for PII</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <button id="get-all-pii" class="btn waves-effect waves-light">Get PII For ALL Articles</button>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
-    	<div class="col s12">
-    		<button id="get-all-pii" class="btn waves-effect waves-light">Get PII For ALL articles in DB</button>
-    	</div>
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h3>Author Affiliations</h3>
+                            <h4>for All Articles</h4>
+                            <p>Based on articles in articles collection. Uses 'ids.pmid' in article doc to query PubMed for affiliations</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <p>Queries articles collection. Loops through articles. Gets XML response from PubMed with author affiliations. Loops through authors in article doc, matches author to the response from PubMed. Adds affilation to: author object in article doc, affiliations array in article doc, known affiliations array in author doc.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <button id="get-all-authors-affiliations" class="btn waves-effect waves-light">Get Author Affiliations</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

@@ -1,9 +1,63 @@
 <template name="AuthorsList">
-	<span class="authors">{{#each authors}}<span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}} {{name_last}}<span class="comma">, </span></span>{{/each}}</span>
+	<span class="authors">
+		{{#each authors}}
+			<span class="author">
+				{{name_first}}
+				{{#if name_middle}} {{name_middle}}{{/if}}
+				{{#if name_last}} {{name_last}}{{/if}}
+				<span class="comma">, </span>
+			</span>
+		{{/each}}
+	</span>
 </template>
-<template name="prettyDate">
-	{{getMonthWord month}}{{#if day}} {{day}}{{/if}}{{#if year}}, {{year}}{{/if}}
+<template name="AuthorsRefList">
+	<span class="authors">
+		{{#each authors}}
+			<span class="author">
+				{{name_first}}
+				{{#if name_middle}} {{name_middle}}{{/if}}
+				{{#if name_last}} {{name_last}}{{/if}}
+				{{#if affiliations}}
+					<sup class="author-affiliations">{{#each affiliation_numbers}}<span>{{.}}<span class="comma">,&nbsp;</span></span>{{/each}}</sup>
+				{{/if}}
+				<span class="comma">, </span>
+			</span>
+		{{/each}}
+	</span>
+	{{#if affiliations}}
+	<h6>
+		<span class="affiliations">
+			{{#each arrayify affiliations}}
+			<div class="clearfix"></div>
+				{{affiliationNumber name}}. {{value}}
+			{{/each}}
+		</span>		
+	</h6>
+	{{/if}}
 </template>
+
+<template name="ArticleDates">
+	{{#each arrayify dates}}
+		{{#if equals name 'collection'}}
+			<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+			{{else}}
+			<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+		{{/if}}
+	{{/each}}	
+</template>
+
+<template name="ArticleMeta">
+	<span class="badge">{{article_type.type}}</span>
+	<h4>{{{title}}}</h4>
+	<h5>{{>AuthorsRefList}}</h5>
+	<h6>Volume {{volume}}, Issue {{issue}}</h6>
+	{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
+	{{#if dates}}
+		{{>ArticleDates}}
+	{{/if}}	
+</template>
+
+
 
 <!--admin partials-->
 

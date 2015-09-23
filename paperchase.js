@@ -103,6 +103,8 @@ if (Meteor.isClient) {
 
     Session.setDefault('formMethod','');
     Session.setDefault('fileNameXML',''); //LIVE
+    Session.setDefault('data-submission-type','');
+    Session.setDefault('data-submission-data','');
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
@@ -202,10 +204,11 @@ Router.route('/advance', {
         data: function(){
             if(this.ready()){
                 var id = this.params._id;
-                var article = articles.findOne({'_id': id});
+                var article;
+                article = articles.findOne({'_id': id});
                 return {
                     article: article
-                };
+                };   
             }
         }
     });
@@ -248,6 +251,18 @@ Router.route('/advance', {
                 };
             }
         }
+    });
+
+    /*data submissions*/
+    Router.route('/admin/data_submissions',{
+        name: 'AdminDataSubmissions',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('issues'),
+                Meteor.subscribe('volumes')
+            ]
+        },
     });
 
     /*xml intake*/
@@ -479,10 +494,9 @@ Router.route('/advance', {
         },
         data: function(){
             if(this.ready()){
-                var id = this.params._id;
-                var authorsData = authors.findOne({'_id':id});
-                var authorArticleIdsList = authorsData['article_ids'];
-                var authorArticlesList = articles.find({'_id' : {$in : authorArticleIdsList}}).fetch();
+                var mongoId = this.params._id;
+                var authorsData = authors.findOne({'_id':mongoId});
+                var authorArticlesList = articles.find({ 'authors' : { '$elemMatch' : { 'ids.mongo_id' :  mongoId } } });
                 return {
                     author : authorsData,
                     articles: authorArticlesList
@@ -527,9 +541,14 @@ Router.route('/advance', {
 
 
     //this route is used to query pmc for all xml.. don't go here.
-    Router.route('/admin/batchprocessxml', {
-        name: 'adminBatchXml',
-        layoutTemplate: 'Admin'
+    Router.route('/admin/batch_process', {
+        name: 'AdminBatchXml',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articles')
+            ]
+        },
     }); 
 }
 // Router.route('/xml/:_filename',{

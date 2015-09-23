@@ -88,6 +88,23 @@ VISITOR
 		}
 	}
 }
+.author-affiliations{
+	span{
+		.comma{
+			display: inline-block!important;
+		}
+		&:last-child{
+			.comma{
+				display:none!important;
+			}
+		}
+	}
+}
+.affiliations{
+	color: $gray;
+	font-size: $font-sm;
+}
+
 /*home*/
 .hero{
 	background-image: url(/images/backgrounds/home.jpg);
@@ -254,6 +271,9 @@ FORMS
 		padding: $pad-lg;
 	}
 }
+.clear{
+	background-color: $red;
+}
 #close-success-msg{
 	cursor: pointer;
 }
@@ -268,3 +288,11 @@ FORMS
 	}
 * html .clearfix             { zoom: 1; } /* IE6 */
 *:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
+/*
+MAtERIALIZE
+*/
+.chip{
+	padding: $pad-sm;
+	margin-right: $margin-sm;
+}

@@ -7,3 +7,9 @@ Template.adminIssue.rendered = function(){
 		selectYears: 1
   	});	
 }
+Template.AdminDataSubmissions.rendered = function(){
+	$('select').material_select();
+	Session.set('data-submission-type','');
+	Session.set('data-submission-data','');
+}
+

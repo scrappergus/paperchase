@@ -204,21 +204,6 @@ Schemas.User = new SimpleSchema({
 Meteor.users.attachSchema(Schemas.User);
 
 
-XMLIntake = new Meteor.Collection('xml-intake');
-
-Schemas.XMLIntake = new SimpleSchema ({
-        picture: {
-            type: String
-            ,autoform: {
-                afFieldInput: {
-                    type: 'fileUpload'
-                    ,collection: 'xml-intake-fs'
-                }
-                ,label: 'Choose file' 
-            }
-        }
-    });
-
 /*
 Articles
 */
@@ -239,8 +224,8 @@ Schemas.articles = new SimpleSchema({
     'authors.$.name_last': {
         type: String
     },
-    'authors.$.mongo_id': {
-        type: String
+    'authors.$.ids': {
+        type: Object
     },
     page_start: {
         type: Number
@@ -294,15 +279,15 @@ Schemas.articles = new SimpleSchema({
 Authors
 */
 Schemas.authors = new SimpleSchema({
-    name_first:{
+    'name_first':{
         type: String
     },
-    name_last:{
+    'name_last':{
         type: String
     },
-    // article_ids: {
-    //     type: Array
-    // }
+    'ids' : {
+        type: Object
+    }
 });
 
 

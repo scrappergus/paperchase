@@ -42,6 +42,26 @@ articles.allow({
   }  
 });
 
+articles.before.update(function (userId, doc, fieldNames, modifier, options) {
+  //add affiliation number to author 
+  //might need to adjust this as article updates get added
+  if(fieldNames.indexOf('authors') != -1){
+    var authorsList = modifier['$set']['authors'];
+    var affiliationsList 
+    affiliationsList = doc['affiliations'];
+
+    for(var i = 0 ; i < authorsList.length ; i++){
+      if(authorsList[i]['affiliations'] && affiliationsList){
+        authorsList[i]['affiliation_numbers'] = [];
+        for(var a = 0 ; a < authorsList[i]['affiliations'].length ; a++){
+          var affiliationIndex = affiliationsList.indexOf(authorsList[i]['affiliations'][a]);
+          authorsList[i]['affiliation_numbers'].push(parseInt(affiliationIndex+1));
+        }
+      }
+    }
+  }
+});
+
 
 issues.allow({
   insert: function (userId, doc, fields, modifier) {
@@ -218,9 +238,9 @@ if (Meteor.isServer) {
       return;
      }
   });  
-  Meteor.publish('authorData', function(id){
+  Meteor.publish('authorData', function(mongoId){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
-      return authors.find({'_id':id});
+      return  authors.find({'_id':mongoId})
      }else{
       this.stop();
       return;

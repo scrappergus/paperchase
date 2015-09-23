@@ -19,8 +19,7 @@ Meteor.methods({
 		}
 		return pmcId;
 	},
-	getPIIFromPmid: function(articlePMID){
-		console.log('--getPIIFromPmid '+articlePMID);
+	getPiiFromPmid: function(articlePMID){
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
 		var res;
 		res = Meteor.http.get(requestURL);
@@ -33,31 +32,6 @@ Meteor.methods({
 					return articleIdList[i]['value'];
 				}
 			}	
-		}
-	},
-	getAllPii: function(){
-		console.log('--getAllPii');
-		var allArticles = articles.find().fetch();
-		var articlesLength = allArticles.length;
-		for(var i = 0 ; i < articlesLength ; i++){
-			var articleIds = allArticles[i]['ids'];
-			idsLength = articleIds.length;
-			var pmid = allArticles[i]['ids']['pmid'];
-			Meteor.call('getPIIFromPmid',pmid,function(error,pii){
-				if(error){
-					console.log('ERROR: Could not get PII');
-					console.log(error);
-				}else{
-					articleIds['pii'] = pii;
-					Meteor.call('pushPiiArticle',allArticles[i]['_id'],articleIds,function(err,res){
-						if(err){
-							console.log('ERROR: Could not save PII '+allArticles[i]['_id']);
-							piiFail.push(allArticles[i]['_id']);
-							console.log(err);
-						}
-					});
-				}
-			});
 		}
 	}
 })

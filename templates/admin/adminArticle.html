@@ -84,10 +84,7 @@
 			<div class="card-header">
 				<div class="row">
 					<div class="col s10">
-						<h4>{{{title}}}</h4>
-						<h5>{{>AuthorsList}}</h5>
-						<h6>Volume {{volume}}, Issue {{issue}}</h6>
-						<p>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</p>
+						{{>ArticleMeta}}
 					</div>
 					<div class="col s2">
 						<span class="badge right">{{article_type.type}}</span>
@@ -106,9 +103,7 @@
 			<div class="row">
 				<div class="col s12">
 					<h5>Dates:</h5>
-					{{#each arrayify dates}}
-					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-					{{/each}}
+					{{>ArticleDates}}
 				</div>
 			</div>
 			{{/if}}
