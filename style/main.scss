@@ -2,8 +2,7 @@
 @import 'mixins';
 
 .aging-nav {
-    background: $blue-aging;
-    height: 66px;
+    background-color: rgba(55, 71, 79, 0.9);
 }
 
 html,body{
@@ -39,22 +38,45 @@ p{
 	color: $black-0;
 }
 
-
-
-h3{
-	text-transform: uppercase;
+strong {
+ font-weight: bold;
 }
+
+
+
+//h3{
+//	text-transform: uppercase;
+//}
+
+.card {
+  h4 { 
+      margin-top:0em;
+      margin-bottom:0.3em;
+  }
+}
+
+// pushing the logo around at the top
+.brand-logo {
+    position: relative;
+    top: 2px;
+}
+
+// The editors list on the homepage
+.home-page-editors-list {
+
+}
+
+
 /*
 VISITOR
 */
 .footer{
-	background-color: $blue-aging!important;
-	padding: $pad-lg 0;
+	padding: 0 0;
 	.row{
+		margin-top: 0;
 		margin-bottom: 0;
 	}
 	p{
-		color: $white;
 	}
 }
 .authors{
@@ -255,6 +277,17 @@ FORMS
 #close-success-msg{
 	cursor: pointer;
 }
+
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+	}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
 
 /*
 MAtERIALIZE

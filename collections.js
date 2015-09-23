@@ -4,6 +4,7 @@ articles = new Mongo.Collection('articles');
 articleTypes = new Mongo.Collection('articleTypes'); //when saving an article query this db and add the name, short_name and id as an object to the article
 Institutions = new Mongo.Collection("institutions");
 IPRanges = new Mongo.Collection("ipranges");
+edboard = new Mongo.Collection("edboard");
 authors = new Mongo.Collection('authors');
 
 
@@ -213,6 +214,21 @@ if (Meteor.isServer) {
       return;
      }
   });  
+
+  Meteor.publish('fullBoard', function () {
+          return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Founding Editorial Board"}]});
+  });
+
+  Meteor.publish('eic', function () {
+          return edboard.find({role:"Editor-in-Chief"});
+  });
+
+  Meteor.publish('eb', function () {
+          return edboard.find({role:"Founding Editorial Board"});
+  });
+
+
+
   //AUTHORS
   Meteor.publish('authorsList', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {

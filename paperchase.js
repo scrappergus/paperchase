@@ -23,6 +23,7 @@ Router.configure({
     loadingTemplate: 'Loading'
 });
 
+
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
         var iprnew = [];
         var iprid = IPRanges.find({institutionID: doc._id});
@@ -107,23 +108,32 @@ if (Meteor.isClient) {
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', { 
-        name: 'home',
+        name: 'Home',
         layoutTemplate: 'Visitor',
         waitOn: function(){
             return[
-                Meteor.subscribe('feature')
+                Meteor.subscribe('feature'),
+                Meteor.subscribe('eic'),
+                Meteor.subscribe('eb')
             ]
         },        
         data: function(){
             var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
             return {
-                feature : featureList
+                feature : featureList,
+                eic:edboard.find({role:"Editor-in-Chief"}) ,
+                eb:edboard.find({role:"Founding Editorial Board"}) 
             }
         }
     });
 
+Template.Home.rendered = function () {
+    $('.collapsible').collapsible({
+            accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
+};
 
-    Router.route('/advance', { 
+Router.route('/advance', { 
         name: 'advance',
         layoutTemplate: 'Visitor',
         waitOn: function(){
@@ -143,6 +153,18 @@ if (Meteor.isClient) {
         name: 'archive',
         layoutTemplate: 'Visitor',
     });
+
+    Router.route('/editorial-board', { 
+        name: 'EdBoard',
+        layoutTemplate: 'Visitor',
+        data: function(){
+            return {
+                eic:edboard.find({role:"Editor-in-Chief"}),
+                fullBoard:edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]})
+            }
+        }
+    });
+
 
     Router.route('/issue/:vi', { 
             name: 'issue',
