@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col s12">
                             <h3>XML from PMC</h3>
-                            <p>based on list of PMID, in pmid.js</p>
+                            <h4>based on list of PMID, in pmid.js</h4>
                         </div>
                     </div>
                     <div class="row">
@@ -48,7 +48,8 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
-                            <h3>Get PII for All Articles</h3>
+                            <h3>Get PII</h3>
+                            <h4>for All Articles</h4>
                             <p>Based on articles in articles collection. Uses 'ids.pmid' in article doc to query PubMed for PII</p>
                         </div>
                     </div>
@@ -68,12 +69,17 @@
                     <div class="row">
                         <div class="col s12">
                             <h3>Author Affiliations</h3>
+                            <h4>for All Articles</h4>
                             <p>Based on articles in articles collection. Uses 'ids.pmid' in article doc to query PubMed for affiliations</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col s12">
                             <p>Queries articles collection. Loops through articles. Gets XML response from PubMed with author affiliations. Loops through authors in article doc, matches author to the response from PubMed. Adds affilation to: author object in article doc, affiliations array in article doc, known affiliations array in author doc.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
                             <button id="get-all-authors-affiliations" class="btn waves-effect waves-light">Get Author Affiliations</button>
                         </div>
                     </div>
