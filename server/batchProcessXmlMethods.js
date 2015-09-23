@@ -150,7 +150,8 @@ Meteor.methods({
 											var authorNameLast = authorsJson[i]['LastName'][0];
 											
 											for(var a = 0 ; a < authorsListDb.length ; a++){
-												if(authorsListDb[a]['name_first'].replace('.','').replace(' ','') === authorNameFirst.replace('.','').replace(' ','') && authorsListDb[a]['name_last'].replace('.','').replace(' ','') === authorNameLast.replace('.','').replace(' ','') ){
+												//TODO: better way of matching authors
+												if(authorsListDb[a]['name_first'].replace('.','').replace(' ','').toLowerCase() === authorNameFirst.replace('.','').replace(' ','').toLowerCase() && authorsListDb[a]['name_last'].replace('.','').replace(' ','').toLowerCase() === authorNameLast.replace('.','').replace(' ','').toLowerCase() ){
 													//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
 													if(!authorsListDb[a]['affiliations']){
 														authorsListDb[a]['affiliations'] = [];
@@ -164,6 +165,28 @@ Meteor.methods({
 														authorsListDb[a]['affiliations'].push(authorAffiliation);	
 													}
 													
+												}
+											}
+
+											//one more attempt to match affiliation from pubmed's response to author in the db
+											if(authorMongoId === ''){
+												for(var a = 0 ; a < authorsListDb.length ; a++){
+													//TODO: better way of matching authors
+													if(authorsListDb[a]['name_last'] === authorNameLast ){
+														//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
+														if(!authorsListDb[a]['affiliations']){
+															authorsListDb[a]['affiliations'] = [];
+														}
+
+														authorMongoId = authorsListDb[a]['ids']['mongo_id']; //for testing if we found a match and updating author doc
+
+														//update the authorsList (from the article doc)
+														//add this affiliaton string to the array of affiliations for the author object, but only if not already present
+														if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
+															authorsListDb[a]['affiliations'].push(authorAffiliation);	
+														}
+														
+													}
 												}
 											}
 
