@@ -215,8 +215,8 @@ if (Meteor.isServer) {
      }
   });  
 
-  Meteor.publish('director', function () {
-          return edboard.find({role:"Impact Journals Director"});
+  Meteor.publish('fullBoard', function () {
+          return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Founding Editorial Board"}]});
   });
 
   Meteor.publish('eic', function () {
@@ -224,7 +224,7 @@ if (Meteor.isServer) {
   });
 
   Meteor.publish('eb', function () {
-          return edboard.find({role:"Founding editorial board"});
+          return edboard.find({role:"Founding Editorial Board"});
   });
 
 
