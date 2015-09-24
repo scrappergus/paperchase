@@ -76,7 +76,6 @@ Meteor.methods({
 						var cookiePieces = cookies[c].split('=');
 						console.log('cookie  =====');
 						console.log(cookies[c]);
-						Meteor.cookie.set(cookiePieces[0],cookiePieces[1]);
 					}
 				}
 				console.log('login HEADERS =====');
