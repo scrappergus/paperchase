@@ -1,22 +1,21 @@
 <template name="advance">
-<div class="container">
-	<div class="row">
-		<div class="col s12">
-			<h1>Advance Online Publications</h1>
-		</div>
-	</div>
-    <div class="row">
-        <div class="col s12">
-        	<ul class="collection">
-        		{{#each advance}}
-        			<li class="collection-item">
-        				<h5>{{{title}}}</h5>
-        				<p>{{>AuthorsList}}</p>
-                        <p><a class="btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a></p>
-        			</li>
-        		{{/each}}
-        	</ul>
-        </div>
+<div class="row">
+    {{> LeftNav}}
+    <div class="col s10">
+
+        <h2>Advance Online Publications</h2>
+        <div class="divider"></div>
+
+        <ul>
+            {{#each advance}}
+            <li class="collection-item">
+            <h5>{{{title}}}</h5>
+            <p>{{>AuthorsList}}</p>
+            <p><a class="btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a></p>
+            </li>
+            <div class="divider"></div>
+            {{/each}}
+        </ul>
     </div>
 </div>
 </template>

@@ -128,6 +128,10 @@ if (Meteor.isClient) {
     });
 
 Template.Home.rendered = function () {
+    $('.edboard-name').click(function() {
+            $(this).next().toggle();
+        });
+
     $('.collapsible').collapsible({
             accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
         });
@@ -166,6 +170,29 @@ Router.route('/advance', {
     });
 
 
+
+    Router.route('/for-authors', { 
+        name: 'ForAuthors',
+        layoutTemplate: 'Visitor'
+    });
+
+    Router.route('/about', { 
+        name: 'About',
+        layoutTemplate: 'Visitor'
+    });
+
+    Router.route('/contact', { 
+        name: 'Contact',
+        layoutTemplate: 'Visitor'
+    });
+
+    Router.route('/recent-breakthroughs', { 
+        name: 'RecentBreakthroughs',
+        layoutTemplate: 'Visitor'
+    });
+
+
+
     Router.route('/issue/:vi', { 
             name: 'issue',
             layoutTemplate: 'Visitor',
@@ -196,6 +223,11 @@ Router.route('/advance', {
                 }
             }
         });
+
+Template.Issue.rendered = function () {
+        $('.modal-trigger').leanModal();
+};
+
 
     Router.route('/article/:_id', { 
         name: 'Article',

@@ -1,32 +1,29 @@
 <template name="archive">
-<div class="container">
-	<div class="row">
-		<div class="col s12">
-			<h1>Archive</h1>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12">
-			<ul class="collection">
-			{{#each volumes}}
-				<li class="collection-item collection-header"><h3>Volume {{volume}}</h3></li>
-				{{#each issues}}
-					<li class="collection-item">
-						<div class="row">
-							<div class="col s2">
-								<a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
-							</div>
-							<div class="col s10">
-								<h4><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h4>
-								{{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
-							</div>
-						</div>
-					</li>
-				{{/each}}	
-			{{/each}}
-			</ul>
-		</div>	
-	</div>
+<div class="row">
+    {{> LeftNav}}
+    <div class="col s10">
+        <h3>Archive</h3>
+        <div class="divider"></div>
+
+        <ul class="">
+            {{#each volumes}}
+            <li class="collection-item collection-header"><h4>Volume {{volume}}</h4></li>
+            {{#each issues}}
+            <li class="collection-item">
+            <div class="row">
+                <div class="col s2">
+                    <a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
+                </div>
+                <div class="col s10">
+                    <h5><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h5>
+                    {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
+                </div>
+            </div>
+            </li>
+            {{/each}}	
+            {{/each}}
+        </ul>
+    </div>	
 </div>
 </template>
 

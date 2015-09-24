@@ -66,6 +66,13 @@ strong {
 
 }
 
+.edboard-name {
+  cursor: pointer;
+}
+
+.edboard-bio {
+   display: none;
+}
 
 /*
 VISITOR
@@ -194,6 +201,20 @@ VISITOR
 		margin-top: 20px;
 	}
 }
+
+.home-left-nav {
+    li {
+        margin: 8px 0px;
+        a {
+            color: $black-1;
+            font-weight:bold;
+            font-size:1.1em;
+            line-height:1em;
+        }
+    }
+}
+
+
 /*text*/
 	.columns{
 		@include columns-count(3);
