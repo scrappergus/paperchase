@@ -23,10 +23,12 @@ Meteor.methods({
 		if(res.statusCode == 200){
 			//find ms_id_key in the login form
 			var resHtml = res.content;
-			ms = resHtml.substring(resHtml.lastIndexOf('id=\'ms_id_key\'')+1,resHtml.lastIndexOf('input'));
-			ms = ms.replace('d=\'ms_id_key\' value=', '').replace('\' />','').replace('\'','');
-			console.log('ms_id_key ===== ');
-			console.log(ms);
+			// console.log(resHtml.find('ms_id_key'));
+			// console.log(resHtml.lastIndexOf('id=\'ms_id_key\'')+1);
+			var keyStart = resHtml.lastIndexOf('id=\'ms_id_key\'')+22;
+			var keyEnd = keyStart + 28;
+			ms = resHtml.substring(keyStart, keyEnd);
+			console.log('ms_id_key=====' + ms + '=====');
 
 			console.log('res HEADERS =====');
 			console.log(res.headers);
@@ -46,6 +48,7 @@ Meteor.methods({
 			var result = Meteor.http.post(requestURL + 'cgi-bin/main.plex', {
 				//auth : authCredString,
 				params: {
+					timeout: 30000,
 					form_type: 'login_results',
 					j_id : journalEjpId,
 					login: username,
