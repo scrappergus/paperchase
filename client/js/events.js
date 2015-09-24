@@ -287,5 +287,16 @@ Template.AdminBatchXml.events({
 				console.log(error);
 			}
 		});			
+	},
+	'click #get-manuscripts': function(e){
+		e.preventDefault();
+		Meteor.call('getEjpAccepted', function(error,result){
+			if(error){
+				console.log('ERROR - getEjpAccepted');
+				console.log(error);
+			}else{
+				console.log(result);
+			}
+		});			
 	}
 });
