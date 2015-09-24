@@ -22,14 +22,11 @@ fourseven:scss
 tomi:upload-server
 tomi:upload-jquery
 gandev:server-eval
-
-
 peerlibrary:xml2js
 meteorhacks:npm
 npm-container
 momentjs:moment
 autopublish
-<<<<<<< HEAD
 standard-minifiers
 meteor-base
 mobile-experience
@@ -46,6 +43,3 @@ spacebars
 check
 materialize:materialize@=0.97.0
 ixdi:material-design-iconic-font@=2.1.2
-=======
-jquery
->>>>>>> aac927a13558d27dd8ee57274bd10d372c455386
