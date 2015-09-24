@@ -8,8 +8,7 @@ Meteor.methods({
 			requestURL = ejpCred.url,
 			username = ejpCred.username,
 			password = ejpCred.password,
-			journalEjpId = ejpCred.journalEjpId,
-			authCredString = username + ':' + password;
+			journalEjpId = ejpCred.journalEjpId;
 
 
 		//Set initial cookie, get ms_id_key
@@ -28,7 +27,7 @@ Meteor.methods({
 			var keyStart = resHtml.lastIndexOf('id=\'ms_id_key\'')+22;
 			var keyEnd = keyStart + 28;
 			ms = resHtml.substring(keyStart, keyEnd);
-			console.log('ms_id_key=====' + ms + '=====');
+			// console.log('ms_id_key=====' + ms + '=====');
 
 			console.log('res HEADERS =====');
 			console.log(res.headers);
@@ -39,16 +38,17 @@ Meteor.methods({
 				var cookies = res['headers']['set-cookie'];
 				for(var c = 0 ; c < cookies.length ; c++){
 					var cookiePieces = cookies[c].split('=');
-					console.log('cookie  =====');
-					console.log(cookies[c]);
+					// console.log('cookie  =====');
+					// console.log(cookies[c]);
 					cookieObject[cookiePieces[0]] = cookiePieces[1];
 				}
 			}
 			console.log(cookieObject);
 
 		
-			//LOGIN
-			var result = Meteor.http.post(requestURL + 'cgi-bin/main.plex', {
+			//LOGIN and GET Manuscripts
+			var manuscriptsPath = 'cgi-bin/main.plex?form_type=ndt_folder&j_id=459&ms_id_key=684ftdWXpqQ0cuPXznOnZIQ2SiQ&ft_key=NQcbqxCKr20xjQr3VmgxSg&is_open_2000=1&folder_id=2000&is_open_view_2000=11&role=20';
+			Meteor.http.post(requestURL + manuscriptsPath, {
 				// auth : authCredString,
 				params: {
 					timeout: 30000,
@@ -62,43 +62,24 @@ Meteor.methods({
 					'Accept' : '*/*',
 					'Connection' : 'Keep-Alive',
 					'User-Agent' : agent,
-					'Cookies' : cookieObject
+					'Cookie' : cookieObject
 	          	}
+			},function(error,r){
+				if(error){
+					console.log('error');
+					console.log(error);
+				}else{
+					console.log(r);
+				}
 			});
 
 
 			//GET - get manuscripts
-			if (result.statusCode == 200) {
-				//SET COOKIES
-				if(result['headers']['set-cookie']){
-					var cookies = result['headers']['set-cookie'];
-					for(var c = 0 ; c < cookies.length ; c++){
-						var cookiePieces = cookies[c].split('=');
-						console.log('cookie  =====');
-						console.log(cookies[c]);
-					}
-				}
-				console.log('login HEADERS =====');
-				console.log(result.headers);
-
-				// var res;
-				// res = Meteor.http.get(requestURL,{
-				// 	auth : authCredString,
-				// 	params: {
-				// 		timeout: 30000
-				// 	},
-				// 	headers: { 
-				// 		'Accept' : '*/*',
-				// 		'Connection' : 'Keep-Alive',
-				// 		'User-Agent' : agent
-				// 	},
-				// 	auth : authCredString
-				// });
-				// if(res){
-				// 	console.log('get manuscripts res = ');
-				// 	// console.log(res.content);	
-				// }
-			}		
+			// if (result.statusCode == 200) {
+			// 	// console.log('login HEADERS =====');
+			// 	console.log('login res');
+			// 	console.log(result);
+			// }		
 		}
 
 
