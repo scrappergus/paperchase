@@ -34,19 +34,22 @@ Meteor.methods({
 			console.log(res.headers);
 
 			//SET COOKIES
+			var cookieObject = {};
 			if(res['headers']['set-cookie']){
 				var cookies = res['headers']['set-cookie'];
 				for(var c = 0 ; c < cookies.length ; c++){
 					var cookiePieces = cookies[c].split('=');
 					console.log('cookie  =====');
 					console.log(cookies[c]);
-					Meteor.cookie.set(cookiePieces[0],cookiePieces[1]);
+					cookieObject[cookiePieces[0]] = cookiePieces[1];
 				}
 			}
+			console.log(cookieObject);
+
 		
 			//LOGIN
 			var result = Meteor.http.post(requestURL + 'cgi-bin/main.plex', {
-				//auth : authCredString,
+				// auth : authCredString,
 				params: {
 					timeout: 30000,
 					form_type: 'login_results',
@@ -58,7 +61,8 @@ Meteor.methods({
 	           	headers: {
 					'Accept' : '*/*',
 					'Connection' : 'Keep-Alive',
-					'User-Agent' : agent
+					'User-Agent' : agent,
+					'Cookies' : cookieObject
 	          	}
 			});
 
