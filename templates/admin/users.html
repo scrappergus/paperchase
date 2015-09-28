@@ -61,7 +61,7 @@
 								<h4>Permissions</h4>
 								<ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
 							</div>
-						</div>			
+						</div>
 					</div>
 					<div class="card-content edit hide">
 						<div class="row">
@@ -109,8 +109,8 @@
 									</div>
 								</div>
 							</form>
-						</div>			
-					</div>			
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -119,22 +119,10 @@
 
 <template name="AdminAddUser">
 		{{>AdminHeader header="Add User"}}
-		<div class="card">			
+		<div class="card">
 			<div class="card-content user-edit">
 				<div class="row">
-				<div class="col s12">
-					{{#autoForm collection="Meteor.users" id="signupForm" type="insert"}}
-					<fieldset>
-						{{> afQuickField name='emails'}}
-					</fieldset>
-					<fieldset>
-						{{> afQuickField name='username'}}
-					</fieldset>
-					<button type="submit" class="btn btn-primary green">Add</button>
-					{{/autoForm}}						
-				</div>
-			
-					<!-- <form class="col s12">
+					<form class="col s12">
 						<div class="row">
 							<div class="input-field col s12">
 								<h4>Email</h4>
@@ -164,8 +152,8 @@
 								<button class="submit btn waves-effect waves-light light-blue accent-4" type="submit" name="action" alt="Add User">Save</button>
 							</div>
 						</div>
-					</form> -->
-				</div>			
-			</div>		
-		</div>	
+					</form>
+				</div>
+			</div>
+		</div>
 </template>
