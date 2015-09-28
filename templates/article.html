@@ -39,14 +39,4 @@
 </template>
 
 
-<template name="ArticleButtons">
-    {{#if isSubscribed}}
-    <a class="blue-grey darken-1 waves-effect waves-light btn ">PDF</a>
-    <a class="blue-grey darken-1 waves-effect waves-light btn">Full Text</a>
-    {{else}}
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full Text</a>
-    {{/if}}
-</template>
-
 <template name="ArticleText"></template>
