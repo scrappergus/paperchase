@@ -52,8 +52,8 @@ if (Meteor.isClient) {
 		return items.length;
 	});
 	Template.registerHelper('clientIP', function() {
-			return headers.getClientIP();
-		});
+		// 	return headers.getClientIP();
+		// });
 
 			var match = IPRanges.findOne( {
 					startNum: {$lte: ip}
