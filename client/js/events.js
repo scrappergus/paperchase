@@ -14,6 +14,10 @@ Template.AdminUser.events({
 	'click .role-cb': function(e){
 		Meteor.adminUser.clickedRole(e);
 	},
+	'click .cancel-user-edit': function(e){
+		$('.overview').removeClass('hide');
+		$('.edit').addClass('hide');
+	},
 	'submit form': function(e){
 		e.preventDefault();
 		$('input').removeClass('invalid');
@@ -36,6 +40,42 @@ Template.AdminUser.events({
 		// }
 	}
 });
+
+Template.AdminUserSubs.events({
+        'submit form' : function(e,t) {
+            e.preventDefault();
+            Meteor.formActions.saving();
+
+            var subs = [];
+            $('.sub-cb').each(function() {
+                    if($(this).prop('checked')) {
+                        var v = $(this).attr('data-volume');
+                        var i = $(this).attr('data-issue');
+
+                        subs.push(obj = {
+                            type: 'issue'
+                            ,volume: v
+                            ,issue: i
+                        });
+
+
+
+                    }
+                });
+
+            Meteor.call('updateSubs', t.data.u._id,  subs, function(error, result){
+                    if(error){
+                        console.log('ERROR');
+                        console.log(error);
+                        Meteor.formActions.error();
+                    }else{
+                        Meteor.formActions.success();
+                    }
+                });
+
+        }
+    });
+
 Template.AdminAddUser.events({
 	'click .role-cb': function(e){
 		Meteor.adminUser.clickedRole(e);
@@ -477,6 +517,5 @@ Template.AdminRecommendationUpdate.events({
 		});
 	}
 })
-
 
 
