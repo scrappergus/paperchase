@@ -5,24 +5,24 @@
         <h3>Archive</h3>
         <div class="divider"></div>
 
-        <ul class="">
-            {{#each volumes}}
-            <li class="collection-item collection-header"><h4>Volume {{volume}}</h4></li>
-            {{#each issues}}
-            <li class="collection-item">
-            <div class="row">
-                <div class="col s2">
+        {{#each volumes}}
+        <h4>Volume {{volume}}</h4>
+        <div class="clearfix">
+            <ul class="">
+                {{#each issues}}
+                <li style="float:left; display:block; margin-right:22px;">
+                <div class="clearfix">
                     <a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
-                </div>
-                <div class="col s10">
+                    <br>
                     <h5><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h5>
                     {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
                 </div>
+                </li>
+                {{/each}}	
+            </ul>
             </div>
-            </li>
-            {{/each}}	
-            {{/each}}
-        </ul>
+        <div class="divider"></div>
+        {{/each}}
     </div>	
 </div>
 </template>
