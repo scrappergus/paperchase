@@ -14,13 +14,14 @@ Meteor.methods({
 		return recommendations.update({'_id' : mongoId}, {$set:doc});
 	},
 	notifyByEmail: function(doc){
-		console.log('..notifyByEmail');
-		console.log(doc);
 		this.unblock();
-		var message = 'Recommended By: ' + doc.name_first + ' ' + doc.name_last + '\r\n';
-		message += '\r\n';
-		message += doc.recommendation + '\r\n';
-		message += '\r\n';
+		var message = 'Institution: ' + doc.institution + '\r\n\r\n';
+		message += 'Recommended By: ' + doc.name_first + ' ' + doc.name_last + '\r\n\r\n';
+
+		if(doc.message){
+			message += 'Message: ' + doc.message + '\r\n';
+		}
+
 		message += 'View at: paperchase.oncotarget.com/admin/recommendation/'+doc.mongo_id;
 		Email.send({
 			to: 'agingnotifications@gmail.com',
