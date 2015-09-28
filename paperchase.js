@@ -62,18 +62,11 @@ Router.route('/pdf/:_filename',{
         var filePath = process.env.PWD + '/uploads/pdf/' + name;
         var fs = Meteor.npmRequire('fs');
         var data = fs.readFileSync(filePath);
-        // fs.exists(filePath, function(fileok){
-        //     if(!fileok){
-        //         data = fs.readFileSync(process.env.PWD + '/uploads/pdf/temp.pdf');
-        //     }else{
-        //         data =
-        //     }
-        // })
-        this.response.write(data);
         this.response.writeHead(200, {
           'Content-Type': 'application/pdf',
           'Content-Disposition': 'attachment; filename=' + name
         });
+        this.response.write(data);
         this.response.end();
     }
 });
