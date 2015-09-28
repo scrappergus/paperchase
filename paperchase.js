@@ -315,6 +315,31 @@ if (Meteor.isClient) {
     });
 
 
+    Router.route('/subscribe', {
+        name: 'Subscribe',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            Meteor.subscribe('currentUser');
+        },
+        data: function(){
+        }
+    });
+
+    Router.route('/purchase-article/:_id', {
+        name: 'PurchaseArticle'
+        ,layoutTemplate: 'Visitor'
+        ,waitOn: function(){
+            return[
+            Meteor.subscribe('articleInfo',this.params._id)
+            ,Meteor.subscribe('currentUser')
+            ]
+        }
+        ,data: function(){
+        }
+    });
+
+
+
     /*
      ADMIN PAGES
      */
@@ -494,6 +519,12 @@ if (Meteor.isClient) {
     Router.route('/admin/archive', {
         name: 'adminArchive'
         ,layoutTemplate: 'Admin'
+        ,waitOn: function(){
+            return[
+            Meteor.subscribe('issues'),
+            Meteor.subscribe('articles'),
+            ]
+        }
     });
 
 
@@ -550,6 +581,7 @@ Router.route('/admin/users', {
             }
         }
     });
+
 Router.route('/admin/user/:_id', {
         name: 'AdminUser',
         layoutTemplate: 'Admin',
@@ -557,8 +589,8 @@ Router.route('/admin/user/:_id', {
             return[
             Meteor.subscribe('userData',this.params._id)
             ]
-        },
-        data: function(){
+        }
+        ,data: function(){
             if(this.ready()){
                 var id = this.params._id;
                 var u = Meteor.users.findOne({'_id':id});
@@ -582,6 +614,30 @@ Router.route('/admin/user/:_id', {
             }
         }
     });
+Router.route('/admin/user/:_id/subs', {
+        name: 'AdminUserSubs',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+            Meteor.subscribe('userData',this.params._id)
+            ,Meteor.subscribe('issues')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var id = this.params._id;
+                var u = Meteor.users.findOne({'_id':id});
+
+
+                return {
+                    u: u
+//                    ,volumes:volumes
+//                    ,issues:issues
+                };
+            }
+        }
+    });
+
 Router.route('/admin/adduser', {
         name: 'AdminAddUser',
         layoutTemplate: 'Admin'

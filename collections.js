@@ -7,6 +7,7 @@ ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 authors = new Mongo.Collection('authors');
 recommendations = new Mongo.Collection('recommendations');
+subs = new Mongo.Collection('subscriptions');
 
 
 Meteor.users.allow({
@@ -193,6 +194,11 @@ if (Meteor.isServer) {
   Meteor.publish('issues', function () {
     return issues.find({},{sort : {volume:1}});
   });
+
+  Meteor.publish('subs', function () {
+    return subs.find({});
+  });
+
   Meteor.publish('issue', function (v,i) {
     return issues.find({'volume': parseInt(v), 'issue': parseInt(i)});
   });
@@ -315,4 +321,5 @@ if (Meteor.isClient) {
 //	 Meteor.subscribe('issues');
     Meteor.subscribe('ipranges')
     Meteor.subscribe('institutions')
+    Meteor.subscribe('subs')
 }

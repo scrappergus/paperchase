@@ -155,6 +155,16 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	Template.AdminUserSubs.helpers({
+		volumes: function(){
+			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
+			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
+			return res;
+		}
+	});
+
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.
