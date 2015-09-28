@@ -189,6 +189,12 @@ if (Meteor.isClient) {
     Router.route('/editorial-board', {
             name: 'EdBoard',
             layoutTemplate: 'Visitor',
+            waitOn: function(){
+                return[
+                Meteor.subscribe('eic'),
+                Meteor.subscribe('fullBoard')
+                ]
+            },        
             data: function(){
                 return {
                     eic:edboard.find({role:"Editor-in-Chief"}),

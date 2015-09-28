@@ -376,6 +376,9 @@ Template.AdminInstitutionForm.events({
         ,'click .add-ip-btn': function(e,t){
             t.showIPFields.set(true);
         }
+        ,'click .cancel-new-ip-btn': function(e,t) {
+            t.showIPFields.set(false);
+        }
         ,'click .save-new-ip-btn': function(e,t) {
             var mongoId = t.data.institution._id;
 
@@ -390,6 +393,7 @@ Template.AdminInstitutionForm.events({
                         Meteor.formActions.error();
                     }else{
                         Meteor.formActions.success();
+                        t.showIPFields.set(false);
                     }
                 });
 
@@ -456,3 +460,17 @@ Template.Issue.events({
             $("#subscribe-modal").openModal();
         }
     });
+
+Template.Article.events({
+        'click .modal-trigger': function(e){
+            $("#subscribe-modal").openModal();
+        }
+    });
+
+Template.advance.events({
+        'click .modal-trigger': function(e){
+            $("#subscribe-modal").openModal();
+        }
+    });
+
+
