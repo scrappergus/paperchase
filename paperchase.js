@@ -194,7 +194,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('fullBoard')
                 ]
-            },        
+            },
             data: function(){
                 return {
                     eic:edboard.find({role:"Editor-in-Chief"}),
@@ -352,7 +352,24 @@ if (Meteor.isClient) {
                 }
             }
         }
-    })
+    });
+    Router.route('/admin/recommendation/:_id',{
+        name: 'AdminRecommendationUpdate',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return [
+                Meteor.subscribe('recommendationData',this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                return{
+                    recommendation: recommendations.findOne({'_id':this.params._id})
+                }
+            }
+        }
+
+    });
 
     /*data submissions*/
     Router.route('/admin/data_submissions',{

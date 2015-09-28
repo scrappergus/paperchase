@@ -23,8 +23,8 @@ Meteor.methods({
 						var filePath = process.env.PWD + '/uploads/pmc_xml/' + pmidAgingList[i] + '.xml';
 						fs.writeFile(filePath, res.content, function (err) {
 							if (err) return console.log(err);
-							// console.log('--saved '+filePath);
-						});						
+							console.log('--saved '+filePath);
+						});
 					}else{
 						console.log('--failed '+pmidAgingList[i]);
 						failed.push(pmidAgingList[i]);
@@ -36,7 +36,7 @@ Meteor.methods({
 				console.log(failed);
 				return 'done saving xml';
 			}
-		}		
+		}
 	},
 	saveXMLFromPMC: function(){
 		console.log('-saveXMLFromPMC');
@@ -50,10 +50,10 @@ Meteor.methods({
                     console.log(error);
                 }else{
 					result['doc_updates'] = {};
-					result['doc_updates']['created_date'] = new Date(); 
+					result['doc_updates']['created_date'] = new Date();
 					result['doc_updates']['created_by'] = Meteor.userId();
 
-					var articleIssue = issues.findOne({'volume' : result['volume'], 'issue': result['issue']}); 
+					var articleIssue = issues.findOne({'volume' : result['volume'], 'issue': result['issue']});
 	                if(articleIssue){
 	                    result['issue_id'] = result['_id'];
 	                }
@@ -73,7 +73,7 @@ Meteor.methods({
 				console.log(failedSavedDB);
 				// console.log(saved);
 			}
-		}	
+		}
 	},
 	getAllArticlesPii: function(){
 		console.log('--getAllArticlesPii');
@@ -86,7 +86,7 @@ Meteor.methods({
 			var pmid = allArticles[i]['ids']['pmid'];
 			var pii = allArticles[i]['ids']['pii'];
 			console.log('.. ' + i + ' / pmid = '+pmid);
-			
+
 			if(!pii){
 				Meteor.call('getPiiFromPmid',pmid,function(error,pii){
 					if(error){
@@ -121,7 +121,7 @@ Meteor.methods({
 				var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=' + articlePmid;
 				var res;
 				res = Meteor.http.get(requestURL);
-				
+
 				if(res){
 					// console.log(res.content);
 					parseString(res.content, function (error, result) {
@@ -132,7 +132,7 @@ Meteor.methods({
 							//first check that there are authors in the json response and also that the db has authors saved
 							if(result['PubmedArticleSet']['PubmedArticle'][0]['MedlineCitation'][0]['Article'][0]['AuthorList'] && authorsListDb){
 								var authorsJson = result['PubmedArticleSet']['PubmedArticle'][0]['MedlineCitation'][0]['Article'][0]['AuthorList'][0]['Author'];
-								
+
 								//loop through all authors in the article (in the response from pubmed)
 								for(var i = 0 ; i < authorsJson.length ; i++){
 									if(authorsJson[i]['AffiliationInfo']){
@@ -142,15 +142,15 @@ Meteor.methods({
 										//Then UPDATE the known affiliations of author doc
 
 										//loop through all affiliations
-										//match the found affiliation with the saved author, to get the authors mongo_id 
+										//match the found affiliation with the saved author, to get the authors mongo_id
 										var authorAffiliations = authorsJson[i]['AffiliationInfo'];
-										
+
 										for(var aff = 0 ; aff < authorAffiliations.length ; aff++){
 											var authorAffiliation = authorAffiliations[aff]['Affiliation'][0];
 											var authorMongoId = '';
-											var authorNameFirst = authorsJson[i]['ForeName'][0]; 
+											var authorNameFirst = authorsJson[i]['ForeName'][0];
 											var authorNameLast = authorsJson[i]['LastName'][0];
-											
+
 											for(var a = 0 ; a < authorsListDb.length ; a++){
 												//TODO: better way of matching authors
 												if(authorsListDb[a]['name_first'].replace('.','').replace(' ','').toLowerCase() === authorNameFirst.replace('.','').replace(' ','').toLowerCase() && authorsListDb[a]['name_last'].replace('.','').replace(' ','').toLowerCase() === authorNameLast.replace('.','').replace(' ','').toLowerCase() ){
@@ -164,9 +164,9 @@ Meteor.methods({
 													//update the authorsList (from the article doc)
 													//add this affiliaton string to the array of affiliations for the author object, but only if not already present
 													if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
-														authorsListDb[a]['affiliations'].push(authorAffiliation);	
+														authorsListDb[a]['affiliations'].push(authorAffiliation);
 													}
-													
+
 												}
 											}
 
@@ -185,9 +185,9 @@ Meteor.methods({
 														//update the authorsList (from the article doc)
 														//add this affiliaton string to the array of affiliations for the author object, but only if not already present
 														if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
-															authorsListDb[a]['affiliations'].push(authorAffiliation);	
+															authorsListDb[a]['affiliations'].push(authorAffiliation);
 														}
-														
+
 													}
 												}
 											}
@@ -226,14 +226,14 @@ Meteor.methods({
 											}else{
 												console.log('----ERROR: could not match');
 												console.log('    authorNameFirst = ' + authorNameFirst  + ' / authorNameLast = ' + authorNameLast + ' / affi = ' + authorAffiliation);
-											}	
-										}				
+											}
+										}
 									}
-								}								
+								}
 							}
 						}
 					});
-				}				
+				}
 			}
 		}
 	},
@@ -259,6 +259,6 @@ Meteor.methods({
 					})
 				}
 			});
-		}		
-	}	
+		}
+	}
 })

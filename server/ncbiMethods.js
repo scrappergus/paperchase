@@ -7,7 +7,7 @@ Meteor.methods({
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
 		var res;
 		res = Meteor.http.get(requestURL);
-		
+
 		if(res){
 			var articleIdList = res.data.result[articlePMID]['articleids'];
 			var articleIdListL = articleIdList.length;
@@ -16,7 +16,7 @@ Meteor.methods({
 					// console.log(articleIdList[i]['value']);
 					pmcId = articleIdList[i]['value'];
 				}
-			}	
+			}
 		}
 		return pmcId;
 	},
@@ -24,7 +24,7 @@ Meteor.methods({
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
 		var res;
 		res = Meteor.http.get(requestURL);
-		
+
 		if(res){
 			var articleIdList = res.data.result[articlePMID]['articleids'];
 			var articleIdListL = articleIdList.length;
@@ -32,7 +32,7 @@ Meteor.methods({
 				if(articleIdList[i]['idtype'] === 'pii'){
 					return articleIdList[i]['value'];
 				}
-			}	
+			}
 		}
 	},
 	getPubStatusFromPmid: function(pmid){
@@ -40,10 +40,22 @@ Meteor.methods({
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + pmid;
 		var res;
 		res = Meteor.http.get(requestURL);
-		
+
 		if(res){
 			var articlePubStatus = res.data.result[pmid]['pubstatus'];
 			return articlePubStatus;
-		}		
+		}
+	},
+	pubMedCiteCheck: function(xml){
+		var url = 'http://www.ncbi.nlm.nih.gov/pubmed/citcheck/';
+		var xmlCheck = Meteor.http('post',url,{
+			params: {
+				hfiletext: xml
+			}
+		});
+		if(xmlCheck){
+			console.log('xmlCheck  --');
+			console.log(xmlCheck);
+		}
 	}
 })

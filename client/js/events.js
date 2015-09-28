@@ -455,6 +455,30 @@ Template.AdminInstitutionForm.events({
         }
     });
 
+Template.AdminRecommendationUpdate.events({
+	'submit form': function(e,t){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var inputs = {};
+		if(!$('#institution_contact').prop('disabled')){
+			inputs['contacted'] = $('#institution_contact').prop('checked');
+		}
+
+		inputs['correspondence_notes'] = $('#correspondence_notes').val();
+
+		Meteor.call('updateRecommendation', inputs, this._id, function(error, result){
+			if(error){
+				console.log('ERROR - updateRecommendation');
+				console.log(error);
+			}else{
+				console.log(result);
+				Meteor.formActions.success();
+			}
+		});
+	}
+})
+
+/*visitor*/
 Template.Issue.events({
         'click .modal-trigger': function(e){
             $("#subscribe-modal").openModal();
