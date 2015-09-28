@@ -21,7 +21,7 @@
 										<tr>
 											<td>{{name_first}} {{name_last}}</td>
 											<td>{{institution}}</td>
-											<td>{{recommendation}}</td>
+											<td>{{message}}</td>
 											<td>{{#if contacted}}Yes{{else}}No{{/if}}</td>
 											<td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminRecommendationUpdate'}}">Update</a></td>
 										</tr>
@@ -47,7 +47,15 @@
 						<div class="col s12">
 							<p><label>Recommended By: </label>{{name_first}} {{name_last}} {{#if user_id}}<a href="{{pathFor 'AdminUser' id=user_id}}">user profile</a>{{/if}}</p>
 							<p><label>Institution: </label>{{institution}}</p>
-							<p><label>Recommendation: </label>{{recommendation}}</p>
+							{{#if message}}<p><label>Message: </label>{{message}}</p>{{/if}}
+							{{#if recommendations}}
+								<label>Reasons: </label>
+								<ul>
+								{{#each recommendations}}
+									<li>{{.}}</li>
+								{{/each}}
+								</ul>
+							{{/if}}
 						</div>
 					</div>
 				</div>

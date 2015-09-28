@@ -10,16 +10,27 @@ Template.Recommend.events({
 		inputs['user_email'] = $('#email_input').val();
 		inputs['name_last'] = $('#name_last_input').val();
 		inputs['institution'] =  $('#institution_input').val();
-		inputs['recommendation'] =  $('#recommendation_input').val();
+		inputs['lib_email'] = $('#lib_email_input').val();
+		inputs['message'] =  $('#message_input').val();
 
-		//check required
+		//get checkboxe recommendations
+		var recommendations = [];
+		$('.checkbox-recommend').each(function(i){
+			if($(this).prop('checked')){
+				var checkbox_id = $(this).attr('id');
+				var text = $('label[for="'+checkbox_id+'"]').text();
+				recommendations.push(text);
+			}
+		});
+		if(recommendations.length > 0){
+			inputs['recommendations'] = recommendations;
+		}
+
+
+		// check required
 		if(!inputs['institution']){
 			errors.push('Institution' + ' Required');
 			$('#institution_input').addClass('invalid');
-		}
-		if(!inputs['recommendation']){
-			errors.push('Recommendation' + ' Required')
-			$('#recommendation_input').addClass('invalid');
 		}
 
 		if(errors.length === 0 ){

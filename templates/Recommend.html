@@ -3,13 +3,17 @@
 	<div class="col s12">
 		<div class="row">
 			<div class="col s12">
-				<h1>Recommend a Subscription to Your Library</h1>
-				<h4>We will forward your request to your institution's librarian.</h4>
+				<h1><i>Aging</i> Subscription</h1>
+				<h2>For Your Institution</h2>
+				<h4>We will contact your institution's librarian about subscribing to <i>Aging</i>.</h4>
 			</div>
 		</div>
 
 		<form>
 			<div class="row">
+				<div class="input-field col s12">
+					<h5>Your Information</h5>
+				</div>
 				<div class="input-field col s6">
 					<input id="name_first_input" type="text" class="validate" value="{{user.name_first}}">
 					<label for="name_first_input" class="{{#if user.name_first}}active{{/if}}">First Name</label>
@@ -21,18 +25,55 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
-					<input id="institution_input" type="text" class="validate">
-					<label for="institution_input">Institution</label>
+					<input id="email_input" type="email" class="validate" value="{{user.emails.[0].address}}">
+					<label for="email_input" class="{{#if user.emails}}active{{/if}}">Your Email</label>
 				</div>
 				<div class="input-field col s6">
-					<input id="email_input" type="email" class="validate" value="{{user.emails.[0].address}}">
-					<label for="email_input" class="{{#if user.emails}}active{{/if}}">Email</label>
+					<input id="position_input" type="text" class="validate">
+					<label for="position_input">Position</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<textarea id="recommendation_input" class="materialize-textarea"></textarea>
-					<label for="recommendation_input">Recommendation</label>
+					<h5>Institution Information</h5>
+				</div>
+				<div class="input-field col s6">
+					<input id="institution_input" type="text" class="validate">
+					<label for="institution_input">Institution</label>
+				</div>
+				<div class="input-field col s6">
+					<input id="lib_email_input" type="email" class="validate">
+					<label for="lib_email_input" class="{{#if user.emails}}active{{/if}}">Librarian Email</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<h5>Please check all reasons for recommending <i>Aging</i></h5>
+					<p>
+						<input type="checkbox" class="checkbox-recommend filled-in" id="recommend_reference"/>
+						<label for="recommend_reference">Reference</label>
+					</p>
+					<p>
+						<input type="checkbox" class="checkbox-recommend filled-in" id="recommend_student"/>
+						<label for="recommend_student">Student Reference</label>
+					</p>
+					<p>
+						<input type="checkbox" class="checkbox-recommend filled-in" id="recommend_benefit"/>
+						<label for="recommend_benefit">Benefit library's collection</label>
+					</p>
+					<p>
+						<input type="checkbox" class="checkbox-recommend filled-in" id="recommend_affiliation"/>
+						<label for="recommend_affiliation">Affiliation</label>
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<h5>Include a message about your recommendation</h5>
+				</div>
+				<div class="input-field col s12">
+					<textarea id="message_input" class="materialize-textarea"></textarea>
+					<label for="message_input">Recommendation</label>
 				</div>
 			</div>
 			{{>ErrorMessages}}
