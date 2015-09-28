@@ -336,7 +336,12 @@ Template.AdminInstitutionAdd.events({
 
     });
 
-Template.AdminInstitutionEdit.events({
+
+Template.AdminInstitutionForm.onCreated(function() {
+        this.showIPFields = new ReactiveVar( false );
+    });
+
+Template.AdminInstitutionForm.events({
         'click .edit-btn': function(e){
             $(".institution-form").show();
         }
@@ -344,6 +349,47 @@ Template.AdminInstitutionEdit.events({
             var mongoId = t.data.institution._id;
             Meteor.call('removeInstitution', mongoId, function(error, result){
                 });
+        }
+        ,'click .add-ip-btn': function(e,t){
+            t.showIPFields.set(true);
+        }
+        ,'click .save-new-ip-btn': function(e,t) {
+            var mongoId = t.data.institution._id;
+
+            var obj = {
+                'IPRanges': {startIP: $('.add-startIP').val(), endIP: $('.add-endIP').val()}
+            };
+
+            Meteor.call('addIPRangeToInstitution', mongoId, obj, function(error, result){
+                    if(error){
+                        console.log('ERROR');
+                        console.log(error);
+                        Meteor.formActions.error();
+                    }else{
+                        Meteor.formActions.success();
+                    }
+                });
+
+        }
+        ,'click .del-ip-btn': function(e,t) {
+            var mongoId = t.data.institution._id;
+            console.log(this);
+            console.log(mongoId);
+
+            obj = {
+                'IPRanges': this
+            };
+
+            Meteor.call('removeInstitutionIPRange', mongoId, obj, function(error, result){
+                    if(error){
+                        console.log('ERROR');
+                        console.log(error);
+                        Meteor.formActions.error();
+                    }else{
+                        Meteor.formActions.success();
+                    }
+                });
+
         }
         ,'submit form': function(e,t){
             var formType = Session.get('formType');
@@ -382,3 +428,8 @@ Template.AdminInstitutionEdit.events({
         }
     });
 
+Template.Issue.events({
+        'click .modal-trigger': function(e){
+            $("#subscribe-modal").openModal();
+        }
+    });

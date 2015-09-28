@@ -9,7 +9,11 @@
             <li><strong>IP Address: You are accessing this site from this IP address: {{clientIP}}</strong></li>
 
             {{#if isSubscribed}}
-            <li><strong>onuthoenuth{{#if isSubscribedIP}}You have institutional subscription access through {{getInstitutionByIP.institution}}{{/if}}</strong></li>
+            {{#if isSubscribedIP}}<li><strong>You have institutional subscription access through {{getInstitutionByIP.institution}}</strong></li> {{/if}}
+            {{#if isSubscribedUser}}<li><strong>You are subscribed as an individual.</strong></li> {{/if}}
+
+            {{else}}
+            <li><strong>You are not currently subscribed to our journal. Request access from your librarian.</strong></li>
             {{/if}}
         </ul>
     </div>	

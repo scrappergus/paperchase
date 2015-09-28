@@ -201,7 +201,7 @@ Schemas.User = new SimpleSchema({
           }
 });
 
-Meteor.users.attachSchema(Schemas.User);
+//Meteor.users.attachSchema(Schemas.User);
 
 
 /*

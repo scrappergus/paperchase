@@ -46,35 +46,8 @@ if (Meteor.isClient) {
 			return headers.getClientIP();
 		});
 
-	Template.registerHelper('isSubscribedIP', function() {
-			ip = dot2num(headers.getClientIP());
 
-			var match = IPRanges.findOne( { 
-					startNum: {$lte: ip} 
-					,endNum: {$gte: ip}
-				}
-			);
 
-			return match !== undefined;
-		});
-
-	Template.registerHelper('getInstitutionByIP', function() {
-			ip = dot2num(headers.getClientIP());
-
-			var match = IPRanges.findOne( { 
-					startNum: {$lte: ip} 
-					,endNum: {$gte: ip}
-				}
-			);
-
-			if(match) {
-			   inst_match = Institutions.findOne({
-					   "_id": match.institutionID
-				   });
-			}
-
-			return inst_match || false;
-		});
 
 	Template.Archive.helpers({
 		volumes: function(){
@@ -154,9 +127,8 @@ if (Meteor.isClient) {
 		}
 	});
 	Template.AdminInstitutionForm.helpers({
-		'formType' : function(){
-			// console.log('... = '+Session.get('formType'));
-			return Session.get('formType');
+		'showIPFields' : function(){
+            return Template.instance().showIPFields.get();
 		}
 	});
 	Template.adminArticleXmlIntake.helpers({

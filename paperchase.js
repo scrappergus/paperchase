@@ -55,10 +55,6 @@ institutions.after.remove(function(userId, doc) {
     });
 
 if (Meteor.isClient) {
-    Template.registerHelper('clientIP', function() {
-            return headers.getClientIP();
-        });
-
 
     Template.registerHelper('isSubscribed', function() {
             ip = dot2num(headers.getClientIP());
@@ -69,23 +65,33 @@ if (Meteor.isClient) {
                 }
             );
 
-            console.log(match);
+            if(match === undefined) {
+                userId = Meteor.userId();
+                match = Meteor.users.findOne({'_id':userId, subscribed:true});
+            }
 
             return match !== undefined;
         });
 
 
-    Template.registerHelper('isSubscribedIP', function() {
-            ip = dot2num(headers.getClientIP());
 
-            var match = ipranges.findOne( { 
-                    startNum: {$lte: ip} 
-                    ,endNum: {$gte: ip}
-                }
-            );
-
+    Template.registerHelper('isSubscribedUser', function() {
+            userId = Meteor.userId();
+            match = Meteor.users.findOne({'_id':userId, subscribed:true});
             return match !== undefined;
         });
+
+	Template.registerHelper('isSubscribedIP', function() {
+			ip = dot2num(headers.getClientIP());
+
+			var match = ipranges.findOne( { 
+					startNum: {$lte: ip} 
+					,endNum: {$gte: ip}
+				}
+			);
+
+			return match !== undefined;
+		});
 
     Template.registerHelper('getInstitutionByIP', function() {
             ip = dot2num(headers.getClientIP());
@@ -102,8 +108,11 @@ if (Meteor.isClient) {
                     });
             }
 
+
             return inst_match || false;
         });
+
+
 
 
     Session.setDefault('formMethod','');
@@ -168,6 +177,12 @@ if (Meteor.isClient) {
     Router.route('/archive', { 
             name: 'Archive',
             layoutTemplate: 'Visitor',
+            waitOn: function(){
+                return[
+                Meteor.subscribe('issues'),
+                Meteor.subscribe('articles'),
+                ]
+            }
         });
 
     Router.route('/editorial-board', { 
@@ -236,10 +251,6 @@ if (Meteor.isClient) {
             }
         });
 
-    Template.Issue.rendered = function () {
-        $('.modal-trigger').leanModal();
-    };
-
 
     Router.route('/article/:_id', { 
             name: 'Article',
@@ -279,6 +290,12 @@ if (Meteor.isClient) {
                 }
             }
         });
+
+    Router.route('/recommend', { 
+            name: 'Recommend'
+            ,layoutTemplate: 'Visitor'
+        });
+
 
     /*
      ADMIN PAGES
@@ -501,6 +518,11 @@ Router.route('/admin/user/:_id', {
                 for(var i = 0 ; i < rL ; i++){
                     u[r[i]+'Role'] = 'checked';
                 }
+
+                if(u.subscribed) {
+                    u['subbed'] = 'checked';
+                }
+
                 return {
                     u: u
                 };
@@ -581,15 +603,13 @@ Router.route('/admin/institution/add', {
 
 Router.route('/admin/institution/edit/:_id', {
         layoutTemplate: 'Admin',
-        name: 'AdminInstitutionEdit',
+        name: 'AdminInstitutionForm',
         waitOn: function(){
             return[
             Meteor.subscribe('institution',this.params._id)
             ]
         }
         ,data: function(){
-            Session.set({formType:'update'});
-
             return {
                 institution: institutions.findOne({"_id":this.params._id})
                 ,updateForm: true

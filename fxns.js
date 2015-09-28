@@ -123,6 +123,9 @@ Meteor.adminUser = {
 		user.emails[0] = {};
 		user.emails[0].address = $('#email').val();
 		user.roles =  Meteor.adminUser.getFormCheckBoxes();
+
+        user.subscribed = $('.sub-cb').is(':checked');
+
 		return user;		
 	},
 	getFormAdd: function(){

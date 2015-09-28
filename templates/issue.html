@@ -8,11 +8,16 @@
   <!-- Modal Structure -->
   <div id="subscribe-modal" class="modal">
     <div class="modal-content">
-      <h4>Subscribe to Aging</h4>
-      <p>You should really subscribe to aging.</p>
+      <h4>You do not have access to this article.</h4>
+      <h6>Here are three ways to gain access to this article:</h6>
+                                                                                                     
+      <p><a class="btn modal-action modal-close waves-effect" href="/recommend">Recommend Aging to your Librarian</a></p>
+      <p><a class="btn modal-action modal-close waves-effect" href="/subscribe">Subscribe to Aging as an individual</a></p>
+      <p><a class="btn modal-action modal-close waves-effect" href="/purchase-article">Purchase per-article access to this paper</a></p>
+
     </div>
     <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close this dialog</a>
     </div>
   </div>
 
@@ -46,8 +51,13 @@
                 	<p>{{>AuthorsList}}</p>
                 	<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
                 	<a class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'Article'}}">Abstract</a>
-                    <a class="blue-grey darken-1 waves-effect waves-light btn {{!isSubscribed}}">PDF</a>
-                	<a class="blue-grey darken-1 waves-effect waves-light btn modal-trigger" href="#subscribe-modal">Full Text</a>
+                    {{#if isSubscribed}}
+                    <a class="blue-grey darken-1 waves-effect waves-light btn ">PDF</a>
+                	<a class="blue-grey darken-1 waves-effect waves-light btn">Full Text</a>
+                    {{else}}
+                    <a class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
+                	<a class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full Text</a>
+                    {{/if}}
                 </li>
 
 

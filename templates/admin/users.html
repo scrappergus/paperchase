@@ -73,6 +73,16 @@
 										<input id="email" type="email" class="validate" value="{{#each emails}}{{address}}{{/each}}">
 									</div>
 								</div>
+
+								<div class="row">
+									<div class="input-field col s12">
+										<h4>Subscription</h4>
+                                        <input type="checkbox" class="sub-cb filled-in" id="user-sub" value="subscribed" {{subbed}}/>
+										<label for="user-sub">Subscribed to aging</label>
+									</div>
+								</div>
+
+
 								{{#if isInRole 'super'}}
 								<div class="row">
 									<div class="input-field col s12">
@@ -90,6 +100,8 @@
 										<label for="articles-role">article</label>
 									</div>
 								</div>
+
+
 								{{/if}}
 								<div class="row">
 									<div class="input-field col s12">

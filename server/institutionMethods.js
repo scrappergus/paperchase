@@ -8,4 +8,10 @@ Meteor.methods({
 	,removeInstitution: function(id){
 		return institutions.remove({'_id': id});		
 	}
+	,addIPRangeToInstitution: function(id, data){
+		return institutions.update({'_id': id}, {$push: data});
+	}
+	,removeInstitutionIPRange: function(id, data){
+		return institutions.update({'_id': id}, {$pull: data}, {multi:true});
+	}
 });

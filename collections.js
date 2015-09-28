@@ -165,6 +165,10 @@ ipranges.allow({
 });
 
 if (Meteor.isServer) {
+    Meteor.publish(null, function() {
+            return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
+        });
+
   Meteor.publish('volumes', function () {
     return volumes.find({},{sort : {volume:-1}});
   });
@@ -226,6 +230,9 @@ if (Meteor.isServer) {
           }
       });  
 
+  Meteor.publish('ipranges', function () {
+          return ipranges.find({});
+      });
 
   Meteor.publish('fullBoard', function () {
           return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Founding Editorial Board"}]});
@@ -238,6 +245,8 @@ if (Meteor.isServer) {
   Meteor.publish('eb', function () {
           return edboard.find({role:"Founding Editorial Board"});
   });
+
+  Meteor.publish('users');
 
 
 
@@ -262,5 +271,7 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
 	Meteor.subscribe('volumes');
-	// Meteor.subscribe('issues');
+//	 Meteor.subscribe('issues');
+    Meteor.subscribe('ipranges')
+    Meteor.subscribe('institutions')
 }

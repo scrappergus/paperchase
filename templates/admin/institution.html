@@ -27,9 +27,9 @@
 								<tr>
 									<td><a href="/admin/institution/edit/{{_id}}">{{institution}}</a></td>
 									<td>{{address}}</td>
-                                    <td>{{#each IPRanges}}{{this.startIP}}-{{this.endIP}}{{/each}}</td>
+                                    <td>{{#each IPRanges}}{{this.startIP}}-{{this.endIP}}<br>{{/each}}</td>
                                     <td> <button type="button" class=" btn red del-btn" data-del="{{_id}}">Delete</button> </td>
-									<td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminInstitutionEdit'}}">Profile</a></td>
+									<td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminInstitutionForm'}}">Profile</a></td>
 								</tr>
 								{{/each}}
 							</tbody>
@@ -97,23 +97,49 @@
     <input type="text" name="institution" placeholder="Institution name" value="{{institution.institution}}">
 
     <div class="input-field col s12">
-          <textarea name="address" class="materialize-textarea">{{institution.address}}</textarea>
-          <label for="address">Address</label>
+        <textarea name="address" class="materialize-textarea">{{institution.address}}</textarea>
+        <label for="address">Address</label>
+    </div>
+
+    {{#if showIPFields}}
+    <div class="row">
+        <div class="input-field col s3"> 
+            <input type="text" class="add-startIP" placeholder="127.0.0.1">
         </div>
+        <div class="input-field col s3"> 
+            <input type="text" class="add-endIP" placeholder="127.0.0.2">
+        </div>
+    </div>
+   <button type="button" class="btn  blue save-new-ip-btn">Add IP Range</button>
+    {{else}}
+    <button type="button" class="btn  blue add-ip-btn">Add IP Range</button>
+    {{/if}}
 
-        {{#each institution.IPRanges}}
-        <input type="text" class="iprange-start" name="iprange-start" placeholder="IP Range Start" value="{{startIP}}">
-        <input type="text" class="iprange-end" name="iprange-end" placeholder="IP Range End" value="{{endIP}}">
-        {{/each}}
+    <br><br>
+
+    {{#each institution.IPRanges}}
+    <div class="row">
+        <div class="input-field col s3"> 
+            <input type="text" class="iprange-start iprange-field" name="iprange-start" placeholder="IP Range Start" value="{{startIP}}">
+        </div>
+        <div class="input-field col s3"> 
+            <input type="text" class="iprange-end iprange-field" name="iprange-end" placeholder="IP Range End" value="{{endIP}}">
+        </div>
+        <div class="input-field col s3"> 
+        <button type="button" class="btn red del-ip-btn">Delete IP Range</button>
+        </div>
+    </div>
+    {{/each}}
 
 
-        {{#if updateForm}}
-        <button type="submit" class="submit btn btn-large green save-btn">Save</button>
-        <button type="button" class="btn btn-large red del-btn">Delete</button>
-        {{/if}}
-        {{#if insertForm}}
-        <button type="submit" class="submit btn btn-large green add-btn">Create Institution</button>
-        {{/if}}
+    <div class="divider"></div>
+    {{#if updateForm}}
+    <button type="submit" class="submit btn btn-large green save-btn">Save</button>
+    <button type="button" class="btn btn-large red del-btn">Delete</button>
+    {{/if}}
+    {{#if insertForm}}
+    <button type="submit" class="submit btn btn-large green add-btn">Create Institution</button>
+    {{/if}}
 
 </form>
 </template>
