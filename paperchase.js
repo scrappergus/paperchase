@@ -315,15 +315,25 @@ if (Meteor.isClient) {
     });
 
 
-    Router.route('/subscribe', {
+Router.route('/subscribe', {
         name: 'Subscribe',
         layoutTemplate: 'Visitor',
         waitOn: function(){
-            Meteor.subscribe('currentUser');
+            return[
+            Meteor.subscribe('currentIssue')
+            ]
         },
         data: function(){
+            if(this.ready()){
+                return{
+                    issue: issues.findOne(),
+                    today: new Date(),
+                    nextYear: new Date(new Date().setYear(new Date().getFullYear() + 1))
+                }
+            }
         }
     });
+
 
     Router.route('/purchase-article/:_id', {
         name: 'PurchaseArticle'
@@ -337,7 +347,6 @@ if (Meteor.isClient) {
         ,data: function(){
         }
     });
-
 
 
     /*
