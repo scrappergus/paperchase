@@ -7,16 +7,16 @@
 				<h4>We will forward your request to your institution's librarian.</h4>
 			</div>
 		</div>
-		{{#with user}}
+
 		<form>
 			<div class="row">
 				<div class="input-field col s6">
-					<input id="name_first_input" type="text" class="validate" value="{{name_first}}">
-					<label for="name_first_input" class="{{#if name_first}}active{{/if}}">First Name</label>
+					<input id="name_first_input" type="text" class="validate" value="{{user.name_first}}">
+					<label for="name_first_input" class="{{#if user.name_first}}active{{/if}}">First Name</label>
 				</div>
 				<div class="input-field col s6">
-					<input id="name_last_input" type="text" class="validate" value="{{name_last}}">
-					<label for="name_last_input" class="{{#if name_last}}active{{/if}}">Last Name</label>
+					<input id="name_last_input" type="text" class="validate" value="{{user.name_last}}">
+					<label for="name_last_input" class="{{#if user.name_last}}active{{/if}}">Last Name</label>
 				</div>
 			</div>
 			<div class="row">
@@ -25,8 +25,8 @@
 					<label for="institution_input">Institution</label>
 				</div>
 				<div class="input-field col s6">
-					<input id="email_input" type="email" class="validate" value="{{emails.[0].address}}">
-					<label for="email_input" class="{{#if emails}}active{{/if}}">Email</label>
+					<input id="email_input" type="email" class="validate" value="{{user.emails.[0].address}}">
+					<label for="email_input" class="{{#if user.emails}}active{{/if}}">Email</label>
 				</div>
 			</div>
 			<div class="row">
@@ -38,14 +38,13 @@
 			{{>ErrorMessages}}
 			<div class="row save-btn">
 				<div class="input-field col s12 center-align">
-					<input type="hidden" id="user_id" value="{{_id}}">
+					<input type="hidden" id="user_id" value="{{user._id}}">
 					<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Send Recommendation">Send</button>
 				</div>
 			</div>
 			{{>Sending}}
 			{{>SendingSuccessMessage what='Recommendation'}}
 		</form>
-		{{/with}}
 	</div>
 </div>
 </template>
