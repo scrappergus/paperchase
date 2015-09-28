@@ -299,6 +299,14 @@ if (Meteor.isServer) {
 
   Meteor.publish('recommendations', function(){
     return recommendations.find({});
+  });
+  Meteor.publish('recommendationData',function(mongoId){
+    if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return  recommendations.find({'_id':mongoId})
+    }else{
+      this.stop();
+      return;
+    }
   })
 }
 if (Meteor.isClient) {

@@ -29,7 +29,7 @@ Template.Recommend.events({
 					console.log('ERROR - addReccomendation');
 					console.log(error);
 				}else{
-					Meteor.formActions.success()
+					Meteor.formActions.success();
 				}
 			});
 		}else{
