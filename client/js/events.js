@@ -460,7 +460,10 @@ Template.AdminRecommendationUpdate.events({
 		e.preventDefault();
 		Meteor.formActions.saving();
 		var inputs = {};
-		inputs['contacted'] = $('#institution_contact').prop('checked');
+		if(!$('#institution_contact').prop('disabled')){
+			inputs['contacted'] = $('#institution_contact').prop('checked');
+		}
+
 		inputs['correspondence_notes'] = $('#correspondence_notes').val();
 
 		Meteor.call('updateRecommendation', inputs, this._id, function(error, result){
