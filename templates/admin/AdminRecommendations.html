@@ -47,6 +47,7 @@
 						<div class="col s12">
 							<p><label>Recommended By: </label>{{name_first}} {{name_last}} {{#if user_id}}<a href="{{pathFor 'AdminUser' id=user_id}}">user profile</a>{{/if}}</p>
 							<p><label>Institution: </label>{{institution}}</p>
+							{{#if lib_email}}<p><label>Librarian Email: </label>{{lib_email}}</p>{{/if}}
 							{{#if position}}<p><label>Position: </label>{{position}}</p>{{/if}}
 							{{#if message}}<p><label>Message: </label>{{message}}</p>{{/if}}
 							{{#if recommendations}}
