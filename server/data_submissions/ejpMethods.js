@@ -21,7 +21,9 @@ Meteor.methods({
 					'Accept' : '*/*',
 					'Connection' : 'Keep-Alive',
 					'User-Agent' : agent,
-					'cookie' : cookieValue
+					'cookie' : cookieValue,
+					'Referer' : 'http://aging.msubmit.net/cgi-bin/main.plex',
+					'Origin' : 'http://aging.msubmit.net'
 	          	}
 			});
 
@@ -36,29 +38,51 @@ Meteor.methods({
 
 				for(c = 0 ; c < newCookies.length ; c++){
 					var cookieCrumbs = newCookies[c].split(';');
-					cookieValue.push(cookieCrumbs[0]);
+					// cookieValue.push(cookieCrumbs[0]);
+					//cookieValue.push(newCookies[c]);
+					// console.log(newCookies[c]);
+					if(newCookies[c].indexOf('expires') !== -1) {
+
+					}else{
+						// cookieValue.push(newCookies[c]);	
+					}
 				}
 				console.log(cookieValue);
 
 				//first path to take
-				// var manuscriptsPath = 'cgi-bin/main.plex?form_type=ndt_folder&amp;j_id=459&amp;ms_id_key=' + msPostDescisionsUrl + '&amp;ft_key=NQcbqxCKr20xjQr3VmgxSg&amp;is_open_1900=1&amp;folder_id=1900&amp;is_open_view_1900=11&amp;role=20'
+				var manuscriptsPath = '?form_type=ndt_folder&j_id=459&ms_id_key=' + msPostDescisionsUrl + '&ft_key=NQcbqxCKr20xjQr3VmgxSg&is_open_1900=1&folder_id=1900&is_open_view_1900=11&role=20'
+				// console.log(manuscriptsPath);
 				var manuscriptsPath = '';
 				Meteor.http.get(requestURL + manuscriptsPath ,  {
+					params: {
+						login: username,
+						password: password,
+						form_type: 'ndt_folder',
+						j_id: 459,
+						timeout: 30000,
+						ms_id_key: msPostDescisionsUrl,
+						ft_key: 'NQcbqxCKr20xjQr3VmgxSg',
+						is_open_1900: 1,
+						folder_id: 1900,
+						is_open_view_1900: 11,
+						role: 20
+					},
 		           	headers: {
 						'Accept' : '*/*',
 						'Connection' : 'Keep-Alive',
 						'User-Agent' : agent,
-						'cookie' : cookieValue
+						'cookie' : JSON.stringify(cookieValue),
+						'Upgrade-Insecure-Requests' : 1,
+						'Content-Type' : 'application/x-www-form-urlencoded'
 		          	}
 				}, function(error,result){
 					if(error){
 						console.log('ERROR');
 						console.log(error);
 					}else{
-						console.log(result);
+						console.log(result.content);
 					}
 				});
 			}
-		}
-	// }
+	}
 });
