@@ -52,23 +52,9 @@ if (Meteor.isClient) {
 		return items.length;
 	});
 	Template.registerHelper('clientIP', function() {
-		// 	return headers.getClientIP();
-		// });
+		 	return headers.getClientIP();
+		 });
 
-			var match = IPRanges.findOne( {
-					startNum: {$lte: ip}
-					,endNum: {$gte: ip}
-				}
-			);
-
-			if(match) {
-			   inst_match = Institutions.findOne({
-					   "_id": match.institutionID
-				   });
-			}
-
-			return inst_match || false;
-		});
 	Template.Archive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
