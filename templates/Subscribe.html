@@ -15,3 +15,135 @@
     </div>
 </div>
 </template>
+
+<template name="Subscribe">
+    <div class="row">
+        <div class="col s12">
+            <h1>Individual <i>Aging</i> Subscription</h1>
+            <h4>Full Access to all <i>Aging</i> publications</h4>
+        </div>
+    </div>
+    <form>
+        <div class="row">
+            <div class="input-field col s12">
+                <h3>Contact Information</h3>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_name_first" class="validate">
+                <label for="contact_name_first">First Name</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_name_last" class="validate">
+                <label for="contact_name_last">Last Name</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_address" class="validate">
+                <label for="contact_address">Address</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_city" class="validate">
+                <label for="contact_city">City</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_state" class="validate">
+                <label for="contact_state">State/Province</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_zip" class="validate">
+                <label for="contact_zip">Zip</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="contact_country" class="validate">
+                <label for="contact_country">Country</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <h3>Billing Information</h3>
+            </div>
+            <div class="input-field col s12">
+                <button class="btn waves-effect waves-light">Copy Contact Information</button>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_name_first" class="validate">
+                <label for="billing_name_first">First Name</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_name_last" class="validate">
+                <label for="billing_name_last">Last Name</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_address" class="validate">
+                <label for="billing_address">Address</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_city" class="validate">
+                <label for="billing_city">City</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_state" class="validate">
+                <label for="billing_state">State/Province</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_zip" class="validate">
+                <label for="billing_zip">Zip</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="text" id="billing_country" class="validate">
+                <label for="billing_country">Country</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <h3>Payment Information</h3>
+            </div>
+            <div class="input-field col s6">
+                <input type="number" id="cc" class="validate">
+                <label for="cc">Credit Card</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="number" id="ccv" class="validate">
+                <label for="ccv">CCV</label>
+            </div>
+            <div class="input-field col s6">
+                <select name="month" id="exp_month">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <label for="exp_month">Expiration Month</label>
+            </div>
+            <div class="input-field col s6">
+                <select name="month" id="exp_yr">
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                </select>
+                <label for="exp_yr">Expiration Year</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s2">
+                <img src="/images/covers/cover_v{{issue.volume}}n{{issue.issue}}.png" style="width:100%;">
+            </div>
+            <div class="col s10">
+                <h3>Individual Subscription</h3>
+                <h4>$1 / year</h4>
+                <h4>{{formatDate today}} &mdash; {{formatDate nextYear}}</h4>
+                <button class="btn btn-large waves-effect waves-light submit">Purchase</button>
+            </div>
+        </div>
+    </form>
+</template>

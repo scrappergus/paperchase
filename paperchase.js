@@ -315,6 +315,25 @@ if (Meteor.isClient) {
     });
 
 
+    Router.route('/subscribe', {
+            name: 'Subscribe',
+            layoutTemplate: 'Visitor',
+            waitOn: function(){
+                return[
+                    Meteor.subscribe('currentIssue')
+                ]
+            },
+            data: function(){
+                if(this.ready()){
+                    return{
+                        issue: issues.findOne(),
+                        today: new Date(),
+                        nextYear: new Date(new Date().setYear(new Date().getFullYear() + 1))
+                    }
+                }
+            }
+        });
+
     /*
      ADMIN PAGES
      */

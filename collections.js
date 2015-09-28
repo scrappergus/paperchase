@@ -190,12 +190,17 @@ if (Meteor.isServer) {
   Meteor.publish('volumes', function () {
     return volumes.find({},{sort : {volume:-1}});
   });
+
   Meteor.publish('issues', function () {
     return issues.find({},{sort : {volume:1}});
   });
   Meteor.publish('issue', function (v,i) {
     return issues.find({'volume': parseInt(v), 'issue': parseInt(i)});
   });
+  Meteor.publish('currentIssue',function(){
+    return issues.find({},{sort : {volume:-1,issue:-1}});
+  });
+
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
