@@ -61,17 +61,26 @@ Template.Subscribe.events({
 Template.Issue.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);
+	},
+	'click .download-pdf' : function(e){
+		Meteor.article.downloadPdf(e);
 	}
 });
 
 Template.Article.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);
+	},
+	'click .download-pdf' : function(e){
+		Meteor.article.downloadPdf(e);
 	}
 });
 
 Template.advance.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);
+	},
+	'click .download-pdf' : function(e){
+		Meteor.article.downloadPdf(e);
 	}
 });

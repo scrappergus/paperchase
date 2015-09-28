@@ -54,8 +54,8 @@
 
 <template name="ArticleButtons">
     {{#if isSubscribed}}
-    <a class="blue-grey darken-1 waves-effect waves-light btn ">PDF</a>
-    <a class="blue-grey darken-1 waves-effect waves-light btn">Full Text</a>
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn download-pdf">PDF</a>
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Full Text</a>
     {{else}}
     <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
     <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full Text</a>

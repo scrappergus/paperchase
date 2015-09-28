@@ -54,6 +54,31 @@ institutions.after.remove(function(userId, doc) {
             });
     });
 
+
+Router.route('/pdf/:_filename',{
+    where: 'server',
+    action: function(){
+        var name = this.params._filename;
+        var filePath = process.env.PWD + '/uploads/pdf/' + name;
+        var fs = Meteor.npmRequire('fs');
+        var data = fs.readFileSync(filePath);
+        // fs.exists(filePath, function(fileok){
+        //     if(!fileok){
+        //         data = fs.readFileSync(process.env.PWD + '/uploads/pdf/temp.pdf');
+        //     }else{
+        //         data =
+        //     }
+        // })
+        this.response.write(data);
+        this.response.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'attachment; filename=' + name
+        });
+        this.response.end();
+    }
+});
+
+
 if (Meteor.isClient) {
 
     Template.registerHelper('isSubscribed', function() {
