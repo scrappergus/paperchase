@@ -13,9 +13,9 @@ Meteor.methods({
 
 			//who created
 			issueData['doc_updates'] = {};
-			issueData['doc_updates']['created_date'] = new Date(); 
+			issueData['doc_updates']['created_date'] = new Date();
 			issueData['doc_updates']['created_by'] = articleData['doc_updates']['created_by'];
-			
+
 			//INSERT into issues collection
 			Meteor.call('addIssue',issueData, function(error,_id){
 				if(error){
@@ -51,15 +51,15 @@ Meteor.methods({
 		}
 
 		//INSERT into articles colection
-		return articles.insert(articleData);		
+		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData){
 		// console.log('--updateArticle |  mongoId = ' + mongoId);
-		return articles.update({'_id' : mongoId}, {$set: articleData});		
+		return articles.update({'_id' : mongoId}, {$set: articleData});
 	},
 	updateArticleByPmid: function(pmid, articleData){
 		// console.log('--updateArticleByPmid |  pmid = '+pmid);
-		return articles.update({'ids.pmid' : pmid}, {$set: articleData});		
+		return articles.update({'ids.pmid' : pmid}, {$set: articleData});
 	},
 	addToArticleAffiliationsByPmid: function(pmid, affiliation){
 		// console.log('--addToArticleAffiliationsByPmid | pmid = ' + pmid  + ' / affiliation = ' + affiliation);
@@ -67,17 +67,17 @@ Meteor.methods({
 	},
 	pushPiiArticle: function(mongoId, ids){
 		//used for batch processing of XML from PMC
-		return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});		
+		return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});
 	},
 	processXML: function(fileName,batch){
 		if(fileName)
-		var j = {}, 
+		var j = {},
 			xml;
 		var fut = new future();
 
-		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths 
+		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
 		if(batch){
-			filePath = '/Users/jl/sites/paperchase/uploads/pmc_xml/';
+			filePath = '/Users/jl/sites/paperchase/uploads/xml/';
 		}
 
 		var file = filePath + fileName;
@@ -99,7 +99,7 @@ Meteor.methods({
 								var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
 								titleTitle = titleTitle.replace('article-title>','').replace('<italic>','<i>').replace('</italic>','</i>');
 								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
-								j['title'] = titleTitle; 
+								j['title'] = titleTitle;
 
 
 								j['volume'] = parseInt(articleJSON['volume'][0]);
@@ -109,9 +109,9 @@ Meteor.methods({
 
 								//KEYWORDS
 								if(articleJSON['kwd-group']){
-									j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];	
+									j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];
 								}
-								
+
 								//ABSTRACT
 								if(articleJSON['abstract']){
 									var abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
@@ -150,7 +150,7 @@ Meteor.methods({
 										author['name_first'] = name_first;
 										author['name_last'] = name_last;
 										j['authors'].push(author);
-									}									
+									}
 								}
 
 								//PUB DATES
@@ -181,7 +181,7 @@ Meteor.methods({
 									j['history'] = {};
 									var history = articleJSON['history'][0]['date'];
 									var historyLength = history.length;
-									
+
 									for(var i = 0 ; i < historyLength ; i++){
 										var dateType = history[i]['$']['date-type'];
 										var d = '';
@@ -196,14 +196,14 @@ Meteor.methods({
 										}
 										var dd = new Date(d);
 										j['history'][dateType] = dd;
-									}									
+									}
 								}
 
 								// console.log(j);
 
 								fut['return'](j);	//this what is returned. j = is the fixed json.
 							}
-						});					
+						});
 					}
 
 				});
@@ -216,7 +216,7 @@ Meteor.methods({
 	// getXML: function(fileName){
 	// 	console.log('..getXML');
 	// 	if(fileName)
-	// 	var j = {}, 
+	// 	var j = {},
 	// 		xml;
 	// 	var fut = new future();
 
@@ -226,7 +226,7 @@ Meteor.methods({
 	// 		if(fileok){
 	// 			fs.readFile(file, function(error, data) {
 	// 				if(data)
-					
+
 	// 				if(error){
 	// 					return 'ERROR';
 	// 				}else{
@@ -237,9 +237,9 @@ Meteor.methods({
 	// 		}else{
 	// 			console.log('file not found');
 	// 		}
-	// 	});		
+	// 	});
 	// 	return fut.wait();
-	// 	//TODO: use this in processXML 
+	// 	//TODO: use this in processXML
 	// }
 })
 
