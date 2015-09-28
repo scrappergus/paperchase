@@ -41,7 +41,7 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
                         ,startNum: dot2num(ipr.startIP)
                         ,endNum: dot2num(ipr.endIP)
                     });
-            });            
+            });
     }
 }
 
@@ -59,8 +59,8 @@ if (Meteor.isClient) {
     Template.registerHelper('isSubscribed', function() {
             ip = dot2num(headers.getClientIP());
 
-            var match = ipranges.findOne( { 
-                    startNum: {$lte: ip} 
+            var match = ipranges.findOne( {
+                    startNum: {$lte: ip}
                     ,endNum: {$gte: ip}
                 }
             );
@@ -84,8 +84,8 @@ if (Meteor.isClient) {
 	Template.registerHelper('isSubscribedIP', function() {
 			ip = dot2num(headers.getClientIP());
 
-			var match = ipranges.findOne( { 
-					startNum: {$lte: ip} 
+			var match = ipranges.findOne( {
+					startNum: {$lte: ip}
 					,endNum: {$gte: ip}
 				}
 			);
@@ -96,8 +96,8 @@ if (Meteor.isClient) {
     Template.registerHelper('getInstitutionByIP', function() {
             ip = dot2num(headers.getClientIP());
 
-            var match = ipranges.findOne( { 
-                    startNum: {$lte: ip} 
+            var match = ipranges.findOne( {
+                    startNum: {$lte: ip}
                     ,endNum: {$gte: ip}
                 }
             );
@@ -119,9 +119,10 @@ if (Meteor.isClient) {
     Session.setDefault('fileNameXML',''); //LIVE
     Session.setDefault('submission_list',null);
     Session.setDefault('error',false);
+    Session.setDefault('errorMessages',null);
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
-    Router.route('/', { 
+    Router.route('/', {
             name: 'Home',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -130,13 +131,13 @@ if (Meteor.isClient) {
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('eb')
                 ]
-            },        
+            },
             data: function(){
                 var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
                 return {
                     feature : featureList,
                     eic:edboard.find({role:"Editor-in-Chief"}) ,
-                    eb:edboard.find({role:"Founding Editorial Board"}) 
+                    eb:edboard.find({role:"Founding Editorial Board"})
                 }
             }
         });
@@ -151,14 +152,14 @@ if (Meteor.isClient) {
             });
     };
 
-    Router.route('/advance', { 
+    Router.route('/advance', {
             name: 'advance',
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
                 Meteor.subscribe('advance')
                 ]
-            },        
+            },
             data: function(){
                 var advanceList = articles.find({'advance':true},{sort:{'_id':1}}).fetch();
                 return {
@@ -168,13 +169,13 @@ if (Meteor.isClient) {
         });
 
 
-    Router.route('/account', { 
+    Router.route('/account', {
             name: 'Account',
             layoutTemplate: 'Visitor',
         });
 
 
-    Router.route('/archive', { 
+    Router.route('/archive', {
             name: 'Archive',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -185,7 +186,7 @@ if (Meteor.isClient) {
             }
         });
 
-    Router.route('/editorial-board', { 
+    Router.route('/editorial-board', {
             name: 'EdBoard',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -204,29 +205,29 @@ if (Meteor.isClient) {
 
 
 
-    Router.route('/for-authors', { 
+    Router.route('/for-authors', {
             name: 'ForAuthors',
             layoutTemplate: 'Visitor'
         });
 
-    Router.route('/about', { 
+    Router.route('/about', {
             name: 'About',
             layoutTemplate: 'Visitor'
         });
 
-    Router.route('/contact', { 
+    Router.route('/contact', {
             name: 'Contact',
             layoutTemplate: 'Visitor'
         });
 
-    Router.route('/recent-breakthroughs', { 
+    Router.route('/recent-breakthroughs', {
             name: 'RecentBreakthroughs',
             layoutTemplate: 'Visitor'
         });
 
 
 
-    Router.route('/issue/:vi', { 
+    Router.route('/issue/:vi', {
             name: 'issue',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -258,7 +259,7 @@ if (Meteor.isClient) {
         });
 
 
-    Router.route('/article/:_id', { 
+    Router.route('/article/:_id', {
             name: 'Article',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -273,11 +274,11 @@ if (Meteor.isClient) {
                     article = articles.findOne({'_id': id});
                     return {
                         article: article
-                    };   
+                    };
                 }
             }
         });
-    Router.route('/article/:_id/text', { 
+    Router.route('/article/:_id/text', {
             name: 'ArticleText',
             layoutTemplate: 'Visitor',
             waitOn: function(){
@@ -297,10 +298,21 @@ if (Meteor.isClient) {
             }
         });
 
-    Router.route('/recommend', { 
-            name: 'Recommend'
-            ,layoutTemplate: 'Visitor'
-        });
+    Router.route('/recommend', {
+        name: 'Recommend',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            Meteor.subscribe('currentUser');
+        },
+        data: function(){
+            if(Meteor.user()){
+                var u =  Meteor.users.findOne();
+                return {
+                    user: u
+                }
+            }
+        }
+    });
 
 
     /*
@@ -324,8 +336,26 @@ if (Meteor.isClient) {
             }
         });
 
+    /*recommendations*/
+    Router.route('/admin/recommendations',{
+        name: 'AdminRecommendations',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return [
+                Meteor.subscribe('recommendations')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                return{
+                    recommendations: recommendations.find().fetch()
+                }
+            }
+        }
+    })
+
     /*data submissions*/
-Router.route('/admin/data_submissions',{
+    Router.route('/admin/data_submissions',{
         name: 'AdminDataSubmissions',
         layoutTemplate: 'Admin',
         waitOn: function(){
@@ -336,12 +366,12 @@ Router.route('/admin/data_submissions',{
         },
     });
 
-/*xml intake*/
-Router.route('/admin/article_xml',{
+    /*xml intake*/
+    Router.route('/admin/article_xml',{
         name: 'adminArticleXmlIntake',
         layoutTemplate: 'Admin'
     });
-Router.route('/admin/article-xml/process',{
+    Router.route('/admin/article-xml/process',{
         name: 'adminArticleXmlProcess',
         layoutTemplate: 'Admin',
         onBeforeAction: function(){
@@ -363,7 +393,7 @@ Router.route('/admin/article-xml/process',{
             var newArticle;
             newArticle =  ReactiveMethod.call('processXML',fileName);
             if(newArticle){
-                //add issue_id if exists, 
+                //add issue_id if exists,
                 //later when INSERT into articles, check for if issue_id in doc (in meteor method addArticle)
                 var articleIssue = issues.findOne({'volume' : newArticle['volume'], 'issue': newArticle['issue']});
                 if(articleIssue){
@@ -375,13 +405,13 @@ Router.route('/admin/article-xml/process',{
                 return {
                     article: newArticle,
                     articleExists: articleExists
-                }            
+                }
             }
         }
     });
 
-/*article and articles*/
-Router.route('/admin/articles',{
+    /*article and articles*/
+    Router.route('/admin/articles',{
         name: 'adminArticlesDashboard',
         layoutTemplate: 'Admin',
         waitOn: function(){
@@ -389,7 +419,7 @@ Router.route('/admin/articles',{
             Meteor.subscribe('feature'),
             Meteor.subscribe('advance'),
             ]
-        },        
+        },
         data: function(){
             var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
             var advanceList = articles.find({'advance':true},{sort:{'_id':1}}).fetch();
@@ -399,28 +429,28 @@ Router.route('/admin/articles',{
             }
         }
     });
-Router.route('/admin/articles/list',{
+    Router.route('/admin/articles/list',{
         name: 'adminArticlesList',
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
             Meteor.subscribe('articles')
             ]
-        },        
+        },
         data: function(){
             return {
                 articles : articles.find().fetch()
             }
         }
-    });    
-Router.route('/admin/article/:_id',{
+    });
+    Router.route('/admin/article/:_id',{
         name: 'adminArticle',
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
             Meteor.subscribe('articleInfo',this.params._id)
             ]
-        },        
+        },
         data: function(){
             if(this.ready()){
                 var id = this.params._id;
@@ -443,8 +473,8 @@ Router.route('/admin/article/:_id',{
         }
     })
 
-/*archive browsing*/
-Router.route('/admin/archive', {
+    /*archive browsing*/
+    Router.route('/admin/archive', {
         name: 'adminArchive'
         ,layoutTemplate: 'Admin'
     });
@@ -559,7 +589,7 @@ Router.route('/admin/authors', {
         }
     });
 
-//TODO AdminAuthors: limit articles subscription 
+//TODO AdminAuthors: limit articles subscription
 Router.route('/admin/author/:_id', {
         name: 'AdminAuthor',
         layoutTemplate: 'Admin',
@@ -605,7 +635,7 @@ Router.route('/admin/institution/add', {
                 insertForm: true
             }
         }
-    });    
+    });
 
 Router.route('/admin/institution/edit/:_id', {
         layoutTemplate: 'Admin',
@@ -621,7 +651,7 @@ Router.route('/admin/institution/edit/:_id', {
                 ,updateForm: true
             }
         }
-    });   
+    });
 
 
 //this route is used to query pmc for all xml.. don't go here.
@@ -633,7 +663,7 @@ Router.route('/admin/batch_process', {
             Meteor.subscribe('articles')
             ]
         },
-    }); 
+    });
 }
 // Router.route('/xml/:_filename',{
 //     name: 'xml',
@@ -657,10 +687,10 @@ Router.route('/admin/batch_process', {
 //             console.log(this);
 //             var headers = {'Content-type': 'application/xml', 'charset' : 'ISO-8859-1'};
 //             this.response.writeHead(200, headers);
-//             this.response.end('<xml></xml>');         
-//         }           
+//             this.response.end('<xml></xml>');
+//         }
 //     }
-// });   
+// });
 if (Meteor.isServer) {
     Meteor.startup(function () {
 
@@ -677,7 +707,7 @@ function dot2num(dot) {
 
 function num2dot(num) {
     var d = num%256;
-    for (var i = 3; i > 0; i--) { 
+    for (var i = 3; i > 0; i--) {
         num = Math.floor(num/256);
         d = num%256 + '.' + d;}
     return d;}

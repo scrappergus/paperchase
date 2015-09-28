@@ -67,6 +67,12 @@ Template.successMessage.events({
 		$('.success').addClass('hide');
 	}
 });
+Template.SendingSuccessMessage.events({
+	'click #close-success-msg': function(e){
+		e.preventDefault();
+		$('.success').addClass('hide');
+	}
+});
 
 /*
 Issue

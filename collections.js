@@ -6,6 +6,7 @@ institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 authors = new Mongo.Collection('authors');
+recommendations = new Mongo.Collection('recommendations');
 
 
 Meteor.users.allow({
@@ -39,15 +40,32 @@ articles.allow({
     if (Roles.userIsInRole(u, ['admin'])) {
       return true;
     }
-  }  
+  }
+});
+recommendations.allow({
+  insert: function (userId, doc, fields, modifier) {
+    return true;
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
 });
 
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
-  //add affiliation number to author 
+  //add affiliation number to author
   //might need to adjust this as article updates get added
   if(fieldNames.indexOf('authors') != -1){
     var authorsList = modifier['$set']['authors'];
-    var affiliationsList 
+    var affiliationsList
     affiliationsList = doc['affiliations'];
 
     for(var i = 0 ; i < authorsList.length ; i++){
@@ -81,7 +99,7 @@ issues.allow({
     if (Roles.userIsInRole(u, ['admin'])) {
       return true;
     }
-  }  
+  }
 });
 volumes.allow({
   insert: function (userId, doc, fields, modifier) {
@@ -101,7 +119,7 @@ volumes.allow({
     if (Roles.userIsInRole(u, ['admin'])) {
       return true;
     }
-  }  
+  }
 });
 authors.allow({
   insert: function (userId, doc, fields, modifier) {
@@ -121,7 +139,7 @@ authors.allow({
     if (Roles.userIsInRole(u, ['admin'])) {
       return true;
     }
-  }  
+  }
 });
 institutions.allow({
   insert: function (userId, doc, fields, modifier) {
@@ -194,6 +212,8 @@ if (Meteor.isServer) {
   Meteor.publish('advance', function () {
     return articles.find({'advance':true},{sort:{'_id':1}});
   });
+
+  //users
   Meteor.publish('allUsers', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return Meteor.users.find();
@@ -201,7 +221,7 @@ if (Meteor.isServer) {
       this.stop();
       return;
      }
-  });  
+  });
 
   Meteor.publish('userData', function(id){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
@@ -210,8 +230,18 @@ if (Meteor.isServer) {
       this.stop();
       return;
      }
-  });  
+  });
 
+  Meteor.publish('currentUser', function(id){
+    if(!this.userId) return null;
+    return Meteor.users.find(this.userId, {fields: {
+      name_first: 1,
+      name_last: 1,
+    }});
+  });
+  Meteor.publish('users');
+
+  //institutions
   Meteor.publish('institutions', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return institutions.find();
@@ -219,7 +249,7 @@ if (Meteor.isServer) {
       this.stop();
       return;
      }
-  });  
+  });
 
   Meteor.publish('institution', function(id){
           if (Roles.userIsInRole(this.userId, ['admin'])) {
@@ -228,7 +258,7 @@ if (Meteor.isServer) {
               this.stop();
               return;
           }
-      });  
+      });
 
   Meteor.publish('ipranges', function () {
           return ipranges.find({});
@@ -246,7 +276,6 @@ if (Meteor.isServer) {
           return edboard.find({role:"Founding Editorial Board"});
   });
 
-  Meteor.publish('users');
 
 
 
@@ -258,7 +287,7 @@ if (Meteor.isServer) {
       this.stop();
       return;
      }
-  });  
+  });
   Meteor.publish('authorData', function(mongoId){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return  authors.find({'_id':mongoId})
@@ -266,7 +295,11 @@ if (Meteor.isServer) {
       this.stop();
       return;
      }
-  });  
+  });
+
+  Meteor.publish('recommendations', function(){
+    return recommendations.find({});
+  })
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
