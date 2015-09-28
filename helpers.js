@@ -13,35 +13,44 @@ if (Meteor.isClient) {
 		month[8] = 'September';
 		month[9] = 'October';
 		month[10] = 'November';
-		month[11] = 'December';		
+		month[11] = 'December';
 		return month[d.getMonth()];
 	});
 	Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MMMM DD, YYYY');
-	});	
+	});
 	Template.registerHelper('affiliationNumber', function(affiliation) {
 		return parseInt(parseInt(affiliation) + 1);
-	});	
+	});
 	Template.registerHelper('formatIssueDate', function(date) {
 		return moment(date).format('MMMM YYYY');
-	});	
+	});
 	Template.registerHelper('articleDate', function(date) {
 		return moment(date).format('MMMM D, YYYY');
-	});	
+	});
 	Template.registerHelper('collectionDate',function(date) {
 		return moment(date).format('MMMM YYYY');
 	});
+	Template.registerHelper('getYear',function(date) {
+		return moment(date).format('YYYY');
+	});
+	Template.registerHelper('getMonth',function(date) {
+		return moment(date).format('MMMM');
+	});
+	Template.registerHelper('getDay',function(date) {
+		return moment(date).format('D');
+	});
 	Template.registerHelper('equals', function (a, b) {
 		return a == b;
-    });	
+    });
 	Template.registerHelper('arrayify',function(obj){
 		result = [];
 		for (var key in obj) result.push({name:key,value:obj[key]});
 		return result;
-	});   
+	});
 	Template.registerHelper('countItems', function(items) {
 		return items.length;
-	});	 
+	});
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
 		});
@@ -49,8 +58,8 @@ if (Meteor.isClient) {
 	Template.registerHelper('isSubscribedIP', function() {
 			ip = dot2num(headers.getClientIP());
 
-			var match = IPRanges.findOne( { 
-					startNum: {$lte: ip} 
+			var match = IPRanges.findOne( {
+					startNum: {$lte: ip}
 					,endNum: {$gte: ip}
 				}
 			);
@@ -61,8 +70,8 @@ if (Meteor.isClient) {
 	Template.registerHelper('getInstitutionByIP', function() {
 			ip = dot2num(headers.getClientIP());
 
-			var match = IPRanges.findOne( { 
-					startNum: {$lte: ip} 
+			var match = IPRanges.findOne( {
+					startNum: {$lte: ip}
 					,endNum: {$gte: ip}
 				}
 			);
@@ -147,6 +156,7 @@ if (Meteor.isClient) {
 			return res;
 		},
 		articles: function(){
+			// console.log( Session.get('submission_list'));
 			return Session.get('submission_list');
 		},
 		error: function(){
@@ -176,4 +186,4 @@ if (Meteor.isClient) {
 	});
 }
 
-// TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page. 
+// TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.
