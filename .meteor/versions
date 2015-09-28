@@ -3,12 +3,9 @@ accounts-password@1.1.3
 accounts-ui@1.1.6
 accounts-ui-unstyled@1.1.8
 alanning:roles@1.2.13
-aldeed:autoform@5.5.1
 aldeed:collection2@2.5.0
-aldeed:delete-button@1.0.0
 aldeed:simple-schema@1.3.3
 aldeed:template-extension@3.4.3
-autopublish@1.0.4
 autoupdate@1.2.3
 babel-compiler@5.8.24_1
 babel-runtime@0.1.4
@@ -41,7 +38,6 @@ fourseven:scss@3.2.0
 gadicohen:headers@0.0.30
 gandev:server-eval@0.6.6
 geojson-utils@1.0.4
-gildaspk:autoform-materialize@0.0.25
 gwendall:session-json@0.1.7
 hot-code-push@1.0.0
 html-tools@1.0.5
@@ -88,8 +84,8 @@ meteortoys:toykit@0.8.7
 meteortoys:toypro@0.4.2
 minifiers@1.1.7
 minimongo@1.0.9
-mizzao:timesync@0.3.3
-mizzao:user-status@0.6.5
+mizzao:timesync@0.3.4
+mizzao:user-status@0.6.6
 mobile-experience@1.0.1
 mobile-status-bar@1.0.6
 momentjs:moment@2.10.6

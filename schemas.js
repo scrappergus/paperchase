@@ -4,40 +4,40 @@ var Schemas = {};
 /*
 Institutions
 */
-Schemas.Institutions = new SimpleSchema({
-    institution: {
-        type: String,
-        label: "Institution",
-        max: 200
-    },
-    address: {
-        type: String
-        ,label: "Address"
-        ,max: 200
-        ,optional:true
-        ,autoform: {
-            rows: 5
-        }
-    },
-    IPRanges: {
-        type: Array,
-        label: "IP Ranges",
-        optional: true,
-        minCount: 0,
-        maxCount: 20
-    },
-    "IPRanges.$": {
-        type: Object,
-    },
-    "IPRanges.$.startIP": {
-        type: String,
-        label: 'Start IP'
-    },
-    "IPRanges.$.endIP": {
-        type: String,
-        label: 'End IP'
-    }
-});
+//Schemas.Institutions = new SimpleSchema({
+//    institution: {
+//        type: String,
+//        label: "Institution",
+//        max: 200
+//    },
+//    address: {
+//        type: String
+//        ,label: "Address"
+//        ,max: 200
+//        ,optional:true
+//        ,autoform: {
+//            rows: 5
+//        }
+//    },
+//    IPRanges: {
+//        type: Array,
+//        label: "IP Ranges",
+//        optional: true,
+//        minCount: 0,
+//        maxCount: 20
+//    },
+//    "IPRanges.$": {
+//        type: Object,
+//    },
+//    "IPRanges.$.startIP": {
+//        type: String,
+//        label: 'Start IP'
+//    },
+//    "IPRanges.$.endIP": {
+//        type: String,
+//        label: 'End IP'
+//    }
+//});
 
 Schemas.IPRanges = new SimpleSchema({
     institutionID: {
@@ -60,41 +60,41 @@ Schemas.IPRanges = new SimpleSchema({
 });
 
 
-Schemas.users = new SimpleSchema({
-    institution: {
-        type: String,
-        label: "Institution",
-        max: 200
-    },
-    address: {
-        type: String
-        ,label: "Address"
-        ,max: 200
-        ,optional:true
-        ,autoform: {
-            rows: 5
-        }
-    },
-    IPRanges: {
-        type: Array,
-        label: "IP Ranges",
-        optional: true,
-        minCount: 0,
-        maxCount: 20
-    },
-    "IPRanges.$": {
-        type: Object
-    },
-    "IPRanges.$.startIP": {
-        type: String 
-    },
-    "IPRanges.$.endIP": {
-        type: String
-    }
-});
+//Schemas.users = new SimpleSchema({
+//    institution: {
+//        type: String,
+//        label: "Institution",
+//        max: 200
+//    },
+//    address: {
+//        type: String
+//        ,label: "Address"
+//        ,max: 200
+//        ,optional:true
+//        ,autoform: {
+//            rows: 5
+//        }
+//    },
+//    IPRanges: {
+//        type: Array,
+//        label: "IP Ranges",
+//        optional: true,
+//        minCount: 0,
+//        maxCount: 20
+//    },
+//    "IPRanges.$": {
+//        type: Object
+//    },
+//    "IPRanges.$.startIP": {
+//        type: String 
+//    },
+//    "IPRanges.$.endIP": {
+//        type: String
+//    }
+//});
 
-IPRanges.attachSchema(Schemas.IPRanges);
-Institutions.attachSchema(Schemas.Institutions);
+//ipranges.attachSchema(Schemas.IPRanges);
+//institutions.attachSchema(Schemas.Institutions);
 
 /*
 Users
@@ -201,7 +201,7 @@ Schemas.User = new SimpleSchema({
           }
 });
 
-Meteor.users.attachSchema(Schemas.User);
+//Meteor.users.attachSchema(Schemas.User);
 
 
 /*
