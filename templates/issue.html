@@ -29,11 +29,11 @@
             <ul class="">
                 {{#each articles}}
                 {{#if start_group}}
-                <li ><h4 id="{{article_type.short_name}}">{{article_type.type}}</h4></li>
+                <li ><h3 id="{{article_type.short_name}}">{{article_type.type}}</h3></li>
                 {{/if}}
                 <li>
-                	<h5>{{{title}}}</h5>
-                	<p>{{>AuthorsList}}</p>
+                	<h4>{{{title}}}</h4>
+                	<h5>{{>AuthorsList}}</h5>
                 	<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
                 	<a class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'Article'}}">Abstract</a>
                     {{>ArticleButtons}}
