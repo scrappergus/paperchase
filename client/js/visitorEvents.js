@@ -10,6 +10,7 @@ Template.Recommend.events({
 		inputs['user_email'] = $('#email_input').val();
 		inputs['name_last'] = $('#name_last_input').val();
 		inputs['institution'] =  $('#institution_input').val();
+		inputs['position'] =  $('#position_input').val();
 		inputs['lib_email'] = $('#lib_email_input').val();
 		inputs['message'] =  $('#message_input').val();
 
