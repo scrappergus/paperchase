@@ -2,8 +2,8 @@ volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
 articles = new Mongo.Collection('articles');
 articleTypes = new Mongo.Collection('articleTypes'); //when saving an article query this db and add the name, short_name and id as an object to the article
-Institutions = new Mongo.Collection("institutions");
-IPRanges = new Mongo.Collection("ipranges");
+institutions = new Mongo.Collection("institutions");
+ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 authors = new Mongo.Collection('authors');
 
@@ -123,7 +123,7 @@ authors.allow({
     }
   }  
 });
-Institutions.allow({
+institutions.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -143,7 +143,7 @@ Institutions.allow({
     }
   }
 });
-IPRanges.allow({
+ipranges.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -198,6 +198,7 @@ if (Meteor.isServer) {
       return;
      }
   });  
+
   Meteor.publish('userData', function(id){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return Meteor.users.find({'_id':id});
@@ -206,14 +207,25 @@ if (Meteor.isServer) {
       return;
      }
   });  
+
   Meteor.publish('institutions', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
-      return Institutions.find();
+      return institutions.find();
      }else{
       this.stop();
       return;
      }
   });  
+
+  Meteor.publish('institution', function(id){
+          if (Roles.userIsInRole(this.userId, ['admin'])) {
+              return institutions.find({"_id":id});
+          }else{
+              this.stop();
+              return;
+          }
+      });  
+
 
   Meteor.publish('fullBoard', function () {
           return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Founding Editorial Board"}]});

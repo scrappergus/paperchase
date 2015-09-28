@@ -8,14 +8,10 @@ iron:router
 accounts-password
 meteortoys:allthings
 gadicohen:headers
-aldeed:autoform
-aldeed:collection2
 meteorhacks:kadira
-aldeed:delete-button
 mizzao:user-status
 matb33:collection-hooks
 service-configuration
-gildaspk:autoform-materialize
 accounts-ui
 alanning:roles
 fourseven:scss
@@ -26,7 +22,6 @@ peerlibrary:xml2js
 meteorhacks:npm
 npm-container
 momentjs:moment
-autopublish
 standard-minifiers
 meteor-base
 mobile-experience
@@ -44,3 +39,4 @@ check
 materialize:materialize@=0.97.0
 ixdi:material-design-iconic-font@=2.1.2
 ostrio:cookies
+aldeed:collection2

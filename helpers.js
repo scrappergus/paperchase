@@ -76,7 +76,7 @@ if (Meteor.isClient) {
 			return inst_match || false;
 		});
 
-	Template.archive.helpers({
+	Template.Archive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
 			var iss = issues.find({},{sort : {issue:-1}}).fetch();
@@ -84,7 +84,7 @@ if (Meteor.isClient) {
 			return res;
 		}
 	});
-	Template.adminArchive.helpers({
+	Template.AdminArchive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
 			var iss = issues.find({},{sort : {issue:-1}}).fetch();
@@ -153,11 +153,6 @@ if (Meteor.isClient) {
 			return Session.get('error');
 		}
 	});
-	Template.AdminInstitution.helpers({
-			'institutions': function() {
-				return Institutions.find({});
-			}
-		});
 	Template.AdminInstitutionForm.helpers({
 		'formType' : function(){
 			// console.log('... = '+Session.get('formType'));

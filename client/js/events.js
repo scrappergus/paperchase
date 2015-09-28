@@ -300,3 +300,85 @@ Template.AdminBatchXml.events({
 		});			
 	}
 });
+
+
+Template.AdminInstitution.events({
+        'click .del-btn': function(e,t){
+            Meteor.call('removeInstitution', this['_id'], function(error, result){
+                });
+        }
+    });
+
+
+Template.AdminInstitutionAdd.events({
+        'submit form': function(e,t){
+            var formType = Session.get('formType');
+
+            e.preventDefault();
+            //        Meteor.formActions.saving();
+
+            //commont to insert and update
+            obj = {
+                institution: $('[name=institution]').val()
+                ,address: $('[name=address]').val()
+            };
+
+            Meteor.call('addInstitution', obj, function(error, result){
+                    if(error){
+                        console.log('ERROR');
+                        console.log(error);
+                        Meteor.formActions.error();
+                    }else{
+                        Meteor.formActions.success();
+                    }
+                });
+        }
+
+    });
+
+Template.AdminInstitutionEdit.events({
+        'click .edit-btn': function(e){
+            $(".institution-form").show();
+        }
+        ,'click .del-btn': function(e,t){
+            var mongoId = t.data.institution._id;
+            Meteor.call('removeInstitution', mongoId, function(error, result){
+                });
+        }
+        ,'submit form': function(e,t){
+            var formType = Session.get('formType');
+
+            e.preventDefault();
+            //        Meteor.formActions.saving();
+
+            //commont to insert and update
+            obj = {
+                institution: $('[name=institution]').val()
+                ,address: $('[name=address]').val()
+            };
+
+            var mongoId = t.data.institution._id;
+
+            obj.IPRanges = [];
+
+            $('.iprange-start').each(function(a,b,c) {
+                    obj.IPRanges[a] = {startIP: $(this).val()};
+                });
+
+            $('.iprange-end').each(function(a,b,c) {
+                    obj.IPRanges[a]['endIP'] = $(this).val();
+                });
+
+
+            Meteor.call('updateInstitution', mongoId, obj, function(error, result){
+                    if(error){
+                        console.log('ERROR');
+                        console.log(error);
+                        Meteor.formActions.error();
+                    }else{
+                        Meteor.formActions.success();
+                    }
+                });
+        }
+    });
+

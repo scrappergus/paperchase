@@ -53,20 +53,3 @@
   </div>
 </template>
 
-<template name="AdminInstitutionForm">
-	{{#autoForm collection="Institutions" doc=this id="institutionForm" type=formType class="grey lighten-5"}}
-		<fieldset>
-			{{> afQuickField name='institution'}}
-		</fieldset>
-		<fieldset>
-			{{> afQuickField name='address'}}
-		</fieldset>
-		<fieldset>
-			{{> afArrayField name='IPRanges' template='institutionIps'}}
-		</fieldset>
-		<fieldset class="center-align">
-			<button type="submit" class="btn btn-large green save-btn">Save</button>
-			{{>saving}}
-		</fieldset>
-	{{/autoForm}}
-</template>
