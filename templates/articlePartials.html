@@ -42,8 +42,8 @@
 
 <template name="ArticleMeta">
 	<span class="badge">{{article_type.type}}</span>
-	<h4>{{{title}}}</h4>
-	<h5>{{>AuthorsRefList}}</h5>
+	<h2>{{{title}}}</h2>
+	<h3>{{>AuthorsRefList}}</h3>
 	<h6>Volume {{volume}}, Issue {{issue}}</h6>
 	{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
 	{{#if dates}}
