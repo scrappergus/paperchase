@@ -120,6 +120,7 @@ if (Meteor.isClient) {
     Session.setDefault('submission_list',null);
     Session.setDefault('error',false);
     Session.setDefault('errorMessages',null);
+    Session.setDefault('articleData',null);
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', {

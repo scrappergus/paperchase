@@ -76,6 +76,11 @@ if (Meteor.isClient) {
 			return Session.get('errorMessages');
 		}
 	});
+	Template.SubscribeModal.helpers({
+		article: function(){
+			return Session.get('articleData');
+		}
+	});
 	Template.Archive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();

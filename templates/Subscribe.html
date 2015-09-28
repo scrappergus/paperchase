@@ -2,13 +2,31 @@
 <!-- Modal Structure -->
 <div id="subscribe-modal" class="modal">
     <div class="modal-content">
-        <h4>You do not have access to this article.</h4>
-        <h6>Here are three ways to gain access to this article:</h6>
-
-        <p><a class="btn modal-action modal-close waves-effect" href="/recommend">Recommend Aging to your Librarian</a></p>
-        <p><a class="btn modal-action modal-close waves-effect" href="/subscribe">Subscribe to Aging as an individual</a></p>
-        <p><a class="btn modal-action modal-close waves-effect" href="/purchase-article">Purchase per-article access to this paper</a></p>
-
+        <div class="row">
+            <div class="col s12 center-align">
+                <div class="chip red lighten-4">You do not have access to this article.</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 center-align">
+                <h2 class="truncate">{{{article.title}}}</h2>
+                <h3>Here are 2 ways to gain access to this article:</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6 center-align">
+                <h4>Institution Subscription</h4>
+                <a class="btn modal-action modal-close waves-effect" href="{{pathFor 'Recommend'}}">Recommend</a>
+            </div>
+            <div class="col s12 m6 center-align">
+                <h4>Individual Subscription</h4>
+                <a class="btn modal-action modal-close waves-effect" href="{{pathFor 'Subscribe'}}">Purchase</a>
+            </div>
+           <!--  <div class="col s12 m4 center-align">
+                <h4>Article Purchase</h4>
+                <a class="btn modal-action modal-close waves-effect" href="/purchase-article">Purchase</a>
+            </div> -->
+        </div>
     </div>
     <div class="modal-footer">
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close this dialog</a>
