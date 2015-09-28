@@ -51,3 +51,9 @@ Template.Recommend.events({
 		}
 	}
 });
+
+Template.Subscribe.events({
+	'click button': function(e){
+		e.preventDefault();
+	}
+})
