@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'mixins';
+@import 'type';
 
 .aging-nav {
     background-color: rgba(55, 71, 79, 0.9);
@@ -49,7 +50,7 @@ strong {
 //}
 
 .card {
-  h4 { 
+  h4 {
       margin-top:0em;
       margin-bottom:0.3em;
   }
@@ -118,7 +119,7 @@ VISITOR
 }
 .ip-alert{
 	padding: $pad-md 0;
-	background: $blue-aging; 
+	background: $blue-aging;
 	p{
 		margin: 0;
 		color: $white-dark;
@@ -223,7 +224,7 @@ VISITOR
 
 /*
 ADMIN
-*/ 
+*/
 #institution-form{
 	input,textarea{
 		margin: 0;
