@@ -55,21 +55,6 @@ if (Meteor.isClient) {
 			return headers.getClientIP();
 		});
 
-
-<<<<<<< HEAD
-			var match = IPRanges.findOne( {
-					startNum: {$lte: ip}
-					,endNum: {$gte: ip}
-				}
-			);
-
-			return match !== undefined;
-		});
-=======
->>>>>>> 45a54664cf97621654fda07963906d5603135fe6
-
-
-<<<<<<< HEAD
 			var match = IPRanges.findOne( {
 					startNum: {$lte: ip}
 					,endNum: {$gte: ip}
@@ -84,11 +69,7 @@ if (Meteor.isClient) {
 
 			return inst_match || false;
 		});
-
-	Template.archive.helpers({
-=======
 	Template.Archive.helpers({
->>>>>>> 45a54664cf97621654fda07963906d5603135fe6
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
 			var iss = issues.find({},{sort : {issue:-1}}).fetch();
