@@ -141,15 +141,26 @@ Meteor.formActions = {
 		$('.save-btn').addClass('hide');
 		$('.saving').removeClass('hide');
 		$('.success').addClass('hide');
+		$('.error').addClass('hide');
+		//sending and saving forms have shared class names
+
+		//reset
+		Session.set('errorMessages',null);
+		$('input').removeClass('invalid');
+		$('textarea').removeClass('invalid');
+		$('input').removeClass('valid');
+		$('textarea').removeClass('valid');
 	},
 	error: function(){
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
 		$('.success').addClass('hide');
+		$('.error').removeClass('hide');
 	},
 	success: function(){
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
 		$('.success').removeClass('hide');
+		$('.error').addClass('hide');
 	}
 }

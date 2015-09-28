@@ -69,6 +69,13 @@ if (Meteor.isClient) {
 
 			return inst_match || false;
 		});
+
+
+	Template.ErrorMessages.helpers({
+		errors: function(){
+			return Session.get('errorMessages');
+		}
+	});
 	Template.Archive.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();

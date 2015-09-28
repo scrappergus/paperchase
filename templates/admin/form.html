@@ -11,8 +11,37 @@
 		<div class="col m4 offset-m4 s12 green lighten-4 center-align">
 			<h5>{{what}} Saved <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
 		</div>
-	</div>	
+	</div>
 </template>
+<template name="Sending">
+	<div class="row saving hide center-align">
+		<div class="col s12">
+			<h4>Sending</h4>
+		</div>
+	</div>
+</template>
+<template name="SendingSuccessMessage">
+	<div class="row success hide">
+		<div class="col m4 offset-m4 s12 green lighten-4 center-align">
+			<h5>{{what}} Sent <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
+		</div>
+	</div>
+</template>
+<template name="ErrorMessages">
+	<div class="row error hide">
+		<div class="col s8 offset-s2 red lighten-4">
+			<h5>Error:</h5>
+			<ul>
+			{{#each errors}}
+				<li>{{.}}</li>
+			{{/each}}
+			</ul>
+
+		</div>
+	</div>
+</template>
+
+
 
 <template name="afArrayField_institutionIps">
 	<p>{{afFieldLabelText name=this.atts.name}}</p>
@@ -21,19 +50,19 @@
 		<span class="red-text">{{{afFieldMessage name=this.atts.name}}}</span>
     {{/if}}
     <ul class="collection">
-	    {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}} 
+	    {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
 		<li class="collection-item">
 			<div class="row">
 				<div class="col s10">
-					{{> afQuickField name=this.name label=false options=afOptionsFromSchema template='institutionIpObj'}}       
+					{{> afQuickField name=this.name label=false options=afOptionsFromSchema template='institutionIpObj'}}
 				</div>
 				<div class="col s2">
 					{{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount maxCount=../atts.maxCount}}
 					<button type="button" class="btn autoform-remove-item red right">
 						<span class="mdi-content-clear"></span>
 					</button>
-					{{/if}} 
-				</div>				
+					{{/if}}
+				</div>
 			</div>
 		</li>
 	    {{/afEachArrayItem}}
@@ -42,7 +71,7 @@
 	<button type="button" class="btn autoform-add-item" data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}" data-autoform-maxCount="{{this.atts.maxCount}}">
 		<i class="mdi-content-add"></i>
 	</button>
-    {{/if}}    
+    {{/if}}
 </template>
 <template name="afObjectField_institutionIpObj">
   <div class="autoform-object-field">
