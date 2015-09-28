@@ -56,4 +56,22 @@ Template.Subscribe.events({
 	'click button': function(e){
 		e.preventDefault();
 	}
-})
+});
+
+Template.Issue.events({
+	'click .modal-trigger': function(e){
+		Meteor.article.subscribeModal(e);
+	}
+});
+
+Template.Article.events({
+	'click .modal-trigger': function(e){
+		Meteor.article.subscribeModal(e);
+	}
+});
+
+Template.advance.events({
+	'click .modal-trigger': function(e){
+		Meteor.article.subscribeModal(e);
+	}
+});

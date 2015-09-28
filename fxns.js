@@ -96,6 +96,13 @@ Meteor.article = {
 		}
 		console.log(article);
 		return article;
+	},
+	subscribeModal: function(e){
+		e.preventDefault();
+		$("#subscribe-modal").openModal();
+		var mongoId = $(e.target).data('id');
+		var articleData = articles.findOne({'_id':mongoId});
+		Session.set('articleData',articleData);
 	}
 }
 

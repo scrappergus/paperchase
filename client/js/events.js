@@ -478,23 +478,5 @@ Template.AdminRecommendationUpdate.events({
 	}
 })
 
-/*visitor*/
-Template.Issue.events({
-        'click .modal-trigger': function(e){
-            $("#subscribe-modal").openModal();
-        }
-    });
-
-Template.Article.events({
-        'click .modal-trigger': function(e){
-            $("#subscribe-modal").openModal();
-        }
-    });
-
-Template.advance.events({
-        'click .modal-trigger': function(e){
-            $("#subscribe-modal").openModal();
-        }
-    });
 
 
