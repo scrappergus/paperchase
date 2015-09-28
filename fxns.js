@@ -2,7 +2,7 @@ Meteor.organize = {
 	issuesIntoVolumes: function(vol,iss){
 		// console.log('-issuesIntoVolumes');
 		// console.log('vol');console.log(vol);console.log('iss');console.log(iss);
-		
+
 		var issL = iss.length;
 
 		//group issues by volume
@@ -76,6 +76,7 @@ Meteor.dataSubmissions = {
 		Session.set('error',true);
 		$('#processing-response').addClass('hide');
 	}
+
 }
 
 Meteor.article = {
@@ -89,9 +90,9 @@ Meteor.article = {
 					var authorAffiliations = article['authors'][i]['affiliations'];
 					for(var a = 0 ; a < authorAffiliations.length ; a++){
 						article['authors'][i]['affiliation_numbers'].push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
-					}					
+					}
 				}
-			}			
+			}
 		}
 		console.log(article);
 		return article;
@@ -123,13 +124,13 @@ Meteor.adminUser = {
 		user.emails[0] = {};
 		user.emails[0].address = $('#email').val();
 		user.roles =  Meteor.adminUser.getFormCheckBoxes();
-		return user;		
+		return user;
 	},
 	getFormAdd: function(){
 		var user = {};
 		user.email = $('#email').val();
 		user.roles =  Meteor.adminUser.getFormCheckBoxes();
-		return user;		
+		return user;
 	}
 }
 
