@@ -21,7 +21,7 @@ Template.AdminUser.events({
 		var userId = $('#user-id').val();
 		var user = Meteor.adminUser.getFormUpdate();
 
-		//TODO: additional validate email 
+		//TODO: additional validate email
 		// var emailValid = Meteor.validate.email(user.emails[0]);
 		// if(!emailValid){
 		// 	$('#email').addClass('invalid');
@@ -47,14 +47,14 @@ Template.AdminAddUser.events({
 		var user = Meteor.adminUser.getFormAdd();
 		user.password = 'AgingPassword';
 
-		//TODO: additional validate email 
+		//TODO: additional validate email
 		Meteor.call('addUser', user, function( error, result ){
 			if( error ){
 				alert('ERROR! ' + error );
 			}else{
 				alert('User was created!');
 			}
-		})	
+		})
 	}
 });
 
@@ -107,7 +107,7 @@ Template.adminArticle.events({
 		if($('#feature-checkbox').prop('checked')){
 			articleUpdateObj['feature'] = true;
 		}else{
-			articleUpdateObj['feature'] = false;	
+			articleUpdateObj['feature'] = false;
 		}
 
 		//advance
@@ -154,13 +154,13 @@ Template.AdminDataSubmissions.events({
 	},
 	'submit .form-pii': function(e,t){
 		e.preventDefault();
-		
+
 		var piiList = Meteor.dataSubmissions.getPiiList();
 
 		//check if there's anything to add to the array of pii
 		if($('#submissions_search_pii').val()){
 			var addPii = $('#submissions_search_pii').val();
-			//do not add if already present 
+			//do not add if already present
 			if(piiList.indexOf(addPii) === -1){
 				piiList.push(addPii);
 			}
@@ -191,6 +191,23 @@ Template.AdminDataSubmissions.events({
 		Session.set('error',false);
 		$('.data-submission-pii').remove();
 		$('#processing-response').addClass('hide');
+	},
+	'click #validate-xml': function(e,t){
+		e.preventDefault();
+		console.log('clicked validate-xml');
+		// var articles = t.data.articles;
+		var submissionList = Session.get('submission_list');
+		// console.log(submissionList);
+		for(var i=0 ; i<submissionList.length; i++){
+			var pii = submissionList[i]['ids']['pii'];
+			console.log(pii);
+			Meteor.call('generateArticleXml',pii,function(e,r){
+
+			})
+		}
+
+		// console.log('articles');
+		// console.log(articles);
 	}
 })
 
@@ -201,8 +218,8 @@ Template.adminArticleXmlProcess.events({
 
 		//add who UPDATED this article doc
 		articleData['doc_updates'] = {};
-		articleData['doc_updates']['last_update_date'] = new Date(); 
-		articleData['doc_updates']['last_update_by'] = Meteor.userId(); 
+		articleData['doc_updates']['last_update_date'] = new Date();
+		articleData['doc_updates']['last_update_by'] = Meteor.userId();
 
 		var mongoId = $(e.target).attr('data-mongoid');
 		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
@@ -220,8 +237,8 @@ Template.adminArticleXmlProcess.events({
 
 		//add who CREATED this article doc
 		articleData['doc_updates'] = {};
-		articleData['doc_updates']['created_date'] = new Date(); 
-		articleData['doc_updates']['created_by'] = Meteor.userId(); 
+		articleData['doc_updates']['created_date'] = new Date();
+		articleData['doc_updates']['created_by'] = Meteor.userId();
 
 		Meteor.call('addArticle', articleData, function(error,_id){
 			if(error){
@@ -243,7 +260,7 @@ Template.AdminBatchXml.events({
 			}else{
 				console.log('DONE');
 				console.log(r);
-			}		
+			}
 		});
 	},
 	'click #save-pmc-xml': function(e){
@@ -255,7 +272,7 @@ Template.AdminBatchXml.events({
 			}else{
 				console.log('DONE');
 				console.log(r);
-			}		
+			}
 		});
 	},
 	'click #get-all-pii': function(e){
@@ -267,7 +284,7 @@ Template.AdminBatchXml.events({
 			}else{
 				console.log('DONE');
 				console.log(r);
-			}		
+			}
 		});
 	},
 	'click #get-all-authors-affiliations': function(e,t){
@@ -277,7 +294,7 @@ Template.AdminBatchXml.events({
 				console.log('ERROR');
 				console.log(error);
 			}
-		});	
+		});
 	},
 	'click #get-all-pub-status': function(e){
 		e.preventDefault();
@@ -286,7 +303,7 @@ Template.AdminBatchXml.events({
 				console.log('ERROR - updateAllArticlesPubStatusNumber');
 				console.log(error);
 			}
-		});			
+		});
 	},
 	'click #get-manuscripts': function(e){
 		e.preventDefault();
@@ -297,6 +314,6 @@ Template.AdminBatchXml.events({
 			}else{
 				console.log(result);
 			}
-		});			
+		});
 	}
 });
