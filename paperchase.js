@@ -55,6 +55,7 @@ institutions.after.remove(function(userId, doc) {
     });
 
 
+//DOWNLOAD ROUTES
 Router.route('/pdf/:_filename',{
     where: 'server',
     action: function(){
@@ -66,6 +67,20 @@ Router.route('/pdf/:_filename',{
           'Content-Type': 'application/pdf',
           'Content-Disposition': 'attachment; filename=' + name
         });
+        this.response.write(data);
+        this.response.end();
+    }
+});
+Router.route('/xml-cite-set/:_filename',{
+    where: 'server',
+    action: function(){
+        var name = this.params._filename;
+        var filePath = process.env.PWD + '/uploads/xml-set/' + name;
+        console.log(filePath);
+        var fs = Meteor.npmRequire('fs');
+        var data = fs.readFileSync(filePath);
+        var headers = {'Content-type': 'application/xml', 'charset' : 'ISO-8859-1'};
+        this.response.writeHead(200, headers);
         this.response.write(data);
         this.response.end();
     }
@@ -334,7 +349,7 @@ if (Meteor.isClient) {
     });
 
 
-Router.route('/subscribe', {
+    Router.route('/subscribe', {
         name: 'Subscribe',
         layoutTemplate: 'Visitor',
         waitOn: function(){
@@ -389,6 +404,7 @@ Router.route('/subscribe', {
             }
         });
 
+
     /*recommendations*/
     Router.route('/admin/recommendations',{
         name: 'AdminRecommendations',
@@ -434,6 +450,22 @@ Router.route('/subscribe', {
             Meteor.subscribe('volumes')
             ]
         },
+    });
+    Router.route('/admin/data_submissions/past',{
+        name: 'AdminDataSubmissionsPast',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('submissions')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                return{
+                    submissions: submissions.find().fetch()
+                }
+            };
+        }
     });
 
     /*xml intake*/

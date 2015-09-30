@@ -17,7 +17,7 @@ if (Meteor.isClient) {
 		return month[d.getMonth()];
 	});
 	Template.registerHelper('formatDate', function(date) {
-		return moment(date).format('MMMM DD, YYYY');
+		return moment(date).format('MMMM D, YYYY');
 	});
 	Template.registerHelper('affiliationNumber', function(affiliation) {
 		return parseInt(parseInt(affiliation) + 1);

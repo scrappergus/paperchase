@@ -8,6 +8,7 @@ edboard = new Mongo.Collection("edboard");
 authors = new Mongo.Collection('authors');
 recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
+submissions = new Mongo.Collection('submissions');
 
 
 Meteor.users.allow({
@@ -182,6 +183,26 @@ ipranges.allow({
     }
   }
 });
+submissions.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
 
 if (Meteor.isServer) {
     Meteor.publish(null, function() {
@@ -222,6 +243,9 @@ if (Meteor.isServer) {
   });
   Meteor.publish('advance', function () {
     return articles.find({'advance':true},{sort:{'_id':1}});
+  });
+  Meteor.publish('submissions', function () {
+    return submissions.find();
   });
 
   //users

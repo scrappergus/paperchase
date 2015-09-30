@@ -45,10 +45,6 @@ strong {
 
 
 
-//h3{
-//	text-transform: uppercase;
-//}
-
 .card {
   h4 {
       margin-top:0em;
@@ -253,11 +249,14 @@ ADMIN
 
 /*CARDS*/
 .card-header{
-	border-bottom: 2px solid $gray;
+	border-bottom: 2px solid $blue-aging;
 }
 /*
 BUTTONS
 */
+.btn-group{
+	padding: $pad-lg;
+}
 .btn-primary{
 	background-color: $btn-color-primary;
 }
@@ -293,6 +292,10 @@ nav{
 /*
 FORMS
 */
+.saving{
+	background: $orange;
+	padding: $pad-lg;
+}
 .success{
 	.col{
 		padding: $pad-lg;

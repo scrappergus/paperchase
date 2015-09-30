@@ -1,7 +1,6 @@
-
 Meteor.methods({
 	getArticlesForDataSubmission: function(type, parameters){
-		console.log('--getArticlesForDataSubmission');
+		// console.log('--getArticlesForDataSubmission');
 		// console.log(parameters);
 		var fut = new future();
 		var articlesList;
@@ -39,35 +38,42 @@ Meteor.methods({
 		//works but problem with the template updating the data
 		return fut.wait();
 	},
-	generateArticleXml: function(articlePii){
-		console.log('..generateArticleXml ');
-		console.log(articlePii);
-		var articleRes = articles.find({'ids.pii':articlePii});
-		// console.log(article);
-		var article = articleRes[0];
-		if(articleRes.length === 0){
+	generateDateXml: function(date){
+		var date = new Date(date);
+		var xmlString = '';
+		xmlString += '<Year>';
+		xmlString +=  date.getFullYear();
+		xmlString += '</Year>';
+		xmlString += '<Month>';
+		xmlString +=  parseInt(date.getMonth() + 1);
+		xmlString += '</Month>';
+		xmlString += '<Day>';
+		xmlString +=  date.getDate();
+		xmlString += '</Day>';
+		return xmlString;
+	},
+	generateArticleCiteXml: function(articlePii){
+		// console.log('..generateArticleXml ');
+		var article = articles.findOne({'ids.pii':articlePii});
+		if(article.length === 0){
 			throw new Meteor.Error('xml-generation failed', 'Could not create article XML');
 		}else{
-			console.log(article);
+			// console.log(article);
 			var xmlString = '<Article><Journal><PublisherName>Impact Journals, LLC</PublisherName><JournalTitle>Aging</JournalTitle><Issn>1945-4589</Issn>';
 			xmlString += '<Volume>' + article.volume + '</Volume>';
 			xmlString += '<Issue>' + article.issue + '</Issue>';
-			//status
-			if(article.pub_statis === 4){
+
+			//status and date
+			if(article.pub_status === 4){
 				xmlString += '<PubDate PubStatus="ppublish">';
 			}else{
 				xmlString += '<PubDate PubStatus="aheadofprint">';
 			}
-			// xmlString += '<Year>';
-			// xmlString +=  moment(article.dates.epub, 'YYYY');
-			// xmlString += '</Year>';
-			// xmlString += '<Month>';
-			// xmlString +=  moment(article.dates.epub, 'MM');
-			// xmlString += '</Month>';
-			// xmlString += '<Day>';
-			// xmlString +=  moment(article.dates.epub, 'D');
-			// xmlString += '</Day>';
-			// xmlString += '</PubDate>';
+			xmlString += Meteor.call('generateDateXml',article.dates.epub);
+			xmlString += '</PubDate>';
+
+
+			xmlString += '</Journal>';
 
 			//PMID
 			if(article.ids.pmid){
@@ -95,23 +101,25 @@ Meteor.methods({
 					xmlString += '<Author>';
 					if(article.authors[a]['name_first']){
 						xmlString += '<FirstName>';
-						xmlString += article.authors['name_first'];
+						xmlString += article.authors[a]['name_first'];
 						xmlString += '</FirstName>';
 					}
 					if(article.authors[a]['name_middle']){
 						xmlString += '<MiddleName>';
-						xmlString += article.authors['name_middle'];
+						xmlString += article.authors[a]['name_middle'];
 						xmlString += '</MiddleName>';
 					}
 					if(article.authors[a]['name_last']){
 						xmlString += '<LastName>';
-						xmlString += article.authors['name_last'];
+						xmlString += article.authors[a]['name_last'];
 						xmlString += '</LastName>';
 					}
 					if(article.authors[a]['affiliations']){
 						xmlString += '<Affiliation>';
 						for(var aff = 0 ; aff < article.authors[a]['affiliations'].length ; aff++){
-							xmlString += article.authors[a]['affiliations'][aff];
+							var authorAff = article.authors[a]['affiliations'][aff];
+							authorAff = Meteor.call('xmlStringFix',authorAff);
+							xmlString += authorAff;
 						}
 						xmlString += '</Affiliation>';
 					}
@@ -120,19 +128,102 @@ Meteor.methods({
 				}
 				xmlString += '</AuthorList>';
 
-				xmlString += '<PublicationType>Journal Article</PublicationType>'; //TODO: change to nlm type
+				xmlString += '<PublicationType>' + article.article_type.type + '</PublicationType>'; //TODO: change to nlm type
 			}
-			xmlString += '</Article>';
-			Meteor.call('pubMedCiteCheck', xmlString, function(error, result){
-				if(error){
-					console.log('ERROR - pubMedCiteCheck');
-					console.log(error);
-				}else{
-					console.log(result);
+
+			//article ids
+			xmlString += '<ArticleIdList>';
+			var articleIds = article['ids'];
+			for(var articleId in articleIds){
+				//reset attribute value
+				var articleIdType = articleId;
+				if(articleIdType === 'pmid'){
+					articleIdType = 'pubmed';
+				}else if(articleIdType === 'pmc'){
+					articleIdType = 'pmcid';
 				}
-			});
+
+				xmlString += '<ArticleId IdType="' + articleIdType + '">' + articleIds[articleId] + '</ArticleId>';
+
+			}
+			xmlString += '</ArticleIdList>';
+
+			//article history
+			xmlString += '<History>';
+			var articleHistory = article['history'];
+			for(var history in articleHistory){
+				xmlString += '<PubDate PubStatus="' + history + '">';
+				xmlString += Meteor.call('generateDateXml',articleHistory[history]);
+				xmlString += '</PubDate>';
+			}
+			xmlString += '</History>';
+
+			xmlString += '</Article>';
+			// console.log(xmlString);
 
 			return xmlString;
 		}
+	},
+	articleSetCiteXmlValidation: function(submissionList, userId){
+		//create a string of article xml, validate at pubmed, return any articles that failed
+		// console.log('--articleSetXmlValidation ');
+		var fut = new future();
+		var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
+		articleSetXmlString += '<ArticleSet>';
+		for(var i=0 ; i<submissionList.length; i++){
+			var pii = submissionList[i]['ids']['pii'];
+			Meteor.call('generateArticleCiteXml',pii,function(error,xmlString){
+				if(error){
+					console.log('ERROR - generateArticleCiteXml');
+					console.log(error);
+				}else{
+					articleSetXmlString += xmlString;
+					if(i === parseInt(submissionList.length -1)){
+						//last article in set, validate at pubmed
+						articleSetXmlString += '</ArticleSet>';
+						Meteor.call('pubMedCiteCheck', articleSetXmlString, function(e, r){
+							if(e){
+								console.log('ERROR - pubMedCiteCheck');
+								console.log(e);
+							}else{
+								//all valid. save the xml set
+								var fileName = new Date().getTime();
+								fileName = fileName + '.xml';
+								Meteor.call('saveXmlCiteSet',articleSetXmlString,fileName);
+
+								//update the submissions collection
+								submissions.insert({'file_name' : fileName, 'created_by' : userId, 'created_date' : new Date()});
+
+								//return file name to redirect for download route
+								fut['return'](fileName);
+							}
+						});
+					}
+				}
+			});
+		}
+		return fut.wait();
+	},
+	saveXmlCiteSet: function(xml,fileName){
+		var fs = Meteor.npmRequire('fs');
+		var filePath = process.env.PWD + '/uploads/xml-set/' + fileName;
+		fs.writeFile(filePath, xml, function (err) {
+			if (err){
+				return console.log(err);
+			}else{
+				console.log('--saved '+filePath);
+			}
+		});
+	},
+	xmlStringFix: function(string){
+		//&
+		if(string.indexOf('&')!= -1){
+			//make sure that it is not already fixed
+			var check = string.substring(string.indexOf('&'), parseInt(string.indexOf('&')+2));
+			if(check != '&a'){
+				string = string.replace('&','&amp;');
+			}
+		}
+		return string;
 	}
 });

@@ -4,7 +4,15 @@
 {{>adminNav}}
 
 <div class="container">
-{{>yield}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    {{>yield}}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{else}}
@@ -21,7 +29,7 @@
 
 
 <template name="AdminHeader">
-    <div class="row">
+    <div class="row card-header">
         <div class="col s12">
             <h1 class="admin-header">{{header}}</h1>
         </div>

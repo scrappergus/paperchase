@@ -47,15 +47,36 @@ Meteor.methods({
 		}
 	},
 	pubMedCiteCheck: function(xml){
-		var url = 'http://www.ncbi.nlm.nih.gov/pubmed/citcheck/';
-		var xmlCheck = Meteor.http('post',url,{
+		// console.log('--pubMedCiteCheck');
+		var fut = new future();
+		var url = 'http://www.ncbi.nlm.nih.gov';
+
+		//post xml string to pubmed, response will provide redirect url. In the redirect, we check the content for valid message
+		Meteor.http.post(url + '/pubmed/citcheck/',{
 			params: {
 				hfiletext: xml
 			}
+		}, function(error,result){
+			if(error){
+				console.log('ERROR - pubMedCiteCheck');
+				console.log(error);
+			}else{
+				Meteor.http.get(url + result.headers.location, function(e,r){
+					if(e){
+						console.log('ERROR - pubMedCiteCheck follow location');
+						console.log(e);
+					}else{
+						var validXml = r.content.indexOf('Your document is valid');
+						if(validXml != -1){
+							fut['return'](true);
+						}else{
+							// fut['return'](false);
+							throw new Meteor.Error('Article Set Failed Validation', result.headers.location);
+						}
+					}
+				})
+			}
 		});
-		if(xmlCheck){
-			console.log('xmlCheck  --');
-			console.log(xmlCheck);
-		}
+		return fut.wait();
 	}
 })

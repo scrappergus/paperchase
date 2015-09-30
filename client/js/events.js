@@ -236,24 +236,11 @@ Template.AdminDataSubmissions.events({
 		Session.set('submission_list',null);
 		Session.set('error',false);
 		$('.data-submission-pii').remove();
-		$('#processing-response').addClass('hide');
+		$('.saving').addClass('hide');
 	},
-	'click #validate-xml': function(e,t){
+	'click #download-set-xml': function(e){
 		e.preventDefault();
-		console.log('clicked validate-xml');
-		// var articles = t.data.articles;
-		var submissionList = Session.get('submission_list');
-		// console.log(submissionList);
-		for(var i=0 ; i<submissionList.length; i++){
-			var pii = submissionList[i]['ids']['pii'];
-			console.log(pii);
-			Meteor.call('generateArticleXml',pii,function(e,r){
-
-			})
-		}
-
-		// console.log('articles');
-		// console.log(articles);
+		Meteor.dataSubmissions.validateXmlSet();
 	}
 })
 

@@ -67,16 +67,32 @@ Meteor.dataSubmissions = {
 		});
 	},
 	processing: function(){
-		$('#processing-response').removeClass('hide');
+		$('.saving').removeClass('hide');
 	},
 	doneProcessing: function(){
-		$('#processing-response').addClass('hide');
+		$('.saving').addClass('hide');
 	},
 	errorProcessing: function(){
 		Session.set('error',true);
-		$('#processing-response').addClass('hide');
+		$('.saving').addClass('hide');
+	},
+	validateXmlSet: function(){
+		$('.saving').removeClass('hide');
+		var submissionList = Session.get('submission_list');
+		// console.log(submissionList);
+		Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,fileName){
+			$('.saving').addClass('hide');
+			if(error){
+				console.log('ERROR - articleSetXmlValidation');
+				console.log(error)
+			}else{
+				// console.log('ALL VALID');
+				// console.log(fileName);
+				//all the articles are valid, now do the download
+				window.open('/xml-cite-set/' + fileName);
+			}
+		});
 	}
-
 }
 
 Meteor.article = {
@@ -105,7 +121,6 @@ Meteor.article = {
 		Session.set('articleData',articleData);
 	},
 	downloadPdf: function(e){
-		console.log('downloadPdf');
 		e.preventDefault();
 		var mongoId = $(e.target).data('id');
 		var articleData = articles.findOne({'_id':mongoId});
