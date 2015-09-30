@@ -7,7 +7,7 @@
 	</div>
 	<div class="row">
 		<div class="col s6">
-			<form class="form-pii">
+			<form class="form-pii box grey lighten-3">
 				<div class="row">
 					<div class="input-field col s12">
 						<input id="submissions_search_pii" type="number" class="validate">
@@ -25,7 +25,7 @@
 			</form>
 		</div>
 		<div class="col s6">
-			<form class="form-issue">
+			<form class="form-issue box grey lighten-3">
 				<div class="row">
 					<div class="input-field col s12">
 						<select id="submissions_search_issue">
@@ -167,7 +167,7 @@
 				<tbody>
 					{{#each submissions}}
 					<tr>
-						<td>{{created_by}}</td>
+						<td><a href="{{pathFor 'AdminUser' _id=created_by}}">User</a></td>
 						<td>{{formatDate created_date}}</td>
 						<td>{{file_name}}</td>
 					</tr>

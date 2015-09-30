@@ -5,10 +5,8 @@
 				<a class="edit-user waves-effect waves-light btn light-blue accent-4" href="{{pathFor 'AdminAddUser'}}">Add User</a>
 			</div>
 		</div>
-		<div class="card">
-			<div class="card-content">
-				<div class="row">
-					<div class="col s12">
+		<div class="row">
+			<div class="col s12">
 						<table>
 							<thead>
 								<tr>
@@ -31,8 +29,6 @@
 								{{/each}}
 							</tbody>
 						</table>
-					</div>
-				</div>
 			</div>
 		</div>
 </template>
@@ -43,29 +39,28 @@
 		{{>AdminHeader header="User Profile"}}
 		<div class="row">
 			<div class="col s12">
-				<div class="card">
-					<div class="card-content overview">
-						<div class="row">
+				<div class="overview">
+					<div class="row">
 							<div class="col s12">
 								<a class="edit-btn waves-effect waves-light btn" href="#">Edit Profile</a>
                                 <a class=" waves-effect waves-light btn" href="/admin/user/{{_id}}/subs/">Edit Subscriptions</a>
 							</div>
-						</div>
-						<div class="row">
+					</div>
+					<div class="row">
 							<div class="col s12">
 								<h4>Email</h4>
 								<p>{{#each emails}}{{address}}{{/each}}</p>
 							</div>
-						</div>
-						<div class="row">
+					</div>
+					<div class="row">
 							<div class="col s12">
 								<h4>Permissions</h4>
 								<ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
 							</div>
-						</div>
 					</div>
-					<div class="card-content edit hide">
-						<div class="row">
+				</div>
+				<div class="edit hide">
+					<div class="row">
 							<form class="col s12">
 								<input type="hidden" id="user-id" value="{{_id}}"/>
 								<div class="row">
@@ -111,7 +106,6 @@
 									</div>
 								</div>
 							</form>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -182,7 +176,7 @@
                             <input type="checkbox" name="issue-{{volume}}-{{issue}}" data-volume="{{volume}}" data-issue="{{issue}}" class="sub-cb filled-in" id="issue-{{volume}}-{{issue}}-sub-check" value="subscribed"/>
                             <label for="issue-{{volume}}-{{issue}}-sub-check">{{issue}}</label>
                         </div>
-                        {{/each}}	
+                        {{/each}}
                     </div>
                 </div>
             </div>

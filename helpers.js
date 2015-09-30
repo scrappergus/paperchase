@@ -1,4 +1,7 @@
 if (Meteor.isClient) {
+	Template.registerHelper('pubStatusAbbrev', function (number) {
+		return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+	});
 	Template.registerHelper('getMonthWord', function(month) {
 		var d = new Date(month);
 		var month = new Array();

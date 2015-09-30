@@ -43,8 +43,10 @@ strong {
  font-weight: bold;
 }
 
-
-
+.box{
+	margin: $margin-lg 0;
+	padding: $pad-md $pad-lg;
+}
 .card {
   h4 {
       margin-top:0em;
@@ -232,7 +234,7 @@ ADMIN
 	}
 }
 .admin-header{
-	margin-bottom: 0px;
+	margin: 0px;
 	color: $blue-aging;
 }
 .xml-upload{
@@ -320,7 +322,7 @@ FORMS
 *:first-child+html .clearfix { zoom: 1; } /* IE7 */
 
 /*
-MAtERIALIZE
+MATERIALIZE
 */
 .chip{
 	padding: $pad-sm;

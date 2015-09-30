@@ -5,7 +5,7 @@
 			<ul class="collection card">
 				<li class="collection-item"><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="zmdi zmdi-upload"></i> XML</a></li>
 				<li class="collection-item"><a href="{{pathFor 'adminArticlesList'}}">Articles List</a></li>
-			</ul>			
+			</ul>
 		</div>
 		<div class="col s4">
 			<div class="card">
@@ -44,52 +44,30 @@
 
 <template name="adminArticle">
 	{{>AdminHeader header="Article"}}
-	<div class="card">
-		<div class="card-content">
-			<!--TODO: auto form this -->
-			<form>
-				<div class="row">
-					<div class="col s12">
-						<h5>Article Settings</h5>
-					</div>
+	<div class="row">
+		<div class="col s12 m6">
+			<div class="row">
+				<div class="col s12">
+					<h3>Data Submissions</h3>
+					{{#each article.submissions}}
+						<li>{{pubStatusAbbrev pub_status}}: {{formatDate created_date}}</li>
+					{{/each}}
 				</div>
-				<div class="row">
-					<div class="col s12">
-						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" {{feature}}/>
-						<label for="feature-checkbox">Feature</label>				
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s12">
-						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox" {{advance}}/>
-						<label for="advance-checkbox">Advance</label>				
-					</div>
-				</div>		
-				<div class="row">
-					<div class="col s12 center-align">
-						<button class="submit btn waves-effect waves-light save-btn" type="submit" name="action" alt="Save Article">Save</button>
-					</div>
-				</div>		
-			</form>
-			{{>saving}}
-			{{>successMessage what='Article'}}
+			</div>
 		</div>
 	</div>
-	{{>adminArticleData}}
+
+	{{>AdminArticleForm}}
 </template>
 <template name="adminArticleData">
 	{{#with article}}
-	<div class="card">
-		<div class="card-content">
-			<div class="card-header">
-				<div class="row">
+			<div class="row">
 					<div class="col s10">
 						{{>ArticleMeta}}
 					</div>
 					<div class="col s2">
 						<span class="badge right">{{article_type.type}}</span>
 					</div>
-				</div>
 			</div>
 			<div class="row">
 				<div class="col s12">
@@ -124,22 +102,18 @@
 					<ul>
 						{{#each keywords}}
 						<li><h6>{{.}}</h6></li>
-						{{/each}}						
+						{{/each}}
 					</ul>
 				</div>
 			</div>
 			{{/if}}
-		</div>
-	</div>	
-	{{/with}}	
+	{{/with}}
 </template>
 
 <template name="adminArticlesList">
 		{{>AdminHeader header="Articles"}}
-		<div class="card">
-			<div class="card-content">
-				<div class="row">
-					<div class="col s12">
+		<div class="row">
+			<div class="col s12">
 						<table>
 							<thead>
 								<tr>
@@ -160,8 +134,125 @@
 								{{/each}}
 							</tbody>
 						</table>
-					</div>
-				</div>
 			</div>
 		</div>
+</template>
+
+<template name="AdminArticleForm">
+	{{#with article}}
+	<form>
+		<div class="row">
+			<div class="col s12 center-align">
+				<button class="submit btn waves-effect waves-light save-btn" type="submit" name="action" alt="Save Article">Save</button>
+			</div>
+		</div>
+
+		<section class="box grey lighten-4">
+			<div class="row">
+				<div class="col s12">
+					{{>saving}}
+					{{>successMessage what='Article'}}
+				</div>
+			</div>
+			<div class="row">
+				<h2>{{{title}}}</h2>
+			</div>
+		</section>
+
+		<section class="box grey lighten-4">
+				<div class="row">
+					<div class="col s12">
+						<h3>Settings</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" {{feature}}/>
+						<label for="feature-checkbox">Feature</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox" {{advance}}/>
+						<label for="advance-checkbox">Advance</label>
+					</div>
+				</div>
+		</section>
+
+		<section class="box grey lighten-4">
+			<div class="row">
+				<div class="col s12"><h3>Authors</h3></div>
+			</div>
+			<div class="row">
+				<div class="col s12 m3"><b>First Name</b></div>
+				<div class="col s12 m3"><b>Middle Name</b></div>
+				<div class="col s12 m3"><b>Last Name</b></div>
+				<div class="col s12 m3"><b>Affiliations</b></div>
+			</div>
+			{{#each authors}}
+			<div class="row">
+				<div class="input-field col s12 m3">{{name_first}}</div>
+				<div class="input-field col s12 m3">{{name_middle}}</div>
+				<div class="input-field col s12 m3">{{name_last}}</div>
+				<div class="input-field col s12 m3">
+					{{#each affiliation_numbers}}
+						<span class="chip orange lighten-2">{{.}}</span>
+					{{/each}}
+				</div>
+			</div>
+			{{/each}}
+		</section>
+
+		<section class="box grey lighten-4">
+			<div class="row">
+				<div class="col s12"><h3>Affiliations</h3></div>
+			</div>
+			{{#each arrayify affiliations}}
+			<div class="row">
+				<div class="input-field col s1">
+					<span class="chip orange lighten-2 right">
+						{{affiliationNumber name}}
+					</span>
+				</div>
+				<div class="input-field col s10">
+					<input type="text" id="affiliation-{{affiliationNumber name}}" value="{{value}}"/>
+				</div>
+				<div class="input-field col s1">
+					<span class="chip red lighten-2 right">
+						<i id="close-success-msg" class="zmdi zmdi-close-circle-o"></i>
+					</span>
+				</div>
+			</div>
+			{{/each}}
+		</section>
+
+		<section class="box grey lighten-4">
+			<div class="row">
+				<div class="col s12">
+					<h3>Dates</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					{{>ArticleDates}}
+				</div>
+			</div>
+		</section>
+
+		<section class="box grey lighten-4">
+			<div class="row">
+				<div class="col s12">
+					<h3>History</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					{{#each arrayify history}}
+						<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+					{{/each}}
+				</div>
+			</div>
+		</section>
+	</form>
+	{{/with}}
 </template>

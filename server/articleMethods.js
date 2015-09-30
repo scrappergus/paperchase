@@ -57,6 +57,11 @@ Meteor.methods({
 		// console.log('--updateArticle |  mongoId = ' + mongoId);
 		return articles.update({'_id' : mongoId}, {$set: articleData});
 	},
+	pushArticle: function(mongoId, field, articleData){
+		var updateObj = {};
+		updateObj[field] = articleData;
+		return articles.update({'_id' : mongoId}, {$push: updateObj});
+	},
 	updateArticleByPmid: function(pmid, articleData){
 		// console.log('--updateArticleByPmid |  pmid = '+pmid);
 		return articles.update({'ids.pmid' : pmid}, {$set: articleData});

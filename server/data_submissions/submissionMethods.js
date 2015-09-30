@@ -166,7 +166,7 @@ Meteor.methods({
 	},
 	articleSetCiteXmlValidation: function(submissionList, userId){
 		//create a string of article xml, validate at pubmed, return any articles that failed
-		// console.log('--articleSetXmlValidation ');
+		console.log('--articleSetXmlValidation ');
 		var fut = new future();
 		var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
 		articleSetXmlString += '<ArticleSet>';
@@ -192,7 +192,11 @@ Meteor.methods({
 								Meteor.call('saveXmlCiteSet',articleSetXmlString,fileName);
 
 								//update the submissions collection
-								submissions.insert({'file_name' : fileName, 'created_by' : userId, 'created_date' : new Date()});
+								var created = new Date();
+								var submissions_id = submissions.insert({'file_name' : fileName, 'created_by' : userId, 'created_date' : created});
+
+								//update article docs
+								Meteor.call('articlesStatusUpdate',submissionList, submissions_id, created);
 
 								//return file name to redirect for download route
 								fut['return'](fileName);
@@ -206,14 +210,24 @@ Meteor.methods({
 	},
 	saveXmlCiteSet: function(xml,fileName){
 		var fs = Meteor.npmRequire('fs');
-		var filePath = process.env.PWD + '/uploads/xml-set/' + fileName;
+		var filePath = process.env.PWD + '/xml-sets/' + fileName;
 		fs.writeFile(filePath, xml, function (err) {
 			if (err){
 				return console.log(err);
 			}else{
-				console.log('--saved '+filePath);
+				// console.log('--saved ' + filePath);
 			}
 		});
+	},
+	articlesStatusUpdate: function(submissionList, submissions_id, created){
+		for(var i=0 ; i< submissionList.length ; i++){
+			var update = {
+				'submission_id' : submissions_id,
+				'created_date' : created,
+				'pub_status' : parseInt(submissionList[i]['pub_status'])
+			};
+			Meteor.call('pushArticle', submissionList[i]['_id'], 'submissions', update);
+		}
 	},
 	xmlStringFix: function(string){
 		//&

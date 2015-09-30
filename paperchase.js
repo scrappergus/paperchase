@@ -75,11 +75,11 @@ Router.route('/xml-cite-set/:_filename',{
     where: 'server',
     action: function(){
         var name = this.params._filename;
-        var filePath = process.env.PWD + '/uploads/xml-set/' + name;
-        console.log(filePath);
+        var filePath = process.env.PWD + '/xml-sets/' + name;
+        // console.log(filePath);
         var fs = Meteor.npmRequire('fs');
         var data = fs.readFileSync(filePath);
-        var headers = {'Content-type': 'application/xml', 'charset' : 'ISO-8859-1'};
+        var headers = {'Content-type': 'application/xml'};
         this.response.writeHead(200, headers);
         this.response.write(data);
         this.response.end();
@@ -486,8 +486,8 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-            Meteor.subscribe('articles'),
-            Meteor.subscribe('issues')
+                Meteor.subscribe('articles'),
+                Meteor.subscribe('issues')
             ]
         },
         data: function(){
@@ -561,15 +561,17 @@ if (Meteor.isClient) {
                 var advance = '';
                 // console.log('article = ');console.log(article);
                 if(article.feature){
-                    feature = 'checked';
+                    article.feature = 'checked';
+                }else{
+                    delete article.feature;
                 }
                 if(article.advance){
-                    advance = 'checked';
+                    article.advance = 'checked';
+                }else{
+                    delete article.advance;
                 }
                 return {
-                    article: article,
-                    feature: feature,
-                    advance: advance
+                    article: article
                 };
             }
         }
