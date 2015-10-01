@@ -456,12 +456,15 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-                Meteor.subscribe('submissions')
+                Meteor.subscribe('adminUsers'),
+                Meteor.subscribe('submissions'),
+                Meteor.subscribe('articles')
             ]
         },
         data: function(){
             if(this.ready()){
                 return{
+                    articles: articles.find({},{submissions:1}).fetch(),
                     submissions: submissions.find().fetch()
                 }
             };

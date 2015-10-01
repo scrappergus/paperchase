@@ -22,6 +22,9 @@ if (Meteor.isClient) {
 	Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MMMM D, YYYY');
 	});
+	Template.registerHelper('formatDateNumber', function(date) {
+		return moment(date).format('MM/D/YYYY');
+	});
 	Template.registerHelper('affiliationNumber', function(affiliation) {
 		return parseInt(parseInt(affiliation) + 1);
 	});
@@ -45,7 +48,7 @@ if (Meteor.isClient) {
 	});
 	Template.registerHelper('equals', function (a, b) {
 		return a == b;
-    });
+	});
 	Template.registerHelper('arrayify',function(obj){
 		result = [];
 		for (var key in obj) result.push({name:key,value:obj[key]});
@@ -55,7 +58,7 @@ if (Meteor.isClient) {
 		return items.length;
 	});
 	Template.registerHelper('clientIP', function() {
-		 	return headers.getClientIP();
+			return headers.getClientIP();
 		 });
 
 
@@ -147,9 +150,93 @@ if (Meteor.isClient) {
 			return Session.get('error');
 		}
 	});
+	Template.AdminDataSubmissionsPast.helpers({
+		submissionsSettings: function(){
+			return {
+				rowsPerPage: 10,
+				showFilter: false,
+				fields: [
+					{
+						key: 'created_date',
+						label: 'Date',
+						fn: function(d){
+							return moment(d).format('MM/D/YYYY')
+						}
+					},
+					{
+						key: 'created_by',
+						label: 'Created By',
+						fn: function(uId){
+							var u = Meteor.users.findOne({'_id':uId},{'name_first': 1, 'name_last':1});
+							return u['name_first'] + ' ' + u['name_last'];
+						}
+					},
+					{
+						key: 'file_name',
+						label: 'File'
+					}
+				]
+			}
+		},
+		articleSettings: function () {
+			return {
+				collection: articles.find().fetch(),
+				rowsPerPage: 10,
+				showFilter: false,
+				fields: [
+					{
+						key: 'title',
+						label: 'Title',
+						fn: function(title){
+							var txt = document.createElement('textarea');
+							txt.innerHTML = title.substring(0,40);
+							if(title.length > 40){
+								txt.innerHTML += '...';
+							}
+							return new Spacebars.SafeString(txt.value);
+						}
+					},
+					{
+						key: 'ids.pii',
+						label: 'PII'
+					},
+					{
+						key: 'ids.pmid',
+						label: 'PubMed ID'
+					},
+					{
+						key: 'ids.pmc',
+						label: 'PMC ID'
+					},
+					{
+						key: 'pub_status',
+						label: 'Pub Status',
+						fn: function(value){
+							var stat = 'unknown';
+							if(pubStatusTranslate[parseInt(value - 1)]){
+								stat = pubStatusTranslate[parseInt(value - 1)]['abbrev'];
+							}
+							return stat;
+						}
+					},
+					{
+						key: 'submissions',
+						label: 'Last Submission',
+						fn: function(submissions){
+							if(submissions){
+								var d = submissions[submissions.length - 1]['created_date'];
+								d = moment(d).format('MM/D/YYYY');
+								return d;
+							}
+						}
+					}
+				]
+			};
+		}
+	})
 	Template.AdminInstitutionForm.helpers({
 		'showIPFields' : function(){
-            return Template.instance().showIPFields.get();
+			return Template.instance().showIPFields.get();
 		}
 	});
 	Template.adminArticleXmlIntake.helpers({

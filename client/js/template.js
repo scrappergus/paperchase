@@ -11,7 +11,11 @@ Template.AdminDataSubmissions.rendered = function(){
 	$('select').material_select();
 	Session.set('submission_list',null);
 }
+Template.AdminDataSubmissionsPast.rendered = function(){
+	$('ul.tabs').tabs();
+}
 Template.Subscribe.rendered = function(){
 	$('select').material_select();
 }
+
 

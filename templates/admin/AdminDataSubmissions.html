@@ -1,6 +1,6 @@
 <template name="AdminDataSubmissions">
 	{{>AdminHeader header="New Data Submission"}}
-	<a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a>
+	<!-- <a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a> -->
 	<div class="row">
 		<div class="col s12 m10">
 			<h2>Search By:</h2>
@@ -48,19 +48,20 @@
 		</div>
 	</div>
 	{{#if error}}
-		<div class="row">
-			<div class="col s12">
-				<button class="waves-effect waves-light btn right clear">clear</button>
-			</div>
+	<div class="row">
+		<div class="col s12">
+			<button class="waves-effect waves-light btn right clear">clear</button>
 		</div>
-		<div class="row">
-			<div class="col s12">
-				<h4>No Articles Found</h4>
-			</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<h4>No Articles Found</h4>
 		</div>
+	</div>
 	{{/if}}
 
 	{{>processing}}
+
 	{{#if articles}}
 	<div class="row btn-group grey lighten-3">
 		<div class="col s4">
@@ -86,59 +87,60 @@
 		<div class="col s12">
 			<ul class="collection">
 				{{#each articles}}
-					<li class="collection-item">
-				{{#if equals pubmed_pub_status pub_status}}
-				{{else}}
-				<div class="chip red lighten-3">Pub Status Not Matched on PubMed - {{pub_status}} vs {{pubmed_pub_status}}</div>
-				{{/if}}
-				<div class="row"><div class="col s12">
-					{{>ArticleMetaSmall}}
-				</div></div>
+				<li class="collection-item">
+					{{#if equals pubmed_pub_status pub_status}}
+					{{else}}
+					<div class="chip red lighten-3">Pub Status Not Matched on PubMed - {{pub_status}} vs {{pubmed_pub_status}}</div>
+					{{/if}}
+					<div class="row"><div class="col s12">
+						{{>ArticleMetaSmall}}
+					</div></div>
 
-				<div class="row">
-					<div class="col s6">
-						<h5>Article IDs</h5>
-						<ul>
-						{{#each arrayify ids}}
-							<li><label>{{name}}:</label> {{value}}</li>
-						{{/each}}
-						</ul>
-					</div>
-					<div class="col s6">
-						<h5>Article History</h5>
-						<ul>
-						{{#each arrayify history}}
-							<li><label>{{name}}:</label> {{formatDate value}}</li>
-						{{/each}}
-						</ul>
-					</div>
-				</div>
-				<div class="row"><div class="col s12">
-					<form>
-						<div class="row">
-							<div class="input-field col s12">
-						<p>
-							{{#if equals pub_status '4' }}
-							<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" disabled/>
-							{{else}}
-							<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" checked/>
-							{{/if}}
-							<label for="radio_aheadofprint-{{_id}}">Ahead of Print</label>
-						</p>
-
-						<p>
-							{{#if equals pub_status '4' }}
-							<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4" checked />
-							{{else}}
-							<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4"/>
-							{{/if}}
-							<label for="radio_ppublish-{{_id}}">Published</label>
-						</p>
-							</div>
+					<div class="row">
+						<div class="col s6">
+							<h5>Article IDs</h5>
+							<ul>
+							{{#each arrayify ids}}
+								<li><label>{{name}}:</label> {{value}}</li>
+							{{/each}}
+							</ul>
 						</div>
-					</form>
-				</div></div>
-					</li>
+						<div class="col s6">
+							<h5>Article History</h5>
+							<ul>
+							{{#each arrayify history}}
+								<li><label>{{name}}:</label> {{formatDate value}}</li>
+							{{/each}}
+							</ul>
+						</div>
+					</div>
+
+					<div class="row"><div class="col s12">
+						<form>
+							<div class="row">
+								<div class="input-field col s12">
+							<p>
+								{{#if equals pub_status '4' }}
+								<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" disabled/>
+								{{else}}
+								<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" checked/>
+								{{/if}}
+								<label for="radio_aheadofprint-{{_id}}">Ahead of Print</label>
+							</p>
+
+							<p>
+								{{#if equals pub_status '4' }}
+								<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4" checked />
+								{{else}}
+								<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4"/>
+								{{/if}}
+								<label for="radio_ppublish-{{_id}}">Published</label>
+							</p>
+								</div>
+							</div>
+						</form>
+					</div></div>
+				</li>
 				{{/each}}
 			</ul>
 		</div>
@@ -149,27 +151,49 @@
 
 <template name="AdminDataSubmissionsPast">
 	{{>AdminHeader header="Past Admin Data Submissions"}}
-	<a href="{{pathFor 'AdminDataSubmissions'}}">New Submission</a>
 	<div class="row">
 		<div class="col s12">
-			<table>
-				<thead>
-					<tr>
-						<th>Created By</th>
-						<th>Created Date</th>
-						<th>Filename</th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each submissions}}
-					<tr>
-						<td><a href="{{pathFor 'AdminUser' _id=created_by}}">User</a></td>
-						<td>{{formatDate created_date}}</td>
-						<td>{{file_name}}</td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
+		  <ul class="tabs">
+			<li class="tab col s6"><a class="active" href="#submissions">Submissions</a></li>
+			<li class="tab col s6"><a href="#articles">Articles</a></li>
+		  </ul>
+		</div>
+		<div id="submissions" class="col s12">
+			<div class="row">
+				<div class="col s12">
+					<div class="box grey lighten-4">
+						{{> reactiveTable collection=submissions settings=submissionsSettings}}
+					</div>
+					<!-- <table>
+						<thead>
+							<tr>
+								<th>Created By</th>
+								<th>Created Date</th>
+								<th>Filename</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each submissions}}
+							<tr>
+								<td><a href="{{pathFor 'AdminUser' _id=created_by}}">User</a></td>
+								<td>{{formatDate created_date}}</td>
+								<td>{{file_name}}</td>
+							</tr>
+							{{/each}}
+						</tbody>
+					</table> -->
+				</div>
+			</div>
+		</div>
+		<div id="articles" class="col s12">
+			<div class="row">
+				<div class="col s12">
+					<div class="box grey lighten-4">
+						{{> reactiveTable settings=articleSettings}}
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+	<!-- <a href="{{pathFor 'AdminDataSubmissions'}}">New Submission</a> -->
 </template>

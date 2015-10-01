@@ -257,6 +257,14 @@ if (Meteor.isServer) {
       return;
      }
   });
+  Meteor.publish('adminUsers', function(){
+    if (Roles.userIsInRole(this.userId, ['admin'])) {
+      return Meteor.users.find({'roles': {'$in': ['admin']}},{'name_first':1,'name_last':1});
+    }else{
+      this.stop();
+      return;
+    }
+  });
 
   Meteor.publish('userData', function(id){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
