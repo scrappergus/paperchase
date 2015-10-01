@@ -4,7 +4,7 @@
 		<div class="col s4">
 			<ul class="collection card">
 				<li class="collection-item"><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="zmdi zmdi-upload"></i> XML</a></li>
-				<li class="collection-item"><a href="{{pathFor 'adminArticlesList'}}">Articles List</a></li>
+				<li class="collection-item"><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
 			</ul>
 		</div>
 		<div class="col s4">
@@ -114,30 +114,11 @@
 	{{/with}}
 </template>
 
-<template name="adminArticlesList">
+<template name="AdminArticlesList">
 		{{>AdminHeader header="Articles"}}
 		<div class="row">
 			<div class="col s12">
-						<table>
-							<thead>
-								<tr>
-									<th data-field="title">Title</th>
-									<th data-field="volume">Volume</th>
-									<th data-field="volume">Issue</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								{{#each articles}}
-								<tr>
-									<td>{{{title}}}</td>
-									<td>{{volume}}</td>
-									<td>{{issue}}</td>
-									<td><a class="waves-effect waves-light btn" href="{{pathFor 'adminArticle'}}">View</a></td>
-								</tr>
-								{{/each}}
-							</tbody>
-						</table>
+				{{> reactiveTable collection=articles settings=settings}}
 			</div>
 		</div>
 </template>

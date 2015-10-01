@@ -135,6 +135,45 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
+	Template.AdminArticlesList.helpers({
+		settings: function(){
+			return {
+				rowsPerPage: 10,
+				showFilter: false,
+				fields: [
+					{
+						key: 'title',
+						label: 'Title',
+						fn: function(title){
+							var t = Meteor.admin.titleInTable(title);
+							return new Spacebars.SafeString(t);
+						}
+					},
+					{
+						key: 'volume',
+						label: 'Volume'
+					},
+					{
+						key: 'issue',
+						label: 'Issue'
+					},
+					{
+						key: 'ids.pii',
+						label: 'PII'
+					},
+					{
+						key: '_id',
+						label: '',
+						sortable: false,
+						fn: function(value){
+							console.log('v = '+value);
+							return new Spacebars.SafeString('<a href="/admin/article/' + value + '">View</a>');
+						}
+					}
+				]
+			}
+		}
+	});
 	Template.AdminDataSubmissions.helpers({
 		volumes: function(){
 			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -188,12 +227,13 @@ if (Meteor.isClient) {
 						key: 'title',
 						label: 'Title',
 						fn: function(title){
-							var txt = document.createElement('textarea');
-							txt.innerHTML = title.substring(0,40);
-							if(title.length > 40){
-								txt.innerHTML += '...';
-							}
-							return new Spacebars.SafeString(txt.value);
+							// var txt = document.createElement('textarea');
+							// txt.innerHTML = title.substring(0,40);
+							// if(title.length > 40){
+							// 	txt.innerHTML += '...';
+							// }
+							var t = Meteor.admin.titleInTable(title);
+							return new Spacebars.SafeString(t);
 						}
 					},
 					{

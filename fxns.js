@@ -42,6 +42,17 @@ Meteor.organize = {
 	}
 }
 
+Meteor.admin = {
+	titleInTable: function(title){
+		var txt = document.createElement('textarea');
+		txt.innerHTML = title.substring(0,40);
+		if(title.length > 40){
+			txt.innerHTML += '...';
+		}
+		return txt.value;
+	}
+}
+
 Meteor.dataSubmissions = {
 	getPiiList: function(){
 		var piiList = [];

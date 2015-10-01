@@ -535,7 +535,7 @@ if (Meteor.isClient) {
         }
     });
     Router.route('/admin/articles/list',{
-        name: 'adminArticlesList',
+        name: 'AdminArticlesList',
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
