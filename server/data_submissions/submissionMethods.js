@@ -166,7 +166,7 @@ Meteor.methods({
 	},
 	articleSetCiteXmlValidation: function(submissionList, userId){
 		//create a string of article xml, validate at pubmed, return any articles that failed
-		console.log('--articleSetXmlValidation ');
+		// console.log('--articleSetXmlValidation ');
 		var fut = new future();
 		var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
 		articleSetXmlString += '<ArticleSet>';
@@ -185,7 +185,10 @@ Meteor.methods({
 							if(e){
 								console.log('ERROR - pubMedCiteCheck');
 								console.log(e);
-							}else{
+								throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation', result.headers.location);
+							}
+
+							if(r){
 								//all valid. save the xml set
 								var fileName = new Date().getTime();
 								fileName = fileName + '.xml';
@@ -200,6 +203,9 @@ Meteor.methods({
 
 								//return file name to redirect for download route
 								fut['return'](fileName);
+							}else{
+								console.log('ERROR: XML Set NOT valid.');
+								fut['return']('invalid');
 							}
 						});
 					}

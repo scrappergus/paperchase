@@ -80,16 +80,16 @@ Meteor.dataSubmissions = {
 		$('.saving').removeClass('hide');
 		var submissionList = Session.get('submission_list');
 		// console.log(submissionList);
-		Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,fileName){
+		Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
 			$('.saving').addClass('hide');
 			if(error){
 				console.log('ERROR - articleSetXmlValidation');
 				console.log(error)
+			}else if(result === 'invalid'){
+				alert('XML set invalid');
 			}else{
-				// console.log('ALL VALID');
-				// console.log(fileName);
 				//all the articles are valid, now do the download
-				window.open('/xml-cite-set/' + fileName);
+				window.open('/xml-cite-set/' + result);
 			}
 		});
 	}
