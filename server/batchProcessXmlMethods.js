@@ -87,12 +87,13 @@ Meteor.methods({
 			var pii = allArticles[i]['ids']['pii'];
 			console.log('.. ' + i + ' / pmid = '+pmid);
 
-			if(!pii){
+			// if(!pii){
 				Meteor.call('getPiiFromPmid',pmid,function(error,pii){
 					if(error){
 						console.log('ERROR: Could not get PII');
 						console.log(error);
 					}else{
+						console.log(pii);
 						articleIds['pii'] = pii;
 						Meteor.call('pushPiiArticle',allArticles[i]['_id'],articleIds,function(err,res){
 							if(err){
@@ -103,7 +104,7 @@ Meteor.methods({
 						});
 					}
 				});
-			}
+			// }
 		}
 	},
 	getAllAuthorsAffiliationsPubMed: function(){

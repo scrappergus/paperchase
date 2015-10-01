@@ -30,7 +30,13 @@ Meteor.methods({
 			var articleIdListL = articleIdList.length;
 			for(var i = 0 ; i < articleIdListL ; i ++){
 				if(articleIdList[i]['idtype'] === 'pii'){
-					return articleIdList[i]['value'];
+					//fix for articles misindexed at pubmed
+					var val = articleIdList[i]['value'];
+					if(val.indexOf('html') != -1){
+						var valPieces = val.split('/');
+						val = valPieces[valPieces.length -1].replace('.html','');
+					}
+					return val;
 				}
 			}
 		}
