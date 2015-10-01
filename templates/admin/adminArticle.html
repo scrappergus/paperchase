@@ -15,7 +15,7 @@
 						<div class="col s12">
 							<ul class="collection">
 							{{#each feature}}
-								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
+								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
 							{{/each}}
 							</ul>
 						</div>
@@ -31,7 +31,7 @@
 						<div class="col s12">
 							<ul class="collection">
 							{{#each advance}}
-								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
+								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
 							{{/each}}
 							</ul>
 						</div>
@@ -42,7 +42,7 @@
 	</div>
 </template>
 
-<template name="adminArticle">
+<template name="AdminArticle">
 	{{>AdminHeader header="Article"}}
 
 	<div class="row">
@@ -131,14 +131,13 @@
 				<button class="submit btn waves-effect waves-light save-btn" type="submit" name="action" alt="Save Article">Save</button>
 			</div>
 		</div>
-
-		<section class="box grey lighten-4">
-			<div class="row">
-				<div class="col s12">
-					{{>saving}}
-					{{>successMessage what='Article'}}
-				</div>
+		<div class="row">
+			<div class="col s12">
+				{{>saving}}
+				{{>successMessage what='Article'}}
 			</div>
+		</div>
+		<section class="box grey lighten-4">
 			<div class="row">
 				<h2>{{{title}}}</h2>
 			</div>
@@ -169,23 +168,41 @@
 				<div class="col s12"><h3>Authors</h3></div>
 			</div>
 			<div class="row">
-				<div class="col s12 m3"><b>First Name</b></div>
-				<div class="col s12 m3"><b>Middle Name</b></div>
-				<div class="col s12 m3"><b>Last Name</b></div>
-				<div class="col s12 m3"><b>Affiliations</b></div>
+				<div class="col s1">&nbsp;</div>
+				<div class="col s11 m3"><b>First Name</b></div>
+				<div class="col s11 m3"><b>Middle Name</b></div>
+				<div class="col s11 m3"><b>Last Name</b></div>
+				<div class="col s11 m2"><b>Affiliations</b></div>
 			</div>
-			{{#each authors}}
-			<div class="row">
-				<div class="input-field col s12 m3">{{name_first}}</div>
-				<div class="input-field col s12 m3">{{name_middle}}</div>
-				<div class="input-field col s12 m3">{{name_last}}</div>
-				<div class="input-field col s12 m3">
-					{{#each affiliation_numbers}}
-						<span class="chip orange lighten-2">{{.}}</span>
-					{{/each}}
-				</div>
-			</div>
-			{{/each}}
+			<ul class="authors-list">
+				{{#each authors}}
+				<li class="row author-row">
+					<div class="input-field col s1">
+						<i class="zmdi prefix zmdi-swap-vertical"></i>
+					</div>
+					<div class="input-field col s11 m3">
+						<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
+					</div>
+					<div class="input-field col s11 m3">
+						<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
+					</div>
+					<div class="input-field col s11 m3">
+						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
+					</div>
+					<div class="input-field col s11 m2">
+						{{#each affiliation_numbers}}
+							<span class="chip orange lighten-2">{{.}}</span>
+						{{/each}}
+					</div>
+					<div class="hide">
+						{{#each arrayify ids}}
+						<input class="author-id" type="hidden" name="{{name}}" value="{{value}}">
+						{{/each}}
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+
 		</section>
 
 		<section class="box grey lighten-4">

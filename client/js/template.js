@@ -1,3 +1,6 @@
+Template.AdminArticle.rendered = function(){
+	$('.authors-list').sortable();
+}
 Template.adminArticleXmlIntake.rendered = function(){
     Session.set('fileNameXML','');
 }

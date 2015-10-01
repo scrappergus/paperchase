@@ -142,12 +142,13 @@ Template.adminIssue.events({
 /*
 ARTICLE
 */
-Template.adminArticle.events({
+Template.AdminArticle.events({
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
 		var mongoId = t.data.article._id;
 		var articleUpdateObj = {};
+
 
 		//feature
 		if($('#feature-checkbox').prop('checked')){
@@ -162,6 +163,22 @@ Template.adminArticle.events({
 		}else{
 			articleUpdateObj['advance'] = false;
 		}
+
+		//authors
+		var authors = [];
+		$('.author-row').each(function(idx,obj){
+			var author = {
+				'name_first' : $(this).find('input[name="name_first"]').val(),
+				'name_middle' : $(this).find('input[name="name_middle"]').val(),
+				'name_last' : $(this).find('input[name="name_last"]').val(),
+				'ids' : {}
+			};
+			var authorIds = $(this).find('.author-id').each(function(i,o){
+				author['ids'][$(o).attr('name')] = $(o).val();
+			});
+			authors.push(author);
+		});
+console.log(authors);
 
 		//save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
