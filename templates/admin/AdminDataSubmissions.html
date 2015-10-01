@@ -1,17 +1,16 @@
 <template name="AdminDataSubmissions">
-	{{>AdminHeader header="Admin Data Submissions"}}
+	{{>AdminHeader header="New Data Submission"}}
+	<a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a>
 	<div class="row">
-		<div class="col s12">
-			<h4>Search By:</h4>
+		<div class="col s12 m10">
+			<h2>Search By:</h2>
 		</div>
-	</div>
-	<div class="row">
 		<div class="col s6">
 			<form class="form-pii box grey lighten-3">
 				<div class="row">
 					<div class="input-field col s12">
-						<input id="submissions_search_pii" type="number" class="validate">
-						<label for="submissions_search_pii">PII</label>
+				<input id="submissions_search_pii" type="number" class="validate">
+				<label for="submissions_search_pii">PII</label>
 					</div>
 				</div>
 				<div class="row">
@@ -19,7 +18,7 @@
 				</div>
 				<div class="row">
 					<div class="input-field col s12">
-						<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
+				<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
 					</div>
 				</div>
 			</form>
@@ -28,21 +27,21 @@
 			<form class="form-issue box grey lighten-3">
 				<div class="row">
 					<div class="input-field col s12">
-						<select id="submissions_search_issue">
-							<option disabled>Select Issue</option>
-								{{#each volumes}}
-								<option disabled>&mdash; Volume {{volume}} &mdash;</option>
-								{{#each issues}}
-								<option value="{{_id}}">Volume {{volume}}, Issue {{issue}}</option>
-								{{/each}}
-								{{/each}}
-						</select>
-						<label for="submissions_search_issue">Issue</label>
+				<select id="submissions_search_issue">
+					<option disabled>Select Issue</option>
+						{{#each volumes}}
+						<option disabled>&mdash; Volume {{volume}} &mdash;</option>
+						{{#each issues}}
+						<option value="{{_id}}">Volume {{volume}}, Issue {{issue}}</option>
+						{{/each}}
+						{{/each}}
+				</select>
+				<label for="submissions_search_issue">Issue</label>
 					</div>
 				</div>
 				<div class="row">
 					<div class="input-field col s12">
-						<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
+				<button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
 					</div>
 				</div>
 			</form>
@@ -88,72 +87,69 @@
 			<ul class="collection">
 				{{#each articles}}
 					<li class="collection-item">
-						{{#if equals pubmed_pub_status pub_status}}
-						{{else}}
-						<div class="chip red lighten-3">Pub Status Not Matched on PubMed - {{pub_status}} vs {{pubmed_pub_status}}</div>
-						{{/if}}
-						<div class="row"><div class="col s12">
-							{{>ArticleMetaSmall}}
-						</div></div>
+				{{#if equals pubmed_pub_status pub_status}}
+				{{else}}
+				<div class="chip red lighten-3">Pub Status Not Matched on PubMed - {{pub_status}} vs {{pubmed_pub_status}}</div>
+				{{/if}}
+				<div class="row"><div class="col s12">
+					{{>ArticleMetaSmall}}
+				</div></div>
 
+				<div class="row">
+					<div class="col s6">
+						<h5>Article IDs</h5>
+						<ul>
+						{{#each arrayify ids}}
+							<li><label>{{name}}:</label> {{value}}</li>
+						{{/each}}
+						</ul>
+					</div>
+					<div class="col s6">
+						<h5>Article History</h5>
+						<ul>
+						{{#each arrayify history}}
+							<li><label>{{name}}:</label> {{formatDate value}}</li>
+						{{/each}}
+						</ul>
+					</div>
+				</div>
+				<div class="row"><div class="col s12">
+					<form>
 						<div class="row">
-							<div class="col s6">
-								<h5>Article IDs</h5>
-								<ul>
-								{{#each arrayify ids}}
-									<li><label>{{name}}:</label> {{value}}</li>
-								{{/each}}
-								</ul>
-							</div>
-							<div class="col s6">
-								<h5>Article History</h5>
-								<ul>
-								{{#each arrayify history}}
-									<li><label>{{name}}:</label> {{formatDate value}}</li>
-								{{/each}}
-								</ul>
+							<div class="input-field col s12">
+						<p>
+							{{#if equals pub_status '4' }}
+							<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" disabled/>
+							{{else}}
+							<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" checked/>
+							{{/if}}
+							<label for="radio_aheadofprint-{{_id}}">Ahead of Print</label>
+						</p>
+
+						<p>
+							{{#if equals pub_status '4' }}
+							<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4" checked />
+							{{else}}
+							<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4"/>
+							{{/if}}
+							<label for="radio_ppublish-{{_id}}">Published</label>
+						</p>
 							</div>
 						</div>
-						<div class="row"><div class="col s12">
-							<form>
-								<div class="row">
-									<div class="input-field col s12">
-										<p>
-											{{#if equals pub_status '4' }}
-											<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" disabled/>
-											{{else}}
-											<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" checked/>
-											{{/if}}
-											<label for="radio_aheadofprint-{{_id}}">Ahead of Print</label>
-										</p>
-
-										<p>
-											{{#if equals pub_status '4' }}
-											<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4" checked />
-											{{else}}
-											<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4"/>
-											{{/if}}
-											<label for="radio_ppublish-{{_id}}">Published</label>
-										</p>
-									</div>
-								</div>
-							</form>
-						</div></div>
+					</form>
+				</div></div>
 					</li>
 				{{/each}}
 			</ul>
 		</div>
 	</div>
 	{{/if}}
-	<div class="row">
-		<div class="col s12">
-			<a class="waves-effect waves-light btn" href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a>
-		</div>
-	</div>
 </template>
+
 
 <template name="AdminDataSubmissionsPast">
 	{{>AdminHeader header="Past Admin Data Submissions"}}
+	<a href="{{pathFor 'AdminDataSubmissions'}}">New Submission</a>
 	<div class="row">
 		<div class="col s12">
 			<table>

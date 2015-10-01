@@ -294,8 +294,11 @@ nav{
 /*
 FORMS
 */
+.loading-img{
+	width: 100px;
+	margin:0 auto;
+}
 .saving{
-	background: $orange;
 	padding: $pad-lg;
 }
 .success{

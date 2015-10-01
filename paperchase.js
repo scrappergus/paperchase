@@ -79,7 +79,7 @@ Router.route('/xml-cite-set/:_filename',{
         // console.log(filePath);
         var fs = Meteor.npmRequire('fs');
         var data = fs.readFileSync(filePath);
-        var headers = {'Content-type': 'application/xml'};
+        var headers = {'Content-type': 'application/xml','Content-Disposition': 'attachment'};
         this.response.writeHead(200, headers);
         this.response.write(data);
         this.response.end();

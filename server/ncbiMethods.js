@@ -61,17 +61,21 @@ Meteor.methods({
 				console.log('ERROR - pubMedCiteCheck');
 				console.log(error);
 			}else{
-				Meteor.http.get(url + result.headers.location, function(e,r){
+				var goToUrl = url + result.headers.location;
+				Meteor.http.get(goToUrl, function(e,r){
 					if(e){
-						console.log('ERROR - pubMedCiteCheck follow location');
+						console.log('pubMedCiteCheck get: ERROR - pubMedCiteCheck follow location');
 						console.log(e);
+						throw new Meteor.Error('pubMedCiteCheck get: COULD NOT follow location', result.headers.location);
 					}else{
 						var validXml = r.content.indexOf('Your document is valid');
 						if(validXml != -1){
+							console.log('valid');
 							fut['return'](true);
 						}else{
-							// fut['return'](false);
-							throw new Meteor.Error('Article Set Failed Validation', result.headers.location);
+							console.log('NOT valid');
+							fut['return'](false);
+							throw new Meteor.Error('pubMedCiteCheck get: ERROR - Article Set Failed Validation', result.headers.location);
 						}
 					}
 				})
