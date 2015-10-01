@@ -53,6 +53,10 @@
 					{{#each article.submissions}}
 						<li>{{pubStatusAbbrev pub_status}}: {{formatDate created_date}}</li>
 					{{/each}}
+					{{#if article.submissions}}
+						{{else}}
+						<h4>No Records Found</h4>
+					{{/if}}
 				</div>
 			</div>
 		</div>
