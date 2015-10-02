@@ -168,31 +168,34 @@
 				<div class="col s12"><h3>Authors</h3></div>
 			</div>
 			<div class="row">
-				<div class="col s1">&nbsp;</div>
-				<div class="col s11 m3"><b>First Name</b></div>
-				<div class="col s11 m3"><b>Middle Name</b></div>
-				<div class="col s11 m3"><b>Last Name</b></div>
-				<div class="col s11 m2"><b>Affiliations</b></div>
+				<div class="col s12 m1">&nbsp;</div>
+				<div class="col s12 m3"><b>First Name</b></div>
+				<div class="col s12 m3"><b>Middle Name</b></div>
+				<div class="col s12 m3"><b>Last Name</b></div>
+				<div class="col s12 m2"><b>Affiliations</b></div>
 			</div>
 			<ul class="authors-list">
 				{{#each authors}}
 				<li class="row author-row">
-					<div class="input-field col s1">
+					<div class="input-field col s12 m1">
 						<i class="zmdi prefix zmdi-swap-vertical"></i>
 					</div>
-					<div class="input-field col s11 m3">
+					<div class="input-field col s12 m3">
 						<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
 					</div>
-					<div class="input-field col s11 m3">
+					<div class="input-field col s12 m3">
 						<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
 					</div>
-					<div class="input-field col s11 m3">
+					<div class="input-field col s12 m3">
 						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
 					</div>
-					<div class="input-field col s11 m2">
+					<div class="input-field col s12 m1">
 						{{#each affiliations_numbers}}
 							<span id="author-aff-{{.}}-{{_id}}" class="author-aff chip orange lighten-2" data-value="{{.}}">{{affiliationNumber .}}</span>
 						{{/each}}
+					</div>
+					<div class="input-field col s12 m1">
+						<i class="dropdown-button prefix add-author-aff zmdi zmdi-plus-circle right" data-activates="dropdown-aff-{{_id}}"></i>
 					</div>
 					<div class="hide">
 						{{#each arrayify ids}}
