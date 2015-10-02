@@ -1,5 +1,10 @@
 Template.AdminArticle.rendered = function(){
 	$('.authors-list').sortable();
+	$('.affiliations-list').sortable({
+		update: function( event, ui ) {
+			Meteor.adminArticle.updateAffiliationsOrder();
+		}
+	});
 }
 Template.adminArticleXmlIntake.rendered = function(){
     Session.set('fileNameXML','');
