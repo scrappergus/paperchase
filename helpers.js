@@ -135,6 +135,11 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
+	Template.AdminArticle.helpers({
+		article : function(){
+			return Session.get('article');
+		}
+	});
 	Template.AdminArticlesList.helpers({
 		settings: function(){
 			return {

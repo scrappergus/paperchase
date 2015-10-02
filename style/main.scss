@@ -43,6 +43,11 @@ strong {
  font-weight: bold;
 }
 
+.red-type{
+	color: $red;
+}
+
+/*containers*/
 .box{
 	margin: $margin-lg 0;
 	padding: $pad-md $pad-lg;
@@ -280,6 +285,9 @@ BUTTONS
 .kw{
 	font-size: 0.8rem;
 }
+.close-icon{
+	font-size: $font-lg;
+}
 
 
 /*
@@ -296,7 +304,7 @@ FORMS
 */
 .loading-img{
 	width: 100px;
-	margin:0 auto;
+	margin: 0 auto;
 }
 .saving{
 	padding: $pad-lg;

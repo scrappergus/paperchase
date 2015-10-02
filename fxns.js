@@ -53,6 +53,23 @@ Meteor.admin = {
 	}
 }
 
+Meteor.adminArticle = {
+	getAffiliations: function(){
+		var affiliations = [];
+		$('.article-affiliations').each(function(idx,obj){
+			affiliations.push($(this).val());
+		});
+		return affiliations;
+	},
+	updateAffiliationsOrder: function(){
+		var article = Session.get('article');
+		article.affiliations = Meteor.adminArticle.getAffiliations();
+		// console.log('article');console.log(article);
+		//the affiliation number is based on index in array. updating the order will update the affiliations number
+		Session.set('article',article);
+	}
+}
+
 Meteor.dataSubmissions = {
 	getPiiList: function(){
 		var piiList = [];

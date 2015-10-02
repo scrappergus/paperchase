@@ -61,7 +61,7 @@
 			</div>
 		</div>
 	</div>
-	{{>AdminArticleForm}}
+	{{>AdminArticleForm article=article}}
 </template>
 <template name="adminArticleData">
 	{{#with article}}
@@ -191,7 +191,7 @@
 					</div>
 					<div class="input-field col s11 m2">
 						{{#each affiliation_numbers}}
-							<span class="chip orange lighten-2">{{.}}</span>
+							<span id="author-aff-{{.}}-{{_id}}" class="author-aff chip orange lighten-2" data-value="{{.}}">{{.}}</span>
 						{{/each}}
 					</div>
 					<div class="hide">
@@ -208,24 +208,30 @@
 		<section class="box grey lighten-4">
 			<div class="row">
 				<div class="col s12"><h3>Affiliations</h3></div>
+				<button id="add-affiliation" class="submit btn waves-effect waves-light save-btn" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i> Affiliation</button>
+
 			</div>
-			{{#each arrayify affiliations}}
-			<div class="row">
-				<div class="input-field col s1">
-					<span class="chip orange lighten-2 right">
-						{{affiliationNumber name}}
-					</span>
-				</div>
-				<div class="input-field col s10">
-					<input type="text" id="affiliation-{{affiliationNumber name}}" value="{{value}}"/>
-				</div>
-				<div class="input-field col s1">
-					<span class="chip red lighten-2 right">
-						<i id="close-success-msg" class="zmdi zmdi-close-circle-o"></i>
-					</span>
-				</div>
-			</div>
-			{{/each}}
+			<ul class="affiliations-list">
+				{{#each arrayify affiliations}}
+				<li class="row">
+					<div class="input-field col s1">
+						<i class="zmdi prefix zmdi-swap-vertical"></i>
+					</div>
+					<div class="input-field col s1">
+						<span class="chip orange lighten-2 right">
+							{{affiliationNumber name}}
+						</span>
+					</div>
+					<div class="input-field col s9">
+						<input class="article-affiliations" type="text" id="affiliation-{{affiliationNumber name}}" value="{{value}}"/>
+					</div>
+					<div class="input-field col s1">
+						<i data-value="{{name}}" class="remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+
 		</section>
 
 		<section class="box grey lighten-4">
