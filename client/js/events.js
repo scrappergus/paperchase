@@ -152,17 +152,13 @@ Template.AdminArticle.events({
 	},
 	'click .remove-affiliation': function(e,t){
 		var affiliationNumber = $(e.target).data('value');
-
 		//remove affiliation from authors in article doc
 		var article = Session.get('article');
 		for(var i = 0 ; i < article.authors.length ; i++){
-			if(article.authors[i]['affiliation_numbers'][parseInt(affiliationNumber + 1)] != -1){
-				var affName =article['affiliations'][affiliationNumber];
-				var numIndex = article.authors[i]['affiliation_numbers'].indexOf(parseInt(affiliationNumber + 1));
-
-				article.authors[i]['affiliation_numbers'].splice(numIndex,1);
-				//author affiliation numbers aren't 0 based.
-				article.authors[i]['affiliations'].splice(article.authors[i]['affiliations'].indexOf(affName),1);
+			if(article.authors[i]['affiliations_numbers'] && article.authors[i]['affiliations_numbers'][parseInt(affiliationNumber)] != -1){
+				var numIndex = article.authors[i]['affiliations_numbers'].indexOf(parseInt(affiliationNumber));
+				if(numIndex != -1)
+				article.authors[i]['affiliations_numbers'].splice(numIndex,1);
 			}
 		}
 
