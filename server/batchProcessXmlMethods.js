@@ -239,14 +239,14 @@ Meteor.methods({
 		}
 	},
 	updateAllArticlesPubStatusNumber: function(){
-		// console.log('--updateAllArticlesPubStatusNumber');
+		console.log('--updateAllArticlesPubStatusNumber');
 		var articlesList = articles.find().fetch();
 
 		for(var i = 0 ; i < articlesList.length ; i++){
 			var pmid = articlesList[i]['ids']['pmid'];
-			Meteor.call('getPubStatusNumberFromPmid',pmid, function(error,result){
+			Meteor.call('getPubStatusFromPmid',pmid, function(error,result){
 				if(error){
-					console.log('ERROR - getPubStatusNumberFromPmid');
+					console.log('ERROR - getPubStatusFromPmid');
 					console.log(error);
 				}else{
 					var update = {
