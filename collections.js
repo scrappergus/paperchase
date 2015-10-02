@@ -63,14 +63,13 @@ recommendations.allow({
 });
 
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
-  console.log('..before update')
+  // console.log('..before update')
   //add affiliation number to author
   //might need to adjust this as article updates get added
   if(fieldNames.indexOf('authors') != -1){
     var authorsList = modifier['$set']['authors'];
     var affiliationsList = doc['affiliations'];
-    console.log('affiliationsList');
-    console.log(affiliationsList);
+    // console.log('affiliationsList');console.log(affiliationsList);
     for(var i = 0 ; i < authorsList.length ; i++){
 
       if(authorsList[i]['affiliations_names'] && affiliationsList){
