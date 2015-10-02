@@ -166,10 +166,14 @@ Template.AdminArticle.events({
 		article['affiliations'].splice(article['affiliations'].indexOf(affiliationNumber), 1);
 		Session.set('article',article);
 	},
+	'click .add-author-aff': function(e,t){
+		e.preventDefault();
+		console.log('clicked add author auth');
+	},
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
-		var mongoId = t.data.article._id;
+		var mongoId = Session.get('article')['_id'];
 		var articleUpdateObj = {};
 
 
@@ -187,7 +191,7 @@ Template.AdminArticle.events({
 			articleUpdateObj['advance'] = false;
 		}
 		//affiliations
-		var affiliations = Meteor.articleAdmin.getAffiliations();
+		var affiliations = Meteor.adminArticle.getAffiliations();
 
 		// console.log('affiliations');console.log(affiliations);
 
@@ -199,7 +203,6 @@ Template.AdminArticle.events({
 				'name_middle' : $(this).find('input[name="name_middle"]').val(),
 				'name_last' : $(this).find('input[name="name_last"]').val(),
 				'ids' : {},
-				'affiliations' : [],
 				'affiliation_numbers' : []
 			};
 			var authorIds = $(this).find('.author-id').each(function(i,o){
@@ -209,11 +212,11 @@ Template.AdminArticle.events({
 			var affs = $(this).find('.author-aff').each(function(i,o){
 				var affNumber = $(this).attr('data-value');
 				author['affiliation_numbers'].push(parseInt(affNumber));
-				author['affiliations'].push(affiliations[parseInt(affNumber - 1)]);
 			});
 		});
 		// console.log('authors');console.log(authors);
-
+		articleUpdateObj['authors'] = authors;
+		articleUpdateObj['affiliations'] = affiliations;
 		//save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 			if(error){
