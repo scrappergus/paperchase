@@ -114,10 +114,11 @@ Meteor.methods({
 						xmlString += article.authors[a]['name_last'];
 						xmlString += '</LastName>';
 					}
-					if(article.authors[a]['affiliations']){
+					if(article.authors[a]['affiliations_numbers']){
 						xmlString += '<Affiliation>';
-						for(var aff = 0 ; aff < article.authors[a]['affiliations'].length ; aff++){
-							var authorAff = article.authors[a]['affiliations'][aff];
+						for(var aff = 0 ; aff < article.authors[a]['affiliations_numbers'].length ; aff++){
+							var authorAffNumber = article.authors[a]['affiliations_numbers'][aff];
+							var authorAff = article.affiliations[authorAffNumber];
 							authorAff = Meteor.call('xmlStringFix',authorAff);
 							xmlString += authorAff;
 						}

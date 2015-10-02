@@ -63,20 +63,26 @@ recommendations.allow({
 });
 
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
+  console.log('..before update')
   //add affiliation number to author
   //might need to adjust this as article updates get added
   if(fieldNames.indexOf('authors') != -1){
     var authorsList = modifier['$set']['authors'];
-    var affiliationsList
-    affiliationsList = doc['affiliations'];
-
+    var affiliationsList = doc['affiliations'];
+    console.log('affiliationsList');
+    console.log(affiliationsList);
     for(var i = 0 ; i < authorsList.length ; i++){
-      if(authorsList[i]['affiliations'] && affiliationsList){
-        authorsList[i]['affiliation_numbers'] = [];
-        for(var a = 0 ; a < authorsList[i]['affiliations'].length ; a++){
-          var affiliationIndex = affiliationsList.indexOf(authorsList[i]['affiliations'][a]);
-          authorsList[i]['affiliation_numbers'].push(parseInt(affiliationIndex+1));
+
+      if(authorsList[i]['affiliations_names'] && affiliationsList){
+        //article update from a batch import of author affiliations
+        //affiliations_names is only used to find index of affiliation after batch import
+        authorsList[i]['affiliations_numbers'] = [];
+        for(var a = 0 ; a < authorsList[i]['affiliations_names'].length ; a++){
+          var affiliationIndex = affiliationsList.indexOf(authorsList[i]['affiliations_names'][a]);
+          authorsList[i]['affiliations_numbers'].push(parseInt(affiliationIndex));
         }
+      }else if(authorsList[i]['affiliations_numbers']){
+
       }
     }
   }

@@ -156,16 +156,16 @@ Meteor.methods({
 												//TODO: better way of matching authors
 												if(authorsListDb[a]['name_first'].replace('.','').replace(' ','').toLowerCase() === authorNameFirst.replace('.','').replace(' ','').toLowerCase() && authorsListDb[a]['name_last'].replace('.','').replace(' ','').toLowerCase() === authorNameLast.replace('.','').replace(' ','').toLowerCase() ){
 													//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
-													if(!authorsListDb[a]['affiliations']){
-														authorsListDb[a]['affiliations'] = [];
+													if(!authorsListDb[a]['affiliations_names']){
+														authorsListDb[a]['affiliations_names'] = [];
 													}
 
 													authorMongoId = authorsListDb[a]['ids']['mongo_id']; //for testing if we found a match and updating author doc
 
 													//update the authorsList (from the article doc)
 													//add this affiliaton string to the array of affiliations for the author object, but only if not already present
-													if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
-														authorsListDb[a]['affiliations'].push(authorAffiliation);
+													if(authorsListDb[a]['affiliations_names'].indexOf(authorAffiliation) === -1){
+														authorsListDb[a]['affiliations_names'].push(authorAffiliation);
 													}
 
 												}
@@ -177,16 +177,16 @@ Meteor.methods({
 													//TODO: better way of matching authors
 													if(authorsListDb[a]['name_last'] === authorNameLast ){
 														//we found a match. the first and last name in the returned xml from pubmed and the name in the db are the same.
-														if(!authorsListDb[a]['affiliations']){
-															authorsListDb[a]['affiliations'] = [];
+														if(!authorsListDb[a]['affiliations_names']){
+															authorsListDb[a]['affiliations_names'] = [];
 														}
 
 														authorMongoId = authorsListDb[a]['ids']['mongo_id']; //for testing if we found a match and updating author doc
 
 														//update the authorsList (from the article doc)
 														//add this affiliaton string to the array of affiliations for the author object, but only if not already present
-														if(authorsListDb[a]['affiliations'].indexOf(authorAffiliation) === -1){
-															authorsListDb[a]['affiliations'].push(authorAffiliation);
+														if(authorsListDb[a]['affiliations_names'].indexOf(authorAffiliation) === -1){
+															authorsListDb[a]['affiliations_names'].push(authorAffiliation);
 														}
 
 													}
