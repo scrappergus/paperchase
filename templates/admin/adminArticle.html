@@ -137,13 +137,15 @@
 				{{>successMessage what='Article'}}
 			</div>
 		</div>
-		<section class="box grey lighten-4">
+		<section>
 			<div class="row">
-				<h2>{{{title}}}</h2>
+				<div class="col s12">
+					<h2>{{{title}}}</h2>
+				</div>
 			</div>
 		</section>
 
-		<section class="box grey lighten-4">
+		<section>
 				<div class="row">
 					<div class="col s12">
 						<h3>Settings</h3>
@@ -163,7 +165,7 @@
 				</div>
 		</section>
 
-		<section class="box grey lighten-4">
+		<section>
 			<div class="row">
 				<div class="col s12"><h3>Authors</h3></div>
 			</div>
@@ -176,7 +178,7 @@
 			</div>
 			<ul class="authors-list">
 				{{#each authors}}
-				<li class="row author-row">
+				<li class="row author-row grey lighten-4">
 					<div class="input-field col s12 m1">
 						<i class="zmdi prefix zmdi-swap-vertical"></i>
 					</div>
@@ -189,13 +191,13 @@
 					<div class="input-field col s12 m3">
 						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
 					</div>
-					<div class="input-field col s12 m1">
+					<div class="col s12 m2">
 						{{#each affiliations_numbers}}
-							<span id="author-aff-{{.}}-{{_id}}" class="author-aff chip orange lighten-2" data-value="{{.}}">{{affiliationNumber .}}</span>
+							<p class="pad-md">
+								<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{index}}-{{author_mongo_id}}" checked="{{checked}}" />
+								<label for="affiliation-{{index}}-{{author_mongo_id}}">{{affiliationNumber index}}</label>
+							</p>
 						{{/each}}
-					</div>
-					<div class="input-field col s12 m1">
-						<i class="dropdown-button prefix add-author-aff zmdi zmdi-plus-circle right" data-activates="dropdown-aff-{{_id}}"></i>
 					</div>
 					<div class="hide">
 						{{#each arrayify ids}}
@@ -208,15 +210,16 @@
 
 		</section>
 
-		<section class="box grey lighten-4">
+		<section>
 			<div class="row">
-				<div class="col s12"><h3>Affiliations</h3></div>
-				<button id="add-affiliation" class="submit btn waves-effect waves-light save-btn" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i> Affiliation</button>
-
+				<div class="col s12">
+					<h3>Affiliations</h3>
+					<button id="add-affiliation" class="submit btn waves-effect waves-light save-btn" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i> Affiliation</button>
+				</div>
 			</div>
 			<ul class="affiliations-list">
 				{{#each arrayify affiliations}}
-				<li class="row">
+				<li class="row grey lighten-4">
 					<div class="input-field col s1">
 						<i class="zmdi prefix zmdi-swap-vertical"></i>
 					</div>
@@ -226,10 +229,10 @@
 						</span>
 					</div>
 					<div class="input-field col s9">
-						<input class="article-affiliations" type="text" id="affiliation-{{affiliationNumber name}}" value="{{value}}"/>
+						<input class="article-affiliation" type="text" id="affiliation-{{affiliationNumber name}}" value="{{value}}"/>
 					</div>
 					<div class="input-field col s1">
-						<i data-value="{{name}}" class="remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
+						<i data-value="{{name}}" class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
 				</li>
 				{{/each}}
@@ -237,7 +240,7 @@
 
 		</section>
 
-		<section class="box grey lighten-4">
+		<section>
 			<div class="row">
 				<div class="col s12">
 					<h3>Dates</h3>
@@ -250,7 +253,7 @@
 			</div>
 		</section>
 
-		<section class="box grey lighten-4">
+		<section>
 			<div class="row">
 				<div class="col s12">
 					<h3>History</h3>

@@ -155,10 +155,13 @@ Template.AdminArticle.events({
 		//remove affiliation from authors in article doc
 		var article = Session.get('article');
 		for(var i = 0 ; i < article.authors.length ; i++){
-			if(article.authors[i]['affiliations_numbers'] && article.authors[i]['affiliations_numbers'][parseInt(affiliationNumber)] != -1){
-				var numIndex = article.authors[i]['affiliations_numbers'].indexOf(parseInt(affiliationNumber));
-				if(numIndex != -1)
-				article.authors[i]['affiliations_numbers'].splice(numIndex,1);
+			if(article.authors[i]['affiliations_numbers']){
+				var authorAffiliations = article.authors[i]['affiliations_numbers'];
+				for(var a = 0 ; a < authorAffiliations.length ; a++){
+					if(authorAffiliations[a]['index'] === parseInt(affiliationNumber)){
+						article.authors[i]['affiliations_numbers'].splice(a,1);
+					}
+				}
 			}
 		}
 
@@ -166,16 +169,11 @@ Template.AdminArticle.events({
 		article['affiliations'].splice(article['affiliations'].indexOf(affiliationNumber), 1);
 		Session.set('article',article);
 	},
-	'click .add-author-aff': function(e,t){
-		e.preventDefault();
-		console.log('clicked add author auth');
-	},
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
 		var mongoId = Session.get('article')['_id'];
 		var articleUpdateObj = {};
-
 
 		//feature
 		if($('#feature-checkbox').prop('checked')){
@@ -193,8 +191,6 @@ Template.AdminArticle.events({
 		//affiliations
 		var affiliations = Meteor.adminArticle.getAffiliations();
 
-		// console.log('affiliations');console.log(affiliations);
-
 		//authors
 		var authors = [];
 		$('.author-row').each(function(idx,obj){
@@ -203,18 +199,18 @@ Template.AdminArticle.events({
 				'name_middle' : $(this).find('input[name="name_middle"]').val(),
 				'name_last' : $(this).find('input[name="name_last"]').val(),
 				'ids' : {},
-				'affiliation_numbers' : []
+				'affiliations_numbers' : []
 			};
 			var authorIds = $(this).find('.author-id').each(function(i,o){
 				author['ids'][$(o).attr('name')] = $(o).val();
 			});
-			authors.push(author);
-			var affs = $(this).find('.author-aff').each(function(i,o){
-				var affNumber = $(this).attr('data-value');
-				author['affiliation_numbers'].push(parseInt(affNumber));
+			var affs = $(this).find('.author-affiliation').each(function(i,o){
+				if($(o).prop('checked')){
+					author['affiliations_numbers'].push(parseInt(i));
+				}
 			});
+			authors.push(author);
 		});
-		// console.log('authors');console.log(authors);
 		articleUpdateObj['authors'] = authors;
 		articleUpdateObj['affiliations'] = affiliations;
 		//save to db
