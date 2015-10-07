@@ -65,11 +65,11 @@
 	{{#if articles}}
 	<div class="row btn-group grey lighten-3">
 		<div class="col s4">
-			<button class="waves-effect waves-light btn submit">
-				Send
+			<button class="waves-effect waves-light btn" id="register-doi-set">
+				Register DOI
 			</button>
 		</div>
-		<div class="col s4">
+		<div class="col s4 center-align">
 			<button class="waves-effect waves-light btn" id="download-set-xml">
 				Download XML
 			</button>
@@ -78,6 +78,20 @@
 			<button class="waves-effect waves-light btn right clear">clear</button>
 		</div>
 	</div>
+	{{#if missingPii}}
+	{{>SendingSuccessMessage what="DOI registered"}}
+	<div class="row">
+		<div class="col s12">
+			<h3>Missing PII</h3>
+			<h4>Cannot register</h4>
+			<ul>
+			{{#each missingPii}}
+				<li>{{{.}}}</li>
+			{{/each}}
+			</ul>
+		</div>
+	</div>
+	{{/if}}
 	<div class="row">
 		<div class="col s12">
 			<h4>Article Count: {{countItems articles}}</h4>

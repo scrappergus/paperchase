@@ -191,6 +191,9 @@ if (Meteor.isClient) {
 		},
 		error: function(){
 			return Session.get('error');
+		},
+		missingPii: function(){
+			return Session.get('missingPii');
 		}
 	});
 	Template.AdminDataSubmissionsPast.helpers({

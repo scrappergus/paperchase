@@ -1,4 +1,16 @@
 Meteor.methods({
+	registerDoiSet: function(piiList){
+		piiList = piiList.substring(0, piiList.length - 1); //remove trailing comma
+		var requestURL = 'http://doi.oncotarget.com/submit_pii/aging/' + piiList;
+		var res;
+		res = Meteor.http.get(requestURL + '?test=true');
+		if(res && res.statusCode === 200){
+			return true;
+		}else{
+			console.log(res);
+			throw new Meteor.Error('Cannot register set');
+		}
+	},
 	getArticlesForDataSubmission: function(type, parameters){
 		// console.log('--getArticlesForDataSubmission');
 		// console.log(parameters);

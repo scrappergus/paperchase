@@ -157,6 +157,7 @@ if (Meteor.isClient) {
     Session.setDefault('article',null);
     Session.setDefault('article-id',null);
     Session.setDefault('affIndex',null);
+    Session.setDefault('missingPii',null);
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', {

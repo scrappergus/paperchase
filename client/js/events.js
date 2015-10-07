@@ -341,6 +341,35 @@ Template.AdminDataSubmissions.events({
 	'click #download-set-xml': function(e){
 		e.preventDefault();
 		Meteor.dataSubmissions.validateXmlSet();
+	},
+	'click #register-doi-set': function(e){
+		e.preventDefault();
+		var submissionList = Session.get('submission_list');
+		var piiList = '';
+		var missingPiiList = [];
+
+		for(var i = 0 ; i < submissionList.length ; i++){
+			if(submissionList[i]['ids']['pii']){
+				piiList += submissionList[i]['ids']['pii'] + ',';
+			}else{
+				missingPiiList.push(submissionList[i]['title']);
+			}
+		}
+
+		if(missingPiiList.length > 0){
+			Session.set('missingPii',missingPiiList);
+		}
+		if(piiList.length > 0){
+			Meteor.call('registerDoiSet', piiList, function(error,result){
+				if(error){
+					console.log('ERROR - registerDoiSet');
+					console.log(error);
+				}
+				if(result){
+					Meteor.formActions.success();
+				}
+			});
+		}
 	}
 })
 
