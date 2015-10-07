@@ -153,13 +153,13 @@
 				</div>
 				<div class="row">
 					<div class="col s12">
-						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" {{feature}}/>
+						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{#if feature}}checked{{/if}}"/>
 						<label for="feature-checkbox">Feature</label>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col s12">
-						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox" {{advance}}/>
+						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{#if feature}}advance{{/if}}"/>
 						<label for="advance-checkbox">Advance</label>
 					</div>
 				</div>
@@ -192,10 +192,10 @@
 						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
 					</div>
 					<div class="col s12 m2">
-						{{#each affiliations_numbers}}
+						{{#each affiliations_list}}
 							<p class="pad-md">
-								<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{index}}-{{author_mongo_id}}" checked="{{checked}}" />
-								<label for="affiliation-{{index}}-{{author_mongo_id}}">{{affiliationNumber index}}</label>
+								<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
+								<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
 							</p>
 						{{/each}}
 					</div>
@@ -217,26 +217,21 @@
 					<button id="add-affiliation" class="submit btn waves-effect waves-light save-btn" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i> Affiliation</button>
 				</div>
 			</div>
-			<ul class="affiliations-list">
+			<ol class="affiliations-list">
 				{{#each arrayify affiliations}}
-				<li class="row grey lighten-4">
+				<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4">
 					<div class="input-field col s1">
 						<i class="zmdi prefix zmdi-swap-vertical"></i>
 					</div>
-					<div class="input-field col s1">
-						<span class="chip orange lighten-2 right">
-							{{affiliationNumber name}}
-						</span>
-					</div>
-					<div class="input-field col s9">
-						<input class="article-affiliation" type="text" id="affiliation-{{affiliationNumber name}}" value="{{value}}"/>
+					<div class="input-field col s10">
+						<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
 					</div>
 					<div class="input-field col s1">
-						<i data-value="{{name}}" class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
+						<i data-value="{{@index}}" class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
 				</li>
 				{{/each}}
-			</ul>
+			</ol>
 
 		</section>
 

@@ -143,30 +143,80 @@ Template.adminIssue.events({
 ARTICLE
 */
 Template.AdminArticle.events({
+	'change .author-affiliation':function(e,t){
+		var checked = false;
+			authorIndex = $(e.target).closest('li').index(),
+			checkboxSettings = $(e.target).attr('id').split('-'),
+			affIndex = checkboxSettings[1],
+			article = Session.get('article');
+		if($(e.target).prop('checked')){
+			checked = true;
+		}
+		article.authors[authorIndex]['affiliations_list'][affIndex]['checked'] = checked;
+
+		Session.set('article',article);
+	},
 	'click #add-affiliation': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
-		//update template variable with empty string
-		article['affiliations'].push('');
+		// first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
+		article['affiliations'] = Meteor.adminArticle.getAffiliations();
+		article['affiliations'].push('NEW AFFILIATION');
+
+		// add object to all author affiliations list
+		for(var i = 0 ; i < article['authors'].length ; i++){
+			var author_mongo_id = article['authors'][i]['ids']['mongo_id'];
+			article['authors'][i]['affiliations_list'].push({'checked':false,'author_mongo_id':author_mongo_id});
+		}
+		// console.log(article['authors'][parseInt(article['authors'].length - 1)]['affiliations_list']);
 		Session.set('article',article);
 	},
 	'click .remove-affiliation': function(e,t){
-		var affiliationNumber = $(e.target).data('value');
-		//remove affiliation from authors in article doc
+		// console.log('------------------------- remove-affiliation');
+		e.preventDefault();
 		var article = Session.get('article');
+		var affiliationIndex = $(e.target).closest('li').index();
+
+		// first keep a record of names before index change, authorAffiliationsString
+		// next remove the affiliation from each author,
+		// then remove from affiliation list of article
+
+		// console.log('remove = '+affiliationIndex);
 		for(var i = 0 ; i < article.authors.length ; i++){
-			if(article.authors[i]['affiliations_numbers']){
-				var authorAffiliations = article.authors[i]['affiliations_numbers'];
-				for(var a = 0 ; a < authorAffiliations.length ; a++){
-					if(authorAffiliations[a]['index'] === parseInt(affiliationNumber)){
-						article.authors[i]['affiliations_numbers'].splice(a,1);
-					}
+			var authorAffiliationsStrings = [];
+			var authorAffList = article['authors'][i]['affiliations_list'];
+
+			for(var a = 0 ; a < authorAffList.length ; a++){
+				var newAuthAffiliations = article['affiliations'].splice(affiliationIndex, 1);
+				//save checked
+				if(authorAffList[a]['checked']){
+					authorAffiliationsStrings.push(article['affiliations'][a]);
+				}
+
+				//resets
+				authorAffList[a]['index'] = a;
+				authorAffList[a]['checked'] = false;
+
+				//remove if this is the one we are looking for
+				if(a === parseInt(affiliationIndex)){
+					authorAffList.splice(a,1);
+				}
+
+				//update data object
+				article.authors[i]['affiliations_list'] = authorAffList;
+			}
+
+			// add checked back in
+			for(var s = 0 ; s < authorAffiliationsStrings.length ; s++){
+				var affString = authorAffiliationsStrings[s];
+				var affIndex = article['affiliations'].indexOf(affString);
+				if(affIndex != affiliationIndex && article['authors'][i]['affiliations_list'][affIndex]){
+					article['authors'][i]['affiliations_list'][affIndex]['checked'] = true;
+					//else, this was the affiliation that was removed
 				}
 			}
 		}
-
-		//remove affiliation from affiliations list in article doc
-		article['affiliations'].splice(article['affiliations'].indexOf(affiliationNumber), 1);
+		article['affiliations'].splice(affiliationIndex, 1);
 		Session.set('article',article);
 	},
 	'submit form': function(e,t){
@@ -204,7 +254,7 @@ Template.AdminArticle.events({
 			var authorIds = $(this).find('.author-id').each(function(i,o){
 				author['ids'][$(o).attr('name')] = $(o).val();
 			});
-			var affs = $(this).find('.author-affiliation').each(function(i,o){
+			$(this).find('.author-affiliation').each(function(i,o){
 				if($(o).prop('checked')){
 					author['affiliations_numbers'].push(parseInt(i));
 				}

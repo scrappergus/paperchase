@@ -155,6 +155,8 @@ if (Meteor.isClient) {
     Session.setDefault('errorMessages',null);
     Session.setDefault('articleData',null);
     Session.setDefault('article',null);
+    Session.setDefault('article-id',null);
+    Session.setDefault('affIndex',null);
     // Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 
     Router.route('/', {
@@ -559,21 +561,7 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                var id = this.params._id;
-                var article = articles.findOne({'_id': id});
-                var feature = '';
-                var advance = '';
-                if(article.feature){
-                    article.feature = 'checked';
-                }else{
-                    delete article.feature;
-                }
-                if(article.advance){
-                    article.advance = 'checked';
-                }else{
-                    delete article.advance;
-                }
-                Session.set('article',article);
+                Session.set('article-id',this.params._id);
             }
         }
     })

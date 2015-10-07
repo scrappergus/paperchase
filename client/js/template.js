@@ -1,9 +1,13 @@
 Template.AdminArticle.rendered = function(){
 	$('.authors-list').sortable();
 	$('.affiliations-list').sortable({
+		start: function( event, ui ) {
+			Session.set('affIndex',ui.item.index());
+		},
 		update: function( event, ui ) {
-			Meteor.adminArticle.updateAffiliationsOrder();
-		}
+			var newIndex = ui.item.index();
+			Meteor.adminArticle.updateAffiliationsOrder(newIndex);
+		},
 	});
 }
 Template.adminArticleXmlIntake.rendered = function(){
@@ -25,5 +29,3 @@ Template.AdminDataSubmissionsPast.rendered = function(){
 Template.Subscribe.rendered = function(){
 	$('select').material_select();
 }
-
-

@@ -137,29 +137,7 @@ if (Meteor.isClient) {
 	*/
 	Template.AdminArticle.helpers({
 		article : function(){
-			var article =  Session.get('article');
-			var affs = article.affiliations;
-			var authorsList = article.authors;
-			//add all affiliations to author object, so that author can aff new added easily
-			for(var i=0 ; i < authorsList.length; i++){
-				var current = authorsList[i]['affiliations_numbers'];
-				var authorAffiliationsEditable = [];
-				for(var a = 0 ; a < affs.length ; a++){
-					var authorAff = {
-						index: a,
-						author_mongo_id: authorsList[i]['ids']['mongo_id']
-					}
-					if(current && current.indexOf(a) != -1){
-						//if author already has affiliation
-						authorAff['checked'] = true;
-					}else{
-						authorAff['checked'] = false;
-					}
-					authorAffiliationsEditable.push(authorAff);
-				}
-				authorsList[i]['affiliations_numbers'] = authorAffiliationsEditable;
-			}
-			return article;
+			return Meteor.adminArticle.preProcessArticle();
 		}
 	});
 	Template.AdminArticlesList.helpers({

@@ -61,11 +61,48 @@ Meteor.adminArticle = {
 		});
 		return affiliations;
 	},
-	updateAffiliationsOrder: function(){
+	updateAffiliationsOrder: function(newIndex){
+		var originalIndex = Session.get('affIndex');
 		var article = Session.get('article');
-		article.affiliations = Meteor.adminArticle.getAffiliations();
-		//the affiliation number is based on index in array. updating the order will update the affiliations number
+
+		// update the order of affiliations in the author objects
+		for(var a = 0; a < article.authors.length ; a++){
+			var affs = article['authors'][a]['affiliations_list'];
+			var movedAff = affs[originalIndex];
+			affs.splice(originalIndex,1);
+			affs.splice(newIndex, 0, movedAff);
+			article['authors'][a]['affiliations_list'] = affs;
+		}
+
 		Session.set('article',article);
+	},
+	preProcessArticle: function(){
+		var article = Session.get('article');
+		if(!article){
+			article = articles.findOne({'_id': Session.get('article-id')});
+			var affs = article.affiliations;
+			var authorsList = article.authors;
+			// add ALL affiliations for article to author object, for checkbox input
+			for(var i=0 ; i < authorsList.length; i++){
+				var current = authorsList[i]['affiliations_numbers'];
+				var authorAffiliationsEditable = [];
+				for(var a = 0 ; a < affs.length ; a++){
+					var authorAff = {
+						author_mongo_id: authorsList[i]['ids']['mongo_id']
+					}
+					if(current && current.indexOf(a) != -1){
+						// author already has affiliation
+						authorAff['checked'] = true;
+					}else{
+						authorAff['checked'] = false;
+					}
+					authorAffiliationsEditable.push(authorAff);
+				}
+				authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
+			}
+			Session.set('article',article);
+		}
+		return article;
 	}
 }
 
@@ -128,11 +165,11 @@ Meteor.article = {
 			var authorsList = article['authors'];
 			var affiliationsList = article['affiliations'];
 			for(var i = 0 ; i < authorsList.length ; i++){
-				if(article['authors'][i]['affiliations']){
-					article['authors'][i]['affiliation_numbers'] = [];
+				if(article['authors'][i]['affiliations_numbers']){
+					article['authors'][i]['affiliations_numbers'] = [];
 					var authorAffiliations = article['authors'][i]['affiliations'];
 					for(var a = 0 ; a < authorAffiliations.length ; a++){
-						article['authors'][i]['affiliation_numbers'].push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
+						article['authors'][i]['affiliations_numbers'].push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
 					}
 				}
 			}
@@ -181,7 +218,7 @@ Meteor.adminUser = {
 		user.emails[0] = {};
 		user.emails[0].address = $('#email').val();
 		user.roles =  Meteor.adminUser.getFormCheckBoxes();
-        user.subscribed = $('.sub-cb').is(':checked');
+		user.subscribed = $('.sub-cb').is(':checked');
 
 		return user;
 	},
