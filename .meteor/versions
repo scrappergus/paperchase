@@ -36,6 +36,7 @@ ecmascript-collections@0.1.6
 ejson@1.0.7
 email@1.0.7
 fastclick@1.0.7
+fortawesome:fontawesome@4.4.0
 fourseven:scss@3.2.0
 gadicohen:headers@0.0.30
 gandev:server-eval@0.6.6
@@ -120,6 +121,7 @@ spacebars@1.0.7
 spacebars-compiler@1.0.7
 srp@1.0.4
 standard-minifiers@1.0.0
+summernote:standalone@0.6.16
 templating@1.1.3
 templating-tools@1.0.0
 tomi:upload-jquery@2.1.8

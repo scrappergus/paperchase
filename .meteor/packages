@@ -44,3 +44,5 @@ reactive-var
 email
 aslagle:reactive-table
 linto:jquery-ui
+summernote:standalone
+fortawesome:fontawesome
