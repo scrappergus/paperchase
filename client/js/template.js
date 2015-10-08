@@ -1,4 +1,23 @@
 Template.AdminArticle.rendered = function(){
+	//title
+	$('.article-title').summernote({
+		onPaste: function(e){
+			e.preventDefault();
+			console.log('paste');
+			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+			document.execCommand('insertText', false, bufferText);
+		},
+		toolbar: [
+			['font', ['bold', 'italic', 'underline', 'clear']]
+		]
+	});
+
+	//dates
+	$('.datepicker').pickadate({
+		// format: 'YYYY/MM/DD'
+	});
+	//authors and affiliations
 	$('.authors-list').sortable();
 	$('.affiliations-list').sortable({
 		start: function( event, ui ) {

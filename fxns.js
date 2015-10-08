@@ -256,5 +256,8 @@ Meteor.formActions = {
 		$('.saving').addClass('hide');
 		$('.success').removeClass('hide');
 		$('.error').addClass('hide');
+	},
+	cleanWysiwyg: function(input){
+		return input.replace('<br>','').replace('<p>','').replace('</p>','');
 	}
 }

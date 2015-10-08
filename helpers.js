@@ -19,6 +19,9 @@ if (Meteor.isClient) {
 		month[11] = 'December';
 		return month[d.getMonth()];
 	});
+	Template.registerHelper('inputDate', function(date) {
+		return moment(date).format('YYYY/MM/DD');
+	});
 	Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MMMM D, YYYY');
 	});

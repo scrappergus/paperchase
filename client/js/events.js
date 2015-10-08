@@ -225,6 +225,11 @@ Template.AdminArticle.events({
 		var mongoId = Session.get('article')['_id'];
 		var articleUpdateObj = {};
 
+		//title
+		var articleTitle = $('.article-title').code();
+			articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
+		articleUpdateObj['title'] = articleTitle;
+
 		//feature
 		if($('#feature-checkbox').prop('checked')){
 			articleUpdateObj['feature'] = true;
@@ -238,6 +243,7 @@ Template.AdminArticle.events({
 		}else{
 			articleUpdateObj['advance'] = false;
 		}
+
 		//affiliations
 		var affiliations = Meteor.adminArticle.getAffiliations();
 
@@ -263,6 +269,7 @@ Template.AdminArticle.events({
 		});
 		articleUpdateObj['authors'] = authors;
 		articleUpdateObj['affiliations'] = affiliations;
+
 		//save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 			if(error){
@@ -364,6 +371,7 @@ Template.AdminDataSubmissions.events({
 				if(error){
 					console.log('ERROR - registerDoiSet');
 					console.log(error);
+					alert('Could not register DOIs');
 				}
 				if(result){
 					Meteor.formActions.success();

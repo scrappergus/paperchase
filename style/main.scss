@@ -82,6 +82,17 @@ strong {
 }
 
 /*
+MISC
+*/
+.outlined{
+	border: 1px solid $gray;
+}
+
+/*
+ADMIN
+*/
+
+/*
 VISITOR
 */
 .footer{
@@ -265,7 +276,7 @@ ADMIN
 BUTTONS
 */
 .btn-group{
-	padding: $pad-lg;
+	/*padding: $pad-lg;*/
 }
 .btn-primary{
 	background-color: $btn-color-primary;
@@ -305,6 +316,13 @@ nav{
 /*
 FORMS
 */
+fieldset{
+	margin-top: $margin-lg;
+	margin-bottom: $margin-lg;
+}
+.note-editor{
+	border: 0px!important;
+}
 .loading-img{
 	width: 100px;
 	margin: 0 auto;
