@@ -231,9 +231,9 @@ Template.AdminArticle.events({
 		Meteor.formActions.saving();
 
 		//scroll to top
-		$('html, body').animate({
-			scrollTop: 0
-		}, 500);
+		// $('html, body').animate({
+		// 	scrollTop: 0
+		// }, 500);
 
 		var mongoId = Session.get('article')['_id'];
 		var articleUpdateObj = {};

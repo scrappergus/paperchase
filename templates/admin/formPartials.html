@@ -12,6 +12,52 @@
 	</div>
 </template>
 
+<!--SAVE PARTIALS-->
+<template name="FixedSaveBtn">
+	<div id="fixed-save-btn" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+		<button class="submit btn-floating btn-large">
+			<div class="show-save">
+				<i class="zmdi zmdi-floppy"></i>
+			</div>
+			<div class="show-wait hide">
+				<div class="preloader-wrapper active" style="margin:4px;">
+					<div class="spinner-layer spinner-red-only">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
+						</div>
+						<div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</button>
+	</div>
+</template>
+<template name="SaveBtn">
+	<button id="save-btn" class="submit btn-large">
+			<div class="show-save">
+				<i class="zmdi zmdi-floppy"></i> Save
+			</div>
+			<div class="show-wait hide">
+				<div class="preloader-wrapper active" style="margin:4px;">
+					<div class="spinner-layer spinner-red-only">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
+						</div>
+						<div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</button>
+</template>
+
 <!--SUCCESS PARTIALS-->
 <template name="successMessage">
 	<div class="row success hide">
@@ -24,6 +70,13 @@
 	<div class="row success hide">
 		<div class="col m4 offset-m4 s12 green lighten-4 center-align">
 			<h5>{{what}} Sent <i id="close-success-msg" class="zmdi zmdi-close-circle-o right"></i></h5>
+		</div>
+	</div>
+</template>
+<template name="SuccessModal">
+	<div id="success-modal" class="modal">
+		<div class="modal-content center-align">
+			<h3>{{what}} Saved</h3>
 		</div>
 	</div>
 </template>

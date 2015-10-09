@@ -232,11 +232,23 @@ Meteor.adminUser = {
 
 Meteor.formActions = {
 	saving: function(){
+		// inline messages
 		$('.save-btn').addClass('hide');
 		$('.saving').removeClass('hide');
 		$('.success').addClass('hide');
 		$('.error').addClass('hide');
 		//sending and saving forms have shared class names
+
+		//fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').addClass('hide');
+			$('#fixed-save-btn').find('.show-wait').removeClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').addClass('hide');
+			$('#save-btn').find('.show-wait').removeClass('hide');
+		}
 
 		//reset
 		Session.set('errorMessages',null);
@@ -250,12 +262,41 @@ Meteor.formActions = {
 		$('.saving').addClass('hide');
 		$('.success').addClass('hide');
 		$('.error').removeClass('hide');
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
 	},
 	success: function(){
+		// inline messages
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
 		$('.success').removeClass('hide');
 		$('.error').addClass('hide');
+
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+
+		// success modals
+		if($('#success-modal').length){
+			$('#success-modal').openModal();
+		}
 	},
 	cleanWysiwyg: function(input){
 		return input.replace('<br>','').replace('<p>','').replace('</p>','');

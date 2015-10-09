@@ -28,6 +28,9 @@ Template.AdminArticle.rendered = function(){
 			Meteor.adminArticle.updateAffiliationsOrder(newIndex);
 		},
 	});
+
+	// saving success modal
+	$('#success-modal').leanModal();
 }
 Template.adminArticleXmlIntake.rendered = function(){
 	Session.set('fileNameXML','');
