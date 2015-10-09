@@ -178,6 +178,13 @@ Template.AdminArticle.events({
 			scrollTop: $('.affiliation-li:nth-child(' + childNumber + ')').find('input').position().top
 		}, 500);
 	},
+	'click .remove-author': function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		var authorIndex = $(e.target).closest('li').index();
+		article.authors.splice(authorIndex,1);
+		Session.set('article',article);
+	},
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');
 		e.preventDefault();

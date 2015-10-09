@@ -183,13 +183,16 @@
 								<div class="col s12 m3">
 									<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
 								</div>
-								<div class="col s12 m2">
+								<div class="col s12 m1">
 									{{#each affiliations_list}}
 										<p class="pad-md">
 											<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
 											<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
 										</p>
 									{{/each}}
+								</div>
+								<div class="col s12 m1">
+									<i class="prefix remove-author zmdi zmdi-close-circle red-type close-icon right"></i>
 								</div>
 								<div class="hide">
 									{{#each arrayify ids}}
@@ -224,9 +227,7 @@
 									<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
 									</div>
 								<div class="col s1">
-									<button data-value="{{@index}}" class="btn remove-affiliation btn-floating waves-effect waves-light red" alt="Add Affiliation">
-										<i class="prefix zmdi zmdi-close-circle red-type close-icon"></i>
-									</button>
+									<i class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon right"></i>
 								</div>
 							</div>
 						</li>
