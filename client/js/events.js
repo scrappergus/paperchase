@@ -154,6 +154,11 @@ Template.AdminArticle.events({
 		}
 		article.authors[authorIndex]['affiliations_list'][affIndex]['checked'] = checked;
 
+		//scroll to new affiliation <li>
+		$('html, body').animate({
+			scrollTop: $('.author-li:last-child').position().top
+		}, 500);
+
 		Session.set('article',article);
 	},
 	'click #add-author' : function(e,t){
@@ -195,9 +200,8 @@ Template.AdminArticle.events({
 		Session.set('article',article);
 
 		//scroll to new affiliation <li>
-		var childNumber = parseInt(article['affiliations'].length - 1);
 		$('html, body').animate({
-			scrollTop: $('.affiliation-li:nth-child(' + childNumber + ')').find('input').position().top
+			scrollTop: $('.affiliation-li:last-child').find('input').position().top
 		}, 500);
 	},
 	'click .remove-author': function(e,t){
@@ -259,37 +263,45 @@ Template.AdminArticle.events({
 		e.preventDefault();
 		Meteor.formActions.saving();
 
-		//scroll to top
-		// $('html, body').animate({
-		// 	scrollTop: 0
-		// }, 500);
-
 		var mongoId = Session.get('article')['_id'];
 		var articleUpdateObj = {};
 
-		//title
+		// title
 		var articleTitle = $('.article-title').code();
 			articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
 		articleUpdateObj['title'] = articleTitle;
 
-		//feature
+		// feature
 		if($('#feature-checkbox').prop('checked')){
 			articleUpdateObj['feature'] = true;
 		}else{
 			articleUpdateObj['feature'] = false;
 		}
 
-		//advance
+		// advance
 		if($('#advance-checkbox').prop('checked')){
 			articleUpdateObj['advance'] = true;
 		}else{
 			articleUpdateObj['advance'] = false;
 		}
 
-		//affiliations
+		// meta
+		articleUpdateObj['page_start'] = parseInt($('#page_start').val());
+		articleUpdateObj['page_end'] = parseInt($('#page_end').val());
+
+		// ids
+		articleUpdateObj['ids'] = {};
+		$('.article-id').each(function(i){
+			var k = $(this).attr('id'); //of the form, article-id-key
+				k = k.split('-');
+				k = k[2];
+			articleUpdateObj['ids'][k] = $(this).val();
+		});
+
+		// affiliations
 		var affiliations = Meteor.adminArticle.getAffiliations();
 
-		//authors
+		// authors
 		var authors = [];
 		$('.author-row').each(function(idx,obj){
 			var author = {
@@ -312,7 +324,7 @@ Template.AdminArticle.events({
 		articleUpdateObj['authors'] = authors;
 		articleUpdateObj['affiliations'] = affiliations;
 
-		//dates
+		// dates
 		var dates = {};
 		var history = {};
 		$('.datepicker').each(function(i){
@@ -326,7 +338,7 @@ Template.AdminArticle.events({
 		articleUpdateObj['dates'] = dates;
 		articleUpdateObj['history'] = history;
 
-		//save to db
+		// save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 			if(error){
 				alert(error.message);
