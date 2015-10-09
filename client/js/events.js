@@ -156,10 +156,32 @@ Template.AdminArticle.events({
 
 		Session.set('article',article);
 	},
+	'click #add-author' : function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		var newAuthor = {
+			name_first: '',
+			name_middle: '',
+			name_last: '',
+			ids: {},
+			affiliations_list: []
+		}
+		// need this random number for uniqueness of checkboxes. for authors in the db, it is the mongo id
+		var temp_id = Math.random().toString(36).substring(7);
+		newAuthor['ids']['mongo_id'] = temp_id;
+		for(var i = 0; i < article.affiliations.length ; i++){
+			newAuthor.affiliations_list.push({
+				author_mongo_id : temp_id,
+				checked: false,
+
+			})
+		}
+		article.authors.push(newAuthor);
+		Session.set('article',article);
+	},
 	'click #add-affiliation': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
-
 		// first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
 		article['affiliations'] = Meteor.adminArticle.getAffiliations();
 		article['affiliations'].push('NEW AFFILIATION');

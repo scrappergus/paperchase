@@ -86,9 +86,16 @@ Meteor.adminArticle = {
 			for(var i=0 ; i < authorsList.length; i++){
 				var current = authorsList[i]['affiliations_numbers'];
 				var authorAffiliationsEditable = [];
+				if(authorsList[i]['ids']['mongo_id']){
+					var mongo = authorsList[i]['ids']['mongo_id'];
+				}else{
+					//for authors not saved in the db
+					var mongo = Math.random().toString(36).substring(7);
+				}
+
 				for(var a = 0 ; a < affs.length ; a++){
 					var authorAff = {
-						author_mongo_id: authorsList[i]['ids']['mongo_id']
+						author_mongo_id: mongo
 					}
 					if(current && current.indexOf(a) != -1){
 						// author already has affiliation
