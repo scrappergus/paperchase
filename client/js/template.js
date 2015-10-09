@@ -14,9 +14,12 @@ Template.AdminArticle.rendered = function(){
 	});
 
 	//dates
-	$('.datepicker').pickadate({
-		// format: 'YYYY/MM/DD'
+	$('.datepicker').each(function(i){
+		var pick = $(this).pickadate()
+		var picker = pick.pickadate('picker');
+		picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' })
 	});
+
 	//authors and affiliations
 	$('.authors-list').sortable();
 	$('.affiliations-list').sortable({

@@ -312,6 +312,20 @@ Template.AdminArticle.events({
 		articleUpdateObj['authors'] = authors;
 		articleUpdateObj['affiliations'] = affiliations;
 
+		//dates
+		var dates = {};
+		var history = {};
+		$('.datepicker').each(function(i){
+			var key = $(this).attr('id');
+			if($(this).hasClass('date')){
+				dates[key] = new Date($(this).val());
+			}else if($(this).hasClass('history')){
+				history[key] = new Date($(this).val());
+			}
+		});
+		articleUpdateObj['dates'] = dates;
+		articleUpdateObj['history'] = history;
+
 		//save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 			if(error){
