@@ -130,11 +130,16 @@
 <template name="AdminArticleForm">
 	{{#with article}}
 	<form>
-		<div class="row">
+		<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+          <button class="submit btn-floating btn-large">
+            <i class="zmdi zmdi-floppy"></i>
+          </button>
+        </div>
+		<!-- <div class="row">
 			<div class="col s12 center-align">
 				<button class="submit btn waves-effect waves-light save-btn" type="submit" name="action" alt="Save Article">Save</button>
 			</div>
-		</div>
+		</div> -->
 		{{>saving}}
 		{{>successMessage what='Article'}}
 
@@ -148,15 +153,13 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>Settings</legend>
+			<legend>Site Settings</legend>
 				<div class="row">
-					<div class="col s12">
+					<div class="col s12 m6 center-align">
 						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{#if feature}}checked{{/if}}"/>
 						<label for="feature-checkbox">Feature</label>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col s12">
+					<div class="col s12 m6 center-align">
 						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{#if feature}}advance{{/if}}"/>
 						<label for="advance-checkbox">Advance</label>
 					</div>
@@ -172,70 +175,82 @@
 				<div class="col s12 m3"><b>Last Name</b></div>
 				<div class="col s12 m2"><b>Affiliations</b></div>
 			</div>
-			<ul class="authors-list">
-				{{#each authors}}
-				<li class="row author-row grey lighten-4 outlined">
-					<div class="input-field col s12 m1">
-						<i class="zmdi prefix zmdi-swap-vertical"></i>
-					</div>
-					<div class="input-field col s12 m3">
-						<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
-					</div>
-					<div class="input-field col s12 m3">
-						<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
-					</div>
-					<div class="input-field col s12 m3">
-						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
-					</div>
-					<div class="col s12 m2">
-						{{#each affiliations_list}}
-							<p class="pad-md">
-								<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
-								<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-							</p>
+			<div class="row">
+				<div class="col s12">
+					<ul class="authors-list">
+						{{#each authors}}
+						<li class="author-row row grey lighten-4 outlined valign-wrapper">
+								<div class="col s12 m1 center-align">
+									<i class="zmdi prefix zmdi-swap-vertical"></i>
+								</div>
+								<div class="col s12 m3">
+									<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
+								</div>
+								<div class="col s12 m3">
+									<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
+								</div>
+								<div class="col s12 m3">
+									<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
+								</div>
+								<div class="col s12 m2">
+									{{#each affiliations_list}}
+										<p class="pad-md">
+											<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
+											<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
+										</p>
+									{{/each}}
+								</div>
+								<div class="hide">
+									{{#each arrayify ids}}
+									<input class="author-id" type="hidden" name="{{name}}" value="{{value}}">
+									{{/each}}
+								</div>
+						</li>
 						{{/each}}
-					</div>
-					<div class="hide">
-						{{#each arrayify ids}}
-						<input class="author-id" type="hidden" name="{{name}}" value="{{value}}">
-						{{/each}}
-					</div>
-				</li>
-				{{/each}}
-			</ul>
+					</ul>
+				</div>
+			</div>
+
 		</fieldset>
 
 		<fieldset>
 			<legend>Affiliations</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-affiliation" class="submit btn waves-effect waves-light save-btn" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i> Affiliation</button>
+					<button id="add-affiliation" class="btn waves-effect waves-light" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i> Affiliation</button>
 				</div>
 			</div>
-			<ol class="affiliations-list">
-				{{#each arrayify affiliations}}
-				<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 outlined">
-					<div class="input-field col s1">
-						<i class="zmdi prefix zmdi-swap-vertical"></i>
-					</div>
-					<div class="input-field col s10">
-						<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
-					</div>
-					<div class="input-field col s1">
-						<i data-value="{{@index}}" class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
-					</div>
-				</li>
-				{{/each}}
-			</ol>
-
+			<div class="row">
+				<div class="col s12">
+					<ol class="affiliations-list">
+						{{#each arrayify affiliations}}
+						<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 outlined">
+							<div class="valign-wrapper" style="width:100%">
+								<div class="col s1 center-align ">
+									<i class="zmdi prefix zmdi-swap-vertical"></i>
+								</div>
+								<div class="col s10">
+									<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+									</div>
+								<div class="col s1">
+									<i data-value="{{@index}}" class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon"></i>
+								</div>
+							</div>
+						</li>
+						{{/each}}
+					</ol>
+				</div>
+			</div>
 		</fieldset>
 
 		<fieldset>
 			<legend>Dates</legend>
 			<div class="row">
 				{{#each arrayify dates}}
-					<div class="col s12 m4">
+					<div class="col s3 l1 right-align">
 						<h6><label>{{name}}:</label></h6>
+					</div>
+					<div class="col s9 m3 l2">
 						<input type="date" class="datepicker" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{formatDate value}}">
 					</div>
 				{{/each}}
@@ -246,13 +261,23 @@
 			<legend>History</legend>
 			<div class="row">
 				{{#each arrayify history}}
-					<div class="col s12 m4">
+					<div class="col s3 l1 right-align">
 						<h6><label>{{name}}:</label></h6>
+					</div>
+					<div class="col s9 m3 l2">
 						<input type="date" class="datepicker" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{formatDate value}}">
 					</div>
 				{{/each}}
 			</div>
 		</fieldset>
+
+		<row>
+			<div class="col s12">
+				<button class="submit btn btn-large">
+	            	<i class="zmdi zmdi-floppy"></i> Save
+				</button>
+			</div>
+		</row>
 	</form>
 	{{/with}}
 </template>

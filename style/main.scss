@@ -86,11 +86,20 @@ MISC
 */
 .outlined{
 	border: 1px solid $gray;
+
 }
 
 /*
 ADMIN
 */
+.note-editor{
+	.btn-group{
+		.btn{
+			border-radius: 0px !important;
+			box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.16), 0 0px 0px 0 rgba(0, 0, 0, 0.12)!important;
+		}
+	}
+}
 
 /*
 VISITOR

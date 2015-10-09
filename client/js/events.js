@@ -159,17 +159,24 @@ Template.AdminArticle.events({
 	'click #add-affiliation': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
+
 		// first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
 		article['affiliations'] = Meteor.adminArticle.getAffiliations();
 		article['affiliations'].push('NEW AFFILIATION');
 
-		// add object to all author affiliations list
+		// add new affiliation object to all author affiliations list array
 		for(var i = 0 ; i < article['authors'].length ; i++){
 			var author_mongo_id = article['authors'][i]['ids']['mongo_id'];
 			article['authors'][i]['affiliations_list'].push({'checked':false,'author_mongo_id':author_mongo_id});
 		}
 		// console.log(article['authors'][parseInt(article['authors'].length - 1)]['affiliations_list']);
 		Session.set('article',article);
+
+		//scroll to new affiliation <li>
+		var childNumber = parseInt(article['affiliations'].length - 1);
+		$('html, body').animate({
+			scrollTop: $('.affiliation-li:nth-child(' + childNumber + ')').find('input').position().top
+		}, 500);
 	},
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');
@@ -222,6 +229,12 @@ Template.AdminArticle.events({
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
+
+		//scroll to top
+		$('html, body').animate({
+			scrollTop: 0
+		}, 500);
+
 		var mongoId = Session.get('article')['_id'];
 		var articleUpdateObj = {};
 

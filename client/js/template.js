@@ -9,7 +9,7 @@ Template.AdminArticle.rendered = function(){
 			document.execCommand('insertText', false, bufferText);
 		},
 		toolbar: [
-			['font', ['bold', 'italic', 'underline', 'clear']]
+			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']]
 		]
 	});
 
