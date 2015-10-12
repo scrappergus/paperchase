@@ -117,7 +117,7 @@ Template.SendingSuccessMessage.events({
 /*
 Issue
 */
-Template.adminIssue.events({
+Template.AdminIssue.events({
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();

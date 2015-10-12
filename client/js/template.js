@@ -41,11 +41,10 @@ Template.AdminArticle.rendered = function(){
 Template.adminArticleXmlIntake.rendered = function(){
 	Session.set('fileNameXML','');
 }
-Template.adminIssue.rendered = function(){
-	$('.datepicker').pickadate({
-		selectMonths: true,
-		selectYears: 1
-	});
+Template.AdminIssue.rendered = function(){
+	var pick = $('#issue-date').pickadate();
+	var picker = pick.pickadate('picker');
+	picker.set('select', $('#issue-date').data('value'), { format: 'yyyy/mm/dd' })
 }
 Template.AdminDataSubmissions.rendered = function(){
 	$('select').material_select();

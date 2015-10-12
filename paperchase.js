@@ -587,7 +587,7 @@ if (Meteor.isClient) {
 /*issue control*/
 //TODO: LIMIT subscription of articles to just issue
 Router.route('/admin/issue/:vi', {
-        name: 'admin.issue',
+        name: 'AdminIssue',
         layoutTemplate: 'Admin',
         waitOn: function(){
             var vi = this.params.vi;
