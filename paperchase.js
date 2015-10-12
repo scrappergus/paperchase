@@ -218,8 +218,9 @@ if (Meteor.isClient) {
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
-                Meteor.subscribe('issues'),
-                Meteor.subscribe('articles'),
+	                Meteor.subscribe('volumes'),
+	                Meteor.subscribe('issues'),
+	                Meteor.subscribe('articles'),
                 ]
             }
         });
@@ -270,8 +271,8 @@ if (Meteor.isClient) {
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
-                Meteor.subscribe('issues'),
-                Meteor.subscribe('articles'),
+	                Meteor.subscribe('issues'),
+	                Meteor.subscribe('articles'),
                 ]
             },
             data: function(){
@@ -302,7 +303,7 @@ if (Meteor.isClient) {
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
-                Meteor.subscribe('articleInfo',this.params._id)
+               		Meteor.subscribe('articleInfo',this.params._id)
                 ]
             },
             data: function(){
@@ -321,7 +322,7 @@ if (Meteor.isClient) {
             layoutTemplate: 'Visitor',
             waitOn: function(){
                 return[
-                Meteor.subscribe('articleInfo',this.params._id)
+                	Meteor.subscribe('articleInfo',this.params._id)
                 ]
             },
             data: function(){
@@ -395,7 +396,7 @@ if (Meteor.isClient) {
             layoutTemplate: 'Admin',
             waitOn: function(){
                 return[
-                Meteor.subscribe('articlesRecentFive')
+                	Meteor.subscribe('articlesRecentFive')
                 ]
             },
             data: function(){
@@ -450,10 +451,10 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('issues'),
-            Meteor.subscribe('volumes')
+	            Meteor.subscribe('issues'),
+	            Meteor.subscribe('volumes')
             ]
-        },
+        }
     });
     Router.route('/admin/data_submissions/past',{
         name: 'AdminDataSubmissionsPast',
@@ -525,8 +526,8 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('feature'),
-            Meteor.subscribe('advance'),
+            	Meteor.subscribe('feature'),
+            	Meteor.subscribe('advance'),
             ]
         },
         data: function(){
@@ -557,7 +558,9 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('articleInfo',this.params._id)
+				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('volumes'),
+				Meteor.subscribe('issues')
             ]
         },
         data: function(){
@@ -569,12 +572,13 @@ if (Meteor.isClient) {
 
     /*archive browsing*/
     Router.route('/admin/archive', {
-        name: 'adminArchive'
-        ,layoutTemplate: 'Admin'
-        ,waitOn: function(){
+        name: 'adminArchive',
+        layoutTemplate: 'Admin',
+        waitOn: function(){
             return[
-            Meteor.subscribe('issues'),
-            Meteor.subscribe('articles'),
+            	Meteor.subscribe('volumes'),
+            	Meteor.subscribe('issues'),
+            	Meteor.subscribe('articles')
             ]
         }
     });
@@ -671,8 +675,8 @@ Router.route('/admin/user/:_id/subs', {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('userData',this.params._id)
-            ,Meteor.subscribe('issues')
+            	Meteor.subscribe('userData',this.params._id),
+            	Meteor.subscribe('issues')
             ]
         },
         data: function(){

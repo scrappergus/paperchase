@@ -219,9 +219,8 @@ if (Meteor.isServer) {
   });
 
   Meteor.publish('issues', function () {
-    return issues.find({},{sort : {volume:1}});
+    return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
   });
-
   Meteor.publish('subs', function () {
     return subs.find({});
   });
@@ -287,7 +286,9 @@ if (Meteor.isServer) {
       name_last: 1,
     }});
   });
-  Meteor.publish('users');
+  Meteor.publish('users',function(){
+    return Meteor.users.find();
+  });
 
   //institutions
   Meteor.publish('institutions', function(){
@@ -359,8 +360,8 @@ if (Meteor.isServer) {
 }
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
-	Meteor.subscribe('volumes');
-//	 Meteor.subscribe('issues');
+	// Meteor.subscribe('volumes');
+	//  Meteor.subscribe('issues');
     Meteor.subscribe('ipranges')
     Meteor.subscribe('institutions')
     Meteor.subscribe('subs')

@@ -1,19 +1,8 @@
 Meteor.organize = {
 	issuesIntoVolumes: function(vol,iss){
 		// console.log('-issuesIntoVolumes');
-		// console.log('vol');console.log(vol);console.log('iss');console.log(iss);
-
-		var issL = iss.length;
-
 		//group issues by volume
-		var issues = []
-		for(var i = 0; i < issL ; i++){
-			var issue = iss[i];
-			if(!issues[issue['volume']]){
-				issues[issue['volume']] = [];
-			}
-			issues[issue['volume']].push(issue);
-		}
+		var issues = Meteor.organize.groupIssuesByVol(iss);
 
 		//loop through volumes to add issues. this will keep the order descending so that the most recent vol is at the top
 		var volL = vol.length;
@@ -21,6 +10,19 @@ Meteor.organize = {
 			vol[idx]['issues'] = issues[vol[idx]['volume']];
 		}
 		return vol;
+	},
+	groupIssuesByVol: function(issues){
+		// console.log('...groupIssuesByVol');
+		var issL = issues.length;
+		var res = []
+		for(var i = 0; i < issL ; i++){
+			var issue = issues[i];
+			if(!res[issue['volume']]){
+				res[issue['volume']] = [];
+			}
+			res[issue['volume']].push(issue);
+		}
+		return res;
 	},
 	getIssueArticlesByID: function(id){
 		var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();
@@ -77,9 +79,11 @@ Meteor.adminArticle = {
 		Session.set('article',article);
 	},
 	preProcessArticle: function(){
+		// console.log('..preProcessArticle');
 		var article = Session.get('article');
-		if(!article){
-			article = articles.findOne({'_id': Session.get('article-id')});
+		var articleId = Session.get('article-id');
+		if(!article && articleId){
+			article = articles.findOne({'_id': articleId});
 			var affs = article.affiliations;
 			var authorsList = article.authors;
 			// add ALL affiliations for article to author object, for checkbox input
@@ -107,6 +111,17 @@ Meteor.adminArticle = {
 				}
 				authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
 			}
+
+			var volumesList = volumes.find().fetch();
+			var issuesList = issues.find().fetch();
+			if(article.issue_id){
+				for(var i=0 ; i<issuesList.length ; i++){
+					if(issuesList[i]['_id'] === article.issue_id){
+						issuesList[i]['selected'] = true;
+					}
+				}
+			}
+			article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
 			Session.set('article',article);
 		}
 		return article;

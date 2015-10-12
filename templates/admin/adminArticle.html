@@ -168,6 +168,17 @@
 					<input type="number" id="page_end" value="{{page_end}}">
 					<label>Last Page</label>
 				</div>
+				<div class="col s6 m4">
+					<select id="article-issue">
+						<option value="">Unassigned Issue</option>
+						{{#each volumes}}
+						<option disabled>&mdash; Volume {{volume}} &mdash;</option>
+						{{#each issues}}
+						<option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">Volume {{volume}}, Issue {{issue}}</option>
+						{{/each}}
+						{{/each}}
+					</select>
+				</div>
 			</div>
 		</fieldset>
 

@@ -288,6 +288,7 @@ Template.AdminArticle.events({
 		// meta
 		articleUpdateObj['page_start'] = parseInt($('#page_start').val());
 		articleUpdateObj['page_end'] = parseInt($('#page_end').val());
+		articleUpdateObj['issue_id'] = $('#article-issue').val();
 
 		// ids
 		articleUpdateObj['ids'] = {};

@@ -32,6 +32,9 @@ Template.AdminArticle.rendered = function(){
 		},
 	});
 
+	//issues select
+	$('select').material_select();
+
 	// saving success modal
 	$('#success-modal').leanModal();
 }
