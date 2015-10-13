@@ -613,6 +613,19 @@ Template.adminArticleXmlProcess.events({
 });
 
 Template.AdminBatchXml.events({
+	'click #update-authors-affs': function(e){
+		e.preventDefault();
+		console.log('clicked');
+		Meteor.call('updateAllArticlesAuthorsAffiliations',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
+			}
+		});
+	},
 	'click #download-pmc-xml': function(e){
 		e.preventDefault();
 		Meteor.call('getXMLFromPMC',function(e,r){

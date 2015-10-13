@@ -244,6 +244,7 @@ Meteor.methods({
 
 		for(var i = 0 ; i < articlesList.length ; i++){
 			var pmid = articlesList[i]['ids']['pmid'];
+			console.log('... pmid= ' + pmid);
 			Meteor.call('getPubStatusFromPmid',pmid, function(error,result){
 				if(error){
 					console.log('ERROR - getPubStatusFromPmid');
@@ -260,6 +261,45 @@ Meteor.methods({
 					})
 				}
 			});
+		}
+	},
+	updateAllArticlesAuthorsAffiliations: function(){
+		console.log('--updateAllArticlesAuthorsAffiliations');
+		var articlesList = articles.find().fetch();
+
+		// loop through articles
+		for(var i = 0 ; i < articlesList.length ; i++){
+			var pmid = articlesList[i]['ids']['pmid'];
+			console.log('... pmid= ' + pmid);
+			if(articlesList[i]['affiliations']){
+				var articleAffiliations = articlesList[i]['affiliations'];
+				console.log('    articleAffiliations');
+				console.log(articleAffiliations);
+				if(articlesList[i]['authors']){
+					var authors = articlesList[i]['authors'];
+					// loop through authors
+					for(var a=0; a<authors.length ; a++){
+						if(articlesList[i]['authors'][a]['affiliations_names']){
+							console.log('    author '+a);
+							articlesList[i]['authors'][a]['affiliations_numbers'] = [];
+							var authorAffiliations = articlesList[i]['authors'][a]['affiliations_names'];
+							for(var aff = 0 ; aff< authorAffiliations.length ; aff++){
+								console.log('    '+articleAffiliations.indexOf(authorAffiliations[aff]));
+								if(articleAffiliations.indexOf(authorAffiliations[aff]) != -1){
+									articlesList[i]['authors'][a]['affiliations_numbers'].push(articleAffiliations.indexOf(authorAffiliations[aff]))
+								}
+							}
+						}
+					}
+				}
+
+				Meteor.call('updateArticle',articlesList[i]['_id'], articlesList[i], function(e,r){
+					if(e){
+						console.log('ERROR - updateArticle');
+						console.log(e);
+					}
+				});
+			}
 		}
 	}
 })
