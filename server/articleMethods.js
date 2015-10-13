@@ -165,16 +165,25 @@ Meteor.methods({
 								for(var i = 0 ; i < datesLength ; i++){
 									var dateType =  dates[i]['$']['pub-type'];
 									var d = '';
+									var hadDay = false;
 									if(dates[i]['month']){
 										d += dates[i]['month'][0] + ' ';
 									}
 									if(dates[i]['day']){
 										d += dates[i]['day'][0] + ', ';
+										hadDay = true;
 									}else{
+										//usually for type collection
 										d += 1 + ', ';
 									}
 									if(dates[i]['year']){
 										d += dates[i]['year'][0];
+									}
+									if(hadDay){
+										//gonna use time of the day to differentiate dates that had this and didn't
+										d += ' 00:00:00 EST';
+									}else{
+										d += ' 12:00:00 EST';
 									}
 									var dd = new Date(d);
 
