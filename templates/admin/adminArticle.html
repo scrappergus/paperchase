@@ -48,7 +48,8 @@
 	<div class="row">
 		<div class="col s12">
 			<ul class="admin-sub-nav">
-				<li><a href="#title">Title</a></li>
+				<li><a href="#article-title">Title</a></li>
+				<li><a href="#abstract">Abstract</a></li>
 				<li><a href="#site">Site</a></li>
 				<li><a href="#meta">Meta</a></li>
 				<li><a href="#meta">IDs</a></li>
@@ -146,11 +147,20 @@
 		{{>FixedSaveBtn}}
 		{{>saving}}
 
-		<fieldset id="title">
+		<fieldset id="article-title">
 			<legend>Title</legend>
 			<div class="row">
 				<div class="col s12">
 					<div class="article-title">{{{title}}}</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset id="abstract">
+			<legend>Abstract</legend>
+			<div class="row">
+				<div class="col s12">
+					<div class="article-abstract">{{{abstract}}}</div>
 				</div>
 			</div>
 		</fieldset>

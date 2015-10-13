@@ -253,6 +253,7 @@ ADMIN
 		display: inline-block;
 	}
 }
+/*article edit*/
 .note-editor{
 	.btn-group{
 		.btn{
@@ -260,10 +261,13 @@ ADMIN
 			box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.16), 0 0px 0px 0 rgba(0, 0, 0, 0.12)!important;
 		}
 	}
+}
+#article-title{
 	.note-editable{
 		font-size: $font-lg; /*for article title*/
 	}
 }
+
 #institution-form{
 	input,textarea{
 		margin: 0;

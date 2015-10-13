@@ -372,6 +372,11 @@ Template.AdminArticle.events({
 			articleUpdateObj['advance'] = false;
 		}
 
+		// abstract
+		var articleAbstract = $('.article-abstract').code();
+			articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
+		articleUpdateObj['abstract'] = articleAbstract;
+
 		// meta
 		articleUpdateObj['page_start'] = parseInt($('#page_start').val());
 		articleUpdateObj['page_end'] = parseInt($('#page_end').val());
