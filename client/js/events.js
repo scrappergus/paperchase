@@ -394,6 +394,9 @@ Template.AdminArticle.events({
 		articleUpdateObj['page_start'] = parseInt($('#page_start').val());
 		articleUpdateObj['page_end'] = parseInt($('#page_end').val());
 		articleUpdateObj['issue_id'] = $('#article-issue').val();
+		articleUpdateObj['article_type'] = {};
+		articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
+		articleUpdateObj['article_type']['type'] = $('#article-type option:selected').text()
 
 		// ids
 		articleUpdateObj['ids'] = {};
@@ -430,7 +433,7 @@ Template.AdminArticle.events({
 		articleUpdateObj['authors'] = authors;
 		articleUpdateObj['affiliations'] = affiliations;
 
-		// dates
+		// dates and history
 		var dates = {};
 		var history = {};
 		$('.datepicker').each(function(i){
@@ -447,6 +450,7 @@ Template.AdminArticle.events({
 		});
 		articleUpdateObj['dates'] = dates;
 		articleUpdateObj['history'] = history;
+
 		// keywords
 		var keywords = [];
 		$('.kw').each(function(i){
@@ -454,10 +458,10 @@ Template.AdminArticle.events({
 		});
 		articleUpdateObj['keywords'] = keywords;
 
-// TODO: VALIDATION
-// DATES
-// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
-// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
+		// TODO: VALIDATION
+		// DATES
+		// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
+		// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
 		// save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 			if(error){
