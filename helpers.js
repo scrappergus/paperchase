@@ -153,48 +153,7 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
-	// pubTypeDateList, dateTypeDateList and pubIdTypeList: http://jats.nlm.nih.gov/archiving/tag-library/1.0/index.html
-	var pubTypeDateList = {
-		'collection': 'Collection',
-		'epub': 'Electronic publication (usually web, but also includes eBook, CD-ROM, or other electronic-only distribution)',
-		'ppub': 'Print publication',
-		'epub-ppub': 'Both print and electronic publications',
-		'epreprint': 'Electronic preprint dissemination',
-		'ppreprint': 'Print preprint dissemination',
-		'ecorrected': 'Corrected in electronic',
-		'pcorrected': 'Corrected in print',
-		'eretracted': 'Retracted in electronic',
-		'pretracted': 'Retracted in print',
-	};
-	var dateTypeDateList = {
-		'accepted': 'The date a document, typically a manuscript, was accepted',
-		'corrected': 'The date an article was corrected',
-		'pub' : 'The publication date (electronic or print)',
-		'preprint':'Preprint dissemination date (electronic or print)',
-		'retracted': 'The date an article was retracted',
-		'received':'The date a document, typically a manuscript, was received',
-		'rev-recd':'The date a revised document was received',
-		'rev-request':'The date revisions were requested'
-	};
-	var pubIdTypeList = {
-		// 'aggregator': 'Identifier assigned by a data aggregator',
-		// 'archive':'Identifier assigned by an archive or other repository',
-		// 'art-access-id':'Generic article accession identifier for interchange and retrieval between archives',
-		// 'arxiv':'arXiv archive of electronic preprints',
-		// 'coden':'Obsolete PDB/CCDC identifier (may be present on older articles)',
-		// 'doaj':'Directory of Open Access Journals',
-		'doi':'Digital Object Identifier',
-		// 'index':'Identifier assigned by an abstracting or indexing service',
-		// 'isbn':'International Standard Book Number',
-		'manuscript':'Identifier assigned to a manuscript',
-		'medline':'NLM Medline identifier',
-		'pii':'Publisher Item Identifier',
-		'pmcid':'PubMed Central identifier',
-		'pmid':'PubMed ID',
-		// 'publisher-id':'Publisher’s identifier',
-		// 'sici':'Serial Item and Contribution Identifier',
-		// 'std-designation':'The official number of a standard, from a standards body such as ISO, NISO, IEEE, ASME'
-	}
+
 	Template.AdminArticle.helpers({
 		article : function(){
 			return Meteor.adminArticle.preProcessArticle();
@@ -230,8 +189,8 @@ if (Meteor.isClient) {
 		ids: function(){
 			var addIds = pubIdTypeList;
 			if(Session.get('article')){
-				var articleIds = Session.get('ids');
-				// console.log(articleDates);
+				var article = Session.get('article');
+				var articleIds = article['ids'];
 				for(var d in articleIds){
 					delete addIds[d];
 				}

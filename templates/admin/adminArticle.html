@@ -201,6 +201,13 @@
 						{{/each}}
 					</select>
 				</div>
+				<div class="col s6 m4">
+					<select id="article-type">
+						{{#each article_type_list}}
+						<option value="{{short_name}}" selected="{{#if selected}}selected{{/if}}">{{type}}</option>
+						{{/each}}
+					</select>
+				</div>
 			</div>
 		</fieldset>
 
