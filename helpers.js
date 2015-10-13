@@ -165,12 +165,19 @@ if (Meteor.isClient) {
 		'eretracted': 'Retracted in electronic',
 		'pretracted': 'Retracted in print',
 	};
+	var dateTypeDateList = {
+		'accepted': 'The date a document, typically a manuscript, was accepted',
+		'corrected': 'The date an article was corrected',
+		'pub' : 'The publication date (electronic or print)',
+		'preprint':'Preprint dissemination date (electronic or print)',
+		'retracted': 'The date an article was retracted',
+		'received':'The date a document, typically a manuscript, was received',
+		'rev-recd':'The date a revised document was received',
+		'rev-request':'The date revisions were requested'
+	};
 	Template.AdminArticle.helpers({
 		article : function(){
 			return Meteor.adminArticle.preProcessArticle();
-		},
-		pubTypeDate: function(){
-			return pubTypeDateList;
 		}
 	});
 	Template.AddArticleDateModal.helpers({
@@ -180,6 +187,19 @@ if (Meteor.isClient) {
 				var articleDates = Session.get('article').dates;
 				// console.log(articleDates);
 				for(var d in articleDates){
+					delete addDates[d];
+				}
+				return addDates;
+			}
+		}
+	});
+	Template.AddArticleHistoryModal.helpers({
+		history: function(){
+			var addDates = dateTypeDateList;
+			if(Session.get('article')){
+				var articleHistory = Session.get('article').history;
+				// console.log(articleDates);
+				for(var d in articleHistory){
 					delete addDates[d];
 				}
 				return addDates;

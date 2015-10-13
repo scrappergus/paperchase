@@ -295,7 +295,7 @@
 			<legend>Dates</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-date" class="btn btn-floating waves-effect waves-light" alt="Add Author"><i class="zmdi zmdi-plus-circle"></i></button>
+					<button id="add-date" class="btn btn-floating waves-effect waves-light" alt="Add Date"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
 			<div class="row">
@@ -305,8 +305,10 @@
 					</div>
 					<div class="col s9 m3 l2">
 						<input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
+						{{#if equals name 'collection'}}
 						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
 						<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
+						{{/if}}
 					</div>
 				{{/each}}
 			</div>
@@ -315,14 +317,17 @@
 		<fieldset id="history">
 			<legend>History</legend>
 			<div class="row">
+				<div class="col s12">
+					<button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History"><i class="zmdi zmdi-plus-circle"></i></button>
+				</div>
+			</div>
+			<div class="row">
 				{{#each arrayify history}}
 					<div class="col s3 l1 right-align">
 						<h6><label>{{name}}:</label></h6>
 					</div>
 					<div class="col s9 m3 l2">
 						<input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
-						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="history-{{name}}-no-day"/>
-						<label for="history-{{name}}-no-day" class="font-sm">Month & Year Only</label>
 					</div>
 				{{/each}}
 			</div>
@@ -363,10 +368,30 @@
 	</form>
 	{{/with}}
 	{{>AddArticleDateModal}}
+	{{>AddArticleHistoryModal}}
 </template>
 
+<!--MODALS-->
+<template name="AddArticleHistoryModal">
+  <div id="add-article-history" class="modal">
+    <div class="modal-content">
+      <h4>Add Article History</h4>
+      {{#each arrayify history}}
+      <ul>
+      	<li>
+      		<button data-value="{{name}}" class="btn btn-sm add-history-type">{{name}}</button>
+      		<p>{{value}}</p>
+      	</li>
+      </ul>
+      {{/each}}
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+  </div>
+</template>
 <template name="AddArticleDateModal">
-  <div id="add-artcle-date" class="modal">
+  <div id="add-article-date" class="modal">
     <div class="modal-content">
       <h4>Add Article Date</h4>
       {{#each arrayify dates}}

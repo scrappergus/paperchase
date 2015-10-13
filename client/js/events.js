@@ -313,7 +313,7 @@ Template.AdminArticle.events({
 	'click #add-date': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
-		$('#add-artcle-date').openModal();
+		$('#add-article-date').openModal();
 	},
 	'click .add-date-type': function(e){
 		e.preventDefault();
@@ -321,7 +321,21 @@ Template.AdminArticle.events({
 		var type = $(e.target).data('value');
 		article.dates[type] = new Date();
 		// TODO: modal not closing overlay
-		$('#add-artcle-date').closeModal();
+		$('#add-article-date').closeModal();
+		Session.set('article',article);
+	},
+	'click #add-history': function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		$('#add-article-history').openModal();
+	},
+	'click .add-history-type': function(e){
+		e.preventDefault();
+		var article = Session.get('article');
+		var type = $(e.target).data('value');
+		article['history'][type] = new Date();
+		// TODO: modal not closing overlay
+		$('#add-article-history').closeModal();
 		Session.set('article',article);
 	},
 	'submit form': function(e,t){
@@ -391,21 +405,22 @@ Template.AdminArticle.events({
 		articleUpdateObj['affiliations'] = affiliations;
 
 		// dates
-		// TODO: if day and year only, add hours to day so not equal 00
-		// https://github.com/amsul/pickadate.js/issues/117
 		var dates = {};
 		var history = {};
 		$('.datepicker').each(function(i){
 			var key = $(this).attr('id');
 			if($(this).hasClass('date')){
 				dates[key] = new Date($(this).val());
+				//check if day included
+				if($('#dates-' + key + '-no-day').prop('checked')){
+					dates[key].setHours(12,0,0,0)
+				}
 			}else if($(this).hasClass('history')){
 				history[key] = new Date($(this).val());
 			}
 		});
 		articleUpdateObj['dates'] = dates;
 		articleUpdateObj['history'] = history;
-
 		// keywords
 		var keywords = [];
 		$('.kw').each(function(i){
