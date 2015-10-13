@@ -153,6 +153,7 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
+	// pubTypeDateList, dateTypeDateList and pubIdTypeList: http://jats.nlm.nih.gov/archiving/tag-library/1.0/index.html
 	var pubTypeDateList = {
 		'collection': 'Collection',
 		'epub': 'Electronic publication (usually web, but also includes eBook, CD-ROM, or other electronic-only distribution)',
@@ -175,6 +176,25 @@ if (Meteor.isClient) {
 		'rev-recd':'The date a revised document was received',
 		'rev-request':'The date revisions were requested'
 	};
+	var pubIdTypeList = {
+		'aggregator': 'Identifier assigned by a data aggregator',
+		'archive':'Identifier assigned by an archive or other repository',
+		'art-access-id':'Generic article accession identifier for interchange and retrieval between archives',
+		'arxiv':'arXiv archive of electronic preprints',
+		'coden':'Obsolete PDB/CCDC identifier (may be present on older articles)',
+		'doaj':'Directory of Open Access Journals',
+		'doi':'Digital Object Identifier',
+		'index':'Identifier assigned by an abstracting or indexing service (generally used with elements <object-id>, <issue-id>, and <volume-id>)',
+		'isbn':'International Standard Book Number',
+		'manuscript':'Identifier assigned to a manuscript',
+		'medline':'NLM Medline identifier',
+		'pii':'Publisher Item Identifier',
+		'pmcid':'PubMed Central identifier',
+		'pmid':'PubMed ID',
+		'publisher-id':'Publisher’s identifier',
+		'sici':'Serial Item and Contribution Identifier',
+		'std-designation':'The official number of a standard, from a standards body such as ISO, NISO, IEEE, ASME'
+	}
 	Template.AdminArticle.helpers({
 		article : function(){
 			return Meteor.adminArticle.preProcessArticle();
@@ -203,6 +223,19 @@ if (Meteor.isClient) {
 					delete addDates[d];
 				}
 				return addDates;
+			}
+		}
+	});
+	Template.AddArticleIdModal.helpers({
+		ids: function(){
+			var addIds = pubIdTypeList;
+			if(Session.get('article')){
+				var articleIds = Session.get('ids');
+				// console.log(articleDates);
+				for(var d in articleIds){
+					delete addIds[d];
+				}
+				return addIds;
 			}
 		}
 	});

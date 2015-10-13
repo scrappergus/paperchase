@@ -207,6 +207,11 @@
 		<fieldset id="ids">
 			<legend>IDs</legend>
 			<div class="row">
+				<div class="col s12">
+					<button id="add-id" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="zmdi zmdi-plus-circle"></i></button>
+				</div>
+			</div>
+			<div class="row">
 				{{#each arrayify ids}}
 				<div class="col s6 m2">
 					<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
@@ -379,6 +384,7 @@
 	{{/with}}
 	{{>AddArticleDateModal}}
 	{{>AddArticleHistoryModal}}
+	{{>AddArticleIdModal}}
 </template>
 
 <!--MODALS-->
@@ -396,7 +402,7 @@
       {{/each}}
     </div>
     <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
   </div>
 </template>
@@ -414,7 +420,25 @@
       {{/each}}
     </div>
     <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+</template>
+<template name="AddArticleIdModal">
+  <div id="add-article-id" class="modal">
+    <div class="modal-content">
+      <h4>Add Article ID</h4>
+      {{#each arrayify ids}}
+      <ul>
+      	<li>
+      		<button data-value="{{name}}" class="btn btn-sm add-id-type">{{name}}</button>
+      		<p>{{value}}</p>
+      	</li>
+      </ul>
+      {{/each}}
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
   </div>
 </template>

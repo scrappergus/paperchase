@@ -330,7 +330,6 @@ Template.AdminArticle.events({
 	},
 	'click #add-history': function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
 		$('#add-article-history').openModal();
 	},
 	'click .add-history-type': function(e){
@@ -343,6 +342,20 @@ Template.AdminArticle.events({
 		$('#'+type).pickadate({});
 
 		$('#add-article-history').closeModal();
+		$('.lean-overlay').remove();
+		Session.set('article',article);
+	},
+	'click #add-id': function(e,t){
+		e.preventDefault();
+		$('#add-article-id').openModal();
+	},
+	'click .add-id-type': function(e){
+		e.preventDefault();
+		var article = Session.get('article');
+		var type = $(e.target).data('value');
+		article['ids'][type] = '';
+
+		$('#add-article-id').closeModal();
 		$('.lean-overlay').remove();
 		Session.set('article',article);
 	},
