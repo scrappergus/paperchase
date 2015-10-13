@@ -5,6 +5,7 @@ Template.AdminArticle.rendered = function(){
 			scrollTop: $(window.location.hash).position().top
 		}, 500);
 	}
+
 	// title
 	$('.article-title').summernote({
 		onPaste: function(e){
@@ -16,6 +17,21 @@ Template.AdminArticle.rendered = function(){
 		},
 		toolbar: [
 			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']]
+		]
+	});
+
+	// abstract
+	$('.article-abstract').summernote({
+		onPaste: function(e){
+			e.preventDefault();
+			console.log('paste');
+			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+			document.execCommand('insertText', false, bufferText);
+		},
+		toolbar: [
+			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+			['view', ['codeview']]
 		]
 	});
 
@@ -49,14 +65,16 @@ Template.AdminArticle.rendered = function(){
 		},
 	});
 
-	// issues select
-	$('select').material_select();
+	// issue, article type
+	// dropdowns
+	$('#article-issue').material_select();
+	$('#article-type').material_select();
 
-	// saving success modal
+	// modals
 	$('#success-modal').leanModal();
-
-	// add article date modal
-	$('#add-artcle-date').leanModal();
+	$('#add-article-date').leanModal();
+	$('#add-article-history').leanModal();
+	$('#add-article-id').leanModal();
 }
 Template.adminArticleXmlIntake.rendered = function(){
 	Session.set('fileNameXML','');
