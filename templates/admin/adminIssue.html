@@ -1,4 +1,4 @@
-<template name="adminIssue">
+<template name="AdminIssue">
 {{#with issue}}
 	<div class="row">
 		<div class="col s12">
@@ -11,7 +11,6 @@
 		<div class="col s12">
 			<div class="card">
 				<div class="card-content">
-					{{#with issue}}
 					<form>
 						<div class="row">
 							<div class="col s12">
@@ -23,20 +22,19 @@
 								<label class="right">Issue Date</label>
 							</div>
 							<div class="col s10">
-								<input type="date" class="datepicker" id="issue-date" data-value="{{pub_date}}" placeholder="{{formatDate pub_date}}">
+								<input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
 							</div>
-						</div>		
+						</div>
 						<div class="row">
 							<div class="col s12 center-align">
 								<button class="submit btn waves-effect waves-light save-btn" type="submit" name="action" alt="Save Issue">Save</button>
 							</div>
-						</div>						
+						</div>
 					</form>
-					{{/with}}
 					{{>saving}}
 					{{>successMessage 'what'}}
 				</div>
-			</div>	
+			</div>
 		</div>
 	</div>
 
@@ -51,7 +49,7 @@
 					<h5>{{{title}}}</h5>
 					<p>{{>AuthorsList}}</p>
 					<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
-					<a class="waves-effect waves-light btn" href="{{pathFor 'adminArticle'}}">View</a>
+					<a class="waves-effect waves-light btn" href="{{pathFor 'AdminArticle'}}">View</a>
 				</li>
 				{{/each}}
 			</ul>
