@@ -327,3 +327,12 @@ Meteor.formActions = {
 		return input.replace('<br>','').replace('<p>','').replace('</p>','');
 	}
 }
+
+Meteor.adminBatch = {
+	cleanString: function(string){
+		string = string.replace('<italic>','<i>').replace('</italic>','</i>');
+		string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
+		string = string.replace(/\s+/g,' '); // remove extra spaces
+		return string;
+	}
+}

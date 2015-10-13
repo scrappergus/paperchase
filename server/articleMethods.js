@@ -99,11 +99,12 @@ Meteor.methods({
 								return 'ERROR';
 							}else{
 								//Process JSON for meteor templating and mongo db
+								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
 								//TITLE
 								var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
 								var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
-								titleTitle = titleTitle.replace('article-title>','').replace('<italic>','<i>').replace('</italic>','</i>');
-								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
+								titleTitle = titleTitle.replace('article-title>','');
+								titleTitle = Meteor.adminBatch.cleanString(titleTitle);
 								j['title'] = titleTitle;
 
 
@@ -123,6 +124,7 @@ Meteor.methods({
 									abstract = abstract.replace('abstract>\n ', '');
 									abstract = abstract.replace('</p>\n','</p>');
 									abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
+									abstract = Meteor.adminBatch.cleanString(abstract);
 									j['abstract'] = abstract;
 								}
 
