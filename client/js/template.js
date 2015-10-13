@@ -1,5 +1,11 @@
 Template.AdminArticle.rendered = function(){
-	//title
+	// scroll to anchor
+	if(window.location.hash) {
+		$('html, body').animate({
+			scrollTop: $(window.location.hash).position().top
+		}, 500);
+	}
+	// title
 	$('.article-title').summernote({
 		onPaste: function(e){
 			e.preventDefault();
@@ -13,14 +19,25 @@ Template.AdminArticle.rendered = function(){
 		]
 	});
 
-	//dates
+	// dates
+	// Collection dates don't usually have dd. So using time of day to differentiate date objects that have days and those that don't
+	// TIME OF DAY 00:00:00, had a day in the XML. Otherwise did NOT have a day. Just month and year.
 	$('.datepicker').each(function(i){
-		var pick = $(this).pickadate()
+		var datePlaceholderFormat = 'mmmm d, yyyy';
+		var placeholder = $(this).attr('placeholder');
+		//if placeholder has 3 pieces, then the date should be shown in the placeholder
+		var placeholderPieces = placeholder.split(' ');
+		if(placeholderPieces.length != 3){
+			var datePlaceholderFormat = 'mmmm yyyy';
+		}
+		var pick = $(this).pickadate({
+			format: datePlaceholderFormat
+		});
 		var picker = pick.pickadate('picker');
-		picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' })
+		picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
 	});
 
-	//authors and affiliations
+	// authors and affiliations
 	$('.authors-list').sortable();
 	$('.affiliations-list').sortable({
 		start: function( event, ui ) {
@@ -32,11 +49,14 @@ Template.AdminArticle.rendered = function(){
 		},
 	});
 
-	//issues select
+	// issues select
 	$('select').material_select();
 
 	// saving success modal
 	$('#success-modal').leanModal();
+
+	// add article date modal
+	$('#add-artcle-date').leanModal();
 }
 Template.adminArticleXmlIntake.rendered = function(){
 	Session.set('fileNameXML','');

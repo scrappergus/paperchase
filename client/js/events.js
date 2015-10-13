@@ -143,6 +143,27 @@ Template.AdminIssue.events({
 ARTICLE
 */
 Template.AdminArticle.events({
+	'click .mm-yy-only': function(e){
+		var keys = $(e.target).attr('id').split('-');
+		var dateKey = keys[1];
+		var groupKey = keys[0];
+		var article = Session.get('article');
+		var datePlaceholderFormat = 'mmmm d, yyyy';
+
+		//update template data
+		var dateChange = new Date(article[groupKey][dateKey]);
+		if($(e.target).prop('checked')){
+			dateChange.setHours( 12,0,0,0 );
+			datePlaceholderFormat = 'mmmm yyyy';
+		}else{
+			dateChange.setHours( 0,0,0,0 ); //should have day
+		}
+		article[groupKey][dateKey] = dateChange;
+
+		// TODO: update date placeholder
+
+		Session.set('article',article);
+	},
 	'change .author-affiliation':function(e,t){
 		var checked = false;
 			authorIndex = $(e.target).closest('li').index(),
@@ -174,14 +195,20 @@ Template.AdminArticle.events({
 		// need this random number for uniqueness of checkboxes. for authors in the db, it is the mongo id
 		var temp_id = Math.random().toString(36).substring(7);
 		newAuthor['ids']['mongo_id'] = temp_id;
-		for(var i = 0; i < article.affiliations.length ; i++){
-			newAuthor.affiliations_list.push({
-				author_mongo_id : temp_id,
-				checked: false,
-
-			})
+		if(article.affiliations){
+			for(var i = 0; i < article.affiliations.length ; i++){
+				newAuthor.affiliations_list.push({
+					author_mongo_id : temp_id,
+					checked: false,
+				})
+			}
 		}
 		article.authors.push(newAuthor);
+
+		//scroll to new affiliation <li>
+		$('html, body').animate({
+			scrollTop: $('.author-li:last-child').find('input').position().top
+		}, 500);
 		Session.set('article',article);
 	},
 	'click #add-affiliation': function(e,t){
@@ -189,17 +216,24 @@ Template.AdminArticle.events({
 		var article = Session.get('article');
 		// first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
 		article['affiliations'] = Meteor.adminArticle.getAffiliations();
+		if(!article['affiliations']){
+			article['affiliations'] = [];
+		}
 		article['affiliations'].push('NEW AFFILIATION');
 
 		// add new affiliation object to all author affiliations list array
 		for(var i = 0 ; i < article['authors'].length ; i++){
 			var author_mongo_id = article['authors'][i]['ids']['mongo_id'];
+			if(!article['authors'][i]['affiliations_list']){
+				article['authors'][i]['affiliations_list'] = [];
+			}
 			article['authors'][i]['affiliations_list'].push({'checked':false,'author_mongo_id':author_mongo_id});
 		}
 		// console.log(article['authors'][parseInt(article['authors'].length - 1)]['affiliations_list']);
 		Session.set('article',article);
 
-		//scroll to new affiliation <li>
+		// scroll to new affiliation <li>
+		// TODO: when no affiliations, get error: Uncaught TypeError: Cannot read property 'top' of undefined (for last-child)
 		$('html, body').animate({
 			scrollTop: $('.affiliation-li:last-child').find('input').position().top
 		}, 500);
@@ -257,6 +291,37 @@ Template.AdminArticle.events({
 			}
 		}
 		article['affiliations'].splice(affiliationIndex, 1);
+		Session.set('article',article);
+	},
+	'click #add-kw': function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		article.keywords.push('');
+		Session.set('article',article);
+		$('html, body').animate({
+			scrollTop: $('.kw-li:last-child').find('input').position().top
+		}, 500);
+	},
+	'click .remove-kw': function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		var kwIndex = $(e.target).closest('li').index();
+		article.keywords.splice(kwIndex,1);
+		Session.set('article',article);
+
+	},
+	'click #add-date': function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		$('#add-artcle-date').openModal();
+	},
+	'click .add-date-type': function(e){
+		e.preventDefault();
+		var article = Session.get('article');
+		var type = $(e.target).data('value');
+		article.dates[type] = new Date();
+		// TODO: modal not closing overlay
+		$('#add-artcle-date').closeModal();
 		Session.set('article',article);
 	},
 	'submit form': function(e,t){
@@ -326,6 +391,8 @@ Template.AdminArticle.events({
 		articleUpdateObj['affiliations'] = affiliations;
 
 		// dates
+		// TODO: if day and year only, add hours to day so not equal 00
+		// https://github.com/amsul/pickadate.js/issues/117
 		var dates = {};
 		var history = {};
 		$('.datepicker').each(function(i){
@@ -339,6 +406,17 @@ Template.AdminArticle.events({
 		articleUpdateObj['dates'] = dates;
 		articleUpdateObj['history'] = history;
 
+		// keywords
+		var keywords = [];
+		$('.kw').each(function(i){
+			keywords.push($(this).val());
+		});
+		articleUpdateObj['keywords'] = keywords;
+
+// TODO: VALIDATION
+// DATES
+// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
+// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
 		// save to db
 		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 			if(error){

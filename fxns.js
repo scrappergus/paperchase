@@ -97,19 +97,22 @@ Meteor.adminArticle = {
 					var mongo = Math.random().toString(36).substring(7);
 				}
 
-				for(var a = 0 ; a < affs.length ; a++){
-					var authorAff = {
-						author_mongo_id: mongo
+				if(affs){
+					for(var a = 0 ; a < affs.length ; a++){
+						var authorAff = {
+							author_mongo_id: mongo
+						}
+						if(current && current.indexOf(a) != -1){
+							// author already has affiliation
+							authorAff['checked'] = true;
+						}else{
+							authorAff['checked'] = false;
+						}
+						authorAffiliationsEditable.push(authorAff);
 					}
-					if(current && current.indexOf(a) != -1){
-						// author already has affiliation
-						authorAff['checked'] = true;
-					}else{
-						authorAff['checked'] = false;
-					}
-					authorAffiliationsEditable.push(authorAff);
+					authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
 				}
-				authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
+
 			}
 
 			var volumesList = volumes.find().fetch();

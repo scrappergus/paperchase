@@ -19,6 +19,21 @@ if (Meteor.isClient) {
 		month[11] = 'December';
 		return month[d.getMonth()];
 	});
+	Template.registerHelper('dateDayExists',function(date){
+		//if the date object should have a day value associated with it
+		if(moment(date).format('HH') == 00){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	Template.registerHelper('placeholderDate',function(date){
+		if(moment(date).format('HH') == 00){
+			return moment(date).format('M D, YYYY');;
+		}else{
+			return moment(date).format('M YYYY');;
+		}
+	});
 	Template.registerHelper('inputDate', function(date) {
 		return moment(date).format('YYYY/MM/DD');
 	});
@@ -138,9 +153,37 @@ if (Meteor.isClient) {
 	/*
 	Admin
 	*/
+	var pubTypeDateList = {
+		'collection': 'Collection',
+		'epub': 'Electronic publication (usually web, but also includes eBook, CD-ROM, or other electronic-only distribution)',
+		'ppub': 'Print publication',
+		'epub-ppub': 'Both print and electronic publications',
+		'epreprint': 'Electronic preprint dissemination',
+		'ppreprint': 'Print preprint dissemination',
+		'ecorrected': 'Corrected in electronic',
+		'pcorrected': 'Corrected in print',
+		'eretracted': 'Retracted in electronic',
+		'pretracted': 'Retracted in print',
+	};
 	Template.AdminArticle.helpers({
 		article : function(){
 			return Meteor.adminArticle.preProcessArticle();
+		},
+		pubTypeDate: function(){
+			return pubTypeDateList;
+		}
+	});
+	Template.AddArticleDateModal.helpers({
+		dates: function(){
+			var addDates = pubTypeDateList;
+			if(Session.get('article')){
+				var articleDates = Session.get('article').dates;
+				// console.log(articleDates);
+				for(var d in articleDates){
+					delete addDates[d];
+				}
+				return addDates;
+			}
 		}
 	});
 	Template.AdminArticlesList.helpers({
