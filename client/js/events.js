@@ -320,8 +320,12 @@ Template.AdminArticle.events({
 		var article = Session.get('article');
 		var type = $(e.target).data('value');
 		article.dates[type] = new Date();
-		// TODO: modal not closing overlay
+
+		//TODO:FIX pickadate
+		$('#'+type).pickadate({});
+
 		$('#add-article-date').closeModal();
+		$('.lean-overlay').remove();
 		Session.set('article',article);
 	},
 	'click #add-history': function(e,t){
@@ -334,8 +338,12 @@ Template.AdminArticle.events({
 		var article = Session.get('article');
 		var type = $(e.target).data('value');
 		article['history'][type] = new Date();
-		// TODO: modal not closing overlay
+
+		//TODO:FIX pickadate
+		$('#'+type).pickadate({});
+
 		$('#add-article-history').closeModal();
+		$('.lean-overlay').remove();
 		Session.set('article',article);
 	},
 	'submit form': function(e,t){
