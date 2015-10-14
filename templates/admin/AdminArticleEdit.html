@@ -125,9 +125,12 @@
 			</div>
 			<div class="row">
 				{{#each arrayify ids}}
-				<div class="col s6 m2">
+				<div class="col s8 m3">
 					<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
 					<label>{{name}}</label>
+				</div>
+				<div class="col s1 left-align">
+					<i id="remove-{{name}}" class="prefix remove-id zmdi zmdi-close-circle red-type close-icon"></i>
 				</div>
 				{{/each}}
 			</div>
