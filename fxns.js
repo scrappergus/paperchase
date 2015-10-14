@@ -85,9 +85,9 @@ Meteor.adminArticle = {
 		if(!article && articleId){
 			article = articles.findOne({'_id': articleId});
 			if(article){
+				// add ALL affiliations for article to author object, for checkbox input
 				var affs = article.affiliations;
 				var authorsList = article.authors;
-				// add ALL affiliations for article to author object, for checkbox input
 				for(var i=0 ; i < authorsList.length; i++){
 					var current = authorsList[i]['affiliations_numbers'];
 					var authorAffiliationsEditable = [];
@@ -126,6 +126,19 @@ Meteor.adminArticle = {
 					}
 				}
 				article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
+
+				// pubstatus
+				article['pub_status_list'] = pubStatusTranslate;
+				if(article['pub_status']){
+					var pubStatusDisable = true;
+				}
+				for(var p=0 ; p<pubStatusTranslate.length ;p++){
+					if(pubStatusDisable && p < parseInt(article['pub_status'] - 1)){
+						article['pub_status_list'][p]['disabled'] = true;
+					}else if(p === parseInt(article['pub_status'] - 1)){
+						article['pub_status_list'][p]['selected'] = true;
+					}
+				}
 
 				// add ALL article types
 				var articleType = article['article_type']['type'];

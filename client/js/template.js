@@ -53,7 +53,8 @@ Template.AdminArticle.onRendered(function () {
 	// issue, article type
 	// dropdowns
 	$('#article-issue').material_select();
-	$('#article-type').material_select();
+	$('#article-type').material_select();;
+	$('#article-pub-status').material_select();
 
 	// modals
 	$('#success-modal').leanModal();

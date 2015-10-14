@@ -27,6 +27,9 @@
 			margin: 0;
 		}
 	}
+	li.disabled{
+		@include opacity(0.2);
+	}
 
 /* General ------------------------*/
 	.admin-header{

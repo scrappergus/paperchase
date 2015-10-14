@@ -114,6 +114,15 @@
 					</select>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col s4">
+					<select id="article-pub-status">
+					{{#each pub_status_list}}
+						<option value="{{@index}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
+					{{/each}}
+					</select>
+				</div>
+			</div>
 		</fieldset>
 
 		<fieldset id="ids">

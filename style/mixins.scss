@@ -1,11 +1,18 @@
 @mixin columns-count($count){
     -webkit-column-count: $count;
     -moz-column-count: $count;
-    column-count: $count;	
+    column-count: $count;
 }
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius!important;
      -moz-border-radius: $radius!important;
       -ms-border-radius: $radius!important;
           border-radius: $radius!important;
+}
+
+@mixin opacity($value) {
+  -webkit-opacity: $value!important;
+     -moz-opacity: $value!important;
+      -ms-opacity: $value!important;
+          opacity: $value!important;
 }
