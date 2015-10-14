@@ -164,6 +164,7 @@ Template.AdminArticle.events({
 
 		Session.set('article',article);
 	},
+	// Authors
 	'change .author-affiliation':function(e,t){
 		var checked = false;
 			authorIndex = $(e.target).closest('li').index(),
@@ -211,6 +212,14 @@ Template.AdminArticle.events({
 		}, 500);
 		Session.set('article',article);
 	},
+	'click .remove-author': function(e,t){
+		e.preventDefault();
+		var article = Session.get('article');
+		var authorIndex = $(e.target).closest('li').index();
+		article.authors.splice(authorIndex,1);
+		Session.set('article',article);
+	},
+	// Affiliations
 	'click #add-affiliation': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
@@ -237,13 +246,6 @@ Template.AdminArticle.events({
 		$('html, body').animate({
 			scrollTop: $('.affiliation-li:last-child').find('input').position().top
 		}, 500);
-	},
-	'click .remove-author': function(e,t){
-		e.preventDefault();
-		var article = Session.get('article');
-		var authorIndex = $(e.target).closest('li').index();
-		article.authors.splice(authorIndex,1);
-		Session.set('article',article);
 	},
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');
@@ -293,6 +295,7 @@ Template.AdminArticle.events({
 		article['affiliations'].splice(affiliationIndex, 1);
 		Session.set('article',article);
 	},
+	// Keywords
 	'click #add-kw': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
@@ -309,6 +312,7 @@ Template.AdminArticle.events({
 		article.keywords.splice(kwIndex,1);
 		Session.set('article',article);
 	},
+	// Dates
 	'click #add-date': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
@@ -320,6 +324,7 @@ Template.AdminArticle.events({
 	'click .remove-dates': function(e){
 		Meteor.adminArticle.removeDateOrHistory('dates',e);
 	},
+	// History
 	'click #add-history': function(e,t){
 		e.preventDefault();
 		$('#add-article-history').openModal();
@@ -330,6 +335,7 @@ Template.AdminArticle.events({
 	'click .remove-history': function(e){
 		Meteor.adminArticle.removeDateOrHistory('history',e);
 	},
+	// IDs
 	'click #add-id': function(e,t){
 		e.preventDefault();
 		$('#add-article-id').openModal();
