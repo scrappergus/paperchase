@@ -225,19 +225,34 @@
 				</div>
 			</div>
 			<div class="row">
+				{{! Separating out collection, because this is the only date that we are allowing mm-yyyy format on}}
 				{{#each arrayify dates}}
+				{{#if equals name 'collection'}}
+				{{else}}
 					<div class="col s8 m3">
 						{{>AdminDateInput}}
 						<label>{{name}}</label>
-						<br/>
-						{{#if equals name 'collection'}}
-						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
-						<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
-						{{/if}}
 					</div>
 					<div class="col s1 left-align">
 						<i id="remove-{{name}}" class="prefix remove-dates zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
+				{{/if}}
+				{{/each}}
+			</div>
+			<div class="row">
+				{{#each arrayify dates}}
+				{{#if equals name 'collection'}}
+					<div class="col s8 m3">
+						{{>AdminDateInput}}
+						<label>{{name}}</label>
+						<br/>
+						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
+						<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
+					</div>
+					<div class="col s1 left-align">
+						<i id="remove-{{name}}" class="prefix remove-dates zmdi zmdi-close-circle red-type close-icon"></i>
+					</div>
+				{{/if}}
 				{{/each}}
 			</div>
 		</fieldset>
