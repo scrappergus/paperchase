@@ -318,7 +318,7 @@ Template.AdminArticle.events({
 	'click .add-date-type': function(e){
 		e.preventDefault();
 		var article = Session.get('article');
-		var type = $(e.target).data('value');
+		var type = $(e.target).attr('id').replace('add-','');
 		article.dates[type] = new Date();
 		article.dates[type].setHours(0,0,0,0);
 		Session.set('article',article);
@@ -333,7 +333,7 @@ Template.AdminArticle.events({
 	'click .add-history-type': function(e){
 		e.preventDefault();
 		var article = Session.get('article');
-		var type = $(e.target).data('value');
+		var type = $(e.target).attr('id').replace('add-','');
 		article['history'][type] = new Date();
 		article.history[type].setHours(0,0,0,0);
 		Session.set('article',article);
@@ -348,7 +348,7 @@ Template.AdminArticle.events({
 	'click .add-id-type': function(e){
 		e.preventDefault();
 		var article = Session.get('article');
-		var type = $(e.target).data('value');
+		var type = $(e.target).attr('id').replace('add-','');
 		article['ids'][type] = '';
 		Session.set('article',article);
 

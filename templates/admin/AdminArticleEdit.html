@@ -314,7 +314,7 @@
       {{#each arrayify history}}
       <ul>
       	<li>
-      		<button data-value="{{name}}" class="btn btn-sm add-history-type">{{name}}</button>
+      		<button id="add-{{name}}" class="btn btn-sm add-history-type">{{name}}</button>
       		<p>{{value}}</p>
       	</li>
       </ul>
@@ -332,7 +332,7 @@
       {{#each arrayify dates}}
       <ul>
       	<li>
-      		<button data-value="{{name}}" class="btn btn-sm add-date-type">{{name}}</button>
+      		<button id="add-{{name}}" class="btn btn-sm add-date-type">{{name}}</button>
       		<p>{{value}}</p>
       	</li>
       </ul>
@@ -350,7 +350,7 @@
       {{#each arrayify ids}}
       <ul>
       	<li>
-      		<button data-value="{{name}}" class="btn btn-sm add-id-type">{{name}}</button>
+      		<button id="add-{{name}}" class="btn btn-sm add-id-type">{{name}}</button>
       		<p>{{value}}</p>
       	</li>
       </ul>
