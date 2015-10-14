@@ -84,64 +84,67 @@ Meteor.adminArticle = {
 		var articleId = Session.get('article-id');
 		if(!article && articleId){
 			article = articles.findOne({'_id': articleId});
-			var affs = article.affiliations;
-			var authorsList = article.authors;
-
-			// add ALL affiliations for article to author object, for checkbox input
-			for(var i=0 ; i < authorsList.length; i++){
-				var current = authorsList[i]['affiliations_numbers'];
-				var authorAffiliationsEditable = [];
-				if(authorsList[i]['ids']['mongo_id']){
-					var mongo = authorsList[i]['ids']['mongo_id'];
-				}else{
-					//for authors not saved in the db
-					var mongo = Math.random().toString(36).substring(7);
-				}
-
-				if(affs){
-					for(var a = 0 ; a < affs.length ; a++){
-						var authorAff = {
-							author_mongo_id: mongo
-						}
-						if(current && current.indexOf(a) != -1){
-							// author already has affiliation
-							authorAff['checked'] = true;
-						}else{
-							authorAff['checked'] = false;
-						}
-						authorAffiliationsEditable.push(authorAff);
+			if(article){
+				var affs = article.affiliations;
+				var authorsList = article.authors;
+				// add ALL affiliations for article to author object, for checkbox input
+				for(var i=0 ; i < authorsList.length; i++){
+					var current = authorsList[i]['affiliations_numbers'];
+					var authorAffiliationsEditable = [];
+					if(authorsList[i]['ids']['mongo_id']){
+						var mongo = authorsList[i]['ids']['mongo_id'];
+					}else{
+						//for authors not saved in the db
+						var mongo = Math.random().toString(36).substring(7);
 					}
-					authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
-				}
-			}
 
-			// add ALL issues
-			var volumesList = volumes.find().fetch();
-			var issuesList = issues.find().fetch();
-			if(article.issue_id){
-				for(var i=0 ; i<issuesList.length ; i++){
-					if(issuesList[i]['_id'] === article.issue_id){
-						issuesList[i]['selected'] = true;
+					if(affs){
+						for(var a = 0 ; a < affs.length ; a++){
+							var authorAff = {
+								author_mongo_id: mongo
+							}
+							if(current && current.indexOf(a) != -1){
+								// author already has affiliation
+								authorAff['checked'] = true;
+							}else{
+								authorAff['checked'] = false;
+							}
+							authorAffiliationsEditable.push(authorAff);
+						}
+						authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
 					}
 				}
-			}
-			article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
 
-			// add ALL article types
-			var articleType = article['article_type']['type'];
-			article['article_type_list'] = [];
-			for(var k in publisherArticleTypes){
-				var selectObj = {
-					short_name: publisherArticleTypes[k],
-					type: k
+				// add ALL issues
+				var volumesList = volumes.find().fetch();
+				var issuesList = issues.find().fetch();
+				if(article.issue_id){
+					for(var i=0 ; i<issuesList.length ; i++){
+						if(issuesList[i]['_id'] === article.issue_id){
+							issuesList[i]['selected'] = true;
+						}
+					}
 				}
-				if(k === articleType){
-					selectObj['selected'] = true;
+				article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
+
+				// add ALL article types
+				var articleType = article['article_type']['type'];
+				article['article_type_list'] = [];
+				for(var k in publisherArticleTypes){
+					var selectObj = {
+						short_name: publisherArticleTypes[k],
+						type: k
+					}
+					if(k === articleType){
+						selectObj['selected'] = true;
+					}
+					article['article_type_list'].push(selectObj);
 				}
-				article['article_type_list'].push(selectObj);
+
+				Session.set('article',article);
 			}
 
-			Session.set('article',article);
+
 		}
 		return article;
 	}
