@@ -229,33 +229,5 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	// getXML: function(fileName){
-	// 	console.log('..getXML');
-	// 	if(fileName)
-	// 	var j = {},
-	// 		xml;
-	// 	var fut = new future();
-
-	// 	var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
-	// 	var file = filePath + fileName;
-	// 	fs.exists(file, function(fileok){
-	// 		if(fileok){
-	// 			fs.readFile(file, function(error, data) {
-	// 				if(data)
-
-	// 				if(error){
-	// 					return 'ERROR';
-	// 				}else{
-	// 					xml = data.toString();
-	// 					fut['return'](xml);
-	// 				}
-	// 			});
-	// 		}else{
-	// 			console.log('file not found');
-	// 		}
-	// 	});
-	// 	return fut.wait();
-	// 	//TODO: use this in processXML
-	// }
 })
 
