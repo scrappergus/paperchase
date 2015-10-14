@@ -185,7 +185,6 @@
 					</ul>
 				</div>
 			</div>
-
 		</fieldset>
 
 		<fieldset id="affiliations">
@@ -227,15 +226,17 @@
 			</div>
 			<div class="row">
 				{{#each arrayify dates}}
-					<div class="col s3 l1 right-align">
-						<h6><label>{{name}}:</label></h6>
-					</div>
-					<div class="col s9 m3 l2">
+					<div class="col s8 m3">
 						{{>AdminDateInput}}
+						<label>{{name}}</label>
+						<br/>
 						{{#if equals name 'collection'}}
 						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
 						<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
 						{{/if}}
+					</div>
+					<div class="col s1 left-align">
+						<i class="prefix remove-date zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
 				{{/each}}
 			</div>
@@ -250,11 +251,12 @@
 			</div>
 			<div class="row">
 				{{#each arrayify history}}
-					<div class="col s3 l1 right-align">
-						<h6><label>{{name}}:</label></h6>
+					<div class="col s8 m3">
+						{{>AdminHistoryInput}}
+						<label>{{name}}:</label>
 					</div>
-					<div class="col s9 m3 l2">
-					{{>AdminHistoryInput}}
+					<div class="col s1 left-align">
+						<i class="prefix remove-history zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
 				{{/each}}
 			</div>
@@ -326,7 +328,7 @@
   </div>
 </template>
 <template name="AddArticleDateModal">
-  <div id="add-article-date" class="modal">
+  <div id="add-article-dates" class="modal">
     <div class="modal-content">
       <h4>Add Article Date</h4>
       {{#each arrayify dates}}

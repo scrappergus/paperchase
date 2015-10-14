@@ -164,6 +164,17 @@ Meteor.adminArticle = {
 			var picker = pick.pickadate('picker');
 			picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
 		});
+	},
+	addDateOrHistory: function(dateType,e){
+		e.preventDefault();
+		var article = Session.get('article');
+		var type = $(e.target).attr('id').replace('add-','');
+		article[dateType][type] = new Date();
+		article[dateType][type].setHours(0,0,0,0);
+		Session.set('article',article);
+
+		$('#add-article-' + dateType).closeModal();
+		$('.lean-overlay').remove();
 	}
 }
 

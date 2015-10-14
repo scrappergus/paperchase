@@ -57,7 +57,7 @@ Template.AdminArticle.onRendered(function () {
 
 	// modals
 	$('#success-modal').leanModal();
-	$('#add-article-date').leanModal();
+	$('#add-article-dates').leanModal();
 	$('#add-article-history').leanModal();
 	$('#add-article-id').leanModal();
 });

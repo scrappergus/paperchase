@@ -313,33 +313,17 @@ Template.AdminArticle.events({
 	'click #add-date': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
-		$('#add-article-date').openModal();
+		$('#add-article-dates').openModal();
 	},
 	'click .add-date-type': function(e){
-		e.preventDefault();
-		var article = Session.get('article');
-		var type = $(e.target).attr('id').replace('add-','');
-		article.dates[type] = new Date();
-		article.dates[type].setHours(0,0,0,0);
-		Session.set('article',article);
-
-		$('#add-article-date').closeModal();
-		$('.lean-overlay').remove();
+		Meteor.adminArticle.addDateOrHistory('dates',e);
 	},
 	'click #add-history': function(e,t){
 		e.preventDefault();
 		$('#add-article-history').openModal();
 	},
 	'click .add-history-type': function(e){
-		e.preventDefault();
-		var article = Session.get('article');
-		var type = $(e.target).attr('id').replace('add-','');
-		article['history'][type] = new Date();
-		article.history[type].setHours(0,0,0,0);
-		Session.set('article',article);
-
-		$('#add-article-history').closeModal();
-		$('.lean-overlay').remove();
+		Meteor.adminArticle.addDateOrHistory('history',e);
 	},
 	'click #add-id': function(e,t){
 		e.preventDefault();
