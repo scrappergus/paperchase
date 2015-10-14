@@ -176,11 +176,6 @@ Template.AdminArticle.events({
 		}
 		article.authors[authorIndex]['affiliations_list'][affIndex]['checked'] = checked;
 
-		//scroll to new affiliation <li>
-		$('html, body').animate({
-			scrollTop: $('.author-li:last-child').position().top
-		}, 500);
-
 		Session.set('article',article);
 	},
 	'click #add-author' : function(e,t){
@@ -207,9 +202,12 @@ Template.AdminArticle.events({
 		article.authors.push(newAuthor);
 
 		//scroll to new affiliation <li>
-		$('html, body').animate({
-			scrollTop: $('.author-li:last-child').find('input').position().top
-		}, 500);
+		if($('.author-li:last-child')){
+			$('html, body').animate({
+				scrollTop: $('.author-li:last-child').find('input').position().top
+			}, 500);
+		} // otherwise, just added first author. the dom isn't updated yet, so technically last-child is not the one just added
+
 		Session.set('article',article);
 	},
 	'click .remove-author': function(e,t){
@@ -243,9 +241,11 @@ Template.AdminArticle.events({
 
 		// scroll to new affiliation <li>
 		// TODO: when no affiliations, get error: Uncaught TypeError: Cannot read property 'top' of undefined (for last-child)
-		$('html, body').animate({
-			scrollTop: $('.affiliation-li:last-child').find('input').position().top
-		}, 500);
+		if($('.affiliation-li:last-child')){
+			$('html, body').animate({
+				scrollTop: $('.affiliation-li:last-child').find('input').position().top
+			}, 500);
+		} // otherwise, just added first affiliation. the dom isn't updated yet, so technically last-child is not the one just added
 	},
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');
