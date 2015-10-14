@@ -1,6 +1,6 @@
 <template name="AdminArticle">
 	{{>AdminHeader header="Article"}}
-
+	{{#if article}}
 	<div class="row">
 		<div class="col s12">
 			<ul class="admin-sub-nav">
@@ -35,6 +35,13 @@
 			</div>
 		</div>
 	</div>
+	{{else}}
+	<div class="row">
+		<div class="col s12">
+			<h3>No Article Found</h3>
+		</div>
+	</div>
+	{{/if}}
 </template>
 
 <template name="AdminArticleForm">
