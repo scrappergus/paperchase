@@ -5,28 +5,12 @@ Template.AdminArticle.helpers({
 });
 Template.AddArticleDateModal.helpers({
 	dates: function(){
-		var addDates = pubTypeDateList;
-		if(Session.get('article')){
-			var articleDates = Session.get('article').dates;
-			// console.log(articleDates);
-			for(var d in articleDates){
-				delete addDates[d];
-			}
-			return addDates;
-		}
+		return Meteor.adminArticle.modalDateOrHistory('dates');
 	}
 });
 Template.AddArticleHistoryModal.helpers({
 	history: function(){
-		var addDates = dateTypeDateList;
-		if(Session.get('article')){
-			var articleHistory = Session.get('article').history;
-			// console.log(articleDates);
-			for(var d in articleHistory){
-				delete addDates[d];
-			}
-			return addDates;
-		}
+		return Meteor.adminArticle.modalDateOrHistory('history');
 	}
 });
 Template.AddArticleIdModal.helpers({

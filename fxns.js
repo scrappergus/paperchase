@@ -182,6 +182,25 @@ Meteor.adminArticle = {
 		var type = $(e.target).attr('id').replace('remove-','');
 		delete article[dateType][type];
 		Session.set('article',article);
+	},
+	modalDateOrHistory: function(dateType){
+		var addDatesListOptions;
+		var addDatesList = {};
+		if(dateType === 'history'){
+			addDatesListOptions = dateTypeDateList
+		}else if(dateType === 'dates'){
+			addDatesListOptions = pubTypeDateList;
+		}
+		if(Session.get('article') && dateType){
+			var article = Session.get('article');
+			var current = article[dateType];
+			for(var d in addDatesListOptions){
+				if(current[d] === undefined){
+					addDatesList[d] = addDatesListOptions[d];
+				}
+			}
+			return addDatesList;
+		}
 	}
 }
 

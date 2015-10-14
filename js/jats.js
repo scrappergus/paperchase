@@ -12,13 +12,13 @@ pubTypeDateList = {
 	'pretracted': 'Retracted in print',
 };
 dateTypeDateList = {
-	'accepted': 'The date a document, typically a manuscript, was accepted',
-	'corrected': 'The date an article was corrected',
+	'accepted': 'The date a manuscript was accepted',
+	'corrected': 'The date a manuscript was corrected',
 	'pub' : 'The publication date (electronic or print)',
 	'preprint':'Preprint dissemination date (electronic or print)',
-	'retracted': 'The date an article was retracted',
-	'received':'The date a document, typically a manuscript, was received',
-	'rev-recd':'The date a revised document was received',
+	'retracted': 'The date a manuscript was retracted',
+	'received':'The date a manuscript was received',
+	'rev-recd':'The date a manuscript was received',
 	'rev-request':'The date revisions were requested'
 };
 pubIdTypeList = {

@@ -267,6 +267,9 @@ ADMIN
 		font-size: $font-lg; /*for article title*/
 	}
 }
+.add-btn{
+	text-transform: none!important;
+}
 
 #institution-form{
 	input,textarea{
