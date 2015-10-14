@@ -236,7 +236,7 @@
 						{{/if}}
 					</div>
 					<div class="col s1 left-align">
-						<i class="prefix remove-date zmdi zmdi-close-circle red-type close-icon"></i>
+						<i id="remove-{{name}}" class="prefix remove-dates zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
 				{{/each}}
 			</div>
@@ -253,10 +253,10 @@
 				{{#each arrayify history}}
 					<div class="col s8 m3">
 						{{>AdminHistoryInput}}
-						<label>{{name}}:</label>
+						<label>{{name}}</label>
 					</div>
 					<div class="col s1 left-align">
-						<i class="prefix remove-history zmdi zmdi-close-circle red-type close-icon"></i>
+						<i id="remove-{{name}}" class="prefix remove-history zmdi zmdi-close-circle red-type close-icon"></i>
 					</div>
 				{{/each}}
 			</div>

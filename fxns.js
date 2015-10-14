@@ -175,6 +175,13 @@ Meteor.adminArticle = {
 
 		$('#add-article-' + dateType).closeModal();
 		$('.lean-overlay').remove();
+	},
+	removeDateOrHistory: function(dateType,e){
+		e.preventDefault();
+		var article = Session.get('article');
+		var type = $(e.target).attr('id').replace('remove-','');
+		delete article[dateType][type];
+		Session.set('article',article);
 	}
 }
 

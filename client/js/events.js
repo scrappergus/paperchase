@@ -308,7 +308,6 @@ Template.AdminArticle.events({
 		var kwIndex = $(e.target).closest('li').index();
 		article.keywords.splice(kwIndex,1);
 		Session.set('article',article);
-
 	},
 	'click #add-date': function(e,t){
 		e.preventDefault();
@@ -318,12 +317,18 @@ Template.AdminArticle.events({
 	'click .add-date-type': function(e){
 		Meteor.adminArticle.addDateOrHistory('dates',e);
 	},
+	'click .remove-dates': function(e){
+		Meteor.adminArticle.removeDateOrHistory('dates',e);
+	},
 	'click #add-history': function(e,t){
 		e.preventDefault();
 		$('#add-article-history').openModal();
 	},
 	'click .add-history-type': function(e){
 		Meteor.adminArticle.addDateOrHistory('history',e);
+	},
+	'click .remove-history': function(e){
+		Meteor.adminArticle.removeDateOrHistory('history',e);
 	},
 	'click #add-id': function(e,t){
 		e.preventDefault();
