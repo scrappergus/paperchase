@@ -1,6 +1,7 @@
 <template name="AdminArticle">
 	{{>AdminHeader header="Article"}}
 	{{#if article}}
+	{{initiateDates}}
 	<div class="row">
 		<div class="col s12">
 			<ul class="admin-sub-nav">
@@ -230,7 +231,7 @@
 						<h6><label>{{name}}:</label></h6>
 					</div>
 					<div class="col s9 m3 l2">
-						<input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
+						{{>AdminDateInput}}
 						{{#if equals name 'collection'}}
 						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
 						<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
@@ -253,7 +254,7 @@
 						<h6><label>{{name}}:</label></h6>
 					</div>
 					<div class="col s9 m3 l2">
-						<input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
+					{{>AdminHistoryInput}}
 					</div>
 				{{/each}}
 			</div>
@@ -296,6 +297,13 @@
 	{{>AddArticleDateModal}}
 	{{>AddArticleHistoryModal}}
 	{{>AddArticleIdModal}}
+</template>
+
+<template name="AdminDateInput">
+	<input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
+</template>
+<template name="AdminHistoryInput">
+	<input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
 </template>
 
 <!--MODALS-->

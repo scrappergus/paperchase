@@ -143,10 +143,27 @@ Meteor.adminArticle = {
 
 				Session.set('article',article);
 			}
-
-
 		}
 		return article;
+	},
+	initiateDates: function(){
+		// console.log('-- initiateDates');
+		// Collection dates don't usually have dd. So using time of day to differentiate date objects that have days and those that don't
+		// TIME OF DAY 00:00:00, had a day in the XML. Otherwise did NOT have a day. Just month and year.
+		$('.datepicker').each(function(i){
+			var datePlaceholderFormat = 'mmmm d, yyyy';
+			var placeholder = $(this).attr('placeholder');
+			//if placeholder has 3 pieces, then the date should be shown in the placeholder
+			var placeholderPieces = placeholder.split(' ');
+			if(placeholderPieces.length != 3){
+				var datePlaceholderFormat = 'mmmm yyyy';
+			}
+			var pick = $(this).pickadate({
+				format: datePlaceholderFormat
+			});
+			var picker = pick.pickadate('picker');
+			picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
+		});
 	}
 }
 

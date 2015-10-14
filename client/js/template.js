@@ -1,5 +1,4 @@
 Template.AdminArticle.onRendered(function () {
-	console.log('onRendered');
 	// scroll to anchor
 	if(window.location.hash) {
 		$('html, body').animate({
@@ -36,23 +35,8 @@ Template.AdminArticle.onRendered(function () {
 		]
 	});
 
-	// dates
-	// Collection dates don't usually have dd. So using time of day to differentiate date objects that have days and those that don't
-	// TIME OF DAY 00:00:00, had a day in the XML. Otherwise did NOT have a day. Just month and year.
-	$('.datepicker').each(function(i){
-		var datePlaceholderFormat = 'mmmm d, yyyy';
-		var placeholder = $(this).attr('placeholder');
-		//if placeholder has 3 pieces, then the date should be shown in the placeholder
-		var placeholderPieces = placeholder.split(' ');
-		if(placeholderPieces.length != 3){
-			var datePlaceholderFormat = 'mmmm yyyy';
-		}
-		var pick = $(this).pickadate({
-			format: datePlaceholderFormat
-		});
-		var picker = pick.pickadate('picker');
-		picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
-	});
+	// dates - handled in template helper, article. uses function to loop through dates and initiate
+	Meteor.adminArticle.initiateDates();
 
 	// authors and affiliations
 	$('.authors-list').sortable();
@@ -77,6 +61,13 @@ Template.AdminArticle.onRendered(function () {
 	$('#add-article-history').leanModal();
 	$('#add-article-id').leanModal();
 });
+Template.AdminDateInput.onRendered(function() {
+	Meteor.adminArticle.initiateDates();
+});
+Template.AdminHistoryInput.onRendered(function() {
+	Meteor.adminArticle.initiateDates();
+});
+
 
 Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');

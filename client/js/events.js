@@ -320,13 +320,11 @@ Template.AdminArticle.events({
 		var article = Session.get('article');
 		var type = $(e.target).data('value');
 		article.dates[type] = new Date();
-
-		//TODO:FIX pickadate
-		$('#'+type).pickadate({});
+		article.dates[type].setHours(0,0,0,0);
+		Session.set('article',article);
 
 		$('#add-article-date').closeModal();
 		$('.lean-overlay').remove();
-		Session.set('article',article);
 	},
 	'click #add-history': function(e,t){
 		e.preventDefault();
@@ -337,13 +335,11 @@ Template.AdminArticle.events({
 		var article = Session.get('article');
 		var type = $(e.target).data('value');
 		article['history'][type] = new Date();
-
-		//TODO:FIX pickadate
-		$('#'+type).pickadate({});
+		article.history[type].setHours(0,0,0,0);
+		Session.set('article',article);
 
 		$('#add-article-history').closeModal();
 		$('.lean-overlay').remove();
-		Session.set('article',article);
 	},
 	'click #add-id': function(e,t){
 		e.preventDefault();
@@ -354,10 +350,10 @@ Template.AdminArticle.events({
 		var article = Session.get('article');
 		var type = $(e.target).data('value');
 		article['ids'][type] = '';
+		Session.set('article',article);
 
 		$('#add-article-id').closeModal();
 		$('.lean-overlay').remove();
-		Session.set('article',article);
 	},
 	'submit form': function(e,t){
 		e.preventDefault();
