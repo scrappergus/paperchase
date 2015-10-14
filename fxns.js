@@ -176,30 +176,33 @@ Meteor.adminArticle = {
 		$('#add-article-' + dateType).closeModal();
 		$('.lean-overlay').remove();
 	},
-	removeDateOrHistory: function(dateType,e){
+	removeKeyFromArticleObject: function(articleKey,e){
 		e.preventDefault();
 		var article = Session.get('article');
-		var type = $(e.target).attr('id').replace('remove-','');
-		delete article[dateType][type];
+		var objectKey = $(e.target).attr('id').replace('remove-',''); //the key of the object in the article doc
+		delete article[articleKey][objectKey]; //the key in the object of the article doc
 		Session.set('article',article);
 	},
-	modalDateOrHistory: function(dateType){
-		var addDatesListOptions;
-		var addDatesList = {};
-		if(dateType === 'history'){
-			addDatesListOptions = dateTypeDateList
-		}else if(dateType === 'dates'){
-			addDatesListOptions = pubTypeDateList;
+	modalListOptions: function(articleKey){
+		var allListOptions;
+		var addListOptions = {};
+		if(articleKey === 'history'){
+			allListOptions = dateTypeDateList
+		}else if(articleKey === 'dates'){
+			allListOptions = pubTypeDateList;
+		}else if(articleKey === 'ids'){
+			allListOptions = pubIdTypeList;
 		}
-		if(Session.get('article') && dateType){
+
+		if(Session.get('article') && articleKey){
 			var article = Session.get('article');
-			var current = article[dateType];
-			for(var d in addDatesListOptions){
+			var current = article[articleKey];
+			for(var d in allListOptions){
 				if(current[d] === undefined){
-					addDatesList[d] = addDatesListOptions[d];
+					addListOptions[d] = allListOptions[d];
 				}
 			}
-			return addDatesList;
+			return addListOptions;
 		}
 	}
 }

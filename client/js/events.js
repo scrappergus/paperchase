@@ -322,7 +322,7 @@ Template.AdminArticle.events({
 		Meteor.adminArticle.addDateOrHistory('dates',e);
 	},
 	'click .remove-dates': function(e){
-		Meteor.adminArticle.removeDateOrHistory('dates',e);
+		Meteor.adminArticle.removeKeyFromArticleObject('dates',e);
 	},
 	// History
 	'click #add-history': function(e,t){
@@ -333,7 +333,7 @@ Template.AdminArticle.events({
 		Meteor.adminArticle.addDateOrHistory('history',e);
 	},
 	'click .remove-history': function(e){
-		Meteor.adminArticle.removeDateOrHistory('history',e);
+		Meteor.adminArticle.removeKeyFromArticleObject('history',e);
 	},
 	// IDs
 	'click #add-id': function(e,t){
@@ -350,6 +350,10 @@ Template.AdminArticle.events({
 		$('#add-article-id').closeModal();
 		$('.lean-overlay').remove();
 	},
+	'click .remove-id': function(e){
+		Meteor.adminArticle.removeKeyFromArticleObject('ids',e);
+	},
+	// Submit
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();

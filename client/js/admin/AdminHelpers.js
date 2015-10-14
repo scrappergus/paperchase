@@ -5,25 +5,17 @@ Template.AdminArticle.helpers({
 });
 Template.AddArticleDateModal.helpers({
 	dates: function(){
-		return Meteor.adminArticle.modalDateOrHistory('dates');
+		return Meteor.adminArticle.modalListOptions('dates');
 	}
 });
 Template.AddArticleHistoryModal.helpers({
 	history: function(){
-		return Meteor.adminArticle.modalDateOrHistory('history');
+		return Meteor.adminArticle.modalListOptions('history');
 	}
 });
 Template.AddArticleIdModal.helpers({
 	ids: function(){
-		var addIds = pubIdTypeList;
-		if(Session.get('article')){
-			var article = Session.get('article');
-			var articleIds = article['ids'];
-			for(var d in articleIds){
-				delete addIds[d];
-			}
-			return addIds;
-		}
+		return Meteor.adminArticle.modalListOptions('ids');
 	}
 });
 Template.AdminArticlesList.helpers({
