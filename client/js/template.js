@@ -1,4 +1,5 @@
-Template.AdminArticle.rendered = function(){
+Template.AdminArticle.onRendered(function () {
+	console.log('onRendered');
 	// scroll to anchor
 	if(window.location.hash) {
 		$('html, body').animate({
@@ -75,22 +76,27 @@ Template.AdminArticle.rendered = function(){
 	$('#add-article-date').leanModal();
 	$('#add-article-history').leanModal();
 	$('#add-article-id').leanModal();
-}
-Template.adminArticleXmlIntake.rendered = function(){
+});
+
+Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');
-}
-Template.AdminIssue.rendered = function(){
+});
+
+Template.AdminIssue.onRendered(function () {
 	var pick = $('#issue-date').pickadate();
 	var picker = pick.pickadate('picker');
 	picker.set('select', $('#issue-date').data('value'), { format: 'yyyy/mm/dd' })
-}
-Template.AdminDataSubmissions.rendered = function(){
+});
+
+Template.AdminDataSubmissions.onRendered(function () {
 	$('select').material_select();
 	Session.set('submission_list',null);
-}
-Template.AdminDataSubmissionsPast.rendered = function(){
+});
+
+Template.AdminDataSubmissionsPast.onRendered(function () {
 	$('ul.tabs').tabs();
-}
-Template.Subscribe.rendered = function(){
+});
+
+Template.Subscribe.onRendered(function () {
 	$('select').material_select();
-}
+});
