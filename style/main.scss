@@ -1,390 +1,231 @@
 @import 'variables';
 @import 'mixins';
 @import 'type';
-
-.aging-nav {
-    background-color: rgba(55, 71, 79, 0.9);
-}
+@import 'admin';
 
 html,body{
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
-    background-image: url(/images/backgrounds/exclusive_paper.png);
+	background-image: url(/images/backgrounds/exclusive_paper.png);
    font-family: "Lora", sans-serif;
 }
 
-/*
-TYPE
-*/
-h1{
-	color: $black-0;
-}
-h2{
-	color: $black-1;
-}
-h3{
-	color: $black-2;
-}
-h4{
-	color: $black-0;
-}
-h5{
-	color: $black-1;
-}
-h6{
-	color: $black-2;
-}
-p{
-	color: $black-0;
-}
 
-strong {
- font-weight: bold;
-}
-
-.red-type{
-	color: $red;
-}
-.font-sm{
-	font-size: $font-sm!important;
-}
-
-/*containers*/
-.box{
-	margin: $margin-lg 0;
-	padding: $pad-md $pad-lg;
-}
-.card {
-  h4 {
-      margin-top:0em;
-      margin-bottom:0.3em;
-  }
-}
-.pad-md{
-	padding: $pad-sm;
-}
-
-// pushing the logo around at the top
-.brand-logo {
-    position: relative;
-    top: 2px;
-}
-
-// The editors list on the homepage
-.home-page-editors-list {
-
-}
-
-.edboard-name {
-  cursor: pointer;
-}
-
-.edboard-bio {
-   display: none;
-}
-
-/*
-MISC
-*/
-.outlined{
-	border: 1px solid $gray;
-
-}
-
-/*
-VISITOR
-*/
-.footer{
-	padding: 0 0;
-	.row{
-		margin-top: 0;
-		margin-bottom: 0;
-	}
-	p{
-	}
-}
-.authors{
-	span{
-		&:last-child{
-			.comma{
-				display:none;
-			}
-		}
-	}
-}
-.author-affiliations{
-	span{
-		.comma{
-			display: inline-block!important;
-		}
-		&:last-child{
-			.comma{
-				display:none!important;
-			}
-		}
-	}
-}
-.affiliations{
-	color: $gray;
-	font-size: $font-sm;
-}
-.truncate {
-	width: 100%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-/*home*/
-.hero{
-	background-image: url(/images/backgrounds/home.jpg);
-}
-.ip-alert{
-	padding: $pad-md 0;
-	background: $blue-aging;
-	p{
-		margin: 0;
-		color: $white-dark;
-	}
-}
-.list-pics{
-	margin: 0 -10px;
-	padding: 0;
-	width: 100%;
-	list-style: none;
-	li{
-		width: 433px;
-		display: inline-block;
-		margin: 0;
-		padding: 0;
-		float: left;
-		.list-p{
-			height: 100px;
-			background-size: cover;
-			margin:10px;
-			position: relative;
-			&:before{
-				background-color: rgba(204,204,204,0.7);
-				content: '';
-				height: 100%;
-				width: 100%;
-				position: absolute;
-				top: 0;
-				left: 0;
-			}
-			div{
-				width: 100%;
-				position: relative;
-				font-weight: bold;
-			}
-		}
-	}
-}
-.current-issue{
-	background-image: url(/images/backgrounds/stem.png);
-	background-size: cover;
-}
-.valign-pic{
-	min-height: 50vh;
-	position: relative;
-	background-size: cover;
-	background-attchment: fixed;
-	&:before{
-		background-color: rgba(0,0,0,0.7);
-		content: '';
-		height: 100%;
-		width: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-	.row{
-		margin:0;
-	}
-	.valign{
-		position: relative;
-	}
+/* Type ------------------------*/
 	h1{
-		color: $white;
+		color: $black-0;
 	}
 	h2{
-		color: $white-dark;
+		color: $black-1;
+	}
+	h3{
+		color: $black-2;
 	}
 	h4{
-		color: $white-dark;
+		color: $black-0;
 	}
-}
-.current-issue{
-	img{
-		height: 40vh;
+	h5{
+		color: $black-1;
 	}
-}
-.latest{
-	button{
-		margin-top: 20px;
+	h6{
+		color: $black-2;
 	}
-}
+	p{
+		color: $black-0;
+	}
+	strong {
+	 font-weight: bold;
+	}
+	/* Type adjustments */
+	.truncate {
+		width: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.red-type{
+		color: $red;
+	}
+	.font-sm{
+		font-size: $font-sm!important;
+	}
 
-.home-left-nav {
-    li {
-        margin: 8px 0px;
-        a {
-            color: $black-1;
-            font-weight:bold;
-            font-size:1.1em;
-            line-height:1em;
-        }
-    }
-}
+/* Containers ------------------------*/
+	.box{
+		margin: $margin-lg 0;
+		padding: $pad-md $pad-lg;
+	}
+	.card {
+		h4 {
+			margin-top:0em;
+			margin-bottom:0.3em;
+		}
+	}
+	.pad-md{
+		padding: $pad-sm;
+	}
 
+/* Navigation ------------------------*/
+	/*// pushing the logo around at the top*/
+	.brand-logo {
+		position: relative;
+		top: 2px;
+	}
+	nav{
+		a{
+			text-align: center;
+		}
+	}
+	.aging-nav {
+		background-color: rgba(55, 71, 79, 0.9);
+	}
 
-/*text*/
+/* Borders ------------------------*/
+	.border-gray{
+		border: 1px solid $gray;
+	}
+
+/* Footer ------------------------*/
+	.footer{
+		padding: 0 0;
+		.row{
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+	}
+
+/* Home ------------------------*/
+	.edboard-name {
+	  cursor: pointer;
+	}
+	.edboard-bio {
+	   display: none;
+	}
+	.home-left-nav {
+		li {
+			margin: 8px 0px;
+			a {
+				color: $black-1;
+				font-weight:bold;
+				font-size:1.1em;
+				line-height:1em;
+			}
+		}
+	}
+
+/* Article ------------------------*/
+	.authors{
+		span{
+			&:last-child{
+				.comma{
+					display:none;
+				}
+			}
+		}
+	}
+	.author-affiliations{
+		span{
+			.comma{
+				display: inline-block!important;
+			}
+			&:last-child{
+				.comma{
+					display:none!important;
+				}
+			}
+		}
+	}
+	.affiliations{
+		color: $gray;
+		font-size: $font-sm;
+	}
+
+/* Buttons ------------------------*/
+	.btn-sm{
+		font-size: $font-sm;
+	}
+	.btn-group{
+		/*padding: $pad-lg;*/
+	}
+	.btn-primary{
+		background-color: $btn-color-primary;
+	}
+	.btn-secondary{
+		background-color: $btn-color-secondary;
+	}
+	.btn-update{
+		background-color: $btn-color-update;
+	}
+	.btn-add{
+		background-color: $btn-color-add;
+	}
+	.btn-delete{
+		background-color: $btn-color-delete;
+	}
+	.submit{
+		background-color: $btn-color-primary;
+	}
+	.kw{
+		font-size: 0.8rem;
+	}
+	.close-icon{
+		font-size: $font-lg;
+	}
+
+/* Materialize ------------------------*/
+	.card-header{
+		border-bottom: 2px solid $blue-aging;
+	}
+	.chip{
+		padding: $pad-sm;
+		margin-right: $margin-sm;
+	}
+
+/* Forms ------------------------*/
+	fieldset{
+		margin-top: $margin-lg;
+		margin-bottom: $margin-lg;
+	}
+	.loading-img{
+		width: 100px;
+		margin: 0 auto;
+	}
+	.saving{
+		padding: $pad-lg;
+	}
+	.success{
+		.col{
+			padding: $pad-lg;
+		}
+	}
+	.clear{
+		background-color: $red;
+	}
+	#close-success-msg{
+		cursor: pointer;
+	}
+
+/* MISC ------------------------*/
+	.ip-alert{
+		padding: $pad-md 0;
+		background: $blue-aging;
+		p{
+			margin: 0;
+			color: $white-dark;
+		}
+	}
 	.columns{
 		@include columns-count(3);
 	}
 
-
-/*
-ADMIN
-*/
-.admin-sub-nav{
-	li{
-		padding: $pad-sm;
-		display: inline-block;
+	.clearfix:after {
+		visibility: hidden;
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 0;
 	}
-}
-/*article edit*/
-.note-editor{
-	.btn-group{
-		.btn{
-			border-radius: 0px !important;
-			box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.16), 0 0px 0px 0 rgba(0, 0, 0, 0.12)!important;
-		}
-	}
-}
-#article-title{
-	.note-editable{
-		font-size: $font-lg; /*for article title*/
-	}
-}
-.add-btn{
-	text-transform: none!important;
-}
-
-#institution-form{
-	input,textarea{
-		margin: 0;
-	}
-}
-.admin-header{
-	margin: 0px;
-	color: $blue-aging;
-}
-.xml-upload{
-	padding: $pad-lg;
-	@include border-radius(5px);
-	.btn{
-		@include border-radius(5px);
-	}
-}
-
-.border-gray{
-	border: 1px solid $gray;
-}
-
-
-/*CARDS*/
-.card-header{
-	border-bottom: 2px solid $blue-aging;
-}
-/*
-BUTTONS
-*/
-.btn-sm{
-	font-size: $font-sm;
-}
-.btn-group{
-	/*padding: $pad-lg;*/
-}
-.btn-primary{
-	background-color: $btn-color-primary;
-}
-.btn-secondary{
-	background-color: $btn-color-secondary;
-}
-.btn-update{
-	background-color: $btn-color-update;
-}
-.btn-add{
-	background-color: $btn-color-add;
-}
-.btn-delete{
-	background-color: $btn-color-delete;
-}
-.submit{
-	background-color: $btn-color-primary;
-}
-.kw{
-	font-size: 0.8rem;
-}
-.close-icon{
-	font-size: $font-lg;
-}
-
-
-/*
-NAV
-*/
-nav{
-	a{
-		text-align: center;
-	}
-}
-
-/*
-FORMS
-*/
-fieldset{
-	margin-top: $margin-lg;
-	margin-bottom: $margin-lg;
-}
-.note-editor{
-	border: 0px!important;
-}
-.loading-img{
-	width: 100px;
-	margin: 0 auto;
-}
-.saving{
-	padding: $pad-lg;
-}
-.success{
-	.col{
-		padding: $pad-lg;
-	}
-}
-.clear{
-	background-color: $red;
-}
-#close-success-msg{
-	cursor: pointer;
-}
-
-.clearfix:after {
-	visibility: hidden;
-	display: block;
-	font-size: 0;
-	content: " ";
-	clear: both;
-	height: 0;
-	}
-* html .clearfix             { zoom: 1; } /* IE6 */
-*:first-child+html .clearfix { zoom: 1; } /* IE7 */
-
-/*
-MATERIALIZE
-*/
-.chip{
-	padding: $pad-sm;
-	margin-right: $margin-sm;
-}
+	* html .clearfix             { zoom: 1; } /* IE6 */
+	*:first-child+html .clearfix { zoom: 1; } /* IE7 */
