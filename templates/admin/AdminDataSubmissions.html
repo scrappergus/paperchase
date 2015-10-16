@@ -63,7 +63,7 @@
 	{{>processing}}
 
 	{{#if articles}}
-	<div class="row btn-group grey lighten-3">
+	<div class="row btn-group border-gray">
 		<div class="col s4">
 			<button class="waves-effect waves-light btn" id="register-doi-set">
 				Register DOI
@@ -106,54 +106,53 @@
 					{{else}}
 					<div class="chip red lighten-3">Pub Status Not Matched on PubMed - {{pub_status}} vs {{pubmed_pub_status}}</div>
 					{{/if}}
-					<div class="row"><div class="col s12">
-						{{>ArticleMetaSmall}}
-					</div></div>
 
-					<div class="row">
-						<div class="col s6">
-							<h5>Article IDs</h5>
-							<ul>
-							{{#each arrayify ids}}
-								<li><label>{{name}}:</label> {{value}}</li>
-							{{/each}}
-							</ul>
+					<div class="row article-edit hide" id="edit-{{_id}}">
+						<div class="col s12">
+							<div class="row"><div class="col s12">
+								<span class="badge">{{article_type.type}}</span>
+								<button id="cancel-{{_id}}" class="cancel-article btn btn-floating waves-effect waves-light red" alt="Edit Article"><i class="zmdi zmdi-block-alt"></i></button> Cancel
+							</div></div>
 						</div>
-						<div class="col s6">
-							<h5>Article History</h5>
-							<ul>
-							{{#each arrayify history}}
-								<li><label>{{name}}:</label> {{formatDate value}}</li>
-							{{/each}}
-							</ul>
-						</div>
+						{{#if equalsArticleId _id}}
+						{{>AdminArticleForm}}
+						{{/if}}
 					</div>
+					<div class="row article-overview" id="overview-{{_id}}">
+						<div class="col s12">
+							<div class="row"><div class="col s12">
+								<span class="badge">{{article_type.type}}</span>
+								<button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light" alt="Edit Article"><i class="zmdi zmdi-edit"></i></button>
+								<h3>{{{title}}}</h3>
+								<h4>{{>AuthorsRefList}}</h4>
+								<h6>Volume {{volume}}, Issue {{issue}}</h6>
+								{{#if page_start}}<h6><label>pp: </label>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
+								{{#if dates}}
+									{{>ArticleDates}}
+								{{/if}}
+								<h6><label>Pub Status:</label> {{pubStatusAbbrev pub_status}}</h6>
+							</div></div>
 
-					<div class="row"><div class="col s12">
-						<form>
 							<div class="row">
-								<div class="input-field col s12">
-							<p>
-								{{#if equals pub_status '4' }}
-								<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" disabled/>
-								{{else}}
-								<input name="pub-status-{{_id}}" id="radio_aheadofprint-{{_id}}" type="radio" value="10" checked/>
-								{{/if}}
-								<label for="radio_aheadofprint-{{_id}}">Ahead of Print</label>
-							</p>
-
-							<p>
-								{{#if equals pub_status '4' }}
-								<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4" checked />
-								{{else}}
-								<input name="pub-status-{{_id}}" id="radio_ppublish-{{_id}}" type="radio" value="4"/>
-								{{/if}}
-								<label for="radio_ppublish-{{_id}}">Published</label>
-							</p>
+								<div class="col s6">
+									<h5>Article IDs</h5>
+									<ul>
+									{{#each arrayify ids}}
+										<li><label>{{name}}:</label> {{value}}</li>
+									{{/each}}
+									</ul>
+								</div>
+								<div class="col s6">
+									<h5>Article History</h5>
+									<ul>
+									{{#each arrayify history}}
+										<li><label>{{name}}:</label> {{formatDate value}}</li>
+									{{/each}}
+									</ul>
 								</div>
 							</div>
-						</form>
-					</div></div>
+						</div>
+					</div>
 				</li>
 				{{/each}}
 			</ul>

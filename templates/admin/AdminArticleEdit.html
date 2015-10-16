@@ -1,23 +1,8 @@
 <template name="AdminArticle">
 	{{>AdminHeader header="Article"}}
-	{{#if article}}
-	{{initiateDates}}
 	<div class="row">
 		<div class="col s12">
-			<ul class="admin-sub-nav">
-				<li><a href="#article-title">Title</a></li>
-				<li><a href="#abstract">Abstract</a></li>
-				<li><a href="#site">Site</a></li>
-				<li><a href="#meta">Meta</a></li>
-				<li><a href="#meta">IDs</a></li>
-				<li><a href="#authors">Authors</a></li>
-				<li><a href="#dates">Dates</a></li>
-				<li><a href="#history">History</a></li>
-				<li><a href="#keywords">Keywords</a></li>
-			</ul>
-		</div>
-		<div class="col s12">
-			{{>AdminArticleForm article=article}}
+			{{>AdminArticleForm}}
 		</div>
 	</div>
 	<div class="row">
@@ -36,19 +21,29 @@
 			</div>
 		</div>
 	</div>
-	{{else}}
-	<div class="row">
-		<div class="col s12">
-			<h3>No Article Found</h3>
-		</div>
-	</div>
-	{{/if}}
 </template>
 
 <template name="AdminArticleForm">
-	{{>SuccessModal what='Article'}}
+	{{#if article}}
 	{{#with article}}
+	{{>SuccessModal what='Article'}}
 	<form id="article-form">
+		<div class="row">
+			<div class="col s12">
+				<ul class="admin-sub-nav">
+					<li><a href="#article-title">Title</a></li>
+					<li><a href="#abstract">Abstract</a></li>
+					<li><a href="#site">Site</a></li>
+					<li><a href="#meta">Meta</a></li>
+					<li><a href="#meta">IDs</a></li>
+					<li><a href="#authors">Authors</a></li>
+					<li><a href="#dates">Dates</a></li>
+					<li><a href="#history">History</a></li>
+					<li><a href="#keywords">Keywords</a></li>
+				</ul>
+			</div>
+		</div>
+
 		{{>FixedSaveBtn}}
 		{{>saving}}
 
@@ -74,11 +69,11 @@
 			<legend>Site Settings</legend>
 				<div class="row">
 					<div class="col s12 m6 center-align">
-						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{#if feature}}checked{{/if}}"/>
+						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
 						<label for="feature-checkbox">Feature</label>
 					</div>
 					<div class="col s12 m6 center-align">
-						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{#if feature}}advance{{/if}}"/>
+						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{checked advance}}"/>
 						<label for="advance-checkbox">Advance</label>
 					</div>
 				</div>
@@ -322,10 +317,13 @@
 			</div>
 		</div>
 	</form>
-	{{/with}}
 	{{>AddArticleDateModal}}
 	{{>AddArticleHistoryModal}}
 	{{>AddArticleIdModal}}
+	{{/with}}
+	{{else}}
+	<h3>No Article Found</h3>
+	{{/if}}
 </template>
 
 <template name="AdminDateInput">

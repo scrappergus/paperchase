@@ -1,4 +1,4 @@
-//when referencing a pubstatus, the numbering is 1 based. 
+//when referencing a pubstatus, the numbering is 1 based.
 
 pubStatusTranslate = [
 	{
@@ -54,3 +54,20 @@ pubStatusTranslate = [
 		'message' : 'other'
 	}
 ]
+
+
+// pubStatusListOptions = {
+// 	'received': 'Manuscript received for review',
+// 	'accepted' : 'Accepted for publication',
+// 	'epublish' : 'Published electronically',
+// 	'ppublish' : 'Published in print',
+// 	'revised' : 'Article revised by publisher/author',
+// 	'pmc' : 'Article first appeared in PubMed Central',
+// 	'pmcr' : 'Article revision in PubMed Central',
+// 	'pubmed' : 'Article citation first appeared in PubMed',
+// 	'pubmedr' : 'Article citation revision in PubMed',
+// 	'aheadofprint' : 'epublish, but will be followed by print',
+// 	'premedline' : 'Date into PreMedline status',
+// 	'medline' : 'Date made a MEDLINE record',
+// 	'other' : 'other'
+// }

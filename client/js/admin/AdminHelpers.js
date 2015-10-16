@@ -1,6 +1,13 @@
 Template.AdminArticle.helpers({
+	// article : function(){
+	// 	return Meteor.adminArticle.preProcessArticle();
+	// }
+});
+Template.AdminArticleForm.helpers({
 	article : function(){
-		return Meteor.adminArticle.preProcessArticle();
+		var article = Meteor.adminArticle.preProcessArticle();
+		// console.log(article);
+		return article;
 	}
 });
 Template.AddArticleDateModal.helpers({
@@ -64,7 +71,6 @@ Template.AdminDataSubmissions.helpers({
 		return res;
 	},
 	articles: function(){
-		// console.log( Session.get('submission_list'));
 		return Session.get('submission_list');
 	},
 	error: function(){
@@ -174,7 +180,6 @@ Template.adminArticleXmlIntake.helpers({
 		}
 	}
 });
-
 Template.AdminUserSubs.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();

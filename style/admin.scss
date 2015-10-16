@@ -44,10 +44,10 @@
 	}
 
 /* Misc ------------------------*/
-.xml-upload{
-	padding: $pad-lg;
-	@include border-radius(5px);
-	.btn{
+	.xml-upload{
+		padding: $pad-lg;
 		@include border-radius(5px);
+		.btn{
+			@include border-radius(5px);
+		}
 	}
-}

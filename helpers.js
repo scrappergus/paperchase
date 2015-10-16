@@ -1,6 +1,8 @@
 if (Meteor.isClient) {
 	Template.registerHelper('pubStatusAbbrev', function (number) {
-		return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+		if(pubStatusTranslate[parseInt(number - 1)]){
+			return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+		}
 	});
 	Template.registerHelper('getMonthWord', function(month) {
 		var d = new Date(month);
@@ -32,6 +34,11 @@ if (Meteor.isClient) {
 			return moment(date).format('M D, YYYY');;
 		}else{
 			return moment(date).format('M YYYY');;
+		}
+	});
+	Template.registerHelper('checked', function(bool) {
+		if(bool){
+			return 'checked';
 		}
 	});
 	Template.registerHelper('inputDate', function(date) {
@@ -66,6 +73,11 @@ if (Meteor.isClient) {
 	});
 	Template.registerHelper('equals', function (a, b) {
 		return a == b;
+	});
+	Template.registerHelper('equalsArticleId', function(id) {
+		if(Session.get('article-id') === id){
+			return true;
+		}
 	});
 	Template.registerHelper('arrayify',function(obj){
 		result = [];
@@ -149,7 +161,6 @@ if (Meteor.isClient) {
 			return cards;
 		}
 	});
-
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.

@@ -82,8 +82,11 @@ Meteor.adminArticle = {
 		// console.log('..preProcessArticle');
 		var article = Session.get('article');
 		var articleId = Session.get('article-id');
-		if(!article && articleId){
-			article = articles.findOne({'_id': articleId});
+		var preprocess = Session.get('preprocess-article');
+		if(!article){
+			article = articles.findOne({'_id': articleId}); //for /admin/article. otherwise, on the data submissions the article will change
+		}
+		if(preprocess && articleId){
 			if(article){
 				// add ALL affiliations for article to author object, for checkbox input
 				var affs = article.affiliations;

@@ -1,16 +1,17 @@
 Template.AdminArticle.onRendered(function () {
+	Session.set('preprocess-article',true);
 	// scroll to anchor
 	if(window.location.hash) {
 		$('html, body').animate({
 			scrollTop: $(window.location.hash).position().top
 		}, 500);
 	}
-
+});
+Template.AdminArticleForm.onRendered(function () {
 	// title
 	$('.article-title').summernote({
 		onPaste: function(e){
 			e.preventDefault();
-			console.log('paste');
 			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
 			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
 			document.execCommand('insertText', false, bufferText);
@@ -24,7 +25,6 @@ Template.AdminArticle.onRendered(function () {
 	$('.article-abstract').summernote({
 		onPaste: function(e){
 			e.preventDefault();
-			console.log('paste');
 			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
 			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
 			document.execCommand('insertText', false, bufferText);
@@ -51,7 +51,7 @@ Template.AdminArticle.onRendered(function () {
 	});
 
 	// issue, article type
-	// dropdowns
+	// selects
 	$('#article-issue').material_select();
 	$('#article-type').material_select();;
 	$('#article-pub-status').material_select();
@@ -86,6 +86,8 @@ Template.AdminDataSubmissions.onRendered(function () {
 });
 
 Template.AdminDataSubmissionsPast.onRendered(function () {
+	Session.set('article-id',null);
+	Session.set('article',null);
 	$('ul.tabs').tabs();
 });
 

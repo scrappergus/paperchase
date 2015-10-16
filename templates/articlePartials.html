@@ -50,16 +50,6 @@
 		{{>ArticleDates}}
 	{{/if}}
 </template>
-<template name="ArticleMetaSmall">
-	<span class="badge">{{article_type.type}}</span>
-	<h3>{{{title}}}</h3>
-	<h4>{{>AuthorsRefList}}</h4>
-	<h6>Volume {{volume}}, Issue {{issue}}</h6>
-	{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
-	{{#if dates}}
-		{{>ArticleDates}}
-	{{/if}}
-</template>
 
 
 <template name="ArticleButtons">
