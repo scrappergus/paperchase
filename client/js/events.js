@@ -392,7 +392,8 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['article_type'] = {};
 		articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
 		articleUpdateObj['article_type']['type'] = $('#article-type option:selected').text()
-		articleUpdateObj['pub_status'] = parseInt($('#article-pub-status').val() + 1);
+		articleUpdateObj['pub_status'] = $('#article-pub-status').val();
+
 		// ids
 		articleUpdateObj['ids'] = {};
 		$('.article-id').each(function(i){
