@@ -104,18 +104,18 @@
 				<li class="collection-item">
 					{{#if equals pubmed_pub_status pub_status}}
 					{{else}}
-					<div class="box red lighten-4">
+					<!-- <div class="box red lighten-4">
 						<h3>Pub Status Not Matched on PubMed</h3>
 						<h4><label>Saved:</label> {{pub_status}}</h4>
 						<h4><label>PubMed:</label> {{pubmed_pub_status}}</h4>
-					</div>
+					</div> -->
 					{{/if}}
 
 					<div class="row article-edit hide" id="edit-{{_id}}">
 						<div class="col s12">
 							<div class="row"><div class="col s12">
 								<span class="badge">{{article_type.type}}</span>
-								<button id="cancel-{{_id}}" class="cancel-article btn btn-floating waves-effect waves-light red" alt="Edit Article"><i class="zmdi zmdi-block-alt"></i></button> Cancel
+								<button id="cancel-{{_id}}" class="cancel-article btn btn-floating waves-effect waves-light red" alt="Edit Article"><i class="zmdi zmdi-block-alt"></i></button> Cancel/Close
 							</div></div>
 						</div>
 						{{#if equalsArticleId _id}}

@@ -150,7 +150,6 @@ if (Meteor.isClient) {
 
     Session.setDefault('formMethod','');
     Session.setDefault('fileNameXML',''); //LIVE
-    Session.setDefault('submission_list',null);
     Session.setDefault('error',false);
     Session.setDefault('errorMessages',null);
     Session.setDefault('articleData',null);
@@ -450,6 +449,11 @@ if (Meteor.isClient) {
     Router.route('/admin/data_submissions',{
         name: 'AdminDataSubmissions',
         layoutTemplate: 'Admin',
+        onBeforeAction: function(){
+        	Session.set('submission_list',null);
+        	Session.set('error',false);
+        	this.next();
+        },
         waitOn: function(){
             return[
 	            Meteor.subscribe('issues'),

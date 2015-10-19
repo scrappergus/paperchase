@@ -436,7 +436,7 @@ Template.AdminArticleForm.events({
 			var key = $(this).attr('id');
 			if($(this).hasClass('date')){
 				dates[key] = new Date($(this).val());
-				//check if day included
+				// check if day included
 				if($('#dates-' + key + '-no-day').prop('checked')){
 					dates[key].setHours(12,0,0,0)
 				}
@@ -524,11 +524,12 @@ Template.AdminDataSubmissions.events({
 		var queryType = 'issue',
 			queryParams = issueId;
 		Meteor.dataSubmissions.getArticles(queryType,queryParams);
-
 	},
 	'click .clear': function(e){
 		e.preventDefault();
-		Session.set('submission_list',null);
+		// Session.set('submission_list',null);
+		Meteor.subscribe('articles-submission',null,null); //just subscribe to nothin to clear the list
+
 		Session.set('error',false);
 		$('.data-submission-pii').remove();
 		$('.saving').addClass('hide');
@@ -539,7 +540,8 @@ Template.AdminDataSubmissions.events({
 	},
 	'click #register-doi-set': function(e){
 		e.preventDefault();
-		var submissionList = Session.get('submission_list');
+		// var submissionList = Session.get('submission_list');
+		var submissionList = articles.find().fetch();
 		var piiList = '';
 		var missingPiiList = [];
 
@@ -573,8 +575,9 @@ Template.AdminDataSubmissions.events({
 		$('.edit-article').addClass('hide');
 		$(e.target).closest('button').removeClass('hide');
 		var articleId = $(e.target).closest('button').attr('id').replace('edit-','');
-		var articleIndex = $(e.target).closest('.collection-item').index();
-		var article = Session.get('submission_list')[articleIndex];
+		// var articleIndex = $(e.target).closest('.collection-item').index();
+		// var article = Session.get('submission_list')[articleIndex];
+		var article =  articles.findOne({'_id' : articleId});
 
 		Session.set('article-id',articleId);
 		Session.set('preprocess-article',true);
@@ -588,6 +591,7 @@ Template.AdminDataSubmissions.events({
 		Session.set('article-id',null);
 		$('#edit-' + articleId).addClass('hide');
 		$('#overview-' + articleId).removeClass('hide');
+		$('.edit-article').removeClass('hide');
 	}
 })
 

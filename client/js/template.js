@@ -9,6 +9,7 @@ Template.AdminArticle.onRendered(function () {
 Template.AdminArticleForm.onRendered(function () {
 	// title
 	$('.article-title').summernote({
+		styleWithSpan: false,
 		onPaste: function(e){
 			e.preventDefault();
 			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
@@ -16,12 +17,14 @@ Template.AdminArticleForm.onRendered(function () {
 			document.execCommand('insertText', false, bufferText);
 		},
 		toolbar: [
-			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']]
+			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+			['view', ['codeview']]
 		]
 	});
 
 	// abstract
 	$('.article-abstract').summernote({
+		styleWithSpan: false,
 		onPaste: function(e){
 			e.preventDefault();
 			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.

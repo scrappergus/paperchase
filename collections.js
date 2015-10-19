@@ -235,8 +235,18 @@ if (Meteor.isServer) {
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
-  Meteor.publish('articleInfo', function (mongoId) {
-    return articles.find({'_id':mongoId},{});
+  Meteor.publish('submission-set', function (queryType, queryParams) {
+    var articlesList;
+    if(queryType === 'issue'){
+      articlesList = articles.find({'issue_id': queryParams});
+    }else if(queryType === 'pii'){
+      articlesList = articles.find({'_id':{'$in':queryParams}});
+    }
+
+    // if a user wants to change the submissions list and start over,
+    // to clear the collection we just pass a queryType that is neither issue nor pii and undefined will be returned
+
+    return articlesList;
   });
   /*TODO: RECENT define. By pub date?*/
   Meteor.publish('articlesRecentFive', function () {

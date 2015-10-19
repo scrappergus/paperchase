@@ -11,43 +11,43 @@ Meteor.methods({
 			throw new Meteor.Error('Cannot register set');
 		}
 	},
-	getArticlesForDataSubmission: function(type, parameters){
-		// console.log('--getArticlesForDataSubmission');
-		// console.log(parameters);
-		var fut = new future();
-		var articlesList;
-		var processed;
-		if(type === 'issue'){
-			articlesList = articles.find({'issue_id':parameters}).fetch();
-		}else{
-			articlesList = articles.find({'ids.pii':{'$in':parameters}}).fetch();
-		}
-		//get pubstatus
-		if(articlesList.length != 0){
+	preprocessSubmission: function(articlesList){
+		console.log('--preprocessSubmission');
+		console.log(articlesList.length);
+		if(articlesList){
+			var fut = new future();
+			var articlesList;
+			var processed;
 			for(var i = 0 ; i < articlesList.length ; i++){
+				console.log('... '+i);
 				var pmid = articlesList[i]['ids']['pmid'];
+				console.log('     '+pmid);
+
+				//check saved pub status against pubmed
 				Meteor.call('getPubStatusFromPmid',pmid, function(error,result){
 					if(error){
 						console.log('ERROR - getPubStatusFromPmid');
 						console.log(error);
-					}else{
+						throw new Meteor.Error('ERROR - getPubStatusFromPmid', error);
+					}
+					if(result){
 						articlesList[i]['pubmed_pub_status'] = result;
 						if(i == parseInt(articlesList.length -1)){
+							// if this is the last article we are checking, return
 							processed = articlesList;
 						}
+					}else{
+						throw new Meteor.Error('ERROR - getPubStatusFromPmid', 'No Result');
 					}
 				});
 			}
 			if(processed){
-				// console.log(processed);
+				console.log('processed');
+				console.log(processed);
 				fut['return'](processed);
 			}
-		}else{
-			throw new Meteor.Error('get-list-failed', 'No Articles Found');
+			return fut.wait();
 		}
-
-		//works but problem with the template updating the data
-		return fut.wait();
 	},
 	generateDateXml: function(date){
 		var date = new Date(date);
@@ -178,12 +178,13 @@ Meteor.methods({
 	},
 	articleSetCiteXmlValidation: function(submissionList, userId){
 		//create a string of article xml, validate at pubmed, return any articles that failed
-		// console.log('--articleSetXmlValidation ');
+		console.log('--articleSetXmlValidation ');
 		var fut = new future();
 		var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
 		articleSetXmlString += '<ArticleSet>';
-		for(var i=0 ; i<submissionList.length; i++){
+		for(var i = 0 ; i < submissionList.length; i++){
 			var pii = submissionList[i]['ids']['pii'];
+			console.log('... '+i);
 			Meteor.call('generateArticleCiteXml',pii,function(error,xmlString){
 				if(error){
 					console.log('ERROR - generateArticleCiteXml');
@@ -202,8 +203,12 @@ Meteor.methods({
 
 							if(r){
 								//all valid. save the xml set
-								var fileName = new Date().getTime();
-								fileName = fileName + '.xml';
+								var today = new Date();
+								var dd = today.getDay();
+								var mm = today.getMonth()+1;
+								var yyyy = today.getFullYear();
+								var time = today.getTime();
+								var fileName = mm + '_' + dd + '_' + yyyy + '_' + time + '.xml';
 								Meteor.call('saveXmlCiteSet',articleSetXmlString,fileName);
 
 								//update the submissions collection
@@ -227,6 +232,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	saveXmlCiteSet: function(xml,fileName){
+		console.log('... saveXmlCiteSet');
 		var fs = Meteor.npmRequire('fs');
 		var filePath = process.env.PWD + '/xml-sets/' + fileName;
 		fs.writeFile(filePath, xml, function (err) {

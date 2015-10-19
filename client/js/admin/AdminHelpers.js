@@ -71,7 +71,12 @@ Template.AdminDataSubmissions.helpers({
 		return res;
 	},
 	articles: function(){
-		return Session.get('submission_list');
+		// console.log('..Articles helper');
+		var articlesList = articles.find().fetch();
+		if(articlesList){
+			Meteor.dataSubmissions.doneProcessing();
+			return articlesList;
+		}
 	},
 	error: function(){
 		return Session.get('error');

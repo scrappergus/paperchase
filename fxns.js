@@ -84,7 +84,10 @@ Meteor.adminArticle = {
 		var articleId = Session.get('article-id');
 		var preprocess = Session.get('preprocess-article');
 		if(!article){
-			article = articles.findOne({'_id': articleId}); //for /admin/article. otherwise, on the data submissions the article will change
+			article = articles.findOne({'_id': articleId});
+			// for /admin/article. We haven't set the session variable yet.
+			// This gets triggered in the template helper,
+			// and that template & helper are shared on 2 different pages (article and submissions)
 		}
 		if(preprocess && articleId){
 			if(article){
@@ -235,20 +238,10 @@ Meteor.dataSubmissions = {
 		});
 		return piiList;
 	},
-	getArticles:function(queryType,queryParams){
+	getArticles: function(queryType,queryParams){
+		// console.log('... getArticles = ' + queryType + ' / ' + queryParams);
 		Meteor.dataSubmissions.processing();
-		Session.set('submission_list',null);
-		Session.set('error',false);
-		Meteor.call('getArticlesForDataSubmission', queryType, queryParams, function(error,result){
-			if(error){
-				console.log('ERROR - getArticlesForDataSubmission');
-				console.log(error);
-				Meteor.dataSubmissions.errorProcessing();
-			}else{
-				Meteor.dataSubmissions.doneProcessing();
-				Session.set('submission_list',result);
-			}
-		});
+		var articleSub = Meteor.subscribe('submission-set',queryType,queryParams);
 	},
 	processing: function(){
 		$('.saving').removeClass('hide');
@@ -262,7 +255,7 @@ Meteor.dataSubmissions = {
 	},
 	validateXmlSet: function(){
 		$('.saving').removeClass('hide');
-		var submissionList = Session.get('submission_list');
+		var submissionList = articles.find().fetch();
 		// console.log(submissionList);
 		Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
 			$('.saving').addClass('hide');
