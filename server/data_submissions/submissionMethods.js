@@ -31,8 +31,7 @@ Meteor.methods({
 						console.log('ERROR - getPubStatusFromPmid');
 						console.log(error);
 					}else{
-						articlesList[i]['pubmed_pub_status'] = parseInt(result);
-						articlesList[i]['pub_status_message'] = pubStatusTranslate[parseInt(result-1)]['message'];
+						articlesList[i]['pubmed_pub_status'] = result;
 						if(i == parseInt(articlesList.length -1)){
 							processed = articlesList;
 						}

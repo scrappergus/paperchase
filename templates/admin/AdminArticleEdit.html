@@ -92,7 +92,7 @@
 				</div>
 				<div class="col s6 m4">
 					<select id="article-issue">
-						<option value="">Unassigned Issue</option>
+						<option disabled>&mdash;&mdash; Select Issue &mdash;&mdash;</option>
 						{{#each volumes}}
 						<option disabled>&mdash; Volume {{volume}} &mdash;</option>
 						{{#each issues}}
@@ -103,6 +103,7 @@
 				</div>
 				<div class="col s6 m4">
 					<select id="article-type">
+						<option disabled>&mdash;&mdash; Select Article Type &mdash;&mdash;</option>
 						{{#each article_type_list}}
 						<option value="{{short_name}}" selected="{{#if selected}}selected{{/if}}">{{type}}</option>
 						{{/each}}
@@ -112,8 +113,9 @@
 			<div class="row">
 				<div class="col s4">
 					<select id="article-pub-status">
+						<option disabled>&mdash;&mdash; Select Pub Status &mdash;&mdash;</option>
 					{{#each pub_status_list}}
-						<option value="{{@index}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
+						<option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
 					{{/each}}
 					</select>
 				</div>

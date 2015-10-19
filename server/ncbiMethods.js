@@ -43,12 +43,13 @@ Meteor.methods({
 	},
 	getPubStatusFromPmid: function(pmid){
 		// console.log('--getPubStatusFromPmid');
-		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + pmid;
+		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=' + pmid;
 		var res;
 		res = Meteor.http.get(requestURL);
-
 		if(res){
-			var articlePubStatus = res.data.result[pmid]['pubstatus'];
+			var xml = res.content;
+			var articlePubStatus = xml.substring(xml.lastIndexOf('<PublicationStatus>')+19,xml.lastIndexOf('</PublicationStatus>'));
+			// console.log(articlePubStatus);
 			return articlePubStatus;
 		}
 	},

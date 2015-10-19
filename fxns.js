@@ -132,14 +132,17 @@ Meteor.adminArticle = {
 
 				// pubstatus
 				article['pub_status_list'] = pubStatusTranslate;
+				var statusFound = false;
 				if(article['pub_status']){
 					var pubStatusDisable = true;
 				}
-				for(var p=0 ; p<pubStatusTranslate.length ;p++){
-					if(pubStatusDisable && p < parseInt(article['pub_status'] - 1)){
-						article['pub_status_list'][p]['disabled'] = true;
-					}else if(p === parseInt(article['pub_status'] - 1)){
+				for(var p = 0; p < pubStatusTranslate.length; p++){
+					if(article['pub_status_list'][p]['abbrev'] == article['pub_status']){
 						article['pub_status_list'][p]['selected'] = true;
+						statusFound = true;
+					}
+					if(!statusFound){
+						article['pub_status_list'][p]['disabled'] = true;
 					}
 				}
 

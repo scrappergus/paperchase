@@ -690,9 +690,9 @@ Template.AdminBatchXml.events({
 	},
 	'click #get-all-pub-status': function(e){
 		e.preventDefault();
-		Meteor.call('updateAllArticlesPubStatusNumber', function(error,result){
+		Meteor.call('updateAllArticlesPubStatus', function(error,result){
 			if(error){
-				console.log('ERROR - updateAllArticlesPubStatusNumber');
+				console.log('ERROR - updateAllArticlesPubStatus');
 				console.log(error);
 			}
 		});

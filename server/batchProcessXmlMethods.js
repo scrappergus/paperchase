@@ -238,10 +238,9 @@ Meteor.methods({
 			}
 		}
 	},
-	updateAllArticlesPubStatusNumber: function(){
-		console.log('--updateAllArticlesPubStatusNumber');
+	updateAllArticlesPubStatus: function(){
+		console.log('--updateAllArticlesPubStatus');
 		var articlesList = articles.find().fetch();
-
 		for(var i = 0 ; i < articlesList.length ; i++){
 			var pmid = articlesList[i]['ids']['pmid'];
 			console.log('... pmid= ' + pmid);
@@ -251,7 +250,7 @@ Meteor.methods({
 					console.log(error);
 				}else{
 					var update = {
-						'pub_status' : parseInt(result)
+						'pub_status' : result
 					}
 					Meteor.call('updateArticle',articlesList[i]['_id'], update, function(e,r){
 						if(e){

@@ -1,5 +1,4 @@
 Template.AdminArticle.onRendered(function () {
-	Session.set('preprocess-article',true);
 	// scroll to anchor
 	if(window.location.hash) {
 		$('html, body').animate({

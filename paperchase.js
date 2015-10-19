@@ -557,6 +557,10 @@ if (Meteor.isClient) {
     Router.route('/admin/article/:_id',{
         name: 'AdminArticle',
         layoutTemplate: 'Admin',
+        onBeforeAction: function(){
+			Session.set('preprocess-article',true);
+			this.next();
+        },
         waitOn: function(){
             return[
 				Meteor.subscribe('articleInfo',this.params._id),
@@ -790,7 +794,7 @@ Router.route('/admin/batch_process', {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('articles')
+            	Meteor.subscribe('articles')
             ]
         },
     });

@@ -63,7 +63,7 @@
 	{{>processing}}
 
 	{{#if articles}}
-	<div class="row btn-group border-gray">
+	<div class="row btn-group box border-gray">
 		<div class="col s4">
 			<button class="waves-effect waves-light btn" id="register-doi-set">
 				Register DOI
@@ -104,7 +104,11 @@
 				<li class="collection-item">
 					{{#if equals pubmed_pub_status pub_status}}
 					{{else}}
-					<div class="chip red lighten-3">Pub Status Not Matched on PubMed - {{pub_status}} vs {{pubmed_pub_status}}</div>
+					<div class="box red lighten-4">
+						<h3>Pub Status Not Matched on PubMed</h3>
+						<h4><label>Saved:</label> {{pub_status}}</h4>
+						<h4><label>PubMed:</label> {{pubmed_pub_status}}</h4>
+					</div>
 					{{/if}}
 
 					<div class="row article-edit hide" id="edit-{{_id}}">
@@ -130,7 +134,7 @@
 								{{#if dates}}
 									{{>ArticleDates}}
 								{{/if}}
-								<h6><label>Pub Status:</label> {{pubStatusAbbrev pub_status}}</h6>
+								<h6><label>Pub Status:</label> {{pub_status}}</h6>
 							</div></div>
 
 							<div class="row">
