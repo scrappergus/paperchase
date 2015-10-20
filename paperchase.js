@@ -1,7 +1,7 @@
+// Config
 // async loader for fonts
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
-
 	WebFontConfig = {
 		google: { families: [ 'Lora:400,400italic,700,700italic:latin' ] }
 	};
@@ -16,9 +16,15 @@ if (Meteor.isClient) {
 			//console.log("async fonts loaded", WebFontConfig);
 	})();
 }
-
 Router.configure({
 	loadingTemplate: 'Loading'
+});
+
+Meteor.startup(function () {
+	if (Meteor.isServer) {
+		var emailSettings = Meteor.call('getConfigRecomendationEmail');
+		process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
+	}
 });
 
 
@@ -51,6 +57,7 @@ institutions.after.remove(function(userId, doc) {
 	});
 });
 
+
 // DOWNLOAD ROUTES
 Router.route('/pdf/:_filename',{
 	where: 'server',
@@ -82,10 +89,10 @@ Router.route('/xml-cite-set/:_filename',{
 	}
 });
 
-
 if (Meteor.isClient) {
 	Session.setDefault('formMethod','');
 	Session.setDefault('fileNameXML',''); //LIVE
+	// Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
 	Session.setDefault('error',false);
 	Session.setDefault('errorMessages',null);
 	Session.setDefault('articleData',null);
@@ -94,7 +101,7 @@ if (Meteor.isClient) {
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
-	// Session.setDefault('fileNameXML','PMC2815766.xml'); //LOCAL TESTING
+
 
 	Router.route('/', {
 		name: 'Home',

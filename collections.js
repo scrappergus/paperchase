@@ -9,6 +9,7 @@ authors = new Mongo.Collection('authors');
 recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
 submissions = new Mongo.Collection('submissions');
+journalConfig = new Mongo.Collection('config');
 
 
 Meteor.users.allow({
@@ -210,9 +211,14 @@ submissions.allow({
 });
 
 if (Meteor.isServer) {
-    Meteor.publish(null, function() {
-            return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
-        });
+  Meteor.publish(null, function() {
+    return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
+  });
+
+  Meteor.publish('journalConfig', function() {
+    var siteConfig =  journalConfig.find({},{fields: {journal : 1}});
+    return siteConfig;
+  });
 
   Meteor.publish('volumes', function () {
     return volumes.find({},{sort : {volume:-1}});
@@ -279,7 +285,6 @@ if (Meteor.isServer) {
       return;
     }
   });
-
   Meteor.publish('userData', function(id){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return Meteor.users.find({'_id':id});
@@ -288,7 +293,6 @@ if (Meteor.isServer) {
       return;
      }
   });
-
   Meteor.publish('currentUser', function(id){
     if(!this.userId) return null;
     return Meteor.users.find(this.userId, {fields: {
@@ -309,7 +313,6 @@ if (Meteor.isServer) {
       return;
      }
   });
-
   Meteor.publish('institution', function(id){
           if (Roles.userIsInRole(this.userId, ['admin'])) {
               return institutions.find({"_id":id});
@@ -317,7 +320,7 @@ if (Meteor.isServer) {
               this.stop();
               return;
           }
-      });
+  });
 
   Meteor.publish('ipranges', function () {
           return ipranges.find({});
@@ -372,7 +375,8 @@ if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
 	// Meteor.subscribe('volumes');
 	//  Meteor.subscribe('issues');
-    Meteor.subscribe('ipranges')
-    Meteor.subscribe('institutions')
-    Meteor.subscribe('subs')
+    Meteor.subscribe('ipranges');
+    Meteor.subscribe('institutions');
+    Meteor.subscribe('subs');
+    Meteor.subscribe('journalConfig');
 }
