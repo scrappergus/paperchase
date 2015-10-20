@@ -1,7 +1,7 @@
 Meteor.methods({
 	'getEjpAccepted' : function(){
 		console.log('..getAccepted');
-		var ejpConfig = Meteor.call('getConfigEjp');
+		var ejpConfig = Meteor.call('getConfigSubmission');
 		var cookieValue = [ejpConfig['cookie']],
 			agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36',
 			requestURL = ejpConfig.url + 'cgi-bin/main.plex',

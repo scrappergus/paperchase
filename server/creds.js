@@ -14,13 +14,13 @@ Meteor.methods({
 		var emailConfig = journalConfig.findOne({}, {fields: {email_lib_recommendation : 1}});
 		return emailConfig['email_lib_recommendation']['address']; // do not replace @ here. Email.send does not require encoding
 	},
-	getConfigEjp : function(){
-		var ejpConfig = journalConfig.findOne({}, {fields: {ejp : 1}});
+	getConfigSubmission : function(){
+		var submissionConfig = journalConfig.findOne({}, {fields: {submission : 1}});
 		return {
-			url: config['ejp']['url'],
-			username: config['ejp']['user'],
-			password: config['ejp']['pw'],
-			cookie : config['ejp']['cookie']
+			url: submissionConfig['submission']['url'],
+			username: submissionConfig['submission']['user'],
+			password: submissionConfig['submission']['pw'],
+			cookie : submissionConfig['submission']['cookie']
 		}
 	},
 	getConfigJournal : function(){

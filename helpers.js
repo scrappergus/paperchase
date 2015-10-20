@@ -148,6 +148,12 @@ if (Meteor.isClient) {
 			if(journalSettings){
 				return journalSettings['journal']['logo']['banner'];
 			}
+    	},
+    	submitLink : function(){
+  			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['submission']['url'];
+			}
     	}
     });
 	Template.Home.helpers({
