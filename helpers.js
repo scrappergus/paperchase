@@ -142,6 +142,11 @@ if (Meteor.isClient) {
 	});
 
     // Template Helpers
+    Template.Visitor.helpers({
+    	bannerLogo: function(){
+    		return journalConfig.findOne()['journal']['logo']['banner'];
+    	}
+    });
 	Template.Home.helpers({
 		cards: function(){
 			var cards = [
