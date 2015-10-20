@@ -9,7 +9,7 @@
 <template name="Visitor">
 
 <div class="navbar-fixed" style="margin-bottom:6px;">
-    <nav class="aging-nav z-depth-0" role="navigation">
+    <nav class="journal-nav z-depth-0" role="navigation">
         <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
             <ul class="right hide-on-med-and-down">
                 <li><a href="http://www.impactaging.com/contact.html">Submit an Article</a></li>
@@ -58,7 +58,7 @@
         <p>You are viewing Aging from this IP address: {{clientIP}}</p>
         {{#if isSubscribedIP}}
         <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
-        {{/if}}        
+        {{/if}}
     </div>
 </div>
 </template>

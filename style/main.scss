@@ -77,7 +77,7 @@ html,body{
 			text-align: center;
 		}
 	}
-	.aging-nav {
+	.journal-nav {
 		background-color: rgba(55, 71, 79, 0.9);
 	}
 
@@ -175,7 +175,7 @@ html,body{
 
 /* Materialize ------------------------*/
 	.card-header{
-		border-bottom: 2px solid $blue-aging;
+		border-bottom: 2px solid $journal-primary-color;
 	}
 	.chip{
 		padding: $pad-sm;
@@ -209,7 +209,7 @@ html,body{
 /* MISC ------------------------*/
 	.ip-alert{
 		padding: $pad-md 0;
-		background: $blue-aging;
+		background: $journal-primary-color;
 		p{
 			margin: 0;
 			color: $white-dark;
