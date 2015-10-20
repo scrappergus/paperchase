@@ -91,7 +91,7 @@ if (Meteor.isClient) {
 			return headers.getClientIP();
 	});
     Template.registerHelper('isSubscribed', function() {
-            ip = dot2num(headers.getClientIP());
+            ip = Meteor.ip.dot2num(headers.getClientIP());
 
             var match = ipranges.findOne( {
                     startNum: {$lte: ip}
@@ -112,7 +112,7 @@ if (Meteor.isClient) {
             return match !== undefined;
 	});
 	Template.registerHelper('isSubscribedIP', function() {
-			ip = dot2num(headers.getClientIP());
+			ip = Meteor.ipdot2num(headers.getClientIP());
 
 			var match = ipranges.findOne( {
 					startNum: {$lte: ip}
@@ -123,7 +123,7 @@ if (Meteor.isClient) {
 			return match !== undefined;
 	});
     Template.registerHelper('getInstitutionByIP', function() {
-            ip = dot2num(headers.getClientIP());
+            ip = Meteor.ip.dot2num(headers.getClientIP());
 
             var match = ipranges.findOne( {
                     startNum: {$lte: ip}
