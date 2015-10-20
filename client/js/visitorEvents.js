@@ -36,9 +36,9 @@ Template.Recommend.events({
 
 		if(errors.length === 0 ){
 			//submit form
-			Meteor.call('addReccomendation', inputs, function(error,result){
+			Meteor.call('addRecommendation', inputs, function(error,result){
 				if(error){
-					console.log('ERROR - addReccomendation');
+					console.log('ERROR - addRecommendation');
 					console.log(error);
 				}else{
 					Meteor.formActions.success();

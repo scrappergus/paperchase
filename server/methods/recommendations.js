@@ -1,5 +1,5 @@
 Meteor.methods({
-	addReccomendation: function(doc){
+	addRecommendation: function(doc){
 		var res = recommendations.insert(doc);
 		if(res){
 			doc.mongo_id = res;
