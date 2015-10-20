@@ -229,5 +229,4 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-})
-
+});
