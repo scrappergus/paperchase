@@ -736,32 +736,6 @@ Router.route('/admin/batch_process', {
         },
     });
 }
-// Router.route('/xml/:_filename',{
-//     name: 'xml',
-//     where: 'server',
-//     data: function(){
-//         Meteor.call('getXML',this.params._filename,function(e,xml){
-//             if(e){
-//                 console.log('error');
-//                 console.log(e);
-//             }else{
-//                 // xml;
-//                 // console.log(xml);
-//                 return xml;
-//             }
-//         });
-//     },
-//     action: function(r) {
-//         if (this.ready()) {
-//             console.log(this.params._filename);
-//             // console.log(r);
-//             console.log(this);
-//             var headers = {'Content-type': 'application/xml', 'charset' : 'ISO-8859-1'};
-//             this.response.writeHead(200, headers);
-//             this.response.end('<xml></xml>');
-//         }
-//     }
-// });
 
 var toType = function(obj) {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
