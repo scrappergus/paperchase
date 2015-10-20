@@ -26,7 +26,6 @@ Meteor.methods({
 		var siteUrl = Meteor.call('getConfigSiteUrl');
 
 		message += 'View at: ' + siteUrl + '/admin/recommendation/'+doc.mongo_id;
-		console.log('TO : '+ address);
 
 		Email.send({
 			to: address,
