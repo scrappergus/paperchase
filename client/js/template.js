@@ -1,3 +1,4 @@
+// Admin
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
 	if(window.location.hash) {
@@ -93,6 +94,17 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 	$('ul.tabs').tabs();
 });
 
+
+// Visitor
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
+Template.Home.onRendered(function () {
+	$('.edboard-name').click(function() {
+		$(this).next().toggle();
+	});
+
+	$('.collapsible').collapsible({
+		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+	});
+};

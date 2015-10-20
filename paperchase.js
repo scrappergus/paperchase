@@ -1,6 +1,5 @@
 // async loader for fonts
 // https://github.com/typekit/webfontloader
-
 if (Meteor.isClient) {
 
     WebFontConfig = {
@@ -14,14 +13,13 @@ if (Meteor.isClient) {
             wf.async = 'true';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(wf, s);
-//            console.log("async fonts loaded", WebFontConfig);
-        })();
-
+			//console.log("async fonts loaded", WebFontConfig);
+	})();
 }
 
 Router.configure({
-        loadingTemplate: 'Loading'
-    });
+	loadingTemplate: 'Loading'
+});
 
 
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
@@ -48,11 +46,11 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
 institutions.after.insert(institutionUpdateInsertHook);
 institutions.after.update(institutionUpdateInsertHook);
 institutions.after.remove(function(userId, doc) {
-        var iprid = ipranges.find({institutionID: doc._id});
-        iprid.forEach(function(rec) {
-                ipranges.remove({_id: rec._id});
-            });
-    });
+	var iprid = ipranges.find({institutionID: doc._id});
+	iprid.forEach(function(rec) {
+		ipranges.remove({_id: rec._id});
+	});
+});
 
 
 //DOWNLOAD ROUTES
@@ -89,62 +87,6 @@ Router.route('/xml-cite-set/:_filename',{
 
 if (Meteor.isClient) {
 
-    Template.registerHelper('isSubscribed', function() {
-            ip = dot2num(headers.getClientIP());
-
-            var match = ipranges.findOne( {
-                    startNum: {$lte: ip}
-                    ,endNum: {$gte: ip}
-                }
-            );
-
-            if(match === undefined) {
-                userId = Meteor.userId();
-                match = Meteor.users.findOne({'_id':userId, subscribed:true});
-            }
-
-            return match !== undefined;
-        });
-
-
-
-    Template.registerHelper('isSubscribedUser', function() {
-            userId = Meteor.userId();
-            match = Meteor.users.findOne({'_id':userId, subscribed:true});
-            return match !== undefined;
-        });
-
-	Template.registerHelper('isSubscribedIP', function() {
-			ip = dot2num(headers.getClientIP());
-
-			var match = ipranges.findOne( {
-					startNum: {$lte: ip}
-					,endNum: {$gte: ip}
-				}
-			);
-
-			return match !== undefined;
-		});
-
-    Template.registerHelper('getInstitutionByIP', function() {
-            ip = dot2num(headers.getClientIP());
-
-            var match = ipranges.findOne( {
-                    startNum: {$lte: ip}
-                    ,endNum: {$gte: ip}
-                }
-            );
-
-            if(match) {
-                inst_match = institutions.findOne({
-                        "_id": match.institutionID
-                    });
-            }
-
-
-            return inst_match || false;
-        });
-
 
 
 
@@ -178,17 +120,8 @@ if (Meteor.isClient) {
                     eb:edboard.find({role:"Founding Editorial Board"})
                 }
             }
-        });
+	});
 
-    Template.Home.rendered = function () {
-        $('.edboard-name').click(function() {
-                $(this).next().toggle();
-            });
-
-        $('.collapsible').collapsible({
-                accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-            });
-    };
 
     Router.route('/advance', {
             name: 'advance',
@@ -829,11 +762,6 @@ Router.route('/admin/batch_process', {
 //         }
 //     }
 // });
-if (Meteor.isServer) {
-    Meteor.startup(function () {
-
-        });
-}
 
 var toType = function(obj) {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()

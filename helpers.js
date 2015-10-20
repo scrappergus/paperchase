@@ -89,9 +89,59 @@ if (Meteor.isClient) {
 	});
 	Template.registerHelper('clientIP', function() {
 			return headers.getClientIP();
-		 });
+	});
+    Template.registerHelper('isSubscribed', function() {
+            ip = dot2num(headers.getClientIP());
+
+            var match = ipranges.findOne( {
+                    startNum: {$lte: ip}
+                    ,endNum: {$gte: ip}
+                }
+            );
+
+            if(match === undefined) {
+                userId = Meteor.userId();
+                match = Meteor.users.findOne({'_id':userId, subscribed:true});
+            }
+
+            return match !== undefined;
+	});
+    Template.registerHelper('isSubscribedUser', function() {
+            userId = Meteor.userId();
+            match = Meteor.users.findOne({'_id':userId, subscribed:true});
+            return match !== undefined;
+	});
+	Template.registerHelper('isSubscribedIP', function() {
+			ip = dot2num(headers.getClientIP());
+
+			var match = ipranges.findOne( {
+					startNum: {$lte: ip}
+					,endNum: {$gte: ip}
+				}
+			);
+
+			return match !== undefined;
+	});
+    Template.registerHelper('getInstitutionByIP', function() {
+            ip = dot2num(headers.getClientIP());
+
+            var match = ipranges.findOne( {
+                    startNum: {$lte: ip}
+                    ,endNum: {$gte: ip}
+                }
+            );
+
+            if(match) {
+                inst_match = institutions.findOne({
+                        "_id": match.institutionID
+                    });
+            }
 
 
+            return inst_match || false;
+	});
+
+    // Template Helpers
 	Template.ErrorMessages.helpers({
 		errors: function(){
 			return Session.get('errorMessages');
