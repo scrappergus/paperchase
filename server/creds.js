@@ -23,7 +23,8 @@ Meteor.methods({
 			cookie : config['ejp']['cookie']
 		}
 	},
-	getConfigSiteSettings : function(){
-		return journalConfig.findOne({}, {fields: {journal : 1}});
-	}
+	getConfigJournal : function(){
+		var settings = journalConfig.findOne({}, {fields: {journal : 1}});
+		return settings['journal'];
+	},
 });

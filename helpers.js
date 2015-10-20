@@ -144,7 +144,10 @@ if (Meteor.isClient) {
     // Template Helpers
     Template.Visitor.helpers({
     	bannerLogo: function(){
-    		return journalConfig.findOne()['journal']['logo']['banner'];
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['journal']['logo']['banner'];
+			}
     	}
     });
 	Template.Home.helpers({
@@ -220,7 +223,10 @@ if (Meteor.isClient) {
 	});
 	Template.AdminNav.helpers({
 		bannerLogo: function(){
-			return journalConfig.findOne()['journal']['logo']['banner'];
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['journal']['logo']['banner'];
+			}
 		}
 	});
 }

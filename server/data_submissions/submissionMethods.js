@@ -66,11 +66,12 @@ Meteor.methods({
 	generateArticleCiteXml: function(articlePii){
 		// console.log('..generateArticleXml ');
 		var article = articles.findOne({'ids.pii':articlePii});
+		var journalSettings = Meteor.call('getConfigJournal');
 		if(article.length === 0){
 			throw new Meteor.Error('xml-generation failed', 'Could not create article XML');
 		}else{
 			// console.log(article);
-			var xmlString = '<Article><Journal><PublisherName>Impact Journals, LLC</PublisherName><JournalTitle>Aging</JournalTitle><Issn>1945-4589</Issn>';
+			var xmlString = '<Article><Journal><PublisherName>' + journalSettings['publisher']['name'] + '</PublisherName><JournalTitle>' + journalSettings['name'] + '</JournalTitle><Issn>' + journalSettings['issn'] + '</Issn>';
 			xmlString += '<Volume>' + article.volume + '</Volume>';
 			xmlString += '<Issue>' + article.issue + '</Issue>';
 
@@ -184,7 +185,7 @@ Meteor.methods({
 		articleSetXmlString += '<ArticleSet>';
 		for(var i = 0 ; i < submissionList.length; i++){
 			var pii = submissionList[i]['ids']['pii'];
-			console.log('... '+i);
+			// console.log('... '+i);
 			Meteor.call('generateArticleCiteXml',pii,function(error,xmlString){
 				if(error){
 					console.log('ERROR - generateArticleCiteXml');
