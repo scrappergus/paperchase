@@ -22,7 +22,7 @@ Meteor.methods({
 			message += 'Message: ' + doc.message + '\r\n';
 		}
 
-		var address = Meteor.call('getConfigRecomendationEmailAddress');
+		var address = Meteor.call('getConfigRecommendationEmailAddress');
 		var siteUrl = Meteor.call('getConfigSiteUrl');
 
 		message += 'View at: ' + siteUrl + '/admin/recommendation/'+doc.mongo_id;

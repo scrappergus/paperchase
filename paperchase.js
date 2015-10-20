@@ -22,7 +22,7 @@ Router.configure({
 
 Meteor.startup(function () {
 	if (Meteor.isServer) {
-		var emailSettings = Meteor.call('getConfigRecomendationEmail');
+		var emailSettings = Meteor.call('getConfigRecommendationEmail');
 		process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
 	}
 });
