@@ -142,32 +142,6 @@ if (Meteor.isClient) {
 	});
 
     // Template Helpers
-	Template.ErrorMessages.helpers({
-		errors: function(){
-			return Session.get('errorMessages');
-		}
-	});
-	Template.SubscribeModal.helpers({
-		article: function(){
-			return Session.get('articleData');
-		}
-	});
-	Template.Archive.helpers({
-		volumes: function(){
-			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-			var iss = issues.find({},{sort : {issue:-1}}).fetch();
-			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-			return res;
-		}
-	});
-	Template.AdminArchive.helpers({
-		volumes: function(){
-			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-			var iss = issues.find({},{sort : {issue:-1}}).fetch();
-			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-			return res;
-		}
-	});
 	Template.Home.helpers({
 		cards: function(){
 			var cards = [
@@ -209,6 +183,34 @@ if (Meteor.isClient) {
 				}
 			];
 			return cards;
+		}
+	});
+	Template.ErrorMessages.helpers({
+		errors: function(){
+			return Session.get('errorMessages');
+		}
+	});
+	Template.SubscribeModal.helpers({
+		article: function(){
+			return Session.get('articleData');
+		}
+	});
+	Template.Archive.helpers({
+		volumes: function(){
+			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
+			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
+			return res;
+		}
+	});
+
+	// Admin Template Helpers
+	Template.AdminArchive.helpers({
+		volumes: function(){
+			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
+			var iss = issues.find({},{sort : {issue:-1}}).fetch();
+			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
+			return res;
 		}
 	});
 }
