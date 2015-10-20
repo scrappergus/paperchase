@@ -218,6 +218,11 @@ if (Meteor.isClient) {
 			return res;
 		}
 	});
+	Template.AdminNav.helpers({
+		bannerLogo: function(){
+			return journalConfig.findOne()['journal']['logo']['banner'];
+		}
+	});
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.
