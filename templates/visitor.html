@@ -7,37 +7,32 @@
 </head>
 
 <template name="Visitor">
+    <div class="navbar-fixed" style="margin-bottom:6px;">
+        <nav class="journal-nav z-depth-0" role="navigation">
+            <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="http://www.impactaging.com/contact.html">Submit an Article</a></li>
+                    <li>{{> loginButtons}}</li>
+                    <li><a href="/search"><i class="material-icons">search</i></a></li>
+                </ul>
 
-<div class="navbar-fixed" style="margin-bottom:6px;">
-    <nav class="journal-nav z-depth-0" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="/images/aging-logo.png"></a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="http://www.impactaging.com/contact.html">Submit an Article</a></li>
-                <li>{{> loginButtons}}</li>
-                <li><a href="/search"><i class="material-icons">search</i></a></li>
-            </ul>
+                <ul id="nav-mobile" class="side-nav">
+                    <li><a href="#">Navbar Link</a></li>
+                </ul>
+                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+            </div>
+        </nav>
+    </div>
 
-            <ul id="nav-mobile" class="side-nav">
-                <li><a href="#">Navbar Link</a></li>
-            </ul>
-            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-        </div>
-    </nav>
-</div>
-
-<div class="container ">
-    <div class="row white z-depth-2" style="margin-bottom:0px;">
-        <div class="col s12">
-            {{>yield}}
+    <div class="container ">
+        <div class="row white z-depth-2" style="margin-bottom:0px;">
+            <div class="col s12">
+                {{>yield}}
+            </div>
         </div>
     </div>
-</div>
 
-
-{{>footer}}
-
-
-
+    {{>footer}}
 </template>
 
 <template name="footer">
@@ -53,13 +48,13 @@
 </template>
 
 <template name="IP address">
-<div class="ip-alert right-align">
-    <div class="container">
-        <p>You are viewing Aging from this IP address: {{clientIP}}</p>
-        {{#if isSubscribedIP}}
-        <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
-        {{/if}}
+    <div class="ip-alert right-align">
+        <div class="container">
+            <p>You are viewing Aging from this IP address: {{clientIP}}</p>
+            {{#if isSubscribedIP}}
+            <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
+            {{/if}}
+        </div>
     </div>
-</div>
 </template>
 
