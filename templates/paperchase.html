@@ -170,12 +170,11 @@
     <div class="row">
         {{> LeftNav}}
         <div class="col s10">
-
-            <h3>Aging Editors-in-Chief</h3>
+            <h3>{{journalName}} Editors-in-Chief</h3>
             <ul class="home-page-editors-list">
                 {{#each eic}}
                 <li>
-                <div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
+                    <div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
                 </li>
                 {{/each}}
             </ul>
@@ -186,7 +185,7 @@
             <ul class="home-page-editors-list">
                 {{#each fullBoard}}
                 <li>
-                <div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
+                    <div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
                 </li>
                 {{/each}}
             </ul>

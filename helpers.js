@@ -144,17 +144,23 @@ if (Meteor.isClient) {
     // Template Helpers
     Template.Visitor.helpers({
     	bannerLogo: function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['journal']['logo']['banner'];
-			}
+    		journalSettings = journalConfig.findOne();
+			return journalSettings['journal']['logo']['banner'];
     	},
-    	submitLink : function(){
-  			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['submission']['url'];
-			}
+		submitLink : function(){
+			journalSettings = journalConfig.findOne();
+			return journalSettings['submission']['url'];
     	}
+    });
+    Template.Footer.helpers({
+		publisher : function(){
+			journalSettings = journalConfig.findOne();
+			return journalSettings['journal']['publisher']['name'];
+		},
+		issn : function(){
+			journalSettings = journalConfig.findOne();
+			return journalSettings['journal']['issn'];
+		}
     });
 	Template.Home.helpers({
 		cards: function(){
@@ -215,6 +221,12 @@ if (Meteor.isClient) {
 			var iss = issues.find({},{sort : {issue:-1}}).fetch();
 			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
 			return res;
+		}
+	});
+	Template.EdBoard.helpers({
+		journalName: function(){
+			journalSettings = journalConfig.findOne();
+			return journalSettings['journal']['name'];
 		}
 	});
 
