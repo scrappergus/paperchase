@@ -1,7 +1,7 @@
 Meteor.methods({
 	registerDoiSet: function(piiList){
 		piiList = piiList.substring(0, piiList.length - 1); //remove trailing comma
-		var requestURL = 'http://doi.oncotarget.com/submit_pii/aging/' + piiList;
+		var requestURL = doiConfig['api'] + journalConfig['short_name'] +'/' + piiList;
 		var res;
 		res = Meteor.http.get(requestURL + '?test=true');
 		if(res && res.statusCode === 200){

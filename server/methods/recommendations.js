@@ -22,10 +22,13 @@ Meteor.methods({
 			message += 'Message: ' + doc.message + '\r\n';
 		}
 
+		// email_lib_recomendation_address. Set in creds.js
 		message += 'View at: paperchase.oncotarget.com/admin/recommendation/'+doc.mongo_id;
+		console.log('TO : '+email_lib_recomendation_address);
+
 		Email.send({
-			to: 'agingnotifications@gmail.com',
-			from: 'agingnotifications@gmail.com',
+			to: email_lib_recomendation_address,
+			from: email_lib_recomendation_address,
 			subject: 'Subscription Recommendation',
 			text: message
 		});

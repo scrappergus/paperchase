@@ -1,12 +1,12 @@
 Meteor.methods({
 	'getEjpAccepted' : function(){
 		console.log('..getAccepted');
-		var cookieValue = ['aging_ejp=1'],
+		var cookieValue = [ejpConfig['cookie']],
 			agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36',
-			requestURL = ejpCred.url + 'cgi-bin/main.plex',
-			username = ejpCred.username,
-			password = ejpCred.password,
-			journalEjpId = ejpCred.journalEjpId;
+			requestURL = ejpConfig.url + 'cgi-bin/main.plex',
+			username = ejpConfig.username,
+			password = ejpConfig.password,
+			journalEjpId = ejpConfig.journalEjpId;
 
 
 			var login_res = Meteor.http.post(requestURL, {
@@ -22,8 +22,8 @@ Meteor.methods({
 					'Connection' : 'Keep-Alive',
 					'User-Agent' : agent,
 					'cookie' : cookieValue,
-					'Referer' : 'http://aging.msubmit.net/cgi-bin/main.plex',
-					'Origin' : 'http://aging.msubmit.net'
+					'Referer' : ejpConfig['url'] + '/cgi-bin/main.plex',
+					'Origin' : ejpConfig['url']
 	          	}
 			});
 
@@ -44,7 +44,7 @@ Meteor.methods({
 					if(newCookies[c].indexOf('expires') !== -1) {
 
 					}else{
-						// cookieValue.push(newCookies[c]);	
+						// cookieValue.push(newCookies[c]);
 					}
 				}
 				console.log(cookieValue);
