@@ -1,7 +1,7 @@
 <template name="Admin">
 {{#if isInRole 'admin'}}
 
-{{>adminNav}}
+{{>AdminNav}}
 
 <div class="container">
     <div class="row">
@@ -36,7 +36,7 @@
     </div>
 </template>
 
-<template name="adminNav">
+<template name="AdminNav">
     <ul id="articles-dropdown" class="dropdown-content">
       <li><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="zmdi zmdi-upload"></i> XML</a></li>
       <li><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
