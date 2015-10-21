@@ -1,3 +1,4 @@
+// Article helpers
 Template.AdminArticle.helpers({
 	// article : function(){
 	// 	return Meteor.adminArticle.preProcessArticle();
@@ -6,7 +7,6 @@ Template.AdminArticle.helpers({
 Template.AdminArticleForm.helpers({
 	article : function(){
 		var article = Meteor.adminArticle.preProcessArticle();
-		// console.log(article);
 		return article;
 	}
 });
@@ -63,6 +63,8 @@ Template.AdminArticlesList.helpers({
 		}
 	}
 });
+
+// Data Submission
 Template.AdminDataSubmissions.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -170,11 +172,15 @@ Template.AdminDataSubmissionsPast.helpers({
 		};
 	}
 })
+
+/// Institution
 Template.AdminInstitutionForm.helpers({
 	'showIPFields' : function(){
 		return Template.instance().showIPFields.get();
 	}
 });
+
+// Intake
 Template.adminArticleXmlIntake.helpers({
 	myCallbacks: function() {
 		return {
@@ -185,6 +191,8 @@ Template.adminArticleXmlIntake.helpers({
 		}
 	}
 });
+
+// Users
 Template.AdminUserSubs.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -193,6 +201,8 @@ Template.AdminUserSubs.helpers({
 		return res;
 	}
 });
+
+// Archive
 Template.AdminArchive.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -201,6 +211,8 @@ Template.AdminArchive.helpers({
 		return res;
 	}
 });
+
+// General
 Template.AdminNav.helpers({
 	bannerLogo: function(){
 		var journalSettings = journalConfig.findOne();
