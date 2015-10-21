@@ -1,7 +1,6 @@
 volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
 articles = new Mongo.Collection('articles');
-articleTypes = new Mongo.Collection('articleTypes'); //when saving an article query this db and add the name, short_name and id as an object to the article
 institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
@@ -266,6 +265,9 @@ if (Meteor.isServer) {
   /*TODO: RECENT define. By pub date?*/
   Meteor.publish('articlesRecentFive', function () {
     return articles.find({},{sort:{'_id':1},limit : 5});
+  });
+  Meteor.publish('articleTypes', function () {
+    return articleTypes.find({},{});
   });
   Meteor.publish('feature', function () {
     return articles.find({'feature':true},{sort:{'_id':1}});
