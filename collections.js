@@ -10,6 +10,7 @@ recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
 submissions = new Mongo.Collection('submissions');
 journalConfig = new Mongo.Collection('config');
+contact = new Mongo.Collection('contact');
 
 
 Meteor.users.allow({
@@ -219,6 +220,9 @@ if (Meteor.isServer) {
     var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
     return siteConfig;
   });
+  Meteor.publish('contact', function() {
+    return contact.find();
+  });
 
   Meteor.publish('volumes', function () {
     return volumes.find({},{sort : {volume:-1}});
@@ -238,13 +242,13 @@ if (Meteor.isServer) {
     return issues.find({},{sort : {volume:-1,issue:-1}});
   });
 
+  // articles
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
   Meteor.publish('articleInfo', function(id) {
     return articles.find({'_id':id},{});
   });
-
   Meteor.publish('submission-set', function (queryType, queryParams) {
     var articlesList;
     if(queryType === 'issue'){

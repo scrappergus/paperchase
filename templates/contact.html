@@ -8,7 +8,6 @@
 
             <div class="divider"></div>
 
-
             <p>Please submit an article: <a href="{{submitLink}}" target="_BLANK">{{submitLink}}</a> </p>
 
             {{#with contact}}
@@ -32,24 +31,22 @@
                 <a href="mailto:{{email_address}}">{{email_address}}</a>
                 {{/with}}
             </p>
+
+            {{#with general}}
+            {{#if email_address}}
+            <p>For general inquiries, email: <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
+            {{/if}}
+
+            {{#if phone}}
+            <p>Tel: {{phone}}</p>
+            {{/if}}
+
+            {{#if fax}}
+            <p>e-Fax: {{fax}}</p>
+            {{/if}}
             {{/with}}
 
-            <p>
-            For general inquiries, email:
-            <a href="mailto:publisher@impactjournals.com">publisher@impactjournals.com</a>.
-            </p>
-
-            <p>
-            Tel: 1-800-922-0957 (option 3)
-            </p>
-
-            <p>
-            e-Fax: 1-716-608-1380
-            </p>
-
-
-            <br> <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
+            {{/with}}
         </div>
     </div>
 </template>

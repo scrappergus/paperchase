@@ -214,12 +214,6 @@ if (Meteor.isClient) {
 		}
 	});
     Template.Contact.helpers({
-    	contact: function(){
-    		var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-    			return journalSettings['contact'];
-    		}
-    	},
 		submitLink : function(){
 			var journalSettings = journalConfig.findOne();
 			if(journalSettings){

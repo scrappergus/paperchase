@@ -52,6 +52,9 @@ html,body{
 	}
 
 /* Containers ------------------------*/
+	.container-main{
+		min-height: 100vh;
+	}
 	.box{
 		margin: $margin-lg 0;
 		padding: $pad-md $pad-lg;
