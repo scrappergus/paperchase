@@ -91,6 +91,14 @@ Router.route('/xml-cite-set/:_filename',{
 	}
 });
 
+// INTAKE ROUTES
+Router.route('/admin/add-legacy-platform-article/',{
+	where: 'server',
+	action: function(){
+		Meteor.call('legacyArticleIntake', this.params.query.type, this.params.query.id, this.params.query.journal);
+	}
+});
+
 if (Meteor.isClient) {
 	Session.setDefault('formMethod','');
 	Session.setDefault('fileNameXML',''); //LIVE
@@ -103,7 +111,6 @@ if (Meteor.isClient) {
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
-
 
 	Router.route('/', {
 		name: 'Home',
@@ -187,7 +194,20 @@ if (Meteor.isClient) {
 
 	Router.route('/contact', {
 		name: 'Contact',
-		layoutTemplate: 'Visitor'
+		layoutTemplate: 'Visitor',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('contact')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var contactInfo = contact.findOne();
+				return {
+					contact: contactInfo
+				};
+			}
+		}
 	});
 
 	Router.route('/recent-breakthroughs', {
@@ -232,7 +252,8 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('articleInfo',this.params._id)
+				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('articleTypes')
 			]
 		},
 		data: function(){
@@ -333,7 +354,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*recommendations*/
+	// Recommendations
 	Router.route('/admin/recommendations',{
 		name: 'AdminRecommendations',
 		layoutTemplate: 'Admin',
@@ -367,7 +388,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*data submissions*/
+	// Data submissions
 	Router.route('/admin/data_submissions',{
 		name: 'AdminDataSubmissions',
 		layoutTemplate: 'Admin',
@@ -379,7 +400,8 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('issues'),
-				Meteor.subscribe('volumes')
+				Meteor.subscribe('volumes'),
+				Meteor.subscribe('articleTypes')
 			]
 		}
 	});
@@ -403,7 +425,8 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*xml intake*/
+	// Intake
+	// xml uploading
 	Router.route('/admin/article_xml',{
 		name: 'adminArticleXmlIntake',
 		layoutTemplate: 'Admin'
@@ -447,7 +470,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*article and articles*/
+	// Article
 	Router.route('/admin/articles',{
 		name: 'adminArticlesDashboard',
 		layoutTemplate: 'Admin',
@@ -501,7 +524,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*archive browsing*/
+	// Archive
 	Router.route('/admin/archive', {
 		name: 'adminArchive',
 		layoutTemplate: 'Admin',
@@ -514,9 +537,8 @@ if (Meteor.isClient) {
 		}
 	});
 
-
-	/*issue control*/
-	//TODO: LIMIT subscription of articles to just issue
+	// Issue
+	// TODO: LIMIT subscription of articles to just issue
 	Router.route('/admin/issue/:vi', {
 		name: 'AdminIssue',
 		layoutTemplate: 'Admin',
@@ -548,7 +570,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*users*/
+	// Users
 	Router.route('/admin/users', {
 		name: 'AdminUsers',
 		layoutTemplate: 'Admin',
@@ -624,7 +646,7 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Admin'
 	});
 
-	/*authors*/
+	// Authors
 	Router.route('/admin/authors', {
 		name: 'AdminAuthors',
 		layoutTemplate: 'Admin',
@@ -664,7 +686,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	/*institutions*/
+	// Institutions
 	Router.route('/admin/institution', {
 		name: 'AdminInstitution',
 		layoutTemplate: 'Admin',
