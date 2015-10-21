@@ -152,12 +152,13 @@ Meteor.adminArticle = {
 				// add ALL article types
 				var articleType = article['article_type']['type'];
 				article['article_type_list'] = [];
-				for(var k in publisherArticleTypes){
+				var publisherArticleTypes = articleTypes.find().fetch();
+				for(var k =0 ; k < publisherArticleTypes.length ; k++){
 					var selectObj = {
-						short_name: publisherArticleTypes[k],
-						type: k
+						short_name: publisherArticleTypes[k]['nlm_type'],
+						type: publisherArticleTypes[k]['name']
 					}
-					if(k === articleType){
+					if(publisherArticleTypes[k]['name'] === articleType){
 						selectObj['selected'] = true;
 					}
 					article['article_type_list'].push(selectObj);
