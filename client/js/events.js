@@ -394,7 +394,7 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
 		articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text()
 		articleUpdateObj['pub_status'] = $('#article-pub-status').val();
-console.log(articleUpdateObj['article_type']);
+
 		// ids
 		articleUpdateObj['ids'] = {};
 		$('.article-id').each(function(i){
