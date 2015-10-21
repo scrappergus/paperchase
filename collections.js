@@ -216,7 +216,7 @@ if (Meteor.isServer) {
   });
 
   Meteor.publish('journalConfig', function() {
-    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' :1}});
+    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
     return siteConfig;
   });
 
