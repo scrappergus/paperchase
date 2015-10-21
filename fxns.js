@@ -155,15 +155,15 @@ Meteor.adminArticle = {
 				var publisherArticleTypes = articleTypes.find().fetch();
 				for(var k =0 ; k < publisherArticleTypes.length ; k++){
 					var selectObj = {
-						short_name: publisherArticleTypes[k]['nlm_type'],
-						type: publisherArticleTypes[k]['name']
+						nlm_type: publisherArticleTypes[k]['nlm_type'],
+						name: publisherArticleTypes[k]['name'],
+						short_name: publisherArticleTypes[k]['short_name']
 					}
 					if(publisherArticleTypes[k]['name'] === articleType){
 						selectObj['selected'] = true;
 					}
 					article['article_type_list'].push(selectObj);
 				}
-
 				Session.set('article',article);
 			}
 		}
