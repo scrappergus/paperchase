@@ -241,6 +241,10 @@ if (Meteor.isServer) {
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
+  Meteor.publish('articleInfo', function(id) {
+    return articles.find({'_id':id},{});
+  });
+
   Meteor.publish('submission-set', function (queryType, queryParams) {
     var articlesList;
     if(queryType === 'issue'){
