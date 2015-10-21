@@ -70,7 +70,7 @@ meteor@1.1.9
 meteor-base@1.0.1
 meteorhacks:async@1.0.0
 meteorhacks:inject-initial@1.0.2
-meteorhacks:kadira@2.23.6
+meteorhacks:kadira@2.24.0
 meteorhacks:meteorx@1.4.1
 meteorhacks:npm@1.5.0
 meteortoys:allthings@1.2.3
