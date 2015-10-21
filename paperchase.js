@@ -95,7 +95,7 @@ Router.route('/xml-cite-set/:_filename',{
 Router.route('/admin/add-legacy-platform-article/',{
 	where: 'server',
 	action: function(){
-		Meteor.call('legacyArticleIntake', this.params.query.type, this.params.query.id, this.params.query.journal);
+		Meteor.call('legacyArticleIntake', this.params.query);
 	}
 });
 
