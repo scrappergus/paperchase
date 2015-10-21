@@ -390,4 +390,5 @@ if (Meteor.isClient) {
     Meteor.subscribe('institutions');
     Meteor.subscribe('subs');
     Meteor.subscribe('journalConfig');
+    Meteor.subscribe('articleTypes');
 }
