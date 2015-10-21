@@ -144,22 +144,30 @@ if (Meteor.isClient) {
     // Template Helpers
     Template.Visitor.helpers({
     	bannerLogo: function(){
-    		journalSettings = journalConfig.findOne();
-			return journalSettings['journal']['logo']['banner'];
+    		var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['journal']['logo']['banner'];
+			}
     	},
 		submitLink : function(){
-			journalSettings = journalConfig.findOne();
-			return journalSettings['submission']['url'];
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['submission']['url'];
+			}
     	}
     });
     Template.Footer.helpers({
 		publisher : function(){
-			journalSettings = journalConfig.findOne();
-			return journalSettings['journal']['publisher']['name'];
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['journal']['publisher']['name'];
+			}
 		},
 		issn : function(){
-			journalSettings = journalConfig.findOne();
-			return journalSettings['journal']['issn'];
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['journal']['issn'];
+			}
 		}
     });
 	Template.Home.helpers({
@@ -205,6 +213,20 @@ if (Meteor.isClient) {
 			return cards;
 		}
 	});
+    Template.Contact.helpers({
+    	contact: function(){
+    		var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+    			return journalSettings['contact'];
+    		}
+    	},
+		submitLink : function(){
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['submission']['url'];
+			}
+		}
+    });
 	Template.ErrorMessages.helpers({
 		errors: function(){
 			return Session.get('errorMessages');
@@ -225,8 +247,10 @@ if (Meteor.isClient) {
 	});
 	Template.EdBoard.helpers({
 		journalName: function(){
-			journalSettings = journalConfig.findOne();
-			return journalSettings['journal']['name'];
+			var journalSettings = journalConfig.findOne();
+			if(journalSettings){
+				return journalSettings['journal']['name'];
+			}
 		}
 	});
 
