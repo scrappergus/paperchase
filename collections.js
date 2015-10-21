@@ -11,6 +11,7 @@ subs = new Mongo.Collection('subscriptions');
 submissions = new Mongo.Collection('submissions');
 journalConfig = new Mongo.Collection('config');
 contact = new Mongo.Collection('contact');
+articleTypes = new Mongo.Collection('article_types');
 
 
 Meteor.users.allow({
