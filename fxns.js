@@ -150,7 +150,7 @@ Meteor.adminArticle = {
 				}
 
 				// add ALL article types
-				var articleType = article['article_type']['type'];
+				var articleType = article['article_type']['name'];
 				article['article_type_list'] = [];
 				var publisherArticleTypes = articleTypes.find().fetch();
 				for(var k =0 ; k < publisherArticleTypes.length ; k++){

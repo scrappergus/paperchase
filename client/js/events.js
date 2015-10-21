@@ -391,9 +391,10 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['issue_id'] = $('#article-issue').val();
 		articleUpdateObj['article_type'] = {};
 		articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
-		articleUpdateObj['article_type']['type'] = $('#article-type option:selected').text()
+		articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
+		articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text()
 		articleUpdateObj['pub_status'] = $('#article-pub-status').val();
-
+console.log(articleUpdateObj['article_type']);
 		// ids
 		articleUpdateObj['ids'] = {};
 		$('.article-id').each(function(i){
@@ -634,6 +635,7 @@ Template.adminArticleXmlProcess.events({
 	}
 });
 
+// Batch
 Template.AdminBatchXml.events({
 	'click #update-authors-affs': function(e){
 		e.preventDefault();
@@ -712,18 +714,19 @@ Template.AdminBatchXml.events({
 				console.log(result);
 			}
 		});
+	},
+	'click #type-fix': function(e){
+		Meteor.call('updateAllArticlesTypes');
 	}
 });
 
-
+// Institutions
 Template.AdminInstitution.events({
         'click .del-btn': function(e,t){
             Meteor.call('removeInstitution', this['_id'], function(error, result){
                 });
         }
     });
-
-
 Template.AdminInstitutionAdd.events({
         'submit form': function(e,t){
             var formType = Session.get('formType');
@@ -749,8 +752,6 @@ Template.AdminInstitutionAdd.events({
         }
 
     });
-
-
 Template.AdminInstitutionForm.onCreated(function() {
         this.showIPFields = new ReactiveVar( false );
     });
@@ -846,6 +847,7 @@ Template.AdminInstitutionForm.events({
         }
     });
 
+// Recommend
 Template.AdminRecommendationUpdate.events({
 	'submit form': function(e,t){
 		e.preventDefault();
