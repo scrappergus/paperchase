@@ -12,7 +12,7 @@
   "nodeVersion": "0.10.40",
   "setupPhantom": true,
   "enableUploadProgressBar": true,
-  "appName": "paperchase",
+  "appName": "aging",
   "app": "/PATH/TO/LOCAL/paperchase",
   "env": {
     "ROOT_URL": "http://aging.oncotarget.com",
@@ -34,7 +34,7 @@
   "nodeVersion": "0.10.40",
   "setupPhantom": true,
   "enableUploadProgressBar": true,
-  "appName": "paperchase",
+  "appName": "oncotarget",
   "app": "/PATH/TO/LOCAL/paperchase",
   "env": {
     "ROOT_URL": "http://paperchase.oncotarget.com",
