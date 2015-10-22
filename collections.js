@@ -1,7 +1,6 @@
 volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
 articles = new Mongo.Collection('articles');
-articleTypes = new Mongo.Collection('articleTypes'); //when saving an article query this db and add the name, short_name and id as an object to the article
 institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
@@ -10,6 +9,8 @@ recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
 submissions = new Mongo.Collection('submissions');
 journalConfig = new Mongo.Collection('config');
+contact = new Mongo.Collection('contact');
+articleTypes = new Mongo.Collection('article_types');
 
 
 Meteor.users.allow({
@@ -219,6 +220,9 @@ if (Meteor.isServer) {
     var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
     return siteConfig;
   });
+  Meteor.publish('contact', function() {
+    return contact.find();
+  });
 
   Meteor.publish('volumes', function () {
     return volumes.find({},{sort : {volume:-1}});
@@ -238,13 +242,13 @@ if (Meteor.isServer) {
     return issues.find({},{sort : {volume:-1,issue:-1}});
   });
 
+  // articles
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
   Meteor.publish('articleInfo', function(id) {
     return articles.find({'_id':id},{});
   });
-
   Meteor.publish('submission-set', function (queryType, queryParams) {
     var articlesList;
     if(queryType === 'issue'){
@@ -261,6 +265,9 @@ if (Meteor.isServer) {
   /*TODO: RECENT define. By pub date?*/
   Meteor.publish('articlesRecentFive', function () {
     return articles.find({},{sort:{'_id':1},limit : 5});
+  });
+  Meteor.publish('articleTypes', function () {
+    return articleTypes.find({},{});
   });
   Meteor.publish('feature', function () {
     return articles.find({'feature':true},{sort:{'_id':1}});
@@ -383,4 +390,5 @@ if (Meteor.isClient) {
     Meteor.subscribe('institutions');
     Meteor.subscribe('subs');
     Meteor.subscribe('journalConfig');
+    Meteor.subscribe('articleTypes');
 }

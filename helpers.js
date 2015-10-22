@@ -214,12 +214,6 @@ if (Meteor.isClient) {
 		}
 	});
     Template.Contact.helpers({
-    	contact: function(){
-    		var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-    			return journalSettings['contact'];
-    		}
-    	},
 		submitLink : function(){
 			var journalSettings = journalConfig.findOne();
 			if(journalSettings){
@@ -250,24 +244,6 @@ if (Meteor.isClient) {
 			var journalSettings = journalConfig.findOne();
 			if(journalSettings){
 				return journalSettings['journal']['name'];
-			}
-		}
-	});
-
-	// Admin Template Helpers
-	Template.AdminArchive.helpers({
-		volumes: function(){
-			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-			var iss = issues.find({},{sort : {issue:-1}}).fetch();
-			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-			return res;
-		}
-	});
-	Template.AdminNav.helpers({
-		bannerLogo: function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['journal']['logo']['banner'];
 			}
 		}
 	});
