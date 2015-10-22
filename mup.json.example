@@ -16,7 +16,7 @@
   "app": "/PATH/TO/LOCAL/paperchase",
   "env": {
     "ROOT_URL": "http://aging.oncotarget.com",
-    "PORT" : "3010"
+    "PORT" : "3000"
   },
   "deployCheckWaitTime": 15
 }
@@ -38,7 +38,7 @@
   "app": "/PATH/TO/LOCAL/paperchase",
   "env": {
     "ROOT_URL": "http://paperchase.oncotarget.com",
-    "PORT" : "3000"
+    "PORT" : "3010"
   },
   "deployCheckWaitTime": 15
 }
