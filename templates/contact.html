@@ -1,44 +1,52 @@
 <template name="Contact">
-<div class="row">
+    <div class="row">
 
-    {{> LeftNav}}
+        {{> LeftNav}}
 
-    <div class="col s10">
-        <h3>Contact Us</h3>
+        <div class="col s10">
+            <h3>Contact Us</h3>
 
-        <div class="divider"></div>
+            <div class="divider"></div>
 
+            <p>Please submit an article: <a href="{{submitLink}}" target="_BLANK">{{submitLink}}</a> </p>
 
-        <p> Please submit an article: <a href="http://aging.msubmit.net">http://aging.msubmit.net</a> </p>
+            {{#with contact}}
+            <p>
+                <b>Journal Office:</b>
+                <br>
+                {{#with address}}
+                {{street}}{{#if street_2}}, {{street_2}}{{/if}}
+                <br>
+                {{city}}, {{state}} {{zip}}
+                {{/with}}
+            </p>
 
-        <p>
-        <b>Journal Office:</b><br>
-        6666 E. Quaker Str.<br>
-        Orchard Park, NY 14127
-        </p>
+            <p>
+                For questions related to preparation of your article for publication, please contact:<br>
+                {{#with publication_prep}}
+                <b>{{name}}</b>
+                <br>
+                {{title}}
+                <br>
+                <a href="mailto:{{email_address}}">{{email_address}}</a>
+                {{/with}}
+            </p>
 
-        <p>
-        For questions related to preparation of your article for publication, please contact:<br> <b>Olga Krasnova</b> <br>
-        Managing Editor and Production Director<br>
-        <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a>
-        </p>
+            {{#with general}}
+            {{#if email_address}}
+            <p>For general inquiries, email: <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
+            {{/if}}
 
-        <p>
-        For general inquiries, email:
-        <a href="mailto:publisher@impactjournals.com">publisher@impactjournals.com</a>.
-        </p>
+            {{#if phone}}
+            <p>Tel: {{phone}}</p>
+            {{/if}}
 
-        <p>
-        Tel: 1-800-922-0957 (option 3)
-        </p>
+            {{#if fax}}
+            <p>e-Fax: {{fax}}</p>
+            {{/if}}
+            {{/with}}
 
-        <p>
-        e-Fax: 1-716-608-1380
-        </p>
-
-
-        <br> <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>                                
-
+            {{/with}}
+        </div>
     </div>
-</div>
 </template>
