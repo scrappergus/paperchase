@@ -11,8 +11,48 @@ submissions = new Mongo.Collection('submissions');
 journalConfig = new Mongo.Collection('config');
 contact = new Mongo.Collection('contact');
 articleTypes = new Mongo.Collection('article_types');
+sorters = new Mongo.Collection('sorters');
 
 
+// HOOKS
+articles.after.insert(function (userId, doc) {
+  // console.log('..before after');console.log('doc');console.log(doc.advance);console.log(this._id);
+  if(doc.advance){
+    //add to top of advance articles
+    // articles
+    Meteor.call('sorterAddArticle','advance',this._id);
+  }
+});
+articles.before.update(function (userId, doc, fieldNames, modifier, options) {
+  // console.log('..before update');console.log(modifier);
+  // advance
+  // add and check if we should remove.
+
+
+  //add affiliation number to author
+  //might need to adjust this as article updates get added
+  if(fieldNames.indexOf('authors') != -1){
+    var authorsList = modifier['$set']['authors'];
+    var affiliationsList = doc['affiliations'];
+    // console.log('affiliationsList');console.log(affiliationsList);
+    for(var i = 0 ; i < authorsList.length ; i++){
+
+      if(authorsList[i]['affiliations_names'] && affiliationsList){
+        //article update from a batch import of author affiliations
+        //affiliations_names is only used to find index of affiliation after batch import
+        authorsList[i]['affiliations_numbers'] = [];
+        for(var a = 0 ; a < authorsList[i]['affiliations_names'].length ; a++){
+          var affiliationIndex = affiliationsList.indexOf(authorsList[i]['affiliations_names'][a]);
+          authorsList[i]['affiliations_numbers'].push(parseInt(affiliationIndex));
+        }
+      }else if(authorsList[i]['affiliations_numbers']){
+
+      }
+    }
+  }
+});
+
+// ALLOW
 Meteor.users.allow({
   update: function (userId, doc, fields, modifier) {
     if (userId && doc._id === userId) {
@@ -63,33 +103,6 @@ recommendations.allow({
     }
   }
 });
-
-articles.before.update(function (userId, doc, fieldNames, modifier, options) {
-  // console.log('..before update')
-  //add affiliation number to author
-  //might need to adjust this as article updates get added
-  if(fieldNames.indexOf('authors') != -1){
-    var authorsList = modifier['$set']['authors'];
-    var affiliationsList = doc['affiliations'];
-    // console.log('affiliationsList');console.log(affiliationsList);
-    for(var i = 0 ; i < authorsList.length ; i++){
-
-      if(authorsList[i]['affiliations_names'] && affiliationsList){
-        //article update from a batch import of author affiliations
-        //affiliations_names is only used to find index of affiliation after batch import
-        authorsList[i]['affiliations_numbers'] = [];
-        for(var a = 0 ; a < authorsList[i]['affiliations_names'].length ; a++){
-          var affiliationIndex = affiliationsList.indexOf(authorsList[i]['affiliations_names'][a]);
-          authorsList[i]['affiliations_numbers'].push(parseInt(affiliationIndex));
-        }
-      }else if(authorsList[i]['affiliations_numbers']){
-
-      }
-    }
-  }
-});
-
-
 issues.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
@@ -211,6 +224,7 @@ submissions.allow({
   }
 });
 
+// PUBLISH
 if (Meteor.isServer) {
   Meteor.publish(null, function() {
     return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
@@ -219,6 +233,9 @@ if (Meteor.isServer) {
   Meteor.publish('journalConfig', function() {
     var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
     return siteConfig;
+  });
+  Meteor.publish('sorters', function() {
+    return sorters.find();
   });
   Meteor.publish('contact', function() {
     return contact.find();
@@ -382,6 +399,8 @@ if (Meteor.isServer) {
     }
   })
 }
+
+// SUBSCRIBE
 if (Meteor.isClient) {
 	//TODO: remove global subscribe to collections
 	// Meteor.subscribe('volumes');
