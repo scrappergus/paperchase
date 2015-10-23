@@ -19,7 +19,7 @@
             <ul>
 			    {{#each articles}}
 			    {{#if start_group}}
-			    <li style="margin: 10px 10px 0 0; display:inline-block;"><a class="waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.type}}</a></li>
+			    <li style="margin: 10px 10px 0 0; display:inline-block;"><a class="waves-effect waves-light btn light-blue accent-4" href="#{{article_type.nlm_type}}">{{article_type.name}}</a></li>
 			    {{/if}}
 			    {{/each}}
 			</ul>
@@ -29,7 +29,7 @@
             <ul class="">
                 {{#each articles}}
                 {{#if start_group}}
-                <li ><h3 id="{{article_type.short_name}}">{{article_type.type}}</h3></li>
+                <li ><h3 id="{{article_type.nlm_type}}">{{article_type.name}}</h3></li>
                 {{/if}}
                 <li>
                 	<h4>{{{title}}}</h4>

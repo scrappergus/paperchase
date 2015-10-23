@@ -1,13 +1,13 @@
 Meteor.methods({
 	addIssue: function(issueData){
 		//check if volume exists, if not add
-		var vol, 
-			iss, 
+		var vol,
+			iss,
 			issueId;
 		issueData['issue'] = parseInt(issueData['issue']);
 		issueData['volume'] = parseInt(issueData['volume']);
 		vol = volumes.findOne({'volume':issueData['volume']});
-		//double check that issue does not exit 
+		//double check that issue does not exit
 		iss = issues.findOne({'volume':issueData['volume'],'issue':issueData['issue']});
 
 		if(!iss){
@@ -29,5 +29,8 @@ Meteor.methods({
 	},
 	addVolume: function( vol){
 		return volumes.insert({'volume':vol});
+	},
+	findIssueByVolIssue: function(vol, iss){
+		return issues.findOne({'volume' : vol, 'issue': iss});
 	}
 });

@@ -105,7 +105,7 @@
 					<select id="article-type">
 						<option disabled>&mdash;&mdash; Select Article Type &mdash;&mdash;</option>
 						{{#each article_type_list}}
-						<option value="{{short_name}}" selected="{{#if selected}}selected{{/if}}">{{type}}</option>
+						<option value="{{short_name}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
 						{{/each}}
 					</select>
 				</div>
