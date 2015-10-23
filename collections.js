@@ -11,7 +11,21 @@ submissions = new Mongo.Collection('submissions');
 journalConfig = new Mongo.Collection('config');
 contact = new Mongo.Collection('contact');
 articleTypes = new Mongo.Collection('article_types');
-sorters = new Mongo.Collection('sorters');
+sorters = new Mongo.Collection('sorters', {
+  transform: function(f) {
+      var order = f.order;
+      var articlesList = articles.find({'_id':{'$in':order}}).fetch();
+      f.articles = [];
+      for(var i = 0 ; i < order.length ; i++){
+        for(var a = 0 ; a < articlesList.length ; a++){
+          if(articlesList[a]['_id'] === order[i]){
+            f.articles.push(articlesList[a]);
+          }
+        }
+      }
+      return f;
+  }
+});
 
 
 // HOOKS
@@ -237,6 +251,9 @@ if (Meteor.isServer) {
   Meteor.publish('sorters', function() {
     return sorters.find();
   });
+  Meteor.publish('sortedList', function(listName) {
+    return sorters.find({'name' : listName});
+  });
   Meteor.publish('contact', function() {
     return contact.find();
   });
@@ -290,7 +307,11 @@ if (Meteor.isServer) {
     return articles.find({'feature':true},{sort:{'_id':1}});
   });
   Meteor.publish('advance', function () {
-    return articles.find({'advance':true},{sort:{'_id':1}});
+    var articlesOrder = sorters.findOne({name : 'advance'});
+    var order = articlesOrder['order'];
+
+    var articlesList = articles.find({advance : true});
+    return articlesList;
   });
   Meteor.publish('submissions', function () {
     return submissions.find();

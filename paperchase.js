@@ -137,7 +137,8 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('advance')
+				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
 			]
 		},
 		data: function(){
@@ -520,6 +521,26 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				Session.set('article-id',this.params._id);
+			}
+		}
+	});
+
+	// Advance articles
+	Router.route('/admin/articles/advance',{
+		name: 'AdminAdvanceArticles',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sorted  = sorters.findOne();
+				return{
+					articles: sorted['articles']
+				}
 			}
 		}
 	});
