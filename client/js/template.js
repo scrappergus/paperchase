@@ -72,6 +72,10 @@ Template.AdminHistoryInput.onRendered(function() {
 	Meteor.adminArticle.initiateDates();
 });
 
+Template.AdminAdvanceArticles.onRendered(function() {
+	$('#advance-table tbody').sortable();
+});
+
 
 Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');
