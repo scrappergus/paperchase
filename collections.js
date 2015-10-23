@@ -18,16 +18,16 @@ sorters = new Mongo.Collection('sorters');
 articles.after.insert(function (userId, doc) {
   // console.log('..before after');console.log('doc');console.log(doc.advance);console.log(this._id);
   if(doc.advance){
-    //add to top of advance articles
-    // articles
     Meteor.call('sorterAddArticle','advance',this._id);
   }
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
-  // console.log('..before update');console.log(modifier);
-  // advance
-  // add and check if we should remove.
-
+  // Advance article. Update sorters colleciton.
+  if(modifier['$set']['advance']){
+    Meteor.call('sorterAddArticle','advance',doc._id);
+  }else{
+    Meteor.call('sorterRemoveArticle','advance',doc._id);
+  }
 
   //add affiliation number to author
   //might need to adjust this as article updates get added
