@@ -114,8 +114,19 @@ Router.route('/get-advance-articles/',{
 		var htmlString = '<head><meta charset="UTF-8"></head><body>';
 		var advance = sorters.findOne({name: 'advance'});
 		var advanceList = advance.articles;
+		var prevSection;
 		for(var i = 0 ; i < advanceList.length ; i++){
 			var articleInfo = advanceList[i];
+			if(articleInfo['section_start']){
+				if(prevSection){
+					// htmlString += '</div>';
+				}
+
+				htmlString += '<h2 style="font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h2>';
+				// htmlString += '<div style="-webkit-column-count: 2;-moz-column-count: 2;column-count: 2;">'
+			}
+			prevSection = articleInfo['section_name'];
+
 			if(articleInfo['title']){
 				htmlString += '<h3>' + articleInfo['title'] + '</h3>';
 			}
