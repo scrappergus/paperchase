@@ -199,9 +199,11 @@ if (Meteor.isClient) {
 			]
 		},
 		data: function(){
-			var sorted  = sorters.findOne();
-			return {
-				advance : sorted['articles']
+			if(this.ready()){
+				var sorted  = sorters.findOne();
+				return {
+					advance : sorted['articles']
+				}
 			}
 		}
 	});
