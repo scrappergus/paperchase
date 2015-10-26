@@ -22,11 +22,8 @@ sorters = new Mongo.Collection('sorters', {
         for(var a = 0 ; a < articlesList.length ; a++){
           if(articlesList[a]['section_id']){
             var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
-            // console.log(section['section_name']);
             articlesList[a]['section_name'] = section['section_name'];
-            console.log(section['section_id'] + ' = ' +prevSection);
             if(articlesList[a]['section_id'] != prevSection){
-              console.log(articlesList[a]['section_name']);
               articlesList[a]['section_start'] = true;
             }
             prevSection = section['section_id'];
