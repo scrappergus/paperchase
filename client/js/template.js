@@ -73,7 +73,7 @@ Template.AdminHistoryInput.onRendered(function() {
 });
 
 Template.AdminAdvanceArticles.onRendered(function() {
-	$('#advance-table tbody').sortable();
+	$('#advance-table').sortable();
 });
 
 
