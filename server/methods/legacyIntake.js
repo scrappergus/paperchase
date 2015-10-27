@@ -90,7 +90,7 @@ Meteor.methods({
 			articleUpdate.issue = parseInt(article.issue);
 		}
 
-		if(article.pages){
+		if(article.pages && article.pages != null){
 			pagePieces = article.pages.split('-');
 			articleUpdate.page_start = pagePieces[0];
 			if(pagesPieces.length > 1){
@@ -109,7 +109,11 @@ Meteor.methods({
 		if(article.article_type){
 			articleUpdate.article_type = {};
 			articleUpdate.article_type.type  = article.article_type;
-			articleUpdate.article_type.short_name = article.short_name;
+			articleUpdate.article_type.short_name = article.shortname.toLowerCase();
+		}
+
+		if(article.section_id){
+			articleUpdate.section_id = parseInt(article.section_id);
 		}
 
 		// TODO: Add other ID types. (PMC, PMID, etc)

@@ -1,32 +1,29 @@
 <template name="AdminAdvanceArticles">
+	{{>AdminHeader header="Advance Articles"}}
 	<form>
 		{{>FixedSaveBtn}}
 		{{> successMessage what='Advance Articles'}}
+		<div class="row" style="border-bottom:1px solid;">
+			<div class="col s1">&nbsp;</div>
+			<div class="col s2"><b>Section</b></div>
+			<div class="col s7"><b>Title</b></div>
+			<div class="col s2 right-align"><b>Advance</b></div>
+		</div>
 		<div class="row">
 			<div class="col s12">
-				<table id="advance-table">
-					<thead>
-						<tr>
-							<th>&nbsp;</th>
-							<th>Title</th>
-							<!-- <th>&nbsp;</th> -->
-							<th>Advance</th>
-						</tr>
-					</thead>
-					<tbody>
+				<ul id="advance-table">
 					{{#each articles}}
-					<tr>
-						<td><i class="zmdi prefix zmdi-swap-vertical"></i></td>
-						<td>{{{title}}}</td>
-						<!-- <td><a href="{{pathFor 'AdminArticle'}}">Edit</a></td> -->
-						<td>
-							<input type="checkbox" class="advanced-article filled-in" id="{{_id}}" checked="checked" />
-							<label for="{{_id}}"></label>
-						</td>
-					</tr>
+					<li>
+						<div class="row">
+							<div class="col s1"><i class="zmdi prefix zmdi-swap-vertical"></i></div>
+							<div class="col s2">{{section_name}}&nbsp;</div>
+							<div class="col s7">{{{title}}}</div>
+							<div class="col s2"><input type="checkbox" class="advanced-article filled-in" id="{{_id}}" checked="checked" />
+							<label class="right" for="{{_id}}"></label></div>
+						</div>
+					</li>
 					{{/each}}
-					</tbody>
-				</table>
+				</ul>
 			</div>
 		</div>
 		<div class="row">

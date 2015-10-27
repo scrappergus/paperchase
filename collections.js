@@ -11,13 +11,23 @@ submissions = new Mongo.Collection('submissions');
 journalConfig = new Mongo.Collection('config');
 contact = new Mongo.Collection('contact');
 articleTypes = new Mongo.Collection('article_types');
+sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
   transform: function(f) {
       var order = f.order;
       var articlesList = articles.find({'_id':{'$in':order}}).fetch();
       f.articles = [];
+      var prevSection = '';
       for(var i = 0 ; i < order.length ; i++){
         for(var a = 0 ; a < articlesList.length ; a++){
+          if(articlesList[a]['section_id']){
+            var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
+            articlesList[a]['section_name'] = section['section_name'];
+            if(articlesList[a]['section_id'] != prevSection){
+              articlesList[a]['section_start'] = true;
+            }
+            prevSection = section['section_id'];
+          }
           if(articlesList[a]['_id'] === order[i]){
             f.articles.push(articlesList[a]);
           }
@@ -303,6 +313,9 @@ if (Meteor.isServer) {
   Meteor.publish('articleTypes', function () {
     return articleTypes.find({},{});
   });
+  Meteor.publish('sections', function() {
+    return sections.find();
+  });
   Meteor.publish('feature', function () {
     return articles.find({'feature':true},{sort:{'_id':1}});
   });
@@ -431,4 +444,5 @@ if (Meteor.isClient) {
     Meteor.subscribe('subs');
     Meteor.subscribe('journalConfig');
     Meteor.subscribe('articleTypes');
+    Meteor.subscribe('sections');
 }
