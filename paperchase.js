@@ -1,4 +1,5 @@
 // Config
+
 // async loader for fonts
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
@@ -99,6 +100,73 @@ Router.route('/admin/add-legacy-platform-article/',{
 	}
 });
 
+// OUTTAKE ROUTES
+Router.route('/get-advance-articles/',{
+	where: 'server',
+	waitOn: function(){
+		return[
+			Meteor.subscribe('advance'),
+			Meteor.subscribe('sortedList','advance')
+		]
+	},
+	action: function(){
+		// console.log('get-advance-articles');
+		var htmlString = '<head><meta charset="UTF-8"></head><body>';
+		var advance = sorters.findOne({name: 'advance'});
+		var advanceList = advance.articles;
+		var prevSection;
+		for(var i = 0 ; i < advanceList.length ; i++){
+			var articleInfo = advanceList[i];
+			if(articleInfo['section_start']){
+				if(prevSection){
+					// htmlString += '</div>';
+				}
+
+				htmlString += '<h2 style="font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h2>';
+				// htmlString += '<div style="-webkit-column-count: 2;-moz-column-count: 2;column-count: 2;">'
+			}
+			prevSection = articleInfo['section_name'];
+
+			if(articleInfo['title']){
+				htmlString += '<h3>' + articleInfo['title'] + '</h3>';
+			}
+
+			if(articleInfo['ids']['pii']){
+				htmlString += '<h4>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</h4>';
+			}
+
+			if(articleInfo.authors){
+				var authors = articleInfo.authors;
+				var authorsCount = authors.length;
+				htmlString += '<p>';
+				for(var a = 0 ; a < authorsCount ; a++){
+					// console.log('... '+a);
+					if(authors[a]['name_first']){
+						htmlString += ' ' + authors[a]['name_first'];
+					}
+					if(authors[a]['name_middle']){
+						htmlString += ' ' + authors[a]['name_middle'];
+					}
+					if(authors[a]['name_last']){
+						htmlString += ' ' + authors[a]['name_last'];
+						// console.log(authors[a]['name_last']);
+					}
+					if(a != parseInt(authorsCount - 1)){
+						if(authors[a]['name_first'] || authors[a]['name_middle'] || authors[a]['name_last']){
+							htmlString += ', ';
+						}
+					}
+				}
+				htmlString += '</p>';
+			}
+		}
+		htmlString += '</body>';
+		var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+		this.response.writeHead(200, headers);
+		this.response.end(htmlString);
+	}
+});
+
 if (Meteor.isClient) {
 	Session.setDefault('formMethod','');
 	Session.setDefault('fileNameXML',''); //LIVE
@@ -142,9 +210,11 @@ if (Meteor.isClient) {
 			]
 		},
 		data: function(){
-			var advanceList = articles.find({'advance':true},{sort:{'_id':1}}).fetch();
-			return {
-				advance : advanceList
+			if(this.ready()){
+				var sorted  = sorters.findOne();
+				return {
+					advance : sorted['articles']
+				}
 			}
 		}
 	});
@@ -479,14 +549,17 @@ if (Meteor.isClient) {
 			return[
 				Meteor.subscribe('feature'),
 				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
 			]
 		},
 		data: function(){
-			var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
-			var advanceList = articles.find({'advance':true},{sort:{'_id':1}}).fetch();
-			return {
-				feature : featureList,
-				advance : advanceList,
+			if(this.ready()){
+				var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
+				var sorted  = sorters.findOne();
+				return {
+					feature : featureList,
+					advance : sorted['articles']
+				}
 			}
 		}
 	});
