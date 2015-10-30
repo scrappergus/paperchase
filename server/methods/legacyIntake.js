@@ -1,6 +1,7 @@
 // Article vs Articles will tell whether the function is for multiple or 1 article
 Meteor.methods({
 	legacyArticleIntake: function(articleParams){
+		// console.log('...legacyArticleIntake');
 		var idType = articleParams.id_type,
 			idValue = articleParams.id,
 			journal = articleParams.journal,
@@ -12,7 +13,7 @@ Meteor.methods({
 			legacyPlatformApi,
 			articleJson,
 			processedArticleJson;
-		console.log('...legacyIntake: ' + idType + ' = ' + idValue);
+		// console.log('...legacyIntake: ' + idType + ' = ' + idValue);
 
 		legacyPlatform = journalConfig.findOne()['legacy_platform'],
 		legacyPlatformApi = legacyPlatform['mini_api'];
@@ -60,7 +61,7 @@ Meteor.methods({
 	ojsGetArticlesJson: function(idType, idValue, journal, requestUrl){
 		// JSON response can contain multiple articles
 		if(requestUrl){
-			console.log('...ojsGetJson');
+			// console.log('...ojsGetJson');
 			// TODO: Add journal param?
 			// requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
 			requestUrl += '?' + idType + '=' + idValue;
@@ -72,7 +73,7 @@ Meteor.methods({
 		}
 	},
 	ojsProcessArticleJson: function(article){
-		console.log('...ojsProcessArticleJson');
+		// console.log('...ojsProcessArticleJson');
 		var articleUpdate = {},
 			pagePieces,
 			authors,
@@ -152,21 +153,6 @@ Meteor.methods({
 
 		// TODO: Add history
 		// if(article.history){}
-
-		if(article.volume && article.issue){
-			// Does issue exist?
-			issueInfo = Meteor.call('findIssueByVolIssue', article.volume, article.issue);
-			if(issueId){
-				issueId = issueInfo['_id'];
-			}else{
-				// This also checks volume collection and inserts if needed.
-				issueId = Meteor.call('addIssue',{
-					'volume': article.volume,
-					'issue': article.issue
-				});
-			}
-			articleUpdate.issue_id = issueId;
-		}
 
 		// TODO: Affiliations
 		// articleUpdate.affiliations = [];

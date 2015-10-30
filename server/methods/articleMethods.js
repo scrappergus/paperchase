@@ -1,26 +1,6 @@
 Meteor.methods({
 	addArticle: function(articleData){
 		// console.log('--addArticle | pmid = '+articleData['ids']['pmid']);
-		if(!articleData['issue_id']){
-			var issueData = {
-				'volume' : parseInt(articleData['volume']),
-				'issue' : articleData['issue']
-			}
-
-			//who created
-			issueData['doc_updates'] = {};
-			issueData['doc_updates']['created_date'] = new Date();
-			issueData['doc_updates']['created_by'] = articleData['doc_updates']['created_by'];
-
-			//INSERT into issues collection
-			Meteor.call('addIssue',issueData, function(error,_id){
-				if(error){
-					console.log('ERROR: ' + error.message);
-				}else{
-					articleData['issue_id'] = _id;
-				}
-			});
-		}
 
 		if(articleData['authors']){
 			var authorsList = articleData['authors'];
@@ -225,4 +205,28 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
+	articleIssueVolume: function(article){
+		// if article in issue:
+		// 1. check if issue exists in issues collection. If not add. If issue exists or added, issue Mongo ID returned
+		// 2. include issue Mongo id in article doc
+		// console.log('..articleIssueVolume');
+		if(article.volume && article.issue){
+			console.log('   VOLUME = '+ article.volume);
+			console.log('   ISSUE = '+ article.issue);
+			// Does issue exist?
+			issueInfo = Meteor.call('findIssueByVolIssue', article.volume, article.issue);
+			if(issueId){
+				issueId = issueInfo['_id'];
+			}else{
+				// This also checks volume collection and inserts if needed.
+				issueId = Meteor.call('addIssue',{
+					'volume': article.volume,
+					'issue': article.issue
+				});
+			}
+			article.issue_id = issueId;
+		}
+
+		return article;
+	}
 });
