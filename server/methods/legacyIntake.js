@@ -94,7 +94,7 @@ Meteor.methods({
 		if(article.pages && article.pages != null){
 			pagePieces = article.pages.split('-');
 			articleUpdate.page_start = pagePieces[0];
-			if(pagesPieces.length > 1){
+			if(pagePieces.length > 1){
 				articleUpdate.page_end = pagePieces[1];
 			}
 		}
