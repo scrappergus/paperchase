@@ -2,6 +2,11 @@
 
 // async loader for fonts
 // https://github.com/typekit/webfontloader
+WebApp.connectHandlers.use(function(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        return next();
+    });
+
 if (Meteor.isClient) {
 	WebFontConfig = {
 		google: { families: [ 'Lora:400,400italic,700,700italic:latin' ] }
