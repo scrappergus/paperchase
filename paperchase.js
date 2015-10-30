@@ -122,7 +122,7 @@ Router.route('/get-advance-articles/',{
 		]
 	},
 	action: function(){
-		// console.log('get-advance-articles');
+		console.log('get-advance-articles');
 		var htmlString = '<head><meta charset="UTF-8"></head><body>';
 		var advance = sorters.findOne({name: 'advance'});
 		var advanceList = advance.articles;
