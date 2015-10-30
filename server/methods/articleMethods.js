@@ -1,7 +1,3 @@
-fs = Meteor.npmRequire('fs');
-parseString = Meteor.npmRequire('xml2js').parseString;
-future = Npm.require('fibers/future');
-
 Meteor.methods({
 	addArticle: function(articleData){
 		// console.log('--addArticle | pmid = '+articleData['ids']['pmid']);
