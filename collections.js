@@ -15,24 +15,27 @@ sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
   transform: function(f) {
       var order = f.order;
-      var articlesList = articles.find({'_id':{'$in':order}}).fetch();
-      f.articles = [];
-      var prevSection = '';
-      for(var i = 0 ; i < order.length ; i++){
-        for(var a = 0 ; a < articlesList.length ; a++){
-          if(articlesList[a]['section_id']){
-            var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
-            articlesList[a]['section_name'] = section['section_name'];
-            if(articlesList[a]['section_id'] != prevSection){
-              articlesList[a]['section_start'] = true;
+      if(order){
+        var articlesList = articles.find({'_id':{'$in':order}}).fetch();
+        f.articles = [];
+        var prevSection = '';
+        for(var i = 0 ; i < order.length ; i++){
+          for(var a = 0 ; a < articlesList.length ; a++){
+            if(articlesList[a]['section_id']){
+              var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
+              articlesList[a]['section_name'] = section['section_name'];
+              if(articlesList[a]['section_id'] != prevSection){
+                articlesList[a]['section_start'] = true;
+              }
+              prevSection = section['section_id'];
             }
-            prevSection = section['section_id'];
-          }
-          if(articlesList[a]['_id'] === order[i]){
-            f.articles.push(articlesList[a]);
+            if(articlesList[a]['_id'] === order[i]){
+              f.articles.push(articlesList[a]);
+            }
           }
         }
       }
+
       return f;
   }
 });
@@ -320,9 +323,6 @@ if (Meteor.isServer) {
     return articles.find({'feature':true},{sort:{'_id':1}});
   });
   Meteor.publish('advance', function () {
-    var articlesOrder = sorters.findOne({name : 'advance'});
-    var order = articlesOrder['order'];
-
     var articlesList = articles.find({advance : true});
     return articlesList;
   });
