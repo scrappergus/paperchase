@@ -1,5 +1,12 @@
 // Config
 
+if (Meteor.isServer) {
+	WebApp.connectHandlers.use(function(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        return next();
+    });
+}
+
 // async loader for fonts
 // https://github.com/typekit/webfontloader
 WebApp.connectHandlers.use(function(req, res, next) {
