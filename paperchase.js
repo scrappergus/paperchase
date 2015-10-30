@@ -324,6 +324,7 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
+				// Meteor.subscribe('articleFullText',this.params._id),
 				Meteor.subscribe('articleTypes')
 			]
 		},
@@ -556,9 +557,13 @@ if (Meteor.isClient) {
 			if(this.ready()){
 				var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
 				var sorted  = sorters.findOne();
+				var sortedArticles;
+				if(sorted['articles']){
+					sortedArticles = sorted['articles'];
+				}
 				return {
 					feature : featureList,
-					advance : sorted['articles']
+					advance : sortedArticles
 				}
 			}
 		}
