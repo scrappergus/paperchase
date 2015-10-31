@@ -148,6 +148,18 @@ Meteor.methods({
 			}
 		}
 
+		// Links
+		articleUpdate.legacy_files = {};
+		if(article.abstract){
+			articleUpdate.legacy_files.abstract_exists = true;
+		}
+		if(article.pdf_galley_id){
+			articleUpdate.legacy_files.pdf_galley_id = article.pdf_galley_id;
+		}
+		if(article.has_supps){
+			articleUpdate.legacy_files.has_supps = true;
+		}
+
 		// TODO: Add dates
 		// if(article.dates){}
 
