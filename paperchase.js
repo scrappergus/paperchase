@@ -178,24 +178,24 @@ Router.route('/get-advance-articles/',{
 			// LINKS
 			htmlString += '<tr><td class="tocGalleys">';
 			// Abstract
-			if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
-				htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D='+ articleInfo.pii +'" class="file">Abstract</a>';
+			if(articleInfo.legacy_files){
+				if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
+					htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D='+ articleInfo.pii +'" class="file">Abstract</a>';
+				}
+				// HTML
+				if(articleInfo.legacy_files.html_galley_id){
+					htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
+				}
+				// PDF
+				if(articleInfo.legacy_files.pdf_galley_id){
+					htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
+				}
+				// Supplemental
+				if(articleInfo.legacy_files.has_supps){
+					htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
+				}
 			}
-			// HTML
-			// if(articleInfo.files){
-			// 	console.log(articleInfo.files);
-			// 	for(var file = 0 ; file < articleInfo.files.length ; file++){
-			// 		console.log(articleInfo.files[file]['file_type']);
-			// 	}
-			// }
-			// PDF
-			if(articleInfo.legacy_files.pdf_galley_id){
-				htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">HTML</a>';
-			}
-			// Supplemental
-			if(articleInfo.legacy_files.has_supps){
-				htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
-			}
+
 
 			htmlString += '</td></tr>';
 

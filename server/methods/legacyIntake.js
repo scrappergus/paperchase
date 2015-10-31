@@ -159,6 +159,9 @@ Meteor.methods({
 		if(article.has_supps){
 			articleUpdate.legacy_files.has_supps = true;
 		}
+		if(article.html_galley_id){
+			articleUpdate.legacy_files.html_galley_id = article.html_galley_id;
+		}
 
 		// TODO: Add dates
 		// if(article.dates){}
