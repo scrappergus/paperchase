@@ -94,7 +94,7 @@ Meteor.methods({
 		if(article.pages && article.pages != null){
 			pagePieces = article.pages.split('-');
 			articleUpdate.page_start = pagePieces[0];
-			if(pagesPieces.length > 1){
+			if(pagePieces.length > 1){
 				articleUpdate.page_end = pagePieces[1];
 			}
 		}
@@ -146,6 +146,18 @@ Meteor.methods({
 				// Add the author with Mongo ID to the article update object
 				articleUpdate.authors.push(authors[a]);
 			}
+		}
+
+		// Links
+		articleUpdate.legacy_files = {};
+		if(article.abstract){
+			articleUpdate.legacy_files.abstract_exists = true;
+		}
+		if(article.pdf_galley_id){
+			articleUpdate.legacy_files.pdf_galley_id = article.pdf_galley_id;
+		}
+		if(article.has_supps){
+			articleUpdate.legacy_files.has_supps = true;
 		}
 
 		// TODO: Add dates
