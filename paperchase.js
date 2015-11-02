@@ -122,7 +122,19 @@ Router.route('/get-advance-articles/',{
 		if(advance && advance.articles){
 			var advanceList = advance.articles;
 			var prevSection;
-			for(var i = 0 ; i < advanceList.length ; i++){
+
+            if(this.params.query.rangeStart !== undefined) {
+                var rangeSize = this.params.query.rangeSize*1 || 3;
+                var rangeStart = this.params.query.rangeStart*rangeSize
+                var rangeEnd = rangeStart + rangeSize;
+                if(rangeEnd > advanceList.length) rangeEnd = advanceList.length;
+            }
+            else {
+                var rangeStart = 0;
+                var rangeEnd = advanceList.length;
+            }
+
+			for(var i = rangeStart ; i < rangeEnd; i++){
 				var articleInfo = advanceList[i];
 				if(articleInfo['section_start']){
 					if(prevSection){
