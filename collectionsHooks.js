@@ -1,7 +1,7 @@
 // Articles
 // --------
 articles.after.insert(function (userId, doc) {
-  // console.log('..before insert article');
+  console.log('..before insert article');
   // console.log('doc');console.log(doc.advance);console.log(this._id);
 
   // Advance
