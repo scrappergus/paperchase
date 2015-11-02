@@ -216,7 +216,6 @@ Meteor.methods({
 		if(article.volume && article.issue){
 			// Does issue exist?
 			issueInfo = Meteor.call('findIssueByVolIssue', article.volume, article.issue);
-			issueId = issueInfo['_id']
 			if(issueInfo){
 				issueId = issueInfo['_id'];
 			}else{
