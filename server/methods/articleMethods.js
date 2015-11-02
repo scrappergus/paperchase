@@ -206,10 +206,12 @@ Meteor.methods({
 		return fut.wait();
 	},
 	articleIssueVolume: function(article){
+		// console.log('....articleIssueVolume');
 		// if article in issue:
 		// 1. check if issue exists in issues collection. If not add. If issue exists or added, issue Mongo ID returned
 		// 2. include issue Mongo id in article doc
 		// console.log('..articleIssueVolume');
+		var issueId;
 		if(article.volume && article.issue){
 			console.log('   VOLUME = '+ article.volume);
 			console.log('   ISSUE = '+ article.issue);
