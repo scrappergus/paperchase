@@ -117,60 +117,96 @@ Router.route('/get-advance-articles/',{
 		]
 	},
 	action: function(){
-		// console.log('get-advance-articles');
 		var htmlString = '<head><meta charset="UTF-8"></head><body>';
 		var advance = sorters.findOne({name: 'advance'});
-		var advanceList = advance.articles;
-		var prevSection;
-		for(var i = 0 ; i < advanceList.length ; i++){
-			var articleInfo = advanceList[i];
-			if(articleInfo['section_start']){
-				if(prevSection){
-					// htmlString += '</div>';
+		if(advance && advance.articles){
+			var advanceList = advance.articles;
+			var prevSection;
+			for(var i = 0 ; i < advanceList.length ; i++){
+				var articleInfo = advanceList[i];
+				if(articleInfo['section_start']){
+					if(prevSection){
+						htmlString += '</div>';
+					}
+
+					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+					htmlString += '<div class="articlewrapper">';
+				}
+				prevSection = articleInfo['section_name'];
+
+
+				htmlString += '<table class="tocArticle" style="width:50%;float:left;"><tbody>';
+				if(articleInfo['title']){
+					htmlString += '<tr>';
+					htmlString += '<td class="tocTitle">' + articleInfo['title'] + '</td>';
+					htmlString += '</tr>';
 				}
 
-				htmlString += '<h2 style="font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h2>';
-				// htmlString += '<div style="-webkit-column-count: 2;-moz-column-count: 2;column-count: 2;">'
-			}
-			prevSection = articleInfo['section_name'];
+				if(articleInfo.authors){
+					htmlString += '<tr>';
+					htmlString += '<td class="tocAuthors">';
 
-			if(articleInfo['title']){
-				htmlString += '<h3>' + articleInfo['title'] + '</h3>';
-			}
-
-			if(articleInfo['ids']['pii']){
-				htmlString += '<h4>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</h4>';
-			}
-
-			if(articleInfo.authors){
-				var authors = articleInfo.authors;
-				var authorsCount = authors.length;
-				htmlString += '<p>';
-				for(var a = 0 ; a < authorsCount ; a++){
-					// console.log('... '+a);
-					if(authors[a]['name_first']){
-						htmlString += ' ' + authors[a]['name_first'];
+					if(articleInfo['ids']['pii']){
+						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
 					}
-					if(authors[a]['name_middle']){
-						htmlString += ' ' + authors[a]['name_middle'];
-					}
-					if(authors[a]['name_last']){
-						htmlString += ' ' + authors[a]['name_last'];
-						// console.log(authors[a]['name_last']);
-					}
-					if(a != parseInt(authorsCount - 1)){
-						if(authors[a]['name_first'] || authors[a]['name_middle'] || authors[a]['name_last']){
-							htmlString += ', ';
+					var authors = articleInfo.authors;
+					var authorsCount = authors.length;
+					htmlString += '<p>';
+					for(var a = 0 ; a < authorsCount ; a++){
+						if(authors[a]['name_first']){
+							htmlString += ' ' + authors[a]['name_first'];
+						}
+						if(authors[a]['name_middle']){
+							htmlString += ' ' + authors[a]['name_middle'];
+						}
+						if(authors[a]['name_last']){
+							htmlString += ' ' + authors[a]['name_last'];
+						}
+						if(a != parseInt(authorsCount - 1)){
+							if(authors[a]['name_first'] || authors[a]['name_middle'] || authors[a]['name_last']){
+								htmlString += ', ';
+							}
 						}
 					}
+					htmlString += '</p>';
+					htmlString += '</td>';
+					htmlString += '</tr>';
 				}
-				htmlString += '</p>';
+
+				// LINKS
+				htmlString += '<tr><td class="tocGalleys">';
+				// Abstract
+				if(articleInfo.legacy_files){
+					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D='+ articleInfo.pii +'" class="file">Abstract</a>';
+						htmlString += '&nbsp;';
+					}
+					// HTML
+					if(articleInfo.legacy_files.html_galley_id){
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
+						htmlString += '&nbsp;';
+					}
+					// PDF
+					if(articleInfo.legacy_files.pdf_galley_id){
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
+						htmlString += '&nbsp;';
+					}
+					// Supplemental
+					if(articleInfo.legacy_files.has_supps){
+						htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
+						htmlString += '&nbsp;';
+					}
+				}
+
+				htmlString += '</td></tr>';
+
+				htmlString += '</tbody></table>';
 			}
+			htmlString += '</body>';
+			var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+			this.response.writeHead(200, headers);
+			this.response.end(htmlString);
 		}
-		htmlString += '</body>';
-		var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
-		this.response.writeHead(200, headers);
-		this.response.end(htmlString);
 	}
 });
 
