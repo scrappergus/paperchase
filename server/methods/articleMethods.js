@@ -211,12 +211,12 @@ Meteor.methods({
 		// 1. check if issue exists in issues collection. If not add. If issue exists or added, issue Mongo ID returned
 		// 2. include issue Mongo id in article doc
 		// console.log('..articleIssueVolume');
-		var issueId;
+		var issueInfo,
+			issueId;
 		if(article.volume && article.issue){
-			console.log('   VOLUME = '+ article.volume);
-			console.log('   ISSUE = '+ article.issue);
 			// Does issue exist?
 			issueInfo = Meteor.call('findIssueByVolIssue', article.volume, article.issue);
+			issueId = issueInfo['_id']
 			if(issueId){
 				issueId = issueInfo['_id'];
 			}else{
