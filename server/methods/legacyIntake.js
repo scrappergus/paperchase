@@ -103,7 +103,11 @@ Meteor.methods({
 		// if(article.keywords){}
 
 		if(article.abstract){
-			articleUpdate.abstract = article.abstract;
+			// HTML is pasted as the abstract and includes author information. We just want the abstract for the intake.
+			var abs = article.abstract.indexOf('<p class=\"BodyText\">');
+			abs = parseInt(abs + 20);
+			var abstract = article.abstract.substring(abs, article.abstract.length);
+			articleUpdate.abstract = '<p>' + abstract;
 		}
 
 		// TODO: Add NLM type. Query article types collection.
