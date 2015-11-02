@@ -127,11 +127,11 @@ Router.route('/get-advance-articles/',{
 				var articleInfo = advanceList[i];
 				if(articleInfo['section_start']){
 					if(prevSection){
-						htmlString += '</table>';
+						htmlString += '</div>';
 					}
 
 					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-					htmlString += '<table class="articlewrapper">';
+					htmlString += '<div class="articlewrapper">';
 				}
 				prevSection = articleInfo['section_name'];
 
