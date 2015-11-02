@@ -20,7 +20,6 @@ sorters = new Mongo.Collection('sorters', {
         f.articles = [];
         var prevSection = '';
         for(var i = 0 ; i < order.length ; i++){
-          console.log(order[i]);
           for(var a = 0 ; a < articlesList.length ; a++){
             if(articlesList[a]['_id'] === order[i]){
               var section = sections.findOne({'section_id' : articlesList[a]['section_id']});

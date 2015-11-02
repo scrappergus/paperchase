@@ -122,7 +122,6 @@ Router.route('/get-advance-articles/',{
 		]
 	},
 	action: function(){
-		// console.log('get-advance-articles');
 		var htmlString = '<head><meta charset="UTF-8"></head><body>';
 		var advance = sorters.findOne({name: 'advance'});
 		if(advance && advance.articles){
@@ -132,16 +131,16 @@ Router.route('/get-advance-articles/',{
 				var articleInfo = advanceList[i];
 				if(articleInfo['section_start']){
 					if(prevSection){
-						htmlString += '</table>';
+						htmlString += '</div>';
 					}
 
-					htmlString += '<h4 class="tocSectionTitle" style="font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-					htmlString += '<table class="articlewrapper">';
+					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+					htmlString += '<div class="articlewrapper">';
 				}
 				prevSection = articleInfo['section_name'];
 
 
-				htmlString += '<table class="tocArticle"><tbody>';
+				htmlString += '<table class="tocArticle" style="width:50%;float:left;"><tbody>';
 				if(articleInfo['title']){
 					htmlString += '<tr>';
 					htmlString += '<td class="tocTitle">' + articleInfo['title'] + '</td>';
@@ -153,7 +152,7 @@ Router.route('/get-advance-articles/',{
 					htmlString += '<td class="tocAuthors">';
 
 					if(articleInfo['ids']['pii']){
-						htmlString += '<p>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</p>';
+						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
 					}
 					var authors = articleInfo.authors;
 					var authorsCount = authors.length;
@@ -185,18 +184,22 @@ Router.route('/get-advance-articles/',{
 				if(articleInfo.legacy_files){
 					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
 						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D='+ articleInfo.pii +'" class="file">Abstract</a>';
+						htmlString += '&nbsp;';
 					}
 					// HTML
 					if(articleInfo.legacy_files.html_galley_id){
 						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
+						htmlString += '&nbsp;';
 					}
 					// PDF
 					if(articleInfo.legacy_files.pdf_galley_id){
 						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
+						htmlString += '&nbsp;';
 					}
 					// Supplemental
 					if(articleInfo.legacy_files.has_supps){
 						htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
+						htmlString += '&nbsp;';
 					}
 				}
 
