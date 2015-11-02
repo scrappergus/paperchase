@@ -1,8 +1,8 @@
 // Articles
 // --------
 articles.after.insert(function (userId, doc) {
-  console.log('..before insert article');
-  // console.log('doc');console.log(doc.advance);console.log(this._id);
+  // console.log('..before insert article');
+  //console.log(doc.advance);console.log(this._id);
 
   // Advance
   if(doc.advance){
@@ -52,8 +52,8 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
 // Issues
 // -----
 issues.after.insert(function (userId, doc) {
-  console.log('..before insert issues');
-
+  // console.log('..before insert issues');
+  var issueData = {};
   issueData['doc_updates'] = {};
   issueData['doc_updates']['created_date'] = new Date();
   issueData['doc_updates']['created_by'] = userId;
