@@ -38,7 +38,6 @@ sorters = new Mongo.Collection('sorters', {
   }
 });
 
-
 // ALLOW
 Meteor.users.allow({
   update: function (userId, doc, fields, modifier) {

@@ -395,10 +395,11 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var id = this.params._id;
+				Session.set('article-id',this.params._id);
+				// var fullText = Meteor.call('getXmlForFullText',id); // returns undefined due to timing issue, moved to helpers.js
 				var article = articles.findOne({'_id': id});
-				// console.log('article = ');console.log(article);
 				return {
-					article: article
+					article: article,
 				};
 			}
 		}
