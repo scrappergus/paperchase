@@ -138,26 +138,28 @@ Router.route('/get-advance-articles/',{
 			for(var i = rangeStart ; i < rangeEnd; i++){
 				var articleInfo = advanceList[i];
 				if(articleInfo['section_start']){
-					if(prevSection){
-						htmlString += '</div>';
-					}
+//					if(prevSection){
+//						htmlString += '</div>';
+//					}
 
-					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-					htmlString += '<div class="articlewrapper">';
+//					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+//					htmlString += '<div class="articlewrapper">';
 				}
 				prevSection = articleInfo['section_name'];
 
 
-				htmlString += '<table class="tocArticle" style="width:50%;float:left;"><tbody>';
-				if(articleInfo['title']){
-					htmlString += '<tr>';
-					htmlString += '<td class="tocTitle">' + articleInfo['title'] + '</td>';
-					htmlString += '</tr>';
-				}
+                if(i%2==0) {
+                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
+                }
+
+                htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
+			    htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
 
 				if(articleInfo.authors){
-					htmlString += '<tr>';
-					htmlString += '<td class="tocAuthors">';
+//					htmlString += '<tr>';
+//					htmlString += '<td class="tocAuthors">';
+
+					htmlString += '<class class="tocAuthors">';
 
 					if(articleInfo['ids']['pii']){
 						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
@@ -182,12 +184,10 @@ Router.route('/get-advance-articles/',{
 						}
 					}
 					htmlString += '</p>';
-					htmlString += '</td>';
-					htmlString += '</tr>';
 				}
 
 				// LINKS
-				htmlString += '<tr><td class="tocGalleys">';
+				htmlString += '<span class="tocGalleys">';
 				// Abstract
 				if(articleInfo.legacy_files){
 					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
@@ -211,10 +211,15 @@ Router.route('/get-advance-articles/',{
 					}
 				}
 
-				htmlString += '</td></tr>';
+				htmlString += '</span>';
 
-				htmlString += '</tbody></table>';
+				htmlString += '</div>';
+
+                if(i%2==1) {
+                    htmlString += '</div>';
+                }
 			}
+
 			htmlString += '</body>';
 			var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
 			this.response.writeHead(200, headers);
