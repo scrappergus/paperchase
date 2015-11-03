@@ -117,7 +117,8 @@ Router.route('/get-advance-articles/',{
 		]
 	},
 	action: function(){
-		var htmlString = '<head><meta charset="UTF-8"></head><body>';
+		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
+		var htmlString = '<body>';
 		var advance = sorters.findOne({name: 'advance'});
 		if(advance && advance.articles){
 			var advanceList = advance.articles;
@@ -379,7 +380,6 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
-				// Meteor.subscribe('articleFullText',this.params._id),
 				Meteor.subscribe('articleTypes')
 			]
 		},
@@ -399,16 +399,19 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('articleInfo',this.params._id)
+				Meteor.subscribe('articleInfo',this.params._id),
+				// Meteor.subscribe('articleFullText',this.params._id),
+				Meteor.subscribe('articleTypes')
 			]
 		},
 		data: function(){
 			if(this.ready()){
 				var id = this.params._id;
+				Session.set('article-id',this.params._id);
+				// var fullText = Meteor.call('getXmlForFullText',id); // returns undefined due to timing issue, moved to helpers.js
 				var article = articles.findOne({'_id': id});
-				// console.log('article = ');console.log(article);
 				return {
-					article: article
+					article: article,
 				};
 			}
 		}
