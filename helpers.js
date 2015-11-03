@@ -247,30 +247,14 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-	// Template.ArticleText.helpers({
-	// 	fullText: function(){
-	// 		var mongoId = Session.get('article-id');
-	// 		var fullText = Meteor.call('getXmlForFullText',mongoId);
-	// 		console.log(fullText);
-	// 		return fullText;
-	// 	}
-	// });
-	Template.ArticleText.created = function() {
-	    var self = this;
-		var mongoId = Session.get('article-id');
-	    self.data.fullTextDep = new Deps.Dependency();
-	    self.data.fullText = '';
-	    Meteor.call('getXmlForFullText', mongoId, function(error, result) {
-	        self.data.fullText = result;
-	        self.data.fullTextDep.changed();
-	    });
-	};
-
-	Template.ArticleText.fullText = function() {
-	    this.fullTextDep.depend();
-	    console.log(this.fullText);
-	    return this.fullText;
-	};
+	Template.ArticleText.helpers({
+		fullText: function(){
+			// this needs to be reactive due to timing issue when processing XML to JSON on server
+			this.fullTextDep.depend();
+			console.log(this.fullText);
+			return this.fullText;
+		}
+	});
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.
