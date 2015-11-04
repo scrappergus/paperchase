@@ -134,10 +134,7 @@ Template.ArticleButtons.onCreated(function() {
 		self.data.assetsDep.changed();
 	});
 });
-Template.Article.onRendered(function() {
-	// Slider
-	$('.slider').slider({full_width: true});
-});
+
 Template.Article.onCreated(function() {
 	// Assets
 	var self = this;
@@ -146,6 +143,12 @@ Template.Article.onCreated(function() {
 	self.data.assets = '';
 	Meteor.call('availableAssests', mongoId, function(error, result) {
 		self.data.assets = result;
-		self.data.assetsDep.changed();
 	});
+});
+Template.ArticleFigures.onRendered(function() {
+	$('.materialboxed').materialbox();
+	// $('.slider').slider({full_width: true});
+	$('.owl-carousel').owlCarousel({});
+	$('.owl-stage').addClass('valign-wrapper');
+	$('.owl-item').addClass('valign');
 });

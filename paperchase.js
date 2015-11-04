@@ -220,6 +220,7 @@ if (Meteor.isClient) {
 	Session.setDefault('articleData',null);
 	Session.setDefault('article',null);
 	Session.setDefault('article-id',null);
+	Session.setDefault('article-assets',null);
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);

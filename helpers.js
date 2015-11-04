@@ -251,8 +251,11 @@ if (Meteor.isClient) {
 		assets: function(){
 			// this needs to be reactive due to timing issue when processing XML to JSON on server
 			this.assetsDep.depend();
-			console.log('assets');
-			console.log(this.assets);
+			if(this.assets){
+				$('.slider').slider({full_width: true});
+			}
+			// console.log('assets');
+			// console.log(this.assets);
 			return this.assets;
 		}
 	});

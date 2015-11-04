@@ -43,6 +43,18 @@
 
 </template>
 
+<template name="ArticleFigures">
+	<div class="owl-carousel">
+			{{#each assets.figures}}
+				<div>
+				{{#each imgURLs}}
+					<img src="{{.}}" class="materialboxed">
+				{{/each}}
+				</div>
+			{{/each}}
+	</div>
+</template>
+
 <template name="ArticleMeta">
 	<div class="article-meta">
 		<span class="badge">{{article_type.name}}</span>
