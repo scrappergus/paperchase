@@ -39,9 +39,63 @@
 
 
 <template name="ArticleText">
+    {{#with article}}
+        {{>ArticleMeta}}
+        {{#if ids.pii}}
+        {{else}}
+        <div class="row">
+            <div class="col s12 red center-align"><h4>Full Text Unavailable.</h4></div>
+        </div>
+
+        {{/if}}
+    {{/with}}
+
+
+    {{#if fullText}}
+    {{else}}
+        <div class="row">
+            <div class="col s12">
+                <h3>Loading</h3>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+
     {{#with fullText}}
         {{#each sections}}
             <h3>{{{title}}}</h3>
+            {{#each content}}
+                <p>{{{.}}}</p>
+            {{/each}}
         {{/each}}
+        {{#if figures}}
+        <div class="row">
+            <div class="col s12">
+                <h3>Figures</h3>
+            </div>
+        </div>
+        <div class="row">
+            {{#each figures}}
+            <div class="col s6">
+                {{#each imgURLs}}
+                   <img src="{{.}}" style="width:100%;">
+                {{/each}}
+                <p>{{{figureText}}}</p>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+        {{#if references}}
+            <h3>References</h3>
+            <ul>
+                {{#each references}}
+                    <li id="R{{number}}"><b>{{number}}.</b>{{#if article_title}} {{article_title}}.{{/if}}{{#if source}} {{source}}.{{/if}}{{#if year}} {{year}}{{/if}}{{#if volume}}; {{volume}}{{/if}}{{#if fpage}}: {{fpage}}{{/if}}{{#if lpage}}-{{lpage}}{{/if}}.</li>
+                {{/each}}
+            </ul>
+
+        {{/if}}
     {{/with}}
+
 </template>
