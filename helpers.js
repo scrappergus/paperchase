@@ -247,6 +247,14 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+	Template.ArticleText.helpers({
+		fullText: function(){
+			// this needs to be reactive due to timing issue when processing XML to JSON on server
+			this.fullTextDep.depend();
+			console.log(this.fullText);
+			return this.fullText;
+		}
+	});
 }
 
 // TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.

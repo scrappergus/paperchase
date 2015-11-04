@@ -1,0 +1,50 @@
+// // parseString = Meteor.npmRequire('xml2js').parseString;
+// Meteor.publish('articleFullText', function(mongoId) {
+// 		console.log('... mongo id = ' + mongoId);
+// 		var articleFullTextLink,
+// 				articleFullText = [],
+// 				articleFullTextXml,
+// 				pii,
+// 				pmid,
+// 				articleInfo,
+// 				configSettings,
+// 				assetsLink,
+// 				resLinks,
+// 				resXml,
+// 				xml;
+// 		articleInfo = articles.findOne({'_id' : mongoId});
+// 		pmid = articleInfo.ids.pmid;
+// 		pii = articleInfo.ids.pii;
+// 		configSettings = journalConfig.findOne({});
+// 		assetsLink = configSettings.api.assets;
+
+// 		if(pii){
+// 			// get asset links
+// 			resLinks = Meteor.http.get(assetsLink + pii);
+// 			if(resLinks){
+// 				resLinks = resLinks.content;
+// 				resLinks = JSON.parse(resLinks);
+// 				resLinks = resLinks[0];
+// 				// console.log('resLinks');console.log(resLinks);
+// 				articleFullTextLink = resLinks.full_xml_url;
+// 			}
+
+// 			// get XML
+// 			if(articleFullTextLink){
+// 				resXml = Meteor.http.get(articleFullTextLink);
+// 				if(resXml){
+// 					// XML to JSON
+// 					xml = resXml.content;
+// 					// console.log(xml);
+// 				}
+// 			}
+
+// 			if(xml){
+// 				var articleJson = Meteor.call('fullTextToJson',xml);
+// 			}
+// 		}
+
+// 		articleFullText.push(articleJson);
+
+// 		return articleFullText;
+// });
