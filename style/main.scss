@@ -118,6 +118,9 @@ html,body{
 	}
 
 /* Article ------------------------*/
+	.article-meta{
+		position: relative;
+	}
 	.authors{
 		span{
 			&:last-child{
@@ -142,6 +145,9 @@ html,body{
 	.affiliations{
 		color: $gray;
 		font-size: $font-sm;
+	}
+	.kw{
+		margin: $margin-sm 0 $margin-sm $margin-sm;
 	}
 
 /* Buttons ------------------------*/

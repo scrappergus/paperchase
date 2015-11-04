@@ -568,6 +568,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var id = this.params._id;
+				Session.set('article-id',this.params._id);
 				var article;
 				article = articles.findOne({'_id': id});
 				return {
