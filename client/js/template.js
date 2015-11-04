@@ -1,3 +1,10 @@
+//
+Template.CustomLeftNav.replaces("LeftNav");
+Template.CustomHome.replaces("Home");
+Template.CustomHomePageEditorList.replaces("HomePageEditorList");
+Template.CustomEdBoard.replaces("EdBoard");
+
+
 // Admin
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
@@ -122,3 +129,5 @@ Template.ArticleText.onCreated(function() {
 		self.data.fullTextDep.changed();
 	});
 });
+
+
