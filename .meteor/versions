@@ -64,6 +64,7 @@ linto:jquery-ui@1.11.2
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+manuelschoebel:ms-seo@0.4.1
 matb33:collection-hooks@0.8.1
 materialize:materialize@0.97.0
 meteor@1.1.9

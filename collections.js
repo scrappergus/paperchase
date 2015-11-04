@@ -315,7 +315,7 @@ if (Meteor.isServer) {
      }
   });
   Meteor.publish('currentUser', function(id){
-    if(!this.userId) return null;
+    if(!this.userId) return;
     return Meteor.users.find(this.userId, {fields: {
       name_first: 1,
       name_last: 1,
