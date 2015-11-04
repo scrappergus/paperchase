@@ -118,11 +118,12 @@ Router.route('/get-advance-articles/',{
 	},
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
-		var htmlString = '<body>';
+		var htmlString = "<body>";
 		var advance = sorters.findOne({name: 'advance'});
 		if(advance && advance.articles){
 			var advanceList = advance.articles;
 			var prevSection;
+            var last_index;
 
             if(this.params.query.rangeStart !== undefined) {
                 var rangeSize = this.params.query.rangeSize*1 || 3;
@@ -135,8 +136,14 @@ Router.route('/get-advance-articles/',{
                 var rangeEnd = advanceList.length;
             }
 
+            var parity=0;
 			for(var i = rangeStart ; i < rangeEnd; i++){
+                parity++;
 				var articleInfo = advanceList[i];
+                last_index = i-1
+                if(i > 0) {
+                    prevSection = advanceList[last_index]['section_name'];
+                }
 				if(articleInfo['section_start']){
 //					if(prevSection){
 //						htmlString += '</div>';
@@ -145,11 +152,19 @@ Router.route('/get-advance-articles/',{
 //					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
 //					htmlString += '<div class="articlewrapper">';
 				}
-				prevSection = articleInfo['section_name'];
 
 
-                if(i%2==0) {
+                if(articleInfo['section_name'] != prevSection) {
+                    if(i != 0) {
+                        htmlString += '</div>';
+                    }
+                    htmlString += "<h4 id=\""+articleInfo['section_name']+"\" class=\"tocSectionTitle\">"+articleInfo['section_name']+"</h4>";
                     htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
+                    parity = 1;
+                }
+                else if(parity%2==1) {
+                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
+
                 }
 
                 htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
@@ -159,7 +174,7 @@ Router.route('/get-advance-articles/',{
 //					htmlString += '<tr>';
 //					htmlString += '<td class="tocAuthors">';
 
-					htmlString += '<class class="tocAuthors">';
+					htmlString += '<span class="tocAuthors">';
 
 					if(articleInfo['ids']['pii']){
 						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
@@ -184,6 +199,7 @@ Router.route('/get-advance-articles/',{
 						}
 					}
 					htmlString += '</p>';
+					htmlString += '</span>';
 				}
 
 				// LINKS
@@ -215,7 +231,7 @@ Router.route('/get-advance-articles/',{
 
 				htmlString += '</div>';
 
-                if(i%2==1) {
+                if(parity%2==0) {
                     htmlString += '</div>';
                 }
 			}
