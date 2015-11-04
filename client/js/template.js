@@ -118,3 +118,14 @@ Template.Home.onRendered(function () {
 		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 	});
 });
+
+Template.ArticleText.onCreated(function() {
+	var self = this;
+	var mongoId = Session.get('article-id');
+	self.data.fullTextDep = new Deps.Dependency();
+	self.data.fullText = '';
+	Meteor.call('getAssetsForFullText', mongoId, function(error, result) {
+		self.data.fullText = result;
+		self.data.fullTextDep.changed();
+	});
+});
