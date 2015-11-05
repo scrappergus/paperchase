@@ -236,6 +236,9 @@ html,body{
 	}
 
 /* MISC ------------------------*/
+	.no-margin{
+		margin: 0px;
+	}
 	.ip-alert{
 		padding: $pad-md 0;
 		background: $journal-primary-color;
