@@ -2,6 +2,7 @@ xpath = Meteor.npmRequire('xpath');
 dom = Meteor.npmRequire('xmldom').DOMParser;
 Meteor.methods({
 	availableAssests: function(mongoId){
+		// console.log('... availableAssests ' + mongoId);
 		var fut = new future();
 		var pii,
 			articleInfo,
@@ -34,7 +35,7 @@ Meteor.methods({
 		}
 	},
 	getAssetsForFullText: function(mongoId){
-		console.log('... mongo id = ' + mongoId);
+		// console.log('... mongo id = ' + mongoId);
 		var fut = new future();
 		var articleJson,
 			articleFullTextLink,

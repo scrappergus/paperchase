@@ -1,53 +1,73 @@
 <template name="Issue">
-<div class="row">
+	<div class="row">
+	{{> LeftNav}}
 
-    {{> LeftNav}}
+	<div class="col s10">
+		{{> SubscribeModal}}
 
-    <div class="col s10">
+		{{#with issueData}}
+		<div class="row">
+			<div class="col s10">
+				<img style="float:left;margin:20px 10px 0px 0px;" src="/images/covers/cover_v{{volume}}n{{issue}}.png">
+				<h2>Volume {{volume}}, Issue {{issue}}</h2>
+				{{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
+				<!-- <h4>pp {{page_start}} - {{page_end}}</h4> -->
+				<div class="clearfix"></div>
+				<ul>
+					{{#each articles}}
+					{{#if start_group}}
+					<li style="margin: 10px 10px 0 0; display:inline-block;"><a class="waves-effect waves-light btn light-blue accent-4" href="#{{article_type.nlm_type}}">{{article_type.name}}</a></li>
+					{{/if}}
+					{{/each}}
+				</ul>
 
-        {{> SubscribeModal}}
+				<div class="divider"></div>
 
+				<ul class="">
+					{{#each articles}}
+					{{#if start_group}}
+					<li><h3 id="{{article_type.nlm_type}}">{{article_type.name}}</h3></li>
+					{{/if}}
+					<li>
+						<h4>{{{title}}}</h4>
+						<h5>{{>AuthorsList}}</h5>
+						{{#if page_start}}<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>{{/if}}
+						{{#if abstract}}<a class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
 
-{{#with issue}}
-    <div class="row">
-        <div class="col s10">
-            <img style="float:left;margin:20px 10px 0px 0px;" src="/images/covers/cover_v{{volume}}n{{issue}}.png">
-            <h2>Volume {{volume}}, Issue {{issue}}</h2>
-            {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
-            <!-- <h4>pp {{page_start}} - {{page_end}}</h4> -->
-            <div class="clearfix"></div>
-            <ul>
-			    {{#each articles}}
-			    {{#if start_group}}
-			    <li style="margin: 10px 10px 0 0; display:inline-block;"><a class="waves-effect waves-light btn light-blue accent-4" href="#{{article_type.nlm_type}}">{{article_type.name}}</a></li>
-			    {{/if}}
-			    {{/each}}
-			</ul>
+						<!-- TODO -->
+						<!-- use button partial -->
+						<!-- none of these below are working.. -->
+						<!-- {{>ArticleButtons assets=assets}} -->
+						<!-- {{>ArticleButtons article=article}} -->
+						<!-- {{#with article}}{{>ArticleButtons}}{{/with}} -->
+						<!-- {{#with assets}}{{>ArticleButtons}}{{/with}} -->
+						<span class="article-btns">
+							{{#if isSubscribed}}
+							{{#if assets.pdf_url}}
+							<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn download-pdf">PDF</a>
+							{{/if}}
+							{{#if assets.full_xml_url}}
+							<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Lens Full-Text Viewer</a>
+							<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+							{{/if}}
+							{{else}}
+							{{#if assets.pdf_url}}
+							<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
+							{{/if}}
+							{{#if assets.full_xml_url}}
+							<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+							<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
+							{{/if}}
+							{{/if}}
+						</span>
+					</li>
 
-            <div class="divider"></div>
-
-            <ul class="">
-                {{#each articles}}
-                {{#if start_group}}
-                <li ><h3 id="{{article_type.nlm_type}}">{{article_type.name}}</h3></li>
-                {{/if}}
-                <li>
-                	<h4>{{{title}}}</h4>
-                	<h5>{{>AuthorsList}}</h5>
-                	<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
-                	<a class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'Article'}}">Abstract</a>
-                    {{>ArticleButtons}}
-                </li>
-
-
-                <br><br>
-                {{/each}}
-            </ul>
-        </div>
-    </div>
-{{/with}}
-        </div>
-    </div>
-
-
+					<br><br>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+		{{/with}}
+		</div>
+	</div>
 </template>

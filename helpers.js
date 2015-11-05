@@ -262,6 +262,9 @@ if (Meteor.isClient) {
 			return Session.get('article-text');
 		}
 	});
+	Template.Issue.helpers({
+		issueData: function(){
+			return Session.get('issue');
+		}
+	});
 }
-
-// TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.
