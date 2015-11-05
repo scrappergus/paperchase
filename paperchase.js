@@ -1,5 +1,4 @@
 // Config
-
 if (Meteor.isServer) {
 	WebApp.connectHandlers.use(function(req, res, next) {
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -1113,6 +1112,14 @@ if (Meteor.isClient) {
 	Router.route('/admin/issue/:vi', {
 		name: 'AdminIssue',
 		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Meteor.call('availableAssests', this.params._id, function(error, result) {
+				if(result){
+					Session.set('article-assets',result);
+				}
+			});
+			this.next();
+		},
 		waitOn: function(){
 			var vi = this.params.vi;
 			var matches = vi.match('v([0-9]+)i([0-9]+)');
