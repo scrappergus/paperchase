@@ -35,7 +35,6 @@ random
 ejson
 spacebars
 check
-ixdi:material-design-iconic-font@=2.1.2
 ostrio:cookies
 aldeed:collection2
 reactive-var
@@ -48,3 +47,4 @@ aldeed:template-extension
 materialize:materialize@=0.97.0
 standard-minifiers
 richsilv:owl-carousel
+ixdi:material-design-iconic-font@=2.1.5
