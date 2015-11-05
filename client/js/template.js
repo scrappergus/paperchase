@@ -1,3 +1,10 @@
+//
+Template.CustomLeftNav.replaces("LeftNav");
+Template.CustomHome.replaces("Home");
+Template.CustomHomePageEditorList.replaces("HomePageEditorList");
+Template.CustomEdBoard.replaces("EdBoard");
+
+
 // Admin
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
@@ -114,41 +121,9 @@ Template.Home.onRendered(function () {
 	});
 });
 // Article
-Template.ArticleText.onCreated(function() {
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.fullTextDep = new Deps.Dependency();
-	self.data.fullText = '';
-	Meteor.call('getAssetsForFullText', mongoId, function(error, result) {
-		self.data.fullText = result;
-		self.data.fullTextDep.changed();
-	});
-});
-Template.ArticleButtons.onCreated(function() {
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.assetsDep = new Deps.Dependency();
-	self.data.assets = '';
-	Meteor.call('availableAssests', mongoId, function(error, result) {
-		self.data.assets = result;
-		self.data.assetsDep.changed();
-	});
-});
-
-Template.Article.onCreated(function() {
-	// Assets
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.assetsDep = new Deps.Dependency();
-	self.data.assets = '';
-	Meteor.call('availableAssests', mongoId, function(error, result) {
-		self.data.assets = result;
-	});
-});
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
-	// $('.slider').slider({full_width: true});
-	// $('.owl-carousel').owlCarousel({});
-	// $('.owl-stage').addClass('valign-wrapper');
-	// $('.owl-item').addClass('valign');
+});
+Template.ArticleText.onRendered(function() {
+	$('.materialboxed').materialbox();
 });

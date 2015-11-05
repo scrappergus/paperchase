@@ -31,7 +31,7 @@
 </template>
 
 <template name="ArticleDates">
-	<div class="row">
+	<div class="row article-dates">
 	{{#each arrayify dates}}
 		{{#if equals name 'collection'}}
 			<div class="col s4"><h6><label>{{name}}:</label> {{collectionDate value}}</h6></div>
@@ -44,15 +44,26 @@
 </template>
 
 <template name="ArticleFigures">
-	<div class="owl-carousel">
-			{{#each assets.figures}}
-				<div>
+	{{#each figures}}
+		<div class="col s6 article-figure">
+			<div class="border-gray box">
 				{{#each imgURLs}}
-					<img src="{{.}}" class="materialboxed">
+				<img src="{{.}}" class="materialboxed" width="100%;">
 				{{/each}}
+				<div class="card" style="border:0px;box-shadow:0px 0px 0px;">
+					<div class="card-content">
+						<span class="card-title activator grey-text text-darken-4"><i class="material-icons right">more_vert</i></span>
+						<h4>{{{figureTitle}}}</h4>
+					</div>
+					<div class="card-reveal">
+						<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span>
+						<h4>{{{figureTitle}}}</h4>
+						<p>{{{figureText}}}</p>
+					</div>
 				</div>
-			{{/each}}
-	</div>
+			</div>
+		</div>
+	{{/each}}
 </template>
 
 <template name="ArticleMeta">
