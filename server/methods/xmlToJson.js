@@ -1,21 +1,49 @@
 xpath = Meteor.npmRequire('xpath');
 dom = Meteor.npmRequire('xmldom').DOMParser;
 Meteor.methods({
+	availableAssests: function(mongoId){
+		var fut = new future();
+		var pii,
+			articleInfo,
+			configSettings,
+			assetsLink,
+			resLinks;
+		articleInfo = articles.findOne({'_id' : mongoId});
+		pii = articleInfo.ids.pii;
+		configSettings = journalConfig.findOne({});
+		assetsLink = configSettings.api.assets;
+
+		if(pii){
+			// get asset links
+			resLinks = Meteor.http.get(assetsLink + pii);
+			if(resLinks){
+				resLinks = resLinks.content;
+				resLinks = JSON.parse(resLinks);
+				resLinks = resLinks[0];
+				// console.log(resLinks);
+				if(resLinks.figures.length === 0){
+					delete resLinks.figures;
+				}
+				fut['return'](resLinks);
+			}
+		}
+		return fut.wait();
+	},
 	getAssetsForFullText: function(mongoId){
 		console.log('... mongo id = ' + mongoId);
 		var fut = new future();
 		var articleJson,
 			articleFullTextLink,
-				articleFullText = [],
-				articleFullTextXml,
-				pii,
-				pmid,
-				articleInfo,
-				configSettings,
-				assetsLink,
-				resLinks,
-				resXml,
-				xml;
+			articleFullText = [],
+			articleFullTextXml,
+			pii,
+			pmid,
+			articleInfo,
+			configSettings,
+			assetsLink,
+			resLinks,
+			resXml,
+			xml;
 		articleInfo = articles.findOne({'_id' : mongoId});
 		pmid = articleInfo.ids.pmid;
 		pii = articleInfo.ids.pii;
@@ -58,7 +86,7 @@ Meteor.methods({
 	},
 	fullTextToJson: function(xml, figures){
 		// Full XML processing. Content, and References
-		console.log(figures);
+		// console.log(figures);
 		// console.log('... fullTextToJson');
 		var fut = new future();
 		var articleObject = {};
@@ -71,13 +99,13 @@ Meteor.methods({
 		if(sections[0]){
 			// Sections
 			for(var section = 0 ; section < sections.length ; section++){
-				var sectionObject = fullTextSectionToJson(sections[section]);
+				var sectionObject = fullTextSectionToJson(sections[section],figures);
 				articleObject.sections.push(sectionObject);
 			}
 		}else{
 			var body =  xpath.select('//body', doc);
 			// there will only be 1 body node, so use body[0]
-			var sectionObject = fullTextSectionToJson(body[0]);
+			var sectionObject = fullTextSectionToJson(body[0],figures);
 			articleObject.sections.push(sectionObject);
 			// no <sec>
 			// just create 1 section
@@ -165,7 +193,7 @@ Meteor.methods({
 });
 
 // this function, fullTextSectionToJson, as a method throws error: { stack: { stack: undefined, source: 'method' }
-var fullTextSectionToJson =  function(section){
+var fullTextSectionToJson =  function(section,figures){
 	// XML processing of part of the content
 	console.log('...fullTextSectionToJson');
 	// console.log('section');
@@ -201,25 +229,66 @@ var fullTextSectionToJson =  function(section){
 			}
 		}else if(sec.childNodes){
 			// Section: Content
-			// console.log('SECTION CONTENT LENGTH =  ' + sec.childNodes.length);
+			// console.log('localName ' + sec.localName);
+			// TODO: if figure, don't add label. we will use title and caption from api.
+			var figureFound = false,
+				figureId = '',
+				figureUrl = '',
+				figureTitle = '',
+				figureCaption = '';
+			if(sec.localName === 'fig'){
+				figureFound  = true;
+				// get the figure ID
+				for(var figAttr = 0 ; figAttr < sec.attributes.length ; figAttr++){
+					if(sec.attributes[figAttr].localName === 'id'){
+						figureId = sec.attributes[figAttr].nodeValue;
+						for(var f = 0 ; f < figures.length ; f++){
+							if(figures[f]['figureID'] === figureId){
+								// console.log(figures[f]['imgURLs']);
+								// TODO : are there ever more than 1 image in this array?
+								figureUrl = figures[f]['imgURLs'][0];
+								figureTitle = figures[f]['figureTitle'];
+								figureCaption = figures[f]['figureText'];
+							}
+						}
+					}
+				}
+			}
 			for(var cc = 0 ; cc < sec.childNodes.length ; cc++){
 				// console.log('..... ' + cc + ' = ' + sec.childNodes[cc].localName);
-				// console.log()
 				if(sec.childNodes[cc].nodeValue){
 					// plain text
 					content += sec.childNodes[cc].nodeValue;
 				}else{
+					var tagValue;
 					// there are style tags, or reference links
 					if(sec.childNodes[cc].childNodes.length > 0){
-						var tagValue = sec.childNodes[cc].childNodes[0].nodeValue;
+						tagValue = sec.childNodes[cc].childNodes[0].nodeValue;
 					}
 					if(sec.childNodes[cc].localName === 'xref'){
-						content += '<a href="#R' + tagValue + '">';
+
+						// Determine - Reference or Figure?
+						var attributes = sec.childNodes[cc].attributes;
+						// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
+						for(var attr = 0 ; attr < attributes.length ; attr++){
+							if(attributes[attr].nodeName === 'rid'){
+								tagValue = attributes[attr].nodeValue;
+							}
+						}
+						content += '<a href="#' + tagValue + '">';
 						content += tagValue;
 						content += '</a>';
 					}else if(sec.childNodes[cc].localName === 'graphic'){
-						console.log(sec.childNodes[cc]);
-						content += '<img class="full-text-image" src="" />';
+						// console.log(sec.childNodes[cc]);
+						content += '<div class="full-text-image-container box border-gray center-align" id="' + figureId + '">';
+						if(figureTitle != ''){
+							content += '<h4>' + figureTitle + '</h4>';
+						}
+						content += '<img class="materialboxed full-text-image" src="' + figureUrl +'"/>';
+						if(figureCaption != ''){
+							content += '<p>' + figureCaption + '</p>';
+						}
+						content += '</div>';
 					}else{
 						content += '<' + sec.childNodes[cc].localName + '>';
 						content += tagValue;

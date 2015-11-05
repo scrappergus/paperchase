@@ -253,6 +253,8 @@ if (Meteor.isClient) {
 	Session.setDefault('articleData',null);
 	Session.setDefault('article',null);
 	Session.setDefault('article-id',null);
+	Session.setDefault('article-assets',null);
+	Session.setDefault('article-text','');
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
@@ -290,9 +292,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName;
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -328,9 +330,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Advance Articles';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -352,9 +354,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Account';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -383,9 +385,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Archive';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -419,9 +421,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Editorial Board';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -443,9 +445,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | For Authors';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -467,9 +469,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | About';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -504,9 +506,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Contact';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -528,9 +530,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Recent Breakthroughs';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -582,9 +584,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Volume ' + volume + ', Issue ' + issue;
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -592,6 +594,14 @@ if (Meteor.isClient) {
 	Router.route('/article/:_id', {
 		name: 'Article',
 		layoutTemplate: 'Visitor',
+		onBeforeAction: function(){
+			Meteor.call('availableAssests', this.params._id, function(error, result) {
+				if(result){
+					Session.set('article-assets',result);
+				}
+			});
+			this.next();
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
@@ -601,6 +611,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var id = this.params._id;
+				Session.set('article-id',this.params._id);
 				var article;
 				article = articles.findOne({'_id': id});
 				return {
@@ -647,14 +658,27 @@ if (Meteor.isClient) {
 			// 		'description': pageDescription
 			// 	}
 			// });
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 	Router.route('/article/:_id/text', {
 		name: 'ArticleText',
 		layoutTemplate: 'Visitor',
+		onBeforeAction: function(){
+			Meteor.call('availableAssests', this.params._id, function(error, result) {
+				if(result){
+					Session.set('article-assets',result);
+				}
+			});
+			Meteor.call('getAssetsForFullText', this.params._id, function(error, result) {
+				if(result){
+					Session.set('article-text',result);
+				}
+			});
+			this.next();
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
@@ -711,9 +735,9 @@ if (Meteor.isClient) {
 			// 		'description': pageDescription
 			// 	}
 			// });
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 	Router.route('/article/:_id/purchase', {
@@ -773,9 +797,9 @@ if (Meteor.isClient) {
 			// 		'description': pageDescription
 			// 	}
 			// });
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -808,9 +832,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Recommend';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 
@@ -846,9 +870,9 @@ if (Meteor.isClient) {
 				pageTitle = journalName + ' | Subscribe';
 			}
 
-			SEO.set({
-				title: pageTitle
-			});
+			// SEO.set({
+			// 	title: pageTitle
+			// });
 		}
 	});
 

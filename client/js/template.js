@@ -106,6 +106,7 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 
 
 // Visitor
+// -------
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
@@ -119,13 +120,16 @@ Template.Home.onRendered(function () {
 	});
 });
 
-Template.ArticleText.onCreated(function() {
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.fullTextDep = new Deps.Dependency();
-	self.data.fullText = '';
-	Meteor.call('getAssetsForFullText', mongoId, function(error, result) {
-		self.data.fullText = result;
-		self.data.fullTextDep.changed();
-	});
+// Article
+Template.ArticleFigures.onRendered(function() {
+	$('.materialboxed').materialbox();
+	$('.owl-carousel').owlCarousel();
+	// $('.owl-stage').addClass('valign-wrapper');
+	// $('.owl-item').addClass('valign');
+});
+Template.ArticleText.onRendered(function() {
+	$('.materialboxed').materialbox();
+});
+Template.ArticleFullText.onRendered(function() {
+	$('.materialboxed').materialbox();
 });

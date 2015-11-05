@@ -16,10 +16,12 @@ Meteor.methods({
 
 		// update articles collection--- use collection hook on sorters instead?
 		for(var a = 0 ; a < list.length ; a++){
+			console.log('.. advance = ' + a);
 			Meteor.call('updateArticle', list[a], {advance:true});
 		}
 		for(var r = 0 ; r < remove.length ; r++){
 			Meteor.call('updateArticle', remove[r], {advance:false});
+			console.log('.. remove = ' + a);
 		}
 
 		// update sorters collection

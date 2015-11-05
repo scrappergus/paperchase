@@ -247,12 +247,19 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+	Template.Article.helpers({
+		assets: function(){
+			return Session.get('article-assets');
+		}
+	});
+	Template.ArticleButtons.helpers({
+		assets: function(){
+			return Session.get('article-assets');
+		}
+	});
 	Template.ArticleText.helpers({
 		fullText: function(){
-			// this needs to be reactive due to timing issue when processing XML to JSON on server
-			this.fullTextDep.depend();
-			console.log(this.fullText);
-			return this.fullText;
+			return Session.get('article-text');
 		}
 	});
 }
