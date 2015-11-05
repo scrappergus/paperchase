@@ -159,7 +159,7 @@ Template.Article.onCreated(function() {
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
 	// $('.slider').slider({full_width: true});
-	$('.owl-carousel').owlCarousel({});
-	$('.owl-stage').addClass('valign-wrapper');
-	$('.owl-item').addClass('valign');
+	// $('.owl-carousel').owlCarousel({});
+	// $('.owl-stage').addClass('valign-wrapper');
+	// $('.owl-item').addClass('valign');
 });
