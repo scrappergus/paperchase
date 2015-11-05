@@ -2,7 +2,7 @@ xpath = Meteor.npmRequire('xpath');
 dom = Meteor.npmRequire('xmldom').DOMParser;
 Meteor.methods({
 	availableAssests: function(mongoId){
-		// console.log('... availableAssests ' + mongoId);
+		console.log('... availableAssests ' + mongoId);
 		var fut = new future();
 		var pii,
 			articleInfo,
@@ -16,17 +16,23 @@ Meteor.methods({
 			assetsLink = configSettings.api.assets;
 
 			if(pii){
+				console.log('pii');
+				console.log(pii);
 				// get asset links
 				resLinks = Meteor.http.get(assetsLink + pii);
+				console.log('resLinks');
+				console.log(resLinks);
 				if(resLinks){
 					resLinks = resLinks.content;
 					resLinks = JSON.parse(resLinks);
 					resLinks = resLinks[0];
-					// console.log(resLinks);
 					if(resLinks.figures.length === 0){
 						delete resLinks.figures;
 					}
 					fut['return'](resLinks);
+				}else{
+					console.log("fail");
+					fut['return']({});
 				}
 			}
 			return fut.wait();
