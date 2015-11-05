@@ -104,6 +104,9 @@ Router.route('/admin/add-legacy-platform-article/',{
 	where: 'server',
 	action: function(){
 		Meteor.call('legacyArticleIntake', this.params.query);
+        this.response.setHeader('Content-Type', 'application/json');
+        this.response.end(JSON.stringify({'success':true}));
+        
 	}
 });
 
