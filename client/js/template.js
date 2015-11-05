@@ -107,6 +107,7 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 
 
 // Visitor
+// -------
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
@@ -119,6 +120,7 @@ Template.Home.onRendered(function () {
 		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 	});
 });
+// Article
 Template.ArticleText.onCreated(function() {
 	var self = this;
 	var mongoId = Session.get('article-id');
@@ -129,5 +131,35 @@ Template.ArticleText.onCreated(function() {
 		self.data.fullTextDep.changed();
 	});
 });
+<<<<<<< HEAD
 
 
+=======
+Template.ArticleButtons.onCreated(function() {
+	var self = this;
+	var mongoId = Session.get('article-id');
+	self.data.assetsDep = new Deps.Dependency();
+	self.data.assets = '';
+	Meteor.call('availableAssests', mongoId, function(error, result) {
+		self.data.assets = result;
+		self.data.assetsDep.changed();
+	});
+});
+
+Template.Article.onCreated(function() {
+	// Assets
+	var self = this;
+	var mongoId = Session.get('article-id');
+	self.data.assetsDep = new Deps.Dependency();
+	self.data.assets = '';
+	Meteor.call('availableAssests', mongoId, function(error, result) {
+		self.data.assets = result;
+	});
+});
+Template.ArticleFigures.onRendered(function() {
+	$('.materialboxed').materialbox();
+	// $('.slider').slider({full_width: true});
+	$('.owl-carousel').owlCarousel({});
+	$('.owl-stage').addClass('valign-wrapper');
+	$('.owl-item').addClass('valign');
+});
