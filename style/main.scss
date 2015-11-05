@@ -85,7 +85,7 @@ html,body{
 	}
 
 /* Borders ------------------------*/
-	.border-gray-1{
+	.border-gray{
 		border: 1px solid $gray-1;
 	}
 
@@ -122,6 +122,7 @@ html,body{
 		position: relative;
 	}
 	.authors{
+		@extend .serif;
 		span{
 			&:last-child{
 				.comma{
@@ -148,14 +149,12 @@ html,body{
 	}
 	.kw{
 		margin: $margin-sm 0 $margin-sm $margin-sm;
+		@extend .serif;
+		text-transform: none!important;
 	}
 	/* Figures */
-	.owl-stage-outer{
-		border: 1px solid $gray-1;
-		background-color: $gray-0;
-	}
-	.owl-item{
-		padding: $pad-md;
+	.article-figure:nth-child(2n){
+		clear:both;
 	}
 
 /* Buttons ------------------------*/
