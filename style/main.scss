@@ -118,9 +118,6 @@ html,body{
 	}
 
 /* Article ------------------------*/
-	.article-meta{
-		position: relative;
-	}
 	.authors{
 		@extend .serif;
 		span{
@@ -153,8 +150,24 @@ html,body{
 		text-transform: none!important;
 	}
 	/* Figures */
-	.article-figure:nth-child(2n){
-		clear:both;
+	.owl-carousel{
+		background-color: $gray-0;
+	}
+	.owl-item{
+		div:not(.material-placeholder){
+			margin: $margin-lg;
+			padding: $pad-lg;
+			@extend .border-gray;
+		}
+	}
+
+	/* Full Text */
+	.full-text-image-container{
+		width: 50%;
+		margin: 0 auto;
+	}
+	.full-text-image{
+		width: 100%;
 	}
 
 /* Buttons ------------------------*/
