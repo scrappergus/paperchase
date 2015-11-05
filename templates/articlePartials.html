@@ -1,3 +1,23 @@
+<template name="ArticleHeader">
+	<div class="row">
+		<div class="col s12" style="position:relative">
+			<span class="badge">{{article_type.name}}</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<h2>{{{title}}}</h2>
+			<h3>{{>AuthorsRefList}}</h3>
+			<div class="row article-dates">
+				{{#if page_start}}<div class="col s4"><h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6></div>{{/if}}
+			</div>
+			{{#if dates}}
+				{{>ArticleDates}}
+			{{/if}}
+		</div>
+	</div>
+</template>
+
 <template name="AuthorsList">
 	<span class="authors">
 		{{#each authors}}
@@ -44,40 +64,16 @@
 </template>
 
 <template name="ArticleFigures">
+	<div class="owl-carousel">
 	{{#each figures}}
-		<div class="col s6 article-figure">
-			<div class="border-gray box">
-				{{#each imgURLs}}
-				<img src="{{.}}" class="materialboxed" width="100%;">
-				{{/each}}
-				<div class="card" style="border:0px;box-shadow:0px 0px 0px;">
-					<div class="card-content">
-						<span class="card-title activator grey-text text-darken-4"><i class="material-icons right">more_vert</i></span>
-						<h4>{{{figureTitle}}}</h4>
-					</div>
-					<div class="card-reveal">
-						<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span>
-						<h4>{{{figureTitle}}}</h4>
-						<p>{{{figureText}}}</p>
-					</div>
-				</div>
-			</div>
+		<div>
+			<h4 class="center-align">{{{figureTitle}}}</h4>
+			{{#each imgURLs}}<img src="{{.}}" class="materialboxed" width="100%;">{{/each}}
+			<!-- <p>{{{figureText}}}</p> -->
 		</div>
 	{{/each}}
-</template>
-
-<template name="ArticleMeta">
-	<div class="article-meta">
-		<span class="badge">{{article_type.name}}</span>
-		<h2>{{{title}}}</h2>
-		<h3>{{>AuthorsRefList}}</h3>
-		{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
-		{{#if dates}}
-			{{>ArticleDates}}
-		{{/if}}
 	</div>
 </template>
-
 
 <template name="ArticleButtons">
     {{#if isSubscribed}}

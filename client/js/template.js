@@ -123,7 +123,13 @@ Template.Home.onRendered(function () {
 // Article
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
+	$('.owl-carousel').owlCarousel();
+	// $('.owl-stage').addClass('valign-wrapper');
+	// $('.owl-item').addClass('valign');
 });
 Template.ArticleText.onRendered(function() {
+	$('.materialboxed').materialbox();
+});
+Template.ArticleFullText.onRendered(function() {
 	$('.materialboxed').materialbox();
 });

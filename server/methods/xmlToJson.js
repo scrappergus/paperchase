@@ -280,11 +280,11 @@ var fullTextSectionToJson =  function(section,figures){
 						content += '</a>';
 					}else if(sec.childNodes[cc].localName === 'graphic'){
 						// console.log(sec.childNodes[cc]);
-						content += '<div class="box border-gray center-align" id="' + figureId + '">';
+						content += '<div class="full-text-image-container box border-gray center-align" id="' + figureId + '">';
 						if(figureTitle != ''){
 							content += '<h4>' + figureTitle + '</h4>';
 						}
-						content += '<img class="materialboxed full-text-image" src="' + figureUrl +'" style="width:50%"/>';
+						content += '<img class="materialboxed full-text-image" src="' + figureUrl +'"/>';
 						if(figureCaption != ''){
 							content += '<p>' + figureCaption + '</p>';
 						}
