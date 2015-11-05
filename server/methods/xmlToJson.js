@@ -16,17 +16,23 @@ Meteor.methods({
 			assetsLink = configSettings.api.assets;
 
 			if(pii){
+				// console.log('assetsLink + pii');
+				// console.log(assetsLink + pii);
 				// get asset links
 				resLinks = Meteor.http.get(assetsLink + pii);
-				if(resLinks){
+				// console.log('resLinks');
+				// console.log(resLinks);
+				if(resLinks && resLinks.content != '{"error":"No XML data found for this PII."}'){
 					resLinks = resLinks.content;
 					resLinks = JSON.parse(resLinks);
 					resLinks = resLinks[0];
-					// console.log(resLinks);
 					if(resLinks.figures.length === 0){
 						delete resLinks.figures;
 					}
 					fut['return'](resLinks);
+				}else{
+					// console.log('no assets');
+					fut['return']({});
 				}
 			}
 			return fut.wait();

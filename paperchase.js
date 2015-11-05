@@ -544,6 +544,7 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
 			// console.log('..before');
+			Session.set('issue',null);
 			var vi = this.params.vi;
 			var matches = vi.match('v([0-9]+)i([0-9]+)');
 			var volume = parseInt(matches[1]);
