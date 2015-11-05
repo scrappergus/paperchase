@@ -31,34 +31,60 @@
 </template>
 
 <template name="ArticleDates">
+	<div class="row">
 	{{#each arrayify dates}}
 		{{#if equals name 'collection'}}
-			<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+			<div class="col s4"><h6><label>{{name}}:</label> {{collectionDate value}}</h6></div>
 			{{else}}
-			<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+			<div class="col s4"><h6><label>{{name}}:</label> {{articleDate value}}</h6></div>
 		{{/if}}
 	{{/each}}
+	</div>
+
+</template>
+
+<template name="ArticleFigures">
+	<div class="owl-carousel">
+			{{#each assets.figures}}
+				<div>
+				{{#each imgURLs}}
+					<img src="{{.}}" class="materialboxed">
+				{{/each}}
+				</div>
+			{{/each}}
+	</div>
 </template>
 
 <template name="ArticleMeta">
-	<span class="badge">{{article_type.type}}</span>
-	<h2>{{{title}}}</h2>
-	<h3>{{>AuthorsRefList}}</h3>
-	<h6>Volume {{volume}}, Issue {{issue}}</h6>
-	{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
-	{{#if dates}}
-		{{>ArticleDates}}
-	{{/if}}
+	<div class="article-meta">
+		<span class="badge">{{article_type.name}}</span>
+		<h2>{{{title}}}</h2>
+		<h3>{{>AuthorsRefList}}</h3>
+		{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
+		{{#if dates}}
+			{{>ArticleDates}}
+		{{/if}}
+	</div>
 </template>
 
 
 <template name="ArticleButtons">
     {{#if isSubscribed}}
+    {{#if assets.pdf_url}}
     <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn download-pdf">PDF</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Full Text</a>
+    {{/if}}
+    {{#if assets.full_xml_url}}
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Lens Full-Text Viewer</a>
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+    {{/if}}
     {{else}}
+    {{#if assets.pdf_url}}
     <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full Text</a>
+    {{/if}}
+    {{#if assets.full_xml_url}}
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
+    {{/if}}
     {{/if}}
 </template>
 

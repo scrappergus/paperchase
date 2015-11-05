@@ -85,8 +85,8 @@ html,body{
 	}
 
 /* Borders ------------------------*/
-	.border-gray{
-		border: 1px solid $gray;
+	.border-gray-1{
+		border: 1px solid $gray-1;
 	}
 
 /* Footer ------------------------*/
@@ -118,6 +118,9 @@ html,body{
 	}
 
 /* Article ------------------------*/
+	.article-meta{
+		position: relative;
+	}
 	.authors{
 		span{
 			&:last-child{
@@ -140,8 +143,19 @@ html,body{
 		}
 	}
 	.affiliations{
-		color: $gray;
+		color: $gray-1;
 		font-size: $font-sm;
+	}
+	.kw{
+		margin: $margin-sm 0 $margin-sm $margin-sm;
+	}
+	/* Figures */
+	.owl-stage-outer{
+		border: 1px solid $gray-1;
+		background-color: $gray-0;
+	}
+	.owl-item{
+		padding: $pad-md;
 	}
 
 /* Buttons ------------------------*/

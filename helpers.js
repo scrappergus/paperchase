@@ -247,11 +247,31 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+	Template.Article.helpers({
+		assets: function(){
+			// this needs to be reactive due to timing issue when processing XML to JSON on server
+			this.assetsDep.depend();
+			if(this.assets){
+				$('.slider').slider({full_width: true});
+			}
+			// console.log('assets');
+			// console.log(this.assets);
+			return this.assets;
+		}
+	});
+	Template.ArticleButtons.helpers({
+		assets: function(){
+			// this needs to be reactive due to timing issue when processing XML to JSON on server
+			this.assetsDep.depend();
+			// console.log('assets');
+			// console.log(this.assets);
+			return this.assets;
+		}
+	});
 	Template.ArticleText.helpers({
 		fullText: function(){
 			// this needs to be reactive due to timing issue when processing XML to JSON on server
 			this.fullTextDep.depend();
-			console.log(this.fullText);
 			return this.fullText;
 		}
 	});

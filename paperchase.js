@@ -220,6 +220,7 @@ if (Meteor.isClient) {
 	Session.setDefault('articleData',null);
 	Session.setDefault('article',null);
 	Session.setDefault('article-id',null);
+	Session.setDefault('article-assets',null);
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
@@ -568,6 +569,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var id = this.params._id;
+				Session.set('article-id',this.params._id);
 				var article;
 				article = articles.findOne({'_id': id});
 				return {
