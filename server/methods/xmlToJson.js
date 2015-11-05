@@ -9,25 +9,29 @@ Meteor.methods({
 			assetsLink,
 			resLinks;
 		articleInfo = articles.findOne({'_id' : mongoId});
-		pii = articleInfo.ids.pii;
-		configSettings = journalConfig.findOne({});
-		assetsLink = configSettings.api.assets;
+		if(articleInfo){
+			pii = articleInfo.ids.pii;
+			configSettings = journalConfig.findOne({});
+			assetsLink = configSettings.api.assets;
 
-		if(pii){
-			// get asset links
-			resLinks = Meteor.http.get(assetsLink + pii);
-			if(resLinks){
-				resLinks = resLinks.content;
-				resLinks = JSON.parse(resLinks);
-				resLinks = resLinks[0];
-				// console.log(resLinks);
-				if(resLinks.figures.length === 0){
-					delete resLinks.figures;
+			if(pii){
+				// get asset links
+				resLinks = Meteor.http.get(assetsLink + pii);
+				if(resLinks){
+					resLinks = resLinks.content;
+					resLinks = JSON.parse(resLinks);
+					resLinks = resLinks[0];
+					// console.log(resLinks);
+					if(resLinks.figures.length === 0){
+						delete resLinks.figures;
+					}
+					fut['return'](resLinks);
 				}
-				fut['return'](resLinks);
 			}
+			return fut.wait();
+		}else{
+			return;
 		}
-		return fut.wait();
 	},
 	getAssetsForFullText: function(mongoId){
 		console.log('... mongo id = ' + mongoId);
