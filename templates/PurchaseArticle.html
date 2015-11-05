@@ -1,6 +1,11 @@
 <template name="PurchaseArticle">
-
-<h4>Purchase this article</h4>
-
+    {{#with article}}
+        {{>ArticleHeader}}
+    {{/with}}
+	<div class="row">
+		<div class="col s12">
+			<h4>Purchase this article</h4>
+		</div>
+	</div>
 </template>
 

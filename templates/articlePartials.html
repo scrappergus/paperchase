@@ -1,3 +1,23 @@
+<template name="ArticleHeader">
+	<div class="row">
+		<div class="col s12" style="position:relative">
+			<span class="badge">{{article_type.name}}</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<h2>{{{title}}}</h2>
+			{{>AuthorsRefList}}
+			<div class="row no-margin">
+				{{#if page_start}}<div class="col s4"><h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6></div>{{/if}}
+			</div>
+			{{#if dates}}
+				{{>ArticleDates}}
+			{{/if}}
+		</div>
+	</div>
+</template>
+
 <template name="AuthorsList">
 	<span class="authors">
 		{{#each authors}}
@@ -6,7 +26,7 @@
 	</span>
 </template>
 <template name="AuthorsRefList">
-	<span class="authors">
+	<h3 class="authors">
 		{{#each authors}}
 			<span class="author">
 				{{name_first}}
@@ -17,7 +37,7 @@
 				<span class="comma">, </span>
 			</span>
 		{{/each}}
-	</span>
+	</h3>
 	{{#if affiliations}}
 	<h6>
 		<span class="affiliations">
@@ -31,34 +51,47 @@
 </template>
 
 <template name="ArticleDates">
+	<div class="row no-margin">
 	{{#each arrayify dates}}
 		{{#if equals name 'collection'}}
-			<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+			<div class="col s4"><h6><label>{{name}}:</label> {{collectionDate value}}</h6></div>
 			{{else}}
-			<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+			<div class="col s4"><h6><label>{{name}}:</label> {{articleDate value}}</h6></div>
 		{{/if}}
 	{{/each}}
+	</div>
+
 </template>
 
-<template name="ArticleMeta">
-	<span class="badge">{{article_type.type}}</span>
-	<h2>{{{title}}}</h2>
-	<h3>{{>AuthorsRefList}}</h3>
-	<h6>Volume {{volume}}, Issue {{issue}}</h6>
-	{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
-	{{#if dates}}
-		{{>ArticleDates}}
-	{{/if}}
+<template name="ArticleFigures">
+	<div class="owl-carousel">
+	{{#each figures}}
+		<div>
+			<h4 class="center-align">{{{figureTitle}}}</h4>
+			{{#each imgURLs}}<img src="{{.}}" class="materialboxed" width="100%;">{{/each}}
+			<!-- <p>{{{figureText}}}</p> -->
+		</div>
+	{{/each}}
+	</div>
 </template>
-
 
 <template name="ArticleButtons">
     {{#if isSubscribed}}
+    {{#if assets.pdf_url}}
     <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn download-pdf">PDF</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Full Text</a>
+    {{/if}}
+    {{#if assets.full_xml_url}}
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Lens Full-Text Viewer</a>
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+    {{/if}}
     {{else}}
+    {{#if assets.pdf_url}}
     <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full Text</a>
+    {{/if}}
+    {{#if assets.full_xml_url}}
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
+    {{/if}}
     {{/if}}
 </template>
 

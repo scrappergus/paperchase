@@ -86,7 +86,7 @@ html,body{
 
 /* Borders ------------------------*/
 	.border-gray{
-		border: 1px solid $gray;
+		border: 1px solid $gray-1;
 	}
 
 /* Footer ------------------------*/
@@ -119,6 +119,7 @@ html,body{
 
 /* Article ------------------------*/
 	.authors{
+		@extend .serif;
 		span{
 			&:last-child{
 				.comma{
@@ -140,8 +141,33 @@ html,body{
 		}
 	}
 	.affiliations{
-		color: $gray;
+		color: $gray-1;
 		font-size: $font-sm;
+	}
+	.kw{
+		margin: $margin-sm 0 $margin-sm $margin-sm;
+		@extend .serif;
+		text-transform: none!important;
+	}
+	/* Figures */
+	.owl-carousel{
+		background-color: $gray-0;
+	}
+	.owl-item{
+		div:not(.material-placeholder){
+			margin: $margin-lg;
+			padding: $pad-lg;
+			@extend .border-gray;
+		}
+	}
+
+	/* Full Text */
+	.full-text-image-container{
+		width: 50%;
+		margin: 0 auto;
+	}
+	.full-text-image{
+		width: 100%;
 	}
 
 /* Buttons ------------------------*/
@@ -210,6 +236,9 @@ html,body{
 	}
 
 /* MISC ------------------------*/
+	.no-margin{
+		margin: 0px;
+	}
 	.ip-alert{
 		padding: $pad-md 0;
 		background: $journal-primary-color;

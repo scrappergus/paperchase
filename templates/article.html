@@ -1,101 +1,48 @@
 <template name="Article">
-    <div class="row">
-        {{> LeftNav}}
-        <div class="col s10">
-            {{> SubscribeModal}}
-            {{#with article}}
-            <h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h5>
-            <div class="card">
-                <div class="card-content">
-                    <div class="row">
-                        <div class="col s12">
-                            {{>ArticleMeta}}
-                        </div>
-                    </div>
-                    {{#if abstract}}
-                    <div class="row">
-                        <div class="col s12">
-                            {{{abstract}}}
-                        </div>
-                    </div>
-                    {{/if}}
-                    <div class="row">
-                        <div class="col s12">
-                            {{>ArticleButtons}}
-                        </div>
-                    </div>
-                </div>
-            </div>
+	<div class="row">
+		{{> LeftNav}}
+		<div class="col s10">
+			{{> SubscribeModal}}
+			{{#with article}}
+			<h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h5>
+			{{/with}}
 
-            {{#if keywords}}
-            {{#each keywords}}
-            <a class="btn waves-effect waves-light kw deep-orange lighten-2">{{{.}}}</a>
-            {{/each}}
-            {{/if}}
-            {{/with}}
-        </div>
-    </div>
-</template>
+			{{#with article}}
+			{{>ArticleHeader}}
+			{{#if abstract}}
+			<div class="row">
+				<div class="col s12">
+					<h3>Abstract</h3>
+					{{{abstract}}}
+				</div>
+			</div>
+			{{/if}}
+			<div class="row">
+					<div class="col s12">
+						{{>ArticleButtons}}
+					</div>
+				</div>
+			{{/with}}
+
+			{{#if isSubscribed}}
+			{{#if assets.figures}}
+				<div class="row">
+					<div class="col s12">
+						<h3>Figures</h3>
+						{{>ArticleFigures figures=assets.figures}}
+					</div>
+				</div>
+			{{/if}}
+			{{/if}}
 
 
-<template name="ArticleText">
-    {{#with article}}
-        {{>ArticleMeta}}
-        {{#if ids.pii}}
-        {{else}}
-        <div class="row">
-            <div class="col s12 red center-align"><h4>Full Text Unavailable.</h4></div>
-        </div>
-
-        {{/if}}
-    {{/with}}
-
-
-    {{#if fullText}}
-    {{else}}
-        <div class="row">
-            <div class="col s12">
-                <h3>Loading</h3>
-                <div class="progress">
-                    <div class="indeterminate"></div>
-                </div>
-            </div>
-        </div>
-    {{/if}}
-
-    {{#with fullText}}
-        {{#each sections}}
-            <h3>{{{title}}}</h3>
-            {{#each content}}
-                <p>{{{.}}}</p>
-            {{/each}}
-        {{/each}}
-        {{#if figures}}
-        <div class="row">
-            <div class="col s12">
-                <h3>Figures</h3>
-            </div>
-        </div>
-        <div class="row">
-            {{#each figures}}
-            <div class="col s6">
-                {{#each imgURLs}}
-                   <img src="{{.}}" style="width:100%;">
-                {{/each}}
-                <p>{{{figureText}}}</p>
-            </div>
-            {{/each}}
-        </div>
-        {{/if}}
-        {{#if references}}
-            <h3>References</h3>
-            <ul>
-                {{#each references}}
-                    <li id="R{{number}}"><b>{{number}}.</b>{{#if article_title}} {{article_title}}.{{/if}}{{#if source}} {{source}}.{{/if}}{{#if year}} {{year}}{{/if}}{{#if volume}}; {{volume}}{{/if}}{{#if fpage}}: {{fpage}}{{/if}}{{#if lpage}}-{{lpage}}{{/if}}.</li>
-                {{/each}}
-            </ul>
-
-        {{/if}}
-    {{/with}}
-
+			{{#with article}}
+			{{#if keywords}}
+			{{#each keywords}}
+			<a class="btn waves-effect waves-light kw deep-orange lighten-2">{{{.}}}</a>
+			{{/each}}
+			{{/if}}
+			{{/with}}
+		</div>
+	</div>
 </template>
