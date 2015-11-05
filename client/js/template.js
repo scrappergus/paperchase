@@ -121,6 +121,7 @@ Template.Home.onRendered(function () {
 	});
 });
 // Article
+<<<<<<< HEAD
 Template.ArticleText.onCreated(function() {
 	var self = this;
 	var mongoId = Session.get('article-id');
@@ -156,10 +157,11 @@ Template.Article.onCreated(function() {
 		self.data.assets = result;
 	});
 });
+=======
+>>>>>>> c17ef090c208149ac741434e2fb2bf039b1f3b09
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
-	// $('.slider').slider({full_width: true});
-	// $('.owl-carousel').owlCarousel({});
-	// $('.owl-stage').addClass('valign-wrapper');
-	// $('.owl-item').addClass('valign');
+});
+Template.ArticleText.onRendered(function() {
+	$('.materialboxed').materialbox();
 });
