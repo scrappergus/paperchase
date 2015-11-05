@@ -541,7 +541,6 @@ if (Meteor.isClient) {
 		onBeforeAction: function(){
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
-					console
 					Session.set('article-assets',result);
 				}
 			});
