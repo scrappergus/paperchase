@@ -206,23 +206,23 @@ Router.route('/get-advance-articles/',{
 				htmlString += '<span class="tocGalleys">';
 				// Abstract
 				if(articleInfo.legacy_files){
-					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D='+ articleInfo.pii +'" class="file">Abstract</a>';
+//					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
 						htmlString += '&nbsp;';
-					}
+//					}
 					// HTML
 					if(articleInfo.legacy_files.html_galley_id){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
 						htmlString += '&nbsp;';
 					}
 					// PDF
 					if(articleInfo.legacy_files.pdf_galley_id){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
 						htmlString += '&nbsp;';
 					}
 					// Supplemental
 					if(articleInfo.legacy_files.has_supps){
-						htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
+						htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
 						htmlString += '&nbsp;';
 					}
 				}
