@@ -79,7 +79,7 @@
 	<span class="article-btns">
 	    {{#if isSubscribed}}
 	    {{#if assets.pdf_url}}
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn download-pdf">PDF</a>
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{assets.pdf_url}}">PDF</a>
 	    {{/if}}
 	    {{#if assets.full_xml_url}}
 	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Lens Full-Text Viewer</a>
