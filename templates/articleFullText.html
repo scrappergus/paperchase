@@ -3,6 +3,16 @@
 	<div class="col s10">
 		{{#with article}}
 			{{>ArticleHeader}}
+
+			{{#if abstract}}
+			<div class="row">
+				<div class="col s12">
+					<h3>Abstract</h3>
+					{{{abstract}}}
+				</div>
+			</div>
+			{{/if}}
+
 			{{#if ids.pii}}
 			{{else}}
 			<div class="row">
@@ -28,7 +38,6 @@
 		{{#with fullText}}
 			{{>ArticleFullText}}
 
-
 			{{#if references}}
 				<h3>References</h3>
 				<ul>
@@ -44,7 +53,7 @@
 
 <template name="ArticleFullText">
 	{{#each sections}}
-	<h3>{{{title}}}</h3>
+	<div class="article-header-{{headerL}}" id="{{sectionId}}">{{{title}}}</div>
 	{{#each content}}
 		<p>{{{.}}}</p>
 	{{/each}}
