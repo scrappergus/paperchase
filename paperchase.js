@@ -267,6 +267,7 @@ if (Meteor.isClient) {
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
+	Session.setDefault('issue',null);
 
 	Router.route('/', {
 		name: 'Home',
@@ -549,11 +550,23 @@ if (Meteor.isClient) {
 		name: 'issue',
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
-			Meteor.call('availableAssests', this.params._id, function(error, result) {
+			// console.log('..before');
+			Session.set('issue',null);
+			var vi = this.params.vi;
+			var matches = vi.match('v([0-9]+)i([0-9]+)');
+			var volume = parseInt(matches[1]);
+			var issue = parseInt(matches[2]);
+
+			Meteor.call('getIssueAndAssets',volume,issue,function(error,result){
+				if(error){
+					console.log('ERROR - getIssueAndAssets');
+					console.log(error);
+				}
 				if(result){
-					Session.set('article-assets',result);
+					Session.set('issue',result);
 				}
 			});
+
 			this.next();
 		},
 		waitOn: function(){
@@ -562,26 +575,14 @@ if (Meteor.isClient) {
 				Meteor.subscribe('articles'),
 			]
 		},
-		data: function(){
-			if(this.ready()){
-				var vi = this.params.vi;
-				var matches = vi.match('v([0-9]+)i([0-9]+)');
-				var volume = parseInt(matches[1]);
-				var issue = parseInt(matches[2]);
-				//get issue metadata
-				var issueData = issues.findOne({'issue': issue, 'volume': volume});
-
-				var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
-				//get articles in issue
-				//test for start of article type
-
-				issueData['articles'] = issueArticles;
-				// console.log(issueData);
-				return {
-					issue: issueData
-				};
-			}
-		},
+		// data: function(){
+		// 	if(this.ready()){
+		// 		// console.log(issueData);
+		// 		return {
+		// 			issue: Session.get('issue');
+		// 		};
+		// 	}
+		// },
 		onAfterAction: function() {
 			var pageTitle,
 				pageDescription,
@@ -1325,6 +1326,3 @@ if (Meteor.isClient) {
 		},
 	});
 }
-// var toType = function(obj) {
-// 	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-// }
