@@ -5,6 +5,31 @@ Template.CustomHomePageEditorList.replaces("HomePageEditorList");
 Template.CustomEdBoard.replaces("EdBoard");
 
 
+// Global anchor scroll fix
+function scroll_if_anchor(href) {
+    href = typeof(href) == "string" ? href : $(this).attr("href");
+    // If href missing, ignore
+    if(!href) return;
+    // You could easily calculate this dynamically if you prefer
+    var fromTop = 80;
+    // If our Href points to a valid, non-empty anchor, and is on the same page (e.g. #foo)
+    // Legacy jQuery and IE7 may have issues: http://stackoverflow.com/q/1593174
+    var $target = $(href);
+    // Older browsers without pushState might flicker here, as they momentarily
+    // jump to the wrong position (IE < 10)
+    if($target.length) {
+        $('html, body').animate({ scrollTop: $target.offset().top - fromTop });
+        return false;
+    }
+}    
+
+Template.onRendered(function() {
+        scroll_if_anchor(window.location.hash);
+        $("a[href^='#']").unbind("click", scroll_if_anchor);
+        $("a[href^='#']").on("click", scroll_if_anchor);
+    });
+
+
 // Admin
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor

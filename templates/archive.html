@@ -13,14 +13,16 @@
                 <li style="float:left; display:block; margin-right:22px;">
                 <div class="clearfix">
                     <a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
-                    <br>
-                    <h5><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h5>
+                    <p><strong><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></strong><br>pp {{pages}}</p>
+                    <!--
                     {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
+                    //-->
                 </div>
                 </li>
                 {{/each}}	
             </ul>
             </div>
+            <br>
         <div class="divider"></div>
         {{/each}}
     </div>	

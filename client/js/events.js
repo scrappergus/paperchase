@@ -125,7 +125,8 @@ Template.AdminIssue.events({
 		var date = $('#issue-date').val();
 		date = new Date(date);
 		var updateObj = {
-			'pub_date' : date
+			'pub_date' : date,
+            'pages' : $('#issue-pages').val()
 		}
 		Meteor.call('updateIssue', mongoId, updateObj, function(error, result){
 			if(error){
