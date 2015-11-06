@@ -85,7 +85,6 @@ Meteor.methods({
 			idsLength = articleIds.length;
 			var pmid = allArticles[i]['ids']['pmid'];
 			var pii = allArticles[i]['ids']['pii'];
-			console.log('.. ' + i + ' / pmid = '+pmid);
 
 			// if(!pii){
 				Meteor.call('getPiiFromPmid',pmid,function(error,pii){
@@ -93,15 +92,17 @@ Meteor.methods({
 						console.log('ERROR: Could not get PII');
 						console.log(error);
 					}else{
-						console.log(pii);
-						articleIds['pii'] = pii;
-						Meteor.call('pushPiiArticle',allArticles[i]['_id'],articleIds,function(err,res){
-							if(err){
-								console.log('ERROR: Could not save PII '+allArticles[i]['_id']);
-								piiFail.push(allArticles[i]['_id']);
-								console.log(err);
-							}
-						});
+						console.log('.. ' + i + ' / pmid = ' + pmid + ' / pii = ' + pii);
+						if(pii){
+							articleIds['pii'] = pii;
+							Meteor.call('pushPiiArticle',allArticles[i]['_id'],articleIds,function(err,res){
+								if(err){
+									console.log('ERROR: Could not save PII '+allArticles[i]['_id']);
+									piiFail.push(allArticles[i]['_id']);
+									console.log(err);
+								}
+							});
+						}
 					}
 				});
 			// }
