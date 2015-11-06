@@ -34,7 +34,7 @@ Meteor.methods({
 		return issues.findOne({'volume' : vol, 'issue': iss});
 	},
 	getIssueAndAssets: function(volume, issue){
-		console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
+		// console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
 		var fut = new future();
 		var issueData = issues.findOne({'issue': issue, 'volume': volume});
 
