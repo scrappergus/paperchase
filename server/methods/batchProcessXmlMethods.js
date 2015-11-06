@@ -301,5 +301,17 @@ Meteor.methods({
 				});
 			}
 		}
+	},
+	fixIssueId: function(){
+		console.log('--fixIssueId');
+		var articlesList = articles.find().fetch();
+
+		// loop through articles
+		for(var i = 0 ; i < articlesList.length ; i++){
+			var pmid = articlesList[i]['ids']['pmid'];
+			console.log('... pmid= ' + pmid);
+			var issue_id = issues.findOne({'issue' : articlesList[i]['issue'],'volume' : articlesList[i]['volume']});
+			Meteor.call('updateArticle', articlesList[i]['_id'], {'issue_id' : issue_id['_id']});
+		}
 	}
 })
