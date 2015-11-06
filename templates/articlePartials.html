@@ -82,7 +82,7 @@
 	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{assets.pdf_url}}">PDF</a>
 	    {{/if}}
 	    {{#if assets.full_xml_url}}
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Lens Full-Text Viewer</a>
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/?pii={{ids.pii}}">Lens Full-Text Viewer</a>
 	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'ArticleText'}}">Full-Text</a>
 	    {{/if}}
 	    {{else}}
