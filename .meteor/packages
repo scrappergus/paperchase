@@ -22,7 +22,6 @@ peerlibrary:xml2js
 meteorhacks:npm
 npm-container
 momentjs:moment
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -36,8 +35,6 @@ random
 ejson
 spacebars
 check
-materialize:materialize@=0.97.0
-ixdi:material-design-iconic-font@=2.1.2
 ostrio:cookies
 aldeed:collection2
 reactive-var
@@ -47,5 +44,7 @@ linto:jquery-ui
 summernote:standalone
 fortawesome:fontawesome
 aldeed:template-extension
-manuelschoebel:ms-seo
+materialize:materialize@=0.97.0
+standard-minifiers
 richsilv:owl-carousel
+ixdi:material-design-iconic-font@=2.1.5

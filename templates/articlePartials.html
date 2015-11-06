@@ -1,3 +1,23 @@
+<template name="ArticleHeader">
+	<div class="row">
+		<div class="col s12" style="position:relative">
+			<span class="badge">{{article_type.name}}</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<h2>{{{title}}}</h2>
+			{{>AuthorsRefList}}
+			<div class="row no-margin">
+				{{#if page_start}}<div class="col s4"><h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6></div>{{/if}}
+			</div>
+			{{#if dates}}
+				{{>ArticleDates}}
+			{{/if}}
+		</div>
+	</div>
+</template>
+
 <template name="AuthorsList">
 	<span class="authors">
 		{{#each authors}}
@@ -6,7 +26,7 @@
 	</span>
 </template>
 <template name="AuthorsRefList">
-	<span class="authors">
+	<h3 class="authors">
 		{{#each authors}}
 			<span class="author">
 				{{name_first}}
@@ -17,7 +37,7 @@
 				<span class="comma">, </span>
 			</span>
 		{{/each}}
-	</span>
+	</h3>
 	{{#if affiliations}}
 	<h6>
 		<span class="affiliations">
@@ -31,7 +51,7 @@
 </template>
 
 <template name="ArticleDates">
-	<div class="row">
+	<div class="row no-margin">
 	{{#each arrayify dates}}
 		{{#if equals name 'collection'}}
 			<div class="col s4"><h6><label>{{name}}:</label> {{collectionDate value}}</h6></div>
@@ -45,47 +65,36 @@
 
 <template name="ArticleFigures">
 	<div class="owl-carousel">
-			{{#each assets.figures}}
-				<div>
-				{{#each imgURLs}}
-					<img src="{{.}}" class="materialboxed">
-				{{/each}}
-				</div>
-			{{/each}}
+	{{#each figures}}
+		<div>
+			<h4 class="center-align">{{{figureTitle}}}</h4>
+			{{#each imgURLs}}<img src="{{.}}" class="materialboxed" width="100%;">{{/each}}
+			<!-- <p>{{{figureText}}}</p> -->
+		</div>
+	{{/each}}
 	</div>
 </template>
-
-<template name="ArticleMeta">
-	<div class="article-meta">
-		<span class="badge">{{article_type.name}}</span>
-		<h2>{{{title}}}</h2>
-		<h3>{{>AuthorsRefList}}</h3>
-		{{#if page_start}}<h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
-		{{#if dates}}
-			{{>ArticleDates}}
-		{{/if}}
-	</div>
-</template>
-
 
 <template name="ArticleButtons">
-    {{#if isSubscribed}}
-    {{#if assets.pdf_url}}
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn download-pdf">PDF</a>
-    {{/if}}
-    {{#if assets.full_xml_url}}
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/">Lens Full-Text Viewer</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'ArticleText'}}">Full-Text</a>
-    {{/if}}
-    {{else}}
-    {{#if assets.pdf_url}}
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
-    {{/if}}
-    {{#if assets.full_xml_url}}
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
-    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
-    {{/if}}
-    {{/if}}
+	<span class="article-btns">
+	    {{#if isSubscribed}}
+	    {{#if assets.pdf_url}}
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{assets.pdf_url}}">PDF</a>
+	    {{/if}}
+	    {{#if assets.full_xml_url}}
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/?pii={{ids.pii}}">Lens Full-Text Viewer</a>
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+	    {{/if}}
+	    {{else}}
+	    {{#if assets.pdf_url}}
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
+	    {{/if}}
+	    {{#if assets.full_xml_url}}
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
+	    {{/if}}
+	    {{/if}}
+	</span>
 </template>
 
 

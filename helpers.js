@@ -249,32 +249,22 @@ if (Meteor.isClient) {
 	});
 	Template.Article.helpers({
 		assets: function(){
-			// this needs to be reactive due to timing issue when processing XML to JSON on server
-			this.assetsDep.depend();
-			if(this.assets){
-				$('.slider').slider({full_width: true});
-			}
-			// console.log('assets');
-			// console.log(this.assets);
-			return this.assets;
+			return Session.get('article-assets');
 		}
 	});
 	Template.ArticleButtons.helpers({
 		assets: function(){
-			// this needs to be reactive due to timing issue when processing XML to JSON on server
-			this.assetsDep.depend();
-			// console.log('assets');
-			// console.log(this.assets);
-			return this.assets;
+			return Session.get('article-assets');
 		}
 	});
 	Template.ArticleText.helpers({
 		fullText: function(){
-			// this needs to be reactive due to timing issue when processing XML to JSON on server
-			this.fullTextDep.depend();
-			return this.fullText;
+			return Session.get('article-text');
+		}
+	});
+	Template.Issue.helpers({
+		issueData: function(){
+			return Session.get('issue');
 		}
 	});
 }
-
-// TODO: Figure out better sorting of issues. They may not have numbers. Right now the issues are sorted by the first page.

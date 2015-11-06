@@ -121,45 +121,15 @@ Template.Home.onRendered(function () {
 	});
 });
 // Article
-Template.ArticleText.onCreated(function() {
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.fullTextDep = new Deps.Dependency();
-	self.data.fullText = '';
-	Meteor.call('getAssetsForFullText', mongoId, function(error, result) {
-		self.data.fullText = result;
-		self.data.fullTextDep.changed();
-	});
-});
-<<<<<<< HEAD
-
-
-=======
-Template.ArticleButtons.onCreated(function() {
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.assetsDep = new Deps.Dependency();
-	self.data.assets = '';
-	Meteor.call('availableAssests', mongoId, function(error, result) {
-		self.data.assets = result;
-		self.data.assetsDep.changed();
-	});
-});
-
-Template.Article.onCreated(function() {
-	// Assets
-	var self = this;
-	var mongoId = Session.get('article-id');
-	self.data.assetsDep = new Deps.Dependency();
-	self.data.assets = '';
-	Meteor.call('availableAssests', mongoId, function(error, result) {
-		self.data.assets = result;
-	});
-});
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
-	// $('.slider').slider({full_width: true});
-	$('.owl-carousel').owlCarousel({});
-	$('.owl-stage').addClass('valign-wrapper');
-	$('.owl-item').addClass('valign');
+	$('.owl-carousel').owlCarousel();
+	// $('.owl-stage').addClass('valign-wrapper');
+	// $('.owl-item').addClass('valign');
+});
+Template.ArticleText.onRendered(function() {
+	$('.materialboxed').materialbox();
+});
+Template.ArticleFullText.onRendered(function() {
+	$('.materialboxed').materialbox();
 });

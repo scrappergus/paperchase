@@ -58,3 +58,24 @@ issues.after.insert(function (userId, doc) {
   issueData['doc_updates']['created_date'] = new Date();
   issueData['doc_updates']['created_by'] = userId;
 });
+
+
+// Sorters
+// -------
+sorters.after.update(function (userId, doc, fieldNames, modifier, options){
+  var articlesList,
+      diff;
+  articlesList = modifier['$set'];
+  if(articlesList){
+    articlesList = articlesList.order;
+    if(articlesList.length < this.previous.order.length){
+      // An article was removed. Update the articles collection. Find difference between old and new list.
+      diff = Meteor.organize.arrDiff(articlesList,this.previous.order);
+      console.log(diff);
+      for(var i=0 ; i < diff.length ; i++){
+        Meteor.call('updateArticle',diff[i],{advance:false});
+      }
+    }
+  }
+  // if new order is greater than original, than articles collection was already updated on OJS intake or via aricles page and the collection hook on articles is triggering the sorters update
+});

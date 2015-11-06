@@ -32,5 +32,26 @@ Meteor.methods({
 	},
 	findIssueByVolIssue: function(vol, iss){
 		return issues.findOne({'volume' : vol, 'issue': iss});
+	},
+	getIssueAndAssets: function(volume, issue){
+		// console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
+		var fut = new future();
+		var issueData = issues.findOne({'issue': issue, 'volume': volume});
+
+		var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
+
+		// get assets
+		for(var i=0 ; i< issueArticles.length ; i++){
+			// console.log(issueArticles[i]['_id']);
+			issueArticles[i]['assets'] = Meteor.call('availableAssests', issueArticles[i]['_id']);
+			if(i == parseInt(issueArticles.length - 1)){
+				issueData['articles']
+				// console.log(issueData);
+				fut['return'](issueData);
+			}
+		}
+
+		issueData['articles'] = issueArticles;
+		return fut.wait();
 	}
 });
