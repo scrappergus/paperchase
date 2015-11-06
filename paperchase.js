@@ -160,7 +160,14 @@ Router.route('/get-advance-articles/',{
                     if(i != 0) {
                         htmlString += '</div>';
                     }
-                    htmlString += "<h4 id=\""+articleInfo['section_name']+"\" class=\"tocSectionTitle\">"+articleInfo['section_name']+"</h4>";
+
+                    if(i<40 && articleInfo['section_name'] == 'Research Papers') {
+                        htmlString += "<h4 id=\"recent_"+articleInfo['section_name']+"\" class=\"tocSectionTitle\">Recent "+articleInfo['section_name']+"</h4>";
+                    }
+                    else {
+                        htmlString += "<h4 id=\""+articleInfo['section_name']+"\" class=\"tocSectionTitle\">"+articleInfo['section_name']+"</h4>";
+                    }
+
                     htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
                     parity = 1;
                 }
