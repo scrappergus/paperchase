@@ -566,6 +566,69 @@ if (Meteor.isClient) {
 	});
 
 	/*article*/
+    Router.route('/article/figureViewer(.*)', {
+		name: 'ArticleFigureViewer',
+		layoutTemplate: 'ArticleFigureViewer',
+		onBeforeAction: function(){
+//			Meteor.call('availableAssests', this.params._id, function(error, result) {
+//				if(result){
+//					Session.set('article-assets',result);
+//				}
+//			});
+			this.next();
+		},
+		waitOn: function(){
+			return[
+//				Meteor.subscribe('articleInfo',this.params._id),
+			]
+		},
+		data: function(){
+			if(this.ready()){
+//				var id = this.params._id;
+//				Session.set('article-id',this.params._id);
+//				var article;
+//				article = articles.findOne({'_id': id});
+				return {
+					img: this.params.query.img,
+                    title:this.params.query.figureId
+				};
+			}
+		},
+		onAfterAction: function() {
+//			var pageTitle,
+//				pageDescription,
+//				journal,
+//				journalName,
+//				id,
+//				article,
+//				articleTitlePlain,
+//				articleTitle;
+//
+//			id = this.params._id;
+//			journalSettings = journalConfig.findOne();
+//			article = articles.findOne({'_id': id});
+//			if(article){
+//				// Title
+//				articleTitle = article.title
+//				var tmp = document.createElement('DIV');
+//				tmp.innerHTML = articleTitle;
+//				articleTitlePlain = tmp.textContent || tmp.innerText || "";
+//				// Description
+//				// pageDescription = article.title;
+//			}
+//			if(journalSettings){
+//				journalName = journalSettings.journal.name;
+//			}
+//			if(journalName && articleTitlePlain){
+//				pageTitle = journalName + ' | ' + articleTitlePlain;
+//			}
+
+		}
+	});
+
+
+
+	/*article*/
 	Router.route('/article/:_id', {
 		name: 'Article',
 		layoutTemplate: 'Visitor',
@@ -777,6 +840,8 @@ if (Meteor.isClient) {
 			// });
 		}
 	});
+
+
 
 	Router.route('/recommend', {
 		name: 'Recommend',

@@ -158,3 +158,16 @@ Template.ArticleText.onRendered(function() {
 Template.ArticleFullText.onRendered(function() {
 	$('.materialboxed').materialbox();
 });
+
+
+Template.ArticleFigureViewer.onRendered(function() {
+        $('.figure img, .table img').wrap('<div class="container"></div>');
+        var $panzoom = $('.figure img, .table img').panzoom({
+                $zoomIn: $(".zoom-in"),
+                $zoomOut: $(".zoom-out"),
+                $zoomRange: $(".zoom-range"),
+                $reset: $(".reset"),
+                maxScale: 3,
+                increment: 0.1
+            }).panzoom('zoom', true);
+    });
