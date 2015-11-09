@@ -1,7 +1,4 @@
 <template name="Article">
-	<div class="row">
-		{{> LeftNav}}
-		<div class="col s10">
 			{{> SubscribeModal}}
 			{{#with article}}
 			<h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h5>
@@ -43,6 +40,4 @@
 			{{/each}}
 			{{/if}}
 			{{/with}}
-		</div>
-	</div>
 </template>

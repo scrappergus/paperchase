@@ -1,5 +1,4 @@
 <template name="LeftNav">
-    <div class="col s2">
         <ul class="home-left-nav">
             <li><a href="/">Home</a></li>
             <div class="divider"></div>
@@ -17,15 +16,9 @@
             <div class="divider"></div>
             <li><a href="/contact">Contact</a></li>
         </ul>
-    </div>
 </template>
 
 <template name="Home">
-    <div class="row">
-        {{> LeftNav}}
-        <div class="col s7">
-        </div>
-    </div>
 </template>
 
 <template name="HomePageEditorList">
@@ -54,9 +47,6 @@
 </template>
 
 <template name="EdBoard">
-    <div class="row">
-        {{> LeftNav}}
-        <div class="col s10">
             <h3>{{journalName}} Editors-in-Chief</h3>
             <ul class="home-page-editors-list">
                 {{#each eic}}
@@ -76,6 +66,10 @@
                 </li>
                 {{/each}}
             </ul>
+<<<<<<< HEAD
         </div>
     </div>
 </template>
+=======
+</template>
+>>>>>>> 8fcc89b534e608ad543a6aa8e9c50c5dee126bc2
