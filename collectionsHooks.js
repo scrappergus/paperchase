@@ -13,13 +13,17 @@ articles.after.insert(function (userId, doc) {
   var doc = Meteor.call('articleIssueVolume',doc);
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
-  // console.log('..before update article')
+  // console.log('..before update article');
+  // console.log(modifier['$set']);
   // Advance article. Update sorters colleciton.
-  if(modifier['$set']['advance']){
-    Meteor.call('sorterAddArticle','advance',doc._id);
-  }else{
-    Meteor.call('sorterRemoveArticle','advance',doc._id);
+  if(modifier['$set']){
+    if(modifier['$set']['advance']){
+      Meteor.call('sorterAddArticle','advance',doc._id);
+    }else{
+      Meteor.call('sorterRemoveArticle','advance',doc._id);
+    }
   }
+
 
   // Affiliations
   //add affiliation number to author

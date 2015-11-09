@@ -22,7 +22,6 @@
 
 <template name="CustomHome">
     <div class="row">
-        {{> LeftNav}}
         <div class="col s7">
             <div class="section">
                 <p><i>Oncotarget</i> is a multidisciplinary traditional journal with free-access. <i>Oncotarget</i> publishes papers online in weekly issues. Print issues will be available by subscription.</p>
@@ -76,9 +75,6 @@
 </template>
 
 <template name="CustomEdBoard">
-    <div class="row">
-        {{> LeftNav}}
-        <div class="col s10">
             <h3>{{journalName}} Editors-in-Chief</h3>
             <ul class="home-page-editors-list">
                 {{#each eic}}
@@ -99,5 +95,4 @@
                 {{/each}}
             </ul>
         </div>
-    </div>
 </template>

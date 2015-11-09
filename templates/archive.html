@@ -1,7 +1,4 @@
 <template name="Archive">
-<div class="row">
-    {{> LeftNav}}
-    <div class="col s10">
         <h3>Archive</h3>
         <div class="divider"></div>
 
@@ -18,13 +15,11 @@
                     {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
                 </div>
                 </li>
-                {{/each}}	
+                {{/each}}
             </ul>
             </div>
         <div class="divider"></div>
         {{/each}}
-    </div>	
-</div>
 </template>
 
 <!-- TODO: add check for pagination -->

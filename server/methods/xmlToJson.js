@@ -110,16 +110,29 @@ Meteor.methods({
 		if(sections[0]){
 			// Sections
 			for(var section = 0 ; section < sections.length ; section++){
+				// console.log('..section ' + section);
+				// console.log(sections[section].attributes);
+				var sectionType;
 				var sectionObject = fullTextSectionToJson(sections[section],figures);
+				for(var sectionAttr = 0 ; sectionAttr < sections[section].attributes.length ; sectionAttr++){
+					// console.log(sections[section].attributes[sectionAttr]);
+					if(sections[section].attributes[sectionAttr].nodeName === 'sec-type'){
+						sectionObject.type = sections[section].attributes[sectionAttr].nodeValue;
+					}else if(sections[section].attributes[sectionAttr].nodeName === 'id'){
+						var sectionId = sections[section].attributes[sectionAttr].nodeValue;
+						sectionObject.headerL = headerLevelFromId(sectionId);
+						sectionObject.sectionId = sectionId;
+					}
+				}
 				articleObject.sections.push(sectionObject);
 			}
 		}else{
 			var body =  xpath.select('//body', doc);
 			// there will only be 1 body node, so use body[0]
-			var sectionObject = fullTextSectionToJson(body[0],figures);
-			articleObject.sections.push(sectionObject);
 			// no <sec>
 			// just create 1 section
+			var sectionObject = fullTextSectionToJson(body[0],figures);
+			articleObject.sections.push(sectionObject);
 		}
 
 		// References
@@ -183,34 +196,31 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
-	// loopNodeWithStyle: function(node){
-		// this throws an error: { stack: { stack: undefined, source: 'method' }, //perhaps a timing issue.. would be nice to have method because we use this multiple times
-		// console.log('......loopNodeWithStyle');
-		// var string = '';
-		// for(var i = 0 ; i < node.childNodes.length ; i++){
-		// 	if(node.childNodes[i].nodeValue){
-		// 		string += sec.childNodes[i].nodeValue;
-		// 	}else{
-		// 		// Get the style tag
-		// 		string += '<' + sec.childNodes[i].localName + '>';
-		// 		// Get the node value of the style tag
-		// 		string += sec.childNodes[i].childNodes[0].nodeValue;
-		// 		// Close the style tag
-		// 		string += '</' + sec.childNodes[i].localName + '>';
-		// 	}
-		// }
-		// return string;
-	// }
 });
-
+// var loopNodeWithStyle =  function(node){
+// 		// this throws an error: { stack: { stack: undefined, source: 'method' }, //perhaps a timing issue.. would be nice to have method because we use this multiple times
+// 		console.log('......loopNodeWithStyle');
+// 		var string = '';
+// 		for(var i = 0 ; i < node.childNodes.length ; i++){
+// 			if(node.childNodes[i].nodeValue){
+// 				string += sec.childNodes[i].nodeValue;
+// 			}else{
+// 				// Get the style tag
+// 				string += '<' + sec.childNodes[i].localName + '>';
+// 				// Get the node value of the style tag
+// 				string += sec.childNodes[i].childNodes[0].nodeValue;
+// 				// Close the style tag
+// 				string += '</' + sec.childNodes[i].localName + '>';
+// 			}
+// 		}
+// 		return string;
+// }
 // this function, fullTextSectionToJson, as a method throws error: { stack: { stack: undefined, source: 'method' }
 var fullTextSectionToJson =  function(section,figures){
 	// XML processing of part of the content
 	console.log('...fullTextSectionToJson');
-	// console.log('section');
-	// console.log(section);
-	// console.log('section.childNodes');
-	// console.log(section.childNodes);
+	// console.log('section');console.log(section);
+	// console.log('section.childNodes');console.log(section.childNodes);
 	var sectionObject = {};
 	sectionObject.content = [];
 	for(var sectionChild = 0 ; sectionChild < section.childNodes.length ; sectionChild++){
@@ -240,7 +250,7 @@ var fullTextSectionToJson =  function(section,figures){
 			}
 		}else if(sec.childNodes){
 			// Section: Content
-			// console.log('localName ' + sec.localName);
+			console.log('.... localName ' + sec.localName);
 			// TODO: if figure, don't add label. we will use title and caption from api.
 			var figureFound = false,
 				figureId = '',
@@ -264,20 +274,23 @@ var fullTextSectionToJson =  function(section,figures){
 						}
 					}
 				}
+			}else if(sec.localName === 'table-wrap'){
+				console.log('table!!');
+				var tableStartLine = sec.childNodes[0].lineNumber;
+				var tableEndLine = sec.parentNode.lastChild.lineNumber;
 			}
 			for(var cc = 0 ; cc < sec.childNodes.length ; cc++){
-				// console.log('..... ' + cc + ' = ' + sec.childNodes[cc].localName);
 				if(sec.childNodes[cc].nodeValue){
 					// plain text
 					content += sec.childNodes[cc].nodeValue;
 				}else{
+					console.log('..... ' + cc + ' = ' + sec.childNodes[cc].localName);
 					var tagValue;
 					// there are style tags, or reference links
 					if(sec.childNodes[cc].childNodes.length > 0){
 						tagValue = sec.childNodes[cc].childNodes[0].nodeValue;
 					}
 					if(sec.childNodes[cc].localName === 'xref'){
-
 						// Determine - Reference or Figure?
 						var attributes = sec.childNodes[cc].attributes;
 						// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
@@ -300,7 +313,11 @@ var fullTextSectionToJson =  function(section,figures){
 							content += '<p>' + figureCaption + '</p>';
 						}
 						content += '</div>';
+					}else if(sec.childNodes[cc].localName === 'table-wrap'){
+						// this is handled above, testing sec.locName
 					}else{
+						// console.log('..else');
+						// console.log(tagValue);
 						content += '<' + sec.childNodes[cc].localName + '>';
 						content += tagValue;
 						content += '</' + sec.childNodes[cc].localName + '>';
@@ -313,4 +330,11 @@ var fullTextSectionToJson =  function(section,figures){
 		sectionObject.content.push(content);
 	}
 	return sectionObject;
+}
+
+var headerLevelFromId = function(sectionId){
+	// section ids are in the format, s1, s1_1, s1_1_1
+	// console.log('.. headerLevelFromId ' + sectionId);
+	var sectionIdPieces = sectionId.split('_');
+	return sectionIdPieces.length;
 }
