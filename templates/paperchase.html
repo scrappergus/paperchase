@@ -1,69 +1,68 @@
 <template name="LeftNav">
-        <ul class="home-left-nav">
-            <li><a href="/">Home</a></li>
-            <div class="divider"></div>
-            <li><a href="/archive">Archive</a></li>
-            <div class="divider"></div>
-            <li><a href="/advance">Advance online publications</a></li>
-            <div class="divider"></div>
-            <li><a href="/recent-breakthroughs">Recent breakthroughs</a></li>
-            <div class="divider"></div>
-            <li><a href="/for-authors">Information for authors</a></li>
-            <div class="divider"></div>
-            <li><a href="/about">About the journal</a></li>
-            <div class="divider"></div>
-            <li><a href="/editorial-board">Editorial board</a></li>
-            <div class="divider"></div>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
+	<ul class="home-left-nav">
+		<li><a href="/">Home</a></li>
+		<div class="divider"></div>
+		<li><a href="/archive">Archive</a></li>
+		<div class="divider"></div>
+		<li><a href="/advance">Advance online publications</a></li>
+		<div class="divider"></div>
+		<li><a href="/recent-breakthroughs">Recent breakthroughs</a></li>
+		<div class="divider"></div>
+		<li><a href="/for-authors">Information for authors</a></li>
+		<div class="divider"></div>
+		<li><a href="/about">About the journal</a></li>
+		<div class="divider"></div>
+		<li><a href="/editorial-board">Editorial board</a></li>
+		<div class="divider"></div>
+		<li><a href="/contact">Contact</a></li>
+	</ul>
 </template>
 
 <template name="Home">
 </template>
 
 <template name="HomePageEditorList">
-    <h5>Editors-in-Chief</h5>
-    <ul class="home-page-editors-list">
-        {{#each eic}}
-        <li class="">
-        <p class="edboard-name"><strong>{{name}}</strong><br> {{address}}</p>
-        <p class="edboard-bio">{{{bio}}}</p>
-        </li>
-        {{/each}}
-    </ul>
+	<h5>Editors-in-Chief</h5>
+	<ul class="home-page-editors-list">
+		{{#each eic}}
+		<li class="">
+		<p class="edboard-name"><strong>{{name}}</strong><br> {{address}}</p>
+		<p class="edboard-bio">{{{bio}}}</p>
+		</li>
+		{{/each}}
+	</ul>
 
-    <h5>Founding editorial board</h5>
-    <ul class="home-page-editors-list">
-        {{#each eb}}
-        <li class="">
-        <p class="edboard-name"><strong>{{name}}</strong><br> {{address}}</p>
-        <p class="edboard-bio">{{{bio}}}</p>
-        </li>
-        {{/each}}
-    </ul>
+	<h5>Founding editorial board</h5>
+	<ul class="home-page-editors-list">
+		{{#each eb}}
+		<li class="">
+		<p class="edboard-name"><strong>{{name}}</strong><br> {{address}}</p>
+		<p class="edboard-bio">{{{bio}}}</p>
+		</li>
+		{{/each}}
+	</ul>
 
-    <a href="/editorial-board" class="blue-grey-text darken-3-text">See full editor's list</a>
-    <br>
+	<a href="/editorial-board" class="blue-grey-text darken-3-text">See full editor's list</a>
+	<br>
 </template>
 
 <template name="EdBoard">
-            <h3>{{journalName}} Editors-in-Chief</h3>
-            <ul class="home-page-editors-list">
-                {{#each eic}}
-                <li>
-                    <div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
-                </li>
-                {{/each}}
-            </ul>
+	<h3>{{journalName}} Editors-in-Chief</h3>
+	<ul class="home-page-editors-list">
+		{{#each eic}}
+		<li>
+			<div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
+		</li>
+		{{/each}}
+	</ul>
 
-            <div class="divider"></div>
-
-            <h5>Editorial board</h5>
-            <ul class="home-page-editors-list">
-                {{#each fullBoard}}
-                <li>
-                    <div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
-                </li>
-                {{/each}}
-            </ul>
+	<div class="divider"></div>
+	<h5>Editorial board</h5>
+	<ul class="home-page-editors-list">
+		{{#each fullBoard}}
+		<li>
+			<div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
+		</li>
+		{{/each}}
+	</ul>
 </template>
