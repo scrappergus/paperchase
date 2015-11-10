@@ -45,7 +45,9 @@ Meteor.methods({
 				// console.log('    Add = ' + processedArticleJson['title']);
 				processedArticleJson['doc_updates'] = {} ;
 				processedArticleJson['doc_updates']['created_by'] = 'OJS Intake';
-				articleMongoId = Meteor.call('addArticle',processedArticleJson);
+                articleMongoId = Meteor.call('addArticle',processedArticleJson, function(e,r) {
+                        Meteor.call('addAdvancedArticle', r);
+                    });
 			}
 		}
 

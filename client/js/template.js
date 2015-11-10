@@ -79,7 +79,29 @@ Template.AdminHistoryInput.onRendered(function() {
 });
 
 Template.AdminAdvanceArticles.onRendered(function() {
-	$('#advance-table').sortable();
+        var data = this.data;
+        $('.article-sections').sortable({
+                stop: function(e, ui) {
+                    var newsort = [];
+                    $('.article').each(function(a,b,c) {
+                            d = Blaze.getData(b);
+                            newsort.push(d._id);
+                        });
+                    $('.article-sections').sortable('cancel');
+                    Meteor.call('updateList', 'advance', newsort);
+                }
+            });
+        $('.articles').sortable({
+                stop: function(e, ui) {
+                    var newsort = [];
+                    $('.article').each(function(a,b,c) {
+                            d = Blaze.getData(b);
+                            newsort.push(d._id);
+                        });
+                    $('.articles').sortable('cancel');
+                    Meteor.call('updateList', 'advance', newsort);
+                }
+            });
 });
 
 
