@@ -149,8 +149,6 @@ Template.Home.onRendered(function () {
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
 	$('.owl-carousel').owlCarousel();
-	// $('.owl-stage').addClass('valign-wrapper');
-	// $('.owl-item').addClass('valign');
 });
 Template.ArticleText.onRendered(function() {
 	$('.materialboxed').materialbox();

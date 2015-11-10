@@ -170,49 +170,6 @@ if (Meteor.isClient) {
 			}
 		}
     });
-	Template.Home.helpers({
-		cards: function(){
-			var cards = [
-				{
-					'name' : 'Gerotarget',
-					'src' : '1.jpg'
-				},
-				{
-					'name' : 'Pathology',
-					'src' : '2.jpg'
-				},
-				{
-					'name' : 'Bioinformatics',
-					'src' : '3.jpg'
-				},
-				{
-					'name' : 'Pharmacology',
-					'src' : '4.jpg'
-				},
-				{
-					'name' : 'Stem Cell',
-					'src' : '5.jpg'
-				},
-				{
-					'name' : 'miRNA',
-					'src' : '6.jpg'
-				},
-				{
-					'name' : 'Immunology',
-					'src' : '7.jpg'
-				},
-				{
-					'name' : 'Neurobiology',
-					'src' : '8.jpg'
-				},
-				{
-					'name' : 'Cellular & Molecular Biology',
-					'src' : '9.jpg'
-				}
-			];
-			return cards;
-		}
-	});
     Template.Contact.helpers({
 		submitLink : function(){
 			var journalSettings = journalConfig.findOne();
