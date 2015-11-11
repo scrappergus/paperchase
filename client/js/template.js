@@ -141,6 +141,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
 
         $('.articles, .article-sections').sortable({
                 connectWith: '.articles',
+                cursor: 'move',
                 update: function(e, ui) {
 
                     var newsort = [];
