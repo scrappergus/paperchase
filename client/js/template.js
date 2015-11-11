@@ -40,62 +40,8 @@ Template.AdminArticle.onRendered(function () {
 	}
 });
 Template.AdminArticleForm.onRendered(function () {
-	// title
-	$('.article-title').summernote({
-		styleWithSpan: false,
-		onPaste: function(e){
-			e.preventDefault();
-			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-			document.execCommand('insertText', false, bufferText);
-		},
-		toolbar: [
-			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-			['view', ['codeview']]
-		]
-	});
-
-	// abstract
-	$('.article-abstract').summernote({
-		styleWithSpan: false,
-		onPaste: function(e){
-			e.preventDefault();
-			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-			document.execCommand('insertText', false, bufferText);
-		},
-		toolbar: [
-			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-			['view', ['codeview']]
-		]
-	});
-
-	// dates - handled in template helper, article. uses function to loop through dates and initiate
-	Meteor.adminArticle.initiateDates();
-
-	// authors and affiliations
-	$('.authors-list').sortable();
-	$('.affiliations-list').sortable({
-		start: function( event, ui ) {
-			Session.set('affIndex',ui.item.index());
-		},
-		update: function( event, ui ) {
-			var newIndex = ui.item.index();
-			Meteor.adminArticle.updateAffiliationsOrder(newIndex);
-		},
-	});
-
-	// issue, article type
-	// selects
-	$('#article-issue').material_select();
-	$('#article-type').material_select();;
-	$('#article-pub-status').material_select();
-
-	// modals
-	$('#success-modal').leanModal();
-	// $('#add-article-dates').leanModal();
-	// $('#add-article-history').leanModal();
-	// $('#add-article-id').leanModal();
+	console.log('AdminArticleForm Rendered');
+	Meteor.adminArticle.readyFormTemplate();
 });
 Template.AdminDateInput.onRendered(function() {
 	Meteor.adminArticle.initiateDates();
