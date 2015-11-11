@@ -18,16 +18,11 @@ sorters = new Mongo.Collection('sorters', {
       if(order){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
-        var prevSection = '';
         for(var i = 0 ; i < order.length ; i++){
           for(var a = 0 ; a < articlesList.length ; a++){
             if(articlesList[a]['_id'] === order[i]){
               var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
               articlesList[a]['section_name'] = section['section_name'];
-              if(articlesList[a]['section_id'] != prevSection){
-                articlesList[a]['section_start'] = true;
-              }
-              prevSection = section['section_id'];
               f.articles.push(articlesList[a]);
             }
           }
@@ -209,6 +204,19 @@ submissions.allow({
     }
   }
 });
+
+sorters.allow({
+  insert: function () {
+      return true;
+  },
+  update: function () {
+      return true;
+  },
+  remove: function () {
+      return true;
+  }
+});
+
 
 // PUBLISH
 if (Meteor.isServer) {

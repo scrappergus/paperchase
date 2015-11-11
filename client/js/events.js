@@ -635,31 +635,31 @@ Template.adminArticleXmlProcess.events({
 	}
 });
 
-Template.AdminAdvanceArticles.events({
-	'submit form': function(e){
-		e.preventDefault();
-		var advance = [],
-			remove = [];
-		$('.advanced-article').each(function(){
-			var mongoId = $(this).attr('id');
-			if($(this).prop('checked')){
-				advance.push(mongoId);
-			}else{
-				remove.push(mongoId);
-			}
-		});
-		Meteor.call('updateList', 'advance', advance, remove, function(error,result){
-			if(error){
-				console.log('ERROR - updateList');
-				console.log(error);
-			}
-			if(result){
-				Meteor.formActions.success();
-			}
-		});
-		// just update articles collection, there is a hook to updaate sorters
-	}
-})
+//Template.AdminAdvanceArticles.events({
+//	'submit form': function(e){
+//		e.preventDefault();
+//		var advance = [],
+//			remove = [];
+//		$('.advanced-article').each(function(){
+//			var mongoId = $(this).attr('id');
+//			if($(this).prop('checked')){
+//				advance.push(mongoId);
+//			}else{
+//				remove.push(mongoId);
+//			}
+//		});
+//		Meteor.call('updateList', 'advance', advance, remove, function(error,result){
+//			if(error){
+//				console.log('ERROR - updateList');
+//				console.log(error);
+//			}
+//			if(result){
+//				Meteor.formActions.success();
+//			}
+//		});
+//		// just update articles collection, there is a hook to updaate sorters
+//	}
+//})
 
 // Batch
 Template.AdminBatchXml.events({

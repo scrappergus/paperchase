@@ -19,12 +19,12 @@
                         <ul class="articles">
 
                             {{#each articles}}
-                            <li class="article">
+                            <li class="article" data-article-id={{_id}}>
                                 <div class="row">
                                     <div class="col s1"><i class="zmdi prefix zmdi-swap-vertical"></i></div>
                                     <div class="col s2">{{section_name}}&nbsp;</div>
                                     <div class="col s7">{{{title}}}</div>
-                                    <div class="col s2"><input type="button" class="btn delete-article red" data-id="{{_id}}" value="Delete"/>
+                                    <div class="col s2"><input type="button" class="btn delete-article red" data-delete-id="{{_id}}" value="Delete"/>
                                         <label class="right" for="{{_id}}"></label></div>
                                 </div>
                             </li>

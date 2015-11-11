@@ -33,6 +33,7 @@ Meteor.methods({
 	updateList: function(listName, list, remove){
 		// console.log('... sorterUpdateList');
 		// update sorters collection
-		return sorters.update({name : listName}, {$set : {order: list}});
+		var one = sorters.findOne({name : listName});
+		return sorters.update({_id : one._id}, {$set : {order: list}});
 	}
 });
