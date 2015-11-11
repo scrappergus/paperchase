@@ -207,7 +207,7 @@ Template.AdminArticleForm.events({
 		article.authors.push(newAuthor);
 
 		//scroll to new affiliation <li>
-		if($('.author-li:last-child')){
+		if($('.author-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.author-li:last-child').find('input').position().top
 			}, 500);
@@ -250,7 +250,7 @@ Template.AdminArticleForm.events({
 
 		// scroll to new affiliation <li>
 		// TODO: when no affiliations, get error: Uncaught TypeError: Cannot read property 'top' of undefined (for last-child)
-		if($('.affiliation-li:last-child')){
+		if($('.affiliation-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.affiliation-li:last-child').find('input').position().top
 			}, 500);
@@ -314,9 +314,11 @@ Template.AdminArticleForm.events({
 		}
 		article.keywords.push('');
 		Session.set('article',article);
-		$('html, body').animate({
-			scrollTop: $('.kw-li:last-child').find('input').position().top
-		}, 500);
+		if($('.kw-li:last-child').length != 0){
+			$('html, body').animate({
+				scrollTop: $('.kw-li:last-child').find('input').position().top
+			}, 500);
+		}
 	},
 	'click .remove-kw': function(e,t){
 		e.preventDefault();
