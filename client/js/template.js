@@ -102,6 +102,11 @@ Template.AdminAdvanceArticles.onRendered(function() {
                     Meteor.call('updateList', 'advance', newsort);
                 }
             });
+
+        $('.delete-article').click(function() {
+                var id = $(this).attr('data-id');
+                Meteor.call('sorterRemoveArticle', 'advance', id);
+            });
 });
 
 
