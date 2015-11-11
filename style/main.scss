@@ -169,6 +169,15 @@ html,body{
 	.full-text-image{
 		width: 100%;
 	}
+	.article-header-1{
+		@extend h2;
+	}
+	.article-header-2{
+		@extend h3;
+	}
+	.article-header-3{
+		@extend h4;
+	}
 
 /* Buttons ------------------------*/
 	.btn-sm{

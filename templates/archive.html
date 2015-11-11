@@ -1,30 +1,25 @@
 <template name="Archive">
-<div class="row">
-    {{> LeftNav}}
-    <div class="col s10">
-        <h3>Archive</h3>
-        <div class="divider"></div>
+	<h3>Archive</h3>
+	<div class="divider"></div>
 
-        {{#each volumes}}
-        <h4>Volume {{volume}}</h4>
-        <div class="clearfix">
-            <ul class="">
-                {{#each issues}}
-                <li style="float:left; display:block; margin-right:22px;">
-                <div class="clearfix">
-                    <a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
-                    <br>
-                    <h5><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h5>
-                    {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
-                </div>
-                </li>
-                {{/each}}	
-            </ul>
-            </div>
-        <div class="divider"></div>
-        {{/each}}
-    </div>	
-</div>
+	{{#each volumes}}
+	<h4>Volume {{volume}}</h4>
+	<div class="clearfix">
+		<ul class="">
+			{{#each issues}}
+			<li style="float:left; display:block; margin-right:22px;">
+			<div class="clearfix">
+				<a href="/issue/v{{volume}}i{{issue}}"><img src="/images/covers/cover_v{{volume}}n{{issue}}.png"></a>
+				<br>
+				<h5><a href="/issue/v{{volume}}i{{issue}}">Issue {{issue}}</a></h5>
+				{{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
+			</div>
+			</li>
+			{{/each}}
+		</ul>
+		</div>
+	<div class="divider"></div>
+	{{/each}}
 </template>
 
 <!-- TODO: add check for pagination -->

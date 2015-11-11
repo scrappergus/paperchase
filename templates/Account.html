@@ -1,24 +1,16 @@
 <template name="Account">
-<div class="row">
-    {{> LeftNav}}
-    <div class="col s10">
-        <h3>Account</h3>
-        <div class="divider"></div>
+	<h3>Account</h3>
+	<div class="divider"></div>
 
-        <ul>
-            <li><strong>IP Address: You are accessing this site from this IP address: {{clientIP}}</strong></li>
+	<ul>
+		<li><strong>IP Address: You are accessing this site from this IP address: {{clientIP}}</strong></li>
 
-            {{#if isSubscribed}}
-            {{#if isSubscribedIP}}<li><strong>You have institutional subscription access through {{getInstitutionByIP.institution}}</strong></li> {{/if}}
-            {{#if isSubscribedUser}}<li><strong>You are subscribed as an individual.</strong></li> {{/if}}
+		{{#if isSubscribed}}
+		{{#if isSubscribedIP}}<li><strong>You have institutional subscription access through {{getInstitutionByIP.institution}}</strong></li> {{/if}}
+		{{#if isSubscribedUser}}<li><strong>You are subscribed as an individual.</strong></li> {{/if}}
 
-            {{else}}
-            <li><strong>You are not currently subscribed to our journal. Request access from your librarian.</strong></li>
-            {{/if}}
-        </ul>
-    </div>	
-</div>
+		{{else}}
+		<li><strong>You are not currently subscribed to our journal. Request access from your librarian.</strong></li>
+		{{/if}}
+	</ul>
 </template>
-
-<!-- TODO: add check for pagination -->
-

@@ -685,6 +685,7 @@ if (Meteor.isClient) {
 		name: 'ArticleText',
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
+			Session.set('article-text', null);
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
 					Session.set('article-assets',result);
