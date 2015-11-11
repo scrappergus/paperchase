@@ -79,6 +79,8 @@ Template.AdminHistoryInput.onRendered(function() {
 });
 
 Template.AdminAdvanceArticles.onRendered(function() {
+        $('.lean-overlay').remove();
+        
 //        $('.articles').sortable({
 //                update: function(e, ui) {
 //                    var newsort = [];
@@ -143,6 +145,13 @@ Template.AdminAdvanceArticles.onRendered(function() {
                 connectWith: '.articles',
                 cursor: 'move',
                 update: function(e, ui) {
+                    $('#modal1').openModal({
+                            dismissible: true,
+                            complete: function() {
+                                $('.lean-overlay').remove();
+                            }
+                        });
+                            
 
                     var newsort = [];
                     $('.article').each(function(a,b,c) {
@@ -150,6 +159,11 @@ Template.AdminAdvanceArticles.onRendered(function() {
                         });
 
                     Meteor.call('updateList', 'advance', newsort, function(a,b,c) {
+
+                            $('#modal1').closeModal();
+                            $('.admin-content-area').empty(); 
+
+
                             var sorted  = sorters.findOne({name:'advance'});
                             var output = [];
                             var last_article = {};
@@ -193,15 +207,18 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                 output[output.length-1]['articles'].push(article);
                             }
 
-                            $('.admin-content-area').empty(); 
+
                             Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
                         });
                 }
             });
 
         $('.delete-article').click(function() {
+                $('#modal1').openModal();
                 var id = $(this).attr('data-delete-id');
-                Meteor.call('sorterRemoveArticle', 'advance', id);
+                Meteor.call('sorterRemoveArticle', 'advance', id, function() {
+                            $('#modal1').closeModal();
+                    });
             });
 });
 
