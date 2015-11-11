@@ -2,7 +2,11 @@
 	{{>AdminHeader header="Article"}}
 	<div class="row">
 		<div class="col s12">
+			{{#if articleProcessed}}
 			{{>AdminArticleForm}}
+			{{else}}
+			<h3>No Article Found</h3>
+			{{/if}}
 		</div>
 	</div>
 	<div class="row">
@@ -24,7 +28,6 @@
 </template>
 
 <template name="AdminArticleForm">
-	{{#if article}}
 	{{#with article}}
 	{{>SuccessModal what='Article'}}
 	<form id="article-form">
@@ -124,7 +127,6 @@
 				</div>
 			</div>
 		</fieldset>
-
 
 		<fieldset id="ids">
 			<legend>IDs</legend>
@@ -344,9 +346,6 @@
 	</form>
 
 	{{/with}}
-	{{else}}
-	<h3>No Article Found</h3>
-	{{/if}}
 </template>
 
 <template name="AdminDateInput">
