@@ -6,19 +6,6 @@
 
 	{{#with article}}
 	{{>ArticleHeader}}
-	{{#if abstract}}
-	<div class="row">
-		<div class="col s12">
-			<h3>Abstract</h3>
-			{{{abstract}}}
-		</div>
-	</div>
-	{{/if}}
-	<div class="row">
-		<div class="col s12">
-			{{>ArticleButtons}}
-		</div>
-	</div>
 	{{/with}}
 
 	{{#if isSubscribed}}

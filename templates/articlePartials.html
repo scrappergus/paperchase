@@ -16,6 +16,19 @@
 			{{/if}}
 		</div>
 	</div>
+	<div class="row">
+		<div class="col s12">
+			{{>ArticleButtons}}
+		</div>
+	</div>
+	{{#if abstract}}
+	<div class="row">
+		<div class="col s12">
+			<h3>Abstract</h3>
+			{{{abstract}}}
+		</div>
+	</div>
+	{{/if}}
 </template>
 
 <template name="AuthorsList">

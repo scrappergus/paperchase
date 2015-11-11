@@ -633,6 +633,13 @@ if (Meteor.isClient) {
 		name: 'Article',
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
+			// check if article exists
+			var art = articles.findOne({'_id': this.params._id});
+			if(!art){
+				Router.go('ArticleNotFound');
+			}
+
+			// get xml, figures, pdf links
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
 					Session.set('article-assets',result);
@@ -840,6 +847,10 @@ if (Meteor.isClient) {
 			// 	title: pageTitle
 			// });
 		}
+	});
+	Router.route('/article/404', {
+		name: 'ArticleNotFound',
+		layoutTemplate: 'Visitor'
 	});
 
 
@@ -1099,14 +1110,20 @@ if (Meteor.isClient) {
 		name: 'AdminArticle',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
-			Session.set('preprocess-article',true);
+			Meteor.call('preProcessArticle',this.params._id,function(error,result){
+				if(error){
+					console.log('ERROR - preProcessArticle');
+					console.log(error);
+				}
+				if(result){
+					Session.set('article',result);
+				}
+			});
 			this.next();
 		},
 		waitOn: function(){
 			return[
-				Meteor.subscribe('articleInfo',this.params._id),
-				Meteor.subscribe('volumes'),
-				Meteor.subscribe('issues')
+				Meteor.subscribe('articleInfo',this.params._id)
 			]
 		},
 		data: function(){
@@ -1114,6 +1131,22 @@ if (Meteor.isClient) {
 				Session.set('article-id',this.params._id);
 			}
 		}
+	});
+	Router.route('/admin/add_article/',{
+		name: 'AdminArticleAdd',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Meteor.call('preProcessArticle',function(error,result){
+				if(error){
+					console.log('ERROR - preProcessArticle');
+					console.log(error);
+				}
+				if(result){
+					Session.set('article',result);
+				}
+			});
+			this.next();
+		},
 	});
 
 	// Advance articles

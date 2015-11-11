@@ -93,9 +93,9 @@ Template.AdminArticleForm.onRendered(function () {
 
 	// modals
 	$('#success-modal').leanModal();
-	$('#add-article-dates').leanModal();
-	$('#add-article-history').leanModal();
-	$('#add-article-id').leanModal();
+	// $('#add-article-dates').leanModal();
+	// $('#add-article-history').leanModal();
+	// $('#add-article-id').leanModal();
 });
 Template.AdminDateInput.onRendered(function() {
 	Meteor.adminArticle.initiateDates();

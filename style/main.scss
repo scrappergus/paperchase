@@ -59,6 +59,16 @@ html,body{
 		margin: $margin-lg 0;
 		padding: $pad-md $pad-lg;
 	}
+	.edit-box{
+		@extend .box;
+		.row{
+			margin: 0;
+		}
+		.col{
+			margin-top: $margin-md;
+			margin-bottom: $margin-md;
+		}
+	}
 	.card {
 		h4 {
 			margin-top:0em;
