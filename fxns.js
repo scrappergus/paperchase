@@ -173,10 +173,12 @@ Meteor.adminArticle = {
 			$('#add-' + type).removeClass('expanded');
 		}
 	},
-	readyFormTemplate: function(){
-		// console.log('..readyFormTemplate');
+	readyArticleForm: function(){
+		// console.log('..readyArticleForm');
 		// console.log(Session.get('article'));
+
 		// title
+		// ------
 		$('.article-title').summernote({
 			styleWithSpan: false,
 			onPaste: function(e){
@@ -192,6 +194,7 @@ Meteor.adminArticle = {
 		});
 
 		// abstract
+		// ------
 		$('.article-abstract').summernote({
 			styleWithSpan: false,
 			onPaste: function(e){
@@ -207,10 +210,24 @@ Meteor.adminArticle = {
 		});
 
 		// dates - handled in template helper, article. uses function to loop through dates and initiate
+		// ------
 		Meteor.adminArticle.initiateDates();
 
-		// authors and affiliations
+		// issue, article type
+		// ------
+		// selects
+		$('#article-issue').material_select();
+		$('#article-type').material_select();;
+		$('#article-pub-status').material_select();
+
+		// modals
+		// ------
+		$('#success-modal').leanModal();
+	},
+	initiateAuthorsSortable: function(){
 		$('.authors-list').sortable();
+	},
+	initiateAffiliationsSortable: function(){
 		$('.affiliations-list').sortable({
 			start: function( event, ui ) {
 				Session.set('affIndex',ui.item.index());
@@ -220,15 +237,6 @@ Meteor.adminArticle = {
 				Meteor.adminArticle.updateAffiliationsOrder(newIndex);
 			},
 		});
-
-		// issue, article type
-		// selects
-		$('#article-issue').material_select();
-		$('#article-type').material_select();;
-		$('#article-pub-status').material_select();
-
-		// modals
-		$('#success-modal').leanModal();
 	}
 }
 
