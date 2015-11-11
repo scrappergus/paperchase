@@ -206,12 +206,17 @@ Template.AdminArticleForm.events({
 		}
 		article.authors.push(newAuthor);
 
-		//scroll to new affiliation <li>
+		// scroll to new affiliation <li>
+		// if no .author-li:last-child, just added first author. The dom isn't updated yet, so technically last-child is not the one just added
 		if($('.author-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.author-li:last-child').find('input').position().top
 			}, 500);
-		} // otherwise, just added first author. the dom isn't updated yet, so technically last-child is not the one just added
+		}
+
+		if($('.author-li').length > 0){
+			Meteor.adminArticle.initiateAuthorsSortable();
+		}
 
 		Session.set('article',article);
 	},
@@ -245,16 +250,15 @@ Template.AdminArticleForm.events({
 			}
 		}
 
-		// console.log(article['authors'][parseInt(article['authors'].length - 1)]['affiliations_list']);
 		Session.set('article',article);
 
 		// scroll to new affiliation <li>
-		// TODO: when no affiliations, get error: Uncaught TypeError: Cannot read property 'top' of undefined (for last-child)
+		// if no .affiliation-li:last-child, just added first affiliation. The dom isn't updated yet, so technically last-child is not the one just added
 		if($('.affiliation-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.affiliation-li:last-child').find('input').position().top
 			}, 500);
-		} // otherwise, just added first affiliation. the dom isn't updated yet, so technically last-child is not the one just added
+		}
 	},
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');

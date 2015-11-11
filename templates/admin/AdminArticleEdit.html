@@ -5,7 +5,7 @@
 			{{#if articleProcessed}}
 			{{>AdminArticleForm}}
 			{{else}}
-			<h3>No Article Found</h3>
+			{{>Loading}}
 			{{/if}}
 		</div>
 	</div>
@@ -166,45 +166,7 @@
 				<div class="col s12 m3"><b>Last Name</b></div>
 				<div class="col s12 m2"><b>Affiliations</b></div>
 			</div>
-			<div class="row">
-				<div class="col s12">
-					<ul class="authors-list">
-						{{! Do not use input-field for authors, margin looks bad}}
-						{{#each authors}}
-						<li class="author-row author-li row grey lighten-4 border-gray valign-wrapper">
-								<div class="col s12 m1 center-align">
-									<i class="zmdi prefix zmdi-swap-vertical"></i>
-								</div>
-								<div class="col s12 m3">
-									<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
-								</div>
-								<div class="col s12 m3">
-									<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
-								</div>
-								<div class="col s12 m3">
-									<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
-								</div>
-								<div class="col s12 m1">
-									{{#each affiliations_list}}
-										<p class="pad-md">
-											<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
-											<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-										</p>
-									{{/each}}
-								</div>
-								<div class="col s12 m1">
-									<i class="prefix remove-author zmdi zmdi-close-circle red-type close-icon right"></i>
-								</div>
-								<div class="hide">
-									{{#each arrayify ids}}
-									<input class="author-id" type="hide" name="{{name}}" value="{{value}}">
-									{{/each}}
-								</div>
-						</li>
-						{{/each}}
-					</ul>
-				</div>
-			</div>
+			{{>AdminArticleFormAuthors}}
 			{{/if}}
 		</fieldset>
 
@@ -215,29 +177,8 @@
 					<button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
-			{{! Do not use input-field for affiliations, margin looks bad}}
 			{{#if affiliations}}
-			<div class="row">
-				<div class="col s12">
-					<ol class="affiliations-list">
-						{{#each arrayify affiliations}}
-						<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 border-gray">
-							<div class="valign-wrapper" style="width:100%">
-								<div class="col s1 center-align ">
-									<i class="zmdi prefix zmdi-swap-vertical"></i>
-								</div>
-								<div class="col s10">
-									<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
-								</div>
-								<div class="col s1">
-									<i class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon right"></i>
-								</div>
-							</div>
-						</li>
-						{{/each}}
-					</ol>
-				</div>
-			</div>
+			{{>AdminArticleFormAffiliations}}
 			{{/if}}
 		</fieldset>
 
@@ -348,14 +289,79 @@
 	{{/with}}
 </template>
 
+
+
+<!--Form Partials-->
 <template name="AdminDateInput">
 	<input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
 </template>
 <template name="AdminHistoryInput">
 	<input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
 </template>
-
-<!--Form Partials-->
+<template name="AdminArticleFormAuthors">
+	<div class="row">
+		<div class="col s12">
+			<ul class="authors-list">
+				{{! Do not use input-field for authors, margin looks bad}}
+				{{#each authors}}
+				<li class="author-row author-li row grey lighten-4 border-gray valign-wrapper">
+					<div class="col s12 m1 center-align">
+						<i class="zmdi prefix zmdi-swap-vertical"></i>
+					</div>
+					<div class="col s12 m3">
+						<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
+					</div>
+					<div class="col s12 m3">
+						<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
+					</div>
+					<div class="col s12 m3">
+						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
+					</div>
+					<div class="col s12 m1">
+						{{#each affiliations_list}}
+						<p class="pad-md">
+							<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
+							<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
+						</p>
+						{{/each}}
+					</div>
+					<div class="col s12 m1">
+						<i class="prefix remove-author zmdi zmdi-close-circle red-type close-icon right"></i>
+					</div>
+					<div class="hide">
+						{{#each arrayify ids}}
+						<input class="author-id" type="hide" name="{{name}}" value="{{value}}">
+						{{/each}}
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+</template>
+<template name="AdminArticleFormAffiliations">
+	<div class="row">
+		<div class="col s12">
+			<ol class="affiliations-list">
+				{{#each arrayify affiliations}}
+				<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 border-gray">
+					<div class="valign-wrapper" style="width:100%">
+						<div class="col s1 center-align ">
+							<i class="zmdi prefix zmdi-swap-vertical"></i>
+						</div>
+						<div class="col s10">
+							<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+						</div>
+						<div class="col s1">
+							<i class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon right"></i>
+						</div>
+					</div>
+				</li>
+				{{/each}}
+			</ol>
+		</div>
+	</div>
+</template>
 <template name="AddArticleHistory">
 	<div class="edit-box teal lighten-5 add-article-history hide">
 		<div class="row">
