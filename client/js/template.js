@@ -218,6 +218,54 @@ Template.AdminAdvanceArticles.onRendered(function() {
                 var id = $(this).attr('data-delete-id');
                 Meteor.call('sorterRemoveArticle', 'advance', id, function() {
                             $('#modal1').closeModal();
+                            $('.admin-content-area').empty(); 
+
+
+                            var sorted  = sorters.findOne({name:'advance'});
+                            var output = [];
+                            var last_article = {};
+                            for (var i = 0; i < sorted.articles.length; i++){
+                                article = sorted.articles[i];
+
+                                //make a copy of the next article for comparison
+                                next_article = sorted.articles[i+1] || false;
+
+                                //things that happen on the first entry
+                                if(i==0) {
+                                    article['first'] = true;
+                                    article['section_start'] = true;
+                                }
+
+                                //mark the rest as not being first
+                                first = false;
+
+
+
+                                //things that happen if we're starting a new section
+                                if(article.section_name != last_article.section_name) {
+                                    article['section_start'] = true;
+                                }
+
+
+                                //things that happen if we're ending a section
+                                if(article.section_name != next_article.section_name) {
+                                    article['section_end'] = true;
+                                }
+
+                                //record this entry for comparison on the next
+                                last_article = article;
+                                //record changes to actual article entry
+                                if(article.section_start) {
+                                    output.push({
+                                            articles:[],
+                                            section_name:article.section_name
+                                        });
+                                }
+                                output[output.length-1]['articles'].push(article);
+                            }
+
+
+                            Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
                     });
             });
 });
