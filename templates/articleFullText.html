@@ -2,15 +2,6 @@
 	{{#with article}}
 		{{>ArticleHeader}}
 
-		{{#if abstract}}
-		<div class="row">
-			<div class="col s12">
-				<h3>Abstract</h3>
-				{{{abstract}}}
-			</div>
-		</div>
-		{{/if}}
-
 		{{#if ids.pii}}
 		{{else}}
 		<div class="row">
@@ -22,14 +13,7 @@
 
 	{{#if fullText}}
 	{{else}}
-		<div class="row">
-			<div class="col s12">
-				<h3>Loading</h3>
-				<div class="progress">
-					<div class="indeterminate"></div>
-				</div>
-			</div>
-		</div>
+	{{>Loading}}
 	{{/if}}
 
 	{{#with fullText}}
@@ -50,7 +34,16 @@
 	{{#each sections}}
 	<div class="article-header-{{headerL}}" id="{{sectionId}}">{{{title}}}</div>
 	{{#each content}}
-		<p>{{{.}}}</p>
+		{{#if equals contentType 'p'}}
+		<p>{{{content}}}</p>
+		{{/if}}
+		{{#if equals contentType 'table'}}
+		<div class="table-box">
+			{{{content}}}
+		</div>
+		{{else}}
+		{{{content}}}
+		{{/if}}
 	{{/each}}
 	{{/each}}
 </template>

@@ -14,6 +14,12 @@
 			{{#if dates}}
 				{{>ArticleDates}}
 			{{/if}}
+			<div class="row no-margin">
+				{{#each arrayify ids}}
+					<div class="col s4"><h6><label>{{name}}:</label> {{value}}</h6></div>
+				{{/each}}
+			</div>
+
 		</div>
 	</div>
 	<div class="row">

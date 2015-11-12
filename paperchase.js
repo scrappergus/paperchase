@@ -634,8 +634,8 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
 			// check if article exists
-			var art = articles.findOne({'_id': this.params._id});
-			if(!art){
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
 				Router.go('ArticleNotFound');
 			}
 
@@ -712,6 +712,13 @@ if (Meteor.isClient) {
 		name: 'ArticleText',
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				Router.go('ArticleNotFound');
+			}
+
+			// Get assets and text
 			Session.set('article-text', null);
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
@@ -728,7 +735,6 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
-				// Meteor.subscribe('articleFullText',this.params._id),
 				Meteor.subscribe('articleTypes')
 			]
 		},
@@ -848,7 +854,7 @@ if (Meteor.isClient) {
 			// });
 		}
 	});
-	Router.route('/article/404', {
+	Router.route('/404/article', {
 		name: 'ArticleNotFound',
 		layoutTemplate: 'Visitor'
 	});
@@ -1110,6 +1116,12 @@ if (Meteor.isClient) {
 		name: 'AdminArticle',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				Router.go('AdminArticleAdd');
+			}
+
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
 				if(error){
 					console.log('ERROR - preProcessArticle');
