@@ -160,8 +160,6 @@ Template.AdminAdvanceArticles.onRendered(function() {
 
                     Meteor.call('updateList', 'advance', newsort, function(a,b,c) {
 
-                            $('#modal1').closeModal();
-                            $('.admin-content-area').empty(); 
 
 
                             var sorted  = sorters.findOne({name:'advance'});
@@ -207,6 +205,8 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                 output[output.length-1]['articles'].push(article);
                             }
 
+                            $('#modal1').closeModal();
+                            $('.admin-content-area').empty(); 
 
                             Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
                         });
@@ -217,7 +217,6 @@ Template.AdminAdvanceArticles.onRendered(function() {
                 $('#modal1').openModal();
                 var id = $(this).attr('data-delete-id');
                 Meteor.call('sorterRemoveArticle', 'advance', id, function() {
-                            $('#modal1').closeModal();
                             $('.admin-content-area').empty(); 
 
 
@@ -265,6 +264,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                             }
 
 
+                            $('#modal1').closeModal();
                             Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
                     });
             });
