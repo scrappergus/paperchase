@@ -69,6 +69,15 @@ html,body{
 			margin-bottom: $margin-md;
 		}
 	}
+	.border-box{
+		@extend .box;
+		border: 1px solid $black-0;
+	}
+	.table-box{
+		@extend .box;
+		padding: 0px!important;
+		border: 1px solid $black-0;
+	}
 	.card {
 		h4 {
 			margin-top:0em;
@@ -187,6 +196,16 @@ html,body{
 	}
 	.article-header-3{
 		@extend h4;
+	}
+	table{
+		caption{
+			background: $gray-0;
+			padding: $pad-md;
+			border-bottom: 1px solid $black-0;
+		}
+		thead{
+			border-bottom: 1px solid $black-0;
+		}
 	}
 
 /* Buttons ------------------------*/
