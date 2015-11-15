@@ -283,57 +283,47 @@ Meteor.fullText = {
 			// Style tags
 			// --------
 			for(var cc = 0 ; cc < node.childNodes.length ; cc++){
+				var childNode = node.childNodes[cc];
 				var nValue = '';
 				// console.log('cc = ' + cc );
-				if(node.childNodes[cc].nodeValue){
-					// plain text
-					content += node.childNodes[cc].nodeValue;
-				}else{
-					// Single Tag
-					// either just <xref> or <italic> with plain text
-					// --------
-					if(node.childNodes[cc].childNodes.length === 1 && node.childNodes[cc].childNodes[0].nodeValue != null){
-						nValue = node.childNodes[cc].childNodes[0].nodeValue;
+				if(childNode.localName != null){
+					content += '<' + childNode.localName + '>';
+				}
+
+				// Special tags - xref
+				// --------
+				if(childNode.localName === 'xref'){
+					// Determine - Reference or Figure?
+					var attributes = childNode.attributes;
+					// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
+					for(var attr = 0 ; attr < attributes.length ; attr++){
+						// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
+						if(attributes[attr].nodeName === 'rid'){
+							nodeV = attributes[attr].nodeValue;
+						}
+					}
+					content += '<a href="#' + nodeV + '">';
+					content += nodeV;
+					content += '</a>';
+				}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+					//plain text or external link
+					if(childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
+						content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
+					}else{
+						content += childNode.nodeValue;
 					}
 
-					// Special tags - xref, graphic, table-wrap
-					// --------
-					// We need attributes for these nodes
-					if(node.childNodes[cc].localName === 'xref'){
-						// Determine - Reference or Figure?
-						var attributes = node.childNodes[cc].attributes;
-						// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
-						for(var attr = 0 ; attr < attributes.length ; attr++){
-							// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
-							if(attributes[attr].nodeName === 'rid'){
-								nodeV = attributes[attr].nodeValue;
-							}
-						}
-						content += '<a href="#' + nodeV + '">';
-						content += nodeV;
-						content += '</a>';
-					}else if(nValue != ''){
-						// just a normal style tag
-						content += '<' + node.childNodes[cc].localName + '>';
-						content += nValue;
-						content += '</' + node.childNodes[cc].localName + '>';
-					}else{
-						// subsections
-						var subsecs = node.childNodes[cc].childNodes;
-						for(var ccc = 0 ; ccc < subsecs.length ; ccc++){
-							// console.log('ccc = ' + ccc );
-							if(subsecs[ccc].nodeValue){
-								content += Meteor.fullText.convertContent(subsecs[ccc].nodeValue);
-								// console.log('    ' + subsecs[ccc].nodeValue);
-							}else{
-								// console.log(subsecs[ccc].childNodes);
-							}
-						}
-					}
+				}else if(childNode.childNodes){
+					content += Meteor.fullText.convertContent(childNode);
+				}
+
+				if(childNode.localName != null){
+					content += '</' + childNode.localName + '>';
 				}
 				// console.log(content);
 			}
 		}
+		content = Meteor.fullText.fixTags(content);
 		return content;
 	},
 	convertFigure: function(node,figures){
@@ -385,7 +375,7 @@ Meteor.fullText = {
 			// console.log(n.localName);
 			// Start table el tag
 			if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){// table tag added in sectionToJson()
-				nodeString += '<' + n.localName + '>'
+				nodeString += '<' + n.localName + '>';
 			}
 
 			if(n.localName === 'label'){
@@ -408,7 +398,8 @@ Meteor.fullText = {
 				nodeString += '</tfoot>';
 			}else{
 				// Table content
-				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){ // text node, and make sure it is not just whitespace
+				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+					// text node, and make sure it is not just whitespace
 					var val = n.nodeValue;
 					nodeString += val;
 				}else if(n.childNodes){
@@ -425,8 +416,16 @@ Meteor.fullText = {
 		return nodeString;
 	},
 	fixTags: function(content){
-		content = content.replace('<italic>','<i>');
-		content = content.replace('</italic>','</i>');
+		// style tags
+		content = content.replace(/<italic>/g,'<i>');
+		content = content.replace(/<\/italic>/g,'</i>');
+		content = content.replace(/<bold>/g,'<b>');
+		content = content.replace(/<\/bold>/g,'</b>');
+
+		// remove deprecated
+		content = content.replace(/<fn>/g,'');
+		content = content.replace(/<\/fn>/g,'');
+
 		return content;
 	}
 }
