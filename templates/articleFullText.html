@@ -32,17 +32,20 @@
 
 <template name="ArticleFullText">
 	{{#each sections}}
-	<div class="article-header-{{headerL}}" id="{{sectionId}}">{{{title}}}</div>
+	<div class="article-header-{{headerLevel}}" id="{{sectionId}}">{{{title}}}</div>
 	{{#each content}}
 		{{#if equals contentType 'p'}}
 		<p>{{{content}}}</p>
 		{{/if}}
+
+		{{#if equals contentType 'figure'}}
+		{{{content}}}
+		{{/if}}
+
 		{{#if equals contentType 'table'}}
 		<div class="table-box">
 			{{{content}}}
 		</div>
-		{{else}}
-		{{{content}}}
 		{{/if}}
 	{{/each}}
 	{{/each}}
