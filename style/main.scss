@@ -212,6 +212,9 @@ html,body{
 	}
 	/* section nav */
 	.section-nav{
+		li{
+			margin: $margin-md 0;
+		}
 		.article-header-1{
 			@extend h4;
 		}
@@ -220,6 +223,12 @@ html,body{
 		}
 		.article-header-3{
 			@extend p;
+		}
+	}
+	.sticky-wrapper.is-sticky{
+		.section-nav{
+			height: 90vh; /* leave space for footer */
+			overflow: scroll;
 		}
 	}
 
