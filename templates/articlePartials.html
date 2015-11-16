@@ -121,12 +121,15 @@
 	{{#if fullText}}
 	{{#with fullText}}
 	<ul class="section-nav">
-		{{#each sections}}
-		<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>
-		{{/each}}
+	{{>ArticleSectionsList}}
 	</ul>
 	{{/with}}
 	{{/if}}
+</template>
+<template name="ArticleSectionsList">
+	{{#each sections}}
+	<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>
+	{{/each}}
 </template>
 
 <!--admin partials-->
