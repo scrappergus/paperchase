@@ -72,6 +72,9 @@ Template.Issue.events({
 	},
 	'click .download-pdf' : function(e){
 		Meteor.article.downloadPdf(e);
+	},
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
 	}
 });
 

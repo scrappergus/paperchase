@@ -13,7 +13,7 @@
 			<ul>
 				{{#each articles}}
 				{{#if start_group}}
-				<li style="margin: 10px 10px 0 0; display:inline-block;"><a class="waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.type}}</a></li>
+				<li style="margin: 10px 10px 0 0; display:inline-block;"><a class="anchor waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.type}}</a></li>
 				{{/if}}
 				{{/each}}
 			</ul>
@@ -24,20 +24,15 @@
 				{{#each articles}}
 				{{#if start_group}}
 				<li><h3 id="{{article_type.short_name}}">{{article_type.type}}</h3></li>
+				<div class="divider"></div>
 				{{/if}}
-				<li>
+				<li class="issue-article">
 					<h4>{{{title}}}</h4>
 					<h5>{{>AuthorsList}}</h5>
 					{{#if page_start}}<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>{{/if}}
 
-
 					<!-- TODO -->
 					<!-- use button partial -->
-					<!-- none of these below are working.. -->
-					<!-- {{>ArticleButtons assets=assets}} -->
-					<!-- {{>ArticleButtons article=article}} -->
-					<!-- {{#with article}}{{>ArticleButtons}}{{/with}} -->
-					<!-- {{#with assets}}{{>ArticleButtons}}{{/with}} -->
 					<span class="article-btns">
 						{{#if abstract}}<a class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
 						{{#if isSubscribed}}
@@ -59,8 +54,6 @@
 						{{/if}}
 					</span>
 				</li>
-
-				<br><br>
 				{{/each}}
 			</ul>
 		</div>

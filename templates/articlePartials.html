@@ -30,7 +30,7 @@
 	{{#if abstract}}
 	<div class="row">
 		<div class="col s12">
-			<h3>Abstract</h3>
+			<h3 id="abstract">Abstract</h3>
 			{{{abstract}}}
 		</div>
 	</div>
@@ -127,6 +127,9 @@
 	{{/if}}
 </template>
 <template name="ArticleSectionsList">
+	{{#if abstract}}
+	<li><a class="article-header-1 anchor" href="#abstract">{{{title}}}</a></li>
+	{{/if}}
 	{{#each sections}}
 	<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>
 	{{/each}}

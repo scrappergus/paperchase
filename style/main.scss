@@ -138,7 +138,6 @@ html,body{
 
 /* Article ------------------------*/
 	.authors{
-		@extend .serif;
 		span{
 			&:last-child{
 				.comma{
@@ -233,6 +232,9 @@ html,body{
 	}
 
 /* Buttons ------------------------*/
+	.btn{
+		@extend .serif;
+	}
 	.btn-sm{
 		font-size: $font-sm;
 	}
@@ -266,6 +268,11 @@ html,body{
 	.btn.active{
 		pointer-events: none;
 	}
+
+/* Issue --------------------------*/
+.issue-article{
+	margin: $margin-xl 0;
+}
 
 /* Materialize ------------------------*/
 	.card-header{
