@@ -56,10 +56,13 @@ Meteor.methods({
 			resXml,
 			xml;
 		articleInfo = articles.findOne({'_id' : mongoId});
-		pmid = articleInfo.ids.pmid;
-		pii = articleInfo.ids.pii;
-		configSettings = journalConfig.findOne({});
-		assetsLink = configSettings.api.assets;
+		if(articleInfo){
+			pmid = articleInfo.ids.pmid;
+			pii = articleInfo.ids.pii;
+			configSettings = journalConfig.findOne({});
+			assetsLink = configSettings.api.assets;
+		}
+
 
 		if(pii){
 			// get asset links
