@@ -239,6 +239,9 @@ html,body{
 	.close-icon{
 		font-size: $font-lg;
 	}
+	.btn.active{
+		pointer-events: none;
+	}
 
 /* Materialize ------------------------*/
 	.card-header{
