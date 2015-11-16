@@ -9,7 +9,7 @@
 <template name="Visitor">
 	<div class="navbar-fixed" style="margin-bottom:6px;">
 		<nav class="journal-nav z-depth-0" role="navigation">
-			<div class="nav-wrapper container">
+			<div class="nav-wrapper container nav-links">
 				<a id="logo-container" href="/" class="brand-logo"><img src="{{bannerLogo}}"></a>
 				<ul class="right hide-on-med-and-down">
 					<li><a href="{{submitLink}}" target="_BLANK">Submit an Article</a></li>
@@ -45,11 +45,22 @@
 </template>
 
 <template name="Footer">
-	<footer class="footer ">
-		<section class="container z-depth-2">
-			<div class="row z-depth-2">
-				<div class="col s12 blue-grey darken-3">
-					<p class="white-text center-align">Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</p>
+	<footer class="footer">
+		<section class="container">
+			<div class="row blue-grey darken-3">
+				<div class="col s12">
+					<div class="row">
+						<div class="col s12">
+							<p class="white-text center-align">Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</p>
+						</div>
+					</div>
+					<div class="row">
+						<ul>
+							<li><a href="#" class="grey-text">Privacy Policy</a></li>
+							<li><span class="grey-text">|</span></li>
+							<li><a href="#" class="grey-text">Terms of Use</a></li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</section>
