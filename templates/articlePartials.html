@@ -117,6 +117,17 @@
 	</span>
 </template>
 
+<template name="ArticleSections">
+	{{#if fullText}}
+	{{#with fullText}}
+	<ul class="section-nav">
+		{{#each sections}}
+		<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>
+		{{/each}}
+	</ul>
+	{{/with}}
+	{{/if}}
+</template>
 
 <!--admin partials-->
 
