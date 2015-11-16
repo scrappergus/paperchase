@@ -90,7 +90,7 @@ Template.ArticleFullText.events({
 		Meteor.general.scrollAnchor(e);
 	}
 });
-Template.ArticleSections.events({
+Template.ArticleSectionsList.events({
 	'click .anchor': function(e){
 		Meteor.general.scrollAnchor(e);
 	}

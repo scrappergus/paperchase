@@ -484,10 +484,13 @@ Meteor.ip = {
 }
 
 Meteor.general = {
+	navHeight: function(){
+		return navTop = $('nav').height();
+	},
 	scrollAnchor: function(e){
 		e.preventDefault();
 		var anchor = $(e.target).attr('href');
-		var navTop = $('nav').height();
+		var navTop = Meteor.general.navHeight();
 		anchor = anchor.replace('#','');
 		$('html, body').animate({
 			scrollTop: $('#' + anchor).position().top - navTop
