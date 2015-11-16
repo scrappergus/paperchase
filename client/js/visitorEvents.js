@@ -1,3 +1,5 @@
+// Recommend
+// -------
 Template.Recommend.events({
 	'submit form': function(e,t){
 		e.preventDefault();
@@ -52,12 +54,18 @@ Template.Recommend.events({
 	}
 });
 
+
+// Subscribe
+// -------
 Template.Subscribe.events({
 	'click button': function(e){
 		e.preventDefault();
 	}
 });
 
+
+// Issue
+// -------
 Template.Issue.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);
@@ -67,6 +75,8 @@ Template.Issue.events({
 	}
 });
 
+// Article
+// -------
 Template.Article.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);
@@ -75,7 +85,20 @@ Template.Article.events({
 		Meteor.article.downloadPdf(e);
 	}
 });
+Template.ArticleFullText.events({
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
+	}
+});
+Template.ArticleSections.events({
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
+	}
+});
 
+
+// Advance
+// -------
 Template.advance.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);

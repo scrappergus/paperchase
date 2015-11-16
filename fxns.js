@@ -482,3 +482,15 @@ Meteor.ip = {
 		return d;
 	}
 }
+
+Meteor.general = {
+	scrollAnchor: function(e){
+		e.preventDefault();
+		var anchor = $(e.target).attr('href');
+		var navTop = $('nav').height();
+		anchor = anchor.replace('#','');
+		$('html, body').animate({
+			scrollTop: $('#' + anchor).position().top - navTop
+		}, 500);
+	}
+}

@@ -169,6 +169,7 @@ html,body{
 		text-transform: none!important;
 	}
 	/* Figures */
+	/* --------- */
 	.owl-carousel{
 		background-color: $gray-0;
 	}
@@ -181,6 +182,7 @@ html,body{
 	}
 
 	/* Full Text */
+	/* --------- */
 	.full-text-image-container{
 		width: 50%;
 		margin: 0 auto;
@@ -188,6 +190,7 @@ html,body{
 	.full-text-image{
 		width: 100%;
 	}
+	/* section headers */
 	.article-header-1{
 		@extend h2;
 	}
@@ -205,6 +208,18 @@ html,body{
 		}
 		thead{
 			border-bottom: 1px solid $black-0;
+		}
+	}
+	/* section nav */
+	.section-nav{
+		.article-header-1{
+			@extend h4;
+		}
+		.article-header-2{
+			@extend h5;
+		}
+		.article-header-3{
+			@extend p;
 		}
 	}
 
