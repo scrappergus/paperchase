@@ -56,10 +56,13 @@ Meteor.methods({
 			resXml,
 			xml;
 		articleInfo = articles.findOne({'_id' : mongoId});
-		pmid = articleInfo.ids.pmid;
-		pii = articleInfo.ids.pii;
-		configSettings = journalConfig.findOne({});
-		assetsLink = configSettings.api.assets;
+		if(articleInfo){
+			pmid = articleInfo.ids.pmid;
+			pii = articleInfo.ids.pii;
+			configSettings = journalConfig.findOne({});
+			assetsLink = configSettings.api.assets;
+		}
+
 
 		if(pii){
 			// get asset links
@@ -302,7 +305,7 @@ Meteor.fullText = {
 							nodeV = attributes[attr].nodeValue;
 						}
 					}
-					content += '<a href="#' + nodeV + '">';
+					content += '<a href="#' + nodeV + '"  class="anchor">';
 					content += nodeV;
 					content += '</a>';
 				}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){

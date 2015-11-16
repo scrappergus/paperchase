@@ -7,7 +7,9 @@ $black-0:		#111111;
 $black-1:		#313131;
 $black-2:		#424242;
 
-$blue:			#42a5f5;
+$blue-0:		#42a5f5;
+$blue-1:		#1e88e5;
+$blue-2:		#1565c0;
 
 $blue-gray:		#eceff1;
 
@@ -23,11 +25,14 @@ $red:			#ef5350;
 $white: 		#ffffff;
 $white-dark: 	#dddddd;
 
-$btn-color-update:		$blue;
+$btn-color-update:		$blue-0;
 $btn-color-add:			$green;
 $btn-color-delete:		$red;
-$btn-color-primary: 	$blue;
+$btn-color-primary: 	$blue-0;
 $btn-color-secondary: 	$gray-1;
+
+$link-text: $blue-1;
+$link-text-hover: $blue-2;
 
 /*
 PADDING
@@ -42,6 +47,7 @@ MARGIN
 $margin-sm:		5px;
 $margin-md:		10px;
 $margin-lg:		20px;
+$margin-xl:		40px;
 
 /*
 FONT

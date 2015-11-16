@@ -1,3 +1,10 @@
+.sans{
+  font-family: 'Open Sans', Geneva, sans-serif;
+}
+h3,h5,p, .btn{
+  @extend .sans;
+}
+
 /*http://typecast.com/blog/a-more-modern-scale-for-web-typography*/
 
 h1 {
@@ -87,8 +94,4 @@ blockquote {
     /* 1.75x body copy size = 28px */
     line-height: 1.25;
   }
-}
-
-.serif{
-  font-family: Helvetica, Geneva, sans-serif;
 }

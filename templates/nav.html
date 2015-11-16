@@ -1,0 +1,17 @@
+<template name="LeftNav">
+	<ul class="home-left-nav nav-links">
+		{{#each links}}
+		<li><a href="{{path}}">{{text}}</a></li>
+		<div class="divider"></div>
+		{{/each}}
+	</ul>
+</template>
+
+<template name="MobileMenu">
+	{{#each links}}
+	<li><a href="{{path}}" class="valign-wrapper"><span class="valign">{{text}}</span></a></li>
+	{{/each}}
+	<div class="divider"></div>
+	<!--full text-->
+	{{>ArticleSections}}
+</template>

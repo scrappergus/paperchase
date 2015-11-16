@@ -48,4 +48,9 @@ materialize:materialize@=0.97.0
 standard-minifiers
 richsilv:owl-carousel
 ixdi:material-design-iconic-font@=2.1.5
+<<<<<<< HEAD
 hitchcott:panzoom
+=======
+zimme:active-route
+bambattajb:sticky
+>>>>>>> c43d44efc07ee9e1a988e7cbccef8434d023eaae

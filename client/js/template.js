@@ -1,5 +1,5 @@
 //
-Template.CustomLeftNav.replaces("LeftNav");
+// Template.CustomLeftNav.replaces("LeftNav");
 Template.CustomHome.replaces("Home");
 Template.CustomHomePageEditorList.replaces("HomePageEditorList");
 Template.CustomEdBoard.replaces("EdBoard");
@@ -21,7 +21,7 @@ function scroll_if_anchor(href) {
         $('html, body').animate({ scrollTop: $target.offset().top - fromTop });
         return false;
     }
-}    
+}
 
 Template.onRendered(function() {
         scroll_if_anchor(window.location.hash);
@@ -32,6 +32,10 @@ Template.onRendered(function() {
 
 // Admin
 // -----
+// -------
+Template.Admin.onRendered(function () {
+	$('.button-collapse').sideNav();
+});
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
 	if(window.location.hash) {
@@ -94,6 +98,10 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 
 // Visitor
 // -------
+Template.Visitor.onRendered(function () {
+	$('.button-collapse').sideNav();
+});
+
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
@@ -129,4 +137,12 @@ Template.ArticleFigureViewer.onRendered(function() {
                 maxScale: 3,
                 increment: 0.1
             }).panzoom('zoom', true);
-    });
+});
+Template.ArticleFullText.onDestroyed(function () {
+	Session.set('article-text',null)
+});
+Template.ArticleSectionsList.onRendered(function() {
+	// console.log('..ArticleSectionsList');
+	var navTop = Meteor.general.navHeight();
+	$('.section-nav').sticky({topSpacing: navTop});
+});

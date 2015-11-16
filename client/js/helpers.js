@@ -142,6 +142,7 @@ if (Meteor.isClient) {
 	});
 
     // Template Helpers
+    // ----------------
     Template.Visitor.helpers({
     	bannerLogo: function(){
     		var journalSettings = journalConfig.findOne();
@@ -204,6 +205,9 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	// Article
+	// -------
 	Template.Article.helpers({
 		assets: function(){
 			return Session.get('article-assets');
@@ -216,9 +220,18 @@ if (Meteor.isClient) {
 	});
 	Template.ArticleText.helpers({
 		fullText: function(){
+			// console.log(Session.get('article-text'));
 			return Session.get('article-text');
 		}
 	});
+	Template.ArticleSections.helpers({
+		fullText: function(){
+			return Session.get('article-text');
+		}
+	});
+
+	// Issue
+	// ------
 	Template.Issue.helpers({
 		issueData: function(){
 			return Session.get('issue');

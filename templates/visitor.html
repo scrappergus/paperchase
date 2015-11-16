@@ -7,57 +7,74 @@
 </head>
 
 <template name="Visitor">
-    <div class="navbar-fixed" style="margin-bottom:6px;">
-        <nav class="journal-nav z-depth-0" role="navigation">
-            <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="{{bannerLogo}}"></a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="{{submitLink}}" target="_BLANK">Submit an Article</a></li>
-                    <li>{{> loginButtons}}</li>
-                    <li><a href="/search"><i class="material-icons">search</i></a></li>
-                </ul>
+	<div class="navbar-fixed" style="margin-bottom:6px;">
+		<nav class="journal-nav z-depth-0" role="navigation">
+			<div class="nav-wrapper container nav-links">
+				<a id="logo-container" href="/" class="brand-logo"><img src="{{bannerLogo}}"></a>
+				<ul class="right hide-on-med-and-down">
+					<li><a href="{{submitLink}}" target="_BLANK">Submit an Article</a></li>
+					<li>{{> loginButtons}}</li>
+					<li><a href="/search"><i class="material-icons">search</i></a></li>
+				</ul>
 
-                <ul id="nav-mobile" class="side-nav">
-                    <li><a href="#">Navbar Link</a></li>
-                </ul>
-                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-            </div>
-        </nav>
-    </div>
+				<ul id="nav-mobile" class="side-nav">
+					<li>{{> loginButtons}}</li>
+					<li><a href="/search"><i class="material-icons">search</i></a></li>
+					<li><a href="{{submitLink}}" target="_BLANK">Submit an Article</a></li>
+					{{>MobileMenu}}
+				</ul>
+				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+			</div>
+		</nav>
+	</div>
 
-    <div class="container">
-        <div class="row white z-depth-2 container-main" style="margin-bottom:0px;">
-            <div class="col s2">
-                {{>LeftNav}}
-            </div>
-            <div class="col s10">
-                {{>yield}}
-            </div>
-        </div>
-    </div>
+	<div class="container">
+		<div class="row white z-depth-2 container-main" style="margin-bottom:0px;">
+			<div class="col hide-on-small-only m2">
+				{{>LeftNav}}
+				{{>ArticleSections}}
+			</div>
 
-    {{>Footer}}
+			<div class="col s12 m10">
+				{{>yield}}
+			</div>
+		</div>
+	</div>
+
+	{{>Footer}}
 </template>
 
 <template name="Footer">
-    <footer class="footer ">
-        <section class="container z-depth-2">
-            <div class="row z-depth-2">
-                <div class="col s12 blue-grey darken-3">
-                    <p class="white-text center-align">Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</p>
-                </div>
-            </div>
-        </section>
-    </footer>
+	<footer class="footer">
+		<section class="container">
+			<div class="row blue-grey darken-3">
+				<div class="col s12">
+					<div class="row">
+						<div class="col s12">
+							<p class="white-text center-align">Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</p>
+						</div>
+					</div>
+					<div class="row">
+						<ul>
+							<li><a href="#" class="grey-text">Privacy Policy</a></li>
+							<li><span class="grey-text">|</span></li>
+							<li><a href="#" class="grey-text">Terms of Use</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+	</footer>
 </template>
 
 <template name="IP address">
-    <div class="ip-alert right-align">
-        <div class="container">
-            <p>You are viewing Aging from this IP address: {{clientIP}}</p>
-            {{#if isSubscribedIP}}
-            <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
-            {{/if}}
-        </div>
-    </div>
+	<div class="ip-alert right-align">
+		<div class="container">
+			<p>You are viewing Aging from this IP address: {{clientIP}}</p>
+			{{#if isSubscribedIP}}
+			<p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
+			{{/if}}
+		</div>
+	</div>
 </template>
 

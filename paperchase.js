@@ -10,7 +10,7 @@ if (Meteor.isServer) {
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
 	WebFontConfig = {
-		google: { families: [ 'Lora:400,400italic,700,700italic:latin' ] }
+		google: { families: [ 'Lora:400,400italic,700,700italic:latin' , 'Open Sans'] }
 	};
 	(function() {
 			var wf = document.createElement('script');
@@ -220,7 +220,7 @@ if (Meteor.isClient) {
 	Session.setDefault('article',null);
 	Session.setDefault('article-id',null);
 	Session.setDefault('article-assets',null);
-	Session.setDefault('article-text','');
+	Session.setDefault('article-text',null);
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
@@ -727,6 +727,9 @@ if (Meteor.isClient) {
 			});
 			Meteor.call('getAssetsForFullText', this.params._id, function(error, result) {
 				if(result){
+					if(articleExistsExists.abstract){
+						result.abstract = articleExistsExists.abstract;
+					}
 					Session.set('article-text',result);
 				}
 			});
