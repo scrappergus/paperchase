@@ -111,9 +111,20 @@ html,body{
 /* Footer ------------------------*/
 	.footer{
 		padding: 0 0;
+		.container{
+			min-height: 100px;
+		}
 		.row{
 			margin-top: 0;
 			margin-bottom: 0;
+		}
+		ul{
+			list-style: none;
+			text-align: center;
+			li{
+				display: inline-block;
+				margin: 0 auto;
+			}
 		}
 	}
 
@@ -137,6 +148,9 @@ html,body{
 	}
 
 /* Article ------------------------*/
+	#article-title{
+		margin:0px;
+	}
 	.authors{
 		span{
 			&:last-child{
@@ -188,6 +202,7 @@ html,body{
 	}
 	.full-text-image{
 		width: 100%;
+		margin: $margin-md 0;
 	}
 	/* section headers */
 	.article-header-1{
@@ -211,6 +226,9 @@ html,body{
 	}
 	/* section nav */
 	.section-nav{
+		height: 90vh;
+		background: $white;
+		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
 		li{
 			margin: $margin-md 0;
 		}
@@ -223,10 +241,16 @@ html,body{
 		.article-header-3{
 			@extend p;
 		}
+		a{
+			/*color: $link-text!important;*/
+			&:hover{
+				color: $link-text-hover!important;
+			};
+		}
 	}
 	.sticky-wrapper.is-sticky{
 		.section-nav{
-			height: 90vh; /* leave space for footer */
+			/*height: 90vh;*/ /* leave space for footer */
 			overflow: scroll;
 		}
 	}
@@ -272,6 +296,14 @@ html,body{
 /* Issue --------------------------*/
 .issue-article{
 	margin: $margin-xl 0;
+}
+
+/* Links --------------------------*/
+a:not(.btn):not(.nav-links > a){
+	color: $link-text;
+	&:hover{
+		color: $link-text-hover;
+	};
 }
 
 /* Materialize ------------------------*/
