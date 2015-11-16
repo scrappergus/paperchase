@@ -1,5 +1,5 @@
 //
-Template.CustomLeftNav.replaces("LeftNav");
+// Template.CustomLeftNav.replaces("LeftNav");
 Template.CustomHome.replaces("Home");
 Template.CustomHomePageEditorList.replaces("HomePageEditorList");
 Template.CustomEdBoard.replaces("EdBoard");
@@ -7,6 +7,10 @@ Template.CustomEdBoard.replaces("EdBoard");
 
 // Admin
 // -----
+// -------
+Template.Admin.onRendered(function () {
+	$('.button-collapse').sideNav();
+});
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
 	if(window.location.hash) {
@@ -69,6 +73,10 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 
 // Visitor
 // -------
+Template.Visitor.onRendered(function () {
+	$('.button-collapse').sideNav();
+});
+
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
@@ -90,5 +98,10 @@ Template.ArticleText.onRendered(function() {
 	$('.materialboxed').materialbox();
 });
 Template.ArticleFullText.onRendered(function() {
-	$('.materialboxed').materialbox();
+	$('.materialboxed').materialbox(); // popup image
+});
+Template.ArticleSectionsList.onRendered(function() {
+	// console.log('..ArticleSectionsList');
+	var navTop = Meteor.general.navHeight();
+	$('.section-nav').sticky({topSpacing: navTop});
 });
