@@ -100,6 +100,9 @@ Template.ArticleText.onRendered(function() {
 Template.ArticleFullText.onRendered(function() {
 	$('.materialboxed').materialbox(); // popup image
 });
+Template.ArticleFullText.onDestroyed(function () {
+	Session.set('article-text',null)
+});
 Template.ArticleSectionsList.onRendered(function() {
 	// console.log('..ArticleSectionsList');
 	var navTop = Meteor.general.navHeight();
