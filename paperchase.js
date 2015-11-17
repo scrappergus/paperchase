@@ -1068,6 +1068,7 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
+				// if the mongo id search found nothing, search by pii
 				var articlePii = String(this.params._id);
 				var articleByPii = articles.findOne({'ids.pii': articlePii});
 				// check if :_id is a pii and not Mongo ID
