@@ -81,135 +81,116 @@ Template.AdminHistoryInput.onRendered(function() {
 Template.AdminAdvanceArticles.onRendered(function() {
         $('.lean-overlay').remove();
         
-//        $('.articles').sortable({
-//                update: function(e, ui) {
-//                    var newsort = [];
-//                    $('.article').each(function(a,b,c) {
-//                            d = Blaze.getData(b);
-//                            newsort.push(d._id);
-//                        });
+        $('body').prepend($('.advance-drop-spot-box').detach());
+
+
+//        $('.advance-drop-spot').droppable({
+//                accept: '.article'
+//                ,drop: function(e,ui) {
+//                    var article = ui.draggable;
+//                    var field = $(article); // assuming there is but 1
+//                    var html = field.wrap("<div>").parent().html();
+//                    field.unwrap();
 //
-//Meteor.call('updateList', 'advance', newsort, function() {
-//                            var sorted  = sorters.findOne({name:'advance'});
-//                            var output = [];
-//                            var last_article = {};
-//                            for (var i = 0; i < sorted.articles.length; i++){
-//                                article = sorted.articles[i];
+//                    $(this).append(html);
 //
-//                                //make a copy of the next article for comparison
-//                                next_article = sorted.articles[i+1] || false;
-//
-//                                //things that happen on the first entry
-//                                if(i==0) {
-//                                    article['first'] = true;
-//                                    article['section_start'] = true;
-//                                }
-//
-//                                //mark the rest as not being first
-//                                first = false;
-//
-//
-//
-//                                //things that happen if we're starting a new section
-//                                if(article.section_name != last_article.section_name) {
-//                                    article['section_start'] = true;
-//                                }
-//
-//
-//                                //things that happen if we're ending a section
-//                                if(article.section_name != next_article.section_name) {
-//                                    article['section_end'] = true;
-//                                }
-//
-//                                //record this entry for comparison on the next
-//                                last_article = article;
-//                                //record changes to actual article entry
-//                                if(article.section_start) {
-//                                    output.push({
-//                                            articles:[],
-//                                            section_name:article.section_name
-//                                        });
-//                                }
-//                                output[output.length-1]['articles'].push(article);
-//                            }
-//
-//                            $('.admin-content-area').empty(); 
-//                            Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
-//
-//})
-//
+//                    $('.advance-drop-spot').children().draggable();
 //                }
 //            });
 
-        $('.articles, .article-sections').sortable({
-                connectWith: '.articles',
+//        $('.articles, .article-sections').droppable({
+//                accept: '.article'
+//                ,drop: function(e,ui) {
+//                    console.log('hellllllo');
+//                    var article = ui.draggable;
+//                    var field = $(article); // assuming there is but 1
+//                    var html = field.wrap("<div>").parent().html();
+//                    field.unwrap();
+//
+//                    $(this).append(html);
+//                }
+//            });
+        
+
+
+        $('.articles, .article-sections, .advance-drop-spot').sortable({
+                connectWith: '.articles, .advance-drop-spot',
                 cursor: 'move',
+                handle: '.handle',
+                zIndex: 9999,
+                start: function(e,ui) {
+                    $(ui.item).css('z-index', 12000);
+                },
                 update: function(e, ui) {
-                    $('#modal1').openModal({
-                            dismissible: true,
-                            complete: function() {
-                                $('.lean-overlay').remove();
-                            }
-                        });
-                            
 
-                    var newsort = [];
-                    $('.article').each(function(a,b,c) {
-                            newsort.push($(this).attr('data-article-id'));
-                        });
-
-                    Meteor.call('updateList', 'advance', newsort, function(a,b,c) {
+                    if($(e.toElement).hasClass('advance-drop-spot') == false && $(e.toElement).hasClass('drop-placeholder') == false) {
+                        $('#modal1').openModal({
+                                dismissible: true,
+                                complete: function() {
+                                    $('.lean-overlay').remove();
+                                }
+                            });
 
 
+                        var newsort = [];
+                        $('.article').each(function(a,b,c) {
+                                newsort.push($(this).attr('data-article-id'));
+                            });
 
-                            var sorted  = sorters.findOne({name:'advance'});
-                            var output = [];
-                            var last_article = {};
-                            for (var i = 0; i < sorted.articles.length; i++){
-                                article = sorted.articles[i];
+                        Meteor.call('updateList', 'advance', newsort, function(a,b,c) {
+                                var sorted  = sorters.findOne({name:'advance'});
+                                var output = [];
+                                var last_article = {};
+                                for (var i = 0; i < sorted.articles.length; i++){
+                                    article = sorted.articles[i];
 
-                                //make a copy of the next article for comparison
-                                next_article = sorted.articles[i+1] || false;
+                                    //make a copy of the next article for comparison
+                                    next_article = sorted.articles[i+1] || false;
 
-                                //things that happen on the first entry
-                                if(i==0) {
-                                    article['first'] = true;
-                                    article['section_start'] = true;
+                                    //things that happen on the first entry
+                                    if(i==0) {
+                                        article['first'] = true;
+                                        article['section_start'] = true;
+                                    }
+
+                                    //mark the rest as not being first
+                                    first = false;
+
+
+
+                                    //things that happen if we're starting a new section
+                                    if(article.section_name != last_article.section_name) {
+                                        article['section_start'] = true;
+                                    }
+
+
+                                    //things that happen if we're ending a section
+                                    if(article.section_name != next_article.section_name) {
+                                        article['section_end'] = true;
+                                    }
+
+                                    //record this entry for comparison on the next
+                                    last_article = article;
+                                    //record changes to actual article entry
+                                    if(article.section_start) {
+                                        output.push({
+                                                articles:[],
+                                                section_name:article.section_name
+                                            });
+                                    }
+                                    output[output.length-1]['articles'].push(article);
                                 }
 
-                                //mark the rest as not being first
-                                first = false;
+                                $('#modal1').closeModal();
+                                $('.admin-content-area').empty(); 
 
-
-
-                                //things that happen if we're starting a new section
-                                if(article.section_name != last_article.section_name) {
-                                    article['section_start'] = true;
-                                }
-
-
-                                //things that happen if we're ending a section
-                                if(article.section_name != next_article.section_name) {
-                                    article['section_end'] = true;
-                                }
-
-                                //record this entry for comparison on the next
-                                last_article = article;
-                                //record changes to actual article entry
-                                if(article.section_start) {
-                                    output.push({
-                                            articles:[],
-                                            section_name:article.section_name
-                                        });
-                                }
-                                output[output.length-1]['articles'].push(article);
-                            }
-
-                            $('#modal1').closeModal();
-                            $('.admin-content-area').empty(); 
-
-                            Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
-                        });
+                                Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+                            });
+                    }
+                    else {
+                        $('.drop-placeholder').empty();
+//                        $('.advance-drop-spot').children().css('z-index', 12000);
+                    }
                 }
             });
 
@@ -266,6 +247,30 @@ Template.AdminAdvanceArticles.onRendered(function() {
 
                             $('#modal1').closeModal();
                             Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+                    });
+            });
+
+
+        $('.publish-advanced').click(function(e) {
+                e.preventDefault();
+
+                newsort = [];
+                $('.article').each(function(a,b,c) {
+                        newsort.push({
+                              'article_id':  $(this).attr('data-article-id')
+                        })
+                    });
+
+                $('#modal1').openModal({
+                        dismissible: true,
+                        complete: function() {
+                            $('.lean-overlay').remove();
+                        }
+                    });
+
+                Meteor.call('advancePublish', newsort, function() {
+                        $('#modal1').closeModal({
+                            });
                     });
             });
 });

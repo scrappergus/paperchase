@@ -114,16 +114,15 @@ Router.route('/get-advance-articles/',{
 	where: 'server',
 	waitOn: function(){
 		return[
-			Meteor.subscribe('advance'),
-			Meteor.subscribe('sortedList','advance')
+			Meteor.subscribe('publish'),
 		]
 	},
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
 		var htmlString = "<body>";
-		var advance = sorters.findOne({name: 'advance'});
-		if(advance && advance.articles){
-			var advanceList = advance.articles;
+		var advance = publish.findOne({name: 'advance'}, {sort:{$natural:-1}});
+		if(advance){
+			var advanceList = advance.data;
 			var prevSection;
             var last_index;
 

@@ -32,6 +32,7 @@ sorters = new Mongo.Collection('sorters', {
       return f;
   }
 });
+publish = new Mongo.Collection('publish');
 
 // ALLOW
 Meteor.users.allow({
