@@ -10,7 +10,7 @@ if (Meteor.isServer) {
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
 	WebFontConfig = {
-		google: { families: [ 'Lora:400,400italic,700,700italic:latin' ] }
+		google: { families: [ 'Lora:400,400italic,700,700italic:latin' , 'Open Sans'] }
 	};
 	(function() {
 			var wf = document.createElement('script');
@@ -262,7 +262,7 @@ if (Meteor.isClient) {
 	Session.setDefault('article',null);
 	Session.setDefault('article-id',null);
 	Session.setDefault('article-assets',null);
-	Session.setDefault('article-text','');
+	Session.setDefault('article-text',null);
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
@@ -612,6 +612,13 @@ if (Meteor.isClient) {
 		name: 'Article',
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				Router.go('ArticleNotFound');
+			}
+
+			// get xml, figures, pdf links
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
 					Session.set('article-assets',result);
@@ -684,6 +691,13 @@ if (Meteor.isClient) {
 		name: 'ArticleText',
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				Router.go('ArticleNotFound');
+			}
+
+			// Get assets and text
 			Session.set('article-text', null);
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
@@ -692,6 +706,9 @@ if (Meteor.isClient) {
 			});
 			Meteor.call('getAssetsForFullText', this.params._id, function(error, result) {
 				if(result){
+					if(articleExistsExists.abstract){
+						result.abstract = articleExistsExists.abstract;
+					}
 					Session.set('article-text',result);
 				}
 			});
@@ -700,7 +717,6 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
-				// Meteor.subscribe('articleFullText',this.params._id),
 				Meteor.subscribe('articleTypes')
 			]
 		},
@@ -819,6 +835,10 @@ if (Meteor.isClient) {
 			// 	title: pageTitle
 			// });
 		}
+	});
+	Router.route('/404/article', {
+		name: 'ArticleNotFound',
+		layoutTemplate: 'Visitor'
 	});
 
 	Router.route('/recommend', {
@@ -1076,14 +1096,26 @@ if (Meteor.isClient) {
 		name: 'AdminArticle',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
-			Session.set('preprocess-article',true);
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				Router.go('AdminArticleAdd');
+			}
+
+			Meteor.call('preProcessArticle',this.params._id,function(error,result){
+				if(error){
+					console.log('ERROR - preProcessArticle');
+					console.log(error);
+				}
+				if(result){
+					Session.set('article',result);
+				}
+			});
 			this.next();
 		},
 		waitOn: function(){
 			return[
-				Meteor.subscribe('articleInfo',this.params._id),
-				Meteor.subscribe('volumes'),
-				Meteor.subscribe('issues')
+				Meteor.subscribe('articleInfo',this.params._id)
 			]
 		},
 		data: function(){
@@ -1091,6 +1123,22 @@ if (Meteor.isClient) {
 				Session.set('article-id',this.params._id);
 			}
 		}
+	});
+	Router.route('/admin/add_article/',{
+		name: 'AdminArticleAdd',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Meteor.call('preProcessArticle',function(error,result){
+				if(error){
+					console.log('ERROR - preProcessArticle');
+					console.log(error);
+				}
+				if(result){
+					Session.set('article',result);
+				}
+			});
+			this.next();
+		},
 	});
 
 	// Advance articles

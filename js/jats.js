@@ -1,7 +1,7 @@
 // pubTypeDateList, dateTypeDateList and pubIdTypeList: http://jats.nlm.nih.gov/archiving/tag-library/1.0/index.html
 pubTypeDateList = {
-	'collection': 'Collection',
-	'epub': 'Electronic publication (usually web, but also includes eBook, CD-ROM, or other electronic-only distribution)',
+	'collection': 'Collection (Issue)',
+	'epub': 'Electronic publication',
 	'ppub': 'Print publication',
 	'epub-ppub': 'Both print and electronic publications',
 	'epreprint': 'Electronic preprint dissemination',

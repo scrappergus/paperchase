@@ -59,6 +59,25 @@ html,body{
 		margin: $margin-lg 0;
 		padding: $pad-md $pad-lg;
 	}
+	.edit-box{
+		@extend .box;
+		.row{
+			margin: 0;
+		}
+		.col{
+			margin-top: $margin-md;
+			margin-bottom: $margin-md;
+		}
+	}
+	.border-box{
+		@extend .box;
+		border: 1px solid $black-0;
+	}
+	.table-box{
+		@extend .box;
+		padding: 0px!important;
+		border: 1px solid $black-0;
+	}
 	.card {
 		h4 {
 			margin-top:0em;
@@ -92,9 +111,20 @@ html,body{
 /* Footer ------------------------*/
 	.footer{
 		padding: 0 0;
+		.container{
+			min-height: 100px;
+		}
 		.row{
 			margin-top: 0;
 			margin-bottom: 0;
+		}
+		ul{
+			list-style: none;
+			text-align: center;
+			li{
+				display: inline-block;
+				margin: 0 auto;
+			}
 		}
 	}
 
@@ -118,8 +148,10 @@ html,body{
 	}
 
 /* Article ------------------------*/
+	#article-title{
+		margin:0px;
+	}
 	.authors{
-		@extend .serif;
 		span{
 			&:last-child{
 				.comma{
@@ -150,6 +182,7 @@ html,body{
 		text-transform: none!important;
 	}
 	/* Figures */
+	/* --------- */
 	.owl-carousel{
 		background-color: $gray-0;
 	}
@@ -162,13 +195,16 @@ html,body{
 	}
 
 	/* Full Text */
+	/* --------- */
 	.full-text-image-container{
 		width: 50%;
 		margin: 0 auto;
 	}
 	.full-text-image{
 		width: 100%;
+		margin: $margin-md 0;
 	}
+	/* section headers */
 	.article-header-1{
 		@extend h2;
 	}
@@ -178,8 +214,51 @@ html,body{
 	.article-header-3{
 		@extend h4;
 	}
+	table{
+		caption{
+			background: $gray-0;
+			padding: $pad-md;
+			border-bottom: 1px solid $black-0;
+		}
+		thead{
+			border-bottom: 1px solid $black-0;
+		}
+	}
+	/* section nav */
+	.section-nav{
+		height: 90vh;
+		background: $white;
+		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
+		li{
+			margin: $margin-md 0;
+		}
+		.article-header-1{
+			@extend h4;
+		}
+		.article-header-2{
+			@extend h5;
+		}
+		.article-header-3{
+			@extend p;
+		}
+		a{
+			/*color: $link-text!important;*/
+			&:hover{
+				color: $link-text-hover!important;
+			};
+		}
+	}
+	.sticky-wrapper.is-sticky{
+		.section-nav{
+			/*height: 90vh;*/ /* leave space for footer */
+			overflow: scroll;
+		}
+	}
 
 /* Buttons ------------------------*/
+	.btn{
+		@extend .serif;
+	}
 	.btn-sm{
 		font-size: $font-sm;
 	}
@@ -210,6 +289,22 @@ html,body{
 	.close-icon{
 		font-size: $font-lg;
 	}
+	.btn.active{
+		pointer-events: none;
+	}
+
+/* Issue --------------------------*/
+.issue-article{
+	margin: $margin-xl 0;
+}
+
+/* Links --------------------------*/
+a:not(.btn):not(.nav-links > a){
+	color: $link-text;
+	&:hover{
+		color: $link-text-hover;
+	};
+}
 
 /* Materialize ------------------------*/
 	.card-header{

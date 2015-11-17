@@ -37,9 +37,9 @@ Meteor.methods({
 		// console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
 		var fut = new future();
 		var issueData = issues.findOne({'issue': issue, 'volume': volume});
-
+		// console.log(issueData);
 		var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
-
+		// console.log(issueArticles);
 		// get assets
 		for(var i=0 ; i< issueArticles.length ; i++){
 			// console.log(issueArticles[i]['_id']);
@@ -53,5 +53,11 @@ Meteor.methods({
 
 		issueData['articles'] = issueArticles;
 		return fut.wait();
+	},
+	getAllIssues: function(){
+		return issues.find().fetch();
+	},
+	getAllVolumes: function(){
+		return volumes.find().fetch();
 	}
 });

@@ -1,10 +1,13 @@
-//Template swapping
-Template.CustomLeftNav.replaces("LeftNav");
 Template.CustomHome.replaces("Home");
 Template.CustomHomePageEditorList.replaces("HomePageEditorList");
 Template.CustomEdBoard.replaces("EdBoard");
 
 // Admin
+// -----
+// -------
+Template.Admin.onRendered(function () {
+	$('.button-collapse').sideNav();
+});
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
 	if(window.location.hash) {
@@ -13,63 +16,11 @@ Template.AdminArticle.onRendered(function () {
 		}, 500);
 	}
 });
+
+// Article Form
+// ------------
 Template.AdminArticleForm.onRendered(function () {
-	// title
-	$('.article-title').summernote({
-		styleWithSpan: false,
-		onPaste: function(e){
-			e.preventDefault();
-			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-			document.execCommand('insertText', false, bufferText);
-		},
-		toolbar: [
-			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-			['view', ['codeview']]
-		]
-	});
-
-	// abstract
-	$('.article-abstract').summernote({
-		styleWithSpan: false,
-		onPaste: function(e){
-			e.preventDefault();
-			//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-			var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-			document.execCommand('insertText', false, bufferText);
-		},
-		toolbar: [
-			['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-			['view', ['codeview']]
-		]
-	});
-
-	// dates - handled in template helper, article. uses function to loop through dates and initiate
-	Meteor.adminArticle.initiateDates();
-
-	// authors and affiliations
-	$('.authors-list').sortable();
-	$('.affiliations-list').sortable({
-		start: function( event, ui ) {
-			Session.set('affIndex',ui.item.index());
-		},
-		update: function( event, ui ) {
-			var newIndex = ui.item.index();
-			Meteor.adminArticle.updateAffiliationsOrder(newIndex);
-		},
-	});
-
-	// issue, article type
-	// selects
-	$('#article-issue').material_select();
-	$('#article-type').material_select();;
-	$('#article-pub-status').material_select();
-
-	// modals
-	$('#success-modal').leanModal();
-	$('#add-article-dates').leanModal();
-	$('#add-article-history').leanModal();
-	$('#add-article-id').leanModal();
+	Meteor.adminArticle.readyArticleForm();
 });
 Template.AdminDateInput.onRendered(function() {
 	Meteor.adminArticle.initiateDates();
@@ -77,10 +28,18 @@ Template.AdminDateInput.onRendered(function() {
 Template.AdminHistoryInput.onRendered(function() {
 	Meteor.adminArticle.initiateDates();
 });
+Template.AdminArticleFormAuthors.onRendered(function() {
+	Meteor.adminArticle.initiateAuthorsSortable();
+});
+Template.AdminArticleFormAffiliations.onRendered(function() {
+	Meteor.adminArticle.initiateAffiliationsSortable();
+});
 
+// Advance
+// -------
 Template.AdminAdvanceArticles.onRendered(function() {
         $('.lean-overlay').remove();
-        
+
         $('body').prepend($('.advance-drop-spot-box').detach());
 
 
@@ -110,7 +69,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
 //                    $(this).append(html);
 //                }
 //            });
-        
+
 
 
         $('.articles, .article-sections, .advance-drop-spot').sortable({
@@ -182,7 +141,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                 }
 
                                 $('#modal1').closeModal();
-                                $('.admin-content-area').empty(); 
+                                $('.admin-content-area').empty();
 
                                 Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
                             });
@@ -198,7 +157,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                 $('#modal1').openModal();
                 var id = $(this).attr('data-delete-id');
                 Meteor.call('sorterRemoveArticle', 'advance', id, function() {
-                            $('.admin-content-area').empty(); 
+                            $('.admin-content-area').empty();
 
 
                             var sorted  = sorters.findOne({name:'advance'});
@@ -275,22 +234,26 @@ Template.AdminAdvanceArticles.onRendered(function() {
             });
 });
 
-
+// XML Intake
+// ----------
 Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');
 });
 
+// Issue
+// ------
 Template.AdminIssue.onRendered(function () {
 	var pick = $('#issue-date').pickadate();
 	var picker = pick.pickadate('picker');
 	picker.set('select', $('#issue-date').data('value'), { format: 'yyyy/mm/dd' })
 });
 
+// Data Submissions
+// --------------
 Template.AdminDataSubmissions.onRendered(function () {
 	$('select').material_select();
 	Session.set('submission_list',null);
 });
-
 Template.AdminDataSubmissionsPast.onRendered(function () {
 	Session.set('article-id',null);
 	Session.set('article',null);
@@ -300,6 +263,10 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 
 // Visitor
 // -------
+Template.Visitor.onRendered(function () {
+	$('.button-collapse').sideNav();
+});
+
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
@@ -322,5 +289,13 @@ Template.ArticleText.onRendered(function() {
 	$('.materialboxed').materialbox();
 });
 Template.ArticleFullText.onRendered(function() {
-	$('.materialboxed').materialbox();
+	$('.materialboxed').materialbox(); // popup image
+});
+Template.ArticleFullText.onDestroyed(function () {
+	Session.set('article-text',null)
+});
+Template.ArticleSectionsList.onRendered(function() {
+	// console.log('..ArticleSectionsList');
+	var navTop = Meteor.general.navHeight();
+	$('.section-nav').sticky({topSpacing: navTop});
 });

@@ -165,6 +165,7 @@ Template.AdminArticleForm.events({
 		Session.set('article',article);
 	},
 	// Authors
+	// -------
 	'change .author-affiliation':function(e,t){
 		var checked = false;
 			authorIndex = $(e.target).closest('li').index(),
@@ -199,14 +200,22 @@ Template.AdminArticleForm.events({
 				})
 			}
 		}
+		if(!article.authors){
+			article.authors = [];
+		}
 		article.authors.push(newAuthor);
 
-		//scroll to new affiliation <li>
-		if($('.author-li:last-child')){
+		// scroll to new affiliation <li>
+		// if no .author-li:last-child, just added first author. The dom isn't updated yet, so technically last-child is not the one just added
+		if($('.author-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.author-li:last-child').find('input').position().top
 			}, 500);
-		} // otherwise, just added first author. the dom isn't updated yet, so technically last-child is not the one just added
+		}
+
+		if($('.author-li').length > 0){
+			Meteor.adminArticle.initiateAuthorsSortable();
+		}
 
 		Session.set('article',article);
 	},
@@ -218,6 +227,7 @@ Template.AdminArticleForm.events({
 		Session.set('article',article);
 	},
 	// Affiliations
+	// -------
 	'click #add-affiliation': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
@@ -229,23 +239,25 @@ Template.AdminArticleForm.events({
 		article['affiliations'].push('NEW AFFILIATION');
 
 		// add new affiliation object to all author affiliations list array
-		for(var i = 0 ; i < article['authors'].length ; i++){
-			var author_mongo_id = article['authors'][i]['ids']['mongo_id'];
-			if(!article['authors'][i]['affiliations_list']){
-				article['authors'][i]['affiliations_list'] = [];
+		if(article['authors']){
+			for(var i = 0 ; i < article['authors'].length ; i++){
+				var author_mongo_id = article['authors'][i]['ids']['mongo_id'];
+				if(!article['authors'][i]['affiliations_list']){
+					article['authors'][i]['affiliations_list'] = [];
+				}
+				article['authors'][i]['affiliations_list'].push({'checked':false,'author_mongo_id':author_mongo_id});
 			}
-			article['authors'][i]['affiliations_list'].push({'checked':false,'author_mongo_id':author_mongo_id});
 		}
-		// console.log(article['authors'][parseInt(article['authors'].length - 1)]['affiliations_list']);
+
 		Session.set('article',article);
 
 		// scroll to new affiliation <li>
-		// TODO: when no affiliations, get error: Uncaught TypeError: Cannot read property 'top' of undefined (for last-child)
-		if($('.affiliation-li:last-child')){
+		// if no .affiliation-li:last-child, just added first affiliation. The dom isn't updated yet, so technically last-child is not the one just added
+		if($('.affiliation-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.affiliation-li:last-child').find('input').position().top
 			}, 500);
-		} // otherwise, just added first affiliation. the dom isn't updated yet, so technically last-child is not the one just added
+		}
 	},
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');
@@ -296,14 +308,20 @@ Template.AdminArticleForm.events({
 		Session.set('article',article);
 	},
 	// Keywords
+	// -------
 	'click #add-kw': function(e,t){
 		e.preventDefault();
 		var article = Session.get('article');
+		if(!article.keywords){
+			article.keywords = [];
+		}
 		article.keywords.push('');
 		Session.set('article',article);
-		$('html, body').animate({
-			scrollTop: $('.kw-li:last-child').find('input').position().top
-		}, 500);
+		if($('.kw-li:last-child').length != 0){
+			$('html, body').animate({
+				scrollTop: $('.kw-li:last-child').find('input').position().top
+			}, 500);
+		}
 	},
 	'click .remove-kw': function(e,t){
 		e.preventDefault();
@@ -313,60 +331,82 @@ Template.AdminArticleForm.events({
 		Session.set('article',article);
 	},
 	// Dates
-	'click #add-date': function(e,t){
+	// -------
+	'click #add-dates': function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
-		$('#add-article-dates').openModal();
+		Meteor.adminArticle.articleListButton('dates');
 	},
 	'click .add-date-type': function(e){
 		Meteor.adminArticle.addDateOrHistory('dates',e);
+		Meteor.adminArticle.articleListButton('dates');
 	},
 	'click .remove-dates': function(e){
 		Meteor.adminArticle.removeKeyFromArticleObject('dates',e);
 	},
 	// History
+	// -------
 	'click #add-history': function(e,t){
 		e.preventDefault();
-		$('#add-article-history').openModal();
+		Meteor.adminArticle.articleListButton('history');
 	},
 	'click .add-history-type': function(e){
 		Meteor.adminArticle.addDateOrHistory('history',e);
+		Meteor.adminArticle.articleListButton('history');
 	},
 	'click .remove-history': function(e){
 		Meteor.adminArticle.removeKeyFromArticleObject('history',e);
 	},
 	// IDs
-	'click #add-id': function(e,t){
+	// -------
+	'click #add-ids': function(e,t){
 		e.preventDefault();
-		$('#add-article-id').openModal();
+		Meteor.adminArticle.articleListButton('ids');
 	},
 	'click .add-id-type': function(e){
 		e.preventDefault();
 		var article = Session.get('article');
 		var type = $(e.target).attr('id').replace('add-','');
+		if(!article['ids']){
+			article['ids'] = {};
+		}
 		article['ids'][type] = '';
 		Session.set('article',article);
-
-		$('#add-article-id').closeModal();
-		$('.lean-overlay').remove();
+		Meteor.adminArticle.articleListButton('ids');
 	},
 	'click .remove-id': function(e){
 		Meteor.adminArticle.removeKeyFromArticleObject('ids',e);
 	},
 	// Submit
+	// -------
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
-		var article = Session.get('article');
-		var mongoId = article['_id'];
-		var articleUpdateObj = {};
+		var mongoId,
+			article,
+			articleUpdateObj;
+
+		var articleTitle,
+			articleAbstract,
+			affiliations,
+			dates = {},
+			history = {},
+			authors = [],
+			keywords = [];
+
+		var invalid = [];
+
+		article = Session.get('article');
+		mongoId = article['_id'];
+		articleUpdateObj = {};
 
 		// title
-		var articleTitle = $('.article-title').code();
-			articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
+		// -------
+		articleTitle = $('.article-title').code();
+		articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
 		articleUpdateObj['title'] = articleTitle;
 
 		// feature
+		// -------
 		if($('#feature-checkbox').prop('checked')){
 			articleUpdateObj['feature'] = true;
 		}else{
@@ -374,6 +414,7 @@ Template.AdminArticleForm.events({
 		}
 
 		// advance
+		// -------
 		if($('#advance-checkbox').prop('checked')){
 			articleUpdateObj['advance'] = true;
 		}else{
@@ -381,21 +422,37 @@ Template.AdminArticleForm.events({
 		}
 
 		// abstract
-		var articleAbstract = $('.article-abstract').code();
-			articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
+		// -------
+		articleAbstract = $('.article-abstract').code();
+		articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
 		articleUpdateObj['abstract'] = articleAbstract;
 
 		// meta
-		articleUpdateObj['page_start'] = parseInt($('#page_start').val());
-		articleUpdateObj['page_end'] = parseInt($('#page_end').val());
-		articleUpdateObj['issue_id'] = $('#article-issue').val();
-		articleUpdateObj['article_type'] = {};
-		articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
-		articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
-		articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text()
-		articleUpdateObj['pub_status'] = $('#article-pub-status').val();
+		// -------
+		// pages
+		if($('#page_start').val()){
+			articleUpdateObj['page_start'] = parseInt($('#page_start').val());
+		}
+		if($('#page_end').val()){
+			articleUpdateObj['page_end'] = parseInt($('#page_end').val());
+		}
+		// select options
+		if($('#article-issue').val() != ''){
+			articleUpdateObj['issue_id'] = $('#article-issue').val();
+		}
+		if($('#article-type').val() != ''){
+			articleUpdateObj['article_type'] = {};
+			articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
+			articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
+			articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
+		}
+		if($('#article-pub-status').val() != ''){
+			articleUpdateObj['pub_status'] = $('#article-pub-status').val();
+		}
+
 
 		// ids
+		// -------
 		articleUpdateObj['ids'] = {};
 		$('.article-id').each(function(i){
 			var k = $(this).attr('id'); //of the form, article-id-key
@@ -404,11 +461,12 @@ Template.AdminArticleForm.events({
 			articleUpdateObj['ids'][k] = $(this).val();
 		});
 
-		// affiliations
-		var affiliations = Meteor.adminArticle.getAffiliations();
+		// All affiliations
+		// -------
+		affiliations = Meteor.adminArticle.getAffiliations();
 
 		// authors
-		var authors = [];
+		// -------
 		$('.author-row').each(function(idx,obj){
 			var author = {
 				'name_first' : $(this).find('input[name="name_first"]').val(),
@@ -431,8 +489,7 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['affiliations'] = affiliations;
 
 		// dates and history
-		var dates = {};
-		var history = {};
+		// -------
 		$('.datepicker').each(function(i){
 			var key = $(this).attr('id');
 			if($(this).hasClass('date')){
@@ -449,25 +506,41 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['history'] = history;
 
 		// keywords
-		var keywords = [];
+		// -------
 		$('.kw').each(function(i){
 			keywords.push($(this).val());
 		});
 		articleUpdateObj['keywords'] = keywords;
 
-		// TODO: VALIDATION
+		// TODO: COMPLETE VALIDATION
+		// -------
 		// DATES
-		// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
-		// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
-		// save to db
-		Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
-			if(error){
-				alert(error.message);
-				Meteor.formActions.error();
-			}else{
-				Meteor.formActions.success();
+			// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
+			// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
+		// title
+		if(articleUpdateObj.title === ''){
+			var invalidObj = {
+				'input_class' : 'article-title',
+				'message' : 'Article title is required'
 			}
-		});
+			invalid.push(invalidObj);
+		}
+		if(invalid.length > 0){
+			Meteor.formActions.invalid(invalid);
+		}else{
+			// save to db
+			// -------
+			Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
+				if(error){
+					alert(error.message);
+					Meteor.formActions.error();
+				}
+				if(result){
+					// if(Iron.Location.get().path) // TODO: add redirect when adding an article.
+					Meteor.formActions.success();
+				}
+			});
+		}
 	}
 });
 
@@ -576,13 +649,22 @@ Template.AdminDataSubmissions.events({
 		$('.edit-article').addClass('hide');
 		$(e.target).closest('button').removeClass('hide');
 		var articleId = $(e.target).closest('button').attr('id').replace('edit-','');
+		Meteor.call('preProcessArticle',articleId,function(error,result){
+			if(error){
+				console.log('ERROR - preProcessArticle');
+				console.log(error);
+			}
+			if(result){
+				Session.set('article',result);
+			}
+		});
 		// var articleIndex = $(e.target).closest('.collection-item').index();
 		// var article = Session.get('submission_list')[articleIndex];
-		var article =  articles.findOne({'_id' : articleId});
+		// var article =  articles.findOne({'_id' : articleId});
 
 		Session.set('article-id',articleId);
-		Session.set('preprocess-article',true);
-		Session.set('article',article);
+		// Session.set('preprocess-article',true);
+		// Session.set('article',article);
 
 		$('#edit-' + articleId).removeClass('hide');
 		$('#overview-' + articleId).addClass('hide');
