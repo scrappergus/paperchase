@@ -105,7 +105,7 @@ Router.route('/admin/add-legacy-platform-article/',{
 		Meteor.call('legacyArticleIntake', this.params.query);
         this.response.setHeader('Content-Type', 'application/json');
         this.response.end(JSON.stringify({'success':true}));
-        
+
 	}
 });
 
@@ -1103,7 +1103,15 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				Router.go('AdminArticleAdd');
+				// if the mongo id search found nothing, search by pii
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
 			}
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
@@ -1172,7 +1180,7 @@ if (Meteor.isClient) {
                         article['first'] = true;
                         article['section_start'] = true;
                     }
-                    
+
                     //mark the rest as not being first
                     first = false;
 
@@ -1196,7 +1204,7 @@ if (Meteor.isClient) {
                         section_name = article.section_name;
                         if(section_name == 'Research Papers' && recent === true) {
                             recent = false;
-                            section_name = 'Recent Research Papers'; 
+                            section_name = 'Recent Research Papers';
                         }
 
                         output.push({
@@ -1241,7 +1249,7 @@ if (Meteor.isClient) {
                     });
 
                 var sorted  = sorters.findOne({name:'advance'});
-                
+
 //                console.log(articles);
 //                console.log(sorted);
 
