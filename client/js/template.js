@@ -1,4 +1,3 @@
-// Template.CustomLeftNav.replaces("LeftNav");
 Template.CustomHome.replaces("Home");
 Template.CustomHomePageEditorList.replaces("HomePageEditorList");
 Template.CustomEdBoard.replaces("EdBoard");
@@ -40,7 +39,7 @@ Template.AdminArticleFormAffiliations.onRendered(function() {
 // -------
 Template.AdminAdvanceArticles.onRendered(function() {
         $('.lean-overlay').remove();
-        
+
         $('body').prepend($('.advance-drop-spot-box').detach());
 
 
@@ -70,7 +69,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
 //                    $(this).append(html);
 //                }
 //            });
-        
+
 
 
         $('.articles, .article-sections, .advance-drop-spot').sortable({
@@ -142,7 +141,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                 }
 
                                 $('#modal1').closeModal();
-                                $('.admin-content-area').empty(); 
+                                $('.admin-content-area').empty();
 
                                 Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
                             });
@@ -158,7 +157,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                 $('#modal1').openModal();
                 var id = $(this).attr('data-delete-id');
                 Meteor.call('sorterRemoveArticle', 'advance', id, function() {
-                            $('.admin-content-area').empty(); 
+                            $('.admin-content-area').empty();
 
 
                             var sorted  = sorters.findOne({name:'advance'});
