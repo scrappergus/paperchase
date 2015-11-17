@@ -246,10 +246,12 @@ Meteor.methods({
 		return issueId;
 	},
 	preProcessArticle: function(articleId){
-		// console.log('..preProcessArticle');
-		var article;
+		// console.log('..preProcessArticle = ' + articleId);
+		var article,
+			articleByPii;
 		article = articles.findOne({'_id': articleId});
-		if(!article){
+		articleByPii = articles.findOne({'ids.pii':articleId});
+		if(!article && !articleByPii){
 			article = {};
 		}
 
