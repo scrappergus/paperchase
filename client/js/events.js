@@ -146,6 +146,7 @@ Template.adminArticlesDashboard.events({
 	'click #ojs-batch-update': function(e){
 		e.preventDefault();
 		// TODO: move to server. problem with method within a method. if this click was to call a method that then uses the update method.
+		// TODO: include a paperchase owns flag, and skip that article in the batch update. for when an article was edited via paperchase.
 		var journalInfo = journalConfig.findOne();
 		var journalShortName = journalInfo.journal.short_name;
 		var articlesList = articles.find().fetch();

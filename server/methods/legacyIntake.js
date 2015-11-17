@@ -114,7 +114,7 @@ Meteor.methods({
 			articleUpdate.volume = parseInt(article.volume);
 		}
 
-		if(article.issue){
+		if(article.issue && article.issue !=0 ){
 			articleUpdate.issue = parseInt(article.issue);
 		}
 
