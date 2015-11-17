@@ -1212,14 +1212,73 @@ if (Meteor.isClient) {
 		name: 'AdminAdvanceArticlesDiff',
 		layoutTemplate: 'Admin',
 		waitOn: function(){
+
+
 			return[
 				Meteor.subscribe('advance'),
 				Meteor.subscribe('sortedList','advance')
 			]
 		},
 		data: function(){
-			if(this.ready()){
-				var sorted  = sorters.findOne({name:'advance'});
+            if(this.ready()){
+
+                var articles = [];
+                $.ajax({
+                        type: 'GET',
+                        url: "http://impactjournals.com//ojs-api/?v=5&i=0",
+                        dataType: 'json',
+                        async: false,
+                        success: function(data) {
+                            articles = data.articles;
+                        }
+                    });
+
+                var sorted  = sorters.findOne({name:'advance'});
+                
+//                console.log(articles);
+//                console.log(sorted);
+
+                var diff = {};
+                var ojs_count = 0;
+				for(var i = 0; i < articles.length ; i++){
+                    ojs_count++;
+                    article = articles[i];
+                    diff[article['pii']] = {ojs:true};
+                }
+
+
+                var pc_count = 0;
+				for(var i = 0; i < sorted.articles.length ; i++){
+                    pc_count++;
+                    article = sorted.articles[i];
+                    var pii = article.ids['pii'];
+                    if(diff[pii] === undefined) {
+                        diff[pii] = {};
+                    }
+                    diff[pii].paperchase = true;
+                }
+
+                var only_ojs = [];
+                var only_pc = [];
+                var total_count = 0;
+                $.each(diff, function(k,v) {
+                        total_count++;
+                        if(v['ojs'] === true && v['paperchase'] !== true) {
+                            only_ojs.push({pii:k});
+                        }
+
+                        if(v['ojs'] !== true && v['paperchase'] === true) {
+                            only_pc.push({pii:k});
+                        }
+                    });
+
+                return {
+                    "ojs_count": ojs_count,
+                    "pc_count": pc_count,
+                    "total_count": total_count,
+                    "only_ojs": only_ojs,
+                    "only_pc": only_pc
+                }
 			}
 		}
 	});

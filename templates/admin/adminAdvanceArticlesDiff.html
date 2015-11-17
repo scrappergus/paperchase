@@ -1,3 +1,15 @@
 <template name="AdminAdvanceArticlesDiff">
-    <div>Hello</div>
+    <h2>Advance Article Platform Integration</h2>
+    <ul>
+        <li>OJS Count: {{ojs_count}}</li>
+        <li>Paperchase Count: {{pc_count}}</li>
+        <li>Total Count: {{total_count}}</li>
+        <li>OJS Only: <ul>{{#each only_ojs}}
+                <li><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">{{pii}}</a></li>
+                {{/each}}</ul></li>
+
+        <li>Paperchase Only: <ul>{{#each only_pc}}
+                <li>{{pii}}</li>
+                {{/each}}</ul></li>
+    </ul>
 </template>
