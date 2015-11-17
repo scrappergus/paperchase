@@ -9,7 +9,7 @@
                 {{/each}}</ul></li>
 
         <li><h3>Paperchase Only</h3><ul>{{#each only_pc}}
-                <li>{{pii}} - <a href="/admin/article/{{pii}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></li>
+                <li>{{pii}} - <a href="/admin/article/{{pii}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{paperchaseId}}"><i class="small material-icons">delete</i></a> </li>
                 {{/each}}</ul></li>
     </ul>
 </template>

@@ -615,14 +615,7 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('Article', {_id: articleByPii._id});
-				}else{
-					Router.go('ArticleNotFound');
-				}
+				Router.go('ArticleNotFound');
 			}
 
 			// get xml, figures, pdf links
@@ -1110,14 +1103,7 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
+				Router.go('AdminArticleAdd');
 			}
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
@@ -1269,6 +1255,7 @@ if (Meteor.isClient) {
 
 
                 var pc_count = 0;
+                var pc_ids = {};
 				for(var i = 0; i < sorted.articles.length ; i++){
                     pc_count++;
                     article = sorted.articles[i];
@@ -1277,6 +1264,7 @@ if (Meteor.isClient) {
                         diff[pii] = {};
                     }
                     diff[pii].paperchase = true;
+                    pc_ids[pii] = article["_id"];
                 }
 
                 var only_ojs = [];
@@ -1289,7 +1277,7 @@ if (Meteor.isClient) {
                         }
 
                         if(v['ojs'] !== true && v['paperchase'] === true) {
-                            only_pc.push({pii:k});
+                            only_pc.push({pii:k,paperchaseId:pc_ids[k]});
                         }
                     });
 

@@ -240,6 +240,16 @@ Template.AdminAdvanceArticles.onRendered(function() {
             });
 });
 
+
+
+Template.AdminAdvanceArticlesDiff.onRendered(function() {
+        $('.delete-article').click(function() {
+                var id = $(this).attr('data-delete-id');
+                Meteor.call('sorterRemoveArticle', 'advance', id);
+            });
+    });
+
+
 // XML Intake
 // ----------
 Template.adminArticleXmlIntake.onRendered(function () {
