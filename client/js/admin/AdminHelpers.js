@@ -1,28 +1,45 @@
-// Article helpers
+// ADMIN HELPERS
+
+// Article
+// ---------------
 Template.AdminArticle.helpers({
-	// article : function(){
-	// 	return Meteor.adminArticle.preProcessArticle();
-	// }
+	articleProcessed: function(){
+		// session default for article is null. If new article, empty object.
+		if(Session.get('article') === null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+});
+Template.AdminArticleAdd.helpers({
+	articleProcessed: function(){
+		// session default for article is null. If new article, empty object.
+		if(Session.get('article') === null){
+			return false;
+		}else{
+			return true;
+		}
+	}
 });
 Template.AdminArticleForm.helpers({
 	article : function(){
-		var article = Meteor.adminArticle.preProcessArticle();
-		return article;
+		return Session.get('article');
 	}
 });
-Template.AddArticleDateModal.helpers({
+Template.AddArticleDate.helpers({
 	dates: function(){
-		return Meteor.adminArticle.modalListOptions('dates');
+		return Meteor.adminArticle.articleListOptions('dates');
 	}
 });
-Template.AddArticleHistoryModal.helpers({
+Template.AddArticleHistory.helpers({
 	history: function(){
-		return Meteor.adminArticle.modalListOptions('history');
+		return Meteor.adminArticle.articleListOptions('history');
 	}
 });
-Template.AddArticleIdModal.helpers({
+Template.AddArticleId.helpers({
 	ids: function(){
-		return Meteor.adminArticle.modalListOptions('ids');
+		return Meteor.adminArticle.articleListOptions('ids');
 	}
 });
 Template.AdminArticlesList.helpers({
@@ -65,6 +82,7 @@ Template.AdminArticlesList.helpers({
 });
 
 // Data Submission
+// ---------------
 Template.AdminDataSubmissions.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -173,7 +191,8 @@ Template.AdminDataSubmissionsPast.helpers({
 	}
 })
 
-/// Institution
+// Institution
+// ---------------
 Template.AdminInstitutionForm.helpers({
 	'showIPFields' : function(){
 		return Template.instance().showIPFields.get();
@@ -181,6 +200,7 @@ Template.AdminInstitutionForm.helpers({
 });
 
 // Intake
+// ---------------
 Template.adminArticleXmlIntake.helpers({
 	myCallbacks: function() {
 		return {
@@ -193,6 +213,7 @@ Template.adminArticleXmlIntake.helpers({
 });
 
 // Users
+// ---------------
 Template.AdminUserSubs.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -203,6 +224,7 @@ Template.AdminUserSubs.helpers({
 });
 
 // Archive
+// ---------------
 Template.AdminArchive.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -213,6 +235,7 @@ Template.AdminArchive.helpers({
 });
 
 // General
+// ---------------
 Template.AdminNav.helpers({
 	bannerLogo: function(){
 		var journalSettings = journalConfig.findOne();

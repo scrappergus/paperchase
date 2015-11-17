@@ -2,7 +2,11 @@
 	{{>AdminHeader header="Article"}}
 	<div class="row">
 		<div class="col s12">
+			{{#if articleProcessed}}
 			{{>AdminArticleForm}}
+			{{else}}
+			{{>Loading}}
+			{{/if}}
 		</div>
 	</div>
 	<div class="row">
@@ -24,7 +28,6 @@
 </template>
 
 <template name="AdminArticleForm">
-	{{#if article}}
 	{{#with article}}
 	{{>SuccessModal what='Article'}}
 	<form id="article-form">
@@ -50,7 +53,7 @@
 		<fieldset id="article-title">
 			<legend>Title</legend>
 			<div class="row">
-				<div class="col s12">
+				<div class="input-field col s12">
 					<div class="article-title">{{{title}}}</div>
 				</div>
 			</div>
@@ -59,7 +62,7 @@
 		<fieldset id="abstract">
 			<legend>Abstract</legend>
 			<div class="row">
-				<div class="col s12">
+				<div class="input-field col s12">
 					<div class="article-abstract">{{{abstract}}}</div>
 				</div>
 			</div>
@@ -68,11 +71,11 @@
 		<fieldset id="site">
 			<legend>Site Settings</legend>
 				<div class="row">
-					<div class="col s12 m6 center-align">
+					<div class="input-field col s12 m6 center-align">
 						<input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
 						<label for="feature-checkbox">Feature</label>
 					</div>
-					<div class="col s12 m6 center-align">
+					<div class="input-field col s12 m6 center-align">
 						<input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{checked advance}}"/>
 						<label for="advance-checkbox">Advance</label>
 					</div>
@@ -82,17 +85,17 @@
 		<fieldset id="meta">
 			<legend>Meta</legend>
 			<div class="row">
-				<div class="col s6 m2">
+				<div class="input-field col s6 m2">
 					<input type="number" id="page_start" value="{{page_start}}">
-					<label>First Page</label>
+					<label for="page_start" class="{{#if page_start}}active{{/if}}">First Page</label>
 				</div>
-				<div class="col s6 m2">
+				<div class="input-field col s6 m2">
 					<input type="number" id="page_end" value="{{page_end}}">
-					<label>Last Page</label>
+					<label for="page_end" class="{{#if page_end}}active{{/if}}">Last Page</label>
 				</div>
-				<div class="col s6 m4">
+				<div class="input-field col s6 m4 input-field">
 					<select id="article-issue">
-						<option disabled>&mdash;&mdash; Select Issue &mdash;&mdash;</option>
+						<option value="">&mdash;&mdash; Select Issue &mdash;&mdash;</option>
 						{{#each volumes}}
 						<option disabled>&mdash; Volume {{volume}} &mdash;</option>
 						{{#each issues}}
@@ -100,24 +103,27 @@
 						{{/each}}
 						{{/each}}
 					</select>
+					<label for="article-issue">Volume / Issue</label>
 				</div>
-				<div class="col s6 m4">
+				<div class="input-field col s6 m4">
 					<select id="article-type">
-						<option disabled>&mdash;&mdash; Select Article Type &mdash;&mdash;</option>
+						<option value="">&mdash;&mdash; Select Article Type &mdash;&mdash;</option>
 						{{#each article_type_list}}
 						<option value="{{short_name}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
 						{{/each}}
 					</select>
+					<label for="article-type">Article Type</label>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col s4">
+				<div class="input-field col s4">
 					<select id="article-pub-status">
-						<option disabled>&mdash;&mdash; Select Pub Status &mdash;&mdash;</option>
-					{{#each pub_status_list}}
+						<option value="">&mdash;&mdash; Select Pub Status &mdash;&mdash;</option>
+						{{#each pub_status_list}}
 						<option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
-					{{/each}}
+						{{/each}}
 					</select>
+					<label for="article-pub-status">Pub Status</label>
 				</div>
 			</div>
 		</fieldset>
@@ -126,20 +132,23 @@
 			<legend>IDs</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-id" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="zmdi zmdi-plus-circle"></i></button>
+					<button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
+			{{>AddArticleId}}
+			{{#if ids}}
 			<div class="row">
 				{{#each arrayify ids}}
-				<div class="col s8 m3">
+				<div class="input-field col s8 m3">
 					<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
-					<label>{{name}}</label>
+					<label for="article-id-{{name}}" class="active">{{name}}</label>
 				</div>
 				<div class="col s1 left-align">
 					<i id="remove-{{name}}" class="prefix remove-id zmdi zmdi-close-circle red-type close-icon"></i>
 				</div>
 				{{/each}}
 			</div>
+			{{/if}}
 		</fieldset>
 
 		<fieldset id="authors">
@@ -149,6 +158,7 @@
 					<button id="add-author" class="btn btn-floating waves-effect waves-light" alt="Add Author"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
+			{{#if authors}}
 			<div class="row">
 				<div class="col s12 m1">&nbsp;</div>
 				<div class="col s12 m3"><b>First Name</b></div>
@@ -156,44 +166,8 @@
 				<div class="col s12 m3"><b>Last Name</b></div>
 				<div class="col s12 m2"><b>Affiliations</b></div>
 			</div>
-			<div class="row">
-				<div class="col s12">
-					<ul class="authors-list">
-						{{#each authors}}
-						<li class="author-row author-li row grey lighten-4 border-gray valign-wrapper">
-								<div class="col s12 m1 center-align">
-									<i class="zmdi prefix zmdi-swap-vertical"></i>
-								</div>
-								<div class="col s12 m3">
-									<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
-								</div>
-								<div class="col s12 m3">
-									<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
-								</div>
-								<div class="col s12 m3">
-									<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
-								</div>
-								<div class="col s12 m1">
-									{{#each affiliations_list}}
-										<p class="pad-md">
-											<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
-											<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-										</p>
-									{{/each}}
-								</div>
-								<div class="col s12 m1">
-									<i class="prefix remove-author zmdi zmdi-close-circle red-type close-icon right"></i>
-								</div>
-								<div class="hide">
-									{{#each arrayify ids}}
-									<input class="author-id" type="hidden" name="{{name}}" value="{{value}}">
-									{{/each}}
-								</div>
-						</li>
-						{{/each}}
-					</ul>
-				</div>
-			</div>
+			{{>AdminArticleFormAuthors}}
+			{{/if}}
 		</fieldset>
 
 		<fieldset id="affiliations">
@@ -203,36 +177,20 @@
 					<button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col s12">
-					<ol class="affiliations-list">
-						{{#each arrayify affiliations}}
-						<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 border-gray">
-							<div class="valign-wrapper" style="width:100%">
-								<div class="col s1 center-align ">
-									<i class="zmdi prefix zmdi-swap-vertical"></i>
-								</div>
-								<div class="col s10">
-									<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
-								</div>
-								<div class="col s1">
-									<i class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon right"></i>
-								</div>
-							</div>
-						</li>
-						{{/each}}
-					</ol>
-				</div>
-			</div>
+			{{#if affiliations}}
+			{{>AdminArticleFormAffiliations}}
+			{{/if}}
 		</fieldset>
 
 		<fieldset id="dates">
 			<legend>Dates</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-date" class="btn btn-floating waves-effect waves-light" alt="Add Date"><i class="zmdi zmdi-plus-circle"></i></button>
+					<button id="add-dates" class="btn btn-floating waves-effect waves-light" alt="Add Date"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
+			{{>AddArticleDate}}
+			{{#if dates}}
 			<div class="row">
 				{{! Separating out collection, because this is the only date that we are allowing mm-yyyy format on}}
 				{{#each arrayify dates}}
@@ -240,7 +198,7 @@
 				{{else}}
 					<div class="col s8 m3">
 						{{>AdminDateInput}}
-						<label>{{name}}</label>
+						<label for="{{name}}" class="active">{{name}}</label>
 					</div>
 					<div class="col s1 left-align">
 						<i id="remove-{{name}}" class="prefix remove-dates zmdi zmdi-close-circle red-type close-icon"></i>
@@ -252,18 +210,21 @@
 				{{#each arrayify dates}}
 				{{#if equals name 'collection'}}
 					<div class="col s8 m3">
-						{{>AdminDateInput}}
-						<label>{{name}}</label>
-						<br/>
-						<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
-						<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
-					</div>
-					<div class="col s1 left-align">
-						<i id="remove-{{name}}" class="prefix remove-dates zmdi zmdi-close-circle red-type close-icon"></i>
+						<div class="box grey lighten-5">
+							{{>AdminDateInput}}
+							<label for="{{name}}" class="active">{{name}}</label>
+							<br/>
+							<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
+							<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
+						</div>
+						<div class="col s1 left-align">
+							<i id="remove-{{name}}" class="prefix remove-dates zmdi zmdi-close-circle red-type close-icon"></i>
+						</div>
 					</div>
 				{{/if}}
 				{{/each}}
 			</div>
+			{{/if}}
 		</fieldset>
 
 		<fieldset id="history">
@@ -273,6 +234,8 @@
 					<button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
+			{{>AddArticleHistory}}
+			{{#if history}}
 			<div class="row">
 				{{#each arrayify history}}
 					<div class="col s8 m3">
@@ -284,6 +247,7 @@
 					</div>
 				{{/each}}
 			</div>
+			{{/if}}
 		</fieldset>
 
 		<fieldset id="keywords">
@@ -293,6 +257,7 @@
 					<button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword"><i class="zmdi zmdi-plus-circle"></i></button>
 				</div>
 			</div>
+			{{#if keywords}}
 			<div class="row">
 				<div class="col s12">
 					<ul>
@@ -311,6 +276,7 @@
 					</ul>
 				</div>
 			</div>
+			{{/if}}
 		</fieldset>
 
 		<div class="row">
@@ -319,74 +285,116 @@
 			</div>
 		</div>
 	</form>
-	{{>AddArticleDateModal}}
-	{{>AddArticleHistoryModal}}
-	{{>AddArticleIdModal}}
+
 	{{/with}}
-	{{else}}
-	<h3>No Article Found</h3>
-	{{/if}}
 </template>
 
+
+
+<!--Form Partials-->
 <template name="AdminDateInput">
 	<input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
 </template>
 <template name="AdminHistoryInput">
 	<input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
 </template>
-
-<!--MODALS-->
-<template name="AddArticleHistoryModal">
-  <div id="add-article-history" class="modal">
-    <div class="modal-content">
-      <h4>Add Article History</h4>
-      {{#each arrayify history}}
-      <ul>
-      	<li>
-      		<button id="add-{{name}}" class="btn add-btn btn-sm add-history-type">{{name}}</button>
-      		<p>{{value}}</p>
-      	</li>
-      </ul>
-      {{/each}}
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
-  </div>
+<template name="AdminArticleFormAuthors">
+	<div class="row">
+		<div class="col s12">
+			<ul class="authors-list">
+				{{! Do not use input-field for authors, margin looks bad}}
+				{{#each authors}}
+				<li class="author-row author-li row grey lighten-4 border-gray valign-wrapper">
+					<div class="col s12 m1 center-align">
+						<i class="zmdi prefix zmdi-swap-vertical"></i>
+					</div>
+					<div class="col s12 m3">
+						<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
+					</div>
+					<div class="col s12 m3">
+						<input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
+					</div>
+					<div class="col s12 m3">
+						<input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
+					</div>
+					<div class="col s12 m1">
+						{{#each affiliations_list}}
+						<p class="pad-md">
+							<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
+							<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
+						</p>
+						{{/each}}
+					</div>
+					<div class="col s12 m1">
+						<i class="prefix remove-author zmdi zmdi-close-circle red-type close-icon right"></i>
+					</div>
+					<div class="hide">
+						{{#each arrayify ids}}
+						<input class="author-id" type="hide" name="{{name}}" value="{{value}}">
+						{{/each}}
+					</div>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
 </template>
-<template name="AddArticleDateModal">
-  <div id="add-article-dates" class="modal">
-    <div class="modal-content">
-      <h4>Add Article Date</h4>
-      {{#each arrayify dates}}
-      <ul>
-      	<li>
-      		<button id="add-{{name}}" class="btn btn-sm add-btn add-date-type">{{name}}</button>
-      		<p>{{value}}</p>
-      	</li>
-      </ul>
-      {{/each}}
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
-  </div>
+<template name="AdminArticleFormAffiliations">
+	<div class="row">
+		<div class="col s12">
+			<ol class="affiliations-list">
+				{{#each arrayify affiliations}}
+				<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 border-gray">
+					<div class="valign-wrapper" style="width:100%">
+						<div class="col s1 center-align ">
+							<i class="zmdi prefix zmdi-swap-vertical"></i>
+						</div>
+						<div class="col s10">
+							<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+						</div>
+						<div class="col s1">
+							<i class="prefix remove-affiliation zmdi zmdi-close-circle red-type close-icon right"></i>
+						</div>
+					</div>
+				</li>
+				{{/each}}
+			</ol>
+		</div>
+	</div>
 </template>
-<template name="AddArticleIdModal">
-  <div id="add-article-id" class="modal">
-    <div class="modal-content">
-      <h4>Add Article ID</h4>
-      {{#each arrayify ids}}
-      <ul>
-      	<li>
-      		<button id="add-{{name}}" class="btn add-btn btn-sm add-id-type">{{name}}</button>
-      		<p>{{value}}</p>
-      	</li>
-      </ul>
-      {{/each}}
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
-  </div>
+<template name="AddArticleHistory">
+	<div class="edit-box teal lighten-5 add-article-history hide">
+		<div class="row">
+			{{#each arrayify history}}
+		  	<div class="col s12 m4 center-align">
+				<button id="add-{{name}}" class="btn add-btn btn-sm add-history-type">{{name}}</button>
+				<p class="center-align">{{value}}</p>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+</template>
+<template name="AddArticleDate">
+	<div class="edit-box teal lighten-5 add-article-dates hide">
+		<div class="row">
+		  {{#each arrayify dates}}
+			<div class="col s12 m4 center-align">
+				<button id="add-{{name}}" class="btn btn-sm add-btn add-date-type">{{name}}</button>
+				<p class="center-align">{{value}}</p>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+</template>
+<template name="AddArticleId">
+	<div class="edit-box teal lighten-5 add-article-ids hide">
+		<div class="row">
+			{{#each arrayify ids}}
+			<div class="col s12 m4 center-align">
+				<button id="add-{{name}}" class="btn add-btn btn-sm add-id-type">{{name}}</button>
+				<p class="center-align">{{value}}</p>
+			</div>
+		  {{/each}}
+		</div>
+	</div>
 </template>

@@ -56,10 +56,13 @@ Meteor.methods({
 			resXml,
 			xml;
 		articleInfo = articles.findOne({'_id' : mongoId});
-		pmid = articleInfo.ids.pmid;
-		pii = articleInfo.ids.pii;
-		configSettings = journalConfig.findOne({});
-		assetsLink = configSettings.api.assets;
+		if(articleInfo){
+			pmid = articleInfo.ids.pmid;
+			pii = articleInfo.ids.pii;
+			configSettings = journalConfig.findOne({});
+			assetsLink = configSettings.api.assets;
+		}
+
 
 		if(pii){
 			// get asset links
@@ -97,7 +100,6 @@ Meteor.methods({
 	},
 	fullTextToJson: function(xml, figures){
 		// Full XML processing. Content, and References
-		// console.log(figures);
 		// console.log('... fullTextToJson');
 		var fut = new future();
 		var articleObject = {};
@@ -110,17 +112,18 @@ Meteor.methods({
 		if(sections[0]){
 			// Sections
 			for(var section = 0 ; section < sections.length ; section++){
-				// console.log('..section ' + section);
-				// console.log(sections[section].attributes);
+				// console.log('-------section = ' + section);
+				// console.log(sections[section].childNodes.length);
 				var sectionType;
-				var sectionObject = fullTextSectionToJson(sections[section],figures);
+				var sectionObject = Meteor.fullText.sectionToJson(sections[section],figures);
 				for(var sectionAttr = 0 ; sectionAttr < sections[section].attributes.length ; sectionAttr++){
 					// console.log(sections[section].attributes[sectionAttr]);
 					if(sections[section].attributes[sectionAttr].nodeName === 'sec-type'){
 						sectionObject.type = sections[section].attributes[sectionAttr].nodeValue;
 					}else if(sections[section].attributes[sectionAttr].nodeName === 'id'){
 						var sectionId = sections[section].attributes[sectionAttr].nodeValue;
-						sectionObject.headerL = headerLevelFromId(sectionId);
+
+						sectionObject.headerLevel = Meteor.fullText.headerLevelFromId(sectionId);
 						sectionObject.sectionId = sectionId;
 					}
 				}
@@ -131,7 +134,7 @@ Meteor.methods({
 			// there will only be 1 body node, so use body[0]
 			// no <sec>
 			// just create 1 section
-			var sectionObject = fullTextSectionToJson(body[0],figures);
+			var sectionObject = Meteor.fullText.sectionToJson(body[0],figures);
 			articleObject.sections.push(sectionObject);
 		}
 
@@ -191,150 +194,241 @@ Meteor.methods({
 		}
 
 		if(articleObject){
-			// console.log(articleObject);
 			fut['return'](articleObject);
 		}
 		return fut.wait();
 	},
 });
-// var loopNodeWithStyle =  function(node){
-// 		// this throws an error: { stack: { stack: undefined, source: 'method' }, //perhaps a timing issue.. would be nice to have method because we use this multiple times
-// 		console.log('......loopNodeWithStyle');
-// 		var string = '';
-// 		for(var i = 0 ; i < node.childNodes.length ; i++){
-// 			if(node.childNodes[i].nodeValue){
-// 				string += sec.childNodes[i].nodeValue;
-// 			}else{
-// 				// Get the style tag
-// 				string += '<' + sec.childNodes[i].localName + '>';
-// 				// Get the node value of the style tag
-// 				string += sec.childNodes[i].childNodes[0].nodeValue;
-// 				// Close the style tag
-// 				string += '</' + sec.childNodes[i].localName + '>';
-// 			}
-// 		}
-// 		return string;
-// }
-// this function, fullTextSectionToJson, as a method throws error: { stack: { stack: undefined, source: 'method' }
-var fullTextSectionToJson =  function(section,figures){
-	// XML processing of part of the content
-	console.log('...fullTextSectionToJson');
-	// console.log('section');console.log(section);
-	// console.log('section.childNodes');console.log(section.childNodes);
-	var sectionObject = {};
-	sectionObject.content = [];
-	for(var sectionChild = 0 ; sectionChild < section.childNodes.length ; sectionChild++){
-		var sec = section.childNodes[sectionChild];
-		var content = '';
 
-		// Section: Title and Content
-		if(sec.localName === 'title'){
-			// Section: Title
-			sectionObject.title = '';
-			// if length greater than 1, then there are styling tags in the title. for ex, <italic>
-			if(sec.childNodes.length === 1){
-				sectionObject.title = sec.childNodes[0].nodeValue;
-			}else{
-				for(var i = 0 ; i < sec.childNodes.length ; i++){
-					if(sec.childNodes[i].nodeValue){
-						sectionObject.title += sec.childNodes[i].nodeValue;
-					}else{
-						// Get the style tag
-						sectionObject.title += '<' + sec.childNodes[i].localName + '>';
-						// Get the node value of the style tag
-						sectionObject.title += sec.childNodes[i].childNodes[0].nodeValue;
-						// Close the style tag
-						sectionObject.title += '</' + sec.childNodes[i].localName + '>';
-					}
-				}
-			}
-		}else if(sec.childNodes){
-			// Section: Content
-			console.log('.... localName ' + sec.localName);
-			// TODO: if figure, don't add label. we will use title and caption from api.
-			var figureFound = false,
-				figureId = '',
-				figureUrl = '',
-				figureTitle = '',
-				figureCaption = '';
-			if(sec.localName === 'fig'){
-				figureFound  = true;
-				// get the figure ID
-				for(var figAttr = 0 ; figAttr < sec.attributes.length ; figAttr++){
-					if(sec.attributes[figAttr].localName === 'id'){
-						figureId = sec.attributes[figAttr].nodeValue;
-						for(var f = 0 ; f < figures.length ; f++){
-							if(figures[f]['figureID'] === figureId){
-								// console.log(figures[f]['imgURLs']);
-								// TODO : are there ever more than 1 image in this array?
-								figureUrl = figures[f]['imgURLs'][0];
-								figureTitle = figures[f]['figureTitle'];
-								figureCaption = figures[f]['figureText'];
-							}
+Meteor.fullText = {
+	sectionToJson: function(section,figures){
+		// XML processing of part of the content, <sec>
+		// console.log('...sectionToJson');
+		var sectionObject = {};
+		sectionObject.content = [];
+
+		for(var c = 0 ; c < section.childNodes.length ; c++){
+			var sec = section.childNodes[c];
+			var content,
+				contentType;
+			if(sec.localName != null){
+				// Different processing for different node types
+				if(sec.localName === 'title'){
+					sectionObject.title = Meteor.fullText.sectionTitle(sec);
+				}else if(sec.localName === 'table-wrap'){
+					// get attributes
+					var tableId;
+					var tblAttr = sec.attributes;
+					contentType = 'table';
+					for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
+						// console.log(tblAttr[tblA].localName + ' = ' + tblAttr[tblA].nodeValue );
+						if(tblAttr[tblA].localName === 'id'){
+							tableId = tblAttr[tblA].nodeValue;
 						}
 					}
-				}
-			}else if(sec.localName === 'table-wrap'){
-				console.log('table!!');
-				var tableStartLine = sec.childNodes[0].lineNumber;
-				var tableEndLine = sec.parentNode.lastChild.lineNumber;
-			}
-			for(var cc = 0 ; cc < sec.childNodes.length ; cc++){
-				if(sec.childNodes[cc].nodeValue){
-					// plain text
-					content += sec.childNodes[cc].nodeValue;
+					content = '<table class="striped" id="' + tableId + '">';
+					content += Meteor.fullText.traverseTable(sec);
+					content += '</table>';
+				}else if(sec.localName === 'fig'){
+					content = Meteor.fullText.convertFigure(sec,figures);
+					contentType = 'figure';
 				}else{
-					console.log('..... ' + cc + ' = ' + sec.childNodes[cc].localName);
-					var tagValue;
-					// there are style tags, or reference links
-					if(sec.childNodes[cc].childNodes.length > 0){
-						tagValue = sec.childNodes[cc].childNodes[0].nodeValue;
+					content = Meteor.fullText.convertContent(sec);
+					contentType = 'p';
+				}
+
+				// Add the content object to the section objectx
+				if(content){
+					content = Meteor.fullText.fixTags(content);
+					sectionObject.content.push({contentType: contentType , content: content});
+				}
+			}
+		}
+		return sectionObject;
+	},
+	headerLevelFromId: function(sectionId){
+		// section ids are in the format, s1, s1_1, s1_1_1
+		var sectionIdPieces = sectionId.split('_');
+		return sectionIdPieces.length;
+	},
+	sectionTitle: function(node){
+		// Section: Title
+		var sectionTitle = '';
+		// if length greater than 1, then there are styling tags in the title. for ex, <italic>
+		if(node.childNodes.length === 1){
+			sectionTitle = node.childNodes[0].nodeValue;
+		}else{
+			for(var i = 0 ; i < node.childNodes.length ; i++){
+				if(node.childNodes[i].nodeValue){
+					sectionTitle += node.childNodes[i].nodeValue;
+				}else{
+					// Get the style tag
+					sectionTitle += '<' + node.childNodes[i].localName + '>';
+					// Get the node value of the style tag
+					sectionTitle += node.childNodes[i].childNodes[0].nodeValue;
+					// Close the style tag
+					sectionTitle += '</' + node.childNodes[i].localName + '>';
+				}
+			}
+		}
+		// console.log(sectionTitle);
+		return sectionTitle;
+	},
+	convertContent: function(node){
+		// console.log('convertContent');
+		// need to include figures so that we can fill in src within the content
+		var content = '';
+		// console.log(node.localName);
+		if(node.localName != 'sec' && node.childNodes){
+			// Section: Content
+			// skip <sec> children because these will be processed separately. an xpath query was used to get all <sec> and then we loop through them
+
+			// Style tags
+			// --------
+			for(var cc = 0 ; cc < node.childNodes.length ; cc++){
+				var childNode = node.childNodes[cc];
+				var nValue = '';
+				// console.log('cc = ' + cc );
+				if(childNode.localName != null){
+					content += '<' + childNode.localName + '>';
+				}
+
+				// Special tags - xref
+				// --------
+				if(childNode.localName === 'xref'){
+					// Determine - Reference or Figure?
+					var attributes = childNode.attributes;
+					// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
+					for(var attr = 0 ; attr < attributes.length ; attr++){
+						// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
+						if(attributes[attr].nodeName === 'rid'){
+							nodeV = attributes[attr].nodeValue;
+						}
 					}
-					if(sec.childNodes[cc].localName === 'xref'){
-						// Determine - Reference or Figure?
-						var attributes = sec.childNodes[cc].attributes;
-						// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
-						for(var attr = 0 ; attr < attributes.length ; attr++){
-							if(attributes[attr].nodeName === 'rid'){
-								tagValue = attributes[attr].nodeValue;
-							}
-						}
-						content += '<a href="#' + tagValue + '">';
-						content += tagValue;
-						content += '</a>';
-					}else if(sec.childNodes[cc].localName === 'graphic'){
-						// console.log(sec.childNodes[cc]);
-						content += '<div class="full-text-image-container box border-gray center-align" id="' + figureId + '">';
-						if(figureTitle != ''){
-							content += '<h4>' + figureTitle + '</h4>';
-						}
-						content += '<img class="materialboxed full-text-image" src="' + figureUrl +'"/>';
-						if(figureCaption != ''){
-							content += '<p>' + figureCaption + '</p>';
-						}
-						content += '</div>';
-					}else if(sec.childNodes[cc].localName === 'table-wrap'){
-						// this is handled above, testing sec.locName
+					content += '<a href="#' + nodeV + '"  class="anchor">';
+					content += nodeV;
+					content += '</a>';
+				}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+					//plain text or external link
+					if(childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
+						content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
 					}else{
-						// console.log('..else');
-						// console.log(tagValue);
-						content += '<' + sec.childNodes[cc].localName + '>';
-						content += tagValue;
-						content += '</' + sec.childNodes[cc].localName + '>';
+						content += childNode.nodeValue;
 					}
+
+				}else if(childNode.childNodes){
+					content += Meteor.fullText.convertContent(childNode);
+				}
+
+				if(childNode.localName != null){
+					content += '</' + childNode.localName + '>';
 				}
 				// console.log(content);
 			}
 		}
-		// console.log(content);
-		sectionObject.content.push(content);
-	}
-	return sectionObject;
-}
+		content = Meteor.fullText.fixTags(content);
+		return content;
+	},
+	convertFigure: function(node,figures){
+		var content = '',
+			figureId = '',
+			figureUrl = '',
+			figureTitle = '',
+			figureCaption = '';
+			figureFound  = true;
 
-var headerLevelFromId = function(sectionId){
-	// section ids are in the format, s1, s1_1, s1_1_1
-	// console.log('.. headerLevelFromId ' + sectionId);
-	var sectionIdPieces = sectionId.split('_');
-	return sectionIdPieces.length;
+		// get the figure ID
+		for(var figAttr = 0 ; figAttr < node.attributes.length ; figAttr++){
+			if(node.attributes[figAttr].localName === 'id'){
+				figureId = node.attributes[figAttr].nodeValue;
+				for(var f = 0 ; f < figures.length ; f++){
+					if(figures[f]['figureID'] === figureId){
+						// TODO : are there ever more than 1 image in this array? assets api response has an array of images for each fig.. waiting for example
+						figureUrl = figures[f]['imgURLs'][0];
+						figureTitle = figures[f]['figureTitle'];
+						figureCaption = figures[f]['figureText'];
+					}
+				}
+			}
+		}
+
+		// make the figure content
+		content += '<div class="full-text-image-container box border-gray center-align" id="' + figureId + '">';
+			if(figureTitle != ''){
+				content += '<h4>' + figureTitle + '</h4>';
+			}
+			content += '<img class="materialboxed full-text-image" src="' + figureUrl +'"/>';
+			if(figureCaption != ''){
+				content += '<p>' + figureCaption + '</p>';
+			}
+		content += '</div>';
+		return content;
+	},
+	traverseTable: function(node){
+		// console.log('-----------------------traverseTable');
+		// TODO: make this more general for traversing all nodes, not just table
+
+		// TODO combine label and title
+		var nodeString = '',
+			tableLabel = '',
+			tableCaption = '',
+			tableTitle = '';
+		for(var c = 0 ; c < node.childNodes.length ; c++){
+			var n = node.childNodes[c];
+			// console.log(n.localName);
+			// Start table el tag
+			if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){// table tag added in sectionToJson()
+				nodeString += '<' + n.localName + '>';
+			}
+
+			if(n.localName === 'label'){
+				// Table Title - part one
+				tableLabel = Meteor.fullText.traverseTable(n);
+			}else if( n.localName == 'caption'){
+				// Table Title - part two
+				tableCaption = Meteor.fullText.traverseTable(n)
+				tableTitle = tableLabel + '. ' + tableCaption;
+				nodeString += '<caption>' + tableTitle + '</caption>'
+			}else if(n.localName == 'table-wrap-foot'){
+				// console.log('..footer');
+				nodeString += '<tfoot>';
+				// console.log(n);
+				nodeString += '<tr>';
+				nodeString += '<td>';
+				nodeString += Meteor.fullText.traverseTable(n);
+				nodeString += '</td>';
+				nodeString += '</tr>';
+				nodeString += '</tfoot>';
+			}else{
+				// Table content
+				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+					// text node, and make sure it is not just whitespace
+					var val = n.nodeValue;
+					nodeString += val;
+				}else if(n.childNodes){
+					nodeString += Meteor.fullText.traverseTable(n);
+				}
+
+				// Close table el tag
+				if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){
+					nodeString += '</' + n.localName + '>'
+				}
+			}
+		}
+		// console.log(nodeString);
+		return nodeString;
+	},
+	fixTags: function(content){
+		// style tags
+		content = content.replace(/<italic>/g,'<i>');
+		content = content.replace(/<\/italic>/g,'</i>');
+		content = content.replace(/<bold>/g,'<b>');
+		content = content.replace(/<\/bold>/g,'</b>');
+
+		// remove deprecated
+		content = content.replace(/<fn>/g,'');
+		content = content.replace(/<\/fn>/g,'');
+
+		return content;
+	}
 }

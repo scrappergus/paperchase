@@ -15,17 +15,20 @@ Meteor.organize = {
 		}
 		return diff;
 	},
-	issuesIntoVolumes: function(vol,iss){
+	issuesIntoVolumes: function(volList,issList){
 		// console.log('-issuesIntoVolumes');
+		// console.log(volList);
+		// console.log(issList);
 		//group issues by volume
-		var issues = Meteor.organize.groupIssuesByVol(iss);
+		var issues = Meteor.organize.groupIssuesByVol(issList);
 
 		//loop through volumes to add issues. this will keep the order descending so that the most recent vol is at the top
-		var volL = vol.length;
-		for(var idx = 0; idx < volL ; idx++){
-			vol[idx]['issues'] = issues[vol[idx]['volume']];
+		var volListLength = volList.length;
+		for(var idx = 0; idx < volListLength ; idx++){
+			volList[idx]['issues'] = issues[volList[idx]['volume']];
 		}
-		return vol;
+		// console.log(volList);
+		return volList;
 	},
 	groupIssuesByVol: function(issues){
 		// console.log('...groupIssuesByVol');
@@ -94,97 +97,6 @@ Meteor.adminArticle = {
 
 		Session.set('article',article);
 	},
-	preProcessArticle: function(){
-		// console.log('..preProcessArticle');
-		var article = Session.get('article');
-		var articleId = Session.get('article-id');
-		var preprocess = Session.get('preprocess-article');
-		if(!article){
-			article = articles.findOne({'_id': articleId});
-			// for /admin/article. We haven't set the session variable yet.
-			// This gets triggered in the template helper,
-			// and that template & helper are shared on 2 different pages (article and submissions)
-		}
-		if(preprocess && articleId){
-			if(article){
-				// add ALL affiliations for article to author object, for checkbox input
-				var affs = article.affiliations;
-				var authorsList = article.authors;
-				for(var i=0 ; i < authorsList.length; i++){
-					var current = authorsList[i]['affiliations_numbers'];
-					var authorAffiliationsEditable = [];
-					if(authorsList[i]['ids']['mongo_id']){
-						var mongo = authorsList[i]['ids']['mongo_id'];
-					}else{
-						//for authors not saved in the db
-						var mongo = Math.random().toString(36).substring(7);
-					}
-
-					if(affs){
-						for(var a = 0 ; a < affs.length ; a++){
-							var authorAff = {
-								author_mongo_id: mongo
-							}
-							if(current && current.indexOf(a) != -1){
-								// author already has affiliation
-								authorAff['checked'] = true;
-							}else{
-								authorAff['checked'] = false;
-							}
-							authorAffiliationsEditable.push(authorAff);
-						}
-						authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
-					}
-				}
-
-				// add ALL issues
-				var volumesList = volumes.find().fetch();
-				var issuesList = issues.find().fetch();
-				if(article.issue_id){
-					for(var i=0 ; i<issuesList.length ; i++){
-						if(issuesList[i]['_id'] === article.issue_id){
-							issuesList[i]['selected'] = true;
-						}
-					}
-				}
-				article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
-
-				// pubstatus
-				article['pub_status_list'] = pubStatusTranslate;
-				var statusFound = false;
-				if(article['pub_status']){
-					var pubStatusDisable = true;
-				}
-				for(var p = 0; p < pubStatusTranslate.length; p++){
-					if(article['pub_status_list'][p]['abbrev'] == article['pub_status']){
-						article['pub_status_list'][p]['selected'] = true;
-						statusFound = true;
-					}
-					if(!statusFound){
-						article['pub_status_list'][p]['disabled'] = true;
-					}
-				}
-
-				// add ALL article types
-				var articleType = article['article_type']['name'];
-				article['article_type_list'] = [];
-				var publisherArticleTypes = articleTypes.find().fetch();
-				for(var k =0 ; k < publisherArticleTypes.length ; k++){
-					var selectObj = {
-						nlm_type: publisherArticleTypes[k]['nlm_type'],
-						name: publisherArticleTypes[k]['name'],
-						short_name: publisherArticleTypes[k]['short_name']
-					}
-					if(publisherArticleTypes[k]['name'] === articleType){
-						selectObj['selected'] = true;
-					}
-					article['article_type_list'].push(selectObj);
-				}
-				Session.set('article',article);
-			}
-		}
-		return article;
-	},
 	initiateDates: function(){
 		// console.log('-- initiateDates');
 		// Collection dates don't usually have dd. So using time of day to differentiate date objects that have days and those that don't
@@ -208,6 +120,9 @@ Meteor.adminArticle = {
 		e.preventDefault();
 		var article = Session.get('article');
 		var type = $(e.target).attr('id').replace('add-','');
+		if(!article[dateType]){
+			article[dateType] = {};
+		}
 		article[dateType][type] = new Date();
 		article[dateType][type].setHours(0,0,0,0);
 		Session.set('article',article);
@@ -222,7 +137,8 @@ Meteor.adminArticle = {
 		delete article[articleKey][objectKey]; //the key in the object of the article doc
 		Session.set('article',article);
 	},
-	modalListOptions: function(articleKey){
+	articleListOptions: function(articleKey){
+		// console.log('..articleListOptions');
 		var allListOptions;
 		var addListOptions = {};
 		if(articleKey === 'history'){
@@ -235,14 +151,92 @@ Meteor.adminArticle = {
 
 		if(Session.get('article') && articleKey){
 			var article = Session.get('article');
-			var current = article[articleKey];
+			var current = article[articleKey]; // what the article has saved
 			for(var d in allListOptions){
-				if(current[d] === undefined){
-					addListOptions[d] = allListOptions[d];
+				if(!current || current[d] === undefined){ // do not test for empty string, adding a new ID type will add empty string to articles session variable
+					addListOptions[d] = allListOptions[d]; // add the other available options
 				}
 			}
 			return addListOptions;
 		}
+	},
+	articleListButton: function(type){
+		// console.log('..articleListButton = ' + type);
+		if($('.add-article-' + type).hasClass('hide')){
+			// console.log('SHOW');
+			$('.add-article-' + type).removeClass('hide');
+			$('#add-' + type).html('<i class="zmdi zmdi-caret-up-circle"></i>');
+		}else{
+			// console.log('HIDE');
+			$('.add-article-' + type).addClass('hide');
+			$('#add-' + type).html('<i class="zmdi zmdi-plus-circle"></i>');
+			$('#add-' + type).removeClass('expanded');
+		}
+	},
+	readyArticleForm: function(){
+		// console.log('..readyArticleForm');
+		// console.log(Session.get('article'));
+
+		// title
+		// ------
+		$('.article-title').summernote({
+			styleWithSpan: false,
+			onPaste: function(e){
+				e.preventDefault();
+				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+				document.execCommand('insertText', false, bufferText);
+			},
+			toolbar: [
+				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+				['view', ['codeview']]
+			]
+		});
+
+		// abstract
+		// ------
+		$('.article-abstract').summernote({
+			styleWithSpan: false,
+			onPaste: function(e){
+				e.preventDefault();
+				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+				document.execCommand('insertText', false, bufferText);
+			},
+			toolbar: [
+				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+				['view', ['codeview']]
+			]
+		});
+
+		// dates - handled in template helper, article. uses function to loop through dates and initiate
+		// ------
+		Meteor.adminArticle.initiateDates();
+
+		// issue, article type
+		// ------
+		// selects
+		$('#article-issue').material_select();
+		$('#article-type').material_select();;
+		$('#article-pub-status').material_select();
+
+		// modals
+		// ------
+		$('#success-modal').leanModal();
+	},
+	initiateAuthorsSortable: function(){
+		$('.authors-list').sortable();
+	},
+	initiateAffiliationsSortable: function(){
+		$('.affiliations-list').sortable({
+			start: function( event, ui ) {
+				Session.set('affIndex',ui.item.index());
+			},
+			update: function( event, ui ) {
+				var newIndex = ui.item.index();
+				Meteor.adminArticle.updateAffiliationsOrder(newIndex);
+			},
+		});
 	}
 }
 
@@ -387,6 +381,37 @@ Meteor.formActions = {
 		$('input').removeClass('valid');
 		$('textarea').removeClass('valid');
 	},
+	invalid: function(invalidData){
+		var invalidString = '';
+		for(var i=0 ; i < invalidData.length ; i++){
+			$('.' + invalidData[i]['input_class']).addClass('invalid');
+			// TODO: adding invalid class does not work for WYSIWYG
+			invalidString += invalidData[i]['message'] + '    ';
+			if(i === 0){
+				$('html, body').animate({
+					scrollTop: $('.' + invalidData[i]['input_class']).position().top
+				}, 500);
+			}
+		}
+
+		alert(invalidString);
+
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').addClass('hide');
+		$('.error').removeClass('hide');
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+	},
 	error: function(){
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
@@ -455,5 +480,23 @@ Meteor.ip = {
 			d = num%256 + '.' + d;
 		}
 		return d;
+	}
+}
+
+Meteor.general = {
+	navHeight: function(){
+		return $('nav').height();
+	},
+	footerHeight: function(){
+		return $('footer').height();
+	},
+	scrollAnchor: function(e){
+		e.preventDefault();
+		var anchor = $(e.target).attr('href');
+		var navTop = Meteor.general.navHeight();
+		anchor = anchor.replace('#','');
+		$('html, body').animate({
+			scrollTop: $('#' + anchor).position().top - navTop
+		}, 500);
 	}
 }

@@ -1,18 +1,27 @@
 // Articles
 // --------
+articles.before.insert(function (userId, doc) {
+  // console.log('..articles before insert');
+  // Volume, Issue
+  if(doc['volume'] && doc['issue']){
+    volume = doc['volume'];
+    issue = doc['issue'];
+    doc['issue_id'] = Meteor.call('articleIssueVolume',volume,issue);
+  }
+  // console.log(doc['issue_id']);
+});
 articles.after.insert(function (userId, doc) {
-  // console.log('..before insert article');
+  // console.log('..after insert article');
   //console.log(doc.advance);console.log(this._id);
 
   // Advance
   if(doc.advance){
     Meteor.call('sorterAddArticle','advance',this._id);
   }
-
-  // Volume, Issue
-  var doc = Meteor.call('articleIssueVolume',doc);
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
+  var volume,
+      issue;
   // console.log('..before update article');
   // console.log(modifier['$set']);
   // Advance article. Update sorters colleciton.
@@ -48,9 +57,11 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }
   }
 
-
-  // Volume, Issue
-  var doc = Meteor.call('articleIssueVolume',doc);
+  if(modifier['$set']['volume'] && modifier['$set']['issue']){
+    volume = modifier['$set']['volume'];
+    issue = modifier['$set']['issue'];
+    modifier['$set']['issue_id'] = Meteor.call('articleIssueVolume',volume,issue);
+  }
 });
 
 // Issues

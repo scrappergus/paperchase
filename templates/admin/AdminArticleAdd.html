@@ -1,0 +1,10 @@
+<template name="AdminArticleAdd">
+	{{>AdminHeader header="Add Article"}}
+	<div class="row">
+		<div class="col s12">
+			{{#if articleProcessed}}
+			{{>AdminArticleForm}}
+			{{/if}}
+		</div>
+	</div>
+</template>

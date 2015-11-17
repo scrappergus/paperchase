@@ -1,3 +1,4 @@
+// All of these methods are for admin article
 Meteor.methods({
 	addArticle: function(articleData){
 		// console.log('--addArticle | pmid = '+articleData['ids']['pmid']);
@@ -31,7 +32,22 @@ Meteor.methods({
 	},
 	updateArticle: function(mongoId, articleData){
 		// console.log('--updateArticle |  mongoId = ' + mongoId);
-		return articles.update({'_id' : mongoId}, {$set: articleData});
+		var duplicateArticle;
+		if(!mongoId){
+			// New Article
+			// make sure article does not already exist
+			// TODO: loose title check
+			duplicateArticle = articles.findOne({title : articleData.title});
+		}
+		if(!mongoId && !duplicateArticle){
+			// Add new article
+			return Meteor.call('addArticle', articleData);
+		}else if(mongoId){
+			// Update existing
+			return articles.update({'_id' : mongoId}, {$set: articleData});
+		}else{
+			throw new Meteor.Error('ERROR: Duplicate Article - ' + duplicateArticle._id);
+		}
 	},
 	pushArticle: function(mongoId, field, articleData){
 		var updateObj = {};
@@ -51,6 +67,7 @@ Meteor.methods({
 		return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});
 	},
 	processXML: function(fileName,batch){
+		// for importing XML to DB
 		if(fileName)
 		var j = {},
 			xml;
@@ -205,29 +222,124 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	articleIssueVolume: function(article){
-		// console.log('....articleIssueVolume');
+	articleIssueVolume: function(volume,issue){
+		// console.log('....articleIssueVolume v = ' + volume + ', i = ' + issue );
 		// if article in issue:
 		// 1. check if issue exists in issues collection. If not add. If issue exists or added, issue Mongo ID returned
 		// 2. include issue Mongo id in article doc
-		// console.log('..articleIssueVolume');
 		var issueInfo,
 			issueId;
-		if(article.volume && article.issue){
+		if(volume && issue){
 			// Does issue exist?
-			issueInfo = Meteor.call('findIssueByVolIssue', article.volume, article.issue);
+			issueInfo = Meteor.call('findIssueByVolIssue', volume, issue);
 			if(issueInfo){
 				issueId = issueInfo['_id'];
 			}else{
 				// This also checks volume collection and inserts if needed.
 				issueId = Meteor.call('addIssue',{
-					'volume': article.volume,
-					'issue': article.issue
+					'volume': volume,
+					'issue': issue
 				});
 			}
-			article.issue_id = issueId;
+		}
+		// console.log(issueId);
+		return issueId;
+	},
+	preProcessArticle: function(articleId){
+		// console.log('..preProcessArticle');
+		var article;
+		article = articles.findOne({'_id': articleId});
+		if(!article){
+			article = {};
 		}
 
+		// Affiliations
+		// ------------
+		// add ALL affiliations for article to author object,
+		// for checkbox input
+		var affs;
+		affs = article.affiliations;
+		if(article.authors){
+			var authorsList = article.authors;
+			for(var i=0 ; i < authorsList.length; i++){
+				var current = authorsList[i]['affiliations_numbers'];
+				var authorAffiliationsEditable = [];
+				if(authorsList[i]['ids']['mongo_id']){
+					var mongo = authorsList[i]['ids']['mongo_id'];
+				}else{
+					//for authors not saved in the db
+					var mongo = Math.random().toString(36).substring(7);
+				}
+
+				if(affs){
+					for(var a = 0 ; a < affs.length ; a++){
+						var authorAff = {
+							author_mongo_id: mongo
+						}
+						if(current && current.indexOf(a) != -1){
+							// author already has affiliation
+							authorAff['checked'] = true;
+						}else{
+							authorAff['checked'] = false;
+						}
+						authorAffiliationsEditable.push(authorAff);
+					}
+					authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
+				}
+			}
+		}
+
+		// Issues
+		// ------
+		// get ALL issues and volumes for list options and organize by volume
+		var volumesList = Meteor.call('getAllVolumes');
+		var issuesList = Meteor.call('getAllIssues');
+		if(article.issue_id){
+			for(var i=0 ; i<issuesList.length ; i++){
+				if(issuesList[i]['_id'] === article.issue_id){
+					issuesList[i]['selected'] = true;
+				}
+			}
+		}
+		article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
+
+		// Pub Status
+		// ----------
+		article['pub_status_list'] = pubStatusTranslate;
+		// var statusFound = false;
+		// if(article['pub_status']){
+		// 	var pubStatusDisable = true;
+		// }
+		for(var p = 0; p < pubStatusTranslate.length; p++){
+			if(article['pub_status_list'][p]['abbrev'] == article['pub_status']){
+				article['pub_status_list'][p]['selected'] = true;
+				// statusFound = true;
+			}
+			// if(!statusFound){
+			// 	article['pub_status_list'][p]['disabled'] = true;
+			// }
+		}
+
+		// Article Type
+		// ------------
+		// add ALL article types
+		var articleType;
+		if(article['article_type']){
+			articleType = article['article_type']['name'];
+		}
+		article['article_type_list'] = [];
+		var publisherArticleTypes = articleTypes.find().fetch();
+		for(var k =0 ; k < publisherArticleTypes.length ; k++){
+			var selectObj = {
+				nlm_type: publisherArticleTypes[k]['nlm_type'],
+				name: publisherArticleTypes[k]['name'],
+				short_name: publisherArticleTypes[k]['short_name']
+			}
+			if(publisherArticleTypes[k]['name'] === articleType){
+				selectObj['selected'] = true;
+			}
+			article['article_type_list'].push(selectObj);
+		}
 		return article;
-	}
+	},
 });
