@@ -59,6 +59,24 @@ Meteor.methods({
 
 // OJS
 Meteor.methods({
+	// ojsBatchUpdate: function(articles){ //TODO. FIX STACK ERROR. FOR click #ojs-batch-update
+	// 	console.log('..ojsBatchUpdateAll');
+	// 	var journalInfo = journalConfig.findOne();
+	// 	var journalShortName = journalInfo.journal.short_name;
+	// 	var articlesList = articles.find().fetch();
+	// 	for(var a=0 ; a < articlesList.length ; a++){
+	// 		var article = articlesList[a];
+	// 		if(article.ids.pii){
+	// 			console.log(article.ids.pii);
+	// 			var params = {};
+	// 				params.id_type = 'pii',
+	// 				params.id = article.ids.pii,
+	// 				params.journal = journalShortName;
+	// 			Meteor.call('legacyArticleIntake',params);
+	// 		}
+	// 	}
+	// 	return true;
+	// },
 	ojsGetArticlesJson: function(idType, idValue, journal, requestUrl){
 		// JSON response can contain multiple articles
 		if(requestUrl){
@@ -234,3 +252,4 @@ Meteor.methods({
 		return articleUpdate;
 	}
 });
+

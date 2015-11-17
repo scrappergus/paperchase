@@ -682,9 +682,10 @@ if (Meteor.isClient) {
 			if(this.ready()){
 				var id = this.params._id;
 				Session.set('article-id',this.params._id);
-				var article = articles.findOne({'_id': id});
+				var article;
+				article = articles.findOne({'_id': id});
 				return {
-					article: article,
+					article: article
 				};
 			}
 		},
@@ -1026,12 +1027,15 @@ if (Meteor.isClient) {
 				var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
 				var sorted  = sorters.findOne();
 				var sortedArticles;
+				var journal = journalConfig.findOne();
+				journal = journal.journal;
 				if(sorted['articles']){
 					sortedArticles = sorted['articles'];
 				}
 				return {
 					feature : featureList,
-					advance : sortedArticles
+					advance : sortedArticles,
+					journal : journal
 				}
 			}
 		}
