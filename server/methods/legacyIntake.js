@@ -146,7 +146,7 @@ Meteor.methods({
 					// console.log(dateKwType);
 					if(dateKwType == 'Keywords'){
 						var kwList = datesAndKw[dd].match(/<\/span>(.*?)<\/p>/g);
-						kwList = kwList[0].replace('<\/span>: ','').replace('<\/p>','').replace(/^\s+|\s+$/g, '').replace(/:/g,'').replace(/;/,'');
+						kwList = kwList[0].replace('<\/span>: ','').replace('<\/p>','').replace(/^\s+|\s+$/g, '');
 						kwList = kwList.split(', '); // leave space when splitting to trim whitespace
 						articleUpdate.keywords = kwList
 					}else{
