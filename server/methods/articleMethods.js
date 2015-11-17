@@ -222,17 +222,16 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	articleIssueVolume: function(article){
-		// console.log('....articleIssueVolume');
+	articleIssueVolume: function(volume,issue){
+		// console.log('....articleIssueVolume v = ' + volume + ', i = ' + issue );
 		// if article in issue:
 		// 1. check if issue exists in issues collection. If not add. If issue exists or added, issue Mongo ID returned
 		// 2. include issue Mongo id in article doc
-		// console.log('..articleIssueVolume');
 		var issueInfo,
 			issueId;
-		if(article.volume && article.issue){
+		if(volume && issue){
 			// Does issue exist?
-			issueInfo = Meteor.call('findIssueByVolIssue', article.volume, article.issue);
+			issueInfo = Meteor.call('findIssueByVolIssue', volume, issue);
 			if(issueInfo){
 				issueId = issueInfo['_id'];
 			}else{
@@ -242,10 +241,9 @@ Meteor.methods({
 					'issue': article.issue
 				});
 			}
-			article.issue_id = issueId;
 		}
-
-		return article;
+		// console.log(issueId);
+		return issueId;
 	},
 	preProcessArticle: function(articleId){
 		// console.log('..preProcessArticle');
