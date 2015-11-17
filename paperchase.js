@@ -573,7 +573,14 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				Router.go('ArticleNotFound');
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('Article', {_id: articleByPii._id});
+				}else{
+					Router.go('ArticleNotFound');
+				}
 			}
 
 			// get xml, figures, pdf links
@@ -1061,7 +1068,14 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				Router.go('AdminArticleAdd');
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
 			}
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
