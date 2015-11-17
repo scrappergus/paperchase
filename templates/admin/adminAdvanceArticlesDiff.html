@@ -4,12 +4,12 @@
         <li>OJS Count: {{ojs_count}}</li>
         <li>Paperchase Count: {{pc_count}}</li>
         <li>Total Count: {{total_count}}</li>
-        <li>OJS Only: <ul>{{#each only_ojs}}
-                <li><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">{{pii}}</a></li>
+        <li><h3>OJS Only</h3><ul>{{#each only_ojs}}
+                <li>{{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></li>
                 {{/each}}</ul></li>
 
-        <li>Paperchase Only: <ul>{{#each only_pc}}
-                <li>{{pii}}</li>
+        <li><h3>Paperchase Only</h3><ul>{{#each only_pc}}
+                <li>{{pii}} - <a href="http://galaxy.oncotarget.com/article/?pii={{pii}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></li>
                 {{/each}}</ul></li>
     </ul>
 </template>

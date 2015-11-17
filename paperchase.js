@@ -1160,6 +1160,7 @@ if (Meteor.isClient) {
 				var sorted  = sorters.findOne({name:'advance'});
                 var output = [];
                 var last_article = {};
+                var recent = true;
                 for (var i = 0; i < sorted.articles.length; i++){
                     article = sorted.articles[i];
 
@@ -1192,9 +1193,15 @@ if (Meteor.isClient) {
                     last_article = article;
                     //record changes to actual article entry
                     if(article.section_start) {
+                        section_name = article.section_name;
+                        if(section_name == 'Research Papers' && recent === true) {
+                            recent = false;
+                            section_name = 'Recent Research Papers'; 
+                        }
+
                         output.push({
                                 articles:[],
-                                section_name:article.section_name
+                                section_name:section_name
                             });
                     }
                     output[output.length-1]['articles'].push(article);
