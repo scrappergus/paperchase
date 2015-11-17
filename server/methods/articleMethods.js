@@ -237,8 +237,8 @@ Meteor.methods({
 			}else{
 				// This also checks volume collection and inserts if needed.
 				issueId = Meteor.call('addIssue',{
-					'volume': article.volume,
-					'issue': article.issue
+					'volume': volume,
+					'issue': issue
 				});
 			}
 		}
