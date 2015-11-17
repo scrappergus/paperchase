@@ -1155,6 +1155,24 @@ if (Meteor.isClient) {
 		}
 	});
 
+	// Advance articles
+	Router.route('/admin/articles/advance-diff',{
+		name: 'AdminAdvanceArticlesDiff',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sorted  = sorters.findOne({name:'advance'});
+			}
+		}
+	});
+
+
 	// Archive
 	Router.route('/admin/archive', {
 		name: 'adminArchive',
