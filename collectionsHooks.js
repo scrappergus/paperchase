@@ -75,8 +75,8 @@ issues.after.insert(function (userId, doc) {
 });
 
 
-Sorters
- -------
+//Sorters
+// -------
 sorters.after.update(function (userId, doc, fieldNames, modifier, options){
   var articlesList,
       diff;
