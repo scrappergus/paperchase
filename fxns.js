@@ -485,7 +485,10 @@ Meteor.ip = {
 
 Meteor.general = {
 	navHeight: function(){
-		return navTop = $('nav').height();
+		return $('nav').height();
+	},
+	footerHeight: function(){
+		return $('footer').height();
 	},
 	scrollAnchor: function(e){
 		e.preventDefault();
