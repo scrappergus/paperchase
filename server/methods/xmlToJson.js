@@ -264,7 +264,8 @@ Meteor.fullText = {
 			// --------
 			for(var cc = 0 ; cc < node.childNodes.length ; cc++){
 				var childNode = node.childNodes[cc];
-				var nValue = '';
+				var nodeAnchor = '',
+					nValue = '';
 				// console.log('cc = ' + cc );
 				if(childNode.localName != null){
 					content += '<' + childNode.localName + '>';
@@ -274,16 +275,17 @@ Meteor.fullText = {
 				// --------
 				if(childNode.localName === 'xref'){
 					// Determine - Reference or Figure?
+					nValue = childNode.childNodes[0].nodeValue;
 					var attributes = childNode.attributes;
 					// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
 					for(var attr = 0 ; attr < attributes.length ; attr++){
 						// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
 						if(attributes[attr].nodeName === 'rid'){
-							nodeV = attributes[attr].nodeValue;
+							nodeAnchor = attributes[attr].nodeValue;
 						}
 					}
-					content += '<a href="#' + nodeV + '"  class="anchor">';
-					content += nodeV;
+					content += '<a href="#' + nodeAnchor + '"  class="anchor">';
+					content += nValue;
 					content += '</a>';
 				}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
 					//plain text or external link
