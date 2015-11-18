@@ -20,10 +20,10 @@
 		{{>ArticleFullText}}
 
 		{{#if references}}
-			<h3>References</h3>
+			<h3 id="references">References</h3>
 			<ul>
 				{{#each references}}
-					<li id="R{{number}}"><b>{{number}}.</b>{{#if article_title}} {{article_title}}.{{/if}}{{#if source}} {{source}}.{{/if}}{{#if year}} {{year}}{{/if}}{{#if volume}}; {{volume}}{{/if}}{{#if fpage}}: {{fpage}}{{/if}}{{#if lpage}}-{{lpage}}{{/if}}.</li>
+					<li id="R{{number}}"><b>{{number}}.</b>{{#if authors}} {{authors}}.{{/if}}{{#if article_title}} {{article_title}}.{{/if}}{{#if source}} {{source}}.{{/if}}{{#if year}} {{year}}{{/if}}{{#if volume}}; {{volume}}{{/if}}{{#if fpage}}: {{fpage}}{{/if}}{{#if lpage}}-{{lpage}}{{/if}}.</li>
 				{{/each}}
 			</ul>
 		{{/if}}

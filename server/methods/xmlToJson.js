@@ -141,48 +141,29 @@ Meteor.methods({
 		// References
 		// ----------
 		// TODO: editorials have a different reference style
+		// <ref><label><element-citation>
+		// we want to search for //ref because that has the ID attribute. We do not want to rely on the index of the reference for the ID.
 		var references = xpath.select('//ref', doc);
 		if(references[0]){
 			articleObject.references = [];
-			for(var reference = 0 ; reference < references.length ; reference++){
-				// console.log('... ref ' + reference);
-				var refAttributes = references[reference].attributes;
+			for(var referenceIdx = 0 ; referenceIdx < references.length ; referenceIdx++){
+				var reference = references[referenceIdx];
+				// console.log('... ref ' + referenceIdx);
+				var refAttributes = reference.attributes;
 				var referenceObj = {};
+
+				// Reference content
+				// ------------------
+				for(var refPiece =0 ; refPiece < reference.childNodes.length ; refPiece++){
+					if(reference.childNodes[refPiece].localName === 'element-citation'){
+						referenceObj = Meteor.fullText.convertReference(reference.childNodes[refPiece])
+					}
+				}
 				// Reference number
+				// ------------------
 				for(var refAttr = 0 ; refAttr < refAttributes.length ; refAttr++){
 					if(refAttributes[refAttr].localName === 'id'){
 						referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','');
-					}
-				}
-				var referencePieces = references[reference].childNodes;
-				for(var refPiece =0 ; refPiece < referencePieces.length ; refPiece++){
-					// console.log('.... ' + refPiece);
-					var referenceInfo;
-					if(referencePieces[refPiece].localName === 'element-citation'){
-						referenceInfo = referencePieces[refPiece];
-						for(var r = 0 ; r < referenceInfo.childNodes.length ; r++){
-							if(referenceInfo.childNodes[r].childNodes){
-								// console.log(referenceInfo.childNodes[r].localName);
-								var referencePart = '';
-								if(referenceInfo.childNodes[r].localName){
-									referencePart = referenceInfo.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
-								}
-								// console.log('--- '  +referencePart);
-
-								// Reference Title, Source, Pages, Year, Authors
-								if(referencePart != ''){
-									for(var refP = 0 ; refP < referenceInfo.childNodes[r].childNodes.length ; refP++){
-										if(referenceInfo.childNodes[r].childNodes[refP].nodeValue){
-											referenceObj[referencePart] = referenceInfo.childNodes[r].childNodes[refP].nodeValue;
-										}else if(referencePart === 'person_group'){
-											var refString = Meteor.fullText.traverseNode(referenceInfo.childNodes[r].childNodes[refP]);;
-											// console.log(referenceObj['person_group']);
-											referenceObj['person_group'] += refString + ', ';
-										}
-									}
-								}
-							}
-						}
 					}
 				}
 				articleObject.references.push(referenceObj);
@@ -311,7 +292,6 @@ Meteor.fullText = {
 					}else{
 						content += childNode.nodeValue;
 					}
-
 				}else if(childNode.childNodes){
 					content += Meteor.fullText.convertContent(childNode);
 				}
@@ -359,6 +339,77 @@ Meteor.fullText = {
 			}
 		content += '</div>';
 		return content;
+	},
+	convertReference: function(reference){
+		// console.log('...............convertReference');
+		var referenceObj = {};
+		for(var r = 0 ; r < reference.childNodes.length ; r++){
+			if(reference.childNodes[r].childNodes){
+				var referencePart,
+					referencePartName;
+				// Reference Title, Source, Pages, Year, Authors
+				if(reference.childNodes[r].localName){
+					referencePart = reference.childNodes[r];
+					referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
+
+					// Title, Source, Pages, Year,
+					if(referencePartName && referencePartName != 'person_group'){
+						if(referencePart.childNodes){
+							var referencePartCount = referencePart.childNodes.length;
+							for(var part = 0 ; part < referencePartCount ; part++){
+								if(referencePart.childNodes[part].nodeValue){
+									referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
+								}
+							}
+						}
+					// Authors
+					}else if(referencePartName == 'person_group'){
+						referenceObj.authors = Meteor.fullText.traverseAuthors(referencePart);
+					}
+				}
+			}
+		}
+		// console.log(referenceObj);
+		return referenceObj;
+	},
+	traverseAuthors: function(node){
+		// console.log('..traverseNode');
+		// first creating an array, so that we can ignore empty nodes
+		// then using a string,
+		// because there is some logic that is too complicated for handlebars. For ex, when 2 authors there is no comma and instead 'and' is used.
+		var authors = [];
+		if(node.childNodes){
+			for(var c = 0 ; c < node.childNodes.length ; c++){
+				var n = node.childNodes[c];
+				if(n.nodeValue != ''){
+					var author = '';
+					// Get the author name
+					if(n.nodeType == 3){
+						author += n.nodeValue;
+					}else{
+						author += Meteor.fullText.traverseNode(n);
+					}
+
+					// trim author name
+					author = author.replace(/^\s+|\s+$/g, '');
+					if(author.length != 0){
+						// if not empty node
+						authors.push(author);
+					}
+				}
+			}
+		}
+
+		// now join array
+		if(authors.length > 2){
+			authors = authors.join(', ');
+		}else if(authors.length == 2){
+			authors = authors.join(' and ');
+		}else if(authors.length > 1){
+			authors = authors.join('');
+		}
+
+		return authors;
 	},
 	traverseTable: function(node){
 		// console.log('-----------------------traverseTable');
@@ -420,9 +471,11 @@ Meteor.fullText = {
 		var string = '';
 		if(node.childNodes){
 			for(var c = 0 ; c < node.childNodes.length ; c++){
-				console.log('..'+c);
+				// console.log('..'+c);
+
 				var n = node.childNodes[c];
 				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+					// console.log(n.nodeValue);
 					string += n.nodeValue + ' ';
 				}else{
 					string += Meteor.fullText.traverseNode(n);
