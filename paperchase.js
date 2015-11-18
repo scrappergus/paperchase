@@ -1202,6 +1202,7 @@ if (Meteor.isClient) {
                     //record changes to actual article entry
                     if(article.section_start) {
                         section_name = article.section_name;
+                        section_id = article.section_id;
                         if(section_name == 'Research Papers' && recent === true) {
                             recent = false;
                             section_name = 'Recent Research Papers';
@@ -1209,7 +1210,8 @@ if (Meteor.isClient) {
 
                         output.push({
                                 articles:[],
-                                section_name:section_name
+                                section_name:section_name,
+                                section_id:section_id
                             });
                     }
                     output[output.length-1]['articles'].push(article);

@@ -47,8 +47,8 @@
         <div class="row" style="border-bottom:1px solid;">
             <div class="col s1">&nbsp;</div>
             <div class="col s2"><b>Section</b></div>
-            <div class="col s1"><b>PII</b></div>
             <div class="col s1"><b>PubDate</b></div>
+            <div class="col s1"><b>PII</b></div>
             <div class="col s6"><b>Title</b></div>
             <div class="col s1 right-align"></div>
         </div>
@@ -57,7 +57,7 @@
                 <ul class="article-sections">
                     {{#each sections}}
                     <li class="article-section">
-                        <h2><i class="zmdi prefix zmdi-swap-vertical handle" style="cursor:pointer;"></i> {{section_name}}</h2>
+                        <h2 style="display:inline;"><i class="zmdi prefix zmdi-swap-vertical handle" style="cursor:pointer;"></i> {{section_name}}</h2> <a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a>
                         <ul class="articles">
 
                             {{#each articles}}
