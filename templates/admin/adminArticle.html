@@ -8,6 +8,12 @@
 				<li class="collection-item"><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
 				<li class="collection-item"><a href="{{pathFor 'AdminAdvanceArticles'}}">Advance Articles</a></li>
 			</ul>
+			{{#with journal}}
+			{{#if equals short_name 'oncotarget'}}
+			<br><br>
+			<button id="ojs-batch-update" class="blue-grey darken-1 waves-effect waves-light btn">Batch Update Via OJS</button>
+			{{/if}}
+			{{/with}}
 		</div>
 		<div class="col s4">
 			<div class="card">

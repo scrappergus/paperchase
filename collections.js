@@ -253,7 +253,14 @@ if (Meteor.isServer) {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
   Meteor.publish('articleInfo', function(id) {
-    return articles.find({'_id':id},{});
+    // console.log('articleInfo - ' + id);
+    var article = articles.findOne({'_id':id},{});
+    // URL is based on Mongo ID. But a user could put PII instead, if so send PII info to redirect
+    if(article){
+      return articles.find({'_id':id},{});
+    }else{
+      return  articles.find({'ids.pii':id},{});
+    }
   });
   Meteor.publish('submission-set', function (queryType, queryParams) {
     var articlesList;

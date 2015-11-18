@@ -26,7 +26,7 @@ Meteor.methods({
 					resLinks = resLinks.content;
 					resLinks = JSON.parse(resLinks);
 					resLinks = resLinks[0];
-					if(resLinks.figures.length === 0){
+					if(resLinks.figures && resLinks.figures.length === 0){
 						delete resLinks.figures;
 					}
 					fut['return'](resLinks);
@@ -165,23 +165,19 @@ Meteor.methods({
 								// console.log(referenceInfo.childNodes[r].localName);
 								var referencePart = '';
 								if(referenceInfo.childNodes[r].localName){
-									referencePart = referenceInfo.childNodes[r].localName.replace('-','_');
+									referencePart = referenceInfo.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
 								}
+								// console.log('--- '  +referencePart);
 
-								// Reference Title, Source, Pages, Year
-								// ---------------
-								// TODO: nodes with style tags, just title really
+								// Reference Title, Source, Pages, Year, Authors
 								if(referencePart != ''){
 									for(var refP = 0 ; refP < referenceInfo.childNodes[r].childNodes.length ; refP++){
 										if(referenceInfo.childNodes[r].childNodes[refP].nodeValue){
 											referenceObj[referencePart] = referenceInfo.childNodes[r].childNodes[refP].nodeValue;
-										}else{
-											// there are style tags
-											// console.log(referenceInfo.childNodes[r].childNodes[refP]);
-											// for(var refTT = 0 ; refTT < referenceInfo.childNodes[r].childNodes[refP].childNodes.length ; refTT++){
-											// 	console.log(referenceInfo.childNodes[r].childNodes[refP].childNodes[refTT].localName);
-											// 	console.log(referenceInfo.childNodes[r].childNodes[refP].childNodes[refTT].nodeValue);
-											// }
+										}else if(referencePart === 'person_group'){
+											var refString = Meteor.fullText.traverseNode(referenceInfo.childNodes[r].childNodes[refP]);;
+											// console.log(referenceObj['person_group']);
+											referenceObj['person_group'] += refString + ', ';
 										}
 									}
 								}
@@ -417,6 +413,24 @@ Meteor.fullText = {
 		}
 		// console.log(nodeString);
 		return nodeString;
+	},
+	traverseNode: function(node){
+		// console.log('..traverseNode');
+		// console.log(node.childNodes.length);
+		var string = '';
+		if(node.childNodes){
+			for(var c = 0 ; c < node.childNodes.length ; c++){
+				console.log('..'+c);
+				var n = node.childNodes[c];
+				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+					string += n.nodeValue + ' ';
+				}else{
+					string += Meteor.fullText.traverseNode(n);
+				}
+			}
+		}
+
+		return string;
 	},
 	fixTags: function(content){
 		// style tags

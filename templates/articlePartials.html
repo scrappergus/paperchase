@@ -1,7 +1,7 @@
 <template name="ArticleHeader">
 	<div class="row no-margin">
 		<div class="col s12" style="position:relative">
-			<h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}, Issue {{issue}}</a></h5>
+			<h5><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></h5>
 			<span class="badge">{{article_type.name}}</span>
 		</div>
 	</div>

@@ -2,6 +2,7 @@
 Meteor.methods({
 	legacyArticleIntake: function(articleParams){
 		// console.log('...legacyArticleIntake');
+		// console.log(articleParams);
 		var idType = articleParams.id_type,
 			idValue = articleParams.id,
 			journal = articleParams.journal,
@@ -58,6 +59,24 @@ Meteor.methods({
 
 // OJS
 Meteor.methods({
+	// ojsBatchUpdate: function(articles){ //TODO. FIX STACK ERROR. FOR click #ojs-batch-update
+	// 	console.log('..ojsBatchUpdateAll');
+	// 	var journalInfo = journalConfig.findOne();
+	// 	var journalShortName = journalInfo.journal.short_name;
+	// 	var articlesList = articles.find().fetch();
+	// 	for(var a=0 ; a < articlesList.length ; a++){
+	// 		var article = articlesList[a];
+	// 		if(article.ids.pii){
+	// 			console.log(article.ids.pii);
+	// 			var params = {};
+	// 				params.id_type = 'pii',
+	// 				params.id = article.ids.pii,
+	// 				params.journal = journalShortName;
+	// 			Meteor.call('legacyArticleIntake',params);
+	// 		}
+	// 	}
+	// 	return true;
+	// },
 	ojsGetArticlesJson: function(idType, idValue, journal, requestUrl){
 		// JSON response can contain multiple articles
 		if(requestUrl){
@@ -65,19 +84,26 @@ Meteor.methods({
 			// TODO: Add journal param?
 			// requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
 			requestUrl += '?' + idType + '=' + idValue;
+			// console.log(requestUrl);
 			var res;
 			res = Meteor.http.get(requestUrl);
 			if(res){
+				// console.log(res.content);
 				return res.content;
 			}
 		}
 	},
 	ojsProcessArticleJson: function(article){
 		// console.log('...ojsProcessArticleJson');
+		// console.log(article);
 		var articleUpdate = {},
 			pagePieces,
 			authors,
 			issueId;
+
+		var abs,
+			abstract,
+			datesAndKw;
 
 		if(article.title){
 			articleUpdate.title = article.title;
@@ -87,7 +113,7 @@ Meteor.methods({
 			articleUpdate.volume = parseInt(article.volume);
 		}
 
-		if(article.issue){
+		if(article.issue && article.issue !=0 ){
 			articleUpdate.issue = parseInt(article.issue);
 		}
 
@@ -99,15 +125,61 @@ Meteor.methods({
 			}
 		}
 
-		// TODO: Add Keywords to mini API response.
-		// if(article.keywords){}
-
+		// Abstract and Dates and Keywords
+		// -------------------
 		if(article.abstract){
 			// HTML is pasted as the abstract and includes author information. We just want the abstract for the intake.
-			var abs = article.abstract.indexOf('<p class=\"BodyText\">');
+
+			// Abstract
+			abs = article.abstract.indexOf('<p class=\"BodyText\">');
 			abs = parseInt(abs + 20);
-			var abstract = article.abstract.substring(abs, article.abstract.length);
+			abstract = article.abstract.substring(abs, article.abstract.length);
 			articleUpdate.abstract = '<p>' + abstract;
+
+			// Dates and Keywords
+			datesAndKw = article.abstract.match(/<span class=\"CorespondanceBold\">(.*?)<\/p>/g); //will return 2 items - kw and dates list. need to then separate dates.
+			if(datesAndKw){
+				for(var dd=0; dd < datesAndKw.length ; dd++){
+					// get type of date, or if kw list
+					var dateKwType = datesAndKw[dd].match(/<span class=\"CorespondanceBold\">(.*?)<\/span>/g);
+					dateKwType = dateKwType[0].replace('<span class=\"CorespondanceBold\">','').replace('<\/span>','').replace(/:/g,'').replace(/;/,'');
+					// console.log(dateKwType);
+					if(dateKwType == 'Keywords'){
+						var kwList = datesAndKw[dd].match(/<\/span>(.*?)<\/p>/g);
+						kwList = kwList[0].replace('<\/span>: ','').replace('<\/p>','').replace(/^\s+|\s+$/g, '');
+						kwList = kwList.split(', '); // leave space when splitting to trim whitespace
+						articleUpdate.keywords = kwList
+					}else{
+						// separate list of dates
+						var dateString = datesAndKw[dd];
+						dateString = dateString.replace(/&nbsp;/g,'');
+						var dateList = dateString.match(/<span class=\"CorespondanceBold\">(.*?)[0-9]{4}/g);
+						// console.log(dateList);
+						if(dateList){
+							articleUpdate.dates = {};
+							articleUpdate.history = {};
+							for(var date=0 ; date<dateList.length ; date++){
+								var dateType = dateList[date].match(/<span class=\"CorespondanceBold\">(.*?)<\/span>/g);
+								dateType = dateType[0];
+								dateType = dateType.replace('<span class=\"CorespondanceBold\">','').replace('<\/span>','').replace(':','');
+								// console.log(dateType);
+								var dateDate = dateList[date].match(/<\/span>(.*?)[0-9]{4}/g);
+								dateDate = dateDate[0].replace('<\/span>','').replace(/^\s+|\s+$/g, '');
+								dateDate = dateDate + ' 00:00:00 EST'; // time of day is used to determine if date should have a day. For ex, type collection usually does not have a day.
+								dateDate = new Date(dateDate);
+								// console.log(dateDate);
+								if(dateType == 'Received'){
+									articleUpdate.history.received = dateDate;
+								}else if(dateType == 'Accepted'){
+									articleUpdate.history.accepted = dateDate;
+								}else if(dateType == 'Published'){
+									articleUpdate.dates.epub = dateDate;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 		// TODO: Add NLM type. Query article types collection.
@@ -153,6 +225,7 @@ Meteor.methods({
 		}
 
 		// Links
+		// -------------------
 		articleUpdate.legacy_files = {};
 		if(article.abstract){
 			articleUpdate.legacy_files.abstract_exists = true;
@@ -167,12 +240,6 @@ Meteor.methods({
 			articleUpdate.legacy_files.html_galley_id = article.html_galley_id;
 		}
 
-		// TODO: Add dates
-		// if(article.dates){}
-
-		// TODO: Add history
-		// if(article.history){}
-
 		// TODO: Affiliations
 		// articleUpdate.affiliations = [];
 
@@ -181,3 +248,4 @@ Meteor.methods({
 		return articleUpdate;
 	}
 });
+

@@ -636,7 +636,14 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				Router.go('ArticleNotFound');
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('Article', {_id: articleByPii._id});
+				}else{
+					Router.go('ArticleNotFound');
+				}
 			}
 
 			// get xml, figures, pdf links
@@ -745,9 +752,10 @@ if (Meteor.isClient) {
 			if(this.ready()){
 				var id = this.params._id;
 				Session.set('article-id',this.params._id);
-				var article = articles.findOne({'_id': id});
+				var article;
+				article = articles.findOne({'_id': id});
 				return {
-					article: article,
+					article: article
 				};
 			}
 		},
@@ -1091,12 +1099,15 @@ if (Meteor.isClient) {
 				var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
 				var sorted  = sorters.findOne();
 				var sortedArticles;
+				var journal = journalConfig.findOne();
+				journal = journal.journal;
 				if(sorted['articles']){
 					sortedArticles = sorted['articles'];
 				}
 				return {
 					feature : featureList,
-					advance : sortedArticles
+					advance : sortedArticles,
+					journal : journal
 				}
 			}
 		}
@@ -1122,7 +1133,15 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				Router.go('AdminArticleAdd');
+				// if the mongo id search found nothing, search by pii
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
 			}
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
