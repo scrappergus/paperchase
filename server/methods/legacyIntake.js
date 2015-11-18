@@ -86,6 +86,7 @@ Meteor.methods({
 			// TODO: Add journal param?
 			// requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
 			requestUrl += '?' + idType + '=' + idValue;
+			// console.log(requestUrl);
 			var res;
 			res = Meteor.http.get(requestUrl);
 			if(res){
@@ -139,19 +140,16 @@ Meteor.methods({
 
 			// Dates and Keywords
 			datesAndKw = article.abstract.match(/<span class=\"CorespondanceBold\">(.*?)<\/p>/g); //will return 2 items - kw and dates list. need to then separate dates.
-			// console.log(datesAndKw);
 			if(datesAndKw){
 				for(var dd=0; dd < datesAndKw.length ; dd++){
-					// console.log('................................');
 					// get type of date, or if kw list
 					var dateKwType = datesAndKw[dd].match(/<span class=\"CorespondanceBold\">(.*?)<\/span>/g);
-					dateKwType = dateKwType[0].replace('<span class=\"CorespondanceBold\">','').replace('<\/span>','').replace(':','');
+					dateKwType = dateKwType[0].replace('<span class=\"CorespondanceBold\">','').replace('<\/span>','').replace(/:/g,'').replace(/;/,'');
 					// console.log(dateKwType);
 					if(dateKwType == 'Keywords'){
 						var kwList = datesAndKw[dd].match(/<\/span>(.*?)<\/p>/g);
-						kwList = kwList[0].replace('<\/span>','').replace('<\/p>','').replace(/^\s+|\s+$/g, '');
+						kwList = kwList[0].replace('<\/span>: ','').replace('<\/p>','').replace(/^\s+|\s+$/g, '');
 						kwList = kwList.split(', '); // leave space when splitting to trim whitespace
-						// console.log(kwList);
 						articleUpdate.keywords = kwList
 					}else{
 						// separate list of dates
@@ -184,8 +182,6 @@ Meteor.methods({
 					}
 				}
 			}
-
-
 		}
 
 		// TODO: Add NLM type. Query article types collection.
