@@ -242,7 +242,7 @@ if (Meteor.isServer) {
   Meteor.publish('issues', function () {
     return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
   });
-  Meteor.publish('issues', function (volume,issue) {
+  Meteor.publish('issue', function (volume,issue) {
     return issues.find({volume: parseInt(volume), issue: parseInt(issue)});
   });
   Meteor.publish('issueArticles', function (volume,issue) {
