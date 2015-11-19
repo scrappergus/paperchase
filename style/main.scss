@@ -198,7 +198,11 @@ html,body{
 	/* --------- */
 	.full-text-image-container{
 		width: 50%;
-		margin: 0 auto;
+		margin: $margin-md auto;
+		h4{
+			padding: $pad-md;
+			border-bottom: 1px solid $gray-1;
+		}
 	}
 	.full-text-image{
 		width: 100%;
@@ -228,18 +232,30 @@ html,body{
 	.section-nav{
 		height: 90vh;
 		background: $white;
+		border: 1px solid $gray-1;
+		padding: $pad-md;
 		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
 		li{
-			margin: $margin-md 0;
+			margin: 0;
+			padding: $margin-md 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			border-bottom: 1px solid $gray-0;
+		}
+		a{
+			display: block;
+			width: 100%;
 		}
 		.article-header-1{
 			@extend h4;
 		}
 		.article-header-2{
 			@extend h5;
+			margin-left: $margin-md;
 		}
 		.article-header-3{
 			@extend p;
+			margin-left: $margin-lg;
 		}
 		a{
 			/*color: $link-text!important;*/
