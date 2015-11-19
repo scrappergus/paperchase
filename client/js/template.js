@@ -50,7 +50,7 @@ Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');
 });
 
-// Issue
+// Admin Issue
 // ------
 Template.AdminIssue.onRendered(function () {
 	var pick = $('#issue-date').pickadate();
@@ -89,7 +89,15 @@ Template.Home.onRendered(function () {
 		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 	});
 });
+
+// Issue
+// ------
+Template.Issue.onDestroyed(function () {
+	Session.set('issue',null)
+});
+
 // Article
+// --------
 Template.ArticleFigures.onRendered(function() {
 	$('.materialboxed').materialbox();
 	$('.owl-carousel').owlCarousel();
