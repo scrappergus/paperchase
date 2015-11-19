@@ -526,9 +526,13 @@ if (Meteor.isClient) {
 			this.next();
 		},
 		waitOn: function(){
+			var vi = this.params.vi;
+			var matches = vi.match('v([0-9]+)i([0-9]+)');
+			var volume = parseInt(matches[1]);
+			var issue = parseInt(matches[2]);
 			return[
-				Meteor.subscribe('issues'),
-				Meteor.subscribe('articles'),
+				Meteor.subscribe('issue',volume,issue),
+				Meteor.subscribe('issueArticles',volume,issue)
 			]
 		},
 		// data: function(){
