@@ -308,54 +308,81 @@ Meteor.fullText = {
 		return content;
 	},
 	convertFigure: function(node,figures){
-		var content = '',
-			figureId = '',
-			figureUrl = '',
-			figureTitle = '',
-			figureCaption = '';
-			figureFound  = true;
-
+		var figObj = {};
 		// get the figure ID
 		for(var figAttr = 0 ; figAttr < node.attributes.length ; figAttr++){
 			if(node.attributes[figAttr].localName === 'id'){
-				figureId = node.attributes[figAttr].nodeValue;
+				figObj.id = node.attributes[figAttr].nodeValue;
 				for(var f = 0 ; f < figures.length ; f++){
-					if(figures[f]['figureID'] === figureId){
+					if(figures[f]['figureID'] === figObj.id){
 						// TODO : are there ever more than 1 image in this array? assets api response has an array of images for each fig.. waiting for example
-						figureUrl = figures[f]['imgURLs'][0];
-						figureTitle = figures[f]['figureTitle'];
-						figureCaption = figures[f]['figureText'];
+						figObj.url = figures[f]['imgURLs'][0];
 					}
 				}
 			}
 		}
 
-		// make the figure content
-		content += '<div class="full-text-image-container box border-gray center-align" id="' + figureId + '">';
-			if(figureTitle != ''){
-				content += '<h4>' + figureTitle + '</h4>';
+		// get the figure label, title, caption
+		//------------------
+		if(node.childNodes){
+
+			for(var figChild=0 ; figChild < node.childNodes.length ; figChild++){
+				var nod = node.childNodes[figChild];
+				// label
+					if(nod.localName == 'label'){
+						figObj.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+					}
+				//------------------
+				// title and caption
+				//------------------
+				if(nod.childNodes){
+					for(var c = 0 ; c < nod.childNodes.length ; c++){
+						var n = nod.childNodes[c];
+						// console.log(n.localName);
+						// figure title
+						// ------------
+						if(n.localName == 'title'){
+							figObj.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
+						}
+						// figure caption
+						// ------------
+						if(n.localName == 'p'){
+							figObj.caption = Meteor.fullText.convertContent(n);
+						}
+					}
+				}
 			}
-			content += '<img class="materialboxed full-text-image" src="' + figureUrl +'"/>';
-			if(figureCaption != ''){
-				content += '<p>' + figureCaption + '</p>';
-			}
-		content += '</div>';
-		return content;
+		}
+
+		return figObj;
 	},
 	convertReference: function(reference){
 		// console.log('...............convertReference');
 		var referenceObj = {};
 		for(var r = 0 ; r < reference.childNodes.length ; r++){
+			// console.log('r = ' + r);
 			if(reference.childNodes[r].childNodes){
 				var referencePart,
 					referencePartName;
 				// Reference Title, Source, Pages, Year, Authors
+				// -------
 				if(reference.childNodes[r].localName){
 					referencePart = reference.childNodes[r];
 					referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
-
-					// Title, Source, Pages, Year,
-					if(referencePartName && referencePartName != 'person_group'){
+					// console.log(referencePartName);
+					if(referencePartName == 'person_group'){
+						referenceObj.authors = Meteor.fullText.traverseAuthors(referencePart);
+					}else if(referencePartName == 'pub_id'){
+						// make sure attribute has pmid
+						var pmid = false;
+						for(var attr=0 ; attr<referencePart.attributes.length ; attr++){
+							// console.log(attr);
+							if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'pmid'){
+								// console.log(referencePart.childNodes[0].nodeValue);
+								referenceObj.pmid =referencePart.childNodes[0].nodeValue;
+							}
+						}
+					}else if(referencePartName){
 						if(referencePart.childNodes){
 							var referencePartCount = referencePart.childNodes.length;
 							for(var part = 0 ; part < referencePartCount ; part++){
@@ -364,13 +391,16 @@ Meteor.fullText = {
 								}
 							}
 						}
-					// Authors
-					}else if(referencePartName == 'person_group'){
-						referenceObj.authors = Meteor.fullText.traverseAuthors(referencePart);
 					}
 				}
 			}
 		}
+
+		// TODO: If no PMID, try to search on PubMed.
+		// if(!referenceObj.pmid){
+			// console.log(referenceObj);
+			// Meteor.call('getPubMedId',referenceObj);
+		// }
 		// console.log(referenceObj);
 		return referenceObj;
 	},
@@ -488,15 +518,33 @@ Meteor.fullText = {
 		return string;
 	},
 	fixTags: function(content){
-		// style tags
-		content = content.replace(/<italic>/g,'<i>');
-		content = content.replace(/<\/italic>/g,'</i>');
-		content = content.replace(/<bold>/g,'<b>');
-		content = content.replace(/<\/bold>/g,'</b>');
+		// Either object or string.
+		// Figures are the only one with content array containing objects instead of strings
+		if(!content.title){
+			// style tags
+			content = content.replace(/<italic>/g,'<i>');
+			content = content.replace(/<\/italic>/g,'</i>');
+			content = content.replace(/<bold>/g,'<b>');
+			content = content.replace(/<\/bold>/g,'</b>');
 
-		// remove deprecated
-		content = content.replace(/<fn>/g,'');
-		content = content.replace(/<\/fn>/g,'');
+			// remove deprecated
+			content = content.replace(/<fn>/g,'');
+			content = content.replace(/<\/fn>/g,'');
+		}else if(content.title){
+			// figures
+			if(content.label){
+				var label = Meteor.fullText.fixTags(content.label);
+				content.label = label;
+			}
+			if(content.title){
+				var title = Meteor.fullText.fixTags(content.title);
+				content.title = title;
+			}
+			if(content.caption){
+				var cap = Meteor.fullText.fixTags(content.caption);
+				content.caption = cap;
+			}
+		}
 
 		return content;
 	}

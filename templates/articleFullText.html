@@ -23,7 +23,7 @@
 			<h3 id="references">References</h3>
 			<ul>
 				{{#each references}}
-					<li id="R{{number}}"><b>{{number}}.</b>{{#if authors}} {{authors}}.{{/if}}{{#if article_title}} {{article_title}}.{{/if}}{{#if source}} {{source}}.{{/if}}{{#if year}} {{year}}{{/if}}{{#if volume}}; {{volume}}{{/if}}{{#if fpage}}: {{fpage}}{{/if}}{{#if lpage}}-{{lpage}}{{/if}}.</li>
+					<li id="R{{number}}"><b>{{number}}.</b>{{#if authors}} {{authors}}.{{/if}}{{#if article_title}} {{article_title}}.{{/if}}{{#if source}} {{source}}.{{/if}}{{#if year}} {{year}}{{/if}}{{#if volume}}; {{volume}}{{/if}}{{#if fpage}}: {{fpage}}{{/if}}{{#if lpage}}-{{lpage}}{{/if}}{{#if pmid}}. [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]{{/if}}.</li>
 				{{/each}}
 			</ul>
 		{{/if}}
@@ -40,7 +40,14 @@
 			{{/if}}
 
 			{{#if equals contentType 'figure'}}
-			{{{content}}}
+			{{#with content}}
+			<div class="full-text-image-container box border-gray center-align" id="{{id}}">
+				{{#if label}}<label>{{{label}}}</label>{{/if}}
+				{{#if url}}<img class="materialboxed full-text-image" src="{{url}}"/>{{/if}}
+				{{#if title}}<h4>{{{title}}}</h4>{{/if}}
+				{{#if caption}}<p>{{{caption}}}</p>{{/if}}
+			</div>
+			{{/with}}
 			{{/if}}
 
 			{{#if equals contentType 'table'}}
