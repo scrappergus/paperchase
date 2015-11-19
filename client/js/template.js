@@ -100,6 +100,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                 var sorted  = sorters.findOne({name:'advance'});
                                 var output = [];
                                 var last_article = {};
+                                var recent = true;
                                 for (var i = 0; i < sorted.articles.length; i++){
                                     article = sorted.articles[i];
 
@@ -274,6 +275,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                 var sorted  = sorters.findOne({name:'advance'});
                                 var output = [];
                                 var last_article = {};
+                                var recent = true;
                                 for (var i = 0; i < sorted.articles.length; i++){
                                     article = sorted.articles[i];
 
