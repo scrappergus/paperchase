@@ -333,8 +333,7 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('volumes'),
-				Meteor.subscribe('issues'),
-				Meteor.subscribe('articles'),
+				Meteor.subscribe('issues')
 			]
 		},
 		onAfterAction: function() {
@@ -662,7 +661,7 @@ if (Meteor.isClient) {
 				Router.go('ArticleNotFound');
 			}
 
-			// Get assets and text
+			// Get assets and fulltext
 			Session.set('article-text', null);
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
