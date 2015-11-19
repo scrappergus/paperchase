@@ -259,7 +259,6 @@ if (Meteor.isClient) {
 		name: 'AdminAdvanceArticlesDiff',
 		layoutTemplate: 'Admin',
 		waitOn: function(){
-			console.log('..wait');
 			return[
 				Meteor.subscribe('advance'),
 				Meteor.subscribe('sortedList','advance')
