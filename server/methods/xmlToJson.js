@@ -532,9 +532,10 @@ Meteor.fullText = {
 		return string;
 	},
 	fixTags: function(content){
+		// console.log(typeof content)
 		// Either object or string.
 		// Figures are the only one with content array containing objects instead of strings
-		if(!content.title){
+		if(typeof content == String){
 			// style tags
 			content = content.replace(/<italic>/g,'<i>');
 			content = content.replace(/<\/italic>/g,'</i>');
@@ -544,7 +545,7 @@ Meteor.fullText = {
 			// remove deprecated
 			content = content.replace(/<fn>/g,'');
 			content = content.replace(/<\/fn>/g,'');
-		}else if(content.title){
+		}else{
 			// figures
 			if(content.label){
 				var label = Meteor.fullText.fixTags(content.label);
