@@ -1,7 +1,36 @@
 if (Meteor.isClient) {
+	// Forms
+	// -------
+	Template.registerHelper('checked', function(bool) {
+		if(bool){
+			return 'checked';
+		}
+	});
+	// Article
+	// -------
+	Template.registerHelper('affiliationNumber', function(affiliation) {
+		return parseInt(parseInt(affiliation) + 1);
+	});
 	Template.registerHelper('pubStatusAbbrev', function (number) {
 		if(pubStatusTranslate[parseInt(number - 1)]){
 			return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+		}
+	});
+	// Dates
+	// -----
+	Template.registerHelper('dateDayExists',function(date){
+		//if the date object should have a day value associated with it
+		if(moment(date).format('HH') == 00){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	Template.registerHelper('placeholderDate',function(date){
+		if(moment(date).format('HH') == 00){
+			return moment(date).format('M D, YYYY');;
+		}else{
+			return moment(date).format('M YYYY');;
 		}
 	});
 	Template.registerHelper('getMonthWord', function(month) {
@@ -21,26 +50,6 @@ if (Meteor.isClient) {
 		month[11] = 'December';
 		return month[d.getMonth()];
 	});
-	Template.registerHelper('dateDayExists',function(date){
-		//if the date object should have a day value associated with it
-		if(moment(date).format('HH') == 00){
-			return true;
-		}else{
-			return false;
-		}
-	});
-	Template.registerHelper('placeholderDate',function(date){
-		if(moment(date).format('HH') == 00){
-			return moment(date).format('M D, YYYY');;
-		}else{
-			return moment(date).format('M YYYY');;
-		}
-	});
-	Template.registerHelper('checked', function(bool) {
-		if(bool){
-			return 'checked';
-		}
-	});
 	Template.registerHelper('inputDate', function(date) {
 		return moment(date).format('YYYY/MM/DD');
 	});
@@ -49,9 +58,6 @@ if (Meteor.isClient) {
 	});
 	Template.registerHelper('formatDateNumber', function(date) {
 		return moment(date).format('MM/D/YYYY');
-	});
-	Template.registerHelper('affiliationNumber', function(affiliation) {
-		return parseInt(parseInt(affiliation) + 1);
 	});
 	Template.registerHelper('formatIssueDate', function(date) {
 		return moment(date).format('MMMM YYYY');
@@ -71,6 +77,8 @@ if (Meteor.isClient) {
 	Template.registerHelper('getDay',function(date) {
 		return moment(date).format('D');
 	});
+	// Equals
+	// -------
 	Template.registerHelper('equals', function (a, b) {
 		return a == b;
 	});
@@ -79,6 +87,8 @@ if (Meteor.isClient) {
 			return true;
 		}
 	});
+	// Modify
+	// -------
 	Template.registerHelper('arrayify',function(obj){
 		result = [];
 		for (var key in obj) result.push({name:key,value:obj[key]});
@@ -87,8 +97,10 @@ if (Meteor.isClient) {
 	Template.registerHelper('countItems', function(items) {
 		return items.length;
 	});
+	// Subscribers
+	// -------
 	Template.registerHelper('clientIP', function() {
-			return headers.getClientIP();
+		return headers.getClientIP();
 	});
     Template.registerHelper('isSubscribed', function() {
             ip = Meteor.ip.dot2num(headers.getClientIP());
