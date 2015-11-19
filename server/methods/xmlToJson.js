@@ -3,6 +3,7 @@ dom = Meteor.npmRequire('xmldom').DOMParser;
 Meteor.methods({
 	availableAssests: function(mongoId){
 		// console.log('... availableAssests ' + mongoId);
+		// for the issue and article page. show appropriate button
 		var fut = new future();
 		var pii,
 			articleInfo,
@@ -16,12 +17,11 @@ Meteor.methods({
 			assetsLink = configSettings.api.assets;
 
 			if(pii){
-				// console.log('assetsLink + pii');
-				// console.log(assetsLink + pii);
+				// console.log('assetsLink + pii');console.log(assetsLink + pii);
 				// get asset links
+				// ----------------
 				resLinks = Meteor.http.get(assetsLink + pii);
-				// console.log('resLinks');
-				// console.log(resLinks);
+				// console.log('resLinks');console.log(resLinks);
 				if(resLinks && resLinks.content != '{"error":"No XML data found for this PII."}'){
 					resLinks = resLinks.content;
 					resLinks = JSON.parse(resLinks);
@@ -66,6 +66,7 @@ Meteor.methods({
 
 		if(pii){
 			// get asset links
+			// ---------------
 			resLinks = Meteor.http.get(assetsLink + pii);
 			if(resLinks){
 				resLinks = resLinks.content;
@@ -76,18 +77,17 @@ Meteor.methods({
 			}
 
 			// get XML
+			// ---------------
 			if(articleFullTextLink){
 				resXml = Meteor.http.get(articleFullTextLink);
 				if(resXml){
-					// XML to JSON
 					xml = resXml.content;
 					// console.log(xml);
 				}
 			}
 
-			// get Figures
-
-
+			// convert XML
+			// ---------------
 			if(xml){
 				var articleJson = Meteor.call('fullTextToJson',xml, resLinks.figures);
 			}
@@ -152,11 +152,19 @@ Meteor.methods({
 				var refAttributes = reference.attributes;
 				var referenceObj = {};
 
-				// Reference content
-				// ------------------
+				// Reference content and type
+				// --------------------------
 				for(var refPiece =0 ; refPiece < reference.childNodes.length ; refPiece++){
 					if(reference.childNodes[refPiece].localName === 'element-citation'){
+						// Reference content
 						referenceObj = Meteor.fullText.convertReference(reference.childNodes[refPiece])
+						// Reference type
+						var citationAttributes = reference.childNodes[refPiece].attributes;
+						for(var cAttr=0 ; cAttr<citationAttributes.length ; cAttr++){
+							if(citationAttributes[cAttr].localName == 'publication-type'){
+								referenceObj.type = citationAttributes[cAttr].nodeValue;
+							}
+						}
 					}
 				}
 				// Reference number
@@ -177,6 +185,7 @@ Meteor.methods({
 	},
 });
 
+// for handling sections of XML, content, special elements like figures, references, tables
 Meteor.fullText = {
 	sectionToJson: function(section,figures){
 		// XML processing of part of the content, <sec>
@@ -357,7 +366,7 @@ Meteor.fullText = {
 		return figObj;
 	},
 	convertReference: function(reference){
-		console.log('...............convertReference');
+		// console.log('...............convertReference');
 		var referenceObj = {};
 		for(var r = 0 ; r < reference.childNodes.length ; r++){
 			// console.log('r = ' + r);
@@ -382,7 +391,17 @@ Meteor.fullText = {
 								referenceObj.pmid =referencePart.childNodes[0].nodeValue;
 							}
 						}
+					}else if(referencePartName == 'article_title'){
+						if(referencePart.childNodes){
+							var referencePartCount = referencePart.childNodes.length;
+							for(var part = 0 ; part < referencePartCount ; part++){
+								if(referencePart.childNodes[part].nodeValue){
+									referenceObj['title'] = referencePart.childNodes[part].nodeValue;
+								}
+							}
+						}
 					}else if(referencePartName){
+						// source, year, pages, issue, volume, chapter_title
 						if(referencePart.childNodes){
 							var referencePartCount = referencePart.childNodes.length;
 							for(var part = 0 ; part < referencePartCount ; part++){

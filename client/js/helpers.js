@@ -8,6 +8,29 @@ if (Meteor.isClient) {
 	});
 	// Article
 	// -------
+	Template.registerHelper('getPmid', function(article) {
+		// console.log('..getPmid');
+		// for references without PMID in XML
+		var pmid;
+		if(article.title){
+			// console.log(article.number + ' = ' +article.title);
+			Meteor.call('getPubMedId', article, function(error, pmid){
+				if(pmid){
+					var fullText = Session.get('article-text');
+					var references = fullText.references;
+					// Update reference PMID key
+					// do not rely on number of reference as index of reference in array.
+					for(var ref=0 ; ref<references.length ; ref++){
+						if(references[ref].number === article.number){
+							fullText.references[ref].pmid = pmid;
+							// Update Session variable
+							Session.set('article-text',fullText);
+						}
+					}
+				}
+			});
+		}
+	});
 	Template.registerHelper('affiliationNumber', function(affiliation) {
 		return parseInt(parseInt(affiliation) + 1);
 	});
