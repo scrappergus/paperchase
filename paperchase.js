@@ -813,7 +813,7 @@ if (Meteor.isClient) {
 			// });
 		}
 	});
-	Router.route('/article/figureViewer(.*)', {
+	Router.route('/figure(.*)', {
 		name: 'ArticleFigureViewer',
 		layoutTemplate: 'ArticleFigureViewer',
 		data: function(){
