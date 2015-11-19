@@ -22,8 +22,6 @@ articles.after.insert(function (userId, doc) {
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
   var volume,
       issue;
-  // console.log('..before update article');
-  // console.log(modifier['$set']);
   // Advance article. Update sorters colleciton.
   if(modifier['$set']){
     if(modifier['$set']['advance']){
@@ -33,6 +31,10 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }
   }
 
+  // for when we want to skip things in the hook
+  if(modifier['$set']['batch']){
+    delete modifier['$set']['batch'];
+  }
 
   // Affiliations
   //add affiliation number to author

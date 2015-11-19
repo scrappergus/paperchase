@@ -136,7 +136,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                         section_name = article.section_name;
                                         if(section_name == 'Research Papers' && recent === true) {
                                             recent = false;
-                                            section_name = 'Recent Research Papers'; 
+                                            section_name = 'Recent Research Papers';
                                         }
 
                                         output.push({
@@ -311,7 +311,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                         section_name = article.section_name;
                                         if(section_name == 'Research Papers' && recent === true) {
                                             recent = false;
-                                            section_name = 'Recent Research Papers'; 
+                                            section_name = 'Recent Research Papers';
                                         }
 
                                         output.push({
@@ -370,7 +370,7 @@ Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');
 });
 
-// Issue
+// Admin Issue
 // ------
 Template.AdminIssue.onRendered(function () {
 	var pick = $('#issue-date').pickadate();
@@ -410,10 +410,27 @@ Template.Home.onRendered(function () {
 	});
 });
 
+// Issue
+// ------
+Template.Issue.onDestroyed(function () {
+	Session.set('issue',null)
+});
+
 // Article
+// --------
 Template.ArticleFigures.onRendered(function() {
-	$('.materialboxed').materialbox();
 	$('.owl-carousel').owlCarousel();
+});
+Template.ArticleFigureViewer.onRendered(function() {
+	$('.figure img, .table img').wrap('<div class="container"></div>');
+	var $panzoom = $('.figure img, .table img').panzoom({
+					$zoomIn: $('.zoom-in'),
+					$zoomOut: $('.zoom-out'),
+					$zoomRange: $('.zoom-range'),
+					$reset: $(".reset"),
+					maxScale: 3,
+					increment: 0.1
+				}).panzoom('zoom', true);
 });
 Template.ArticleText.onRendered(function() {
 	$('.materialboxed').materialbox();
