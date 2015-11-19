@@ -357,7 +357,7 @@ Meteor.fullText = {
 		return figObj;
 	},
 	convertReference: function(reference){
-		// console.log('...............convertReference');
+		console.log('...............convertReference');
 		var referenceObj = {};
 		for(var r = 0 ; r < reference.childNodes.length ; r++){
 			// console.log('r = ' + r);
@@ -396,11 +396,6 @@ Meteor.fullText = {
 			}
 		}
 
-		// TODO: If no PMID, try to search on PubMed.
-		// if(!referenceObj.pmid){
-			// console.log(referenceObj);
-			// Meteor.call('getPubMedId',referenceObj);
-		// }
 		// console.log(referenceObj);
 		return referenceObj;
 	},
