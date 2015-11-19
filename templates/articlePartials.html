@@ -134,6 +134,9 @@
 	{{#each sections}}
 	<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>
 	{{/each}}
+	{{#if references}}
+	<li><a class="article-header-1 anchor" href="#references">References</a></li>
+	{{/if}}
 </template>
 
 <!--admin partials-->
