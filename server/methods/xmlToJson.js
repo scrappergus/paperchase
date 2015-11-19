@@ -200,7 +200,7 @@ Meteor.fullText = {
 			if(sec.localName != null){
 				// Different processing for different node types
 				if(sec.localName === 'title'){
-					sectionObject.title = Meteor.fullText.sectionTitle(sec);
+					sectionObject.title = Meteor.fullText.convertContent(sec);
 				}else if(sec.localName === 'table-wrap'){
 					// get attributes
 					var tableId;
@@ -236,29 +236,6 @@ Meteor.fullText = {
 		// section ids are in the format, s1, s1_1, s1_1_1
 		var sectionIdPieces = sectionId.split('_');
 		return sectionIdPieces.length;
-	},
-	sectionTitle: function(node){
-		// Section: Title
-		var sectionTitle = '';
-		// if length greater than 1, then there are styling tags in the title. for ex, <italic>
-		if(node.childNodes.length === 1){
-			sectionTitle = node.childNodes[0].nodeValue;
-		}else{
-			for(var i = 0 ; i < node.childNodes.length ; i++){
-				if(node.childNodes[i].nodeValue){
-					sectionTitle += node.childNodes[i].nodeValue;
-				}else{
-					// Get the style tag
-					sectionTitle += '<' + node.childNodes[i].localName + '>';
-					// Get the node value of the style tag
-					sectionTitle += node.childNodes[i].childNodes[0].nodeValue;
-					// Close the style tag
-					sectionTitle += '</' + node.childNodes[i].localName + '>';
-				}
-			}
-		}
-		// console.log(sectionTitle);
-		return sectionTitle;
 	},
 	convertContent: function(node){
 		// console.log('convertContent');
@@ -532,10 +509,10 @@ Meteor.fullText = {
 		return string;
 	},
 	fixTags: function(content){
-		// console.log(typeof content)
+		// console.log('...fixTags');
 		// Either object or string.
 		// Figures are the only one with content array containing objects instead of strings
-		if(typeof content == String){
+		if(typeof content == 'string'){
 			// style tags
 			content = content.replace(/<italic>/g,'<i>');
 			content = content.replace(/<\/italic>/g,'</i>');
