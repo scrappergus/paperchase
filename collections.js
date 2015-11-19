@@ -248,11 +248,6 @@ if (Meteor.isServer) {
   Meteor.publish('issueArticles', function (volume,issue) {
     return articles.find({volume: parseInt(volume), issue: parseInt(issue)});
   });
-
-
-  Meteor.publish('issue', function (v,i) {
-    return issues.find({'volume': parseInt(v), 'issue': parseInt(i)});
-  });
   Meteor.publish('currentIssue',function(){
     return issues.find({},{sort : {volume:-1,issue:-1}});
   });
