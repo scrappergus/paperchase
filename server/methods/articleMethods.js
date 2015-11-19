@@ -30,7 +30,7 @@ Meteor.methods({
 		//INSERT into articles colection
 		return articles.insert(articleData);
 	},
-	updateArticle: function(mongoId, articleData){
+	updateArticle: function(mongoId, articleData, batch){
 		// console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 		if(!mongoId){
@@ -44,6 +44,7 @@ Meteor.methods({
 			return Meteor.call('addArticle', articleData);
 		}else if(mongoId){
 			// Update existing
+			articleData.batch = batch;
 			return articles.update({'_id' : mongoId}, {$set: articleData});
 		}else{
 			throw new Meteor.Error('ERROR: Duplicate Article - ' + duplicateArticle._id);

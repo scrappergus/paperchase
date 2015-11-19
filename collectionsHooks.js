@@ -22,16 +22,20 @@ articles.after.insert(function (userId, doc) {
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
   var volume,
       issue;
-  // console.log('..before update article');
-  // console.log(modifier['$set']);
+      // console.log(doc._id);
   // Advance article. Update sorters colleciton.
-  if(modifier['$set']){
-    if(modifier['$set']['advance']){
-      Meteor.call('sorterAddArticle','advance',doc._id);
-    }else{
-      Meteor.call('sorterRemoveArticle','advance',doc._id);
+  if(!modifier['$set']['batch']){
+    if(modifier['$set']){
+      if(modifier['$set']['advance']){
+        Meteor.call('sorterAddArticle','advance',doc._id);
+      }else{
+        Meteor.call('sorterRemoveArticle','advance',doc._id);
+      }
     }
+  }else{
+    delete modifier['$set']['batch'];
   }
+
 
 
   // Affiliations
