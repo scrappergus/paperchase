@@ -513,6 +513,13 @@ if (Meteor.isClient) {
 			var volume = parseInt(matches[1]);
 			var issue = parseInt(matches[2]);
 
+			// TODO: add redirect if no issue
+
+			// for issue header while articles are processing and we retrieve assets links from API
+			var issueData = issues.findOne();
+			// console.log(issueData);
+			Session.set('issue',issueData);
+
 			Meteor.call('getIssueAndAssets',volume,issue,function(error,result){
 				if(error){
 					console.log('ERROR - getIssueAndAssets');
