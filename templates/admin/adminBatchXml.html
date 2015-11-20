@@ -1,6 +1,28 @@
 <template name="AdminBatchXml">
     {{>AdminHeader header="XML Intake"}}
-
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h3>Advance Order</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <button id="advance-order-update" class="btn waves-effect waves-light orange lighten-3">Update Advance Order</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <p>From OJS. Uses API http://www.impactjournals.com/ojs-api/index.php?get_advance_piis=1 to loop through PII and get MongoID to then add to the advance doc in the sorters collection.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- <div class="row">
         <div class="col s12">
             <div class="card">

@@ -754,9 +754,22 @@ Template.AdminAdvanceArticles.events({
 
 // Batch
 Template.AdminBatchXml.events({
-	'click #get-issue': function(e){
+	'click #advance-order-update' : function(e){
 		e.preventDefault();
 		console.log('clicked');
+		Meteor.call('batchUpdateAdvanceOrderByPii',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
+			}
+		});
+	},
+	'click #get-issue': function(e){
+		e.preventDefault();
+		// console.log('clicked');
 		Meteor.call('fixIssueId',function(e,r){
 			if(e){
 				console.log('ERROR');
