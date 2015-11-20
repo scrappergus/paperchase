@@ -88,11 +88,7 @@
 	{{#each figures}}
 		<div>
 			<h4 class="center-align">{{{figureTitle}}}</h4>
-<<<<<<< HEAD:templates/articlePartials.html
-            {{#each imgURLs}}<a href="/article/figureViewer/?img={{.}}" target="_blank"><img src="{{.}}" width="100%;"></a>{{/each}}
-=======
 			{{#each imgURLs}}<a href="/figure/?article={{articleId .}}&img={{.}}" target="_blank"><img src="{{.}}" width="100%;"></a>{{/each}}
->>>>>>> da64e92253a635c705347a902bb7e0e4d802c339:templates/article/articlePartials.html
 			<!-- <p>{{{figureText}}}</p> -->
 		</div>
 	{{/each}}
