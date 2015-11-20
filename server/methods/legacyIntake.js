@@ -1,12 +1,30 @@
 // Article vs Articles will tell whether the function is for multiple or 1 article
 Meteor.methods({
+	batchUpdate:function(){
+		var journalInfo = journalConfig.findOne();
+		var journalShortName = journalInfo.journal.short_name;
+		var articlesList = articles.find().fetch();
+		for(var a=0 ; a < articlesList.length ; a++){
+			var article = articlesList[a];
+			if(article.ids.pii){
+				// console.log(article.ids.pii);
+				var params = {};
+					params.id_type = 'pii',
+					params.id = article.ids.pii,
+					params.journal = journalShortName,
+					params.batch = true;
+				Meteor.call('legacyArticleIntake',params);
+			}
+		}
+	},
 	legacyArticleIntake: function(articleParams){
 		// console.log('...legacyArticleIntake');
 		// console.log(articleParams);
 		var idType = articleParams.id_type,
 			idValue = articleParams.id,
 			journal = articleParams.journal,
-			advance = articleParams.advance;
+			advance = articleParams.advance,
+			batch = articleParams.batch;
 		var article,
 			articleMongoId,
 			paperchaseQueryParams,
@@ -41,7 +59,7 @@ Meteor.methods({
 			if(article){
 				articleMongoId =  article['_id'];
 				// console.log('    Update = ' + processedArticleJson['title']);
-				Meteor.call('updateArticle', articleMongoId, processedArticleJson);
+				Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch);
 			}else{
 				// console.log('    Add = ' + processedArticleJson['title']);
 				processedArticleJson['doc_updates'] = {} ;
@@ -109,6 +127,10 @@ Meteor.methods({
 
 		if(article.title){
 			articleUpdate.title = article.title;
+		}
+
+		if(article.advance){
+			articleUpdate.advance = article.advance;
 		}
 
 		if(article.volume){
