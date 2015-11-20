@@ -253,7 +253,10 @@ Meteor.methods({
 			articleByPii;
 		article = articles.findOne({'_id': articleId});
 		articleByPii = articles.findOne({'ids.pii':articleId});
-		if(!article || !articleByPii){
+		if(!article && !articleByPii){
+			article = {};
+		}
+		if(!articleId){
 			article = {};
 		}
 
