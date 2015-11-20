@@ -113,10 +113,10 @@ Template.ArticleFigureViewer.onRendered(function() {
 				}).panzoom('zoom', true);
 });
 Template.ArticleText.onRendered(function() {
-	$('.materialboxed').materialbox();
+	// $('.materialboxed').materialbox();
 });
 Template.ArticleFullText.onRendered(function() {
-	$('.materialboxed').materialbox(); // popup image
+	// $('.materialboxed').materialbox(); // popup image
 });
 Template.ArticleFullText.onDestroyed(function () {
 	Session.set('article-text',null)
