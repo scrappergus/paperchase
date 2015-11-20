@@ -69,7 +69,7 @@
 			{{#with content}}
 			<div class="full-text-image-container box border-gray center-align" id="{{id}}">
 				{{#if label}}<label>{{{label}}}</label>{{/if}}
-				{{#if url}}<img class="materialboxed full-text-image" src="{{url}}"/>{{/if}}
+				{{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
 				{{#if title}}<h4>{{{title}}}</h4>{{/if}}
 				{{#if caption}}<p>{{{caption}}}</p>{{/if}}
 			</div>
