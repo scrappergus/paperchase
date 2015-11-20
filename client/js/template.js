@@ -136,7 +136,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                         section_name = article.section_name;
                                         if(section_name == 'Research Papers' && recent === true) {
                                             recent = false;
-                                            section_name = 'Recent Research Papers'; 
+                                            section_name = 'Recent Research Papers';
                                         }
 
                                         output.push({
@@ -311,7 +311,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
                                         section_name = article.section_name;
                                         if(section_name == 'Research Papers' && recent === true) {
                                             recent = false;
-                                            section_name = 'Recent Research Papers'; 
+                                            section_name = 'Recent Research Papers';
                                         }
 
                                         output.push({
