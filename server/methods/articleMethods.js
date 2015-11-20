@@ -247,12 +247,13 @@ Meteor.methods({
 		return issueId;
 	},
 	preProcessArticle: function(articleId){
+		// Article Form: On - Article Edit, Add Article, Data Submissions
 		// console.log('..preProcessArticle = ' + articleId);
 		var article,
 			articleByPii;
 		article = articles.findOne({'_id': articleId});
 		articleByPii = articles.findOne({'ids.pii':articleId});
-		if(!article && !articleByPii){
+		if(!article || !articleByPii){
 			article = {};
 		}
 
