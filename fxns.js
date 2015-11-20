@@ -284,6 +284,29 @@ Meteor.dataSubmissions = {
 }
 
 Meteor.article = {
+	// articleExists: function(id,fullText){
+	// 	console.log('..articleExists = ' + id);
+	// 	var articleExists = articles.findOne({'_id': id});
+	// 	// console.log('articleExists = ');
+	// 	// console.log(articleExists);
+	// 	if(!articleExists){
+	// 		var articlePii = String(id);
+	// 		var articleByPii = articles.findOne({'ids.pii': articlePii});
+	// 		// console.log('articleByPii = ');
+	// 		// console.log(articleByPii);
+	// 		// check if :_id is a pii and not Mongo ID
+	// 		if(articleByPii && fullText){
+	// 			// console.log('redirect');
+	// 			Router.go('ArticleText', {_id: articleByPii._id});
+	// 		}else if(articleByPii && !fullText){
+	// 			Router.go('Article', {_id: articleByPii._id});
+	// 		}else{
+	// 			Router.go('ArticleNotFound');
+	// 		}
+	// 	}else{
+	// 		return true;
+	// 	}
+	// },
 	affiliationsNumbers: function(article){
 		if(article['authors']){
 			var authorsList = article['authors'];
@@ -494,9 +517,11 @@ Meteor.general = {
 		e.preventDefault();
 		var anchor = $(e.target).attr('href');
 		var navTop = Meteor.general.navHeight();
-		anchor = anchor.replace('#','');
-		$('html, body').animate({
-			scrollTop: $('#' + anchor).position().top - navTop
-		}, 500);
+		if(anchor){
+			anchor = anchor.replace('#','');
+			$('html, body').animate({
+				scrollTop: $('#' + anchor).position().top - navTop
+			}, 500);
+		}
 	}
 }

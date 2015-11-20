@@ -754,18 +754,45 @@ Template.adminArticleXmlProcess.events({
 
 // Batch
 Template.AdminBatchXml.events({
-	'click #intake-advance': function(e){
+	// 'click #intake-advance': function(e){
+	// 	e.preventDefault();
+	// 	for(var i = 0 ; i < advanceArticlesIntake.length ; i++){
+	// 		console.log(advanceArticlesIntake[i]);
+	// 		var obj = {
+	// 			id_type : 'pii',
+	// 			id : advanceArticlesIntake[i],
+	// 			journal : 'oncotarget',
+	// 			advance : 1
+	// 		}
+	// 		Meteor.call('legacyArticleIntake', obj);
+	// 	}
+	// },
+	'click #advance-order-update' : function(e){
 		e.preventDefault();
-		for(var i = 0 ; i < advanceArticlesIntake.length ; i++){
-			console.log(advanceArticlesIntake[i]);
-			var obj = {
-				id_type : 'pii',
-				id : advanceArticlesIntake[i],
-				journal : 'oncotarget',
-				advance : 1
+		console.log('clicked');
+		Meteor.call('batchUpdateAdvanceOrderByPii',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
+			}
+		});
+	},
+	'click #get-issue': function(e){
+		e.preventDefault();
+		// console.log('clicked');
+		Meteor.call('fixIssueId',function(e,r){
+			if(e){
+				console.log('ERROR');
+				console.log(e);
+			}else{
+				console.log('DONE');
+				console.log(r);
 			}
 			Meteor.call('legacyArticleIntake', obj);
-		}
+		});
 
 		// Meteor.call('updateAllArticlesAuthorsAffiliations',function(e,r){
 		// 	if(e){

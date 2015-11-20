@@ -347,4 +347,32 @@ Meteor.methods({
 			return article;
 		}
 	},
+	batchUpdateAdvanceOrderByPii: function(){
+		// console.log('..batchUpdateAdvanceOrderByPii');
+		var advanceOrder = [];
+		var piiList;
+		var piiUrl = 'http://www.impactjournals.com/ojs-api/index.php?get_advance_piis=1';
+		var res;
+		res = Meteor.http.get(piiUrl);
+
+		// Put Mongo ID in correct order
+		if(res){
+			piiList =  JSON.parse(res.content);
+			for(var p=0 ; p<piiList.length ; p++){
+				// console.log(piiList[p]);
+				var article = articles.findOne({'ids.pii' : piiList[p]});
+				if(article){
+					advanceOrder.push(article._id);
+					// console.log(article._id);
+				}
+			}
+			if(advanceOrder.length != 0){
+				// Update advance doc in sorters collection
+				// console.log(advanceOrder);
+				return sorters.update({'name' : 'advance'}, {$set: {'order' : advanceOrder}});
+			}
+
+		}
+
+	}
 });
