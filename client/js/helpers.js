@@ -8,6 +8,9 @@ if (Meteor.isClient) {
 	});
 	// Article
 	// -------
+	Template.registerHelper('articleId', function(){
+		return Session.get('article-id');
+	})
 	Template.registerHelper('getPmid', function(article) {
 		// console.log('..getPmid');
 		// for references without PMID in XML

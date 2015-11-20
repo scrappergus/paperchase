@@ -88,7 +88,7 @@
 	{{#each figures}}
 		<div>
 			<h4 class="center-align">{{{figureTitle}}}</h4>
-			{{#each imgURLs}}<a href="/figure/?img={{.}}" target="_blank"><img src="{{.}}" width="100%;"></a>{{/each}}
+			{{#each imgURLs}}<a href="/figure/?article={{articleId .}}&img={{.}}" target="_blank"><img src="{{.}}" width="100%;"></a>{{/each}}
 			<!-- <p>{{{figureText}}}</p> -->
 		</div>
 	{{/each}}

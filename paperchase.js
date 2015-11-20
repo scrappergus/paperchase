@@ -816,9 +816,21 @@ if (Meteor.isClient) {
 	Router.route('/figure(.*)', {
 		name: 'ArticleFigureViewer',
 		layoutTemplate: 'ArticleFigureViewer',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articleInfo',this.params.query.article),
+				Meteor.subscribe('articleTypes')
+			]
+		},
 		data: function(){
 			if(this.ready()){
+				var id = this.params.query.article;
+				// var assets = Meteor.call('availableAssests',id);
+				Session.set('article-id',id);
+				var article;
+				article = articles.findOne({'_id': id});
 				return {
+					article: article,
 					img: this.params.query.img,
                     title:this.params.query.figureId
 				};
