@@ -148,20 +148,7 @@ Template.adminArticlesDashboard.events({
 		e.preventDefault();
 		// TODO: move to server. problem with method within a method. if this click was to call a method that then uses the update method.
 		// TODO: include a paperchase owns flag, and skip that article in the batch update. for when an article was edited via paperchase.
-		var journalInfo = journalConfig.findOne();
-		var journalShortName = journalInfo.journal.short_name;
-		var articlesList = articles.find().fetch();
-		for(var a=0 ; a < articlesList.length ; a++){
-			var article = articlesList[a];
-			if(article.ids.pii){
-				console.log(article.ids.pii);
-				var params = {};
-					params.id_type = 'pii',
-					params.id = article.ids.pii,
-					params.journal = journalShortName;
-				Meteor.call('legacyArticleIntake',params);
-			}
-		}
+		Meteor.call('batchUpdate');
 	}
 });
 
@@ -1013,6 +1000,4 @@ Template.AdminRecommendationUpdate.events({
 			}
 		});
 	}
-})
-
-
+});

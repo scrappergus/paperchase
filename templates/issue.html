@@ -9,6 +9,7 @@
 			<h2>Volume {{volume}}, Issue {{issue}}</h2>
 			{{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
 			<!-- <h4>pp {{page_start}} - {{page_end}}</h4> -->
+			{{#if articles}}
 			<div class="clearfix"></div>
 			<ul>
 				{{#each articles}}
@@ -56,6 +57,9 @@
 				</li>
 				{{/each}}
 			</ul>
+			{{else}}
+			{{>Loading}}
+			{{/if}}
 		</div>
 	</div>
 	{{/with}}

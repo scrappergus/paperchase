@@ -216,6 +216,9 @@ if (Meteor.isServer) {
     return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
   });
 
+  Meteor.publish('subs', function () {
+    return subs.find({});
+  });
   Meteor.publish('journalConfig', function() {
     var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
     return siteConfig;
@@ -234,21 +237,23 @@ if (Meteor.isServer) {
     return volumes.find({},{sort : {volume:-1}});
   });
 
+  // Issue
+  // ------
   Meteor.publish('issues', function () {
     return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
   });
-  Meteor.publish('subs', function () {
-    return subs.find({});
+  Meteor.publish('issue', function (volume,issue) {
+    return issues.find({volume: parseInt(volume), issue: parseInt(issue)});
   });
-
-  Meteor.publish('issue', function (v,i) {
-    return issues.find({'volume': parseInt(v), 'issue': parseInt(i)});
+  Meteor.publish('issueArticles', function (volume,issue) {
+    return articles.find({volume: parseInt(volume), issue: parseInt(issue)});
   });
   Meteor.publish('currentIssue',function(){
     return issues.find({},{sort : {volume:-1,issue:-1}});
   });
 
-  // articles
+  // Articles
+  // ---------
   Meteor.publish('articles', function () {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
@@ -296,7 +301,8 @@ if (Meteor.isServer) {
     return submissions.find();
   });
 
-  //users
+  // Users
+  // ----------------
   Meteor.publish('allUsers', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return Meteor.users.find();
@@ -332,7 +338,8 @@ if (Meteor.isServer) {
     return Meteor.users.find();
   });
 
-  //institutions
+  // Institutions
+  // ----------------
   Meteor.publish('institutions', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return institutions.find();
@@ -351,25 +358,23 @@ if (Meteor.isServer) {
   });
 
   Meteor.publish('ipranges', function () {
-          return ipranges.find({});
-      });
+    return ipranges.find({});
+  });
 
   Meteor.publish('fullBoard', function () {
-          return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
+    return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
   });
 
   Meteor.publish('eic', function () {
-          return edboard.find({role:"Editor-in-Chief"});
+    return edboard.find({role:"Editor-in-Chief"});
   });
 
   Meteor.publish('eb', function () {
-          return edboard.find({role:"Founding Editorial Board"});
+    return edboard.find({role:"Founding Editorial Board"});
   });
 
-
-
-
-  //AUTHORS
+  // Authors
+  // ----------------
   Meteor.publish('authorsList', function(){
      if (Roles.userIsInRole(this.userId, ['admin'])) {
       return authors.find();
@@ -387,6 +392,8 @@ if (Meteor.isServer) {
      }
   });
 
+  // Recommendations
+  // ----------------
   Meteor.publish('recommendations', function(){
     return recommendations.find({});
   });

@@ -68,21 +68,21 @@ institutions.after.remove(function(userId, doc) {
 
 
 // DOWNLOAD ROUTES
-Router.route('/pdf/:_filename',{
-	where: 'server',
-	action: function(){
-		var name = this.params._filename;
-		var filePath = process.env.PWD + '/uploads/pdf/' + name;
-		var fs = Meteor.npmRequire('fs');
-		var data = fs.readFileSync(filePath);
-		this.response.writeHead(200, {
-		  'Content-Type': 'application/pdf',
-		  'Content-Disposition': 'attachment; filename=' + name
-		});
-		this.response.write(data);
-		this.response.end();
-	}
-});
+// Router.route('/pdf/:_filename',{
+// 	where: 'server',
+// 	action: function(){
+// 		var name = this.params._filename;
+// 		var filePath = process.env.PWD + '/uploads/pdf/' + name;
+// 		var fs = Meteor.npmRequire('fs');
+// 		var data = fs.readFileSync(filePath);
+// 		this.response.writeHead(200, {
+// 		  'Content-Type': 'application/pdf',
+// 		  'Content-Disposition': 'attachment; filename=' + name
+// 		});
+// 		this.response.write(data);
+// 		this.response.end();
+// 	}
+// });
 Router.route('/xml-cite-set/:_filename',{
 	where: 'server',
 	action: function(){
@@ -333,8 +333,7 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('volumes'),
-				Meteor.subscribe('issues'),
-				Meteor.subscribe('articles'),
+				Meteor.subscribe('issues')
 			]
 		},
 		onAfterAction: function() {
@@ -514,6 +513,13 @@ if (Meteor.isClient) {
 			var volume = parseInt(matches[1]);
 			var issue = parseInt(matches[2]);
 
+			// TODO: add redirect if no issue
+
+			// for issue header while articles are processing and we retrieve assets links from API
+			var issueData = issues.findOne();
+			// console.log(issueData);
+			Session.set('issue',issueData);
+
 			Meteor.call('getIssueAndAssets',volume,issue,function(error,result){
 				if(error){
 					console.log('ERROR - getIssueAndAssets');
@@ -527,9 +533,13 @@ if (Meteor.isClient) {
 			this.next();
 		},
 		waitOn: function(){
+			var vi = this.params.vi;
+			var matches = vi.match('v([0-9]+)i([0-9]+)');
+			var volume = parseInt(matches[1]);
+			var issue = parseInt(matches[2]);
 			return[
-				Meteor.subscribe('issues'),
-				Meteor.subscribe('articles'),
+				Meteor.subscribe('issue',volume,issue),
+				Meteor.subscribe('issueArticles',volume,issue)
 			]
 		},
 		// data: function(){
@@ -565,6 +575,7 @@ if (Meteor.isClient) {
 		}
 	});
 
+<<<<<<< HEAD
 	/*article*/
     Router.route('/article/figureViewer(.*)', {
 		name: 'ArticleFigureViewer',
@@ -629,6 +640,10 @@ if (Meteor.isClient) {
 
 
 	/*article*/
+=======
+	// Article
+	// -------
+>>>>>>> da64e92253a635c705347a902bb7e0e4d802c339
 	Router.route('/article/:_id', {
 		name: 'Article',
 		layoutTemplate: 'Visitor',
@@ -725,7 +740,7 @@ if (Meteor.isClient) {
 				Router.go('ArticleNotFound');
 			}
 
-			// Get assets and text
+			// Get assets and fulltext
 			Session.set('article-text', null);
 			Meteor.call('availableAssests', this.params._id, function(error, result) {
 				if(result){
@@ -865,6 +880,30 @@ if (Meteor.isClient) {
 			// });
 		}
 	});
+	Router.route('/figure(.*)', {
+		name: 'ArticleFigureViewer',
+		layoutTemplate: 'ArticleFigureViewer',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articleInfo',this.params.query.article),
+				Meteor.subscribe('articleTypes')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var id = this.params.query.article;
+				// var assets = Meteor.call('availableAssests',id);
+				Session.set('article-id',id);
+				var article;
+				article = articles.findOne({'_id': id});
+				return {
+					article: article,
+					img: this.params.query.img,
+                    title:this.params.query.figureId
+				};
+			}
+		}
+	});
 	Router.route('/404/article', {
 		name: 'ArticleNotFound',
 		layoutTemplate: 'Visitor'
@@ -944,6 +983,7 @@ if (Meteor.isClient) {
 			// });
 		}
 	});
+<<<<<<< HEAD
 
 
 	/*
@@ -1416,3 +1456,6 @@ if (Meteor.isClient) {
 		},
 	});
 }
+=======
+}
+>>>>>>> da64e92253a635c705347a902bb7e0e4d802c339

@@ -1,7 +1,62 @@
 if (Meteor.isClient) {
+	// Forms
+	// -------
+	Template.registerHelper('checked', function(bool) {
+		if(bool){
+			return 'checked';
+		}
+	});
+	// Article
+	// -------
+	Template.registerHelper('articleId', function(){
+		return Session.get('article-id');
+	})
+	Template.registerHelper('getPmid', function(article) {
+		// console.log('..getPmid');
+		// for references without PMID in XML
+		var pmid;
+		if(article.title){
+			// console.log(article.number + ' = ' +article.title);
+			Meteor.call('getPubMedId', article, function(error, pmid){
+				if(pmid){
+					var fullText = Session.get('article-text');
+					var references = fullText.references;
+					// Update reference PMID key
+					// do not rely on number of reference as index of reference in array.
+					for(var ref=0 ; ref<references.length ; ref++){
+						if(references[ref].number === article.number){
+							fullText.references[ref].pmid = pmid;
+							// Update Session variable
+							Session.set('article-text',fullText);
+						}
+					}
+				}
+			});
+		}
+	});
+	Template.registerHelper('affiliationNumber', function(affiliation) {
+		return parseInt(parseInt(affiliation) + 1);
+	});
 	Template.registerHelper('pubStatusAbbrev', function (number) {
 		if(pubStatusTranslate[parseInt(number - 1)]){
 			return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+		}
+	});
+	// Dates
+	// -----
+	Template.registerHelper('dateDayExists',function(date){
+		//if the date object should have a day value associated with it
+		if(moment(date).format('HH') == 00){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	Template.registerHelper('placeholderDate',function(date){
+		if(moment(date).format('HH') == 00){
+			return moment(date).format('M D, YYYY');;
+		}else{
+			return moment(date).format('M YYYY');;
 		}
 	});
 	Template.registerHelper('getMonthWord', function(month) {
@@ -21,26 +76,6 @@ if (Meteor.isClient) {
 		month[11] = 'December';
 		return month[d.getMonth()];
 	});
-	Template.registerHelper('dateDayExists',function(date){
-		//if the date object should have a day value associated with it
-		if(moment(date).format('HH') == 00){
-			return true;
-		}else{
-			return false;
-		}
-	});
-	Template.registerHelper('placeholderDate',function(date){
-		if(moment(date).format('HH') == 00){
-			return moment(date).format('M D, YYYY');;
-		}else{
-			return moment(date).format('M YYYY');;
-		}
-	});
-	Template.registerHelper('checked', function(bool) {
-		if(bool){
-			return 'checked';
-		}
-	});
 	Template.registerHelper('inputDate', function(date) {
 		return moment(date).format('YYYY/MM/DD');
 	});
@@ -49,9 +84,6 @@ if (Meteor.isClient) {
 	});
 	Template.registerHelper('formatDateNumber', function(date) {
 		return moment(date).format('MM/D/YYYY');
-	});
-	Template.registerHelper('affiliationNumber', function(affiliation) {
-		return parseInt(parseInt(affiliation) + 1);
 	});
 	Template.registerHelper('formatIssueDate', function(date) {
 		return moment(date).format('MMMM YYYY');
@@ -71,6 +103,8 @@ if (Meteor.isClient) {
 	Template.registerHelper('getDay',function(date) {
 		return moment(date).format('D');
 	});
+	// Equals
+	// -------
 	Template.registerHelper('equals', function (a, b) {
 		return a == b;
 	});
@@ -79,6 +113,8 @@ if (Meteor.isClient) {
 			return true;
 		}
 	});
+	// Modify
+	// -------
 	Template.registerHelper('arrayify',function(obj){
 		result = [];
 		for (var key in obj) result.push({name:key,value:obj[key]});
@@ -87,8 +123,10 @@ if (Meteor.isClient) {
 	Template.registerHelper('countItems', function(items) {
 		return items.length;
 	});
+	// Subscribers
+	// -------
 	Template.registerHelper('clientIP', function() {
-			return headers.getClientIP();
+		return headers.getClientIP();
 	});
     Template.registerHelper('isSubscribed', function() {
             ip = Meteor.ip.dot2num(headers.getClientIP());
@@ -139,102 +177,5 @@ if (Meteor.isClient) {
 
 
             return inst_match || false;
-	});
-
-    // Template Helpers
-    // ----------------
-    Template.Visitor.helpers({
-    	bannerLogo: function(){
-    		var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['journal']['logo']['banner'];
-			}
-    	},
-		submitLink : function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['submission']['url'];
-			}
-    	}
-    });
-    Template.Footer.helpers({
-		publisher : function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['journal']['publisher']['name'];
-			}
-		},
-		issn : function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['journal']['issn'];
-			}
-		}
-    });
-    Template.Contact.helpers({
-		submitLink : function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['submission']['url'];
-			}
-		}
-    });
-	Template.ErrorMessages.helpers({
-		errors: function(){
-			return Session.get('errorMessages');
-		}
-	});
-	Template.SubscribeModal.helpers({
-		article: function(){
-			return Session.get('articleData');
-		}
-	});
-	Template.Archive.helpers({
-		volumes: function(){
-			var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-			var iss = issues.find({},{sort : {issue:-1}}).fetch();
-			var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-			return res;
-		}
-	});
-	Template.EdBoard.helpers({
-		journalName: function(){
-			var journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				return journalSettings['journal']['name'];
-			}
-		}
-	});
-
-	// Article
-	// -------
-	Template.Article.helpers({
-		assets: function(){
-			return Session.get('article-assets');
-		}
-	});
-	Template.ArticleButtons.helpers({
-		assets: function(){
-			return Session.get('article-assets');
-		}
-	});
-	Template.ArticleText.helpers({
-		fullText: function(){
-			// console.log(Session.get('article-text'));
-			return Session.get('article-text');
-		}
-	});
-	Template.ArticleSections.helpers({
-		fullText: function(){
-			return Session.get('article-text');
-		}
-	});
-
-	// Issue
-	// ------
-	Template.Issue.helpers({
-		issueData: function(){
-			return Session.get('issue');
-		}
 	});
 }
