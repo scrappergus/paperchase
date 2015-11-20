@@ -8,13 +8,7 @@
 					<a class="btn left blue" href="{{pathFor 'Article' id=article._id}}">Back <i class="zmdi zmdi-arrow-left"></i></a>
 				</div>
 			</div> -->
-			<div class="row">
-				<div class="col s12">
-				{{#with article}}
-					<h3>{{{title}}}</h3>
-				{{/with}}
-				</div>
-			</div>
+			{{#with article}}{{>ArticleHeaderTitle}}{{/with}}
 			<div class="row">
 				<div class="col s12 center-align">
 					<div class="figure" id="F2">
