@@ -73,11 +73,6 @@ html,body{
 		@extend .box;
 		border: 1px solid $black-0;
 	}
-	.table-box{
-		@extend .box;
-		padding: 0px!important;
-		border: 1px solid $black-0;
-	}
 	.card {
 		h4 {
 			margin-top:0em;
@@ -105,7 +100,7 @@ html,body{
 
 /* Borders ------------------------*/
 	.border-gray{
-		border: 1px solid $gray-1;
+		border: 1px solid $gray-2;
 	}
 
 /* Footer ------------------------*/
@@ -173,7 +168,7 @@ html,body{
 		}
 	}
 	.affiliations{
-		color: $gray-1;
+		color: $gray-2;
 		font-size: $font-sm;
 	}
 	.kw{
@@ -201,7 +196,7 @@ html,body{
 		margin: $margin-md auto;
 		h4{
 			padding: $pad-md;
-			border-bottom: 1px solid $gray-1;
+			border-bottom: 1px solid $gray-2;
 		}
 	}
 	.full-text-image{
@@ -218,21 +213,29 @@ html,body{
 	.article-header-3{
 		@extend h4;
 	}
-	table{
-		caption{
-			background: $gray-0;
-			padding: $pad-md;
-			border-bottom: 1px solid $black-0;
-		}
-		thead{
-			border-bottom: 1px solid $black-0;
+	.article-table{
+		@extend .box;
+		padding: 0px!important;
+		border: 1px solid $black-0;
+		table{
+			caption{
+				background: $gray-1;
+				padding: $pad-md;
+				border-bottom: 1px solid $black-0;
+			}
+			thead{;
+				border-bottom: 1px solid $black-0;
+				tr{
+					border: 0px!important; /* using .bordered on table, but we do not want table header bordered */
+				}
+			}
 		}
 	}
 	/* section nav */
 	.section-nav{
 		height: 90vh;
 		background: $white;
-		border: 1px solid $gray-1;
+		border: 1px solid $gray-2;
 		padding: $pad-md;
 		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
 		li{

@@ -212,7 +212,7 @@ Meteor.fullText = {
 							tableId = tblAttr[tblA].nodeValue;
 						}
 					}
-					content = '<table class="striped" id="' + tableId + '">';
+					content = '<table class="bordered" id="' + tableId + '">';
 					content += Meteor.fullText.traverseTable(sec);
 					content += '</table>';
 				}else if(sec.localName === 'fig'){
@@ -440,6 +440,7 @@ Meteor.fullText = {
 
 		// TODO combine label and title
 		var nodeString = '',
+			tableHeading = '',
 			tableLabel = '',
 			tableCaption = '',
 			tableTitle = '';
@@ -451,14 +452,21 @@ Meteor.fullText = {
 				nodeString += '<' + n.localName + '>';
 			}
 
-			if(n.localName === 'label'){
+			if(n.localName == 'label'){
 				// Table Title - part one
 				tableLabel = Meteor.fullText.traverseTable(n);
 			}else if( n.localName == 'caption'){
-				// Table Title - part two
-				tableCaption = Meteor.fullText.traverseTable(n)
-				tableTitle = tableLabel + '. ' + tableCaption;
-				nodeString += '<caption>' + tableTitle + '</caption>'
+				// Table Title - part three
+				// do not use traversing functions. problem keeping title separate
+				for(var cc = 0 ; cc < n.childNodes.length ; cc++){
+					if(n.childNodes[cc].localName == 'title'){
+						tableTitle = Meteor.fullText.convertContent(n.childNodes[cc]);
+					}else if(n.childNodes[cc].localName == 'p'){
+						tableCaption += Meteor.fullText.convertContent(n.childNodes[cc]);
+					}
+				}
+				tableHeading = '<h4>' + tableLabel + '. ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
+				nodeString += '<caption>' + tableHeading + '</caption>'
 			}else if(n.localName == 'table-wrap-foot'){
 				// console.log('..footer');
 				nodeString += '<tfoot>';
