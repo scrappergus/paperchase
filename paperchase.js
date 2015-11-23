@@ -102,10 +102,17 @@ Router.route('/xml-cite-set/:_filename',{
 Router.route('/admin/add-legacy-platform-article/',{
 	where: 'server',
 	action: function(){
-		Meteor.call('legacyArticleIntake', this.params.query);
-        this.response.setHeader('Content-Type', 'application/json');
-        this.response.end(JSON.stringify({'success':true}));
-
+        var response = this.response;
+        Meteor.call('legacyArticleIntake', this.params.query, function(err, res) {
+                if(err) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.end(JSON.stringify({'success':false}));
+                }
+                else {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.end(JSON.stringify({'success':true}));
+                }
+            });
 	}
 });
 
