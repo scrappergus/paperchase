@@ -8,7 +8,7 @@ Meteor.methods({
 		for(var a=0 ; a < articlesList.length ; a++){
 			var article = articlesList[a];
 			if(article.ids.pii){
-				console.log(article.ids.pii);
+				// console.log(article.ids.pii);
 				var params = {};
 					params.id_type = 'pii',
 					params.id = article.ids.pii,
