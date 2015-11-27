@@ -73,7 +73,10 @@ Meteor.methods({
 		if(articleMongoId){
 			return true; // DO we need a response to Legacy platform?
 		}
-	},
+        else {
+            return false;
+        }
+	}
 });
 
 
