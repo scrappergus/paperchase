@@ -5,7 +5,7 @@
         <li>Paperchase Count: {{pc_count}}</li>
         <li>Total Count: {{total_count}}</li>
         <li><h3>OJS Only</h3><ul>{{#each only_ojs}}
-                <li>{{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></li>
+                <li>{{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a href="http://galaxy.oncotarget.com/admin/add-legacy-platform-article/?advance=1&id_type=pii&id={{pii}}&journal=oncotarget">Add to Paperchase</a></li>
                 {{/each}}</ul></li>
 
         <li><h3>Paperchase Only</h3><ul>{{#each only_pc}}

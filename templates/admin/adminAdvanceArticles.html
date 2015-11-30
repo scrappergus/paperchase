@@ -67,8 +67,8 @@
                                     <div class="col s1"><i class="zmdi prefix zmdi-swap-vertical handle" style="cursor:pointer;"></i></div>
                                     <div class="col s2">{{section_name}}&nbsp;</div>
                                     <div class="col s1">{{articleDate dates.epub}}&nbsp;</div>
-                                    <div class="col s1">{{ids.pii}}&nbsp;</div>
-                                    <div class="col s6">{{{title}}}</div>
+                                    <div class="col s1"><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">{{ids.pii}}</a>&nbsp;</div>
+                                    <div class="col s6"><a href="http://galaxy.oncotarget.com/admin/article/{{_id}}">{{{title}}}</a></div>
                                     <div class="col s1 right-align">
                                        <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons">delete</i></a> 
                                         <label class="right" for="{{_id}}"></label></div>
