@@ -413,7 +413,12 @@ if (Meteor.isServer) {
       this.stop();
       return;
     }
-  })
+});
+
+  Meteor.publish('publish', function () {
+          return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+    });
+
 }
 
 // SUBSCRIBE

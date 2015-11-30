@@ -242,6 +242,7 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
+				Meteor.subscribe('publish'),
 				Meteor.subscribe('advance'),
 				Meteor.subscribe('sortedList','advance')
 			]
@@ -300,8 +301,12 @@ if (Meteor.isClient) {
 					output[output.length-1]['articles'].push(article);
 				}
 
+                var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
+
 				return{
-					sections: output
+					sections: output,
+                    pubdate: advance.pubtime.toLocaleDateString(),
+                    pubtime: advance.pubtime.toLocaleTimeString()
 				}
 			}
 		}

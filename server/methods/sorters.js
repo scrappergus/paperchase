@@ -1,13 +1,10 @@
 Meteor.methods({
 	sorterAddArticle: function(listName,mongoId){
-		// console.log('...sorterAddArticle');
-		// TODO add to the beginning of set
-
         //find the position to insert at
         article = articles.findOne({"_id": mongoId});
         if(article) {
-            Meteor.call('sorterRemoveArticle', 'advance', mongoId);
-            sorts = sorters.findOne({'name': 'advance'});
+            Meteor.call('sorterRemoveArticle', listName, mongoId);
+            sorts = sorters.findOne({'name': listName});
             position = sorts.order.length;
             for(var i=0; i < sorts.order.length; i++) {
                 match = articles.findOne({"_id":sorts.order[i], section_id:article.section_id});
