@@ -25,25 +25,3 @@
 	<a href="/editorial-board" class="blue-grey-text darken-3-text">See full editor's list</a>
 	<br>
 </template>
-
-<template name="EdBoard">
-	<h3>{{journalName}} Editors-in-Chief</h3>
-	<ul class="home-page-editors-list">
-		{{#each eic}}
-		<li>
-			<div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
-		</li>
-		{{/each}}
-	</ul>
-
-	<div class="divider"></div>
-
-	<h5>Editorial board</h5>
-	<ul class="home-page-editors-list">
-		{{#each fullBoard}}
-		<li>
-			<div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
-		</li>
-		{{/each}}
-	</ul>
-</template>
