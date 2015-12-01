@@ -419,6 +419,58 @@ if (Meteor.isClient) {
 		}
 	});
 
+	// Editorial Board
+	Router.route('/admin/editorial_board', {
+		name: 'AdminEditorialBoard',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('fullBoard'),
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var edboardList = edboard.find().fetch();
+				console.log(edboardList);
+				return {
+					edboard : edboardList
+				};
+			}
+		}
+	});
+	Router.route('/admin/editorial_board/add', {
+		name: 'AdminEditorialBoardAdd',
+		layoutTemplate: 'Admin',
+		data: function(){
+			if(this.ready()){
+				return {
+					member : Meteor.admin.edBoardFormData()
+				};
+			}
+		}
+	});
+	Router.route('/admin/editorial_board/edit/:_id', {
+		name: 'AdminEditorialBoardEdit',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			// TODO
+			// Redirect if no member
+			this.next();
+		},
+		waitOn: function(){
+			return[
+				Meteor.subscribe('edBoardMember',this.params._id),
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				return {
+					member : Meteor.admin.edBoardFormData(this.params._id)
+				};
+			}
+		}
+	});
+
 	// Institutions
 	Router.route('/admin/institution', {
 		name: 'AdminInstitution',

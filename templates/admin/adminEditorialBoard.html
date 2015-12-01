@@ -33,10 +33,12 @@
 
 <template name="AdminEditorialBoardAdd">
 	{{>AdminHeader header="Add Editorial Board Member"}}
+	{{>AdminEditorialBoardForm}}
 </template>
 
 <template name="AdminEditorialBoardEdit">
 	{{>AdminHeader header="Edit Editorial Board Member"}}
+	{{>AdminEditorialBoardForm}}
 </template>
 
 
@@ -61,6 +63,20 @@
 			<div class="row">
 				<div class="input-field col s12">
 					<div class="member-address">{{{address}}}</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset id="role">
+			<legend>Role</legend>
+			<div class="row">
+				<div class="input-field col s12">
+					<select class="member-role">
+						{{#each roles}}
+						<option value="{{@index}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
+						{{/each}}
+					</select>
+					<label for="article-issue">Role</label>
 				</div>
 			</div>
 		</fieldset>

@@ -71,6 +71,43 @@ Meteor.admin = {
 			txt.innerHTML += '...';
 		}
 		return txt.value;
+	},
+	edBoardFormData: function(mongoId){
+		var member = {};
+		if(mongoId){
+			member = edboard.findOne({_id : mongoId});
+		}
+		var edboardRoles = journalConfig.findOne().edboard_roles;
+		for(var r=0 ; r<edboardRoles.length ; r++){
+			var role = edboardRoles[r];
+			edboardRoles[r]['name'] = role;
+			if(member.role && role == member.role){
+				edboardRoles[r]['selected'] = true;
+			}
+		}
+		member.roles = edboardRoles;
+		return member;
+	},
+	edBoardFormReady: function(){
+		// Address
+		// ------
+		$('.member-address').summernote({
+			styleWithSpan: false,
+			onPaste: function(e){
+				e.preventDefault();
+				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+				document.execCommand('insertText', false, bufferText);
+			},
+			toolbar: [
+				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+				['view', ['codeview']]
+			]
+		});
+
+		// Role
+		// -----
+		$('.member-role').material_select();
 	}
 }
 

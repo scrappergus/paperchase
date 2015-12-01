@@ -63,3 +63,9 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 	Session.set('article',null);
 	$('ul.tabs').tabs();
 });
+
+// Editorial Board
+// ---------------
+Template.AdminEditorialBoardForm.onRendered(function () {
+	Meteor.admin.edBoardFormReady();
+});
