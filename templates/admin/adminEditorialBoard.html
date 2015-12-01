@@ -53,7 +53,7 @@
 			<legend>Name</legend>
 			<div class="row">
 				<div class="input-field col s12">
-					<input name="member_name" type="text" value="{{name}}" id="member_name">
+					<input name="member-name" type="text" value="{{name}}" id="member-name">
 				</div>
 			</div>
 		</fieldset>
@@ -67,19 +67,28 @@
 			</div>
 		</fieldset>
 
-		<fieldset id="role">
-			<legend>Role</legend>
+		<fieldset id="bio">
+			<legend>Bio</legend>
 			<div class="row">
 				<div class="input-field col s12">
-					<select class="member-role">
-						{{#each roles}}
-						<option value="{{@index}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
-						{{/each}}
-					</select>
-					<label for="article-issue">Role</label>
+					<div class="member-bio">{{{bio}}}</div>
 				</div>
 			</div>
 		</fieldset>
+
+		<fieldset id="role">
+			<legend>Roles</legend>
+			<div class="row input-field">
+				{{#each roles}}
+					<div class="col s12 m4">
+						<input class="roles" id="member-role-{{@index}}" value="{{name}}" type="checkbox" checked="{{#if selected}}checked{{/if}}">
+						<label for="member-role-{{@index}}">{{name}}</label>
+					</div>
+				{{/each}}
+			</div>
+		</fieldset>
+
+		<input type="hidden" value="{{_id}}" id="member-mongo-id">
 
 		<div class="row">
 			<div class="col s12 center-align">

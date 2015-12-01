@@ -129,6 +129,26 @@ volumes.allow({
     }
   }
 });
+edboard.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
 authors.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});

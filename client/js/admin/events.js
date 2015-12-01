@@ -6,6 +6,13 @@ Template.Admin.events({
 	}
 });
 
+// Editorial Board
+// ----------------
+Template.AdminEditorialBoardForm.events({
+	'submit form': function(e){
+		Meteor.adminEdBoard.formGetData(e);
+	}
+});
 
 // Users
 // ----------------
@@ -77,8 +84,7 @@ Template.AdminUserSubs.events({
                 });
 
         }
-    });
-
+});
 Template.AdminAddUser.events({
 	'click .role-cb': function(e){
 		Meteor.adminUser.clickedRole(e);
@@ -116,7 +122,6 @@ Template.SendingSuccessMessage.events({
 	}
 });
 
-
 // Issue
 // ----------------
 Template.AdminIssue.events({
@@ -140,7 +145,6 @@ Template.AdminIssue.events({
 		});
 	}
 });
-
 
 // Article
 // ----------------
@@ -728,7 +732,6 @@ Template.AdminDataSubmissions.events({
 	}
 })
 
-
 // Advance Articles
 // ----------------
 Template.AdminAdvanceArticles.events({
@@ -876,7 +879,7 @@ Template.AdminInstitution.events({
             Meteor.call('removeInstitution', this['_id'], function(error, result){
                 });
         }
-    });
+});
 Template.AdminInstitutionAdd.events({
         'submit form': function(e,t){
             var formType = Session.get('formType');
@@ -901,10 +904,10 @@ Template.AdminInstitutionAdd.events({
                 });
         }
 
-    });
+});
 Template.AdminInstitutionForm.onCreated(function() {
-        this.showIPFields = new ReactiveVar( false );
-    });
+	this.showIPFields = new ReactiveVar( false );
+});
 
 Template.AdminInstitutionForm.events({
         'click .edit-btn': function(e){
@@ -995,7 +998,7 @@ Template.AdminInstitutionForm.events({
                     }
                 });
         }
-    });
+});
 
 // Recommend
 // ----------------

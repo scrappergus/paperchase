@@ -431,7 +431,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var edboardList = edboard.find().fetch();
-				console.log(edboardList);
+				// console.log(edboardList);
 				return {
 					edboard : edboardList
 				};
@@ -444,7 +444,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				return {
-					member : Meteor.admin.edBoardFormData()
+					member : Meteor.adminEdBoard.formPrepareData()
 				};
 			}
 		}
@@ -465,7 +465,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				return {
-					member : Meteor.admin.edBoardFormData(this.params._id)
+					member : Meteor.adminEdBoard.formPrepareData(this.params._id)
 				};
 			}
 		}

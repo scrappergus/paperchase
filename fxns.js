@@ -72,23 +72,85 @@ Meteor.admin = {
 		}
 		return txt.value;
 	},
-	edBoardFormData: function(mongoId){
+}
+
+Meteor.adminEdBoard = {
+	formPrepareData: function(mongoId){
 		var member = {};
 		if(mongoId){
 			member = edboard.findOne({_id : mongoId});
 		}
 		var edboardRoles = journalConfig.findOne().edboard_roles;
+		var edboardRolesTemp = [];
 		for(var r=0 ; r<edboardRoles.length ; r++){
-			var role = edboardRoles[r];
-			edboardRoles[r]['name'] = role;
-			if(member.role && role == member.role){
-				edboardRoles[r]['selected'] = true;
+			var roleObj = {
+				name: edboardRoles[r]
 			}
+			if(member.role && $.inArray(roleObj.name, member.role) > -1){
+				roleObj['selected'] = true;
+			}
+			edboardRolesTemp.push(roleObj);
 		}
-		member.roles = edboardRoles;
+		member.roles = edboardRolesTemp.reverse(); // Reversed so that lowest ranked role is listed first in the select option in template
+		// console.log(member);
 		return member;
 	},
-	edBoardFormReady: function(){
+	formGetData: function(e){
+		e.preventDefault();
+		var memberMongoId,
+			success;
+		Meteor.formActions.saving();
+		$('input').removeClass('invalid');
+		// Name
+		// ------
+		var member = {};
+		member.name = $('#member-name').val();
+
+		// Address
+		// ------
+		var memberAddress = $('.member-address').code();
+		memberAddress = Meteor.formActions.cleanWysiwyg(memberAddress);
+		if(memberAddress != ''){
+			member.address = memberAddress;
+		}
+
+		// Bio
+		// ------
+		var memberBio = $('.member-bio').code();
+		memberBio = Meteor.formActions.cleanWysiwyg(memberBio);
+		if(memberBio != ''){
+			member.bio = memberBio;
+		}
+
+		// Role
+		// ------
+		member.role = [];
+		$('.roles').each(function(){
+			if($(this).is(':checked')){
+				member.role.push($(this).val());
+			}
+		});
+
+		// TODO: add check for if name exists?
+		// TODO: validation
+		console.log(member);
+
+		memberMongoId = $('#member-mongo-id').val();
+
+		if(!memberMongoId){
+			// Insert
+			success = edboard.insert(member);
+
+		}else{
+			// Update
+			success = edboard.update({_id : memberMongoId} , {$set: member});
+		}
+		if(success){
+			Meteor.formActions.success();
+		}
+
+	},
+	readyForm: function(){
 		// Address
 		// ------
 		$('.member-address').summernote({
@@ -105,9 +167,21 @@ Meteor.admin = {
 			]
 		});
 
-		// Role
-		// -----
-		$('.member-role').material_select();
+		// Bio
+		// ------
+		$('.member-bio').summernote({
+			styleWithSpan: false,
+			onPaste: function(e){
+				e.preventDefault();
+				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+				document.execCommand('insertText', false, bufferText);
+			},
+			toolbar: [
+				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+				['view', ['codeview']]
+			]
+		});
 	}
 }
 
