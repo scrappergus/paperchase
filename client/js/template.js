@@ -10,6 +10,7 @@ Template.CustomEdBoard.replaces("EdBoard");
 // -------
 Template.Admin.onRendered(function () {
 	$('.button-collapse').sideNav();
+	$('.collapsible').collapsible();
 });
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
