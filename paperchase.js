@@ -127,7 +127,7 @@ Router.route('/get-advance-articles/',{
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
 		var htmlString = "<body>";
-		var advance = publish.findOne({name: 'advance'}, {sort:{$natural:-1}});
+		var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 		if(advance){
 			var advanceList = advance.data;
 			var prevSection;
@@ -232,7 +232,7 @@ Router.route('/get-advance-articles/',{
 					}
 					// PDF
 					if(articleInfo.legacy_files.pdf_galley_id){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.pdf_galley_id + '" class="file">PDF</a>';
 						htmlString += '&nbsp;';
 					}
 					// Supplemental
