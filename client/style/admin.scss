@@ -20,17 +20,21 @@
 		.logo{
 			margin-bottom: 20px;
 		}
-		li{
-			padding: 0;
-		}
-		a:not(.active){
+		.collapsible-header:not(.active){
 			color: $white;
 		}
-		.collapsible-body a{
+		li{
+			padding: 0;
+			&:hover{
+				a{
+					color: $blue-gray;
+				}
+			}
+		}
+		li:hover a{
 			color: $black-0;
 		}
 	}
-
 
 /* Article ------------------------*/
 	.note-editor{
