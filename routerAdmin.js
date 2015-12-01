@@ -316,7 +316,8 @@ if (Meteor.isClient) {
 				return{
 					sections: output,
                     pubdate: advance.pubtime.toLocaleDateString(),
-                    pubtime: advance.pubtime.toLocaleTimeString()
+                    pubtime: advance.pubtime.toLocaleTimeString(),
+                    total: sorted.articles.length
 				}
 			}
 		}
