@@ -220,7 +220,7 @@ if (Meteor.isServer) {
     return subs.find({});
   });
   Meteor.publish('journalConfig', function() {
-    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
+    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1, edboard_roles : 1}});
     return siteConfig;
   });
   Meteor.publish('sorters', function() {
@@ -361,16 +361,20 @@ if (Meteor.isServer) {
     return ipranges.find({});
   });
 
+
+  // Editorial Board
+  // ---------------
   Meteor.publish('fullBoard', function () {
     return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
   });
-
   Meteor.publish('eic', function () {
     return edboard.find({role:"Editor-in-Chief"});
   });
-
   Meteor.publish('eb', function () {
     return edboard.find({role:"Founding Editorial Board"});
+  });
+  Meteor.publish('edBoardMember', function (mongoId) {
+    return edboard.find({_id: mongoId});
   });
 
   // Authors
