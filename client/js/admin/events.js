@@ -5,6 +5,10 @@ Template.Admin.events({
 		$('.edit').removeClass('hide');
 	}
 });
+
+
+// Users
+// ----------------
 Template.AdminUser.events({
 	'click .edit-user': function(e){
 		e.preventDefault();
@@ -40,7 +44,6 @@ Template.AdminUser.events({
 		// }
 	}
 });
-
 Template.AdminUserSubs.events({
         'submit form' : function(e,t) {
             e.preventDefault();
@@ -98,9 +101,8 @@ Template.AdminAddUser.events({
 	}
 });
 
-/*
-FORMS
-*/
+// Forms - General
+// ----------------
 Template.successMessage.events({
 	'click #close-success-msg': function(e){
 		e.preventDefault();
@@ -114,9 +116,9 @@ Template.SendingSuccessMessage.events({
 	}
 });
 
-/*
-Issue
-*/
+
+// Issue
+// ----------------
 Template.AdminIssue.events({
 	'submit form': function(e,t){
 		e.preventDefault();
@@ -139,9 +141,9 @@ Template.AdminIssue.events({
 	}
 });
 
-/*
-ARTICLE
-*/
+
+// Article
+// ----------------
 Template.adminArticlesDashboard.events({
 	'click #ojs-batch-update': function(e){
 		e.preventDefault();
@@ -150,7 +152,6 @@ Template.adminArticlesDashboard.events({
 		Meteor.call('batchUpdate');
 	}
 });
-
 Template.AdminArticleForm.events({
 	'click .mm-yy-only': function(e){
 		var keys = $(e.target).attr('id').split('-');
@@ -552,7 +553,47 @@ Template.AdminArticleForm.events({
 		}
 	}
 });
+Template.adminArticleXmlProcess.events({
+	'click .update-article': function(e,t){
+		e.preventDefault();
+		var articleData = t.data['article'];
 
+		//add who UPDATED this article doc
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['last_update_date'] = new Date();
+		articleData['doc_updates']['last_update_by'] = Meteor.userId();
+
+		var mongoId = $(e.target).attr('data-mongoid');
+		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
+			if(error){
+				alert('ERROR: '+error.message);
+			}else{
+				Router.go('adminArticle', {_id:mongoId});
+			}
+		});
+	},
+	'click .add-article': function(e,t){
+		e.preventDefault();
+
+		var articleData = t.data['article'];
+
+		//add who CREATED this article doc
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['created_date'] = new Date();
+		articleData['doc_updates']['created_by'] = Meteor.userId();
+
+		Meteor.call('addArticle', articleData, function(error,_id){
+			if(error){
+				alert('ERROR: ' + error.message);
+			}else{
+				Router.go('adminArticle', {_id:_id});
+			}
+		});
+	}
+});
+
+// Indexers
+// ----------------
 Template.AdminDataSubmissions.events({
 	'keydown input': function(e,t){
 		var tag = '<div class="chip">Tag<i class="material-icons">close</i></div>'
@@ -687,45 +728,9 @@ Template.AdminDataSubmissions.events({
 	}
 })
 
-Template.adminArticleXmlProcess.events({
-	'click .update-article': function(e,t){
-		e.preventDefault();
-		var articleData = t.data['article'];
 
-		//add who UPDATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['last_update_date'] = new Date();
-		articleData['doc_updates']['last_update_by'] = Meteor.userId();
-
-		var mongoId = $(e.target).attr('data-mongoid');
-		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
-			if(error){
-				alert('ERROR: '+error.message);
-			}else{
-				Router.go('adminArticle', {_id:mongoId});
-			}
-		});
-	},
-	'click .add-article': function(e,t){
-		e.preventDefault();
-
-		var articleData = t.data['article'];
-
-		//add who CREATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['created_date'] = new Date();
-		articleData['doc_updates']['created_by'] = Meteor.userId();
-
-		Meteor.call('addArticle', articleData, function(error,_id){
-			if(error){
-				alert('ERROR: ' + error.message);
-			}else{
-				Router.go('adminArticle', {_id:_id});
-			}
-		});
-	}
-});
-
+// Advance Articles
+// ----------------
 Template.AdminAdvanceArticles.events({
 	'submit form': function(e){
 		e.preventDefault();
@@ -753,6 +758,7 @@ Template.AdminAdvanceArticles.events({
 })
 
 // Batch
+// ----------------
 Template.AdminBatchXml.events({
 	'click #advance-order-update' : function(e){
 		e.preventDefault();
@@ -864,6 +870,7 @@ Template.AdminBatchXml.events({
 });
 
 // Institutions
+// ----------------
 Template.AdminInstitution.events({
         'click .del-btn': function(e,t){
             Meteor.call('removeInstitution', this['_id'], function(error, result){
@@ -991,6 +998,7 @@ Template.AdminInstitutionForm.events({
     });
 
 // Recommend
+// ----------------
 Template.AdminRecommendationUpdate.events({
 	'submit form': function(e,t){
 		e.preventDefault();
