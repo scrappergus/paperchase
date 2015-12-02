@@ -19,7 +19,7 @@
 					<tbody>
 						{{#each edboard}}
 						<tr>
-							<td>{{name}}</td>
+							<td>{{>PersonName}}</td>
 							<td>{{#each role}}<div>{{.}}</div>{{/each}}</td>
 							<td>{{address}}</td>
 							<td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminEditorialBoardEdit'}}">Profile</a></td>
