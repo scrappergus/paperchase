@@ -87,6 +87,10 @@
 			@include border-radius(5px);
 		}
 	}
+	.note-editor .modal{
+		background-color: $gray-1!important;
+		z-index: 5000!important;
+	}
 
 /* For Authors ------------------*/
 	.sections-list{
