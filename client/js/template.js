@@ -1,9 +1,3 @@
-//
-// Template.CustomLeftNav.replaces("LeftNav");
-Template.CustomHome.replaces("Home");
-Template.CustomHomePageEditorList.replaces("HomePageEditorList");
-Template.CustomEdBoard.replaces("EdBoard");
-
 // Visitor
 // -------
 Template.Visitor.onRendered(function () {
