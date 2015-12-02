@@ -6,7 +6,6 @@
 
 iron:router
 accounts-password
-meteortoys:allthings
 gadicohen:headers
 meteorhacks:kadira
 mizzao:user-status
