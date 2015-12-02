@@ -482,7 +482,6 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
-				// TODO: add sorters collection to put sections in correct order
 				Meteor.subscribe('forAuthors'),
 				Meteor.subscribe('sortedList','forAuthors')
 			]
