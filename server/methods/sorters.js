@@ -10,9 +10,9 @@ Meteor.methods({
 		var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});
 		return res;
 	},
-	updateList: function(listName, list, remove){
-		// console.log('... sorterUpdateList');
+	updateList: function(listName, list){
+		// console.log('... sorterUpdateList = ' + listName );
 		// update sorters collection
-		return sorters.update({name : listName}, {$set : {order: list}});
+		return sorters.update({name : listName}, {$set : {order: list}},{upsert: true});
 	}
 });
