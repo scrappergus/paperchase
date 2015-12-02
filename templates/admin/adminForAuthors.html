@@ -24,30 +24,29 @@
 	<div class="divider"></div>
 
 	<h2>Sections</h2>
-	{{#each sections}}
-	{{#if editingSection _id}}
-	<div class="row">
-		<div class="col s12 card grey lighten-5">
-			<div id="add-section-container" class="">
-				<h2>Edit Section</h2>
-				{{>AdminForAuthorsForm}}
+
+	<ol class="roman-list">
+		{{#each sections}}
+		<li>
+		{{#if editingSection _id}}
+		<div class="row">
+			<div class="col s12 card grey lighten-5">
+				<div id="add-section-container" class="">
+					<h2>Edit Section</h2>
+					{{>AdminForAuthorsForm}}
+				</div>
 			</div>
 		</div>
-	</div>
-	{{else}}
-	<div class="row" id="section-{{@index}}">
-		<div class="col s12 m10">
-			<h3>{{{title}}}</h3>
-		</div>
-		<div class="col s12 m2">
-			<h3><button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="mdi mdi-pencil" id="{{_id}}"></i></button></h3>
-		</div>
-		<div class="col s12">
-			{{{content}}}
-		</div>
-	</div>
-	{{/if}}
-	{{/each}}
+		{{else}}
+		<h3 id="section-{{@index}}">
+			{{{title}}}
+			<button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="mdi mdi-pencil" id="{{_id}}"></i></button>
+		</h3>
+		{{{content}}}
+		{{/if}}
+		</li>
+		{{/each}}
+	</ol>
 
 	<div id="add-section-container">
 	{{#if showForm}}
