@@ -3,6 +3,11 @@
  ADMIN ROUTES
 */
 if (Meteor.isClient) {
+
+	// For Authors variables
+	Session.setDefault('showForm',false);
+	Session.setDefault('sectionId',null);
+
 	Router.route('/admin', {
 		name: 'admin.dashboard',
 		layoutTemplate: 'Admin',
@@ -420,12 +425,12 @@ if (Meteor.isClient) {
 	});
 
 	// Editorial Board
-	Router.route('/admin/editorial_board', {
+	Router.route('/admin/editorial-board', {
 		name: 'AdminEditorialBoard',
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('fullBoard'),
+				Meteor.subscribe('entireBoard'),
 			]
 		},
 		data: function(){
@@ -438,7 +443,7 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-	Router.route('/admin/editorial_board/add', {
+	Router.route('/admin/editorial-board/add', {
 		name: 'AdminEditorialBoardAdd',
 		layoutTemplate: 'Admin',
 		data: function(){
@@ -449,7 +454,7 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-	Router.route('/admin/editorial_board/edit/:_id', {
+	Router.route('/admin/editorial-board/edit/:_id', {
 		name: 'AdminEditorialBoardEdit',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
@@ -466,6 +471,27 @@ if (Meteor.isClient) {
 			if(this.ready()){
 				return {
 					member : Meteor.adminEdBoard.formPrepareData(this.params._id)
+				};
+			}
+		}
+	});
+
+	// For Authors
+	Router.route('/admin/for-authors', {
+		name: 'AdminForAuthors',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				// TODO: add sorters collection to put sections in correct order
+				Meteor.subscribe('forAuthors'),
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sections = forAuthors.find().fetch();
+				// console.log(edboardList);
+				return {
+					sections : sections
 				};
 			}
 		}

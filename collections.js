@@ -4,6 +4,7 @@ articles = new Mongo.Collection('articles');
 institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
+forAuthors = new Mongo.Collection('for_authors');
 authors = new Mongo.Collection('authors');
 recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
@@ -130,6 +131,26 @@ volumes.allow({
   }
 });
 edboard.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+forAuthors.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -385,17 +406,29 @@ if (Meteor.isServer) {
   // Editorial Board
   // ---------------
   Meteor.publish('fullBoard', function () {
-    return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
+    return edboard.find({'role': {'$in': ['Editorial Board']}});
+    // return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
+  });
+  Meteor.publish('entireBoard', function () {
+    return edboard.find();
+    // return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
   });
   Meteor.publish('eic', function () {
-    return edboard.find({role:"Editor-in-Chief"});
+    return edboard.find({'role': {'$in': ['Editor-in-Chief']}});
   });
   Meteor.publish('eb', function () {
-    return edboard.find({role:"Founding Editorial Board"});
+    return edboard.find({'role': {'$in': ['Founding Editorial Board']}});
   });
   Meteor.publish('edBoardMember', function (mongoId) {
     return edboard.find({_id: mongoId});
   });
+
+  // For Authors
+  // ------------
+  Meteor.publish('forAuthors', function(){
+    return forAuthors.find();
+  });
+
 
   // Authors
   // ----------------

@@ -133,14 +133,13 @@ Meteor.adminEdBoard = {
 
 		// TODO: add check for if name exists?
 		// TODO: validation
-		console.log(member);
+		// console.log(member);
 
 		memberMongoId = $('#member-mongo-id').val();
 
 		if(!memberMongoId){
 			// Insert
 			success = edboard.insert(member);
-
 		}else{
 			// Update
 			success = edboard.update({_id : memberMongoId} , {$set: member});
@@ -148,7 +147,6 @@ Meteor.adminEdBoard = {
 		if(success){
 			Meteor.formActions.success();
 		}
-
 	},
 	readyForm: function(){
 		// Address
@@ -589,7 +587,7 @@ Meteor.formActions = {
 
 	},
 	cleanWysiwyg: function(input){
-		return input.replace('<br>','').replace('<p>','').replace('</p>','');
+		return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'');
 	}
 }
 
@@ -599,6 +597,76 @@ Meteor.adminBatch = {
 		string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
 		string = string.replace(/\s+/g,' '); // remove extra spaces
 		return string;
+	}
+}
+
+Meteor.adminForAuthors = {
+	readyForm: function(){
+		// Section title
+		// ---------------
+		$('.section-title').summernote({
+			styleWithSpan: false,
+			onPaste: function(e){
+				e.preventDefault();
+				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+				document.execCommand('insertText', false, bufferText);
+			},
+			toolbar: [
+				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+				['view', ['codeview']]
+			]
+		});
+		// Section content
+		// ---------------
+		$('.section-content').summernote({
+			styleWithSpan: false,
+			onPaste: function(e){
+				e.preventDefault();
+				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+				document.execCommand('insertText', false, bufferText);
+			},
+			toolbar: [
+				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+				['view', ['codeview']]
+			]
+		});
+	},
+	formGetData: function(e){
+		e.preventDefault();
+		var forDb = {}
+
+		// Section title
+		// ---------------
+		var title = $('.section-title').code();
+		// title = Meteor.formActions.cleanWysiwyg(title);
+		if(title != ''){
+			forDb.title = title;
+		}
+
+		// Section content
+		// ---------------
+		var section = $('.section-content').code();
+		// section = Meteor.formActions.cleanWysiwyg(section);
+		if(section != ''){
+			forDb.content = section;
+		}
+
+		// Check if section exists via Mongo ID hidden input
+		mongoId = $('#section-mongo-id').val();
+		if(!mongoId){
+			// Insert
+			success = forAuthors.insert(forDb);
+		}else{
+			// Update
+			success = forAuthors.update({_id : mongoId} , {$set: forDb});
+		}
+		if(success){
+			// Meteor.formActions.success(); // Do not show modal. Problem when changing session variable to hide template, doesn't remove modal overlay
+			Session.set('showForm',false);
+			Session.set('sectionId',null);
+		}
 	}
 }
 

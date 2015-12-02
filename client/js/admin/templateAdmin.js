@@ -69,3 +69,16 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 Template.AdminEditorialBoardForm.onRendered(function () {
 	Meteor.adminEdBoard.readyForm();
 });
+
+// For Authors
+// ---------------
+Template.AdminForAuthors.onDestroyed(function () {
+	Session.set('sectionId',null);
+});
+Template.AdminForAuthorsForm.onRendered(function () {
+	// console.log('..AdminEditorialBoardForm onRendered');
+	Meteor.adminForAuthors.readyForm();
+});
+Template.AdminForAuthorsForm.onDestroyed(function () {
+	Session.set('sectionId',null);
+});

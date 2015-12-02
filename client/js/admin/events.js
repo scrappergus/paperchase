@@ -14,6 +14,25 @@ Template.AdminEditorialBoardForm.events({
 	}
 });
 
+// For Authors
+// ----------------
+Template.AdminForAuthors.events({
+	'click #add-section': function(e){
+		Session.set('showForm',true);
+	},
+	'click .edit-section': function(e){
+		e.preventDefault();
+		var sectionId = $(e.target).attr('id');
+		// console.log('edit = ' + sectionId);
+		Session.set('sectionId',sectionId);
+	}
+});
+Template.AdminForAuthorsForm.events({
+	'submit form': function(e){
+		Meteor.adminForAuthors.formGetData(e);
+	}
+});
+
 // Users
 // ----------------
 Template.AdminUser.events({

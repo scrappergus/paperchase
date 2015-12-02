@@ -318,12 +318,17 @@ html,body{
 }
 
 /* Links --------------------------*/
-a:not(.btn):not(.nav-links > a){
-	color: $link-text;
-	&:hover{
-		color: $link-text-hover;
-	};
-}
+	a:not(.btn):not(.nav-links > a){
+		color: $link-text;
+		&:hover{
+			color: $link-text-hover;
+		};
+	}
+
+/* List --------------------------*/
+	.roman-list{
+		list-style: upper-roman;
+	}
 
 /* Materialize ------------------------*/
 	.card-header{
