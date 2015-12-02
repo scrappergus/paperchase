@@ -71,6 +71,110 @@ Meteor.admin = {
 			txt.innerHTML += '...';
 		}
 		return txt.value;
+	},
+}
+
+Meteor.adminEdBoard = {
+	formPrepareData: function(mongoId){
+		var member = {};
+		if(mongoId){
+			member = edboard.findOne({_id : mongoId});
+		}
+		var edboardRoles = journalConfig.findOne().edboard_roles;
+		var edboardRolesTemp = [];
+		for(var r=0 ; r<edboardRoles.length ; r++){
+			var roleObj = {
+				name: edboardRoles[r]
+			}
+			if(member.role && $.inArray(roleObj.name, member.role) > -1){
+				roleObj['selected'] = true;
+			}
+			edboardRolesTemp.push(roleObj);
+		}
+		member.roles = edboardRolesTemp.reverse(); // Reversed so that lowest ranked role is listed first in the select option in template
+		// console.log(member);
+		return member;
+	},
+	formGetData: function(e){
+		// console.log('..edboard formGetData');
+		e.preventDefault();
+		var memberMongoId,
+			success;
+		Meteor.formActions.saving();
+		$('input').removeClass('invalid');
+		// Name
+		// ------
+		var member = {};
+		member.name_first = $('#member-name-first').val();
+		member.name_middle = $('#member-name-middle').val();
+		member.name_last = $('#member-name-last').val();
+
+		// Address
+		// ------
+		var memberAddress = $('.member-address').code();
+		memberAddress = Meteor.formActions.cleanWysiwyg(memberAddress);
+		if(memberAddress != ''){
+			member.address = memberAddress;
+		}
+
+		// Bio
+		// ------
+		var memberBio = $('.member-bio').code();
+		memberBio = Meteor.formActions.cleanWysiwyg(memberBio);
+		if(memberBio != ''){
+			member.bio = memberBio;
+		}
+
+		// Role
+		// ------
+		member.role = [];
+		$('.roles').each(function(){
+			if($(this).is(':checked')){
+				member.role.push($(this).val());
+			}
+		});
+
+		// TODO: add check for if name exists?
+		// TODO: validation
+		// console.log(member);
+		memberMongoId = $('#member-mongo-id').val();
+		if(!memberMongoId){
+			// Insert
+			success = edboard.insert(member);
+		}else{
+			// Update
+			success = edboard.update({_id : memberMongoId} , {$set: member});
+		}
+		if(success){
+			Meteor.formActions.success();
+		}
+	},
+	readyForm: function(){
+		// Address
+		// ------
+		$('.member-address').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
+			toolbar: [
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
+			]
+		});
+
+		// Bio
+		// ------
+		$('.member-bio').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
+			toolbar: [
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
+			]
+		});
 	}
 }
 
@@ -179,33 +283,27 @@ Meteor.adminArticle = {
 
 		// title
 		// ------
-		$('.article-title').summernote({
-			styleWithSpan: false,
+		$('.article-title').materialnote({
 			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
+				Meteor.formActions.removePastedStyle(e);
 			},
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 
 		// abstract
 		// ------
-		$('.article-abstract').summernote({
-			styleWithSpan: false,
+		$('.article-abstract').materialnote({
 			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
+				Meteor.formActions.removePastedStyle(e);
 			},
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 
@@ -477,8 +575,16 @@ Meteor.formActions = {
 		}
 
 	},
+	removePastedStyle: function(e){
+		e.preventDefault();
+		// console.log('..removePastedStyle');
+		// for Wysiwyg
+		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+		document.execCommand('insertText', false, bufferText);
+	},
 	cleanWysiwyg: function(input){
-		return input.replace('<br>','').replace('<p>','').replace('</p>','');
+		return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
 	}
 }
 
@@ -488,6 +594,75 @@ Meteor.adminBatch = {
 		string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
 		string = string.replace(/\s+/g,' '); // remove extra spaces
 		return string;
+	}
+}
+
+Meteor.adminForAuthors = {
+	readyForm: function(){
+		// Section title
+		// ---------------
+		$('.section-title').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
+			toolbar: [
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
+			]
+		});
+		// Section content
+		// ---------------
+		$('.section-content').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
+			toolbar: [
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview','link']],
+				['para', ['ul', 'ol', 'paragraph', 'leftButton', 'centerButton', 'rightButton', 'justifyButton', 'outdentButton', 'indentButton']]
+			]
+		});
+	},
+	formGetData: function(e){
+		// console.log('..formGetData forAuthors');
+		e.preventDefault();
+		var forDb = {}
+
+		// Section title
+		// ---------------
+		var title = $('.section-title').code();
+		// console.log(title);
+		title = Meteor.formActions.cleanWysiwyg(title);
+		if(title != ''){
+			forDb.title = title;
+		}
+
+		// Section content
+		// ---------------
+		var section = $('.section-content').code();
+		// section = Meteor.formActions.cleanWysiwyg(section);
+		if(section != ''){
+			forDb.content = section;
+		}
+
+		// Check if section exists via Mongo ID hidden input
+		mongoId = $('#section-mongo-id').val();
+		if(!mongoId){
+			// Insert
+			success = forAuthors.insert(forDb);
+			// Update sorters collection
+			Meteor.call('sorterAddArticle','forAuthors',success);
+		}else{
+			// Update
+			success = forAuthors.update({_id : mongoId} , {$set: forDb});
+		}
+		if(success){
+			// Meteor.formActions.success(); // Do not show modal. Problem when changing session variable to hide template, doesn't remove modal overlay
+			Session.set('showForm',false);
+			Session.set('sectionId',null);
+		}
 	}
 }
 

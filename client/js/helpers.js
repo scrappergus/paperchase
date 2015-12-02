@@ -113,6 +113,21 @@ if (Meteor.isClient) {
 			return true;
 		}
 	});
+	Template.registerHelper('editingSection', function (id) {
+		// console.log('..editingSection ');
+		// for admin editing of for authors
+		return id == Session.get('sectionId');
+	});
+	// Not equals
+	Template.registerHelper('notEmpty', function (a) {
+		if(a.length > 0){
+			return true;
+		}else{
+			return false;
+		}
+	});
+
+
 	// Modify
 	// -------
 	Template.registerHelper('arrayify',function(obj){

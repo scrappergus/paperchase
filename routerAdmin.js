@@ -3,6 +3,11 @@
  ADMIN ROUTES
 */
 if (Meteor.isClient) {
+
+	// For Authors variables
+	Session.setDefault('showForm',false);
+	Session.setDefault('sectionId',null);
+
 	Router.route('/admin', {
 		name: 'admin.dashboard',
 		layoutTemplate: 'Admin',
@@ -414,6 +419,79 @@ if (Meteor.isClient) {
 				return {
 					author : authorsData,
 					articles: authorArticlesList
+				};
+			}
+		}
+	});
+
+	// Editorial Board
+	Router.route('/admin/editorial-board', {
+		name: 'AdminEditorialBoard',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('entireBoard'),
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var edboardList = edboard.find().fetch();
+				// console.log(edboardList);
+				return {
+					edboard : edboardList
+				};
+			}
+		}
+	});
+	Router.route('/admin/editorial-board/add', {
+		name: 'AdminEditorialBoardAdd',
+		layoutTemplate: 'Admin',
+		data: function(){
+			if(this.ready()){
+				return {
+					member : Meteor.adminEdBoard.formPrepareData()
+				};
+			}
+		}
+	});
+	Router.route('/admin/editorial-board/edit/:_id', {
+		name: 'AdminEditorialBoardEdit',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			// TODO
+			// Redirect if no member
+			this.next();
+		},
+		waitOn: function(){
+			return[
+				Meteor.subscribe('edBoardMember',this.params._id),
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				return {
+					member : Meteor.adminEdBoard.formPrepareData(this.params._id)
+				};
+			}
+		}
+	});
+
+	// For Authors
+	Router.route('/admin/for-authors', {
+		name: 'AdminForAuthors',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('forAuthors'),
+				Meteor.subscribe('sortedList','forAuthors')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sections = forAuthors.find().fetch();
+				var sorted  = sorters.findOne();
+				return {
+					sections : sorted['ordered']
 				};
 			}
 		}

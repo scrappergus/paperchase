@@ -1,25 +1,26 @@
 <template name="Admin">
 {{#if isInRole 'admin'}}
-
-{{>AdminNav}}
-
-<div class="container">
-    <div class="row">
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                    {{>yield}}
+<header>
+    {{>AdminNav}}
+</header>
+<main>
+    <div class="admin-container">
+        <div class="row">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        {{>yield}}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+</main>
 {{else}}
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h3><i class="zmdi zmdi-alert-triangle"></i> NO ACCESS</h3>
+            <h3><i class="mdi mdi-alert"></i> NO ACCESS</h3>
             {{> loginButtons}}
         </div>
     </div>
@@ -37,27 +38,112 @@
 </template>
 
 <template name="AdminNav">
-    <ul id="articles-dropdown" class="dropdown-content">
-      <li><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="zmdi zmdi-upload"></i> XML</a></li>
-      <li><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
-    </ul>
     <nav class="journal-nav" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo"><img src="{{bannerLogo}}"></a>
+        <div class="nav-wrapper container">
+            <!-- <a id="logo-container" href="/" class="brand-logo"><img src="{{bannerLogo}}"></a> -->
             <ul class="right hide-on-med-and-down">
-                <li><a href="/admin/">Dashboard</a></li>
-                <li><a href="/admin/institution">Institutions</a></li>
-                <li><a href="{{pathFor 'adminArchive'}}">Archive</a></li>
-                <li><a href="/admin/users">Users</a></li>
-                <li><a href="{{pathFor 'AdminAuthors'}}">Authors</a></li>
-                <li><a href="{{pathFor 'adminArticlesDashboard'}}">Articles</a></li>
-                <!-- <li><a class="dropdown-button" href="#!" data-activates="articles-dropdown">Articles</a></li> -->
-                <li>{{> loginButtons}}</li>
+                {{>AdminNavLinks}}
             </ul>
 
-            <ul id="nav-mobile" class="side-nav">
-                <li><a href="#">Navbar Link</a></li>
+            <ul id="nav-mobile" class="side-nav admin-nav">
+                {{>AdminNavLinks}}
+                {{>AdminNavLinksCollapse}}
             </ul>
             <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
         </div>
     </nav>
+    <ul class="side-nav fixed admin-side-nav journal-nav admin-nav">
+        <li class="logo"><a id="logo-container" href="/admin" class="brand-logo"><img src="{{bannerLogo}}"></a></li>
+        {{>AdminNavLinksCollapse}}
+    </ul>
+</template>
+
+<template name="AdminNavLinks">
+    <li><a href="/admin/">Dashboard</a></li>
+    <li><a href="/admin/institution">Institutions</a></li>
+    <li><a href="{{pathFor 'adminArchive'}}">Archive</a></li>
+    <li><a href="{{pathFor 'adminArchive'}}">Archive</a></li>
+    <li><a href="/admin/users">Users</a></li>
+    <li><a href="{{pathFor 'AdminAuthors'}}">Authors</a></li>
+    <li><a href="{{pathFor 'adminArticlesDashboard'}}">Articles</a></li>
+    <li>{{> loginButtons}}</li>
+</template>
+<template name="AdminNavLinksCollapse">
+        <li class="bold">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Papers</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="{{pathFor 'AdminArticlesList'}}">All</a></li>
+                            <li><a href="{{pathFor 'adminArticleXmlIntake'}}">Upload XML</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="bold">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Indexers</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="http://doi.oncotarget.com">DOI Control</a></li>
+                            <li><a href="{{pathFor 'AdminDataSubmissions'}}">Data Submissions Manager</a></li>
+                            <li><a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Data Submissions</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="bold">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Pages</a>
+                    <div class="collapsible-body">
+                        <ul>
+                          <li><a href="{{pathFor 'AdminEditorialBoard'}}">Editorial Board</a></li>
+                          <li><a href="{{pathFor 'AdminForAuthors'}}">For Authors</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="bold">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Users</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="{{pathFor 'AdminUsers'}}">All</a></li>
+                            <li><a href="{{pathFor 'AdminAddUser'}}">Add</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="bold">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Institutions</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="{{pathFor 'AdminInstitution'}}">All</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="bold">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Marketing</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="http://rss.oncotarget.com/admin">RSS Control</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
 </template>

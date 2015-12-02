@@ -368,8 +368,8 @@ if (Meteor.isClient) {
 		},
 		data: function(){
 			return {
-				eic: edboard.find({role:"Editor-in-Chief"}),
-				fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]})
+				eic: edboard.find({role:"Editor-in-Chief"},{sort : {name_last:1}}),
+				fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]},{sort : {name_last:1}})
 			}
 		},
 		onAfterAction: function() {
@@ -396,6 +396,21 @@ if (Meteor.isClient) {
 	Router.route('/for-authors', {
 		name: 'ForAuthors',
 		layoutTemplate: 'Visitor',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('forAuthors'),
+				Meteor.subscribe('sortedList','forAuthors')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sections = forAuthors.find().fetch();
+				var sorted  = sorters.findOne();
+				return {
+					sections : sorted['ordered']
+				};
+			}
+		},
 		onAfterAction: function() {
 			var pageTitle,
 				pageDescription,

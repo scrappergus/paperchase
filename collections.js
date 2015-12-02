@@ -4,6 +4,7 @@ articles = new Mongo.Collection('articles');
 institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
+forAuthors = new Mongo.Collection('for_authors');
 authors = new Mongo.Collection('authors');
 recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
@@ -15,7 +16,9 @@ sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
   transform: function(f) {
       var order = f.order;
-      if(order){
+      // console.log(order);
+      // TODO: collection name as variable?? can we consolidate this code to not use else if? we are using pretty much the same logic to order collections
+      if(order && f.name != 'forAuthors'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
         var prevSection = '';
@@ -29,6 +32,19 @@ sorters = new Mongo.Collection('sorters', {
               }
               prevSection = section['section_id'];
               f.articles.push(articlesList[a]);
+            }
+          }
+        }
+      }else if(f.name == 'forAuthors'){
+        f.ordered = [];
+        var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+          // console.log(order[i]);
+          for(var a = 0 ; a < sectionsList.length ; a++){
+            // console.log(sectionsList[a]['_id']);
+            if(sectionsList[a]['_id'] == order[i]){
+              f.ordered.push(sectionsList[a]);
             }
           }
         }
@@ -110,6 +126,46 @@ issues.allow({
   }
 });
 volumes.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+edboard.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+forAuthors.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -220,7 +276,7 @@ if (Meteor.isServer) {
     return subs.find({});
   });
   Meteor.publish('journalConfig', function() {
-    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1}});
+    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1, edboard_roles : 1}});
     return siteConfig;
   });
   Meteor.publish('sorters', function() {
@@ -361,17 +417,33 @@ if (Meteor.isServer) {
     return ipranges.find({});
   });
 
+
+  // Editorial Board
+  // ---------------
   Meteor.publish('fullBoard', function () {
-    return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
+    return edboard.find({'role': {'$in': ['Editorial Board']}});
+    // return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
   });
-
+  Meteor.publish('entireBoard', function () {
+    return edboard.find();
+    // return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
+  });
   Meteor.publish('eic', function () {
-    return edboard.find({role:"Editor-in-Chief"});
+    return edboard.find({'role': {'$in': ['Editor-in-Chief']}});
+  });
+  Meteor.publish('eb', function () {
+    return edboard.find({'role': {'$in': ['Founding Editorial Board']}});
+  });
+  Meteor.publish('edBoardMember', function (mongoId) {
+    return edboard.find({_id: mongoId});
   });
 
-  Meteor.publish('eb', function () {
-    return edboard.find({role:"Founding Editorial Board"});
+  // For Authors
+  // ------------
+  Meteor.publish('forAuthors', function(){
+    return forAuthors.find();
   });
+
 
   // Authors
   // ----------------

@@ -1,6 +1,7 @@
 // Article vs Articles will tell whether the function is for multiple or 1 article
 Meteor.methods({
 	batchUpdate:function(){
+		// console.log('..batchUpdate');
 		var journalInfo = journalConfig.findOne();
 		var journalShortName = journalInfo.journal.short_name;
 		var articlesList = articles.find().fetch();
@@ -34,42 +35,44 @@ Meteor.methods({
 			processedArticleJson;
 		// console.log('...legacyIntake: ' + idType + ' = ' + idValue);
 
-		legacyPlatform = journalConfig.findOne()['legacy_platform'],
-		legacyPlatformApi = legacyPlatform['mini_api'];
+		legacyPlatform = journalConfig.findOne();
+		if(legacyPlatform){
+			legacyPlatform = legacyPlatform['legacy_platform'];
+			legacyPlatformApi = legacyPlatform['mini_api'];
+			// Check if article exists by query for ID. Allow multiple types of ID (PMID, PII, etc)
+			paperchaseQueryParams = '{"' + 'ids.' + idType + '" : "' + idValue + '"}';
+			paperchaseQueryParams = JSON.parse(paperchaseQueryParams);
+			article = articles.findOne(paperchaseQueryParams);
 
-		// Check if aritcle exists by query for ID. Allow multiple types of ID (PMID, PII, etc)
-		paperchaseQueryParams = '{"' + 'ids.' + idType + '" : "' + idValue + '"}';
-		paperchaseQueryParams = JSON.parse(paperchaseQueryParams);
-		article = articles.findOne(paperchaseQueryParams);
-
-		// Get the article JSON from the legacy platform
-		if(legacyPlatform['short_name'] === 'ojs'){
-			articleJson = Meteor.call('ojsGetArticlesJson', idType, idValue, journal, legacyPlatformApi);
-			articleJson = JSON.parse(articleJson);
-		}
-
-		// Process article info for Paperchase DB
-		if(articleJson){
-			articleJson = articleJson['articles'][0];
-			processedArticleJson = Meteor.call('ojsProcessArticleJson', articleJson);
-			if(advance){
-				processedArticleJson.advance = true;
+			// Get the article JSON from the legacy platform
+			if(legacyPlatform['short_name'] === 'ojs'){
+				articleJson = Meteor.call('ojsGetArticlesJson', idType, idValue, journal, legacyPlatformApi);
+				articleJson = JSON.parse(articleJson);
 			}
-			// console.log('    '+processedArticleJson['title']);
-			if(article){
-				articleMongoId =  article['_id'];
-				// console.log('    Update = ' + processedArticleJson['title']);
-				Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch);
-			}else{
-				// console.log('    Add = ' + processedArticleJson['title']);
-				processedArticleJson['doc_updates'] = {} ;
-				processedArticleJson['doc_updates']['created_by'] = 'OJS Intake';
-				articleMongoId = Meteor.call('addArticle',processedArticleJson);
-			}
-		}
 
-		if(articleMongoId){
-			return true; // DO we need a response to Legacy platform?
+			// Process article info for Paperchase DB
+			if(articleJson){
+				articleJson = articleJson['articles'][0];
+				processedArticleJson = Meteor.call('ojsProcessArticleJson', articleJson);
+				if(advance){
+					processedArticleJson.advance = true;
+				}
+				// console.log('    '+processedArticleJson['title']);
+				if(article){
+					articleMongoId =  article['_id'];
+					// console.log('    Update = ' + processedArticleJson['title']);
+					Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch);
+				}else{
+					// console.log('    Add = ' + processedArticleJson['title']);
+					processedArticleJson['doc_updates'] = {} ;
+					processedArticleJson['doc_updates']['created_by'] = 'OJS Intake';
+					articleMongoId = Meteor.call('addArticle',processedArticleJson);
+				}
+			}
+
+			if(articleMongoId){
+				return true; // DO we need a response to Legacy platform?
+			}
 		}
 	},
 });

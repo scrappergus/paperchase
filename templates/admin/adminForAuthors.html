@@ -1,0 +1,97 @@
+<template name="AdminForAuthors">
+	{{>AdminHeader header="For Authors"}}
+	<div class="row">
+		<div class="col s12">
+			<button id="add-section" class="waves-effect waves-light btn btn-add right"><i class="mdi mdi-plus-circle"></i> Section</button>
+		</div>
+	</div>
+	{{>SuccessModal what='Section Order'}}
+	<div class="row">
+		<div class="col s12">
+			<h2>Section Order</h2>
+			<ol class="roman-list sections-list">
+			{{#each sections}}
+				<li id="section-title-{{_id}}">{{{title}}}</li>
+			{{/each}}
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<button id="save-section-order" class="waves-effect waves-light btn btn-update right">Save Section Order</button>
+		</div>
+	</div>
+	<div class="divider"></div>
+
+	<h2>Sections</h2>
+
+	<ol class="roman-list">
+		{{#each sections}}
+		<li>
+		{{#if editingSection _id}}
+		<div class="row">
+			<div class="col s12 card grey lighten-5">
+				<div id="add-section-container" class="">
+					<h2>Edit Section</h2>
+					{{>AdminForAuthorsForm}}
+				</div>
+			</div>
+		</div>
+		{{else}}
+		<h3 id="section-{{@index}}">
+			{{{title}}}
+			<button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="mdi mdi-pencil" id="{{_id}}"></i></button>
+		</h3>
+		{{{content}}}
+		{{/if}}
+		</li>
+		{{/each}}
+	</ol>
+
+	<div id="add-section-container">
+	{{#if showForm}}
+	<div class="divider"></div>
+	<div class="row">
+		<div class="col s12 card grey lighten-5">
+			<h2>New Section</h2>
+			{{>AdminForAuthorsForm}}
+		</div>
+	</div>
+	{{/if}}
+	</div>
+</template>
+
+<template name="AdminForAuthorsForm">
+	{{#with section}}
+	{{>SuccessModal what='For Authors Section'}}
+	<form id="article-form">
+		{{>saving}}
+
+		<fieldset id="section-title">
+			<legend>Title</legend>
+			<div class="row">
+				<div class="input-field col s12">
+					<div class="section-title">{{{title}}}</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset id="section">
+			<legend>Section</legend>
+			<div class="row">
+				<div class="input-field col s12">
+					<div class="section-content">{{{content}}}</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<input type="hidden" value="{{_id}}" id="section-mongo-id">
+
+		<div class="row">
+			<div class="col s12 center-align">
+				{{>SaveBtn}}
+			</div>
+		</div>
+	</form>
+	{{/with}}
+</template>

@@ -199,6 +199,24 @@ Template.AdminInstitutionForm.helpers({
 	}
 });
 
+
+// For Authors
+// ---------------
+Template.AdminForAuthors.helpers({
+	'showForm' : function(){
+		return Session.get('showForm');
+	}
+});
+Template.AdminForAuthorsForm.helpers({
+	'section' : function(){
+		var section = {};
+		if(Session.get('sectionId')){
+			section = forAuthors.findOne({_id : Session.get('sectionId')});
+		}
+		return section;
+	}
+});
+
 // Intake
 // ---------------
 Template.adminArticleXmlIntake.helpers({

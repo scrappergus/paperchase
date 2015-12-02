@@ -16,3 +16,10 @@
       -ms-opacity: $value!important;
           opacity: $value!important;
 }
+
+@mixin backface-visibility($value) {
+  -webkit-backface-visibility: $value!important;
+     -moz-backface-visibility: $value!important;
+      -ms-backface-visibility: $value!important;
+          backface-visibility: $value!important;
+}

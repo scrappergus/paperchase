@@ -5,6 +5,57 @@ Template.Admin.events({
 		$('.edit').removeClass('hide');
 	}
 });
+
+// Editorial Board
+// ----------------
+Template.AdminEditorialBoardForm.events({
+	'submit form': function(e){
+		Meteor.adminEdBoard.formGetData(e);
+	}
+});
+
+// For Authors
+// ----------------
+Template.AdminForAuthors.events({
+	'click #add-section': function(e){
+		Session.set('showForm',true);
+		Session.set('sectionId', null);
+
+		$('html, body').animate({
+			scrollTop: $('#add-section-container').position().top
+		}, 500);
+	},
+	'click .edit-section': function(e){
+		e.preventDefault();
+		var sectionId = $(e.target).attr('id');
+		Session.set('sectionId',sectionId);
+	},
+	'click #save-section-order': function(e){
+		e.preventDefault();
+		var order = [];
+		$('.sections-list li').each(function(){
+			var sectionMongoId = $(this).attr('id').replace('section-title-','');
+			order.push(sectionMongoId);
+		});
+		Meteor.call('updateList', 'forAuthors', order, function(error,result){
+			if(error){
+				console.log('error - updateList forAuthors');
+				console.log(error);
+			}
+			if(result){
+				Meteor.formActions.success();
+			}
+		});
+	}
+});
+Template.AdminForAuthorsForm.events({
+	'submit form': function(e){
+		Meteor.adminForAuthors.formGetData(e);
+	}
+});
+
+// Users
+// ----------------
 Template.AdminUser.events({
 	'click .edit-user': function(e){
 		e.preventDefault();
@@ -40,7 +91,6 @@ Template.AdminUser.events({
 		// }
 	}
 });
-
 Template.AdminUserSubs.events({
         'submit form' : function(e,t) {
             e.preventDefault();
@@ -74,8 +124,7 @@ Template.AdminUserSubs.events({
                 });
 
         }
-    });
-
+});
 Template.AdminAddUser.events({
 	'click .role-cb': function(e){
 		Meteor.adminUser.clickedRole(e);
@@ -98,9 +147,8 @@ Template.AdminAddUser.events({
 	}
 });
 
-/*
-FORMS
-*/
+// Forms - General
+// ----------------
 Template.successMessage.events({
 	'click #close-success-msg': function(e){
 		e.preventDefault();
@@ -114,9 +162,8 @@ Template.SendingSuccessMessage.events({
 	}
 });
 
-/*
-Issue
-*/
+// Issue
+// ----------------
 Template.AdminIssue.events({
 	'submit form': function(e,t){
 		e.preventDefault();
@@ -140,9 +187,8 @@ Template.AdminIssue.events({
 	}
 });
 
-/*
-ARTICLE
-*/
+// Article
+// ----------------
 Template.adminArticlesDashboard.events({
 	'click #ojs-batch-update': function(e){
 		e.preventDefault();
@@ -151,7 +197,6 @@ Template.adminArticlesDashboard.events({
 		Meteor.call('batchUpdate');
 	}
 });
-
 Template.AdminArticleForm.events({
 	'click .mm-yy-only': function(e){
 		var keys = $(e.target).attr('id').split('-');
@@ -553,7 +598,47 @@ Template.AdminArticleForm.events({
 		}
 	}
 });
+Template.adminArticleXmlProcess.events({
+	'click .update-article': function(e,t){
+		e.preventDefault();
+		var articleData = t.data['article'];
 
+		//add who UPDATED this article doc
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['last_update_date'] = new Date();
+		articleData['doc_updates']['last_update_by'] = Meteor.userId();
+
+		var mongoId = $(e.target).attr('data-mongoid');
+		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
+			if(error){
+				alert('ERROR: '+error.message);
+			}else{
+				Router.go('adminArticle', {_id:mongoId});
+			}
+		});
+	},
+	'click .add-article': function(e,t){
+		e.preventDefault();
+
+		var articleData = t.data['article'];
+
+		//add who CREATED this article doc
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['created_date'] = new Date();
+		articleData['doc_updates']['created_by'] = Meteor.userId();
+
+		Meteor.call('addArticle', articleData, function(error,_id){
+			if(error){
+				alert('ERROR: ' + error.message);
+			}else{
+				Router.go('adminArticle', {_id:_id});
+			}
+		});
+	}
+});
+
+// Indexers
+// ----------------
 Template.AdminDataSubmissions.events({
 	'keydown input': function(e,t){
 		var tag = '<div class="chip">Tag<i class="material-icons">close</i></div>'
@@ -688,45 +773,8 @@ Template.AdminDataSubmissions.events({
 	}
 })
 
-Template.adminArticleXmlProcess.events({
-	'click .update-article': function(e,t){
-		e.preventDefault();
-		var articleData = t.data['article'];
-
-		//add who UPDATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['last_update_date'] = new Date();
-		articleData['doc_updates']['last_update_by'] = Meteor.userId();
-
-		var mongoId = $(e.target).attr('data-mongoid');
-		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
-			if(error){
-				alert('ERROR: '+error.message);
-			}else{
-				Router.go('adminArticle', {_id:mongoId});
-			}
-		});
-	},
-	'click .add-article': function(e,t){
-		e.preventDefault();
-
-		var articleData = t.data['article'];
-
-		//add who CREATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['created_date'] = new Date();
-		articleData['doc_updates']['created_by'] = Meteor.userId();
-
-		Meteor.call('addArticle', articleData, function(error,_id){
-			if(error){
-				alert('ERROR: ' + error.message);
-			}else{
-				Router.go('adminArticle', {_id:_id});
-			}
-		});
-	}
-});
-
+// Advance Articles
+// ----------------
 Template.AdminAdvanceArticles.events({
 	'submit form': function(e){
 		e.preventDefault();
@@ -754,6 +802,7 @@ Template.AdminAdvanceArticles.events({
 })
 
 // Batch
+// ----------------
 Template.AdminBatchXml.events({
 	'click #advance-order-update' : function(e){
 		e.preventDefault();
@@ -865,12 +914,13 @@ Template.AdminBatchXml.events({
 });
 
 // Institutions
+// ----------------
 Template.AdminInstitution.events({
         'click .del-btn': function(e,t){
             Meteor.call('removeInstitution', this['_id'], function(error, result){
                 });
         }
-    });
+});
 Template.AdminInstitutionAdd.events({
         'submit form': function(e,t){
             var formType = Session.get('formType');
@@ -895,10 +945,10 @@ Template.AdminInstitutionAdd.events({
                 });
         }
 
-    });
+});
 Template.AdminInstitutionForm.onCreated(function() {
-        this.showIPFields = new ReactiveVar( false );
-    });
+	this.showIPFields = new ReactiveVar( false );
+});
 
 Template.AdminInstitutionForm.events({
         'click .edit-btn': function(e){
@@ -989,9 +1039,10 @@ Template.AdminInstitutionForm.events({
                     }
                 });
         }
-    });
+});
 
 // Recommend
+// ----------------
 Template.AdminRecommendationUpdate.events({
 	'submit form': function(e,t){
 		e.preventDefault();

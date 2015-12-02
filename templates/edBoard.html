@@ -1,0 +1,21 @@
+<template name="EdBoard">
+	<h3>{{journalName}} Editors-in-Chief</h3>
+	<ul class="home-page-editors-list">
+		{{#each eic}}
+		<li>
+			<div><p><span class="title"><b>{{>PersonName}}</b></span><br> {{address}}</p></div>
+		</li>
+		{{/each}}
+	</ul>
+
+	<div class="divider"></div>
+
+	<h4>Editorial Board</h4>
+	<ul class="home-page-editors-list">
+		{{#each fullBoard}}
+		<li>
+			<div><p><span class="title"><b>{{>PersonName}}</b></span><br> {{address}}</p></div>
+		</li>
+		{{/each}}
+	</ul>
+</template>

@@ -1,0 +1,108 @@
+@import 'variables';
+@import 'mixins';
+@import 'type';
+
+/* Forms -----------------------------*/
+	.note-editor .note-toolbar{
+		background: $black-1;
+		overflow: hidden;
+	}
+	.note-editor .modal{
+		background-color: $black-1!important;
+		z-index: 5000!important;
+	}
+/* General ------------------------*/
+	.admin-container{
+		padding-left: 240px;
+		@media only screen and (max-width: 992px){
+			padding-left: 0px;
+		}
+	}
+/* Navigation ------------------------*/
+	.admin-nav .brand-logo{
+		overflow: visible;
+	}
+	.admin-nav{
+		a{
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	.admin-side-nav{
+		.logo{
+			margin-bottom: 20px;
+		}
+		.collapsible-header:not(.active){
+			color: $white;
+		}
+		li{
+			padding: 0;
+			&:hover{
+				a{
+					color: $blue-gray;
+				}
+			}
+		}
+		li:hover a{
+			color: $black-0;
+		}
+	}
+
+/* Article ------------------------*/
+	.note-editor{
+		border: 0px!important;
+		.btn-group{
+			.btn{
+				border-radius: 0px !important;
+				box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.16), 0 0px 0px 0 rgba(0, 0, 0, 0.12)!important;
+			}
+		}
+	}
+	#article-title{
+		.note-editable{
+			font-size: $font-lg; /*for article title*/
+		}
+	}
+	.add-btn{
+		text-transform: none!important;
+	}
+
+	#institution-form{
+		input,textarea{
+			margin: 0;
+		}
+	}
+	li.disabled{
+		@include opacity(0.2);
+	}
+
+/* General ------------------------*/
+	.admin-header{
+		margin: 0px;
+		color: $journal-primary-color;
+	}
+	.admin-sub-nav{
+		li{
+			padding: $pad-sm;
+			display: inline-block;
+		}
+	}
+
+/* Misc ------------------------*/
+	.xml-upload{
+		padding: $pad-lg;
+		@include border-radius(5px);
+		.btn{
+			@include border-radius(5px);
+		}
+	}
+
+/* For Authors ------------------*/
+	.sections-list{
+		li{
+			padding: $pad-md;
+			margin: $margin-md 0;
+			background: $gray-0;
+			cursor: pointer;
+		}
+	}

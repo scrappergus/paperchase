@@ -296,6 +296,9 @@ html,body{
 	.btn-add{
 		background-color: $btn-color-add;
 	}
+	.btn-edit{
+		background-color: $btn-color-edit;
+	}
 	.btn-delete{
 		background-color: $btn-color-delete;
 	}
@@ -318,12 +321,17 @@ html,body{
 }
 
 /* Links --------------------------*/
-a:not(.btn):not(.nav-links > a){
-	color: $link-text;
-	&:hover{
-		color: $link-text-hover;
-	};
-}
+	a:not(.btn):not(.nav-links > a){
+		color: $link-text;
+		&:hover{
+			color: $link-text-hover;
+		};
+	}
+
+/* List --------------------------*/
+	.roman-list{
+		list-style: upper-roman;
+	}
 
 /* Materialize ------------------------*/
 	.card-header{
