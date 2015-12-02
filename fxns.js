@@ -150,20 +150,10 @@ Meteor.adminEdBoard = {
 	readyForm: function(){
 		// Address
 		// ------
-		// $('.member-address').summernote({
-		// 	styleWithSpan: false,
-		// 	onPaste: function(e){
-		// 		e.preventDefault();
-		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-		// 		document.execCommand('insertText', false, bufferText);
-		// 	},
-		// 	toolbar: [
-		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-		// 		['view', ['codeview']]
-		// 	]
-		// });
 		$('.member-address').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
 			toolbar: [
 				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
 				['undo', ['undo', 'redo', 'help']],
@@ -173,20 +163,10 @@ Meteor.adminEdBoard = {
 
 		// Bio
 		// ------
-		// $('.member-bio').summernote({
-		// 	styleWithSpan: false,
-		// 	onPaste: function(e){
-		// 		e.preventDefault();
-		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-		// 		document.execCommand('insertText', false, bufferText);
-		// 	},
-		// 	toolbar: [
-		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-		// 		['view', ['codeview']]
-		// 	]
-		// });
 		$('.member-bio').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
 			toolbar: [
 				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
 				['undo', ['undo', 'redo', 'help']],
@@ -301,20 +281,10 @@ Meteor.adminArticle = {
 
 		// title
 		// ------
-		// $('.article-title').summernote({
-		// 	styleWithSpan: false,
-		// 	onPaste: function(e){
-		// 		e.preventDefault();
-		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-		// 		document.execCommand('insertText', false, bufferText);
-		// 	},
-		// 	toolbar: [
-		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-		// 		['view', ['codeview']]
-		// 	]
-		// });
 		$('.article-title').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
 			toolbar: [
 				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
 				['undo', ['undo', 'redo', 'help']],
@@ -324,20 +294,10 @@ Meteor.adminArticle = {
 
 		// abstract
 		// ------
-		// $('.article-abstract').summernote({
-		// 	styleWithSpan: false,
-		// 	onPaste: function(e){
-		// 		e.preventDefault();
-		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-		// 		document.execCommand('insertText', false, bufferText);
-		// 	},
-		// 	toolbar: [
-		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-		// 		['view', ['codeview']]
-		// 	]
-		// });
 		$('.article-abstract').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
 			toolbar: [
 				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
 				['undo', ['undo', 'redo', 'help']],
@@ -613,6 +573,14 @@ Meteor.formActions = {
 		}
 
 	},
+	removePastedStyle: function(e){
+		e.preventDefault();
+		// console.log('..removePastedStyle');
+		// for Wysiwyg
+		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+		document.execCommand('insertText', false, bufferText);
+	},
 	cleanWysiwyg: function(input){
 		return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
 	}
@@ -632,6 +600,9 @@ Meteor.adminForAuthors = {
 		// Section title
 		// ---------------
 		$('.section-title').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
 			toolbar: [
 				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
 				['undo', ['undo', 'redo', 'help']],
@@ -641,6 +612,9 @@ Meteor.adminForAuthors = {
 		// Section content
 		// ---------------
 		$('.section-content').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
 			toolbar: [
 				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
 				['undo', ['undo', 'redo', 'help']],
@@ -657,7 +631,7 @@ Meteor.adminForAuthors = {
 		// Section title
 		// ---------------
 		var title = $('.section-title').code();
-		console.log(title);
+		// console.log(title);
 		title = Meteor.formActions.cleanWysiwyg(title);
 		if(title != ''){
 			forDb.title = title;
