@@ -109,7 +109,7 @@ Meteor.adminEdBoard = {
 
 		// Address
 		// ------
-		var memberAddress = $('.member-address').code();
+		var memberAddress = $('.member-address').summernote('code');
 		memberAddress = Meteor.formActions.cleanWysiwyg(memberAddress);
 		if(memberAddress != ''){
 			member.address = memberAddress;
@@ -117,7 +117,7 @@ Meteor.adminEdBoard = {
 
 		// Bio
 		// ------
-		var memberBio = $('.member-bio').code();
+		var memberBio = $('.member-bio').summernote('code');
 		memberBio = Meteor.formActions.cleanWysiwyg(memberBio);
 		if(memberBio != ''){
 			member.bio = memberBio;
@@ -603,32 +603,21 @@ Meteor.adminForAuthors = {
 	readyForm: function(){
 		// Section title
 		// ---------------
-		$('.section-title').summernote({
-			styleWithSpan: false,
-			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
-			},
+		$('.section-title').materialnote({
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 		// Section content
 		// ---------------
-		$('.section-content').summernote({
-			styleWithSpan: false,
-			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
-			},
+		$('.section-content').materialnote({
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview','link']],
+				['para', ['ul', 'ol', 'paragraph', 'leftButton', 'centerButton', 'rightButton', 'justifyButton', 'outdentButton', 'indentButton']]
 			]
 		});
 	},
@@ -640,6 +629,7 @@ Meteor.adminForAuthors = {
 		// Section title
 		// ---------------
 		var title = $('.section-title').code();
+		console.log(title);
 		title = Meteor.formActions.cleanWysiwyg(title);
 		if(title != ''){
 			forDb.title = title;
