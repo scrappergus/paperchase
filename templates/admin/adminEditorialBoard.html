@@ -52,8 +52,17 @@
 		<fieldset id="name">
 			<legend>Name</legend>
 			<div class="row">
-				<div class="input-field col s12">
-					<input name="member-name" type="text" value="{{name}}" id="member-name">
+				<div class="input-field col s12 m4">
+					<input name="member-name-first" type="text" value="{{name_first}}" id="member-name-first">
+					<label for="member-name-first" class="{{#if notEmpty name_first}}active{{/if}}">First Name</label>
+				</div>
+				<div class="input-field col s12 m4">
+					<input name="member-name-middle" type="text" value="{{name_middle}}" id="member-name-middle">
+					<label for="member-name-middle" class="{{#if notEmpty name_middle}}active{{/if}}">Middle Name</label>
+				</div>
+				<div class="input-field col s12 m4">
+					<input name="member-name-last" type="text" value="{{name_last}}" id="member-name-last">
+					<label for="member-name-last" class="{{#if notEmpty name_last}}active{{/if}}">Last Name</label>
 				</div>
 			</div>
 		</fieldset>

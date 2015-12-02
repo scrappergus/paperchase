@@ -105,7 +105,9 @@ Meteor.adminEdBoard = {
 		// Name
 		// ------
 		var member = {};
-		member.name = $('#member-name').val();
+		member.name_first = $('#member-name-first').val();
+		member.name_middle = $('#member-name-middle').val();
+		member.name_last = $('#member-name-last').val();
 
 		// Address
 		// ------
@@ -134,7 +136,7 @@ Meteor.adminEdBoard = {
 
 		// TODO: add check for if name exists?
 		// TODO: validation
-
+		// console.log(member);
 		memberMongoId = $('#member-mongo-id').val();
 		if(!memberMongoId){
 			// Insert
