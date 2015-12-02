@@ -109,7 +109,7 @@ Meteor.adminEdBoard = {
 
 		// Address
 		// ------
-		var memberAddress = $('.member-address').summernote('code');
+		var memberAddress = $('.member-address').code();
 		memberAddress = Meteor.formActions.cleanWysiwyg(memberAddress);
 		if(memberAddress != ''){
 			member.address = memberAddress;
@@ -117,7 +117,7 @@ Meteor.adminEdBoard = {
 
 		// Bio
 		// ------
-		var memberBio = $('.member-bio').summernote('code');
+		var memberBio = $('.member-bio').code();
 		memberBio = Meteor.formActions.cleanWysiwyg(memberBio);
 		if(memberBio != ''){
 			member.bio = memberBio;
@@ -150,33 +150,47 @@ Meteor.adminEdBoard = {
 	readyForm: function(){
 		// Address
 		// ------
-		$('.member-address').summernote({
-			styleWithSpan: false,
-			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
-			},
+		// $('.member-address').summernote({
+		// 	styleWithSpan: false,
+		// 	onPaste: function(e){
+		// 		e.preventDefault();
+		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+		// 		document.execCommand('insertText', false, bufferText);
+		// 	},
+		// 	toolbar: [
+		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+		// 		['view', ['codeview']]
+		// 	]
+		// });
+		$('.member-address').materialnote({
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 
 		// Bio
 		// ------
-		$('.member-bio').summernote({
-			styleWithSpan: false,
-			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
-			},
+		// $('.member-bio').summernote({
+		// 	styleWithSpan: false,
+		// 	onPaste: function(e){
+		// 		e.preventDefault();
+		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+		// 		document.execCommand('insertText', false, bufferText);
+		// 	},
+		// 	toolbar: [
+		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+		// 		['view', ['codeview']]
+		// 	]
+		// });
+		$('.member-bio').materialnote({
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 	}
@@ -287,33 +301,47 @@ Meteor.adminArticle = {
 
 		// title
 		// ------
-		$('.article-title').summernote({
-			styleWithSpan: false,
-			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
-			},
+		// $('.article-title').summernote({
+		// 	styleWithSpan: false,
+		// 	onPaste: function(e){
+		// 		e.preventDefault();
+		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+		// 		document.execCommand('insertText', false, bufferText);
+		// 	},
+		// 	toolbar: [
+		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+		// 		['view', ['codeview']]
+		// 	]
+		// });
+		$('.article-title').materialnote({
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 
 		// abstract
 		// ------
-		$('.article-abstract').summernote({
-			styleWithSpan: false,
-			onPaste: function(e){
-				e.preventDefault();
-				//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
-				var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-				document.execCommand('insertText', false, bufferText);
-			},
+		// $('.article-abstract').summernote({
+		// 	styleWithSpan: false,
+		// 	onPaste: function(e){
+		// 		e.preventDefault();
+		// 		//remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
+		// 		var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+		// 		document.execCommand('insertText', false, bufferText);
+		// 	},
+		// 	toolbar: [
+		// 		['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+		// 		['view', ['codeview']]
+		// 	]
+		// });
+		$('.article-abstract').materialnote({
 			toolbar: [
-				['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
-				['view', ['codeview']]
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview']]
 			]
 		});
 
