@@ -2,16 +2,28 @@
 	{{>AdminHeader header="For Authors"}}
 	<div class="row">
 		<div class="col s12">
-			<button id="add-section" class="waves-effect waves-light btn light-blue accent-4">Add Section</button>
+			<button id="add-section" class="waves-effect waves-light btn btn-add right"><i class="zmdi zmdi-plus-circle"></i> Section</button>
 		</div>
 	</div>
-	<ol class="roman-list">
-	{{#each sections}}
-		<li>{{{title}}}</li>
-	{{/each}}
-	</ol>
+	{{>SuccessModal what='Section Order'}}
+	<div class="row">
+		<div class="col s12">
+			<h2>Section Order</h2>
+			<ol class="roman-list sections-list">
+			{{#each sections}}
+				<li id="section-title-{{_id}}">{{{title}}}</li>
+			{{/each}}
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<button id="save-section-order" class="waves-effect waves-light btn btn-update right">Save Section Order</button>
+		</div>
+	</div>
 	<div class="divider"></div>
 
+	<h2>Sections</h2>
 	{{#each sections}}
 	{{#if editingSection _id}}
 	<div class="row">
@@ -28,26 +40,26 @@
 			<h3>{{{title}}}</h3>
 		</div>
 		<div class="col s12 m2">
-			<h3><button class="waves-effect waves-light btn btn-sm edit-section right" id="{{_id}}">Edit</button></h3>
+			<h3><button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="zmdi zmdi-edit" id="{{_id}}"></i></button></h3>
 		</div>
 		<div class="col s12">
 			{{{content}}}
 		</div>
 	</div>
 	{{/if}}
-	<div class="divider"></div>
 	{{/each}}
 
+	<div id="add-section-container">
 	{{#if showForm}}
+	<div class="divider"></div>
 	<div class="row">
 		<div class="col s12 card grey lighten-5">
-			<div id="add-section-container" class="">
-				<h2>New Section</h2>
-				{{>AdminForAuthorsForm}}
-			</div>
+			<h2>New Section</h2>
+			{{>AdminForAuthorsForm}}
 		</div>
 	</div>
 	{{/if}}
+	</div>
 </template>
 
 <template name="AdminForAuthorsForm">

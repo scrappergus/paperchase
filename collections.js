@@ -16,7 +16,9 @@ sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
   transform: function(f) {
       var order = f.order;
-      if(order){
+      // console.log(order);
+      // TODO: collection name as variable?? can we consolidate this code to not use else if? we are using pretty much the same logic to order collections
+      if(order && f.name != 'forAuthors'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
         var prevSection = '';
@@ -30,6 +32,19 @@ sorters = new Mongo.Collection('sorters', {
               }
               prevSection = section['section_id'];
               f.articles.push(articlesList[a]);
+            }
+          }
+        }
+      }else if(f.name == 'forAuthors'){
+        f.ordered = [];
+        var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+          // console.log(order[i]);
+          for(var a = 0 ; a < sectionsList.length ; a++){
+            // console.log(sectionsList[a]['_id']);
+            if(sectionsList[a]['_id'] == order[i]){
+              f.ordered.push(sectionsList[a]);
             }
           }
         }

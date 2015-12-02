@@ -484,14 +484,15 @@ if (Meteor.isClient) {
 			return[
 				// TODO: add sorters collection to put sections in correct order
 				Meteor.subscribe('forAuthors'),
+				Meteor.subscribe('sortedList','forAuthors')
 			]
 		},
 		data: function(){
 			if(this.ready()){
 				var sections = forAuthors.find().fetch();
-				// console.log(edboardList);
+				var sorted  = sorters.findOne();
 				return {
-					sections : sections
+					sections : sorted['ordered']
 				};
 			}
 		}

@@ -87,3 +87,13 @@
 			@include border-radius(5px);
 		}
 	}
+
+/* For Authors ------------------*/
+	.sections-list{
+		li{
+			padding: $pad-md;
+			margin: $margin-md 0;
+			background: $gray-0;
+			cursor: pointer;
+		}
+	}
