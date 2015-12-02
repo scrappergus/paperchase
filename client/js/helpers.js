@@ -118,6 +118,15 @@ if (Meteor.isClient) {
 		// for admin editing of for authors
 		return id == Session.get('sectionId');
 	});
+	// Not equals
+	Template.registerHelper('notEmpty', function (a) {
+		if(a.length > 0){
+			return true;
+		}else{
+			return false;
+		}
+	});
+
 
 	// Modify
 	// -------
