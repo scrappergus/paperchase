@@ -3,7 +3,7 @@
 	<ul class="home-page-editors-list">
 		{{#each eic}}
 		<li>
-			<div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
+			<div><p><span class="title"><b>{{>PersonName}}</b></span><br> {{address}}</p></div>
 		</li>
 		{{/each}}
 	</ul>
@@ -14,7 +14,7 @@
 	<ul class="home-page-editors-list">
 		{{#each fullBoard}}
 		<li>
-			<div><p><span class="title"><b>{{name}}</b></span><br> {{address}}</p></div>
+			<div><p><span class="title"><b>{{>PersonName}}</b></span><br> {{address}}</p></div>
 		</li>
 		{{/each}}
 	</ul>
