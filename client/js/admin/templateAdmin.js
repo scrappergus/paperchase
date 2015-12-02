@@ -75,6 +75,9 @@ Template.AdminEditorialBoardForm.onRendered(function () {
 Template.AdminForAuthors.onDestroyed(function () {
 	Session.set('sectionId',null);
 });
+Template.AdminForAuthors.onRendered(function () {
+	$('.sections-list').sortable();
+});
 Template.AdminForAuthorsForm.onRendered(function () {
 	// console.log('..AdminEditorialBoardForm onRendered');
 	Meteor.adminForAuthors.readyForm();
