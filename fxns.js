@@ -96,6 +96,7 @@ Meteor.adminEdBoard = {
 		return member;
 	},
 	formGetData: function(e){
+		// console.log('..edboard formGetData');
 		e.preventDefault();
 		var memberMongoId,
 			success;
@@ -133,10 +134,8 @@ Meteor.adminEdBoard = {
 
 		// TODO: add check for if name exists?
 		// TODO: validation
-		// console.log(member);
 
 		memberMongoId = $('#member-mongo-id').val();
-
 		if(!memberMongoId){
 			// Insert
 			success = edboard.insert(member);
@@ -587,7 +586,7 @@ Meteor.formActions = {
 
 	},
 	cleanWysiwyg: function(input){
-		return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'');
+		return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
 	}
 }
 
@@ -634,13 +633,14 @@ Meteor.adminForAuthors = {
 		});
 	},
 	formGetData: function(e){
+		// console.log('..formGetData forAuthors');
 		e.preventDefault();
 		var forDb = {}
 
 		// Section title
 		// ---------------
 		var title = $('.section-title').code();
-		// title = Meteor.formActions.cleanWysiwyg(title);
+		title = Meteor.formActions.cleanWysiwyg(title);
 		if(title != ''){
 			forDb.title = title;
 		}
@@ -658,6 +658,8 @@ Meteor.adminForAuthors = {
 		if(!mongoId){
 			// Insert
 			success = forAuthors.insert(forDb);
+			// Update sorters collection
+			Meteor.call('sorterAddArticle','forAuthors',success);
 		}else{
 			// Update
 			success = forAuthors.update({_id : mongoId} , {$set: forDb});
