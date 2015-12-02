@@ -23,6 +23,7 @@ caching-html-compiler@1.0.2
 callback-hook@1.0.4
 check@1.1.0
 coffeescript@1.0.11
+dapearce:material-icons@0.1.4
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.2
@@ -35,7 +36,6 @@ ecmascript-runtime@0.2.6
 ejson@1.0.7
 email@1.0.8
 fastclick@1.0.7
-fortawesome:fontawesome@4.5.0
 fourseven:scss@3.4.1
 gadicohen:headers@0.0.31
 gandev:server-eval@0.6.6
@@ -54,16 +54,14 @@ iron:location@1.0.11
 iron:middleware-stack@1.0.11
 iron:router@1.0.12
 iron:url@1.0.11
-ixdi:material-design-iconic-font@2.1.5
 jquery@1.11.4
 launch-screen@1.0.4
 less@2.5.1
-linto:jquery-ui@1.11.2
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
 matb33:collection-hooks@0.8.1
-materialize:materialize@0.97.0
+materialize:materialize@0.97.3
 meteor@1.1.10
 meteor-base@1.0.1
 meteorhacks:async@1.0.0
@@ -73,6 +71,8 @@ meteorhacks:meteorx@1.4.1
 meteorhacks:npm@1.5.0
 minifiers@1.1.7
 minimongo@1.0.10
+mizzao:build-fetcher@0.2.0
+mizzao:jquery-ui@1.11.4
 mizzao:timesync@0.3.4
 mizzao:user-status@0.6.6
 mobile-experience@1.0.1
@@ -105,7 +105,6 @@ spacebars@1.0.7
 spacebars-compiler@1.0.7
 srp@1.0.4
 standard-minifiers@1.0.2
-summernote:standalone@0.7.0
 templating@1.1.5
 templating-tools@1.0.0
 tomi:upload-jquery@2.2.1
@@ -114,6 +113,7 @@ tracker@1.0.9
 ui@1.0.8
 underscore@1.0.4
 url@1.0.5
+vojtechklos:materialnote@1.2.1
 webapp@1.2.3
 webapp-hashing@1.0.5
 zimme:active-route@2.3.2
