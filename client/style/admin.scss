@@ -2,6 +2,15 @@
 @import 'mixins';
 @import 'type';
 
+/* Forms -----------------------------*/
+	.note-editor .note-toolbar{
+		background: $black-1;
+		overflow: hidden;
+	}
+	.note-editor .modal{
+		background-color: $gray-1!important;
+		z-index: 5000!important;
+	}
 /* General ------------------------*/
 	.admin-container{
 		padding-left: 240px;
@@ -86,10 +95,6 @@
 		.btn{
 			@include border-radius(5px);
 		}
-	}
-	.note-editor .modal{
-		background-color: $gray-1!important;
-		z-index: 5000!important;
 	}
 
 /* For Authors ------------------*/
