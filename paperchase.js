@@ -368,8 +368,8 @@ if (Meteor.isClient) {
 		},
 		data: function(){
 			return {
-				eic: edboard.find({role:"Editor-in-Chief"}),
-				fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]})
+				eic: edboard.find({role:"Editor-in-Chief"},{sort : {name_last:1}}),
+				fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]},{sort : {name_last:1}})
 			}
 		},
 		onAfterAction: function() {
