@@ -42,12 +42,6 @@ aslagle:reactive-table
 aldeed:template-extension
 standard-minifiers
 richsilv:owl-carousel
-<<<<<<< HEAD
-ixdi:material-design-iconic-font@=2.1.5
-hitchcott:panzoom
-zimme:active-route
-bambattajb:sticky
-=======
 zimme:active-route
 bambattajb:sticky
 hitchcott:panzoom
@@ -55,4 +49,3 @@ materialize:materialize@0.97.3
 mizzao:jquery-ui
 vojtechklos:materialnote
 dapearce:material-icons
->>>>>>> 91a4dc1dbdec594eb5ffee1d9632e8ff2a7404aa
