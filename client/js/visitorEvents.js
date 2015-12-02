@@ -110,3 +110,12 @@ Template.advance.events({
 		Meteor.article.downloadPdf(e);
 	}
 });
+
+
+// For Authors
+// -------
+Template.ForAuthors.events({
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
+	}
+});

@@ -396,6 +396,21 @@ if (Meteor.isClient) {
 	Router.route('/for-authors', {
 		name: 'ForAuthors',
 		layoutTemplate: 'Visitor',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('forAuthors'),
+				Meteor.subscribe('sortedList','forAuthors')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sections = forAuthors.find().fetch();
+				var sorted  = sorters.findOne();
+				return {
+					sections : sorted['ordered']
+				};
+			}
+		},
 		onAfterAction: function() {
 			var pageTitle,
 				pageDescription,
