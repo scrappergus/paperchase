@@ -265,7 +265,7 @@ if (Meteor.isClient) {
 	});
 
 	Router.route('/advance', {
-		name: 'advance',
+		name: 'Advance',
 		layoutTemplate: 'Visitor',
 		title: function() {
 			var pageTitle = '';
@@ -445,7 +445,7 @@ if (Meteor.isClient) {
 	});
 
 	Router.route('/issue/:vi', {
-		name: 'issue',
+		name: 'Issue',
 		layoutTemplate: 'Visitor',
 		title: function() {
 			var pageTitle = '',

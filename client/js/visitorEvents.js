@@ -102,7 +102,7 @@ Template.ArticleSectionsList.events({
 
 // Advance
 // -------
-Template.advance.events({
+Template.Advance.events({
 	'click .modal-trigger': function(e){
 		Meteor.article.subscribeModal(e);
 	},
