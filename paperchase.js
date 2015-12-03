@@ -40,7 +40,6 @@ Meteor.startup(function () {
 		}
 	}
 	if (Meteor.isClient) {
-		console.log('startup');
 		var journal = journalConfig.findOne();
 		Session.setDefault('journal',journal);
 	}
