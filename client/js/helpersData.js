@@ -42,12 +42,16 @@ Template.SubscribeModal.helpers({
 // -------------
 Template.LeftNav.helpers({
 	links: function(){
-		return Session.get('journal').site.side_nav;
+		if(Session.get('journal')){
+			return Session.get('journal').site.side_nav;
+		}
 	}
 });
 Template.MobileMenu.helpers({
 	links: function(){
-		return Session.get('journal').site.side_nav;
+		if(Session.get('journal')){
+			return Session.get('journal').site.side_nav;
+		}
 	}
 });
 // Contact

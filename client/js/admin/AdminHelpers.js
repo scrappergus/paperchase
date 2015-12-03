@@ -4,7 +4,9 @@
 // ---------------
 Template.AdminSiteControl.helpers({
 	sideNav: function(){
-		return Session.get('journal').site.side_nav;
+		if(Session.get('journal')){
+			return Session.get('journal').site.side_nav;
+		}
 	}
 });
 
