@@ -69,6 +69,26 @@ Meteor.users.allow({
     }
   }
 });
+journalConfig.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
 articles.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
@@ -297,7 +317,13 @@ if (Meteor.isServer) {
     return subs.find({});
   });
   Meteor.publish('journalConfig', function() {
-    var siteConfig =  journalConfig.find({},{fields: {journal : 1, 'submission.url' : 1, contact : 1, edboard_roles : 1}});
+    var siteConfig =  journalConfig.find({},{fields: {
+      'journal' : 1,
+      'site' : 1,
+      'submission.url' : 1,
+      'contact' : 1,
+      'edboard_roles' : 1
+    }});
     return siteConfig;
   });
   Meteor.publish('sorters', function() {

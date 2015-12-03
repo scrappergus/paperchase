@@ -1,10 +1,18 @@
 // Admin
-// -----
 // -------
 Template.Admin.onRendered(function () {
 	$('.button-collapse').sideNav();
 	$('.collapsible').collapsible();
 });
+
+// Site Control
+// ------------
+Template.Admin.onRendered(function () {
+	$('.side-nav-options').sortable();
+});
+
+// Article
+// ------------
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
 	if(window.location.hash) {
@@ -13,9 +21,7 @@ Template.AdminArticle.onRendered(function () {
 		}, 500);
 	}
 });
-
 // Article Form
-// ------------
 Template.AdminArticleForm.onRendered(function () {
 	Meteor.adminArticle.readyArticleForm();
 });

@@ -74,6 +74,43 @@ Meteor.admin = {
 	},
 }
 
+Meteor.adminSite = {
+	formGetData: function(e){
+		// console.log('..adminSite formGetData');
+		e.preventDefault();
+		var success,
+			updateObj = {};
+		updateObj.side_nav = [];
+		Meteor.formActions.saving();
+		$('input').removeClass('invalid');
+		// Side Navigation
+		// ------
+		var sideNavList = []; // Rebuild entire array and objects before inserting into db. because we are using the order of objects to set the order of links when displaying.
+		$('.side-nav-option').each(function(){
+			var sideNavOption = {};
+			// console.log($(this).attr('id'));
+			var routeOptionName = $(this).attr('id').replace('-checkbox','');
+			// console.log(routeOptionName);
+			sideNavOption.route_name = routeOptionName;
+			// console.log($('#' + routeOptionName + '-label'));
+			sideNavOption.name = $('#' + routeOptionName + '-label')[0].innerText;
+			if($(this).is(':checked')){
+				sideNavOption.display = true;
+			}else{
+				sideNavOption.display = false;
+			}
+			updateObj.side_nav.push(sideNavOption);
+		});
+
+		// TODO: validation
+		// console.log(updateObj);
+		success = journalConfig.update({_id : Session.get('journal')._id} , {$set: {site : updateObj}});
+		// console.log(success);
+		if(success){
+			Meteor.formActions.success();
+		}
+	},
+}
 
 Meteor.adminNews = {
 	readyForm: function(){

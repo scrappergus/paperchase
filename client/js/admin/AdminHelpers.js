@@ -1,5 +1,14 @@
 // ADMIN HELPERS
 
+// Site Control
+// ---------------
+Template.AdminSiteControl.helpers({
+	sideNav: function(){
+		return Session.get('journal').site.side_nav;
+	}
+});
+
+
 // Article
 // ---------------
 Template.AdminArticle.helpers({

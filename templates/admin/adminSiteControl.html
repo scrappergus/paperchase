@@ -1,0 +1,31 @@
+<template name="AdminSiteControl">
+	{{>AdminHeader header="Site Control"}}
+	{{>SuccessModal what='Site Settings'}}
+	<form>
+		{{>FixedSaveBtn}}
+		{{>saving}}
+		<div class="row">
+			<div class="col s12 m6">
+				<fieldset>
+					<legend>Side Navigation</legend>
+					<ul class="side-nav-options">
+						{{#each sideNav}}
+						<li class="row">
+							<div class="col s1"><i class=" prefix mdi mdi-swap-vertical"></i></div>
+							<div class="col s11">
+								<input class="filled-in side-nav-option" name="{{route_name}}" type="checkbox" id="{{route_name}}-checkbox"  checked="{{checked display}}"/>
+								<label id="{{route_name}}-label" for="{{route_name}}-checkbox">{{name}}</label>
+							</div>
+						</li>
+						{{/each}}
+					</ul>
+				</fieldset>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s12 center-align">
+				{{>SaveBtn}}
+			</div>
+		</div>
+	</form>
+</template>

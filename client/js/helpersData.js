@@ -1,3 +1,5 @@
+// General
+// -------------
 Template.Visitor.helpers({
 	bannerLogo: function(){
 		var journalSettings = journalConfig.findOne();
@@ -26,14 +28,6 @@ Template.Footer.helpers({
 		}
 	}
 });
-Template.Contact.helpers({
-	submitLink : function(){
-		var journalSettings = journalConfig.findOne();
-		if(journalSettings){
-			return journalSettings['submission']['url'];
-		}
-	}
-});
 Template.ErrorMessages.helpers({
 	errors: function(){
 		return Session.get('errorMessages');
@@ -44,6 +38,30 @@ Template.SubscribeModal.helpers({
 		return Session.get('articleData');
 	}
 });
+// Navigation
+// -------------
+Template.LeftNav.helpers({
+	links: function(){
+		return Session.get('journal').site.side_nav;
+	}
+});
+Template.MobileMenu.helpers({
+	links: function(){
+		return Session.get('journal').site.side_nav;
+	}
+});
+// Contact
+// -------------
+Template.Contact.helpers({
+	submitLink : function(){
+		var journalSettings = journalConfig.findOne();
+		if(journalSettings){
+			return journalSettings['submission']['url'];
+		}
+	}
+});
+// Archive
+// -------------
 Template.Archive.helpers({
 	volumes: function(){
 		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
@@ -52,6 +70,8 @@ Template.Archive.helpers({
 		return res;
 	}
 });
+// Editorial Board
+// -------------
 Template.EdBoard.helpers({
 	journalName: function(){
 		var journalSettings = journalConfig.findOne();
