@@ -54,6 +54,14 @@ Template.AdminForAuthorsForm.events({
 	}
 });
 
+// News
+// --------------------
+Template.AdminNewsForm.events({
+	'submit form': function(e){
+		Meteor.adminNews.formGetData(e);
+	}
+});
+
 // Users
 // ----------------
 Template.AdminUser.events({

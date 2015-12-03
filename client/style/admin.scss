@@ -11,6 +11,9 @@
 		background-color: $black-1!important;
 		z-index: 5000!important;
 	}
+	.btn-toolbar{
+		z-index: 1000!important; /* otherwise overlaps with modal */
+	}
 /* General ------------------------*/
 	.admin-container{
 		padding-left: 240px;

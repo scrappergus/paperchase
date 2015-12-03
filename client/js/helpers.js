@@ -120,7 +120,9 @@ if (Meteor.isClient) {
 	});
 	// Not equals
 	Template.registerHelper('notEmpty', function (a) {
-		if(a.length > 0){
+		if(!a){
+			return false;
+		}else if(a.length > 0){
 			return true;
 		}else{
 			return false;

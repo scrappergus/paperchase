@@ -77,6 +77,26 @@ issues.after.insert(function (userId, doc) {
 });
 
 
+// News
+// -----
+newsList.after.insert(function (userId, doc) {
+  var updateObj = {};
+  updateObj['doc_updates'] = {};
+  updateObj['doc_updates']['created'] = {};
+  updateObj['doc_updates']['created']['date'] = new Date();
+  updateObj['doc_updates']['created']['user'] = userId;
+  newsList.update({_id: doc._id},{$set:updateObj});
+});
+
+newsList.after.update(function (userId, doc, fieldNames, modifier, options) {
+  // console.log('..after update news');console.log(modifier);
+  var updateObj = {};
+  updateObj.date = new Date();
+  updateObj.user = userId;
+  newsList.direct.update({_id : doc._id}, {$addToSet : {'doc_updates.updates' : updateObj}}); // MUST use direct.update, otherwise will be stuck in an update loop
+});
+
+
 // Sorters
 // -------
 sorters.after.update(function (userId, doc, fieldNames, modifier, options){

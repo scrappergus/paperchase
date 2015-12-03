@@ -233,15 +233,17 @@ if (Meteor.isClient) {
 			return[
 				Meteor.subscribe('feature'),
 				Meteor.subscribe('eic'),
-				Meteor.subscribe('eb')
+				Meteor.subscribe('eb'),
+				Meteor.subscribe('newsListDisplay')
 			]
 		},
 		data: function(){
 			var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
 			return {
 				feature : featureList,
-				eic:edboard.find({role:"Editor-in-Chief"}) ,
-				eb:edboard.find({role:"Founding Editorial Board"})
+				eic: edboard.find({role: 'Editor-in-Chief'}) ,
+				eb: edboard.find({role: 'Founding Editorial Board'}),
+				news: newsList.find({sort : {date: -1}})
 			}
 		},
 		onAfterAction: function() {

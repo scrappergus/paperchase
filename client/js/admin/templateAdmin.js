@@ -44,12 +44,19 @@ Template.adminArticleXmlIntake.onRendered(function () {
 	Session.set('fileNameXML','');
 });
 
-// Admin Issue
+// Issue
 // ------
 Template.AdminIssue.onRendered(function () {
 	var pick = $('#issue-date').pickadate();
 	var picker = pick.pickadate('picker');
 	picker.set('select', $('#issue-date').data('value'), { format: 'yyyy/mm/dd' })
+});
+
+
+// News
+// ------
+Template.AdminNewsForm.onRendered(function () {
+	Meteor.adminNews.readyForm();
 });
 
 // Data Submissions

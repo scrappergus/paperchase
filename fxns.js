@@ -74,6 +74,77 @@ Meteor.admin = {
 	},
 }
 
+
+Meteor.adminNews = {
+	readyForm: function(){
+		// Date
+		// ------
+		var pick = $('#news-date').pickadate();
+		var picker = pick.pickadate('picker');
+		picker.set('select', $('#news-date').data('value'), { format: 'yyyy/mm/dd' })
+
+		// Content
+		// ------
+		$('.news-content').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
+			toolbar: [
+				['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['undo', ['undo', 'redo', 'help']],
+				['misc', ['codeview','link']]
+			]
+		});
+	},
+	formGetData: function(e){
+		// console.log('..news formGetData');
+		e.preventDefault();
+		var newsObj = {},
+			newsMongoId,
+			success;
+
+		Meteor.formActions.saving();
+		$('input').removeClass('invalid');
+
+		// Title
+		// ------
+		newsObj.title = $('#news-title').val();
+
+		// Content
+		// ------
+		var newsContent = $('.news-content').code();
+		newsContent = Meteor.formActions.cleanWysiwyg(newsContent);
+		if(newsContent != ''){
+			newsObj.content = newsContent;
+		}
+
+		// Date
+		// ------
+		var newsDate = $('#news-date').val();
+		newsDate = new Date(newsDate);
+		newsObj.date = newsDate;
+
+		// Display
+		// ------
+		newsObj.display = $('#news-display').is(':checked');
+
+		// TODO: validation
+		// console.log('news');
+		// console.log(news);
+		newsMongoId = $('#news-mongo-id').val();
+		if(!newsMongoId){
+			// Insert
+			success = newsList.insert(newsObj);
+		}else{
+			// Update
+			success = newsList.update({_id : newsMongoId} , {$set: newsObj});
+		}
+		if(success){
+			Meteor.formActions.success();
+		}
+	}
+}
+
 Meteor.adminEdBoard = {
 	formPrepareData: function(mongoId){
 		var member = {};
