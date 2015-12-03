@@ -210,7 +210,6 @@ Template.AdminInstitutionForm.helpers({
 	}
 });
 
-
 // For Authors
 // ---------------
 Template.AdminForAuthors.helpers({
@@ -223,6 +222,23 @@ Template.AdminForAuthorsForm.helpers({
 		var section = {};
 		if(Session.get('sectionId')){
 			section = forAuthors.findOne({_id : Session.get('sectionId')});
+		}
+		return section;
+	}
+});
+
+// About
+// ---------------
+Template.AdminAbout.helpers({
+	'showAboutForm' : function(){
+		return Session.get('showAboutForm');
+	}
+});
+Template.AdminAboutForm.helpers({
+	'section' : function(){
+		var section = {};
+		if(Session.get('aboutSectionId')){
+			section = about.findOne({_id : Session.get('aboutSectionId')});
 		}
 		return section;
 	}

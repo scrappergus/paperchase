@@ -104,3 +104,18 @@ Template.AdminForAuthorsForm.onRendered(function () {
 Template.AdminForAuthorsForm.onDestroyed(function () {
 	Session.set('sectionId',null);
 });
+
+// About
+// ---------------
+Template.AdminAbout.onDestroyed(function () {
+	Session.set('aboutSectionId',null);
+});
+Template.AdminAbout.onRendered(function () {
+	$('.sections-list').sortable();
+});
+Template.AdminAboutForm.onRendered(function () {
+	Meteor.adminAbout.readyForm();
+});
+Template.AdminForAuthorsForm.onDestroyed(function () {
+	Session.set('aboutSectionId',null);
+});
