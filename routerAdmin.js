@@ -4,9 +4,14 @@
 */
 if (Meteor.isClient) {
 
-	// For Authors variables
+	// Variables
+	// ----------
+	// For Authors
 	Session.setDefault('showForm',false);
 	Session.setDefault('sectionId',null);
+	// News
+	Session.setDefault('newsId',null);
+
 
 	Router.route('/admin', {
 		name: 'admin.dashboard',
@@ -25,6 +30,56 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	// News
+	Router.route('/admin/news',{
+		name: 'AdminNews',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return [
+				Meteor.subscribe('newsListAll')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				return{
+					// recommendations: recommendations.find().fetch()
+				}
+			}
+		}
+	});
+	Router.route('/admin/news-add',{
+		name: 'AdminNewsAdd',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return [
+				// Meteor.subscribe('news')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				return{
+					// recommendations: recommendations.find().fetch()
+				}
+			}
+		}
+	});
+
+	Router.route('/admin/news-edit/:_id',{
+		name: 'AdminNewsEdit',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Session.set('newsId',this.params._id);
+			this.next();
+		},
+		waitOn: function(){
+			return [
+				Meteor.subscribe('newsItem', this.params._id)
+			]
+		}
+	});
+
+
 
 	// Recommendations
 	Router.route('/admin/recommendations',{

@@ -230,6 +230,23 @@ Template.adminArticleXmlIntake.helpers({
 	}
 });
 
+// News
+// ---------------
+Template.AdminNews.helpers({
+	news: function() {
+		return newsList.find({display:true},{sort:{date:-1}});
+	}
+});
+Template.AdminNewsForm.helpers({
+	news: function() {
+		var news = {}; // if undefined, the template form will not load. So we need an empty object.
+		if(Session.get('newsId')){
+			news = newsList.findOne({_id : Session.get('newsId')});
+		}
+		return news;
+	}
+});
+
 // Users
 // ---------------
 Template.AdminUserSubs.helpers({

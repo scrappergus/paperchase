@@ -1,27 +1,43 @@
 <template name="Home">
+	<div class="row">
+		<div class="col s12 m10">
+			{{#if news}}
+			<h3>News</h3>
+			{{#each news}}
+			<h4>{{title}}</h4>
+			<p>{{{content}}}</p>
+			{{/each}}
+			{{/if}}
+		</div>
+
+		<div class="col s12 m2">
+			{{>HomePageEditorList}}
+		</div>
+	</div>
 </template>
 
 <template name="HomePageEditorList">
-	<h5>Editors-in-Chief</h5>
+	<h3>Editorial Board</h3>
+	<h4>Editors-in-Chief</h4>
 	<ul class="home-page-editors-list">
 		{{#each eic}}
 		<li class="">
-		<p class="edboard-name"><strong>{{name}}</strong><br> {{address}}</p>
-		<p class="edboard-bio">{{{bio}}}</p>
+			<p class="edboard-name"><strong>{{>PersonName}}</strong><br> {{{address}}}</p>
+			<p class="edboard-bio">{{{bio}}}</p>
 		</li>
 		{{/each}}
 	</ul>
 
-	<h5>Founding editorial board</h5>
+	<h4>Founding Editorial Board</h4>
 	<ul class="home-page-editors-list">
 		{{#each eb}}
 		<li class="">
-		<p class="edboard-name"><strong>{{name}}</strong><br> {{address}}</p>
-		<p class="edboard-bio">{{{bio}}}</p>
+			<p class="edboard-name"><strong>{{>PersonName}}</strong><br>{{{address}}}</p>
+			<p class="edboard-bio">{{{bio}}}</p>
 		</li>
 		{{/each}}
 	</ul>
 
-	<a href="/editorial-board" class="blue-grey-text darken-3-text">See full editor's list</a>
+	<a href="{{pathFor 'EdBoard'}}" class="blue-grey-text darken-3-text">See full editor's list</a>
 	<br>
 </template>
