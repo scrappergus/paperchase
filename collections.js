@@ -6,6 +6,7 @@ ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 forAuthors = new Mongo.Collection('for_authors');
 authors = new Mongo.Collection('authors');
+newsList = new Mongo.Collection('news');
 recommendations = new Mongo.Collection('recommendations');
 subs = new Mongo.Collection('subscriptions');
 submissions = new Mongo.Collection('submissions');
@@ -166,6 +167,26 @@ edboard.allow({
   }
 });
 forAuthors.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+newsList.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -477,6 +498,18 @@ if (Meteor.isServer) {
       return;
     }
   })
+
+  // News
+  // ----------------
+  Meteor.publish('newsListAll', function(){
+    return newsList.find();
+  });
+  Meteor.publish('newsListDisplay', function(){
+    return newsList.find({display: true});
+  });
+  Meteor.publish('newsItem', function(mongoId){
+    return newsList.find({_id:mongoId});
+  });
 }
 
 // SUBSCRIBE
