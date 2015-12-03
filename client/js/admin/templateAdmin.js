@@ -2,6 +2,11 @@
 // -------
 Template.Admin.onRendered(function () {
 	$('.button-collapse').sideNav();
+});
+
+// Navigation
+// -----------
+Template.AdminNavLinksCollapse.onRendered(function () {
 	$('.collapsible-nav').collapsible();
 });
 
