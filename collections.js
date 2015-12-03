@@ -1,5 +1,6 @@
 volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
+about = new Mongo.Collection('about');
 articles = new Mongo.Collection('articles');
 institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
@@ -19,7 +20,7 @@ sorters = new Mongo.Collection('sorters', {
       var order = f.order;
       // console.log(order);
       // TODO: collection name as variable?? can we consolidate this code to not use else if? we are using pretty much the same logic to order collections
-      if(order && f.name != 'forAuthors'){
+      if(f.name == 'advance'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
         var prevSection = '';
@@ -40,6 +41,19 @@ sorters = new Mongo.Collection('sorters', {
         f.ordered = [];
         var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
         // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+          // console.log(order[i]);
+          for(var a = 0 ; a < sectionsList.length ; a++){
+            // console.log(sectionsList[a]['_id']);
+            if(sectionsList[a]['_id'] == order[i]){
+              f.ordered.push(sectionsList[a]);
+            }
+          }
+        }
+      }else if(f.name == 'about'){
+        // Same exact thing as forAuthors. Look into using collection name as a variable.
+        f.ordered = [];
+        var sectionsList = about.find({'_id':{'$in':order}}).fetch();
         for(var i = 0 ; i < order.length ; i++){
           // console.log(order[i]);
           for(var a = 0 ; a < sectionsList.length ; a++){
@@ -70,6 +84,26 @@ Meteor.users.allow({
   }
 });
 journalConfig.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
+about.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
     if (Roles.userIsInRole(u, ['admin'])) {
@@ -485,10 +519,22 @@ if (Meteor.isServer) {
     return edboard.find({_id: mongoId});
   });
 
+  // About
+  // ------------
+  Meteor.publish('about', function(){
+    return about.find();
+  });
+  Meteor.publish('aboutPublic', function(){
+    return about.find({display:true});
+  });
+
   // For Authors
   // ------------
   Meteor.publish('forAuthors', function(){
     return forAuthors.find();
+  });
+  Meteor.publish('forAuthorsPublic', function(){
+    return forAuthors.find({display:true});
   });
 
 

@@ -1,14 +1,15 @@
-<template name="AdminForAuthors">
-	{{>AdminHeader header="For Authors"}}
+<template name="AdminAbout">
+	{{>AdminHeader header="About"}}
 	<div class="row">
 		<div class="col s12">
-			<button id="add-section" class="waves-effect waves-light btn btn-add right"><i class="mdi mdi-plus-circle"></i> Section</button>
+			<button id="add-about-section" class="waves-effect waves-light btn btn-add right"><i class="mdi mdi-plus-circle"></i> About Section</button>
 		</div>
 	</div>
-	{{>SuccessModal what='Section Order'}}
+	{{>SuccessModal what='About Order'}}
+	{{#if sections}}
 	<div class="row">
 		<div class="col s12">
-			<h2>Section Order</h2>
+			<h2>About Order</h2>
 			<ol class="roman-list sections-list">
 			{{#each sections}}
 				<li id="section-title-{{_id}}">{{{title}}}</li>
@@ -18,22 +19,21 @@
 	</div>
 	<div class="row">
 		<div class="col s12">
-			<button id="save-section-order" class="waves-effect waves-light btn btn-update right">Save Section Order</button>
+			<button id="save-about-section-order" class="waves-effect waves-light btn btn-update right">Save About Order</button>
 		</div>
 	</div>
 	<div class="divider"></div>
 
-	<h2>Sections</h2>
-
+	<h2>About Sections</h2>
 	<ol class="roman-list">
 		{{#each sections}}
 		<li>
-		{{#if editingSection _id}}
+		{{#if editingAboutSection _id}}
 		<div class="row">
 			<div class="col s12 card grey lighten-5">
-				<div id="add-section-container" class="">
-					<h2>Edit Section</h2>
-					{{>AdminForAuthorsForm}}
+				<div id="add-section-container">
+					<h2>Edit About Section</h2>
+					{{>AdminAboutForm}}
 				</div>
 			</div>
 		</div>
@@ -47,23 +47,24 @@
 		</li>
 		{{/each}}
 	</ol>
+	{{/if}}
 
-	<div id="add-section-container">
-	{{#if showForm}}
+	<div id="add-about-section-container">
+	{{#if showAboutForm}}
 	<div class="divider"></div>
 	<div class="row">
 		<div class="col s12 card grey lighten-5">
-			<h2>New Section</h2>
-			{{>AdminForAuthorsForm}}
+			<h2>New About Section</h2>
+			{{>AdminAboutForm}}
 		</div>
 	</div>
 	{{/if}}
 	</div>
 </template>
 
-<template name="AdminForAuthorsForm">
+<template name="AdminAboutForm">
 	{{#with section}}
-	{{>SuccessModal what='For Authors Section'}}
+	{{>SuccessModal what='About Section'}}
 	{{>SectionForm}}
 	{{/with}}
 </template>

@@ -9,6 +9,9 @@ if (Meteor.isClient) {
 	// For Authors
 	Session.setDefault('showForm',false);
 	Session.setDefault('sectionId',null);
+	// About
+	Session.set('showAboutForm',false);
+	Session.set('aboutSectionId', null);
 	// News
 	Session.setDefault('newsId',null);
 
@@ -30,6 +33,32 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+
+	// About
+	Router.route('/admin/about', {
+		name: 'AdminAbout',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('about'),
+				Meteor.subscribe('sortedList','about')
+			]
+		},
+		data: function(){
+			// Keep data declarations here
+			// when adding data via template helper, the array shows as an object and there is an error:
+			// {#each}} currently only accepts arrays, cursors or falsey values.
+			if(this.ready()){
+				var sections = about.find().fetch();
+				var sorted  = sorters.findOne();
+				return {
+					sections : sorted['ordered']
+				};
+			}
+		}
+	});
+
 
 	// Site control
 	Router.route('/admin/site-control', {
@@ -531,6 +560,9 @@ if (Meteor.isClient) {
 			]
 		},
 		data: function(){
+			// Keep data declarations here
+			// when adding data via template helper, the array shows as an object and there is an error:
+			// {#each}} currently only accepts arrays, cursors or falsey values.
 			if(this.ready()){
 				var sections = forAuthors.find().fetch();
 				var sorted  = sorters.findOne();

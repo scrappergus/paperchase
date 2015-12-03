@@ -1,9 +1,9 @@
 Meteor.methods({
 	sorterAddArticle: function(listName,mongoId){
-		// not always used for articles. for ex, use this for for authors sections.
+		// not always used for articles. for ex, use this for about and for authors sections.
 		// console.log('...sorterAddArticle');
 		// TODO add to the beginning of set
-		var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}});
+		var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}},{upsert: true});
 		return res;
 	},
 	sorterRemoveArticle: function(listName,mongoId){

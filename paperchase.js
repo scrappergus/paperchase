@@ -349,7 +349,7 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('forAuthors'),
+				Meteor.subscribe('forAuthorsPublic'),
 				Meteor.subscribe('sortedList','forAuthors')
 			]
 		},
@@ -362,49 +362,26 @@ if (Meteor.isClient) {
 				};
 			}
 		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | For Authors';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
-		}
 	});
 
 	Router.route('/about', {
 		name: 'About',
 		layoutTemplate: 'Visitor',
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
+		waitOn: function(){
+			return[
+				Meteor.subscribe('aboutPublic'),
+				Meteor.subscribe('sortedList','about')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sections = about.find().fetch();
+				var sorted  = sorters.findOne();
+				return {
+					sections : sorted['ordered']
+				};
 			}
-			if(journalName){
-				pageTitle = journalName + ' | About';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
-		}
+		},
 	});
 
 	Router.route('/contact', {
