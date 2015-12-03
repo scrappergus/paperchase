@@ -4,6 +4,7 @@
 			{{#if news}}
 			<h3>News</h3>
 			{{#each news}}
+			<h5>{{formatDate date}}</h5>
 			<h4>{{title}}</h4>
 			<p>{{{content}}}</p>
 			{{/each}}
