@@ -241,7 +241,7 @@ if (Meteor.isClient) {
 		title: function() {
 			var pageTitle = '';
 			if(Session.get('journal')){
-				pageTitle = Session.get('journal').journal.name + ' | ';
+				pageTitle = Session.get('journal').journal.name;
 			}
 			return pageTitle;
 		},
