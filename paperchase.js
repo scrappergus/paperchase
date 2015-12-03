@@ -22,6 +22,11 @@ if (Meteor.isClient) {
 			s.parentNode.insertBefore(wf, s);
 			//console.log("async fonts loaded", WebFontConfig);
 	})();
+	// var journal = journalConfig.findOne();
+	// Session.setDefault('journal',journal);
+	Meteor.subscribe('journalConfig', function(){
+		Session.set('journal', journalConfig.findOne());
+	});
 }
 Router.configure({
 	loadingTemplate: 'Loading'
@@ -33,6 +38,11 @@ Meteor.startup(function () {
 		if(emailSettings){
 			process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
 		}
+	}
+	if (Meteor.isClient) {
+		console.log('startup');
+		var journal = journalConfig.findOne();
+		Session.setDefault('journal',journal);
 	}
 });
 
@@ -229,6 +239,13 @@ if (Meteor.isClient) {
 	Router.route('/', {
 		name: 'Home',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('feature'),
@@ -245,31 +262,19 @@ if (Meteor.isClient) {
 				eb: edboard.find({role: 'Founding Editorial Board'}),
 				news:  newsList.find({},{sort : {date: -1}}).fetch()
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName;
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
 	Router.route('/advance', {
 		name: 'advance',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Advance Articles';
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('advance'),
@@ -283,85 +288,49 @@ if (Meteor.isClient) {
 					advance : sorted['articles']
 				}
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Advance Articles';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
 	Router.route('/account', {
 		name: 'Account',
 		layoutTemplate: 'Visitor',
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
 			}
-			if(journalName){
-				pageTitle = journalName + ' | Account';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
-		}
+			return pageTitle + 'Account';
+		},
 	});
 
 	Router.route('/archive', {
 		name: 'Archive',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Archive';
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('volumes'),
 				Meteor.subscribe('issues')
 			]
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Archive';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
 	Router.route('/editorial-board', {
 		name: 'EdBoard',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Editorial Board';
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('eic'),
@@ -373,25 +342,6 @@ if (Meteor.isClient) {
 				eic: edboard.find({role:"Editor-in-Chief"},{sort : {name_last:1}}),
 				fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]},{sort : {name_last:1}})
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Editorial Board';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
@@ -461,6 +411,13 @@ if (Meteor.isClient) {
 	Router.route('/contact', {
 		name: 'Contact',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Contact';
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('contact')
@@ -473,55 +430,35 @@ if (Meteor.isClient) {
 					contact: contactInfo
 				};
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Contact';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
 	Router.route('/recent-breakthroughs', {
 		name: 'RecentBreakthroughs',
 		layoutTemplate: 'Visitor',
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
 			}
-			if(journalName){
-				pageTitle = journalName + ' | Recent Breakthroughs';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
+			return pageTitle + 'Recent Breakthroughs';
 		}
 	});
 
 	Router.route('/issue/:vi', {
 		name: 'issue',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '',
+				vi = this.params.vi;
+			var matches = vi.match('v([0-9]+)i([0-9]+)');
+			var volume = parseInt(matches[1]);
+			var issue = parseInt(matches[2]);
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Volume ' + volume + ', Issue ' + issue;
+		},
 		onBeforeAction: function(){
 			// console.log('..before');
 			Session.set('issue',null);
@@ -558,37 +495,6 @@ if (Meteor.isClient) {
 				Meteor.subscribe('issue',volume,issue),
 				Meteor.subscribe('issueArticles',volume,issue)
 			]
-		},
-		// data: function(){
-		// 	if(this.ready()){
-		// 		// console.log(issueData);
-		// 		return {
-		// 			issue: Session.get('issue');
-		// 		};
-		// 	}
-		// },
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-			var vi = this.params.vi;
-			var matches = vi.match('v([0-9]+)i([0-9]+)');
-			var volume = parseInt(matches[1]);
-			var issue = parseInt(matches[2]);
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Volume ' + volume + ', Issue ' + issue;
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
@@ -597,6 +503,14 @@ if (Meteor.isClient) {
 	Router.route('/article/:_id', {
 		name: 'Article',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			var articleTitle = Meteor.article.pageTitle(this.params._id);
+			return pageTitle + articleTitle;
+		},
 		onBeforeAction: function(){
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
@@ -635,49 +549,6 @@ if (Meteor.isClient) {
 					article: article
 				};
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName,
-				id,
-				article,
-				articleTitlePlain,
-				articleTitle;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			article = articles.findOne({'_id': id});
-			if(article){
-				// Title
-				articleTitle = article.title
-				var tmp = document.createElement('DIV');
-				tmp.innerHTML = articleTitle;
-				articleTitlePlain = tmp.textContent || tmp.innerText || "";
-				// Description
-				// pageDescription = article.title;
-			}
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName && articleTitlePlain){
-				pageTitle = journalName + ' | ' + articleTitlePlain;
-			}
-
-			// SEO.set({
-			// 	title: pageTitle,
-			// 	meta: {
-			// 		'description': pageDescription
-			// 	},
-			// 	og: {
-			// 		'title': pageTitle,
-			// 		'description': pageDescription
-			// 	}
-			// });
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 	Router.route('/article/:_id/text', {
@@ -724,53 +595,27 @@ if (Meteor.isClient) {
 				};
 			}
 		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName,
-				id,
-				article,
-				articleTitlePlain,
-				articleTitle;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			article = articles.findOne({'_id': id});
-			if(article){
-				// Title
-				articleTitle = article.title
-				var tmp = document.createElement('DIV');
-				tmp.innerHTML = articleTitle;
-				articleTitlePlain = tmp.textContent || tmp.innerText || "";
-				// Description
-				// pageDescription = article.title;
+		title: function() {
+			var pageTitle = '';
+			console.log(Session.get('journal'));
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
 			}
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName && articleTitlePlain){
-				pageTitle = journalName + ' | ' + articleTitlePlain + ' - Full Text';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle,
-			// 	meta: {
-			// 		'description': pageDescription
-			// 	},
-			// 	og: {
-			// 		'title': pageTitle,
-			// 		'description': pageDescription
-			// 	}
-			// });
-			// SEO.set({
-			// 	title: pageTitle
-			// });
-		}
+			var articleTitle = Meteor.article.pageTitle(this.params._id) + ' - Full Text' ;
+			return pageTitle + articleTitle;
+		},
 	});
 	Router.route('/article/:_id/purchase', {
 		name: 'PurchaseArticle',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			var articleTitle = Meteor.article.pageTitle(this.params._id) + ' - Purchase' ;
+			return pageTitle + articleTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id)
@@ -785,54 +630,18 @@ if (Meteor.isClient) {
 					article: article,
 				};
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName,
-				id,
-				article,
-				articleTitlePlain,
-				articleTitle;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			article = articles.findOne({'_id': id});
-			if(article){
-				// Title
-				articleTitle = article.title
-				var tmp = document.createElement('DIV');
-				tmp.innerHTML = articleTitle;
-				articleTitlePlain = tmp.textContent || tmp.innerText || "";
-				// Description
-				// pageDescription = article.title;
-			}
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName && articleTitlePlain){
-				pageTitle = journalName + ' | ' + articleTitlePlain + ' - Purchase';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle,
-			// 	meta: {
-			// 		'description': pageDescription
-			// 	},
-			// 	og: {
-			// 		'title': pageTitle,
-			// 		'description': pageDescription
-			// 	}
-			// });
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 	Router.route('/figure(.*)', {
 		name: 'ArticleFigureViewer',
-		layoutTemplate: 'ArticleFigureViewer',
+		layoutTemplate: 'ArticleFigureViewer',title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			// TODO: add article title
+			return pageTitle + 'Figure Viewer';
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params.query.article),
@@ -856,12 +665,26 @@ if (Meteor.isClient) {
 	});
 	Router.route('/404/article', {
 		name: 'ArticleNotFound',
-		layoutTemplate: 'Visitor'
+		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + '404: Article Not Found';
+		},
 	});
 
 	Router.route('/recommend', {
 		name: 'Recommend',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Recommend';
+		},
 		waitOn: function(){
 			Meteor.subscribe('currentUser');
 		},
@@ -872,31 +695,19 @@ if (Meteor.isClient) {
 					user: u
 				}
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Recommend';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 
 	Router.route('/subscribe', {
 		name: 'Subscribe',
 		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Subscribe';
+		},
 		waitOn: function(){
 			return[
 			Meteor.subscribe('currentIssue')
@@ -910,25 +721,6 @@ if (Meteor.isClient) {
 					nextYear: new Date(new Date().setYear(new Date().getFullYear() + 1))
 				}
 			}
-		},
-		onAfterAction: function() {
-			var pageTitle,
-				pageDescription,
-				journal,
-				journalName;
-
-			id = this.params._id;
-			journalSettings = journalConfig.findOne();
-			if(journalSettings){
-				journalName = journalSettings.journal.name;
-			}
-			if(journalName){
-				pageTitle = journalName + ' | Subscribe';
-			}
-
-			// SEO.set({
-			// 	title: pageTitle
-			// });
 		}
 	});
 }

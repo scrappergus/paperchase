@@ -520,7 +520,7 @@ if (Meteor.isClient) {
     Meteor.subscribe('ipranges');
     Meteor.subscribe('institutions');
     Meteor.subscribe('subs');
-    Meteor.subscribe('journalConfig');
+    // Meteor.subscribe('journalConfig');
     Meteor.subscribe('articleTypes');
     Meteor.subscribe('sections');
 }

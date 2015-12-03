@@ -476,6 +476,20 @@ Meteor.article = {
 	// 		return true;
 	// 	}
 	// },
+	pageTitle: function(articleId){
+		var articleTitle = '',
+			articleTitlePlain = '',
+			article,
+			tmp;
+		article = articles.findOne({'_id': articleId});
+		if(article){
+			articleTitle = article.title
+			tmp = document.createElement('DIV');
+			tmp.innerHTML = articleTitle;
+			articleTitlePlain = tmp.textContent || tmp.innerText || '';
+		}
+		return articleTitlePlain;
+	},
 	affiliationsNumbers: function(article){
 		if(article['authors']){
 			var authorsList = article['authors'];
