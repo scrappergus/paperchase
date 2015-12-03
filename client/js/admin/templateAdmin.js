@@ -7,7 +7,7 @@ Template.Admin.onRendered(function () {
 
 // Site Control
 // ------------
-Template.Admin.onRendered(function () {
+Template.AdminSiteControl.onRendered(function () {
 	$('.side-nav-options').sortable();
 });
 
