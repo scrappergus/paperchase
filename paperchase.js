@@ -243,7 +243,7 @@ if (Meteor.isClient) {
 				feature : featureList,
 				eic: edboard.find({role: 'Editor-in-Chief'}) ,
 				eb: edboard.find({role: 'Founding Editorial Board'}),
-				news: newsList.find({},{sort : {date: -1}})
+				news:  newsList.find({},{sort : {date: -1}}).fetch()
 			}
 		},
 		onAfterAction: function() {
