@@ -524,12 +524,17 @@ if (Meteor.isServer) {
   Meteor.publish('about', function(){
     return about.find();
   });
-
+  Meteor.publish('aboutPublic', function(){
+    return about.find({display:true});
+  });
 
   // For Authors
   // ------------
   Meteor.publish('forAuthors', function(){
     return forAuthors.find();
+  });
+  Meteor.publish('forAuthorsPublic', function(){
+    return forAuthors.find({display:true});
   });
 
 
