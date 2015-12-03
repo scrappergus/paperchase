@@ -779,24 +779,8 @@ Meteor.adminForAuthors = {
 	formGetData: function(e){
 		// console.log('..formGetData forAuthors');
 		e.preventDefault();
-		var forDb = {}
 
-		// Section title
-		// ---------------
-		var title = $('.section-title').code();
-		// console.log(title);
-		title = Meteor.formActions.cleanWysiwyg(title);
-		if(title != ''){
-			forDb.title = title;
-		}
-
-		// Section content
-		// ---------------
-		var section = $('.section-content').code();
-		// section = Meteor.formActions.cleanWysiwyg(section);
-		if(section != ''){
-			forDb.content = section;
-		}
+		var forDb = Meteor.adminShared.formGetData();
 
 		// Check if section exists via Mongo ID hidden input
 		mongoId = $('#section-mongo-id').val();
