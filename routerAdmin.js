@@ -31,6 +31,12 @@ if (Meteor.isClient) {
 		}
 	});
 
+	// Site control
+	Router.route('/admin/site-control', {
+		name: 'AdminSiteControl',
+		layoutTemplate: 'Admin'
+	});
+
 	// News
 	Router.route('/admin/news',{
 		name: 'AdminNews',
@@ -39,13 +45,6 @@ if (Meteor.isClient) {
 			return [
 				Meteor.subscribe('newsListAll')
 			]
-		},
-		data: function(){
-			if(this.ready()){
-				return{
-					// recommendations: recommendations.find().fetch()
-				}
-			}
 		}
 	});
 	Router.route('/admin/news-add',{
@@ -55,16 +54,8 @@ if (Meteor.isClient) {
 			return [
 				// Meteor.subscribe('news')
 			]
-		},
-		data: function(){
-			if(this.ready()){
-				return{
-					// recommendations: recommendations.find().fetch()
-				}
-			}
 		}
 	});
-
 	Router.route('/admin/news-edit/:_id',{
 		name: 'AdminNewsEdit',
 		layoutTemplate: 'Admin',
@@ -78,8 +69,6 @@ if (Meteor.isClient) {
 			]
 		}
 	});
-
-
 
 	// Recommendations
 	Router.route('/admin/recommendations',{

@@ -241,7 +241,7 @@ if (Meteor.isClient) {
 		title: function() {
 			var pageTitle = '';
 			if(Session.get('journal')){
-				pageTitle = Session.get('journal').journal.name + ' | ';
+				pageTitle = Session.get('journal').journal.name;
 			}
 			return pageTitle;
 		},
@@ -265,7 +265,7 @@ if (Meteor.isClient) {
 	});
 
 	Router.route('/advance', {
-		name: 'advance',
+		name: 'Advance',
 		layoutTemplate: 'Visitor',
 		title: function() {
 			var pageTitle = '';
@@ -445,7 +445,7 @@ if (Meteor.isClient) {
 	});
 
 	Router.route('/issue/:vi', {
-		name: 'issue',
+		name: 'Issue',
 		layoutTemplate: 'Visitor',
 		title: function() {
 			var pageTitle = '',

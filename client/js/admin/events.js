@@ -6,6 +6,15 @@ Template.Admin.events({
 	}
 });
 
+
+// Site Control
+// ----------------
+Template.AdminSiteControl.events({
+	'submit form': function(e){
+		Meteor.adminSite.formGetData(e);
+	}
+});
+
 // Editorial Board
 // ----------------
 Template.AdminEditorialBoardForm.events({

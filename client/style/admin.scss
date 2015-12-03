@@ -100,8 +100,9 @@
 		}
 	}
 
-/* For Authors ------------------*/
-	.sections-list{
+/* Sortable Lists ------------------*/
+	/* for authors and site control */
+	.sections-list, .side-nav-options{
 		li{
 			padding: $pad-md;
 			margin: $margin-md 0;
