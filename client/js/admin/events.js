@@ -859,9 +859,62 @@ Template.AdminAdvanceArticles.events({
 	}
 })
 
+Template.adminArticleXmlProcess.events({
+	'click .update-article': function(e,t){
+		e.preventDefault();
+		var articleData = t.data['article'];
+
+		//add who UPDATED this article doc
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['last_update_date'] = new Date();
+		articleData['doc_updates']['last_update_by'] = Meteor.userId();
+
+		var mongoId = $(e.target).attr('data-mongoid');
+		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
+			if(error){
+				alert('ERROR: '+error.message);
+			}else{
+				Router.go('adminArticle', {_id:mongoId});
+			}
+		});
+	},
+	'click .add-article': function(e,t){
+		e.preventDefault();
+
+		var articleData = t.data['article'];
+
+		//add who CREATED this article doc
+		articleData['doc_updates'] = {};
+		articleData['doc_updates']['created_date'] = new Date();
+		articleData['doc_updates']['created_by'] = Meteor.userId();
+
+		Meteor.call('addArticle', articleData, function(error,_id){
+			if(error){
+				alert('ERROR: ' + error.message);
+			}else{
+				Router.go('adminArticle', {_id:_id});
+			}
+		});
+	}
+});
+
+
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	// 'click #intake-advance': function(e){
+	// 	e.preventDefault();
+	// 	for(var i = 0 ; i < advanceArticlesIntake.length ; i++){
+	// 		console.log(advanceArticlesIntake[i]);
+	// 		var obj = {
+	// 			id_type : 'pii',
+	// 			id : advanceArticlesIntake[i],
+	// 			journal : 'oncotarget',
+	// 			advance : 1
+	// 		}
+	// 		Meteor.call('legacyArticleIntake', obj);
+	// 	}
+	// },
 	'click #advance-order-update' : function(e){
 		e.preventDefault();
 		console.log('clicked');
@@ -886,7 +939,18 @@ Template.AdminBatchXml.events({
 				console.log('DONE');
 				console.log(r);
 			}
+			Meteor.call('legacyArticleIntake', obj);
 		});
+
+		// Meteor.call('updateAllArticlesAuthorsAffiliations',function(e,r){
+		// 	if(e){
+		// 		console.log('ERROR');
+		// 		console.log(e);
+		// 	}else{
+		// 		console.log('DONE');
+		// 		console.log(r);
+		// 	}
+		// });
 	},
 	'click #update-authors-affs': function(e){
 		e.preventDefault();

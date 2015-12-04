@@ -70,11 +70,19 @@ Meteor.methods({
 				}
 			}
 
-			if(articleMongoId){
+            if(articleMongoId){
 				return true; // DO we need a response to Legacy platform?
 			}
+            else {
+                throw new Meteor.Error("legacy-intake-failure", 
+                    "Article ("+idType+": "+ idValue +") was not added to Paperchase.")
+            }
+
 		}
-	},
+        else {
+            return false;
+        }
+	}
 });
 
 

@@ -1,19 +1,46 @@
 Meteor.methods({
-	sorterAddArticle: function(listName,mongoId){
+	sorterAddItem: function(listName,mongoId){
 		// not always used for articles. for ex, use this for about and for authors sections.
-		// console.log('...sorterAddArticle');
 		// TODO add to the beginning of set
-		var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}},{upsert: true});
-		return res;
-	},
-	sorterRemoveArticle: function(listName,mongoId){
-		// console.log('...sorterRemoveArticle');
-		var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});
+
+        if(listName == 'articles') {
+            //find the position to insert at
+            article = articles.findOne({"_id": mongoId});
+            if(article) {
+                Meteor.call('sorterRemoveItem', listName, mongoId);
+                sorts = sorters.findOne({'name': listName});
+                position = sorts.order.length;
+                for(var i=0; i < sorts.order.length; i++) {
+                    match = articles.findOne({"_id":sorts.order[i], section_id:article.section_id});
+                    if(match) {
+                        position = i;
+                        i = sorts.order.length;
+                    }
+                }
+
+                var res = sorters.update({name : listName}, {$push : {
+                            'order': {
+                                $each: [mongoId],
+                                $position: position
+                            }}});
+            }
+
+        }
+        else {
+            var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}},{upsert: true});
+        }
+
+
+        return res;
+    },
+    sorterRemoveItem: function(listName,mongoId){
+        var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});
 		return res;
 	},
 	updateList: function(listName, list){
 		// console.log('... sorterUpdateList = ' + listName );
 		// update sorters collection
-		return sorters.update({name : listName}, {$set : {order: list}},{upsert: true});
+		var one = sorters.findOne({name : listName});
+		return sorters.update({_id : one._id}, {$set : {order: list}},{upsert: true});
 	}
 });
