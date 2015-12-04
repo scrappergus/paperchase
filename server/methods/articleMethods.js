@@ -76,7 +76,7 @@ Meteor.methods({
 
 		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
 		if(batch){
-			filePath = '/Users/jl/sites/paperchase/uploads/pmc_xml/';
+			filePath = '/Users/jl/sites/paperchase/uploads/xml/';
 		}
 
 		var file = filePath + fileName;

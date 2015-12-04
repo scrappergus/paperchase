@@ -111,7 +111,17 @@ Router.route('/xml-cite-set/:_filename',{
 Router.route('/admin/add-legacy-platform-article/',{
 	where: 'server',
 	action: function(){
-		Meteor.call('legacyArticleIntake', this.params.query);
+        var response = this.response;
+        Meteor.call('legacyArticleIntake', this.params.query, function(err, res) {
+                if(err) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.end(JSON.stringify({'success':false}));
+                }
+                else {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.end(JSON.stringify({'success':true}));
+                }
+            });
 	}
 });
 
@@ -120,40 +130,75 @@ Router.route('/get-advance-articles/',{
 	where: 'server',
 	waitOn: function(){
 		return[
-			Meteor.subscribe('advance'),
-			Meteor.subscribe('sortedList','advance')
+			Meteor.subscribe('publish'),
 		]
 	},
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
-		var htmlString = '<body>';
-		var advance = sorters.findOne({name: 'advance'});
-		if(advance && advance.articles){
-			var advanceList = advance.articles;
+		var htmlString = "<body>";
+		var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
+		if(advance){
+			var advanceList = advance.data;
 			var prevSection;
-			for(var i = 0 ; i < advanceList.length ; i++){
+            var last_index;
+
+            if(this.params.query.rangeStart !== undefined) {
+                var rangeSize = this.params.query.rangeSize*1 || 3;
+                var rangeStart = this.params.query.rangeStart*rangeSize
+                var rangeEnd = rangeStart + rangeSize;
+                if(rangeEnd > advanceList.length) rangeEnd = advanceList.length;
+            }
+            else {
+                var rangeStart = 0;
+                var rangeEnd = advanceList.length;
+            }
+
+            var parity=0;
+			for(var i = rangeStart ; i < rangeEnd; i++){
+                parity++;
 				var articleInfo = advanceList[i];
+                last_index = i-1
+                if(i > 0) {
+                    prevSection = advanceList[last_index]['section_name'];
+                }
 				if(articleInfo['section_start']){
-					if(prevSection){
-						htmlString += '</div>';
-					}
+//					if(prevSection){
+//						htmlString += '</div>';
+//					}
 
-					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-					htmlString += '<div class="articlewrapper">';
+//					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+//					htmlString += '<div class="articlewrapper">';
 				}
-				prevSection = articleInfo['section_name'];
 
 
-				htmlString += '<table class="tocArticle" style="width:50%;float:left;"><tbody>';
-				if(articleInfo['title']){
-					htmlString += '<tr>';
-					htmlString += '<td class="tocTitle">' + articleInfo['title'] + '</td>';
-					htmlString += '</tr>';
-				}
+                if(articleInfo['section_name'] != prevSection) {
+                    if(i != 0) {
+                        htmlString += '</div>';
+                    }
+
+                    if(i<40 && articleInfo['section_name'] == 'Research Papers') {
+                        htmlString += "<h4 id=\"recent_"+articleInfo['section_name']+"\" class=\"tocSectionTitle\">Recent "+articleInfo['section_name']+"</h4>";
+                    }
+                    else {
+                        htmlString += "<h4 id=\""+articleInfo['section_name']+"\" class=\"tocSectionTitle\">"+articleInfo['section_name']+"</h4>";
+                    }
+
+                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
+                    parity = 1;
+                }
+                else if(parity%2==1) {
+                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
+
+                }
+
+                htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
+			    htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
 
 				if(articleInfo.authors){
-					htmlString += '<tr>';
-					htmlString += '<td class="tocAuthors">';
+//					htmlString += '<tr>';
+//					htmlString += '<td class="tocAuthors">';
+
+					htmlString += '<span class="tocAuthors">';
 
 					if(articleInfo['ids']['pii']){
 						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
@@ -178,39 +223,43 @@ Router.route('/get-advance-articles/',{
 						}
 					}
 					htmlString += '</p>';
-					htmlString += '</td>';
-					htmlString += '</tr>';
+					htmlString += '</span>';
 				}
 
 				// LINKS
-				htmlString += '<tr><td class="tocGalleys">';
+				htmlString += '<span class="tocGalleys">';
 				// Abstract
 				if(articleInfo.legacy_files){
-					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D='+ articleInfo.pii +'" class="file">Abstract</a>';
+//					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
 						htmlString += '&nbsp;';
-					}
+//					}
 					// HTML
 					if(articleInfo.legacy_files.html_galley_id){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';
 						htmlString += '&nbsp;';
 					}
 					// PDF
 					if(articleInfo.legacy_files.pdf_galley_id){
-						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=' + articleInfo.pdf_galley_id + '" class="file">PDF</a>';
+						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.pdf_galley_id + '" class="file">PDF</a>';
 						htmlString += '&nbsp;';
 					}
 					// Supplemental
 					if(articleInfo.legacy_files.has_supps){
-						htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path%5B%5D=' + articleInfo.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
+						htmlString += '<a href="javascript:openRTWindow(\'http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=rt&amp;op=suppFiles&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=\');" class="file">Supplementary Information</a>';
 						htmlString += '&nbsp;';
 					}
 				}
 
-				htmlString += '</td></tr>';
+				htmlString += '</span>';
 
-				htmlString += '</tbody></table>';
+				htmlString += '</div>';
+
+                if(parity%2==0) {
+                    htmlString += '</div>';
+                }
 			}
+
 			htmlString += '</body>';
 			var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
 			this.response.writeHead(200, headers);
@@ -491,14 +540,7 @@ if (Meteor.isClient) {
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('Article', {_id: articleByPii._id});
-				}else{
-					Router.go('ArticleNotFound');
-				}
+				Router.go('ArticleNotFound');
 			}
 
 			// get xml, figures, pdf links

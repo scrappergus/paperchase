@@ -23,16 +23,11 @@ sorters = new Mongo.Collection('sorters', {
       if(f.name == 'advance'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
-        var prevSection = '';
         for(var i = 0 ; i < order.length ; i++){
           for(var a = 0 ; a < articlesList.length ; a++){
             if(articlesList[a]['_id'] === order[i]){
               var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
               articlesList[a]['section_name'] = section['section_name'];
-              if(articlesList[a]['section_id'] != prevSection){
-                articlesList[a]['section_start'] = true;
-              }
-              prevSection = section['section_id'];
               f.articles.push(articlesList[a]);
             }
           }
@@ -68,6 +63,7 @@ sorters = new Mongo.Collection('sorters', {
       return f;
   }
 });
+publish = new Mongo.Collection('publish');
 
 // ALLOW
 Meteor.users.allow({
@@ -361,6 +357,19 @@ submissions.allow({
   }
 });
 
+sorters.allow({
+  insert: function () {
+      return true;
+  },
+  update: function () {
+      return true;
+  },
+  remove: function () {
+      return true;
+  }
+});
+
+
 // PUBLISH
 if (Meteor.isServer) {
   Meteor.publish(null, function() {
@@ -589,7 +598,7 @@ if (Meteor.isServer) {
       this.stop();
       return;
     }
-  })
+});
 
   // News
   // ----------------
@@ -614,6 +623,11 @@ if (Meteor.isServer) {
     // For admin pages
     return articles.find({'section' : sectionMongoId});
   });
+
+  // For advance
+  Meteor.publish('publish', function () {
+          return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+    });
 }
 
 // SUBSCRIBE

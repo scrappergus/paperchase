@@ -788,7 +788,7 @@ Meteor.adminForAuthors = {
 			// Insert
 			success = forAuthors.insert(forDb);
 			// Update sorters collection
-			Meteor.call('sorterAddArticle','forAuthors',success);
+			Meteor.call('sorterAddItem','forAuthors',success);
 		}else{
 			// Update
 			success = forAuthors.update({_id : mongoId} , {$set: forDb});
@@ -842,7 +842,7 @@ Meteor.adminAbout = {
 			// Insert
 			success = about.insert(forDb);
 			// Update sorters collection
-			Meteor.call('sorterAddArticle', 'about', success);
+			Meteor.call('sorterAddItem', 'about', success);
 		}else{
 			// Update
 			success = about.update({_id : mongoId} , {$set: forDb});

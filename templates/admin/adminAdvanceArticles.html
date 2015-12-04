@@ -1,35 +1,94 @@
 <template name="AdminAdvanceArticles">
-	{{>AdminHeader header="Advance Articles"}}
-	<form>
-		{{>FixedSaveBtn}}
-		{{> SuccessModal what='Advance Articles'}}
-		<div class="row" style="border-bottom:1px solid;">
-			<div class="col s1">&nbsp;</div>
-			<div class="col s2"><b>Section</b></div>
-			<div class="col s7"><b>Title</b></div>
-			<div class="col s2 right-align"><b>Advance</b></div>
-		</div>
-		<div class="row">
-			<div class="col s12">
-				<ul id="advance-table">
-					{{#each articles}}
-					<li>
-						<div class="row">
-							<div class="col s1"><i class=" prefix mdi mdi-swap-vertical"></i></div>
-							<div class="col s2">{{section_name}}&nbsp;</div>
-							<div class="col s7">{{{title}}}</div>
-							<div class="col s2"><input type="checkbox" class="advanced-article filled-in" id="{{_id}}" checked="checked" />
-							<label class="right" for="{{_id}}"></label></div>
+    <div class="advance-drop-spot-box " style="background:white; position:fixed; width: 160px; top: 80px; right:0px; overflow:hidden;"><ul class="advance-drop-spot"><li class="drop-placeholder">Drop article here</li></ul></div>
+    {{>AdminHeader header="Advance Articles"}}
+    <div id="modal1" class="modal">
+        <div class="modal-content center-align">
+                <div class=" center-align">
+                    <h4 class="center-align">Saving...</h4>
+                    <div class="preloader-wrapper big active center-align">
+                        <div class="spinner-layer spinner-blue">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form>
+        
+	<div class="publish-advanced fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <h5>Total count: {{total}}</h5>
+        <h5>Last published:<br>{{pubdate}}<br>{{pubtime}}</h5>
+		<button class="waves-effect waves-light btn-large">
+			<div class="">
+                <span class="">Publish</span>
+			</div>
+			<div class="show-wait hide">
+				<div class="preloader-wrapper active" style="margin:4px;">
+					<div class="spinner-layer spinner-red-only">
+						<div class="circle-clipper left">
+							<div class="circle"></div>
+						</div><div class="gap-patch">
+							<div class="circle"></div>
 						</div>
-					</li>
-					{{/each}}
-				</ul>
+						<div class="circle-clipper right">
+							<div class="circle"></div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col s12 center-align">
-				{{>SaveBtn}}
-			</div>
-		</div>
-	</form>
+		</button>
+	</div>
+
+        {{> SuccessModal what='Advance Articles'}}
+        <div class="row" style="border-bottom:1px solid;">
+            <div class="col s1">&nbsp;</div>
+            <div class="col s2"><b>Section</b></div>
+            <div class="col s1"><b>PubDate</b></div>
+            <div class="col s1"><b>PII</b></div>
+            <div class="col s6"><b>Title</b></div>
+            <div class="col s1 right-align"></div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <ul class="article-sections">
+                    {{#each sections}}
+                    <li class="article-section">
+                        <h2 style="display:inline;"><i class="mdi prefix mdi-swap-vertical handle" style="cursor:pointer;"></i> {{section_name}} <span class="badge">{{section_length}} articles</span></h2> <a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a>
+                        <ul class="articles">
+
+                            {{#each articles}}
+                            <li class="article" data-article-id={{_id}}>
+                                <div class="row">
+                                    <div class="col s1"><i class="mdi prefix mdi-swap-vertical handle" style="cursor:pointer;"></i></div>
+                                    <div class="col s2">{{section_name}}&nbsp;</div>
+                                    <div class="col s1">{{#if dates.epub}}{{articleDate dates.epub}}{{else}}<a href="http://galaxy.oncotarget.com/admin/article/{{_id}}#dates">Set&nbsp;date</a>{{/if}}&nbsp;</div>
+                                    <div class="col s1"><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">{{ids.pii}}</a>&nbsp;</div>
+                                    <div class="col s6"><a href="http://galaxy.oncotarget.com/admin/article/{{_id}}">{{{title}}}</a></div>
+                                    <div class="col s1 right-align">
+                                       <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons">delete</i></a> 
+                                        <label class="right" for="{{_id}}"></label></div>
+                                </div>
+                            </li>
+
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col s12 center-align">
+                {{>SaveBtn}}
+            </div>
+        </div>
+        //-->
+    </form>
 </template>

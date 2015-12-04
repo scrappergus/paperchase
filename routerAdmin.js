@@ -1,4 +1,3 @@
-
 /*
  ADMIN ROUTES
 */
@@ -323,16 +322,157 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
+				Meteor.subscribe('publish'),
 				Meteor.subscribe('advance'),
 				Meteor.subscribe('sortedList','advance')
 			]
 		},
 		data: function(){
 			if(this.ready()){
-				var sorted  = sorters.findOne();
-				return{
-					articles: sorted['articles']
+				var sorted  = sorters.findOne({name:'advance'});
+				var output = [];
+				var last_article = {};
+				var recent = true;
+                var section_count = 0;
+                var section_start_index = 0;
+				for (var i = 0; i < sorted.articles.length; i++){
+					article = sorted.articles[i];
+
+					//make a copy of the next article for comparison
+					next_article = sorted.articles[i+1] || false;
+
+					//things that happen on the first entry
+					if(i==0) {
+						article['first'] = true;
+						article['section_start'] = true;
+					}
+
+					//mark the rest as not being first
+					first = false;
+
+
+
+					//things that happen if we're starting a new section
+					if(article.section_name != last_article.section_name) {
+						article['section_start'] = true;
+					}
+
+
+					//things that happen if we're ending a section
+					if(article.section_name != next_article.section_name) {
+						article['section_end'] = true;
+					}
+
+					//record this entry for comparison on the next
+					last_article = article;
+					//record changes to actual article entry
+					if(article.section_start) {
+
+						section_name = article.section_name;
+						section_id = article.section_id;
+						if(section_name == 'Research Papers' && recent === true) {
+							recent = false;
+							section_name = 'Recent Research Papers';
+						}
+
+						output.push({
+								articles:[],
+								section_name:section_name,
+								section_id:section_id
+							});
+
+                        //set section count in previous section
+                        output[section_start_index]['section_length'] = section_count;
+                        section_count = 0;
+                        section_start_index = output.length - 1;
+
+					}
+                    section_count++;
+					output[output.length-1]['articles'].push(article);
 				}
+
+                var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
+
+				return{
+					sections: output,
+                    pubdate: advance.pubtime.toLocaleDateString(),
+                    pubtime: advance.pubtime.toLocaleTimeString(),
+                    total: sorted.articles.length
+				}
+			}
+		}
+	});
+	Router.route('/admin/articles/advance-diff',{
+		name: 'AdminAdvanceArticlesDiff',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
+			]
+		},
+		data: function(){
+            if(this.ready()){
+
+                var articles = [];
+                $.ajax({
+                        type: 'GET',
+                        url: "http://impactjournals.com//ojs-api/?v=5&i=0",
+                        dataType: 'json',
+                        async: false,
+                        success: function(data) {
+                            articles = data.articles;
+                        }
+                    });
+
+                var sorted  = sorters.findOne({name:'advance'});
+
+               	// console.log(articles);
+               	// console.log(sorted);
+
+                var diff = {};
+                var ojs_count = 0;
+				for(var i = 0; i < articles.length ; i++){
+                    ojs_count++;
+                    article = articles[i];
+                    diff[article['pii']] = {ojs:true};
+                }
+
+
+                var pc_count = 0;
+                var pc_ids = {};
+				for(var i = 0; i < sorted.articles.length ; i++){
+                    pc_count++;
+                    article = sorted.articles[i];
+                    var pii = article.ids['pii'];
+                    if(diff[pii] === undefined) {
+                        diff[pii] = {};
+                    }
+                    diff[pii].paperchase = true;
+                    pc_ids[pii] = article["_id"];
+                }
+
+                var only_ojs = [];
+                var only_pc = [];
+                var total_count = 0;
+                $.each(diff, function(k,v) {
+                        total_count++;
+                        if(v['ojs'] === true && v['paperchase'] !== true) {
+                            only_ojs.push({pii:k});
+                        }
+
+                        if(v['ojs'] !== true && v['paperchase'] === true) {
+                            only_pc.push({pii:k,paperchaseId:pc_ids[k]});
+                        }
+                    });
+
+                return {
+                    "ojs_count": ojs_count,
+                    "pc_count": pc_count,
+                    "total_count": total_count,
+                    "only_ojs": only_ojs,
+                    "only_pc": only_pc
+                }
 			}
 		}
 	});
