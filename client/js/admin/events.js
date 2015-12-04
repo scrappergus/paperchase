@@ -914,19 +914,6 @@ Template.adminArticleXmlProcess.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
-	// 'click #intake-advance': function(e){
-	// 	e.preventDefault();
-	// 	for(var i = 0 ; i < advanceArticlesIntake.length ; i++){
-	// 		console.log(advanceArticlesIntake[i]);
-	// 		var obj = {
-	// 			id_type : 'pii',
-	// 			id : advanceArticlesIntake[i],
-	// 			journal : 'oncotarget',
-	// 			advance : 1
-	// 		}
-	// 		Meteor.call('legacyArticleIntake', obj);
-	// 	}
-	// },
 	'click #advance-order-update' : function(e){
 		e.preventDefault();
 		console.log('clicked');
