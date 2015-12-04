@@ -75,8 +75,23 @@
                     <a class="collapsible-header waves-effect waves-teal">Papers</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminArticlesList'}}">All</a></li>
-                            <li><a href="{{pathFor 'adminArticleXmlIntake'}}">Upload XML</a></li>
+                            <li><a href="{{pathFor 'adminArticlesDashboard'}}"><i class="mdi mdi-view-dashboard"></i> Dashboard</a></li>
+                            <li><a href="{{pathFor 'AdminArticlesList'}}"><i class="mdi mdi-table"></i> All</a></li>
+                            <li><a href="{{pathFor 'AdminAdvanceArticles'}}"><i class="mdi mdi-view-list"></i> Advance</a></li>
+                            <li><a href="{{pathFor 'adminArticleXmlIntake'}}"><i class="mdi mdi-upload"></i> Upload XML</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="bold">
+            <ul class="collapsible-nav collapsible-accordion">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal">Sections</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="{{pathFor 'AdminSectionsAdd'}}"><i class="mdi mdi-table"></i> Add</a></li>
+                            <li><a href="{{pathFor 'AdminSections'}}"><i class="mdi mdi-view-list"></i> All</a></li>
                         </ul>
                     </div>
                 </li>
@@ -88,9 +103,9 @@
                     <a class="collapsible-header waves-effect waves-teal">Indexers</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="http://doi.oncotarget.com">DOI Control</a></li>
-                            <li><a href="{{pathFor 'AdminDataSubmissions'}}">Data Submissions Manager</a></li>
-                            <li><a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Data Submissions</a></li>
+                            <li><a href="http://doi.oncotarget.com"><i class="mdi mdi-send"></i>  DOI Control</a></li>
+                            <li><a href="{{pathFor 'AdminDataSubmissions'}}"><i class="mdi mdi-send"></i>  Data Submissions Manager</a></li>
+                            <li><a href="{{pathFor 'AdminDataSubmissionsPast'}}"><i class="mdi mdi-table"></i> Past Data Submissions</a></li>
                         </ul>
                     </div>
                 </li>
