@@ -306,3 +306,29 @@ Template.AdminNav.helpers({
 		}
 	}
 });
+
+
+// Sections
+// ---------------
+Template.AdminSections.helpers({
+	sections: function(){
+		return sections.find();
+	}
+});
+Template.AdminSectionsForm.helpers({
+	section: function() {
+		var section = {}; // if undefined, the template form will not load. So we need an empty object.
+		if(Session.get('paperSectionId')){
+			section = sections.findOne({_id : Session.get('paperSectionId')});
+		}
+		return section;
+	}
+});
+Template.AdminSectionPapers.helpers({
+	section: function(){
+		return sections.find({_id : Session.get('paperSectionId')});
+	},
+	papers: function() {
+		return articles.find(); // subscription is limited to just these section papers, so we can return the whole collection
+	}
+})

@@ -59,6 +59,7 @@ Template.AdminForAuthors.events({
 });
 Template.AdminForAuthorsForm.events({
 	'submit form': function(e){
+		Meteor.formActions.saving();
 		Meteor.adminForAuthors.formGetData(e);
 	}
 });
@@ -101,6 +102,7 @@ Template.AdminAbout.events({
 });
 Template.AdminAboutForm.events({
 	'submit form': function(e){
+		Meteor.formActions.saving();
 		Meteor.adminAbout.formGetData(e);
 	}
 });
@@ -109,7 +111,17 @@ Template.AdminAboutForm.events({
 // --------------------
 Template.AdminNewsForm.events({
 	'submit form': function(e){
+		Meteor.formActions.saving();
 		Meteor.adminNews.formGetData(e);
+	}
+});
+
+// Sections
+// ----------------
+Template.AdminSectionsForm.events({
+	'submit form': function(e){
+		Meteor.formActions.saving();
+		Meteor.adminSections.formGetData(e);
 	}
 });
 

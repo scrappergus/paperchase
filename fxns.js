@@ -720,7 +720,7 @@ Meteor.adminBatch = {
 }
 
 Meteor.adminShared = {
-	formGetData: function () {
+	formGetData: function (e) {
 		var forDb = {}
 
 		// Section title
@@ -851,6 +851,49 @@ Meteor.adminAbout = {
 			// Meteor.formActions.success(); // Do not show modal. Problem when changing session variable to hide template, doesn't remove modal overlay
 			Session.set('showAboutForm',false);
 			Session.set('aboutSectionId',null);
+		}
+	}
+}
+
+Meteor.adminSections = {
+	formGetData: function(e){
+		console.log('..formGetData adminSection');
+		e.preventDefault();
+		var forDb = {};
+		var invalidData = [];
+		forDb.name = $('#section-name').val();
+
+		if(!forDb.name){
+			var invalidObj = {
+				'input_class' : 'section-name',
+				'message' : 'Section Name Is Empty'
+			}
+			invalidData.push(invalidObj);
+			Meteor.formActions.invalid(invalidData);
+		}else{
+			forDb.short_name = forDb.name.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+				if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+				return index == 0 ? match.toLowerCase() : match.toUpperCase();
+			}); // based on http://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
+
+			// TODO: Check if section name already exists
+			// console.log(forDb);
+			// Check if section exists via Mongo ID hidden input
+			mongoId = $('#section-mongo-id').val();
+			if(!mongoId){
+				// Insert
+				success = sections.insert(forDb);
+				// Update sorters collection
+				// Meteor.call('sorterAddArticle', 'sections', success);
+			}else{
+				// Update
+				success = sections.update({_id : mongoId} , {$set: forDb});
+			}
+			if(success){
+				Meteor.formActions.success();
+				// Session.set('showAboutForm',false);
+				// Session.set('aboutSectionId',null);
+			}
 		}
 	}
 }

@@ -1,0 +1,74 @@
+<template name="AdminSections">
+	{{>AdminHeader header="Sections"}}
+	<form>
+		{{#each sections}}
+		<div class="row">
+			<div class="col s12 m10">
+				<h4>{{name}}</h4>
+			</div>
+			<div class="col s12 m2">
+				<a class="waves-effect waves-light btn" href="{{pathFor 'AdminSectionPapers'}}">Papers</a>
+			</div>
+		</div>
+		{{/each}}
+	</form>
+</template>
+
+<template name="AdminSectionPapers">
+	{{>AdminHeader header="Section Papers"}}
+	<h3>{{section.name}}</h3>
+	<table>
+		<thead>
+			<tr>
+				<td>Title</td>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each papers}}
+			<tr>
+				<td>{{{title}}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+
+</template>
+
+<template name="AdminSectionsAdd">
+	{{>AdminHeader header="New Section"}}
+	{{>AdminSectionsForm}}
+</template>
+
+<template name="AdminSectionsForm">
+	{{#with section}}
+	{{>SuccessModal what='Section'}}
+	<form>
+		{{>FixedSaveBtn}}
+		{{>saving}}
+		<fieldset>
+			<legend>Section Name</legend>
+			<div class="row">
+				<div class="input-field col s12">
+					<input type="text" value="{{section_name}}" id="section-name" class="section-name" />
+				</div>
+			</div>
+		</fieldset>
+		<!-- <fieldset>
+			<div class="row">
+				<div class="input-field col s12">
+					<input type="checkbox" value="{{checked display}}" id="section-display"/>
+					<label for="section-display">Display</label>
+				</div>
+			</div>
+		</fieldset> -->
+		<input type="hidden" value="{{_id}}" id="section-mongo-id">
+
+		<div class="row">
+			<div class="col s12 center-align">
+				{{>SaveBtn}}
+			</div>
+		</div>
+	</form>
+	{{/with}}
+</template>
+

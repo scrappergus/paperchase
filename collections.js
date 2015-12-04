@@ -320,6 +320,26 @@ ipranges.allow({
     }
   }
 });
+sections.allow({
+  insert: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  update: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  },
+  remove: function (userId, doc, fields, modifier) {
+    var u = Meteor.users.findOne({_id:userId});
+    if (Roles.userIsInRole(u, ['admin'])) {
+      return true;
+    }
+  }
+});
 submissions.allow({
   insert: function (userId, doc, fields, modifier) {
     var u = Meteor.users.findOne({_id:userId});
@@ -582,6 +602,18 @@ if (Meteor.isServer) {
   Meteor.publish('newsItem', function(mongoId){
     return newsList.find({_id:mongoId});
   });
+
+
+  // Sections
+  // ----------------
+  Meteor.publish('sectionsAll', function(){
+    // For admin pages
+    return sections.find({});
+  });
+  Meteor.publish('sectionPapers', function(sectionMongoId){
+    // For admin pages
+    return articles.find({'section' : sectionMongoId});
+  });
 }
 
 // SUBSCRIBE
@@ -594,5 +626,5 @@ if (Meteor.isClient) {
     Meteor.subscribe('subs');
     // Meteor.subscribe('journalConfig');
     Meteor.subscribe('articleTypes');
-    Meteor.subscribe('sections');
+    Meteor.subscribe('sections'); // TODO: Remove
 }

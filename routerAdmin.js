@@ -14,6 +14,8 @@ if (Meteor.isClient) {
 	Session.set('aboutSectionId', null);
 	// News
 	Session.setDefault('newsId',null);
+	// Paper sections
+	Session.setDefault('paperSectionId',null);
 
 
 	Router.route('/admin', {
@@ -332,6 +334,52 @@ if (Meteor.isClient) {
 					articles: sorted['articles']
 				}
 			}
+		}
+	});
+
+	// Sections
+	Router.route('/admin/sections', {
+		name: 'AdminSections',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('sectionsAll')
+			]
+		}
+	});
+	Router.route('/admin/sections-add', {
+		name: 'AdminSectionsAdd',
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				// sections
+			]
+		}
+	});
+	Router.route('/admin/sections/:_id',{
+		name: 'AdminSectionPapers',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Session.set('paperSectionId',this.params._id);
+			this.next();
+		},
+		waitOn: function(){
+			return [
+				Meteor.subscribe('sectionPapers', this.params._id)
+			]
+		}
+	});
+	Router.route('/admin/sections-edit/:_id',{
+		name: 'AdminSectionsEdit',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Session.set('paperSectionId',this.params._id);
+			this.next();
+		},
+		waitOn: function(){
+			return [
+				Meteor.subscribe('sectionItem', this.params._id)
+			]
 		}
 	});
 
