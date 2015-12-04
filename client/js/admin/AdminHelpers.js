@@ -1,5 +1,13 @@
 // ADMIN HELPERS
 
+Template.AdminNav.helpers({
+	mainColor: function(){
+		var journalSettings = journalConfig.findOne();
+		if(journalSettings){
+			return journalSettings['site']['spec']['color']['main_rgb'];
+		}
+	},
+});
 // Site Control
 // ---------------
 Template.AdminSiteControl.helpers({

@@ -12,7 +12,13 @@ Template.Visitor.helpers({
 		if(journalSettings){
 			return journalSettings['submission']['url'];
 		}
-	}
+	},
+	mainColor: function(){
+		var journalSettings = journalConfig.findOne();
+		if(journalSettings){
+			return journalSettings['site']['spec']['color']['main_rgb'];
+		}
+	},
 });
 Template.Footer.helpers({
 	publisher : function(){
