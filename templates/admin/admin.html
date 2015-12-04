@@ -59,11 +59,11 @@
 </template>
 
 <template name="AdminNavLinks">
-    <li><a href="/admin/">Dashboard</a></li>
-    <li><a href="/admin/institution">Institutions</a></li>
+    <!-- <li><a href="/admin/">Dashboard</a></li> -->
+    <li><a href="{{pathFor 'AdminInstitution'}}">Institutions</a></li>
     <li><a href="{{pathFor 'adminArchive'}}">Archive</a></li>
-    <li><a href="{{pathFor 'adminArchive'}}">Archive</a></li>
-    <li><a href="/admin/users">Users</a></li>
+    <!-- <li><a href="{{pathFor 'AdminSiteControl'}}">Site Control</a></li> -->
+    <li><a href="{{pathFor 'AdminUsers'}}">Users</a></li>
     <li><a href="{{pathFor 'AdminAuthors'}}">Authors</a></li>
     <li><a href="{{pathFor 'adminArticlesDashboard'}}">Articles</a></li>
     <li>{{> loginButtons}}</li>
@@ -102,8 +102,9 @@
                     <a class="collapsible-header waves-effect waves-teal">Pages</a>
                     <div class="collapsible-body">
                         <ul>
-                          <li><a href="{{pathFor 'AdminEditorialBoard'}}">Editorial Board</a></li>
-                          <li><a href="{{pathFor 'AdminForAuthors'}}">For Authors</a></li>
+                            <li><a href="{{pathFor 'AdminSiteControl'}}">Site Control</a></li>
+                            <li><a href="{{pathFor 'AdminEditorialBoard'}}">Editorial Board</a></li>
+                            <li><a href="{{pathFor 'AdminForAuthors'}}">For Authors</a></li>
                         </ul>
                     </div>
                 </li>
