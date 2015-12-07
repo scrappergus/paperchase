@@ -584,12 +584,12 @@ Template.AdminArticleForm.events({
 			articleUpdateObj['issue_id'] = $('#article-issue').val();
 		}
 		// Article type
-		if($('#article-type').val() != ''){
-			articleUpdateObj['article_type'] = {};
-			articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
-			articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
-			articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
-		}
+		// if($('#article-type').val() != ''){
+			// articleUpdateObj['article_type'] = {};
+		articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
+		articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
+		articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
+		// }
 		// Article section
 		articleUpdateObj['section'] = $('#article-section').val();
 		// Article status
