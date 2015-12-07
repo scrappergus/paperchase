@@ -96,6 +96,21 @@ newsList.after.update(function (userId, doc, fieldNames, modifier, options) {
   newsList.direct.update({_id : doc._id}, {$addToSet : {'doc_updates.updates' : updateObj}}); // MUST use direct.update, otherwise will be stuck in an update loop
 });
 
+// Papers Sections
+// ----------------
+sections.after.insert(function (userId, doc) {
+  // append to sorters collection if displaying
+  if(doc.display){
+    Meteor.call('sorterAddItem','sections',doc._id);
+  }
+});
+sections.after.update(function (userId, doc, fieldNames, modifier, options){
+  if(modifier['$set']['display']) {
+    Meteor.call('sorterAddItem','sections',doc._id);
+  }else{
+     Meteor.call('sorterRemoveItem','sections',doc._id);
+  }
+});
 
 // Sorters
 // -------
@@ -107,4 +122,4 @@ sorters.after.update(function (userId, doc, fieldNames, modifier, options){
                 articles.direct.update({"_id":article_id}, {$set: {advance:false}});
             }
         }
-    });
+});

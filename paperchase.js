@@ -31,16 +31,27 @@ if (Meteor.isClient) {
 Router.configure({
 	loadingTemplate: 'Loading'
 });
-
+Router.onBeforeAction(function() {
+	// Site Settings
+	// ------------------------
+	Meteor.subscribe('sectionsVisible');
+	Meteor.subscribe('sortedList','sections');
+	this.next();
+});
 Meteor.startup(function () {
+	// Email
+	// ------------------------
 	if (Meteor.isServer) {
 		var emailSettings = Meteor.call('getConfigRecommendationEmail');
 		if(emailSettings){
 			process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
 		}
 	}
+	// Site Settings
+	// ------------------------
 	if (Meteor.isClient) {
 		var journal = journalConfig.findOne();
+		// journal color, side navigation
 		Session.setDefault('journal',journal);
 	}
 });
@@ -283,6 +294,10 @@ if (Meteor.isClient) {
 	Session.setDefault('missingPii',null);
 	Session.setDefault('preprocess-article',false);
 	Session.setDefault('issue',null);
+	// for side navigation
+	Session.setDefault('section-nav',null);
+	// for section papers list
+	Session.setDefault('article-list',null);
 
 	Router.route('/', {
 		name: 'Home',
@@ -711,6 +726,51 @@ if (Meteor.isClient) {
 				var u =  Meteor.users.findOne();
 				return {
 					user: u
+				}
+			}
+		}
+	});
+
+	Router.route('/section/:_section_dash_name', {
+		name: 'SectionPapers',
+		layoutTemplate: 'Visitor',
+		onBeforeAction: function(){
+			Meteor.call('preprocessSectionArticles',articles.find().fetch(), function(error,result){
+				if(error){
+					console.log('ERROR - preprocessSectionArticles');
+					console.log(error);
+				}
+				if(result){
+					Session.set('article-list',result);
+				}
+			});
+			this.next();
+		},
+		title: function() {
+			var pageTitle = '',
+				sectionName = '';
+			// console.log(this.params._section_short_name);
+			// console.log(sections.find().fetch());
+			var section = sections.findOne({dash_name : this.params._section_dash_name});
+			// console.log(sectionName);
+			if(section){
+				sectionName = section.name;
+			}
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + sectionName;
+		},
+		waitOn: function(){
+			return [
+				Meteor.subscribe('sectionPapersByDashName', this.params._section_dash_name)
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				// more data set in helpersData.js, articles
+				return {
+					section : sections.findOne({dash_name : this.params._section_dash_name})
 				}
 			}
 		}

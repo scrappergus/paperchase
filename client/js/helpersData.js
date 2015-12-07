@@ -51,6 +51,10 @@ Template.LeftNav.helpers({
 		if(Session.get('journal')){
 			return Session.get('journal').site.side_nav;
 		}
+	},
+	sectionsLinks: function(){
+		var sectionsList = sections.find().fetch();
+		return sectionsList;
 	}
 });
 Template.MobileMenu.helpers({
@@ -122,3 +126,10 @@ Template.Issue.helpers({
 		return Session.get('issue');
 	}
 });
+
+// Sections
+Template.SectionPapers.helpers({
+	articles: function(){
+		return Session.get('article-list');
+	}
+})

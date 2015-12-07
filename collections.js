@@ -58,6 +58,9 @@ sorters = new Mongo.Collection('sorters', {
             }
           }
         }
+      }else if(f.name == 'sections'){
+        var unordered = sections.find({'_id':{'$in':order}}).fetch();
+        f.ordered = Meteor.sorter.sort(unordered,order);
       }
 
       return f;
@@ -356,7 +359,6 @@ submissions.allow({
     }
   }
 });
-
 sorters.allow({
   insert: function () {
       return true;
@@ -452,9 +454,6 @@ if (Meteor.isServer) {
   });
   Meteor.publish('articleTypes', function () {
     return articleTypes.find({},{});
-  });
-  Meteor.publish('sections', function() {
-    return sections.find();
   });
   Meteor.publish('feature', function () {
     return articles.find({'feature':true},{sort:{'_id':1}});
@@ -615,14 +614,27 @@ if (Meteor.isServer) {
 
   // Sections
   // ----------------
+  // Meteor.publish('sections', function() {
+  //   return sections.find();
+  // });
   Meteor.publish('sectionsAll', function(){
     // For admin pages
     return sections.find({});
+  });
+  Meteor.publish('sectionsVisible', function(){
+    // For admin pages
+    return sections.find({display: true});
   });
   Meteor.publish('sectionPapers', function(sectionMongoId){
     // For admin pages
     return articles.find({'section' : sectionMongoId});
   });
+  Meteor.publish('sectionPapersByDashName', function(dashName){
+    // console.log('..sectionPapersByDashName' +  dashName);
+    var section = sections.findOne({'dash_name' : dashName})
+    return articles.find({'section' : section._id});
+  });
+
 
   // For advance
   Meteor.publish('publish', function () {
@@ -640,5 +652,5 @@ if (Meteor.isClient) {
     Meteor.subscribe('subs');
     // Meteor.subscribe('journalConfig');
     Meteor.subscribe('articleTypes');
-    Meteor.subscribe('sections'); // TODO: Remove
+    Meteor.subscribe('sectionsVisible');
 }

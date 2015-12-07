@@ -81,10 +81,12 @@ Meteor.adminSite = {
 		var success,
 			updateObj = {};
 		updateObj.side_nav = [];
+		updateObj.section_side_nav = [];
 		Meteor.formActions.saving();
 		$('input').removeClass('invalid');
-		// Side Navigation
-		// ------
+
+		// Main Side Navigation
+		// ----------------------
 		var sideNavList = []; // Rebuild entire array and objects before inserting into db. because we are using the order of objects to set the order of links when displaying.
 		$('.side-nav-option').each(function(){
 			var sideNavOption = {};
@@ -102,13 +104,38 @@ Meteor.adminSite = {
 			updateObj.side_nav.push(sideNavOption);
 		});
 
+		// Section Side Navigation
+		// ----------------------
+		var sectionSideNavList = []; // Rebuild entire array and objects before inserting into db. because we are using the order of objects to set the order of links when displaying.
+		$('.section-nav-option').each(function(){
+			var sectionSideNavOption = {};
+			// console.log($(this).attr('id'));
+			sectionSideNavOption._id = $(this).attr('id');
+			if($(this).is(':checked')){
+				sectionSideNavOption.display = true;
+			}else{
+				sectionSideNavOption.display = false;
+			}
+			updateObj.section_side_nav.push(sectionSideNavOption);
+		});
+
 		// TODO: validation
 		// console.log(updateObj);
-		success = journalConfig.update({_id : Session.get('journal')._id} , {$set: {site : updateObj}});
-		// console.log(success);
-		if(success){
-			Meteor.formActions.success();
-		}
+		Meteor.call('siteControlUpdate',updateObj,function(error,result){
+			if(error){
+				console.log('ERROR - siteControlUpdate');
+				console.log(error);
+				Meteor.formActions.error();
+			}
+			if(result){
+				Meteor.formActions.success();
+			}
+		});
+		// success = journalConfig.update({_id : Session.get('journal')._id} , {$set: {site : updateObj}});
+		// // console.log(success);
+		// if(success){
+		// 	Meteor.formActions.success();
+		// }
 	},
 }
 
@@ -878,6 +905,8 @@ Meteor.adminSections = {
 				return index == 0 ? match.toLowerCase() : match.toUpperCase();
 			}); // based on http://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
 
+			forDb.dash_name = forDb.name.toLowerCase().replace(' ','-');
+
 			// TODO: Check if section name already exists
 			// console.log(forDb);
 			// Check if section exists via Mongo ID hidden input
@@ -934,5 +963,24 @@ Meteor.general = {
 				scrollTop: $('#' + anchor).position().top - navTop
 			}, 500);
 		}
+	}
+}
+
+Meteor.sorter = {
+	sort: function(unordered,order){
+		// console.log('..SORT');
+		// console.log(order);
+		// for when we have the array of Mongo IDs and array of items to sort
+		var ordered = [];
+		for(var i = 0 ; i < order.length ; i++){
+		  // console.log(order[i]);
+		  for(var a = 0 ; a < unordered.length ; a++){
+			if(unordered[a]['_id'] == order[i]){
+			  ordered.push(unordered[a]);
+			}
+		  }
+		}
+		// console.log(ordered);
+		return ordered;
 	}
 }

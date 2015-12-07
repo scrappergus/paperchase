@@ -3,8 +3,15 @@
 	<form>
 		{{#each sections}}
 		<div class="row {{#if editingPaperSection _id}}hide{{/if}}" id="section-overview-{{_id}}">
-			<div class="col s12 m8">
-				<h4>{{name}}</h4>
+			<div class="col s12 m6">
+				<h3 style="margin:0;padding:0;">{{name}}</h3>
+			</div>
+			<div class="col s12 m2">
+				{{#if display}}
+				<h4>Display</h4>
+				{{else}}
+				<h4>Hidden</h4>
+				{{/if}}
 			</div>
 			<div class="col s12 m2">
 				<a class="waves-effect waves-light btn" href="{{pathFor 'AdminSectionPapers'}}">Papers</a>

@@ -15,9 +15,6 @@ Template.AdminSiteControl.helpers({
 		if(Session.get('journal')){
 			return Session.get('journal').site.side_nav;
 		}
-	},
-	sectionSideNav: function(){
-		return sections.find().fetch();
 	}
 });
 

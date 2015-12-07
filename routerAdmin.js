@@ -35,7 +35,6 @@ if (Meteor.isClient) {
 		}
 	});
 
-
 	// About
 	Router.route('/admin/about', {
 		name: 'AdminAbout',
@@ -51,7 +50,6 @@ if (Meteor.isClient) {
 			// when adding data via template helper, the array shows as an object and there is an error:
 			// {#each}} currently only accepts arrays, cursors or falsey values.
 			if(this.ready()){
-				var sections = about.find().fetch();
 				var sorted  = sorters.findOne();
 				return {
 					sections : sorted['ordered']
@@ -60,11 +58,26 @@ if (Meteor.isClient) {
 		}
 	});
 
-
 	// Site control
 	Router.route('/admin/site-control', {
 		name: 'AdminSiteControl',
-		layoutTemplate: 'Admin'
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('sections'),
+				Meteor.subscribe('sortedList','sections')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sorted  = sorters.findOne();
+				// more data set is AdminHelpers.js (main side nav)
+				return {
+					sectionSideNav : sorted['ordered'],
+					sectionsHidden : sections.find({display:false},{sort:{name:1}}).fetch()
+				};
+			}
+		}
 	});
 
 	// News

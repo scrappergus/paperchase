@@ -6,6 +6,11 @@
 		<div class="divider"></div>
 		{{/if}}
 		{{/each}}
+
+		{{#each sectionsLinks}}
+		<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
+		<div class="divider"></div>
+		{{/each}}
 	</ul>
 </template>
 

@@ -126,7 +126,7 @@ Meteor.methods({
 								//TODO: These are nlm type, possible that publisher has its own type of articles
 								//TODO: Update article type collection if this type not present
 								j['article_type'] = {};
-								j['article_type']['type'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'][0];
+								j['article_type']['name'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'][0];
 								j['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
 
 								//IDS
@@ -343,7 +343,7 @@ Meteor.methods({
 					name: publisherArticleTypes[k]['name'],
 					short_name: publisherArticleTypes[k]['short_name']
 				}
-				if(publisherArticleTypes[k]['name'] === articleType){
+				if(publisherArticleTypes[k]['name'] == articleType){
 					selectObj['selected'] = true;
 				}
 				article['article_type_list'].push(selectObj);
@@ -364,7 +364,7 @@ Meteor.methods({
 					name: publisherArticleSections[s]['name'],
 					short_name: publisherArticleSections[s]['short_name']
 				}
-				if(publisherArticleSections[s]['_id'] === selectedSectionId){
+				if(publisherArticleSections[s]['_id'] == selectedSectionId){
 					selectObj['selected'] = true;
 				}
 				article['article_section_list'].push(selectObj);
