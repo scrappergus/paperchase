@@ -64,7 +64,7 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
-				Meteor.subscribe('sections'),
+				Meteor.subscribe('sectionsAll'),
 				Meteor.subscribe('sortedList','sections')
 			]
 		},
@@ -73,8 +73,7 @@ if (Meteor.isClient) {
 				var sorted  = sorters.findOne();
 				// more data set is AdminHelpers.js (main side nav)
 				return {
-					sectionSideNav : sorted['ordered'],
-					sectionsHidden : sections.find({display:false},{sort:{name:1}}).fetch()
+					sectionSideNav : sorted['ordered']
 				};
 			}
 		}
