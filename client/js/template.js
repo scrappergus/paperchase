@@ -24,6 +24,13 @@ Template.Issue.onDestroyed(function () {
 	Session.set('issue',null)
 });
 
+// Section Papers
+// ------
+Template.SectionPapers.onDestroyed(function () {
+	Session.set('article-list',null)
+});
+
+
 // Article
 // --------
 Template.ArticleFigures.onRendered(function() {
