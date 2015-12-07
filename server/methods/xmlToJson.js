@@ -29,11 +29,14 @@ Meteor.methods({
 					if(resLinks.figures && resLinks.figures.length === 0){
 						delete resLinks.figures;
 					}
+					// console.log(resLinks);
 					fut['return'](resLinks);
 				}else{
 					// console.log('no assets');
 					fut['return']({});
 				}
+			}else{
+				fut['return']({});
 			}
 			return fut.wait();
 		}else{
