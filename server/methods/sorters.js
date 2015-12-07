@@ -38,7 +38,7 @@ Meteor.methods({
 		return res;
 	},
 	updateList: function(listName, list){
-		console.log('... sorterUpdateList = ' + listName );
+		// console.log('... sorterUpdateList = ' + listName );
 		// update sorters collection
 		return sorters.update({name : listName}, {$set : {order: list}},{upsert: true});
 	}
