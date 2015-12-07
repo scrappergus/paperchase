@@ -508,7 +508,7 @@ Template.AdminArticleForm.events({
 		Meteor.formActions.saving();
 		var mongoId,
 			article,
-			articleUpdateObj;
+			articleUpdateObj = {};
 
 		var articleTitle,
 			articleAbstract,
@@ -522,7 +522,11 @@ Template.AdminArticleForm.events({
 
 		article = Session.get('article');
 		mongoId = article['_id'];
-		articleUpdateObj = {};
+
+		articleUpdateObj.page_start; // integer
+		articleUpdateObj.page_end; // integer
+		articleUpdateObj.article_type = {}; // Object of name, short name, nlm type
+		articleUpdateObj.section = ''; // Mongo ID
 
 		// title
 		// -------
@@ -562,15 +566,20 @@ Template.AdminArticleForm.events({
 			articleUpdateObj['page_end'] = parseInt($('#page_end').val());
 		}
 		// select options
+		// Issue
 		if($('#article-issue').val() != ''){
 			articleUpdateObj['issue_id'] = $('#article-issue').val();
 		}
+		// Article type
 		if($('#article-type').val() != ''){
 			articleUpdateObj['article_type'] = {};
 			articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
 			articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
 			articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
 		}
+		// Article section
+		articleUpdateObj['section'] = $('#article-section').val();
+		// Article status
 		if($('#article-pub-status').val() != ''){
 			articleUpdateObj['pub_status'] = $('#article-pub-status').val();
 		}
@@ -643,6 +652,7 @@ Template.AdminArticleForm.events({
 			// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
 			// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
 		// title
+		// console.log(articleUpdateObj);
 		if(articleUpdateObj.title === ''){
 			var invalidObj = {
 				'input_class' : 'article-title',

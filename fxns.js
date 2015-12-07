@@ -424,6 +424,7 @@ Meteor.adminArticle = {
 		// selects
 		$('#article-issue').material_select();
 		$('#article-type').material_select();;
+		$('#article-section').material_select();;
 		$('#article-pub-status').material_select();
 
 		// modals

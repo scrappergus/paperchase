@@ -348,6 +348,28 @@ Meteor.methods({
 				}
 				article['article_type_list'].push(selectObj);
 			}
+
+			// Article Section
+			// ------------
+			// add ALL article sections
+			var selectedSectionId;
+			if(article['section']){
+				selectedSectionId = article['section'];
+			}
+			article['article_section_list'] = [];
+			var publisherArticleSections = sections.find().fetch();
+			for(var s =0 ; s < publisherArticleSections.length ; s++){
+				var selectObj = {
+					_id : publisherArticleSections[s]['_id'],
+					name: publisherArticleSections[s]['name'],
+					short_name: publisherArticleSections[s]['short_name']
+				}
+				if(publisherArticleSections[s]['_id'] === selectedSectionId){
+					selectObj['selected'] = true;
+				}
+				article['article_section_list'].push(selectObj);
+			}
+
 			return article;
 		}
 	},

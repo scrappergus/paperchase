@@ -105,20 +105,31 @@
 					</select>
 					<label for="article-issue">Volume / Issue</label>
 				</div>
+			</div>
+			<div class="row">
 				<div class="input-field col s6 m4">
 					<select id="article-type">
-						<option value="">&mdash;&mdash; Select Article Type &mdash;&mdash;</option>
+						<option value="">&mdash; Select &mdash;</option>
 						{{#each article_type_list}}
 						<option value="{{short_name}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
 						{{/each}}
 					</select>
 					<label for="article-type">Article Type</label>
 				</div>
+				<div class="input-field col s6 m4">
+					<select id="article-section">
+						<option value="">&mdash; Select &mdash;</option>
+						{{#each article_section_list}}
+						<option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
+						{{/each}}
+					</select>
+					<label for="article-section">Article Section</label>
+				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s4">
 					<select id="article-pub-status">
-						<option value="">&mdash;&mdash; Select Pub Status &mdash;&mdash;</option>
+						<option value="">&mdash; Select &mdash;</option>
 						{{#each pub_status_list}}
 						<option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
 						{{/each}}
