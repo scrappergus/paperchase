@@ -418,3 +418,6 @@ Template.AdminAdvanceArticlesDiff.onRendered(function() {
             });
     });
 
+Template.AdminSections.onRendered(function() {
+    Session.set('paperSectionId',null);
+});

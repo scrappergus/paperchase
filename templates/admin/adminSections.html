@@ -2,14 +2,31 @@
 	{{>AdminHeader header="Sections"}}
 	<form>
 		{{#each sections}}
-		<div class="row">
-			<div class="col s12 m10">
+		<div class="row {{#if editingPaperSection _id}}hide{{/if}}" id="section-overview-{{_id}}">
+			<div class="col s12 m8">
 				<h4>{{name}}</h4>
 			</div>
 			<div class="col s12 m2">
 				<a class="waves-effect waves-light btn" href="{{pathFor 'AdminSectionPapers'}}">Papers</a>
 			</div>
+			<div class="col s12 m2">
+				<button id="{{_id}}" class="waves-effect waves-light btn btn-edit edit-section"><i class="mdi mdi-pencil"></i> Edit</button>
+			</div>
 		</div>
+		{{#if editingPaperSection _id}}
+		<div class="card grey lighten-4">
+			<div class="card-content">
+				<div class="row">
+					<div class="col s12">{{>AdminSectionsForm}}</div>
+				</div>
+				<div class="row">
+					<div class="col s12">
+						<button class="btn btn-cancel right">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{/if}}
 		{{/each}}
 	</form>
 </template>
@@ -17,6 +34,7 @@
 <template name="AdminSectionPapers">
 	{{>AdminHeader header="Section Papers"}}
 	<h3>{{section.name}}</h3>
+	{{#if papers}}
 	<table>
 		<thead>
 			<tr>
@@ -33,7 +51,9 @@
 			{{/each}}
 		</tbody>
 	</table>
-
+	{{else}}
+	<h4>No Papers</h4>
+	{{/if}}
 </template>
 
 <template name="AdminSectionsAdd">
@@ -43,26 +63,25 @@
 
 <template name="AdminSectionsForm">
 	{{#with section}}
-	{{>SuccessModal what='Section'}}
+	{{>successMessage what='Section'}}
 	<form>
-		{{>FixedSaveBtn}}
 		{{>saving}}
 		<fieldset>
 			<legend>Section Name</legend>
 			<div class="row">
 				<div class="input-field col s12">
-					<input type="text" value="{{section_name}}" id="section-name" class="section-name" />
+					<input type="text" value="{{name}}" id="section-name" class="section-name" />
 				</div>
 			</div>
 		</fieldset>
-		<!-- <fieldset>
+		<fieldset>
 			<div class="row">
 				<div class="input-field col s12">
-					<input type="checkbox" value="{{checked display}}" id="section-display"/>
+					<input type="checkbox" checked="{{checked display}}" id="section-display"/>
 					<label for="section-display">Display</label>
 				</div>
 			</div>
-		</fieldset> -->
+		</fieldset>
 		<input type="hidden" value="{{_id}}" id="section-mongo-id">
 
 		<div class="row">

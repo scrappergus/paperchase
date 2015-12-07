@@ -15,6 +15,9 @@ Template.AdminSiteControl.helpers({
 		if(Session.get('journal')){
 			return Session.get('journal').site.side_nav;
 		}
+	},
+	sectionSideNav: function(){
+		return sections.find().fetch();
 	}
 });
 
@@ -320,7 +323,7 @@ Template.AdminNav.helpers({
 // ---------------
 Template.AdminSections.helpers({
 	sections: function(){
-		return sections.find();
+		return sections.find({},{sort : {name:1}}).fetch();
 	}
 });
 Template.AdminSectionsForm.helpers({
@@ -337,6 +340,6 @@ Template.AdminSectionPapers.helpers({
 		return sections.findOne({_id : Session.get('paperSectionId')});
 	},
 	papers: function() {
-		return articles.find(); // subscription is limited to just these section papers, so we can return the whole collection
+		return articles.find().fetch(); // subscription is limited to just these section papers, so we can return the whole collection
 	}
 })

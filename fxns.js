@@ -858,11 +858,12 @@ Meteor.adminAbout = {
 
 Meteor.adminSections = {
 	formGetData: function(e){
-		console.log('..formGetData adminSection');
+		// console.log('..formGetData adminSection');
 		e.preventDefault();
 		var forDb = {};
 		var invalidData = [];
 		forDb.name = $('#section-name').val();
+		forDb.display = $('#section-display').is(':checked');
 
 		if(!forDb.name){
 			var invalidObj = {
@@ -881,6 +882,8 @@ Meteor.adminSections = {
 			// console.log(forDb);
 			// Check if section exists via Mongo ID hidden input
 			mongoId = $('#section-mongo-id').val();
+			// console.log(forDb);
+			// console.log(mongoId);
 			if(!mongoId){
 				// Insert
 				success = sections.insert(forDb);
