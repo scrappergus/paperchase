@@ -21,12 +21,14 @@
 		<thead>
 			<tr>
 				<td>Title</td>
+				<td></td>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each papers}}
 			<tr>
 				<td>{{{title}}}</td>
+				<td><a href="{{pathFor 'AdminArticle'}}">Edit</a></td>
 			</tr>
 			{{/each}}
 		</tbody>

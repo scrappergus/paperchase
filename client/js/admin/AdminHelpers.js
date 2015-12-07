@@ -334,7 +334,7 @@ Template.AdminSectionsForm.helpers({
 });
 Template.AdminSectionPapers.helpers({
 	section: function(){
-		return sections.find({_id : Session.get('paperSectionId')});
+		return sections.findOne({_id : Session.get('paperSectionId')});
 	},
 	papers: function() {
 		return articles.find(); // subscription is limited to just these section papers, so we can return the whole collection
