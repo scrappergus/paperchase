@@ -7,10 +7,13 @@
 		{{/if}}
 		{{/each}}
 
+		{{#if sectionsLinks}}
+		<li><h4>Sections</h4></li>
 		{{#each sectionsLinks}}
 		<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
 		<div class="divider"></div>
 		{{/each}}
+		{{/if}}
 	</ul>
 </template>
 
