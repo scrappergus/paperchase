@@ -630,7 +630,7 @@ if (Meteor.isClient) {
 		},
 		title: function() {
 			var pageTitle = '';
-			console.log(Session.get('journal'));
+			// console.log(Session.get('journal'));
 			if(Session.get('journal')){
 				pageTitle = Session.get('journal').journal.name + ' | ';
 			}
