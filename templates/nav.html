@@ -24,6 +24,16 @@
 	{{/if}}
 	{{/each}}
 	<div class="divider"></div>
+
+	{{#if sectionsLinks}}
+	<li><h4>Sections</h4></li>
+	{{#each sectionsLinks}}
+	<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
+	{{/each}}
+	{{/if}}
+
+	<div class="divider"></div>
+
 	<!--full text-->
 	{{>ArticleSections}}
 </template>

@@ -62,6 +62,10 @@ Template.MobileMenu.helpers({
 		if(Session.get('journal')){
 			return Session.get('journal').site.side_nav;
 		}
+	},
+	sectionsLinks: function(){
+		var sectionsList = sections.find().fetch();
+		return sectionsList;
 	}
 });
 // Contact
