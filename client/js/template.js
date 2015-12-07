@@ -26,10 +26,9 @@ Template.Issue.onDestroyed(function () {
 
 // Section Papers
 // ------
-Template.SectionPapers.onDestroyed(function () {
+Template.SectionPapers.onRendered(function () {
 	Session.set('article-list',null)
 });
-
 
 // Article
 // --------
