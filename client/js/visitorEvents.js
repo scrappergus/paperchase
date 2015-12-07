@@ -78,6 +78,16 @@ Template.Issue.events({
 	}
 });
 
+
+// Section
+// -------
+Template.SectionPapers.events({
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
+	}
+});
+
+
 // Article
 // -------
 Template.Article.events({
