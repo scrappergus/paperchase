@@ -47,13 +47,6 @@ Meteor.startup(function () {
 			process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
 		}
 	}
-	// Site Settings
-	// ------------------------
-	if (Meteor.isClient) {
-		var journal = journalConfig.findOne();
-		// journal color, side navigation
-		Session.setDefault('journal',journal);
-	}
 });
 
 
