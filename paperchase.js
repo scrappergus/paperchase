@@ -24,9 +24,6 @@ if (Meteor.isClient) {
 	})();
 	// var journal = journalConfig.findOne();
 	// Session.setDefault('journal',journal);
-	Meteor.subscribe('journalConfig', function(){
-		Session.set('journal', journalConfig.findOne());
-	});
 }
 Router.configure({
 	loadingTemplate: 'Loading'
@@ -36,6 +33,9 @@ Router.onBeforeAction(function() {
 	// ------------------------
 	Meteor.subscribe('sectionsVisible');
 	Meteor.subscribe('sortedList','sections');
+	Meteor.subscribe('journalConfig', function(){
+		Session.set('journal', journalConfig.findOne());
+	});
 	this.next();
 });
 Meteor.startup(function () {
