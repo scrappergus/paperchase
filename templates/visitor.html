@@ -7,6 +7,7 @@
 </head>
 
 <template name="Visitor">
+	{{#if configLoaded}}
 	<div class="navbar-fixed" style="margin-bottom:6px;">
 		<nav class="journal-nav z-depth-0" role="navigation" style="background-color:rgba({{mainColor}},0.9);">
 			<div class="nav-wrapper container nav-links">
@@ -42,6 +43,9 @@
 	</div>
 
 	{{>Footer}}
+	{{else}}
+	{{>LoadingConfig}}
+	{{/if}}
 </template>
 
 <template name="PageHeader">

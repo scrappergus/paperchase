@@ -19,6 +19,12 @@ Template.Visitor.helpers({
 			return journalSettings['site']['spec']['color']['main_rgb'];
 		}
 	},
+	configLoaded: function (){
+		var journalSettings = journalConfig.findOne();
+		if(journalSettings){
+			return true;
+		}
+	}
 });
 Template.Footer.helpers({
 	publisher : function(){
