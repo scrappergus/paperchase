@@ -3,6 +3,7 @@ Meteor.methods({
 		var fut = new future();
 		console.log('..batchUpdateXml : ' + journal);
 		var xmlCrawlUrl = journalConfig.findOne().api.crawler_xml; // LIVE
+		// console.log('xmlCrawlUrl = ' + xmlCrawlUrl);
 		// var xmlCrawlUrl = 'http://localhost:4932/crawl_xml'; // LOCAL
 		var res,
 			articlesList;
@@ -23,7 +24,6 @@ Meteor.methods({
 				}
 				if (i == parseInt(articlesList.length-1) && updatedCount == articlesList.length){
 					// if last article and all succesfully updated
-					console.log('LAST');
 					fut['return'](true);
 				}else if(i == parseInt(articlesList.length-1)){
 					// if last article and not all succesfully updated
