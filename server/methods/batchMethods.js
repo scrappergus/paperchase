@@ -2,8 +2,8 @@ Meteor.methods({
 	batchUpdateXml: function(journal,cb){
 		var fut = new future();
 		console.log('..batchUpdateXml : ' + journal);
-		// var xmlCrawlUrl = journalConfig.findOne().api.crawler_xml; // LIVE
-		var xmlCrawlUrl = 'http://localhost:4932/crawl_xml'; // LOCAL
+		var xmlCrawlUrl = journalConfig.findOne().api.crawler_xml; // LIVE
+		// var xmlCrawlUrl = 'http://localhost:4932/crawl_xml'; // LOCAL
 		var res,
 			articlesList;
 		res = Meteor.http.get(xmlCrawlUrl + '/' + journal);
