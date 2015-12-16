@@ -241,11 +241,15 @@ if (Meteor.isClient) {
 		},
 		data: function(){
 			if(this.ready()){
+				var journal;
 				var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
 				var sorted  = sorters.findOne();
 				var sortedArticles;
-				var journal = journalConfig.findOne();
-				journal = journal.journal;
+				// var journalSettings = journalConfig.findOne();
+				if(Session.get('journal')){
+					journal = Session.get('journal').journal;
+				}
+
 				if(sorted['articles']){
 					sortedArticles = sorted['articles'];
 				}
@@ -809,6 +813,23 @@ if (Meteor.isClient) {
 			return {
 				institution: institutions.findOne({"_id":this.params._id}),
 				updateForm: true
+			}
+		}
+	});
+
+	// Crawl
+	Router.route('/admin/crawl',{
+		name: 'adminCrawl',
+		layoutTemplate: 'Admin',
+		data: function(){
+			if(this.ready()){
+				var journal;
+				if(Session.get('journal')){
+					journal = Session.get('journal').journal;
+				}
+				return {
+					journal : journal
+				}
 			}
 		}
 	});

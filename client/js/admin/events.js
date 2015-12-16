@@ -275,6 +275,7 @@ Template.AdminIssue.events({
 Template.adminArticlesDashboard.events({
 	'click #ojs-batch-update': function(e){
 		e.preventDefault();
+		// just for Oncotarget
 		// TODO: move to server. problem with method within a method. if this click was to call a method that then uses the update method.
 		// TODO: include a paperchase owns flag, and skip that article in the batch update. for when an article was edited via paperchase.
 		Meteor.call('batchUpdate');
@@ -937,6 +938,15 @@ Template.adminArticleXmlProcess.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	// 'click #doi-update': function(e){
+	// 	e.preventDefault();
+
+	// 	Meteor.call('batchDoiUpdate',function(error,result){
+	// 		if(result){
+	// 			console.log(result);
+	// 		}
+	// 	})
+	// },
 	'click #advance-order-update' : function(e){
 		e.preventDefault();
 		console.log('clicked');
@@ -1054,6 +1064,24 @@ Template.AdminBatchXml.events({
 	},
 	'click #type-fix': function(e){
 		Meteor.call('updateAllArticlesTypes');
+	}
+});
+Template.AdminCrawl.events({
+	'click #xml-batch-update': function(e){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var journal = Session.get('journal').journal.short_name;
+		Meteor.call('batchUpdateXml',journal,function(error,result){
+			if(error){
+				console.log('ERROR:');
+				console.log(error);
+			}
+			if(result){
+				// console.log('result:');
+				// console.log(result);
+				Meteor.formActions.success();
+			}
+		});
 	}
 });
 

@@ -15,6 +15,13 @@ journalConfig = new Mongo.Collection('config');
 contact = new Mongo.Collection('contact');
 articleTypes = new Mongo.Collection('article_types');
 sections = new Mongo.Collection('sections');
+// Files
+// -------
+xmlCollection = new Mongo.Collection('xml');
+pdfCollection = new Mongo.Collection('pdf');
+figCollection = new Mongo.Collection('figures');
+// Sorters
+// -------
 sorters = new Mongo.Collection('sorters', {
   transform: function(f) {
       var order = f.order;
