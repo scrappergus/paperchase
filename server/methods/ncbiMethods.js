@@ -20,6 +20,59 @@ Meteor.methods({
 		}
 		return pmcId;
 	},
+	getDoiFromPmid: function(articlePMID){
+		console.log('..getDoiFromPmid: ' + articlePMID);
+		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+		var res;
+		res = Meteor.http.get(requestURL);
+
+		if(res){
+			var articleIdList = res.data.result[articlePMID]['articleids'];
+			var articleIdListL = articleIdList.length;
+			for(var i = 0 ; i < articleIdListL ; i ++){
+				if(articleIdList[i]['idtype'] === 'doi'){
+					//fix for articles misindexed at pubmed
+					var val = articleIdList[i]['value'];
+					console.log(val);
+					return val;
+				}
+			}
+		}
+	},
+	getPubDateFromPmid: function(articlePMID){
+		console.log('..getPubDateFromPmid: ' + articlePMID);
+		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+		var res;
+		res = Meteor.http.get(requestURL);
+
+		if(res){
+			if(res.data.result[articlePMID]['pubdate']){
+				return res.data.result[articlePMID]['pubdate'];
+			}else{
+				console.log("NO PUB DATE");
+			}
+		}
+	},
+	getAllArticlesFromPubMed: function(){
+		var fut = new future();
+		// using journal ISSN, get all articles indexed at pubmed. will return list of PMID
+		var issn = journalConfig.findOne().journal.issn;
+		issn = '1949-2553';
+		console.log('...getAllArticlesFromPubMed: ' + issn);
+		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&RetMax=90000000&term=' + issn;
+		var res;
+		res = Meteor.http.get(requestURL);
+
+		if(res){
+			// console.log(res.data);
+			var articleIdList = res.data['esearchresult']['idlist'];
+			// console.log(articleIdList);
+			fut['return'](articleIdList);
+		}else{
+			throw new Meteor.Error(500, 'getAllArticlesFromPubMed: Cannot get list of PMID from PubMed based on ISSN' , error);
+		}
+		return fut.wait();
+	},
 	getPiiFromPmid: function(articlePMID){
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
 		var res;
