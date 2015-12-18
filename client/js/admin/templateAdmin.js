@@ -50,9 +50,9 @@ Template.AdminAdvanceArticles.onRendered(function() {
 	$('#advance-table').sortable();
 });
 
-// XML Intake
+// XML Upload
 // ----------
-Template.adminArticleXmlIntake.onRendered(function () {
+Template.adminArticleXmlUpload.onRendered(function () {
 	Session.set('fileNameXML','');
 });
 

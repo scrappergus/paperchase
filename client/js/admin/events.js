@@ -1072,15 +1072,43 @@ Template.AdminCrawl.events({
 		Meteor.formActions.saving();
 		var journal = Session.get('journal').journal.short_name;
 		Meteor.call('batchUpdateXml',journal,function(error,result){
+			// TODO: show error message.
+			// TODO: be more specific. because no PMC ID exists for any articles, result is true, but no XML updated
 			if(error){
-				console.log('ERROR:');
-				console.log(error);
+				Meteor.formActions.error();
 			}
 			if(result){
-				// console.log('result:');
-				// console.log(result);
 				Meteor.formActions.success();
 			}
+		});
+	}
+});
+
+// S3
+// -------------
+Template.s3Upload.events({
+	'click button.upload': function(){
+		var files = $('input.file_bag')[0].files;
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		// Make sure they are all XML
+		// TODO: versioning is based on file name, which is based on PII. Make sure filename is PII.xml
+		var xmlFiles = [];
+		for(var i=0 ; i<files.length ; i++){
+			console.log(files[i]['type']);
+			if(files[i]['type'] == 'text/xml'){
+				xmlFiles.push(files[i]);
+			}
+		}
+		S3.upload({
+			Bucket: 'paperchase-' + journalShortName,
+			files: xmlFiles,
+			path: 'xml',
+			unique_name: false
+		},function(error,result){
+			console.log('error:');
+			console.log(error);
+			console.log('result');
+			console.log(result);
 		});
 	}
 });

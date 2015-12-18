@@ -185,8 +185,8 @@ if (Meteor.isClient) {
 
 	// Intake
 	// xml uploading
-	Router.route('/admin/article_xml',{
-		name: 'adminArticleXmlIntake',
+	Router.route('/admin/upload/xml',{
+		name: 'adminArticleXmlUpload',
 		layoutTemplate: 'Admin'
 	});
 	Router.route('/admin/article-xml/process',{

@@ -14,8 +14,6 @@ service-configuration
 accounts-ui
 alanning:roles
 fourseven:scss
-tomi:upload-server
-tomi:upload-jquery
 gandev:server-eval
 peerlibrary:xml2js
 meteorhacks:npm
@@ -50,3 +48,5 @@ mizzao:jquery-ui
 vojtechklos:materialnote
 dapearce:material-icons
 ostrio:iron-router-title
+tomi:upload-server
+lepozepo:s3

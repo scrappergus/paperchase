@@ -252,16 +252,12 @@ Template.AdminAboutForm.helpers({
 	}
 });
 
-// Intake
+// Upload
 // ---------------
-Template.adminArticleXmlIntake.helpers({
-	myCallbacks: function() {
-		return {
-			finished: function(index, fileInfo, context) {
-				Session.set('fileNameXML',fileInfo.name);
-				Router.go('adminArticleXmlProcess');
-			}
-		}
+Template.s3Upload.helpers({
+	'files': function(){
+		// console.log(S3.collection.find());
+		return S3.collection.find();
 	}
 });
 
