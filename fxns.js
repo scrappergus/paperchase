@@ -700,6 +700,26 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-wait').addClass('hide');
 		}
 	},
+	errorMessage: function(message){
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').addClass('hide');
+		$('.error').removeClass('hide');
+
+		// add message to template
+		$('.error-message').text(message);
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+	},
 	success: function(){
 		// inline messages
 		$('.save-btn').removeClass('hide');
@@ -707,6 +727,32 @@ Meteor.formActions = {
 		$('.success').removeClass('hide');
 		$('.error').addClass('hide');
 
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+
+		// success modals
+		if($('#success-modal').length){
+			$('#success-modal').openModal();
+		}
+
+	},
+	successMessage: function(message){
+		// inline messages
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').removeClass('hide');
+		$('.error').addClass('hide');
+
+		$('.success-message').text(message);
 
 		// fixed saved button
 		if($('#fixed-save-btn').length){
