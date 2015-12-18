@@ -239,6 +239,12 @@ Template.successMessage.events({
 		$('.success').addClass('hide');
 	}
 });
+Template.Success.events({
+	'click #close-success-msg': function(e){
+		e.preventDefault();
+		$('.success').addClass('hide');
+	}
+});
 Template.SendingSuccessMessage.events({
 	'click #close-success-msg': function(e){
 		e.preventDefault();
@@ -938,15 +944,15 @@ Template.adminArticleXmlProcess.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
-	// 'click #doi-update': function(e){
-	// 	e.preventDefault();
-
-	// 	Meteor.call('batchDoiUpdate',function(error,result){
-	// 		if(result){
-	// 			console.log(result);
-	// 		}
-	// 	})
-	// },
+	'click #doi-update': function(e){
+		e.preventDefault();
+		// query for all PMID in journal. then check if DOI already at PubMed, if not then add to output.
+		Meteor.call('batchDoiList',function(error,result){
+			if(result){
+				console.log(result);
+			}
+		})
+	},
 	'click #advance-order-update' : function(e){
 		e.preventDefault();
 		console.log('clicked');
@@ -1088,28 +1094,53 @@ Template.AdminCrawl.events({
 // -------------
 Template.s3Upload.events({
 	'click button.upload': function(){
+		Meteor.formActions.saving();
+		var xmlUrl;
 		var files = $('input.file_bag')[0].files;
+		var file = files[0];
 		var journalShortName = journalConfig.findOne().journal.short_name;
-		// Make sure they are all XML
+		// Uploader only allows 1 file at a time.
 		// TODO: versioning is based on file name, which is based on PII. Make sure filename is PII.xml
-		var xmlFiles = [];
-		for(var i=0 ; i<files.length ; i++){
-			console.log(files[i]['type']);
-			if(files[i]['type'] == 'text/xml'){
-				xmlFiles.push(files[i]);
-			}
+		if(file['type'] == 'text/xml'){
+			Meteor.call('piiFromXmlFileNameCheck',file['name'],function(error, mongoId){
+				if(error){
+					console.error(error);
+					// PII not in DB
+					// TODO: add control for adding article to DB
+					Meteor.formActions.errorMessage(error.details);
+				}
+				if(mongoId){
+					// PII exists in DB. Upload XML to S3.
+					S3.upload({
+						Bucket: 'paperchase-' + journalShortName,
+						files: files,
+						path: 'xml',
+						unique_name: false
+					},function(err,res){
+						if(err){
+							console.error(err);
+							Meteor.formActions.errorMessage('XML not uploaded');
+						}
+						if(res){
+							// Meteor.formActions.successMessage('XML Uploaded');
+							xmlUrl = res.secure_url;
+							// Post processing. Parse XML and update DB
+							Meteor.call('parseXmlAfterUpload',xmlUrl, mongoId, function(e,r){
+								if(e){
+									console.error(e);
+									Meteor.formActions.errorMessage('Database not updated');
+								}
+								if(r){
+									Meteor.formActions.successMessage('XML Uploaded & Database Updated');
+								}
+							});
+						}
+					});
+				}
+			});
+		}else{
+			Meteor.formActions.errorMessage('XML required');
 		}
-		S3.upload({
-			Bucket: 'paperchase-' + journalShortName,
-			files: xmlFiles,
-			path: 'xml',
-			unique_name: false
-		},function(error,result){
-			console.log('error:');
-			console.log(error);
-			console.log('result');
-			console.log(result);
-		});
 	}
 });
 

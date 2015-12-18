@@ -69,9 +69,9 @@ Meteor.methods({
 	},
 	processXML: function(fileName,batch){
 		// for importing XML to DB
+		// TODO: verify this is still working after moving processing to new function, processXmlFile
 		if(fileName)
-		var j = {},
-			xml;
+		var xmlString;
 		var fut = new future();
 
 		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
@@ -84,141 +84,170 @@ Meteor.methods({
 			if(fileok){
 				fs.readFile(file, function(error, data) {
 					if(data)
-					xml = data.toString();
+					xmlString = data.toString();
 					if(error){
-						return 'ERROR';
+						throw new Meteor.Error(500, 'Cannot read XML' , error);
 					}else{
-						parseString(xml, function (err, result) {
-							if(err){
-								return 'ERROR';
-							}else{
-								//Process JSON for meteor templating and mongo db
-								var articleJSON = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
-								//TITLE
-								var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
-								var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
-								titleTitle = titleTitle.replace('article-title>','');
-								titleTitle = Meteor.adminBatch.cleanString(titleTitle);
-								j['title'] = titleTitle;
-
-
-								j['volume'] = parseInt(articleJSON['volume'][0]);
-								j['issue'] = parseInt(articleJSON['issue'][0]);
-								j['page_start'] = parseInt(articleJSON['fpage'][0]);
-								j['page_end'] = parseInt(articleJSON['lpage'][0]);
-
-								//KEYWORDS
-								if(articleJSON['kwd-group']){
-									j['keywords'] =  articleJSON['kwd-group'][0]['kwd'];
-								}
-
-								//ABSTRACT
-								if(articleJSON['abstract']){
-									var abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
-									abstract = abstract.replace('abstract>\n ', '');
-									abstract = abstract.replace('</p>\n','</p>');
-									abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
-									abstract = Meteor.adminBatch.cleanString(abstract);
-									j['abstract'] = abstract;
-								}
-
-								//ARTICLE TYPE
-								//TODO: These are nlm type, possible that publisher has its own type of articles
-								//TODO: Update article type collection if this type not present
-								j['article_type'] = {};
-								j['article_type']['name'] = articleJSON['article-categories'][0]['subj-group'][0]['subject'][0];
-								j['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
-
-								//IDS
-								j['ids'] = {};
-								var idList = articleJSON['article-id'];
-								var idListLength = idList.length;
-								for(var i = 0 ; i < idListLength ; i++){
-									var type = idList[i]['$']['pub-id-type'];
-									var idCharacters = idList[i]['_'];
-									j['ids'][type] = idCharacters;
-								}
-
-								//AUTHORS
-								if(articleJSON['contrib-group']){
-									j['authors'] = [];
-									var authorsList = articleJSON['contrib-group'][0]['contrib'];
-									var authorsListLength = authorsList.length;
-									for(var i = 0 ; i < authorsListLength ; i++){
-										var author = {};
-										var name_first = authorsList[i]['name'][0]['given-names'][0];
-										var name_last = authorsList[i]['name'][0]['surname'][0];
-										author['name_first'] = name_first;
-										author['name_last'] = name_last;
-										j['authors'].push(author);
-									}
-								}
-
-								//PUB DATES
-								j['dates'] = {}
-								var dates = articleJSON['pub-date'];
-								var datesLength = dates.length;
-								for(var i = 0 ; i < datesLength ; i++){
-									var dateType =  dates[i]['$']['pub-type'];
-									var d = '';
-									var hadDay = false;
-									if(dates[i]['month']){
-										d += dates[i]['month'][0] + ' ';
-									}
-									if(dates[i]['day']){
-										d += dates[i]['day'][0] + ', ';
-										hadDay = true;
-									}else{
-										//usually for type collection
-										d += 1 + ', ';
-									}
-									if(dates[i]['year']){
-										d += dates[i]['year'][0];
-									}
-									if(hadDay){
-										//gonna use time of the day to differentiate dates that had this and didn't
-										d += ' 00:00:00 EST';
-									}else{
-										d += ' 12:00:00 EST';
-									}
-									var dd = new Date(d);
-
-									j['dates'][dateType] = dd;
-								}
-
-								//HISTORY DATES
-								if(articleJSON['history']){
-									j['history'] = {};
-									var history = articleJSON['history'][0]['date'];
-									var historyLength = history.length;
-
-									for(var i = 0 ; i < historyLength ; i++){
-										var dateType = history[i]['$']['date-type'];
-										var d = '';
-										if(history[i]['month']){
-											d += history[i]['month'][0] + ' ';
-										}
-										if(history[i]['day']){
-											d += history[i]['day'][0] + ', ';
-										}
-										if(history[i]['year']){
-											d += history[i]['year'][0] + ' ';
-										}
-										var dd = new Date(d);
-										j['history'][dateType] = dd;
-									}
-								}
-
-								// console.log(j);
-
-								fut['return'](j);	//this what is returned. j = is the fixed json.
+						Meteor.call('processXmlString',xmlString,function(error,result){
+							if(error){
+								throw new Meteor.Error(500, 'Cannot process XML' , error);
+							}
+							if(result){
+								fut['return'](result);
 							}
 						});
 					}
-
 				});
 			}else{
 				console.log('file not found');
+			}
+		});
+		return fut.wait();
+	},
+	processXmlString: function(xml){
+		// console.log('..processXmlString');
+		// console.log(xml);
+		var articleProcessed = {};
+		var articlePreProcess;
+		var fut = new future();
+		parseString(xml, function (error, result) {
+			if(error){
+				console.error('ERROR');
+				console.error(error);
+				return 'ERROR';
+			}else{
+				//Process JSON for meteor templating and mongo db
+				if(result['pmc-articleset']){
+					// if getting XML via crawling PMC
+					articlePreProcess = result['pmc-articleset']['article'][0]['front'][0]['article-meta'][0];
+				}else{
+					// if uploaded XML by admin
+					articlePreProcess = result;
+				}
+
+				// console.log(articlePreProcess);
+				//TITLE
+				var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
+				var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
+					titleTitle = titleTitle.replace('article-title>','');
+					titleTitle = Meteor.adminBatch.cleanString(titleTitle);
+				articleProcessed['title'] = titleTitle;
+
+
+				articleProcessed['volume'] = parseInt(articlePreProcess['volume'][0]);
+				articleProcessed['issue'] = parseInt(articlePreProcess['issue'][0]);
+				articleProcessed['page_start'] = parseInt(articlePreProcess['fpage'][0]);
+				articleProcessed['page_end'] = parseInt(articlePreProcess['lpage'][0]);
+
+				//KEYWORDS
+				if(articlePreProcess['kwd-group']){
+					articleProcessed['keywords'] =  articlePreProcess['kwd-group'][0]['kwd'];
+				}
+
+				//ABSTRACT
+				if(articlePreProcess['abstract']){
+					var abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
+						abstract = abstract.replace('abstract>\n ', '');
+						abstract = abstract.replace('</p>\n','</p>');
+						abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
+						abstract = Meteor.adminBatch.cleanString(abstract);
+					articleProcessed['abstract'] = abstract;
+				}
+
+				//ARTICLE TYPE
+				//TODO: These are nlm type, possible that publisher has its own type of articles
+				//TODO: Update article type collection if this type not present
+				articleProcessed['article_type'] = {};
+				articleProcessed['article_type']['name'] = articlePreProcess['article-categories'][0]['subj-group'][0]['subject'][0];
+				articleProcessed['article_type']['short_name'] = result['pmc-articleset']['article'][0]['$']['article-type'];
+
+				//IDS
+				articleProcessed['ids'] = {};
+				var idList = articlePreProcess['article-id'];
+				var idListLength = idList.length;
+				for(var i = 0 ; i < idListLength ; i++){
+					var type = idList[i]['$']['pub-id-type'];
+					var idCharacters = idList[i]['_'];
+					articleProcessed['ids'][type] = idCharacters;
+				}
+				// PII required!
+				if(!articleProcessed['ids']['pii']){
+					throw new Meteor.Error('ERROR: PII required ');
+				}
+
+				//AUTHORS
+				if(articlePreProcess['contrib-group']){
+					articleProcessed['authors'] = [];
+					var authorsList = articlePreProcess['contrib-group'][0]['contrib'];
+					var authorsListLength = authorsList.length;
+					for(var i = 0 ; i < authorsListLength ; i++){
+						var author = {};
+						var name_first = authorsList[i]['name'][0]['given-names'][0];
+						var name_last = authorsList[i]['name'][0]['surname'][0];
+						author['name_first'] = name_first;
+						author['name_last'] = name_last;
+						articleProcessed['authors'].push(author);
+					}
+				}
+
+				//PUB DATES
+				articleProcessed['dates'] = {}
+				var dates = articlePreProcess['pub-date'];
+				var datesLength = dates.length;
+				for(var i = 0 ; i < datesLength ; i++){
+					var dateType =  dates[i]['$']['pub-type'];
+					var d = '';
+					var hadDay = false;
+					if(dates[i]['month']){
+						d += dates[i]['month'][0] + ' ';
+					}
+					if(dates[i]['day']){
+						d += dates[i]['day'][0] + ', ';
+						hadDay = true;
+					}else{
+						//usually for type collection
+						d += 1 + ', ';
+					}
+					if(dates[i]['year']){
+						d += dates[i]['year'][0];
+					}
+					if(hadDay){
+						//gonna use time of the day to differentiate dates that had this and didn't
+						d += ' 00:00:00 EST';
+					}else{
+						d += ' 12:00:00 EST';
+					}
+					var dd = new Date(d);
+					// console.log(dateType + ' = ' + dd);
+					articleProcessed['dates'][dateType] = dd;
+				}
+
+				//HISTORY DATES
+				if(articlePreProcess['history']){
+					articleProcessed['history'] = {};
+					var history = articlePreProcess['history'][0]['date'];
+					var historyLength = history.length;
+
+					for(var i = 0 ; i < historyLength ; i++){
+						var dateType = history[i]['$']['date-type'];
+						var d = '';
+						if(history[i]['month']){
+							d += history[i]['month'][0] + ' ';
+						}
+						if(history[i]['day']){
+							d += history[i]['day'][0] + ', ';
+						}
+						if(history[i]['year']){
+							d += history[i]['year'][0] + ' ';
+						}
+						var dd = new Date(d);
+						articleProcessed['history'][dateType] = dd;
+					}
+				}
+
+				// console.log(articleProcessed);
+
+				fut['return'](articleProcessed);	//this what is returned. articleProcessed = is the fixed json.
 			}
 		});
 		return fut.wait();
