@@ -13,8 +13,8 @@ Meteor.methods({
 			throw new Meteor.Error(500, 'Error 500: Not found', 'the PII is not found');
 		}
 	},
-	parseXmlAfterUpload: function(url,mongoId){
-		// console.log('..parseXmlAfterUpload : ' + mongoId + ', xml: ' + url);
+	parseXmlAfterUpload: function(url){
+		// console.log('..parseXmlAfterUpload : ' + ', xml: ' + url);
 		var fut = new future();
 		var xmlString;
 		// after uploading XML to S3, parse some info to add to DB
@@ -35,15 +35,8 @@ Meteor.methods({
 						fut['throw'](err.error);
 					}
 					if(processedArticle){
-						// Update the DB
-						Meteor.call('updateArticle', mongoId, processedArticle, function(e,dbUpdated){
-							if(e){
-								throw new Meteor.Error(500, 'Could not update DB', mongoId);
-							}
-							if(dbUpdated){
-								fut['return'](true);
-							}
-						});
+						// return process XML string
+						fut['return'](processedArticle);
 					}
 				});
 			}
