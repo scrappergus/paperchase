@@ -275,21 +275,32 @@ Meteor.methods({
 		// console.log(issueId);
 		return issueId;
 	},
-	preProcessArticle: function(articleId){
-		// Article Form: On - Article Edit, Add Article, Data Submissions
-		// console.log('..preProcessArticle = ' + articleId);
-		var article,
-			articleByPii;
-		article = articles.findOne({'_id': articleId});
-		articleByPii = articles.findOne({'ids.pii':articleId});
-		if(!article && !articleByPii){
-			article = {};
-		}
-		if(!articleId){
-			article = {};
+	preProcessArticle: function(articleId,article){
+		// Article Form: On - Article Form & Data Submissions
+		// article = parsed XML from S3 after upload
+		console.log('..preProcessArticle = ' + articleId);
+		// TODO: show conflicts between XML and DB
+		var articleByPii,
+			articleFromDb;
+
+		// For when editing an article,
+		// else after uploading XML and parsed article is passed to function
+		if(!article){
+			article = articles.findOne({'_id': articleId});
+		}else{
+			// get DB info to compare
+			articleFromDb = articles.findOne({'_id': articleId});
 		}
 
-		if(article){
+		articleByPii = articles.findOne({'ids.pii':articleId});
+		if(!article && !articleByPii){
+			article = {}; // For a new article
+		}
+		if(!articleId){
+			article = {}; // For a new article
+		}
+
+		if(article){ // For editing an existing article or after uploading XML and updating an existing article's DB info
 			// Affiliations
 			// ------------
 			// add ALL affiliations for article to author object,
@@ -301,7 +312,7 @@ Meteor.methods({
 				for(var i=0 ; i < authorsList.length; i++){
 					var current = authorsList[i]['affiliations_numbers'];
 					var authorAffiliationsEditable = [];
-					if(authorsList[i]['ids']['mongo_id']){
+					if(authorsList[i]['ids'] && authorsList[i]['ids']['mongo_id']){
 						var mongo = authorsList[i]['ids']['mongo_id'];
 					}else{
 						//for authors not saved in the db
@@ -332,6 +343,7 @@ Meteor.methods({
 			var volumesList = Meteor.call('getAllVolumes');
 			var issuesList = Meteor.call('getAllIssues');
 			if(article.issue_id){
+				console.log('issue_id = ' + article.issue_id);
 				for(var i=0 ; i<issuesList.length ; i++){
 					if(issuesList[i]['_id'] === article.issue_id){
 						issuesList[i]['selected'] = true;
@@ -399,6 +411,11 @@ Meteor.methods({
 				article['article_section_list'].push(selectObj);
 			}
 
+			if(articleFromDb){
+				article = Meteor.call('compareProcessedXmlWithDb',article,articleFromDb);
+			}
+			// console.log('--------------------article');
+			// console.log(article);
 			return article;
 		}
 	},
@@ -429,5 +446,80 @@ Meteor.methods({
 
 		}
 
+	},
+	compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
+		console.log('..compareProcessedXmlWithDb');
+		// this is for the article form and after XML is uploaded
+		// The preprocessed info came from the XML. There are things in the DB that are not in the XML.
+		// For example, if an article is advance or feature
+		// Now take the preprocessed data from the XML and compare with the data from the DB
+		// Return the DB article, but update the info we pulled from the XML if different. Because the DB has more info than the XML
+
+		dbArticle['conflicts'] = []; // will return the DB version
+		// TITLE
+		if(xmlArticle['title'] && dbArticle['title']){
+			if(xmlArticle['title'] != dbArticle['title']){
+				dbArticle['conflicts'].push({'what' : 'Title', 'conflict' : dbArticle['title']});
+				dbArticle['title'] = xmlArticle['title'];
+			}
+		}else if(dbArticle['title']){
+			// XML is missing title
+			dbArticle['conflicts'].push({'what' : 'Title', 'conflict' : dbArticle['title']});
+			dbArticle['title'] = xmlArticle['title'];
+		}
+
+		// KEYWORDS
+		if(xmlArticle['keywords'] && dbArticle['keywords']){
+			Meteor.call('conflictProcessedXmlWithDbKw', xmlArticle['keywords'], dbArticle['keywords'],function(errorKw,resultKw){
+				if(errorKw){
+					console.error(errorKw);
+				}
+				if(resultKw){
+					// they DO NOT match
+					dbArticle['conflicts'].push({'what' : 'Keywords', 'conflict' : dbArticle['keywords'].toString()});
+					dbArticle['keywords'] = xmlArticle['keywords'];
+				}
+			});
+		}
+
+		// ABSTRACT
+		if(xmlArticle['abstract'] && dbArticle['abstract']){
+			if(xmlArticle['abstract'] != dbArticle['abstract']){
+				dbArticle['conflicts'].push({'what' : 'Abstract', 'conflict' : dbArticle['abstract']});
+				dbArticle['abstract'] = xmlArticle['abstract'];
+			}
+		}else if(dbArticle['abstract']){
+			// XML is missing abstract
+			dbArticle['conflicts'].push({'what' : 'Abstract', 'conflict' : dbArticle['abstract']});
+			dbArticle['abstract'] = xmlArticle['abstract'];
+		}
+
+		// ARTICLE TYPE
+		// IDS
+		// AUTHORS
+		// PUB DATES
+		// HISTORY DATES
+		return dbArticle;
+	},
+	conflictProcessedXmlWithDbKw: function(xmlKw, dbKw){
+		console.log('..conflictProcessedXmlWithDbKw');
+		// returns true if they DO NOT match
+		// for just comparing KW between upoaded XML and DB info
+		// create temporary for comparing, because we want the admins to be able to control order of kw
+		var tempXmlKw,
+			tempDbKw;
+		tempXmlKw = xmlKw.sort();
+		tempDbKw = dbKw.sort();
+		// not same number of keywords
+		if(tempXmlKw.length != tempDbKw.length){
+			return true;
+		}else{
+			// same number of kw, but check if not matching
+			for (var kw = 0; kw < tempXmlKw.length; kw++) {
+				if (tempXmlKw[kw] !== tempDbKw[kw]){
+					return true;
+				}
+			}
+		}
 	}
 });
