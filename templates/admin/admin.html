@@ -20,7 +20,7 @@
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h3><i class="mdi mdi-alert"></i> NO ACCESS</h3>
+            <h3><i class="material-icons">&#xE002;</i> NO ACCESS</h3>
             {{> loginButtons}}
         </div>
     </div>
@@ -75,10 +75,10 @@
                     <a class="collapsible-header waves-effect waves-teal">Papers</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'adminArticlesDashboard'}}"><i class="mdi mdi-view-dashboard"></i> Dashboard</a></li>
-                            <li><a href="{{pathFor 'AdminArticlesList'}}"><i class="mdi mdi-table"></i> All</a></li>
-                            <li><a href="{{pathFor 'AdminAdvanceArticles'}}"><i class="mdi mdi-view-list"></i> Advance</a></li>
-                            <li><a href="{{pathFor 'adminArticleXmlUpload'}}"><i class="mdi mdi-upload"></i> Upload XML</a></li>
+                            <li><a href="{{pathFor 'adminArticlesDashboard'}}"><i class="material-icons">&#xE871;</i> Dashboard</a></li>
+                            <li><a href="{{pathFor 'AdminArticlesList'}}">All</a></li>
+                            <li><a href="{{pathFor 'AdminAdvanceArticles'}}">Advance</a></li>
+                            <li><a href="{{pathFor 'AdminArticleXmlUpload'}}">Upload XML</a></li>
                         </ul>
                     </div>
                 </li>
@@ -90,8 +90,8 @@
                     <a class="collapsible-header waves-effect waves-teal">Sections</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminSectionsAdd'}}"><i class="mdi mdi-plus-circle"></i> Add</a></li>
-                            <li><a href="{{pathFor 'AdminSections'}}"><i class="mdi mdi-view-list"></i> All</a></li>
+                            <li><a href="{{pathFor 'AdminSectionsAdd'}}">Add</a></li>
+                            <li><a href="{{pathFor 'AdminSections'}}">All</a></li>
                         </ul>
                     </div>
                 </li>
@@ -103,9 +103,9 @@
                     <a class="collapsible-header waves-effect waves-teal">Indexers</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="http://doi.oncotarget.com"><i class="mdi mdi-send"></i>  DOI Control</a></li>
-                            <li><a href="{{pathFor 'AdminDataSubmissions'}}"><i class="mdi mdi-send"></i>  Data Submissions Manager</a></li>
-                            <li><a href="{{pathFor 'AdminDataSubmissionsPast'}}"><i class="mdi mdi-table"></i> Past Data Submissions</a></li>
+                            <li><a href="http://doi.oncotarget.com">DOI Control</a></li>
+                            <li><a href="{{pathFor 'AdminDataSubmissions'}}">Data Submissions Manager</a></li>
+                            <li><a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Data Submissions</a></li>
                         </ul>
                     </div>
                 </li>
@@ -120,6 +120,7 @@
                             <li><a href="{{pathFor 'AdminSiteControl'}}">Site Control</a></li>
                             <li><a href="{{pathFor 'AdminEditorialBoard'}}">Editorial Board</a></li>
                             <li><a href="{{pathFor 'AdminForAuthors'}}">For Authors</a></li>
+                            <li><a href="{{pathFor 'AdminAbout'}}">About</a></li>
                         </ul>
                     </div>
                 </li>
