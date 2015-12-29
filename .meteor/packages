@@ -33,7 +33,6 @@ ejson
 spacebars
 check
 ostrio:cookies
-aldeed:collection2
 reactive-var
 email
 aslagle:reactive-table
@@ -43,10 +42,9 @@ richsilv:owl-carousel
 zimme:active-route
 bambattajb:sticky
 hitchcott:panzoom
-materialize:materialize@0.97.3
 mizzao:jquery-ui
 vojtechklos:materialnote
-dapearce:material-icons
 ostrio:iron-router-title
 tomi:upload-server
 lepozepo:s3
+materialize:materialize
