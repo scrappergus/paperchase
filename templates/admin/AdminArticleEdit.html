@@ -30,6 +30,18 @@
 <template name="AdminArticleForm">
 	{{#with article}}
 	{{>SuccessModal what='Article'}}
+	{{#if conflicts}}
+		<div class="row error-box">
+			<div class="col s12">
+				<h2>XML does not match database</h2>
+				<p>From database:</p>
+				{{#each conflicts}}
+					<h3 style="margin-bottom:0px;">{{what}}</h3>
+					<p>{{{conflict}}}</p>
+				{{/each}}
+			</div>
+		</div>
+	{{/if}}
 	<form id="article-form">
 		<div class="row">
 			<div class="col s12">
@@ -143,19 +155,23 @@
 			<legend>IDs</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="mdi mdi-plus-circle"></i></button>
+					<button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="material-icons">&#xE147;</i></button>
 				</div>
 			</div>
 			{{>AddArticleId}}
 			{{#if ids}}
 			<div class="row">
 				{{#each arrayify ids}}
-				<div class="input-field col s8 m3">
-					<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
-					<label for="article-id-{{name}}" class="active">{{name}}</label>
-				</div>
-				<div class="col s1 left-align">
-					<i id="remove-{{name}}" class="prefix remove-id mdi mdi-minus-circle red-type close-icon"></i>
+				<div class="col s9 m4">
+					<div class="row grey lighten-5">
+						<div class="input-field col s10">
+							<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
+							<label for="article-id-{{name}}" class="active">{{name}}</label>
+						</div>
+						<div class="col s2 right-align">
+							<i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
+						</div>
+					</div>
 				</div>
 				{{/each}}
 			</div>
@@ -166,7 +182,7 @@
 			<legend>Authors</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-author" class="btn btn-floating waves-effect waves-light" alt="Add Author"><i class="mdi mdi-plus-circle"></i></button>
+					<button id="add-author" class="btn btn-floating waves-effect waves-light" alt="Add Author"><i class="material-icons">&#xE147;</i></button>
 				</div>
 			</div>
 			{{#if authors}}
@@ -185,7 +201,7 @@
 			<legend>Affiliations</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation"><i class="mdi mdi-plus-circle"></i></button>
+					<button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation"><i class="material-icons">&#xE147;</i></button>
 				</div>
 			</div>
 			{{#if affiliations}}
@@ -197,7 +213,7 @@
 			<legend>Dates</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-dates" class="btn btn-floating waves-effect waves-light" alt="Add Date"><i class="mdi mdi-plus-circle"></i></button>
+					<button id="add-dates" class="btn btn-floating waves-effect waves-light" alt="Add Date"><i class="material-icons">&#xE147;</i></button>
 				</div>
 			</div>
 			{{>AddArticleDate}}
@@ -207,29 +223,35 @@
 				{{#each arrayify dates}}
 				{{#if equals name 'collection'}}
 				{{else}}
-					<div class="col s8 m3">
-						{{>AdminDateInput}}
-						<label for="{{name}}" class="active">{{name}}</label>
+				<div class="col s9 m4">
+					<div class="row grey lighten-5">
+						<div class="col s19">
+							{{>AdminDateInput}}
+							<label for="{{name}}" class="active">{{name}}</label>
+						</div>
+						<div class="col s2 right-align">
+							<i id="remove-{{name}}" class="prefix remove-dates material-icons red-type close-icon">&#xE15C;</i>
+						</div>
 					</div>
-					<div class="col s1 left-align">
-						<i id="remove-{{name}}" class="prefix remove-dates mdi mdi-minus-circle red-type close-icon"></i>
-					</div>
+				</div>
 				{{/if}}
 				{{/each}}
 			</div>
 			<div class="row">
 				{{#each arrayify dates}}
 				{{#if equals name 'collection'}}
-					<div class="col s8 m3">
-						<div class="box grey lighten-5">
-							{{>AdminDateInput}}
-							<label for="{{name}}" class="active">{{name}}</label>
-							<br/>
-							<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
-							<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
-						</div>
-						<div class="col s1 left-align">
-							<i id="remove-{{name}}" class="prefix remove-dates mdi mdi-close-circle red-type close-icon"></i>
+					<div class="col s9 m4">
+						<div class="row grey lighten-5">
+							<div class="col s10">
+								{{>AdminDateInput}}
+								<label for="{{name}}" class="active">{{name}}</label>
+								<br/>
+								<input class="mm-yy-only" type="checkbox" checked="{{#if dateDayExists value}}{{else}}checked{{/if}}" id="dates-{{name}}-no-day"/>
+								<label for="dates-{{name}}-no-day" class="font-sm">Month & Year Only</label>
+							</div>
+							<div class="col s2 right-align">
+								<i id="remove-{{name}}" class="prefix remove-dates material-icons red-type close-icon">&#xE15C;</i>
+							</div>
 						</div>
 					</div>
 				{{/if}}
@@ -242,19 +264,23 @@
 			<legend>History</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History"><i class="mdi mdi-plus-circle"></i></button>
+					<button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History"><i class="material-icons">&#xE147;</i></button>
 				</div>
 			</div>
 			{{>AddArticleHistory}}
 			{{#if history}}
 			<div class="row">
 				{{#each arrayify history}}
-					<div class="col s8 m3">
-						{{>AdminHistoryInput}}
-						<label>{{name}}</label>
-					</div>
-					<div class="col s1 left-align">
-						<i id="remove-{{name}}" class="prefix remove-history mdi mdi-close-circle red-type close-icon"></i>
+					<div class="col s9 m4">
+						<div class="row grey lighten-5">
+							<div class="col s10">
+								{{>AdminHistoryInput}}
+								<label>{{name}}</label>
+							</div>
+							<div class="col s2 right-align">
+								<i id="remove-{{name}}" class="prefix remove-history material-icons red-type close-icon">&#xE15C;</i>
+							</div>
+						</div>
 					</div>
 				{{/each}}
 			</div>
@@ -265,7 +291,7 @@
 			<legend>Keywords</legend>
 			<div class="row">
 				<div class="col s12">
-					<button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword"><i class="mdi mdi-plus-circle"></i></button>
+					<button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword"><i class="material-icons">&#xE147;</i></button>
 				</div>
 			</div>
 			{{#if keywords}}
@@ -273,13 +299,13 @@
 				<div class="col s12">
 					<ul>
 						{{#each keywords}}
-							<li class="kw-li">
+							<li class="kw-li grey lighten-5">
 								<div class="row">
 									<div class="col s11">
 										<input type="text" value="{{.}}" class="kw" />
 									</div>
 									<div class="col s1">
-										<i class="prefix remove-kw mdi mdi-close-circle red-type close-icon right"></i>
+										<i class="prefix remove-kw material-icons red-type close-icon right">&#xE15C;</i>
 									</div>
 								</div>
 							</li>
@@ -315,9 +341,9 @@
 			<ul class="authors-list">
 				{{! Do not use input-field for authors, margin looks bad}}
 				{{#each authors}}
-				<li class="author-row author-li row grey lighten-4 border-gray valign-wrapper">
+				<li class="author-row author-li row grey lighten-4 valign-wrapper">
 					<div class="col s12 m1 center-align">
-						<i class="mdi prefix mdi-swap-vertical"></i>
+						<i class="material-icons">&#xE8D5;</i>
 					</div>
 					<div class="col s12 m3">
 						<input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
@@ -337,7 +363,7 @@
 						{{/each}}
 					</div>
 					<div class="col s12 m1">
-						<i class="prefix remove-author mdi mdi-close-circle red-type close-icon right"></i>
+						<i class="prefix remove-author material-icons red-type close-icon right">&#xE15C;</i>
 					</div>
 					<div class="hide">
 						{{#each arrayify ids}}
@@ -355,16 +381,16 @@
 		<div class="col s12">
 			<ol class="affiliations-list">
 				{{#each arrayify affiliations}}
-				<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4 border-gray">
+				<li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4">
 					<div class="valign-wrapper" style="width:100%">
 						<div class="col s1 center-align ">
-							<i class="mdi prefix mdi-swap-vertical"></i>
+							<i class="material-icons">&#xE8D5;</i>
 						</div>
 						<div class="col s10">
 							<input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
 						</div>
 						<div class="col s1">
-							<i class="prefix remove-affiliation mdi mdi-close-circle red-type close-icon right"></i>
+							<i class="prefix remove-affiliation material-icons red-type close-icon right">&#xE15C;</i>
 						</div>
 					</div>
 				</li>
