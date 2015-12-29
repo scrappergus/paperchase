@@ -750,7 +750,7 @@ Template.AdminDataSubmissions.events({
 			var piiList = Meteor.dataSubmissions.getPiiList();
 
 			if(piiList.indexOf(pii) === -1){
-				$('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="zmdi zmdi-close-circle-o" data-pii="' + pii + '"></i></span>');
+				$('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="material-icons" data-pii="' + pii + '">&#xE5CD;</i></span>');
 			}else{
 				alert('PII already in list');
 			}
