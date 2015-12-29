@@ -2,7 +2,7 @@
 	{{>AdminHeader header="About"}}
 	<div class="row">
 		<div class="col s12">
-			<button id="add-about-section" class="waves-effect waves-light btn btn-add right"><i class="mdi mdi-plus-circle"></i> About Section</button>
+			<button id="add-about-section" class="waves-effect waves-light btn btn-add right"><i class="material-icons">&#xE147;</i> About Section</button>
 		</div>
 	</div>
 	{{>SuccessModal what='About Order'}}
@@ -40,7 +40,7 @@
 		{{else}}
 		<h3 id="section-{{@index}}">
 			{{{title}}}
-			<button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="mdi mdi-pencil" id="{{_id}}"></i></button>
+			<button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
 		</h3>
 		{{{content}}}
 		{{/if}}
