@@ -279,8 +279,7 @@ if (Meteor.isClient) {
 	Session.setDefault('error',false);
 	Session.setDefault('errorMessages',null);
 	Session.setDefault('articleData',null);
-	Session.setDefault('article',null);
-	Session.setDefault('article-id',null);
+	Session.setDefault('article-id',null);// Article Overview, Article Full Text, Article Purchase
 	Session.setDefault('article-assets',null);
 	Session.setDefault('article-text',null);
 	Session.setDefault('affIndex',null);
