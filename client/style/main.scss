@@ -313,6 +313,7 @@ html,body{
 	}
 	.close-icon{
 		font-size: $font-lg;
+		cursor: pointer;
 	}
 	.btn.active{
 		pointer-events: none;
@@ -367,6 +368,10 @@ html,body{
 	}
 	#close-success-msg{
 		cursor: pointer;
+	}
+	.error-box{
+		padding: $pad-lg;
+		background-color: $red-light;
 	}
 
 /* MISC ------------------------*/
