@@ -1,5 +1,12 @@
-<template name="adminArticleXmlUpload">
+<template name="AdminArticleXmlUpload">
 	{{>AdminHeader header="Article XML Upload"}}
+	{{#if uploaded}}
+		{{#if articleProcessed}}
+			{{>AdminArticleForm}}
+			{{else}}
+			{{>Progress}}
+		{{/if}}
+	{{else}}
 	<div class="row">
 		<div class="col s12">
 			<div class="xml-upload border-gray">
@@ -7,9 +14,10 @@
 			</div>
 		</div>
 	</div>
+	{{/if}}
 </template>
 
-<template name="adminArticleXmlProcess">
+<template name="AdminArticleXmlProcess">
 	{{>AdminHeader header="Article XML Process"}}
 	{{#if article}}
 	<div class="row">
