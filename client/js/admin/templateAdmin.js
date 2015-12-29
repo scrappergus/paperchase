@@ -52,8 +52,9 @@ Template.AdminAdvanceArticles.onRendered(function() {
 
 // XML Upload
 // ----------
-Template.adminArticleXmlUpload.onRendered(function () {
+Template.AdminArticleXmlUpload.onRendered(function () {
 	Session.set('fileNameXML','');
+    Session.set('article',null);
 });
 
 // Issue
