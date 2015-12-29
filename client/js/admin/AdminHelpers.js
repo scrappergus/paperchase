@@ -100,6 +100,20 @@ Template.AdminArticlesList.helpers({
 	}
 });
 
+// Upload
+// XML
+// ---------------
+Template.AdminArticleXmlUpload.helpers({
+	uploaded: function(){
+		return Session.get('xml-uploaded');
+	},
+	articleProcessed: function(){
+		return Session.get('article');
+	}
+});
+
+
+
 // Data Submission
 // ---------------
 Template.AdminDataSubmissions.helpers({
