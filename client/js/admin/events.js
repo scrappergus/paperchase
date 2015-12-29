@@ -698,7 +698,7 @@ Template.AdminArticleForm.events({
 		}
 	}
 });
-Template.adminArticleXmlProcess.events({
+Template.AdminArticleXmlUpload.events({
 	'click .update-article': function(e,t){
 		e.preventDefault();
 		var articleData = t.data['article'];
@@ -901,46 +901,6 @@ Template.AdminAdvanceArticles.events({
 	}
 })
 
-Template.adminArticleXmlProcess.events({
-	'click .update-article': function(e,t){
-		e.preventDefault();
-		var articleData = t.data['article'];
-
-		//add who UPDATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['last_update_date'] = new Date();
-		articleData['doc_updates']['last_update_by'] = Meteor.userId();
-
-		var mongoId = $(e.target).attr('data-mongoid');
-		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
-			if(error){
-				alert('ERROR: '+error.message);
-			}else{
-				Router.go('adminArticle', {_id:mongoId});
-			}
-		});
-	},
-	'click .add-article': function(e,t){
-		e.preventDefault();
-
-		var articleData = t.data['article'];
-
-		//add who CREATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['created_date'] = new Date();
-		articleData['doc_updates']['created_by'] = Meteor.userId();
-
-		Meteor.call('addArticle', articleData, function(error,_id){
-			if(error){
-				alert('ERROR: ' + error.message);
-			}else{
-				Router.go('adminArticle', {_id:_id});
-			}
-		});
-	}
-});
-
-
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
@@ -1101,7 +1061,7 @@ Template.s3Upload.events({
 		var journalShortName = journalConfig.findOne().journal.short_name;
 		// Uploader only allows 1 file at a time.
 		// TODO: versioning is based on file name, which is based on PII. Make sure filename is PII.xml
-		if(file['type'] == 'text/xml'){
+		if(file && file['type'] == 'text/xml'){
 			Meteor.call('piiFromXmlFileNameCheck',file['name'],function(error, mongoId){
 				if(error){
 					console.error(error);
@@ -1122,16 +1082,45 @@ Template.s3Upload.events({
 							Meteor.formActions.errorMessage('XML not uploaded');
 						}
 						if(res){
-							// Meteor.formActions.successMessage('XML Uploaded');
+							Meteor.formActions.successMessage('XML Uploaded');
 							xmlUrl = res.secure_url;
-							// Post processing. Parse XML and update DB
-							Meteor.call('parseXmlAfterUpload',xmlUrl, mongoId, function(e,r){
+							// console.log('xmlUrl = ' + xmlUrl);
+							Session.set('xml-uploaded',true);
+
+
+							// Meteor.call('preProcessArticle',mongoId,function(error,article){
+							// 	if(error){
+							// 		console.log('ERROR - preProcessArticle');
+							// 		console.log(error);
+							// 	}
+							// 	if(article){
+							// 		console.log('article');
+							// 		console.log(article);
+							// 		Session.set('article',article);
+							// 	}
+							// });
+
+
+							// Post processing. Parse XML from S3 then preprocess for form
+							// Now making user verify information before updating DB
+							Meteor.call('parseXmlAfterUpload',xmlUrl, function(e,parsedArticle){
 								if(e){
 									console.error(e);
-									Meteor.formActions.errorMessage('Database not updated');
+									Meteor.formActions.errorMessage('XML not parsed from server');
 								}
-								if(r){
-									Meteor.formActions.successMessage('XML Uploaded & Database Updated');
+								if(parsedArticle){
+									// Meteor.formActions.successMessage('XML Uploaded & Database Updated');
+									Meteor.call('preProcessArticle',mongoId,parsedArticle,function(ee,processedArticle){
+										if(ee){
+											console.error(e);
+											Meteor.formActions.errorMessage('Could not process article data for form');
+										}
+										if(processedArticle){
+											// console.log('article');
+											// console.log(processedArticle);
+											Session.set('article',processedArticle);
+										}
+									})
 								}
 							});
 						}
