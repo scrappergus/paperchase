@@ -12,7 +12,7 @@
 		z-index: 5000!important;
 	}
 	.btn-toolbar{
-		z-index: 1000!important; /* otherwise overlaps with modal */
+		z-index: 995!important; /* otherwise overlaps with modal */
 	}
 /* General ------------------------*/
 	.admin-container{
