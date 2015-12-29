@@ -5,6 +5,9 @@ if (Meteor.isClient) {
 
 	// Variables
 	// ----------
+	Session.setDefault('article',null);	// Article Form
+	Session.setDefault('xml-uploaded',false);// After uploading XML
+
 	// For Authors
 	Session.setDefault('showForm',false);
 	Session.setDefault('sectionId',null);
@@ -186,46 +189,8 @@ if (Meteor.isClient) {
 	// Intake
 	// xml uploading
 	Router.route('/admin/upload/xml',{
-		name: 'adminArticleXmlUpload',
-		layoutTemplate: 'Admin'
-	});
-	Router.route('/admin/article-xml/process',{
-		name: 'adminArticleXmlProcess',
+		name: 'AdminArticleXmlUpload',
 		layoutTemplate: 'Admin',
-		onBeforeAction: function(){
-			var fileNameXML = Session.get('fileNameXML');
-			if(fileNameXML === ''){
-				Router.go('adminArticleXmlIntake');
-			}else{
-				this.next();
-			}
-		},
-		waitOn: function(){
-			return[
-				Meteor.subscribe('articles'),
-				Meteor.subscribe('issues')
-			]
-		},
-		data: function(){
-			var fileName = Session.get('fileNameXML');
-			var newArticle;
-			newArticle =  ReactiveMethod.call('processXML',fileName);
-			if(newArticle){
-				//add issue_id if exists,
-				//later when INSERT into articles, check for if issue_id in doc (in meteor method addArticle)
-				var articleIssue = issues.findOne({'volume' : newArticle['volume'], 'issue': newArticle['issue']});
-				if(articleIssue){
-					newArticle['issue_id'] = articleIssue['_id'];
-				}
-
-				//TODO: better way of checking if article exists, title could change during production.
-				var articleExists = articles.findOne({'title' : newArticle['title']});
-				return {
-					article: newArticle,
-					articleExists: articleExists
-				}
-			}
-		}
 	});
 
 	// Article
