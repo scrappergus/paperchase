@@ -148,7 +148,9 @@ Meteor.methods({
 				if(articlePreProcess['abstract']){
 					var abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
 						abstract = abstract.replace('abstract>\n ', '');
-						abstract = abstract.replace('</p>\n','</p>');
+						// abstract = abstract.replace('</p>\n','</p>');
+						abstract = abstract.replace(/<\/p>/g,'');
+						abstract = abstract.replace(/<p>/g,'');
 						abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
 						abstract = Meteor.adminBatch.cleanString(abstract);
 					articleProcessed['abstract'] = abstract;
@@ -288,8 +290,10 @@ Meteor.methods({
 		if(!article){
 			article = articles.findOne({'_id': articleId});
 		}else{
-			// get DB info to compare
+			// article exists and is from the parsed XML uploaded to S3
+			// Compare XML and Database
 			articleFromDb = articles.findOne({'_id': articleId});
+			article = Meteor.call('compareProcessedXmlWithDb',article,articleFromDb);
 		}
 
 		articleByPii = articles.findOne({'ids.pii':articleId});
@@ -300,7 +304,8 @@ Meteor.methods({
 			article = {}; // For a new article
 		}
 
-		if(article){ // For editing an existing article or after uploading XML and updating an existing article's DB info
+		if(article){
+			// For editing an existing article or after uploading XML and updating an existing article's DB info
 			// Affiliations
 			// ------------
 			// add ALL affiliations for article to author object,
@@ -343,7 +348,7 @@ Meteor.methods({
 			var volumesList = Meteor.call('getAllVolumes');
 			var issuesList = Meteor.call('getAllIssues');
 			if(article.issue_id){
-				console.log('issue_id = ' + article.issue_id);
+				// console.log('issue_id = ' + article.issue_id);
 				for(var i=0 ; i<issuesList.length ; i++){
 					if(issuesList[i]['_id'] === article.issue_id){
 						issuesList[i]['selected'] = true;
@@ -411,9 +416,6 @@ Meteor.methods({
 				article['article_section_list'].push(selectObj);
 			}
 
-			if(articleFromDb){
-				article = Meteor.call('compareProcessedXmlWithDb',article,articleFromDb);
-			}
 			// console.log('--------------------article');
 			// console.log(article);
 			return article;
@@ -448,15 +450,18 @@ Meteor.methods({
 
 	},
 	compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
-		console.log('..compareProcessedXmlWithDb');
+		// console.log('..compareProcessedXmlWithDb');
 		// this is for the article form and after XML is uploaded
 		// The preprocessed info came from the XML. There are things in the DB that are not in the XML.
 		// For example, if an article is advance or feature
 		// Now take the preprocessed data from the XML and compare with the data from the DB
 		// Return the DB article, but update the info we pulled from the XML if different. Because the DB has more info than the XML
+		// Form data will be from the XML if there is a conflict
+
 
 		dbArticle['conflicts'] = []; // will return the DB version
 		// TITLE
+		// ----------
 		if(xmlArticle['title'] && dbArticle['title']){
 			if(xmlArticle['title'] != dbArticle['title']){
 				dbArticle['conflicts'].push({'what' : 'Title', 'conflict' : dbArticle['title']});
@@ -469,6 +474,7 @@ Meteor.methods({
 		}
 
 		// KEYWORDS
+		// ----------
 		if(xmlArticle['keywords'] && dbArticle['keywords']){
 			Meteor.call('conflictProcessedXmlWithDbKw', xmlArticle['keywords'], dbArticle['keywords'],function(errorKw,resultKw){
 				if(errorKw){
@@ -483,26 +489,130 @@ Meteor.methods({
 		}
 
 		// ABSTRACT
+		// ----------
 		if(xmlArticle['abstract'] && dbArticle['abstract']){
 			if(xmlArticle['abstract'] != dbArticle['abstract']){
-				dbArticle['conflicts'].push({'what' : 'Abstract', 'conflict' : dbArticle['abstract']});
+				dbArticle['conflicts'].push({'what' : 'Abstract', 'conflict' : 'Abstracts do not match' + dbArticle['abstract']});
 				dbArticle['abstract'] = xmlArticle['abstract'];
 			}
 		}else if(dbArticle['abstract']){
 			// XML is missing abstract
-			dbArticle['conflicts'].push({'what' : 'Abstract', 'conflict' : dbArticle['abstract']});
+			dbArticle['conflicts'].push({'what' : 'Abstract', 'conflict' : 'XML is missing abstract: ' + dbArticle['abstract']});
 			dbArticle['abstract'] = xmlArticle['abstract'];
 		}
 
 		// ARTICLE TYPE
+		// ----------
+		if(xmlArticle['article_type'] && dbArticle['article_type']){
+			// console.log('article type -');console.log(JSON.stringify(xmlArticle['article_type']));
+			if(xmlArticle['article_type']['short_name'] != dbArticle['article_type']['short_name']){
+				dbArticle['conflicts'].push({'what' : 'Article Type', 'conflict' : dbArticle['article_type']['name']});
+			}
+		}
+
 		// IDS
+		// ----------
+		if(xmlArticle['ids'] && dbArticle['ids']){
+			if(xmlArticle['ids'].length > dbArticle['ids'].length){
+				dbArticle['conflicts'].push({'what' : 'IDs ', 'conflict' : 'Less IDs in DB: ' + JSON.stringify(dbArticle['ids'])});
+			}else if(xmlArticle['ids'].length < dbArticle['ids'].length){
+				dbArticle['conflicts'].push({'what' : 'IDs ', 'conflict' : 'More IDs in DB: ' + JSON.stringify(dbArticle['ids'])});
+			}else{
+				// check that all IDs are the same.
+				// Also checks for possibility that the lengths are the same, but the keys are different
+				for(var id in xmlArticle['ids']){
+					// console.log(id + ' = ' +xmlArticle['ids'][id]);
+					if(xmlArticle['ids'][id] != dbArticle['ids'][id]){
+						dbArticle['conflicts'].push({
+							'what' : 'IDs not equal ',
+							'conflict' : id + ' : ' + xmlArticle['ids'][id] + ' (XML) != (Database) ' + dbArticle['ids'][id]
+						});
+					}
+				}
+			}
+		}
+
+
 		// AUTHORS
+		// ----------
+		// the order author objects are listed in the array is the order they are listed. No need to do any sorting
+
+		if(!xmlArticle['authors'] && dbArticle['authors']){
+			dbArticle['conflicts'].push({'what' : 'Authors ', 'conflict' : 'XML is missing Authors, but there are some saved in the database.'});
+		}else if(xmlArticle['authors'] && !dbArticle['authors']){
+			dbArticle['conflicts'].push({'what' : 'Authors ', 'conflict' : 'Database has no authors saved. XML has authors.'});
+			dbArticle['authors'] = xmlArticle['authors'];
+		}else if(xmlArticle['authors'].length > dbArticle['authors'].length){
+			dbArticle['conflicts'].push({'what' : 'Authors ', 'conflict' : 'XML has more authors than database'});
+			dbArticle['authors'] = xmlArticle['authors'];
+		}else if(xmlArticle['authors'].length < dbArticle['authors'].length){
+			dbArticle['conflicts'].push({'what' : 'Authors ', 'conflict' : 'Database has more authors than XML'});
+			dbArticle['authors'] = xmlArticle['authors'];
+		}else if(xmlArticle['authors'].length == dbArticle['authors'].length){
+			// Same number of authors
+			// check that authors match
+			for(var author=0 ; author < xmlArticle['authors'].length; author++){
+				// Author Name
+				// Parsing XML will return no key if node not present in XML. Database will return empty string.
+				if(xmlArticle['authors'][author]['name_last'] && dbArticle['authors'][author]['name_last'] != ''){
+					if(xmlArticle['authors'][author]['name_last'] != dbArticle['authors'][author]['name_last']){
+						dbArticle['conflicts'].push({
+							'what' : 'Author Last Name',
+							'conflict' : 'Author #' + parseInt(author + 1) + ': ' + xmlArticle['authors'][author]['name_last'] + ' (XML) !=  (Database) ' + dbArticle['authors'][author]['name_last']
+						});
+					}
+				}
+				if(xmlArticle['authors'][author]['name_middle'] && dbArticle['authors'][author]['name_middle'] != ''){
+					if(xmlArticle['authors'][author]['name_middle'] != dbArticle['authors'][author]['name_middle']){
+						dbArticle['conflicts'].push({
+							'what' : 'Author Middle Name',
+							'conflict' : 'Author #' + parseInt(author + 1) + ': ' + xmlArticle['authors'][author]['name_middle'] + ' (XML) !=  (Database) ' + dbArticle['authors'][author]['name_middle']
+						});
+					}
+				}
+				if(xmlArticle['authors'][author]['name_first'] && dbArticle['authors'][author]['name_first'] != ''){
+					if(xmlArticle['authors'][author]['name_first'] != dbArticle['authors'][author]['name_first']){
+						dbArticle['conflicts'].push({
+							'what' : 'Author First Name',
+							'conflict' : 'Author #' + parseInt(author + 1) + ': ' + xmlArticle['authors'][author]['name_first'] + ' (XML) !=  (Database) ' + dbArticle['authors'][author]['name_first']
+						});
+					}
+				}
+
+				// Author Affiliations
+				if(xmlArticle['authors'][author]['affiliations'] && dbArticle['authors'][author]['affiliations']){
+					if(xmlArticle['authors'][author]['affiliations'].toString() != dbArticle['authors'][author]['affiliations'].toString()){
+						dbArticle['conflicts'].push({
+							'what' : 'Author Affiliations',
+							'conflict' : 'Author #' + parseInt(author + 1) + ': (+1 to each affiliation, this is done in processing) ' + xmlArticle['authors'][author]['affiliations'].toString() + ' (XML) !=  (Database) ' + dbArticle['authors'][author]['affiliations'].toString()
+						});
+					}
+				}else if(xmlArticle['authors'][author]['affiliations']){
+					dbArticle['conflicts'].push({
+						'what' : 'Author Affiliations',
+						'conflict' : 'Author #' + parseInt(author + 1) + ': Database does not have affiliations'
+					});
+				}else if(dbArticle['authors'][author]['affiliations']){
+					dbArticle['conflicts'].push({
+						'what' : 'Author Affiliations',
+						'conflict' : 'Author #' + parseInt(author + 1) + ': XML does not have affiliations'
+					});
+				}
+
+				// TODO: Author IDs
+			}
+			dbArticle['authors'] = xmlArticle['authors'];
+		}
+
 		// PUB DATES
+		// ----------
 		// HISTORY DATES
+		// ----------
+
 		return dbArticle;
 	},
 	conflictProcessedXmlWithDbKw: function(xmlKw, dbKw){
-		console.log('..conflictProcessedXmlWithDbKw');
+		// console.log('..conflictProcessedXmlWithDbKw');
 		// returns true if they DO NOT match
 		// for just comparing KW between upoaded XML and DB info
 		// create temporary for comparing, because we want the admins to be able to control order of kw
