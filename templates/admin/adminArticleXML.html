@@ -4,7 +4,8 @@
 		{{#if articleProcessed}}
 			{{>AdminArticleForm}}
 			{{else}}
-			{{>Progress}}
+			{{>ErrorMessage}}
+			{{>processing}}
 		{{/if}}
 	{{else}}
 	<div class="row">
