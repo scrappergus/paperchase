@@ -20,6 +20,19 @@ Meteor.methods({
 		}
 		return pmcId;
 	},
+	getElocationIdFromPmid: function(articlePMID){
+		// console.log('..getElocationIdFromPmid: ' + articlePMID);
+		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+		var res;
+		res = Meteor.http.get(requestURL);
+
+		if(res){
+			var doi = res.data.result[articlePMID]['elocationid'];
+			if(doi){
+				return doi;
+			}
+		}
+	},
 	getDoiFromPmid: function(articlePMID){
 		console.log('..getDoiFromPmid: ' + articlePMID);
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
@@ -40,7 +53,7 @@ Meteor.methods({
 		}
 	},
 	getPubDateFromPmid: function(articlePMID){
-		console.log('..getPubDateFromPmid: ' + articlePMID);
+		// console.log('..getPubDateFromPmid: ' + articlePMID);
 		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
 		var res;
 		res = Meteor.http.get(requestURL);
