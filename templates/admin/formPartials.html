@@ -1,7 +1,7 @@
 <template name="ErrorMessages">
 	<div class="row error hide">
 		<div class="col s8 offset-s2 red lighten-4">
-			<h5>Error:</h5>
+			<h5 class="valign-wrapper"><i class="material-icons">&#xE000;</i> <span class="valign">Error</span></h5>
 			<ul>
 			{{#each errors}}
 				<li>{{.}}</li>
@@ -13,9 +13,9 @@
 </template>
 <template name="ErrorMessage">
 	<div class="row error hide">
-		<div class="col s12 red lighten-4 center-align">
-			<h5>Error</h5>
-			<div class="error-message center-align"></div>
+		<div class="col s12 red lighten-4">
+			<h5 class="valign-wrapper"><i class="valign material-icons">&#xE000;</i> <span class="valign">Error</span></h5>
+			<div class="error-message"></div>
 		</div>
 	</div>
 </template>
