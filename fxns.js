@@ -707,7 +707,7 @@ Meteor.formActions = {
 		$('.error').removeClass('hide');
 
 		// add message to template
-		$('.error-message').text(message);
+		$('.error-message').html(message);
 
 		// fixed saved button
 		if($('#fixed-save-btn').length){
