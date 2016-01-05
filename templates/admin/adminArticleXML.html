@@ -2,8 +2,13 @@
 	{{>AdminHeader header="Article XML Upload"}}
 	{{#if uploaded}}
 		{{#if articleProcessed}}
+			<div class="row"><div class="col s12">
+				<h4>Verify information from XML before updating the database</h4>
+			</div></div>
 			{{>AdminArticleForm}}
+
 			{{else}}
+
 			{{>ErrorMessage}}
 			{{>processing}}
 		{{/if}}

@@ -31,14 +31,18 @@
 	{{#with article}}
 	{{>SuccessModal what='Article'}}
 	{{#if conflicts}}
-		<div class="row error-box">
+		<div class="row error-box z-depth-1">
 			<div class="col s12">
-				<h2>XML does not match database</h2>
-				<p>When there is a conflict, the form will default to the XML</p>
-				{{#each conflicts}}
-					<h3 style="margin-bottom:0px;">{{what}}</h3>
-					<p>{{{conflict}}}</p>
-				{{/each}}
+				<h2 class="valign-wrapper" style="margin-top:0px;"><i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span></h2>
+				<ul>
+					{{#each conflicts}}
+						<li style="list-style-type:disc;">
+							<h3 style="margin-bottom:0px;">{{what}}</h3>
+							<p>{{{conflict}}}</p>
+						</li>
+					{{/each}}
+				</ul>
+				<p><i>If there is a conflict, the form inputs are from the XML.</i></p>
 			</div>
 		</div>
 	{{/if}}
@@ -322,7 +326,6 @@
 			</div>
 		</div>
 	</form>
-
 	{{/with}}
 </template>
 
