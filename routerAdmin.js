@@ -240,7 +240,7 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-	Router.route('/admin/article/overview/:_id',{
+	Router.route('/admin/article/:_id',{
 		name: 'AdminArticleOverview',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
@@ -270,7 +270,7 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-	Router.route('/admin/article/edit/:_id',{
+	Router.route('/admin/article/:_id/edit',{
 		name: 'AdminArticle',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){

@@ -728,8 +728,9 @@ Template.AdminArticleForm.events({
 					Meteor.formActions.error();
 				}
 				if(result){
-					// if(Iron.Location.get().path) // TODO: add redirect when adding an article.
-					Meteor.formActions.success();
+					Router.go('AdminArticleOverview',{_id : mongoId});
+
+					// Meteor.formActions.success();
 				}
 			});
 		}
