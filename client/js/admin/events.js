@@ -288,6 +288,9 @@ Template.adminArticlesDashboard.events({
 	}
 });
 Template.AdminArticleForm.events({
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
+	},
 	'click .mm-yy-only': function(e){
 		var keys = $(e.target).attr('id').split('-');
 		var dateKey = keys[1];
@@ -670,7 +673,9 @@ Template.AdminArticleForm.events({
 		});
 		articleUpdateObj['keywords'] = keywords;
 
-		// TODO: COMPLETE VALIDATION
+		// VALIDATION
+		// -------
+		// TODO: COMPLETE
 		// -------
 		// DATES
 			// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
@@ -678,12 +683,19 @@ Template.AdminArticleForm.events({
 		// title
 		// console.log(articleUpdateObj);
 		if(articleUpdateObj.title === ''){
-			var invalidObj = {
-				'input_class' : 'article-title',
+			invalid.push({
+				'fieldset_id' : 'article-title',
 				'message' : 'Article title is required'
-			}
-			invalid.push(invalidObj);
+			});
 		}
+		if(!articleUpdateObj.ids.pii || articleUpdateObj.ids.pii == ''){
+			invalid.push({
+				'fieldset_id' : 'ids',
+				'message' : 'PII is required'
+			});
+		}
+
+		// Submit to DB or show invalid errors
 		if(invalid.length > 0){
 			Meteor.formActions.invalid(invalid);
 		}else{
@@ -1134,7 +1146,7 @@ Template.s3Upload.events({
 							// });
 
 
-							// Post processing. Parse XML from S3 then preprocess for form
+							// Post uploading. Parse XML from S3 then preprocess for form
 							// Now making user verify information before updating DB
 							Meteor.call('parseXmlAfterUpload',xmlUrl, function(e,parsedArticle){
 								if(e){
