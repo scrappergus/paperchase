@@ -634,6 +634,10 @@ Meteor.formActions = {
 		$('.error').addClass('hide');
 		//sending and saving forms have shared class names
 
+		// invalid notification
+		$('fieldset').removeClass('invalid');
+
+
 		//fixed saved button
 		if($('#fixed-save-btn').length){
 			$('#fixed-save-btn').find('.show-save').addClass('hide');
