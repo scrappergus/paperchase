@@ -404,11 +404,11 @@ Meteor.adminArticle = {
 		if($('.add-article-' + type).hasClass('hide')){
 			// console.log('SHOW');
 			$('.add-article-' + type).removeClass('hide');
-			$('#add-' + type).html('<i class="zmdi zmdi-caret-up-circle"></i>');
+			$('#add-' + type).html('<i class="material-icons">&#xE15C;</i>');
 		}else{
 			// console.log('HIDE');
 			$('.add-article-' + type).addClass('hide');
-			$('#add-' + type).html('<i class="zmdi zmdi-plus-circle"></i>');
+			$('#add-' + type).html('<i class="material-icons">&#xE147;</i>');
 			$('#add-' + type).removeClass('expanded');
 		}
 	},
@@ -655,17 +655,15 @@ Meteor.formActions = {
 	invalid: function(invalidData){
 		var invalidString = '';
 		for(var i=0 ; i < invalidData.length ; i++){
-			$('.' + invalidData[i]['input_class']).addClass('invalid');
+			$('#' + invalidData[i]['fieldset_id']).addClass('invalid');
 			// TODO: adding invalid class does not work for WYSIWYG
 			invalidString += invalidData[i]['message'] + '    ';
 			if(i === 0){
 				$('html, body').animate({
-					scrollTop: $('.' + invalidData[i]['input_class']).position().top
+					scrollTop: $('#' + invalidData[i]['fieldset_id']).position().top
 				}, 500);
 			}
 		}
-
-		alert(invalidString);
 
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
@@ -682,6 +680,8 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-save').removeClass('hide');
 			$('#save-btn').find('.show-wait').addClass('hide');
 		}
+
+		alert(invalidString);
 	},
 	error: function(){
 		$('.save-btn').removeClass('hide');
