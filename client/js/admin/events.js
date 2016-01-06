@@ -517,7 +517,28 @@ Template.AdminArticleForm.events({
 		if(!article['ids']){
 			article['ids'] = {};
 		}
-		article['ids'][type] = '';
+		// Special handling for PII. This is required to add/update article. Need to auto increment this ID
+		if(type == 'pii'){
+			// first make sure that the PII was not removed and then added in same form session.
+			// If so, then the PII could already be assigned to the article
+			if(article['_id']){
+				// no need to call a method because when editing an article the client is subscribed to the DB for this article
+				article['ids']['pii'] = articles.findOne().ids.pii;
+			}else{
+				Meteor.call('getNewPii',function(error,newPii){
+					if(error){
+						console.error(error);
+					}
+					if(newPii){
+						article['ids']['pii'] = newPii;
+						Session.set('article',article); // need to set session also here because of timinig problem with methods on server
+					}
+				});
+			}
+		}else{
+			article['ids'][type] = '';
+		}
+
 		Session.set('article',article);
 		Meteor.adminArticle.articleListButton('ids');
 	},
