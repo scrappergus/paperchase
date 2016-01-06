@@ -186,6 +186,9 @@ Meteor.methods({
 			}
 		}
 
+		// AFFILIATIONS
+		// -----------
+
 		// PUB DATES
 		// -----------
 		articleProcessed['dates'] = {}
@@ -305,8 +308,6 @@ Meteor.methods({
 	},
 	getNewPii: function(){
 		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
-		console.log(highestPii);
-		console.log('highestPii = ' + highestPii.ids.pii);
 		return parseInt(highestPii.ids.pii + 1);
 	},
 	preProcessArticle: function(articleId,article){
