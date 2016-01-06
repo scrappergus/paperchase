@@ -182,16 +182,33 @@ Meteor.methods({
 				var name_last = authorsList[i]['name'][0]['surname'][0];
 				author['name_first'] = name_first;
 				author['name_last'] = name_last;
+				// Author affiliations
+				if(authorsList[i]['xref']){
+					console.log(JSON.stringify(authorsList[i]['xref']));
+					author['affiliations_numbers'] = [];
+					for(var authorAff=0 ; authorAff<authorsList[i]['xref'].length ; authorAff++){
+						author['affiliations_numbers'].push(parseInt(authorsList[i]['xref'][authorAff]['sup'][0]-1)); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
+					}
+				}
 				articleProcessed['authors'].push(author);
 			}
 		}
 
-		// AFFILIATIONS
+		// ALL AFFILIATIONS
 		// -----------
+		articleProcessed['affiliations'] = [];
+		if(article['aff']){
+			// console.log('------affiliations=');
+			// console.log(JSON.stringify(article['aff']));
+			for(var aff=0 ; aff < article['aff'].length ; aff++){
+				articleProcessed['affiliations'].push(article['aff'][aff]['_'])
+			}
+		}
+
 
 		// PUB DATES
 		// -----------
-		articleProcessed['dates'] = {}
+		articleProcessed['dates'] = {};
 		var dates = article['pub-date'];
 		var datesLength = dates.length;
 		for(var i = 0 ; i < datesLength ; i++){
@@ -313,7 +330,7 @@ Meteor.methods({
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
 		// article = parsed XML from S3 after upload
-		console.log('..preProcessArticle = ' + articleId);
+		// console.log('..preProcessArticle = ' + articleId);
 
 		var articleByPii,
 			articleFromDb;
@@ -353,6 +370,7 @@ Meteor.methods({
 			affs = article.affiliations;
 			if(article.authors){
 				var authorsList = article.authors;
+				// Go through each author object
 				for(var i=0 ; i < authorsList.length; i++){
 					var current = authorsList[i]['affiliations_numbers'];
 					var authorAffiliationsEditable = [];
@@ -367,12 +385,12 @@ Meteor.methods({
 						for(var a = 0 ; a < affs.length ; a++){
 							var authorAff = {
 								author_mongo_id: mongo
-							}
+							} // need the mongo ID for uniqueness, id attribute, for checkbox
 							if(current && current.indexOf(a) != -1){
 								// author already has affiliation
-								authorAff['checked'] = true;
+								authorAff['author_aff'] = 'checked';
 							}else{
-								authorAff['checked'] = false;
+								authorAff['author_aff'] = '';
 							}
 							authorAffiliationsEditable.push(authorAff);
 						}
@@ -511,17 +529,24 @@ Meteor.methods({
 		var arraysConflict = false;
 		if(typeof xmlValue == 'string' || typeof xmlValue == 'boolean' || typeof xmlValue == 'number'){
 			if(xmlValue != dbValue){
-				conflict.conflict = '<b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
+				conflict = '<b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
 			}
 		}else if(typeof xmlValue == 'object' && !Array.isArray(xmlValue)){
 			conflict = Meteor.call('compareObjectsXmlWithDb', xmlValue, dbValue);
 		}else if(typeof xmlValue == 'object' && Array.isArray(xmlValue)){
 			// Make sure it is not an array of objects. arraysDiffer cannot handle objects.
 			// if an array of objects (for ex, authors), then the order of objects in the array is important
-			arraysConflict = Meteor.call('arraysDiffer', xmlValue, dbValue);
-			if(arraysConflict){
-				conflict.conflict = ' <b>XML != Database</b><br>' + xmlValue.toString() + '<br>!=<br>' + dbValue.toString();
+			for(var arrIdx=0 ; arrIdx<xmlValue.length ; arrIdx++){
+				if(typeof xmlValue[arrIdx] == 'object'){
+					conflict = Meteor.call('compareObjectsXmlWithDb', xmlValue[arrIdx], dbValue[arrIdx]);
+				}else{
+					conflict = Meteor.call('compareValuesXmlWithDb', xmlValue[arrIdx], dbValue[arrIdx]);
+				}
 			}
+			// arraysConflict = Meteor.call('arraysDiffer', xmlValue, dbValue);
+			// if(arraysConflict){/
+				// conflict.conflict = ' <b>XML != Database</b><br>' + xmlValue.toString() + '<br>!=<br>' + dbValue.toString();
+			// }
 		}else if(typeof xmlValue == 'undefined'){
 			conflict.conflict = 'XML Value is undefined';
 		}else if(typeof dbValue == 'undefined'){
@@ -541,7 +566,7 @@ Meteor.methods({
 		// Note: There are things in dbArticle that are not in the XML. For example, if an article is advance or feature
 		// Note: Merged data will be from the XML if there is a conflict
 
-		var ignoreConflicts = ['_id','doc_updates','issue_id'];
+		var ignoreConflicts = ['_id','doc_updates','issue_id','batch'];
 
 		var merged = {};
 			merged['conflicts'] = [];

@@ -182,7 +182,6 @@
 			</div>
 		</fieldset>
 
-
 		<fieldset id="authors">
 			<legend>Authors</legend>
 			<div class="row">
@@ -367,7 +366,7 @@
 					<div class="col s12 m1">
 						{{#each affiliations_list}}
 						<p class="pad-md">
-							<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
+							<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
 							<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
 						</p>
 						{{/each}}
