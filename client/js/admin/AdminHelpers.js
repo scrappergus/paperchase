@@ -21,6 +21,11 @@ Template.AdminSiteControl.helpers({
 
 // Article
 // ---------------
+Template.AdminArticleOverview.helpers({
+	article : function(){
+		return Session.get('article');
+	}
+});
 Template.AdminArticle.helpers({
 	articleProcessed: function(){
 		// session default for article is null. If new article, empty object.
@@ -111,8 +116,6 @@ Template.AdminArticleXmlUpload.helpers({
 		return Session.get('article');
 	}
 });
-
-
 
 // Data Submission
 // ---------------
