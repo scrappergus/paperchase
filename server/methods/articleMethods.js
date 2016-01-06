@@ -303,6 +303,12 @@ Meteor.methods({
 		// console.log(issueId);
 		return issueId;
 	},
+	getNewPii: function(){
+		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
+		console.log(highestPii);
+		console.log('highestPii = ' + highestPii.ids.pii);
+		return parseInt(highestPii.ids.pii + 1);
+	},
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
 		// article = parsed XML from S3 after upload
@@ -322,12 +328,16 @@ Meteor.methods({
 			article = Meteor.call('compareProcessedXmlWithDb',article,articleFromDb);
 		}
 
+		// New or Edit article? If articleId given and PII found, then editing.
 		articleByPii = articles.findOne({'ids.pii':articleId});
-		if(!article && !articleByPii){
-			article = {}; // For a new article
-		}
 		if(!articleId){
 			article = {}; // For a new article
+			article.ids = {};
+			article.ids.pii = Meteor.call('getNewPii');
+		}else if(!article && !articleByPii){
+			article = {}; // Article by PII not found. Then act like this is a new article
+			article.ids = {};
+			article.ids.pii = Meteor.call('getNewPii');
 		}
 
 		if(article){
@@ -475,7 +485,6 @@ Meteor.methods({
 			}
 
 		}
-
 	},
 	compareObjectsXmlWithDb: function(xmlValue, dbValue){
 		// console.log('..compareObjectsXmlWithDb');
