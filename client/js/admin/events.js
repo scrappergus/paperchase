@@ -942,6 +942,20 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	// 'click #find-duplicate-pubmed': function(e){
+	// 	// For DOI project. well kinda. spin off of project.
+	// 	e.preventDefault();
+	// 	Meteor.call('findDuplicatesAtPubMed',function(error,result){
+	// 	// Meteor.call('getDateForAopArticles',function(error,result){
+	// 		if(error){
+	// 			console.error(error);
+	// 		}
+	// 		if(result){
+	// 			console.log('result');
+	// 			console.log(result);
+	// 		}
+	// 	});
+	// },
 	// 'click #aop-articles-date' : function(e){
 	//	//For DOI project
 	// 	console.log('clicked');
