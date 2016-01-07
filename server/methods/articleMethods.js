@@ -184,7 +184,6 @@ Meteor.methods({
 				author['name_last'] = name_last;
 				// Author affiliations
 				if(authorsList[i]['xref']){
-					console.log(JSON.stringify(authorsList[i]['xref']));
 					author['affiliations_numbers'] = [];
 					for(var authorAff=0 ; authorAff<authorsList[i]['xref'].length ; authorAff++){
 						author['affiliations_numbers'].push(parseInt(authorsList[i]['xref'][authorAff]['sup'][0]-1)); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
@@ -390,7 +389,7 @@ Meteor.methods({
 								// author already has affiliation
 								authorAff['author_aff'] = 'checked';
 							}else{
-								authorAff['author_aff'] = '';
+								authorAff['author_aff'] = false;
 							}
 							authorAffiliationsEditable.push(authorAff);
 						}
@@ -507,50 +506,81 @@ Meteor.methods({
 	},
 	compareObjectsXmlWithDb: function(xmlValue, dbValue){
 		// console.log('..compareObjectsXmlWithDb');
+		// console.log(JSON.stringify(xmlValue));console.log(JSON.stringify(dbValue));
+		var fut = new future();
 		var conflict = '';
-		for(var valueKey in xmlValue){
-			// make sure this value is a string
-
-			// make sure DB has this key too
-			if(dbValue[valueKey]){
+		var keyCount = 0;
+		for(var valueKey in dbValue){
+			// DB will have more keys because middle name, affiliations, etc all will be empty if they do not exist. whereas from the XML, the key will not exist
+			// make sure XML has this key too
+			if(xmlValue[valueKey]){
 				var c = Meteor.call('compareValuesXmlWithDb', valueKey, xmlValue[valueKey], dbValue[valueKey]);
 				if(c){
 					// append to other conflicts in this object
-					conflict += ' ' + valueKey + ' : ' + c.conflict;
+					conflict += valueKey + ': ' + c.conflict + ' ';
 				}
+			}else if(dbValue[valueKey] != '' && Object.keys(dbValue[valueKey]).length != 0){
+				conflict += valueKey + ': Missing in XML. In database, ';
+				if(valueKey == 'affiliations_numbers'){
+					for(var aff in dbValue[valueKey]){
+						conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
+					}
+				}else{
+					conflict += JSON.stringify(dbValue[valueKey]) + ' ';
+				}
+
+			}
+			keyCount++;
+			// console.log(keyCount);
+			if(keyCount == Object.keys(dbValue).length){
+				// console.log('CONFLICT = ');console.log(conflict);
+				fut['return'](conflict);
 			}
 		}
-		return conflict;
+		return fut.wait();
 	},
 	compareValuesXmlWithDb: function(key, xmlValue, dbValue){
-		console.log('..compareValuesXmlWithDb: ' + key);
+		// console.log('..compareValuesXmlWithDb');
+		// console.log('  ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
 		var conflict = {};
-			conflict.what = key;
+			conflict.what = key,
+			conflict.conflict = ''; //make empty so that later when looping through object the first iteration is not undefined.
 		var arraysConflict = false;
-		if(typeof xmlValue == 'string' || typeof xmlValue == 'boolean' || typeof xmlValue == 'number'){
-			if(xmlValue != dbValue){
-				conflict = '<b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
+		if(typeof xmlValue == 'string' || typeof xmlValue == 'boolean' || typeof xmlValue == 'number' || typeof xmlValue.getMonth === 'function'){ //treat dates as strings for comparisson
+			if(xmlValue === dbValue){
+			}else{
+				// keep type comparisson. affiliation numbers are checked here and are 0 based, which would be false when checking.
+				conflict.conflict = '<b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
 			}
 		}else if(typeof xmlValue == 'object' && !Array.isArray(xmlValue)){
-			conflict = Meteor.call('compareObjectsXmlWithDb', xmlValue, dbValue);
+			Meteor.call('compareObjectsXmlWithDb', xmlValue, dbValue, function(error,result){
+				if(result){
+					conflict.conflict = result;
+				}
+			});
 		}else if(typeof xmlValue == 'object' && Array.isArray(xmlValue)){
 			// Make sure it is not an array of objects. arraysDiffer cannot handle objects.
 			// if an array of objects (for ex, authors), then the order of objects in the array is important
 			for(var arrIdx=0 ; arrIdx<xmlValue.length ; arrIdx++){
 				if(typeof xmlValue[arrIdx] == 'object'){
-					conflict = Meteor.call('compareObjectsXmlWithDb', xmlValue[arrIdx], dbValue[arrIdx]);
+					Meteor.call('compareObjectsXmlWithDb', xmlValue[arrIdx], dbValue[arrIdx],function(err,res){
+						if(err){
+							console.error(err);
+						}
+						if(res){
+							conflict.conflict += '<div class="clearfix"></div>#' + parseInt(arrIdx+1) + '- ' + res;
+						}
+					});
 				}else{
-					conflict = Meteor.call('compareValuesXmlWithDb', xmlValue[arrIdx], dbValue[arrIdx]);
+					Meteor.call('compareValuesXmlWithDb', '', xmlValue[arrIdx], dbValue[arrIdx],function(e,r){
+						if(r){
+							conflict.conflict += r.conflict;
+						}
+					});
 				}
 			}
-			// arraysConflict = Meteor.call('arraysDiffer', xmlValue, dbValue);
-			// if(arraysConflict){/
-				// conflict.conflict = ' <b>XML != Database</b><br>' + xmlValue.toString() + '<br>!=<br>' + dbValue.toString();
-			// }
-		}else if(typeof xmlValue == 'undefined'){
-			conflict.conflict = 'XML Value is undefined';
-		}else if(typeof dbValue == 'undefined'){
-			conflict.conflict = 'Database Value is undefined';
+		}else{
+			//TODO add checks for missing
 		}
 
 		if(conflict.conflict){
@@ -574,15 +604,16 @@ Meteor.methods({
 
 		// since DB has more info than XML loop through its data to compare. Later double check nothing missing from merge by looping through XML data
 		for(var articleKey in dbArticle){
-			console.log(articleKey);
+			// console.log(articleKey);
 			if(dbArticle[articleKey] != '' && xmlArticle[articleKey]){ //XML will not have empty value, but DB might because of removing an article from something (ie, removing from a section)
 				merged[articleKey] = xmlArticle[articleKey]; // both versions have data for key. if there are conflicts, then form will default to XML version
-
 				// now check if there are conflicts between versions
-				var conflict = Meteor.call('compareValuesXmlWithDb', articleKey, xmlArticle[articleKey], dbArticle[articleKey]);
-				if(conflict){
-					merged['conflicts'].push(conflict);
-				}
+				Meteor.call('compareValuesXmlWithDb', articleKey, xmlArticle[articleKey], dbArticle[articleKey], function(error,conflict){
+					if(conflict){
+						merged['conflicts'].push(conflict);
+					}
+				});
+
 			}else if(!dbArticle[articleKey] && xmlArticle[articleKey]){
 				merged['conflicts'].push({
 					'what' : articleKey,
@@ -605,7 +636,7 @@ Meteor.methods({
 			}else if(articleKey == '_id'){
 				merged[articleKey] = dbArticle[articleKey];
 			}else{
-				console.log('..else');
+				// console.log('..else');
 				// the database value is empty and the XML does not have this
 			}
 
@@ -778,6 +809,7 @@ Meteor.methods({
 	},
 	arraysDiffer: function(xmlKw, dbKw){
 		// console.log('..arraysDiffer');
+		// console.log(xmlKw);conflict.log(dbKw);
 		// returns true if they DO NOT match
 		// for just comparing KW between upoaded XML and DB info
 		// create temporary for comparing, because we want the admins to be able to control order of kw
