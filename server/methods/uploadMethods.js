@@ -10,7 +10,7 @@ Meteor.methods({
 			return article._id;
 		}else{
 			// console.log('NO PII');
-			throw new Meteor.Error(500, 'Error 500: Not found', 'the PII is not found');
+			throw new Meteor.Error(500, 'Error 500: Not found', 'PII is not found in the database');
 		}
 	},
 	parseXmlAfterUpload: function(url){
@@ -29,10 +29,8 @@ Meteor.methods({
 				// console.log(xmlString);
 				Meteor.call('processXmlString',xmlString,function(err,processedArticle){
 					if(err){
-						// throw new Meteor.Error(500, 'Could not process XML - ' + url,err);
-						console.error('error');
 						console.error(err);
-						fut['throw'](err.error);
+						fut['throw'](err);
 					}
 					if(processedArticle){
 						// return process XML string
