@@ -223,6 +223,55 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
+	getTitleByPmidAtPubMed: function(pmid){
+		var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + pmid;
+		var res;
+		res = Meteor.http.get(requestURL);
+
+		if(res){
+			if(res.data.result[pmid]['pubdate']){
+				// console.log('title = ' + res.data.result[pmid]['title']);
+				return res.data.result[pmid]['title'];
+			}else{
+				console.log('NO TITLE: ' + pmid);
+			}
+		}
+	},
+	getPmidByTitleAtPubMed: function(title){
+		// console.log('..verifyPmid = ' + pmid);
+		var fut = new future();
+		var pubMedUrl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+		var resultTitle = '',
+			resultHtml,
+			doc,
+			resultTitleElement,
+			resultTitle;
+		title = title.replace('.','');
+		// after querying PubMed for ID, verify that titles match
+		console.log(pubMedUrl + encodeURIComponent(title));
+		Meteor.http.get(pubMedUrl + encodeURIComponent(title), function(error,result){
+			if(error){
+				console.log('error');
+				console.log(error);
+			}
+			if(result){
+				// title match check
+				resultHtml = result.content;
+				doc = new dom().parseFromString(resultHtml);
+				resultTitleElement = doc.getElementsByTagName('title');
+				resultTitle = resultTitleElement[0].firstChild.nodeValue.replace('.  - PubMed - NCBI\n','');
+				if(title == resultTitle){
+					// console.log('MATCH! = ' + pmid);console.log(resultTitle);
+					fut['return'](true);
+				}else{
+					// console.log('NO MATCH');
+					fut['return'](false);
+				}
+
+			}
+		});
+		return fut.wait();
+	},
 	verifyPmid: function(pmid,title){
 		// console.log('..verifyPmid = ' + pmid);
 		var fut = new future();
