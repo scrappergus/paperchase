@@ -70,5 +70,29 @@ Meteor.methods({
 				console.log(dates);
 			}
 		}
+	},
+	findDuplicatesAtPubMed: function(){
+		for(var i=0; i<oncotargetAopPmid.length ; i++){
+			console.log('--'+oncotargetAopPmid[i]);
+			Meteor.call('getTitleByPmidAtPubMed',oncotargetAopPmid[i],function(error,title){
+				if(error){
+					console.error(error);
+				}
+				if(title){
+					Meteor.call('getPmidByTitleAtPubMed',title,function(e,pmid){
+						if(e){
+							console.error(e);
+						}
+						if(pmid){
+							// console.log('..no duplicate');
+							// console.log(pmid);
+						}else{
+							console.log('DUPLICATE');
+						}
+					})
+				}
+			});
+
+		}
 	}
 });
