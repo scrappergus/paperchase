@@ -44,6 +44,9 @@ html,body{
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+	.orange-type{
+		color: $orange;
+	}
 	.red-type{
 		color: $red;
 	}
@@ -371,7 +374,7 @@ html,body{
 	}
 	.error-box{
 		padding: $pad-lg;
-		background-color: $red-light;
+		background-color: $red-lightest;
 	}
 
 /* MISC ------------------------*/

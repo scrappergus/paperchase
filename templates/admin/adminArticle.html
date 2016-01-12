@@ -50,14 +50,26 @@
 	</div>
 </template>
 
-<template name="adminArticleData">
+<template name="AdminArticlesList">
+	{{>AdminHeader header="Articles"}}
+	<div class="row">
+		<div class="col s12">
+			{{> reactiveTable collection=articles settings=settings}}
+		</div>
+	</div>
+</template>
+
+<template name="AdminArticleOverview">
 	{{#with article}}
 	<div class="row">
-		<div class="col s10">
-			{{>ArticleMeta}}
+		<div class="col s12">
+			<a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit"><i class="material-icons">&#xE3C9;</i> Edit</a>
 		</div>
-		<div class="col s2">
-			<span class="badge right">{{article_type.name}}</span>
+	</div>
+	{{>ArticleHeaderTitle}}
+	<div class="row">
+		<div class="col s12">
+			<h3>{{>AuthorsRefList}}</h3>
 		</div>
 	</div>
 	<div class="row">
@@ -99,13 +111,4 @@
 	</div>
 	{{/if}}
 	{{/with}}
-</template>
-
-<template name="AdminArticlesList">
-	{{>AdminHeader header="Articles"}}
-	<div class="row">
-		<div class="col s12">
-			{{> reactiveTable collection=articles settings=settings}}
-		</div>
-	</div>
 </template>

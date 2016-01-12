@@ -288,6 +288,9 @@ Template.adminArticlesDashboard.events({
 	}
 });
 Template.AdminArticleForm.events({
+	'click .anchor': function(e){
+		Meteor.general.scrollAnchor(e);
+	},
 	'click .mm-yy-only': function(e){
 		var keys = $(e.target).attr('id').split('-');
 		var dateKey = keys[1];
@@ -514,7 +517,28 @@ Template.AdminArticleForm.events({
 		if(!article['ids']){
 			article['ids'] = {};
 		}
-		article['ids'][type] = '';
+		// Special handling for PII. This is required to add/update article. Need to auto increment this ID
+		if(type == 'pii'){
+			// first make sure that the PII was not removed and then added in same form session.
+			// If so, then the PII could already be assigned to the article
+			if(article['_id']){
+				// no need to call a method because when editing an article the client is subscribed to the DB for this article
+				article['ids']['pii'] = articles.findOne().ids.pii;
+			}else{
+				Meteor.call('getNewPii',function(error,newPii){
+					if(error){
+						console.error(error);
+					}
+					if(newPii){
+						article['ids']['pii'] = newPii;
+						Session.set('article',article); // need to set session also here because of timinig problem with methods on server
+					}
+				});
+			}
+		}else{
+			article['ids'][type] = '';
+		}
+
 		Session.set('article',article);
 		Meteor.adminArticle.articleListButton('ids');
 	},
@@ -547,6 +571,7 @@ Template.AdminArticleForm.events({
 		articleUpdateObj.page_end; // integer
 		articleUpdateObj.article_type = {}; // Object of name, short name, nlm type
 		articleUpdateObj.section = ''; // Mongo ID
+		articleUpdateObj.pub_status = ''; // NLM status
 
 		// title
 		// -------
@@ -576,6 +601,7 @@ Template.AdminArticleForm.events({
 		articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
 		articleUpdateObj['abstract'] = articleAbstract;
 
+
 		// meta
 		// -------
 		// pages
@@ -591,14 +617,15 @@ Template.AdminArticleForm.events({
 			articleUpdateObj['issue_id'] = $('#article-issue').val();
 		}
 		// Article type
-		// if($('#article-type').val() != ''){
-			// articleUpdateObj['article_type'] = {};
-		articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
-		articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
-		articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
-		// }
+		if($('#article-type').val() != ''){
+			articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
+			articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
+			articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
+		}
 		// Article section
-		articleUpdateObj['section'] = $('#article-section').val();
+		if($('#article-section').val() != ''){
+			articleUpdateObj['section'] = $('#article-section').val();
+		}
 		// Article status
 		if($('#article-pub-status').val() != ''){
 			articleUpdateObj['pub_status'] = $('#article-pub-status').val();
@@ -642,6 +669,7 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['authors'] = authors;
 		articleUpdateObj['affiliations'] = affiliations;
 
+
 		// dates and history
 		// -------
 		$('.datepicker').each(function(i){
@@ -666,7 +694,9 @@ Template.AdminArticleForm.events({
 		});
 		articleUpdateObj['keywords'] = keywords;
 
-		// TODO: COMPLETE VALIDATION
+		// VALIDATION
+		// -------
+		// TODO: COMPLETE
 		// -------
 		// DATES
 			// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
@@ -674,12 +704,19 @@ Template.AdminArticleForm.events({
 		// title
 		// console.log(articleUpdateObj);
 		if(articleUpdateObj.title === ''){
-			var invalidObj = {
-				'input_class' : 'article-title',
+			invalid.push({
+				'fieldset_id' : 'article-title',
 				'message' : 'Article title is required'
-			}
-			invalid.push(invalidObj);
+			});
 		}
+		if(!articleUpdateObj.ids.pii || articleUpdateObj.ids.pii == ''){
+			invalid.push({
+				'fieldset_id' : 'ids',
+				'message' : 'PII is required'
+			});
+		}
+
+		// Submit to DB or show invalid errors
 		if(invalid.length > 0){
 			Meteor.formActions.invalid(invalid);
 		}else{
@@ -691,8 +728,9 @@ Template.AdminArticleForm.events({
 					Meteor.formActions.error();
 				}
 				if(result){
-					// if(Iron.Location.get().path) // TODO: add redirect when adding an article.
-					Meteor.formActions.success();
+					Router.go('AdminArticleOverview',{_id : mongoId});
+
+					// Meteor.formActions.success();
 				}
 			});
 		}
@@ -904,6 +942,49 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	// 'click #find-duplicate-pubmed': function(e){
+	// 	// For DOI project. well kinda. spin off of project.
+	// 	e.preventDefault();
+	// 	Meteor.call('findDuplicatesAtPubMed',function(error,result){
+	// 	// Meteor.call('getDateForAopArticles',function(error,result){
+	// 		if(error){
+	// 			console.error(error);
+	// 		}
+	// 		if(result){
+	// 			console.log('result');
+	// 			console.log(result);
+	// 		}
+	// 	});
+	// },
+	// 'click #aop-articles-date' : function(e){
+	//	//For DOI project
+	// 	console.log('clicked');
+	// 	e.preventDefault();
+	// 	Meteor.call('getDoiForAopArticles',function(error,result){
+	// 	// Meteor.call('getDateForAopArticles',function(error,result){
+	// 		if(error){
+	// 			console.error(error);
+	// 		}
+	// 		if(result){
+	// 			console.log('result');
+	// 			console.log(result);
+	// 		}
+	// 	});
+	// },
+	// 'click #all-articles-status' : function(e){
+	//	//For DOI project
+	// 	console.log('clicked');
+	// 	e.preventDefault();
+	// 	Meteor.call('getPubStatusForAllArticles',function(error,result){
+	// 		if(error){
+	// 			console.error(error);
+	// 		}
+	// 		if(result){
+	// 			console.log('result');
+	// 			console.log(result);
+	// 		}
+	// 	});
+	// },
 	'click #doi-update': function(e){
 		e.preventDefault();
 		// query for all PMID in journal. then check if DOI already at PubMed, if not then add to output.
@@ -1101,19 +1182,20 @@ Template.s3Upload.events({
 							// });
 
 
-							// Post processing. Parse XML from S3 then preprocess for form
+							// Post uploading. Parse XML from S3 then preprocess for form
 							// Now making user verify information before updating DB
 							Meteor.call('parseXmlAfterUpload',xmlUrl, function(e,parsedArticle){
 								if(e){
+									console.error('XML not parsed from server = ' + xmlUrl);
 									console.error(e);
-									Meteor.formActions.errorMessage('XML not parsed from server');
+									Meteor.formActions.errorMessage('<b>XML not parsed from server</b> <br/>' + e.error + '<br/>' + xmlUrl);
 								}
 								if(parsedArticle){
-									// Meteor.formActions.successMessage('XML Uploaded & Database Updated');
 									Meteor.call('preProcessArticle',mongoId,parsedArticle,function(ee,processedArticle){
 										if(ee){
-											console.error(e);
-											Meteor.formActions.errorMessage('Could not process article data for form');
+											console.error('Could not process article data for form. Mongo ID = ' + mongoId);
+											console.error(ee);
+											Meteor.formActions.errorMessage('<b>Could not process article data for form<b> <br/>' + xmlUrl);
 										}
 										if(processedArticle){
 											// console.log('article');

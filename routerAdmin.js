@@ -241,6 +241,36 @@ if (Meteor.isClient) {
 		}
 	});
 	Router.route('/admin/article/:_id',{
+		name: 'AdminArticleOverview',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				// if the mongo id search found nothing, search by pii
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
+			}
+			this.next();
+		},
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articleInfo',this.params._id)
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				Session.set('article',articles.findOne());
+			}
+		}
+	});
+	Router.route('/admin/article/:_id/edit',{
 		name: 'AdminArticle',
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){

@@ -31,30 +31,34 @@
 	{{#with article}}
 	{{>SuccessModal what='Article'}}
 	{{#if conflicts}}
-		<div class="row error-box">
+		<div class="row error-box z-depth-1">
 			<div class="col s12">
-				<h2>XML does not match database</h2>
-				<p>When there is a conflict, the form will default to the XML</p>
-				{{#each conflicts}}
-					<h3 style="margin-bottom:0px;">{{what}}</h3>
-					<p>{{{conflict}}}</p>
-				{{/each}}
+				<h2 class="valign-wrapper" style="margin-top:0px;"><i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span></h2>
+				<ul>
+					{{#each conflicts}}
+						<li style="list-style-type:disc;">
+							<h3 style="margin-bottom:0px;">{{what}}</h3>
+							<p>{{{conflict}}}</p>
+						</li>
+					{{/each}}
+				</ul>
+				<p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
 			</div>
 		</div>
 	{{/if}}
 	<form id="article-form">
-		<div class="row">
+		<div class="row border-box">
 			<div class="col s12">
 				<ul class="admin-sub-nav">
-					<li><a href="#article-title">Title</a></li>
-					<li><a href="#abstract">Abstract</a></li>
-					<li><a href="#site">Site</a></li>
-					<li><a href="#meta">Meta</a></li>
-					<li><a href="#meta">IDs</a></li>
-					<li><a href="#authors">Authors</a></li>
-					<li><a href="#dates">Dates</a></li>
-					<li><a href="#history">History</a></li>
-					<li><a href="#keywords">Keywords</a></li>
+					<li><a class="anchor" href="#article-title">Title</a></li>
+					<li><a class="anchor" href="#meta">IDs</a></li>
+					<li><a class="anchor" href="#abstract">Abstract</a></li>
+					<li><a class="anchor" href="#site">Site</a></li>
+					<li><a class="anchor" href="#meta">Meta</a></li>
+					<li><a class="anchor" href="#authors">Authors</a></li>
+					<li><a class="anchor" href="#dates">Dates</a></li>
+					<li><a class="anchor" href="#history">History</a></li>
+					<li><a class="anchor" href="#keywords">Keywords</a></li>
 				</ul>
 			</div>
 		</div>
@@ -63,12 +67,39 @@
 		{{>saving}}
 
 		<fieldset id="article-title">
-			<legend>Title</legend>
+			<legend><i class="material-icons orange-type">&#xE3E7;</i> Title</legend>
 			<div class="row">
 				<div class="input-field col s12">
 					<div class="article-title">{{{title}}}</div>
 				</div>
 			</div>
+		</fieldset>
+
+		<fieldset id="ids">
+			<legend><i class="material-icons orange-type">&#xE3E7;</i> IDs</legend>
+			<div class="row">
+				<div class="col s12">
+					<button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="material-icons">&#xE147;</i></button>
+				</div>
+			</div>
+			{{>AddArticleId}}
+			{{#if ids}}
+			<div class="row">
+				{{#each arrayify ids}}
+				<div class="col s9 m4">
+					<div class="row grey lighten-5">
+						<div class="input-field col s10">
+							<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
+							<label for="article-id-{{name}}" class="active">{{name}}</label>
+						</div>
+						<div class="col s2 right-align">
+							<i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
+						</div>
+					</div>
+				</div>
+				{{/each}}
+			</div>
+			{{/if}}
 		</fieldset>
 
 		<fieldset id="abstract">
@@ -149,33 +180,6 @@
 					<label for="article-pub-status">Pub Status</label>
 				</div>
 			</div>
-		</fieldset>
-
-		<fieldset id="ids">
-			<legend>IDs</legend>
-			<div class="row">
-				<div class="col s12">
-					<button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="material-icons">&#xE147;</i></button>
-				</div>
-			</div>
-			{{>AddArticleId}}
-			{{#if ids}}
-			<div class="row">
-				{{#each arrayify ids}}
-				<div class="col s9 m4">
-					<div class="row grey lighten-5">
-						<div class="input-field col s10">
-							<input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
-							<label for="article-id-{{name}}" class="active">{{name}}</label>
-						</div>
-						<div class="col s2 right-align">
-							<i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
-						</div>
-					</div>
-				</div>
-				{{/each}}
-			</div>
-			{{/if}}
 		</fieldset>
 
 		<fieldset id="authors">
@@ -321,8 +325,13 @@
 				{{>SaveBtn}}
 			</div>
 		</div>
-	</form>
 
+		<div class="row">
+			<div class="col s12 orange-type">
+				<i class="material-icons">&#xE3E7;</i> = Required
+			</div>
+		</div>
+	</form>
 	{{/with}}
 </template>
 
@@ -357,7 +366,7 @@
 					<div class="col s12 m1">
 						{{#each affiliations_list}}
 						<p class="pad-md">
-							<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{checked}}" />
+							<input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
 							<label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
 						</p>
 						{{/each}}
