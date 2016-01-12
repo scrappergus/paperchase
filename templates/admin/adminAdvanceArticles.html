@@ -1,5 +1,5 @@
 <template name="AdminAdvanceArticles">
-    <div class="advance-drop-spot-box " style="background:white; position:fixed; width: 160px; top: 80px; right:0px; overflow:hidden;"><ul class="advance-drop-spot"><li class="drop-placeholder">Drop article here</li></ul></div>
+    <div class="advance-drop-spot-box " style="background:white; position:fixed; width: 160px; bottom: 80px; left:0px; overflow:hidden;"><ul class="advance-drop-spot"><li class="drop-placeholder">Drop article here</li></ul></div>
     {{>AdminHeader header="Advance Articles"}}
     <div id="modal1" class="modal">
         <div class="modal-content center-align">
@@ -21,7 +21,7 @@
     </div>
     <form>
         
-	<div class="publish-advanced fixed-action-btn" style="bottom: 45px; right: 24px;">
+	<div class="publish-advanced fixed-action-btn" style="bottom: 45px; right: 24px; background: white;">
         <h5>Total count: {{total}}</h5>
         <h5>Last published:<br>{{pubdate}}<br>{{pubtime}}</h5>
 		<button class="waves-effect waves-light btn-large">
@@ -59,13 +59,13 @@
                 <ul class="article-sections">
                     {{#each sections}}
                     <li class="article-section">
-                        <h2 style="display:inline;"><i class="mdi prefix mdi-swap-vertical handle" style="cursor:pointer;"></i> {{section_name}} <span class="badge">{{section_length}} articles</span></h2> <a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a>
+                        <h2 style="display:inline;"><i class="material-icons handle" style="cursor:pointer;">&#xE8D5;</i> {{section_name}} <span class="badge">{{section_length}} articles</span></h2> <a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a>
                         <ul class="articles">
 
                             {{#each articles}}
                             <li class="article" data-article-id={{_id}}>
                                 <div class="row">
-                                    <div class="col s1"><i class="mdi prefix mdi-swap-vertical handle" style="cursor:pointer;"></i></div>
+                                    <div class="col s1"><i class="material-icons handle" style="cursor:pointer;">&#xE8D5;</i></div>
                                     <div class="col s2">{{section_name}}&nbsp;</div>
                                     <div class="col s1">{{#if dates.epub}}{{articleDate dates.epub}}{{else}}<a href="http://galaxy.oncotarget.com/admin/article/{{_id}}#dates">Set&nbsp;date</a>{{/if}}&nbsp;</div>
                                     <div class="col s1"><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">{{ids.pii}}</a>&nbsp;</div>

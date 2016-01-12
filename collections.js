@@ -34,7 +34,9 @@ sorters = new Mongo.Collection('sorters', {
           for(var a = 0 ; a < articlesList.length ; a++){
             if(articlesList[a]['_id'] === order[i]){
               var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
-              articlesList[a]['section_name'] = section['section_name'];
+              if(section !== undefined) {
+                  articlesList[a]['section_name'] = section['section_name'];
+              }
               f.articles.push(articlesList[a]);
             }
           }
@@ -621,9 +623,9 @@ if (Meteor.isServer) {
 
   // Sections
   // ----------------
-  // Meteor.publish('sections', function() {
-  //   return sections.find();
-  // });
+   Meteor.publish('sections', function() {
+     return sections.find();
+   });
   Meteor.publish('sectionsAll', function(){
     // For admin pages
     return sections.find({});

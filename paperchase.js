@@ -28,16 +28,20 @@ if (Meteor.isClient) {
 Router.configure({
 	loadingTemplate: 'Loading'
 });
-Router.onBeforeAction(function() {
-	// Site Settings
-	// ------------------------
-	Meteor.subscribe('sectionsVisible');
-	Meteor.subscribe('sortedList','sections');
-	Meteor.subscribe('journalConfig', function(){
-		Session.set('journal', journalConfig.findOne());
-	});
-	this.next();
-});
+
+if (Meteor.isClient) {
+    Router.onBeforeAction(function() {
+            // Site Settings
+            // ------------------------
+            Meteor.subscribe('sectionsVisible');
+            Meteor.subscribe('sortedList','sections');
+            Meteor.subscribe('journalConfig', function(){
+                    Session.set('journal', journalConfig.findOne());
+                });
+            this.next();
+        });
+}
+
 Meteor.startup(function () {
 	// Email
 	// ------------------------
@@ -235,9 +239,10 @@ Router.route('/get-advance-articles/',{
 				// Abstract
 				if(articleInfo.legacy_files){
 //					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
+if([2,10,12,14,16,20,21,34,35,40,36,30].indexOf(articleInfo.section_id) == -1) {
 						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
 						htmlString += '&nbsp;';
-//					}
+					}
 					// HTML
 					if(articleInfo.legacy_files.html_galley_id){
 						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]=' + articleInfo.ids.pii + '&amp;path%5B%5D=' + articleInfo.legacy_files.html_galley_id + '" class="file">HTML</a>';

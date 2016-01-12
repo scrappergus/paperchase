@@ -304,6 +304,7 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('publish'),
+				Meteor.subscribe('sections'),
 				Meteor.subscribe('advance'),
 				Meteor.subscribe('sortedList','advance')
 			]
