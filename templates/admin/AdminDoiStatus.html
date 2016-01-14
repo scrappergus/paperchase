@@ -6,6 +6,9 @@
 					<tr>
 						<th data-field="pii">PII</th>
 						<th data-field="registered">Registered</th>
+						<th data-field="deposited">Deposited</th>
+						<th data-field="indexed">Indexed</th>
+						<th data-field="article-date">Article Date</th>
 						<th data-field="doi">DOI</th>
 						<th data-field=""></th>
 						<th></th>
@@ -16,8 +19,11 @@
 					<tr>
 						<td>{{pii}}</td>
 						<td>{{registered}}</td>
+						<td>{{formatDate deposited.timestamp}}</td>
+						<td>{{formatDate indexed_date}}</td>
+						<td>{{article_date}}</td>
 						<td><a href="{{doi}}">{{doi}}</a></td>
-						<td><a href="{{pathFor 'AdminArticleOverview' _id=pii}}">Article</a></td>
+						<td><a href="{{pathFor 'AdminArticleOverview' _id=pii}}">Article Overview</a></td>
 					</tr>
 					{{/each}}
 				</tbody>
