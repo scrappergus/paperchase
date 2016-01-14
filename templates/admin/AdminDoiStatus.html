@@ -22,8 +22,8 @@
 					<tr>
 						<td>{{pii}}</td>
 						<td>{{registered}}</td>
-						<td>{{formatDate deposited.timestamp}}</td>
-						<td>{{formatDate indexed_date}}</td>
+						<td>{{#if deposited}}{{formatDate deposited.timestamp}}{{/if}}</td>
+						<td>{{#if indexed_date}}{{formatDate indexed_date}}{{/if}}</td>
 						<td>{{#if article_date}}{{dashedDateToWordDate article_date}}{{/if}}</td>
 						<td>{{#if epub}}{{articleDate epub}}{{/if}}</td>
 						<td><a href="{{doi}}">{{doi}}</a></td>
