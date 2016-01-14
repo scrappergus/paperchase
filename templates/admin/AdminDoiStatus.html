@@ -1,0 +1,28 @@
+<template name="AdminDoiStatus">
+	{{>AdminHeader header="DOI Status"}}
+	{{#if articles}}
+			<table>
+				<thead>
+					<tr>
+						<th data-field="pii">PII</th>
+						<th data-field="registered">Registered</th>
+						<th data-field="doi">DOI</th>
+						<th data-field=""></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each articles}}
+					<tr>
+						<td>{{pii}}</td>
+						<td>{{registered}}</td>
+						<td><a href="{{doi}}">{{doi}}</a></td>
+						<td><a href="{{pathFor 'AdminArticleOverview' _id=pii}}">Article</a></td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+	{{else}}
+		{{>ProcessingNotHidden}}
+	{{/if}}
+</template>
