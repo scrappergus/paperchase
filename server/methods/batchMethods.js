@@ -1,6 +1,7 @@
 Meteor.methods({
 	batchUpdateXml: function(journal,cb){
 		// crawl all journal XML and upload to S3
+		// THIS IS DEPRECATED. Moved to crawler.
 		var fut = new future();
 		console.log('..batchUpdateXml : ' + journal);
 		var xmlCrawlUrl = journalConfig.findOne().api.crawler_xml; // LIVE
