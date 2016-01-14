@@ -103,6 +103,10 @@ if (Meteor.isClient) {
 	Template.registerHelper('getDay',function(date) {
 		return moment(date).format('D');
 	});
+	Template.registerHelper('dashedDateToWordDate',function(date) {
+		var d = new Date(date);
+		return moment(d).format('MMMM D, YYYY');
+	});
 	// Equals
 	// -------
 	Template.registerHelper('equals', function (a, b) {

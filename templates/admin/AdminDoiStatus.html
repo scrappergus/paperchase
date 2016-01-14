@@ -8,8 +8,11 @@
 						<th data-field="registered">Registered</th>
 						<th data-field="deposited">Deposited</th>
 						<th data-field="indexed">Indexed</th>
+						<th data-field="article-date-doi">DOI: Article Date</th>
 						<th data-field="article-date">Article Date</th>
 						<th data-field="doi">DOI</th>
+						<th data-field="pmc">PMC</th>
+						<th data-field="pmc">PubMed</th>
 						<th data-field=""></th>
 						<th></th>
 					</tr>
@@ -21,8 +24,11 @@
 						<td>{{registered}}</td>
 						<td>{{formatDate deposited.timestamp}}</td>
 						<td>{{formatDate indexed_date}}</td>
-						<td>{{article_date}}</td>
+						<td>{{dashedDateToWordDate article_date}}</td>
+						<td>{{articleDate epub}}</td>
 						<td><a href="{{doi}}">{{doi}}</a></td>
+						<td>{{#if pmc}}<a href="http://www.ncbi.nlm.nih.gov/pmc/{{pmc}}">PMC</a>{{else}}N/A{{/if}}</td>
+						<td>{{#if pmid}}<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}">PubMed</a>{{else}}N/A{{/if}}</td>
 						<td><a href="{{pathFor 'AdminArticleOverview' _id=pii}}">Article Overview</a></td>
 					</tr>
 					{{/each}}
