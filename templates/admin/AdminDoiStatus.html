@@ -24,8 +24,8 @@
 						<td>{{registered}}</td>
 						<td>{{formatDate deposited.timestamp}}</td>
 						<td>{{formatDate indexed_date}}</td>
-						<td>{{dashedDateToWordDate article_date}}</td>
-						<td>{{articleDate epub}}</td>
+						<td>{{#if article_date}}{{dashedDateToWordDate article_date}}{{/if}}</td>
+						<td>{{#if epub}}{{articleDate epub}}{{/if}}</td>
 						<td><a href="{{doi}}">{{doi}}</a></td>
 						<td>{{#if pmc}}<a href="http://www.ncbi.nlm.nih.gov/pmc/{{pmc}}">PMC</a>{{else}}N/A{{/if}}</td>
 						<td>{{#if pmid}}<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}">PubMed</a>{{else}}N/A{{/if}}</td>
