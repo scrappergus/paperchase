@@ -18,6 +18,8 @@ if (Meteor.isClient) {
 	Session.setDefault('newsId',null);
 	// Paper sections
 	Session.setDefault('paperSectionId',null);
+	// DOI Status, articles list
+	Session.set('articles-doi-status',null);
 
 
 	Router.route('/admin', {
@@ -326,6 +328,26 @@ if (Meteor.isClient) {
 			this.next();
 		},
 	});
+
+	// DOI
+	Router.route('/admin/doi_status', {
+		name: 'AdminDoiStatus',
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Meteor.call('getAllArticlesDoiStatus',function(error,result){
+				if(error){
+					console.error('ERROR - get DOI status');
+					console.error(error);
+					throw new Meteor.Error(503, 'ERROR: DOI Registered Check', error);
+				}
+				if(result){
+					Session.set('articles-doi-status',result);
+				}
+			});
+			this.next();
+		}
+	});
+
 
 	// Advance articles
 	Router.route('/admin/articles/advance',{

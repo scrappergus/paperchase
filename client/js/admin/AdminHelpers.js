@@ -19,6 +19,14 @@ Template.AdminSiteControl.helpers({
 });
 
 
+// DOI Status
+// ---------------
+Template.AdminDoiStatus.helpers({
+	articles: function(){
+		return Session.get('articles-doi-status');
+	}
+})
+
 // Article
 // ---------------
 Template.AdminArticleOverview.helpers({
