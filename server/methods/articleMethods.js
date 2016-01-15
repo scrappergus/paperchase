@@ -163,7 +163,7 @@ Meteor.methods({
 			var idCharacters = idList[i]['_'];
 			articleProcessed['ids'][type] = idCharacters;
 		}
-		console.log(articleProcessed['ids']);
+		// console.log(articleProcessed['ids']);
 		// PII required!
 		// -----------
 		// if(!articleProcessed['ids']['pii']){
@@ -212,30 +212,35 @@ Meteor.methods({
 		var datesLength = dates.length;
 		for(var i = 0 ; i < datesLength ; i++){
 			var dateType =  dates[i]['$']['pub-type'];
-			var d = '';
-			var hadDay = false;
-			if(dates[i]['month']){
-				d += dates[i]['month'][0] + ' ';
+			if(dateType != 'collection'){
+				var d = '';
+				var hadDay = false;
+				if(dates[i]['month']){
+					d += dates[i]['month'][0] + ' ';
+				}
+				if(dates[i]['day']){
+					d += dates[i]['day'][0] + ', ';
+					// hadDay = true;
+				}else{
+					//usually for type collection
+					// REMOVED saving collection date. this will come from the issue doc
+					// d += 1 + ', ';
+				}
+				if(dates[i]['year']){
+					d += dates[i]['year'][0];
+				}
+				if(hadDay){
+					//gonna use time of the day to differentiate dates that had this and didn't
+					d += ' 00:00:00.0000';
+				}else{
+					// d += ' 12:00:00.0000';
+				}
+				d += ' 00:00:00.0000';
+				var dd = new Date(d);
+				console.log(dateType + ' = ' + dd);
+				articleProcessed['dates'][dateType] = dd;
 			}
-			if(dates[i]['day']){
-				d += dates[i]['day'][0] + ', ';
-				hadDay = true;
-			}else{
-				//usually for type collection
-				d += 1 + ', ';
-			}
-			if(dates[i]['year']){
-				d += dates[i]['year'][0];
-			}
-			if(hadDay){
-				//gonna use time of the day to differentiate dates that had this and didn't
-				d += ' 00:00:00 EST';
-			}else{
-				d += ' 12:00:00 EST';
-			}
-			var dd = new Date(d);
-			// console.log(dateType + ' = ' + dd);
-			articleProcessed['dates'][dateType] = dd;
+
 		}
 
 		// HISTORY DATES
@@ -550,7 +555,7 @@ Meteor.methods({
 			if(xmlValue === dbValue){
 			}else{
 				// keep type comparisson. affiliation numbers are checked here and are 0 based, which would be false when checking.
-				conflict.conflict = '<b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
+				conflict.conflict = '<br><b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
 			}
 		}else if(typeof xmlValue == 'object' && !Array.isArray(xmlValue)){
 			Meteor.call('compareObjectsXmlWithDb', xmlValue, dbValue, function(error,result){

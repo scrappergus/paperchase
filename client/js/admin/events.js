@@ -291,27 +291,6 @@ Template.AdminArticleForm.events({
 	'click .anchor': function(e){
 		Meteor.general.scrollAnchor(e);
 	},
-	'click .mm-yy-only': function(e){
-		var keys = $(e.target).attr('id').split('-');
-		var dateKey = keys[1];
-		var groupKey = keys[0];
-		var article = Session.get('article');
-		var datePlaceholderFormat = 'mmmm d, yyyy';
-
-		//update template data
-		var dateChange = new Date(article[groupKey][dateKey]);
-		if($(e.target).prop('checked')){
-			dateChange.setHours( 12,0,0,0 );
-			datePlaceholderFormat = 'mmmm yyyy';
-		}else{
-			dateChange.setHours( 0,0,0,0 ); //should have day
-		}
-		article[groupKey][dateKey] = dateChange;
-
-		// TODO: update date placeholder
-
-		Session.set('article',article);
-	},
 	// Authors
 	// -------
 	'change .author-affiliation':function(e,t){
