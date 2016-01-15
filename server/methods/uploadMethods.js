@@ -14,16 +14,17 @@ Meteor.methods({
 		}
 	},
 	parseXmlAfterUpload: function(url){
-		// console.log('..parseXmlAfterUpload : ' + ', xml: ' + url);
+		console.log('..parseXmlAfterUpload : ' + ', xml: ' + url);
 		var fut = new future();
 		var xmlString;
 		// after uploading XML to S3, parse some info to add to DB
 		// TODO: update DB after uploaded to S3. Look into lambda fxns on aws
 		Meteor.http.get(url,function(error, result) {
 			if(error){
-				throw new Meteor.Error(500, 'XML file not found', 'The URL did not return a file: ' + url);
-			}
-			if(result){
+				// throw new Meteor.Error(500, 'XML file not found', 'The URL did not return a file: ' + url);
+				console.error('XML file not found');
+				fut['throw'](error);
+			}else if(result){
 				// console.log(result.content);
 				xmlString = result.content.toString();
 				// console.log(xmlString);
