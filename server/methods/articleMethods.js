@@ -199,7 +199,10 @@ Meteor.methods({
 				if(authorsList[i]['xref']){
 					author['affiliations_numbers'] = [];
 					for(var authorAff=0 ; authorAff<authorsList[i]['xref'].length ; authorAff++){
-						author['affiliations_numbers'].push(parseInt(authorsList[i]['xref'][authorAff]['sup'][0]-1)); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
+						if(authorsList[i]['xref'][authorAff]['sup']
+							var affNumber = parseInt(authorsList[i]['xref'][authorAff]['sup'][0]-1)
+							author['affiliations_numbers'].push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
+						}
 					}
 				}
 				articleProcessed['authors'].push(author);
@@ -216,7 +219,6 @@ Meteor.methods({
 				articleProcessed['affiliations'].push(article['aff'][aff]['_'])
 			}
 		}
-
 
 		// PUB DATES
 		// -----------
@@ -253,7 +255,6 @@ Meteor.methods({
 				console.log(dateType + ' = ' + dd);
 				articleProcessed['dates'][dateType] = dd;
 			}
-
 		}
 
 		// HISTORY DATES
@@ -299,6 +300,7 @@ Meteor.methods({
 					// if getting XML via crawling PMC
 					// Or if uploading PMC XML
 					articlePreProcess = result['pmc-articleset']['article'];
+					// console.log('articlePreProcess = ');console.log(articlePreProcess);
 					articleProcessed = Meteor.call('articleXmlToJson', xml, articlePreProcess,function(e,r){ // pass XML string (for title) AND JSON for meta
 						if(e){
 							console.error(e);
