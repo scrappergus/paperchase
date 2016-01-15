@@ -199,7 +199,7 @@ Meteor.methods({
 				if(authorsList[i]['xref']){
 					author['affiliations_numbers'] = [];
 					for(var authorAff=0 ; authorAff<authorsList[i]['xref'].length ; authorAff++){
-						if(authorsList[i]['xref'][authorAff]['sup'])
+						if(authorsList[i]['xref'][authorAff]['sup']){
 							var affNumber = parseInt(authorsList[i]['xref'][authorAff]['sup'][0]-1);
 							author['affiliations_numbers'].push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
 						}
