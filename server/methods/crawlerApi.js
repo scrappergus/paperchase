@@ -33,6 +33,7 @@ Meteor.methods({
 		// console.log('..getAllArticlesDoiStatus');
 		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalConfig.findOne().journal.short_name;
+		var registerURL =  journalConfig.findOne().api.doi + journalConfig.findOne().journal.short_name;
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
 				console.error(error);
@@ -55,6 +56,7 @@ Meteor.methods({
 						if(articleInfo['ids']['pmid']){
 							articlesDoiList[a]['pmid'] = articleInfo['ids']['pmid'];
 						}
+						articlesDoiList[a].doiRegisterUrl = registerURL;
 					}else{
 						console.log('DB Missing PII ' + pii);
 					}
