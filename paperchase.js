@@ -28,16 +28,18 @@ if (Meteor.isClient) {
 Router.configure({
 	loadingTemplate: 'Loading'
 });
-Router.onBeforeAction(function() {
-	// Site Settings
-	// ------------------------
-	Meteor.subscribe('sectionsVisible');
-	Meteor.subscribe('sortedList','sections');
-	Meteor.subscribe('journalConfig', function(){
-		Session.set('journal', journalConfig.findOne());
+if (Meteor.isClient) {
+	Router.onBeforeAction(function() {
+		// Site Settings
+		// ------------------------
+		Meteor.subscribe('sectionsVisible');
+		Meteor.subscribe('sortedList','sections');
+		Meteor.subscribe('journalConfig', function(){
+			Session.set('journal', journalConfig.findOne());
+		});
+		this.next();
 	});
-	this.next();
-});
+}
 Meteor.startup(function () {
 	// Email
 	// ------------------------

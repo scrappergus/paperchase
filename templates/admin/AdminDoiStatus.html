@@ -1,5 +1,10 @@
 <template name="AdminDoiStatus">
 	{{>AdminHeader header="DOI Status"}}
+	<div class="row">
+		<div class="col s12">
+			<a id="download-doi-status-csv" href="{{pathFor 'doiStatusCsv'}}" class="btn">Download CSV</a>
+		</div>
+	</div>
 	{{#if articles}}
 			<table>
 				<thead>
@@ -12,7 +17,7 @@
 						<th data-field="article-date">Article Date</th>
 						<th data-field="doi">DOI</th>
 						<th data-field="pmc">PMC</th>
-						<th data-field="pmc">PubMed</th>
+						<th data-field="pubmed">PubMed</th>
 						<th data-field=""></th>
 						<th></th>
 					</tr>

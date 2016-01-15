@@ -1,8 +1,38 @@
 /*
  ADMIN ROUTES
 */
-if (Meteor.isClient) {
 
+// Download
+Router.route('/admin/doi_status_csv/',{
+	name: 'doiStatusCsv',
+	where: 'server',
+	action: function(){
+		var filename = journalConfig.findOne().journal.short_name + '_doi_status.csv';
+		var csvData = 'PII,Registered,Deposited,Indexed, DOI Article Date,Article Date, DOI, PMC ID, PubMed ID' + '\n';
+		Meteor.call('getAllArticlesDoiStatus',function(error,result){
+			if(error){
+				console.error('ERROR - get DOI status');
+				console.error(error);
+				throw new Meteor.Error(503, 'ERROR: DOI Registered Check', error);
+			}else if(result){
+				for(var i=0 ; i< result.length ; i++){
+					var epub = moment(result[i]['epub']).format('YYYY-MM-D');
+					var deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
+					var indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
+					csvData += result[i]['pii'] + ',' + result[i]['registered'] + ',' + deposited + ',' + indexed + ',' + result[i]['article_date'] + ',' + epub + ',' + result[i]['doi'] + ',' + result[i]['pmc'] + ',' + result[i]['pmid'] + '\n';
+				}
+			}
+		});
+		this.response.writeHead(200, {
+		  'Content-Type': 'text/csv',
+		  'Content-Disposition': 'attachment; filename=' + filename
+		});
+		this.response.write(csvData);
+		this.response.end();
+	}
+});
+
+if (Meteor.isClient) {
 	// Variables
 	// ----------
 	Session.setDefault('article',null);	// Article Form
