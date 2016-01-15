@@ -342,6 +342,10 @@ Meteor.methods({
 		// console.log(issueId);
 		return issueId;
 	},
+	getSavedPii: function(mongoId){
+		var art = articles.findOne({_id : mongoId}, {ids:1});
+		return art.ids.pii;
+	},
 	getNewPii: function(){
 		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
 		return parseInt(highestPii.ids.pii + 1);

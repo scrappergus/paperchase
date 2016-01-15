@@ -500,17 +500,25 @@ Template.AdminArticleForm.events({
 		if(type == 'pii'){
 			// first make sure that the PII was not removed and then added in same form session.
 			// If so, then the PII could already be assigned to the article
-			if(article['_id']){
-				// no need to call a method because when editing an article the client is subscribed to the DB for this article
-				article['ids']['pii'] = articles.findOne().ids.pii;
-			}else{
+			if(!article['_id']){
 				Meteor.call('getNewPii',function(error,newPii){
 					if(error){
 						console.error(error);
-					}
-					if(newPii){
+					}else if(newPii){
 						article['ids']['pii'] = newPii;
 						Session.set('article',article); // need to set session also here because of timinig problem with methods on server
+					}
+				});
+			}else{
+				Meteor.call('getSavedPii',article['_id'],function(error,savedPii){
+					if(error){
+						console.error('Get PII', error);
+					}else if(savedPii){
+						// console.log(savedPii);
+						article['ids'][type] = savedPii;
+						Session.set('article',article);// need to set session also here because of timinig problem with methods on server
+					}else{
+						article['ids'][type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
 					}
 				});
 			}
@@ -522,7 +530,9 @@ Template.AdminArticleForm.events({
 		Meteor.adminArticle.articleListButton('ids');
 	},
 	'click .remove-id': function(e){
-		Meteor.adminArticle.removeKeyFromArticleObject('ids',e);
+		if($(e.target).attr('id').replace('remove-','') != 'pii'){
+			Meteor.adminArticle.removeKeyFromArticleObject('ids',e);
+		}
 	},
 	// Submit
 	// -------
@@ -1178,7 +1188,6 @@ Template.s3Upload.events({
 						if(res){
 							Meteor.formActions.successMessage('XML Uploaded');
 							xmlUrl = res.secure_url;
-							// console.log('xmlUrl = ' + xmlUrl);
 							Session.set('xml-uploaded',true);
 
 
