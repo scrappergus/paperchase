@@ -942,6 +942,30 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #process-all-xml' : function(e){
+		e.preventDefault();
+		Meteor.call('batchProcessXml',function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		})
+	},
+	// 'click #get-all-pmid': function(e){
+	// 	// match PMID by title
+	// 	e.preventDefault();
+	// 	Meteor.call('findDuplicatesAtPubMed',function(error,result){
+	// 	// Meteor.call('getDateForAopArticles',function(error,result){
+	// 		if(error){
+	// 			console.error(error);
+	// 		}
+	// 		if(result){
+	// 			console.log('result');
+	// 			console.log(result);
+	// 		}
+	// 	});
+	// },
 	// 'click #find-duplicate-pubmed': function(e){
 	// 	// For DOI project. well kinda. spin off of project.
 	// 	e.preventDefault();
