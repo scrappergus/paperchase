@@ -119,10 +119,18 @@ Meteor.methods({
 		articleProcessed['title'] = titleTitle;
 
 
-		articleProcessed['volume'] = parseInt(article['volume'][0]);
-		articleProcessed['issue'] = parseInt(article['issue'][0]);
-		articleProcessed['page_start'] = parseInt(article['fpage'][0]);
-		articleProcessed['page_end'] = parseInt(article['lpage'][0]);
+		if(article['volume']){
+			articleProcessed['volume'] = parseInt(article['volume'][0]);
+		}
+		if(article['issue']){
+			articleProcessed['issue'] = parseInt(article['issue'][0]);
+		}
+		if(article['fpage']){
+			articleProcessed['page_start'] = parseInt(article['fpage'][0]);
+		}
+		if(article['lpage']){
+			articleProcessed['page_end'] = parseInt(article['lpage'][0]);
+		}
 
 		// KEYWORDS
 		// -----------
@@ -178,10 +186,15 @@ Meteor.methods({
 			var authorsListLength = authorsList.length;
 			for(var i = 0 ; i < authorsListLength ; i++){
 				var author = {};
-				var name_first = authorsList[i]['name'][0]['given-names'][0];
-				var name_last = authorsList[i]['name'][0]['surname'][0];
-				author['name_first'] = name_first;
-				author['name_last'] = name_last;
+				if(authorsList[i]['name']){
+					if(authorsList[i]['name'][0]['given-names']){
+						author['name_first'] = authorsList[i]['name'][0]['given-names'][0];
+					}
+					if(authorsList[i]['name'][0]['surname'][0]){
+						author['name_last'] = authorsList[i]['name'][0]['surname'][0];
+					}
+				}
+
 				// Author affiliations
 				if(authorsList[i]['xref']){
 					author['affiliations_numbers'] = [];
