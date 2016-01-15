@@ -104,13 +104,15 @@ if (Meteor.isClient) {
 		return moment(date).format('D');
 	});
 	Template.registerHelper('dashedDateToWordDate',function(date) {
-		// console.log('----- fix: ' + date);
-		// date = date + ' 00:00:00';
-		// var d = new Date(date);
-
-		// console.log('dashedDateToWordDate: ' + d + ' = ' + date + ' = ' +  moment(d).format('MMMM D, YYYY'));
-		// return moment(d).format('MMMM D, YYYY');
-		return date;
+		var datePieces = date.split('-');
+		for(var piece=0 ; piece < datePieces.length ; piece++){
+			if(datePieces[piece].length == 1){
+				datePieces[piece] = '0' + datePieces[piece];
+			}
+		}
+		dateFixed = datePieces.join('-');
+		var d = new Date(dateFixed + 'T06:00:00.000Z');
+		return moment(d).format('MMMM D, YYYY');
 	});
 	// Equals
 	// -------
