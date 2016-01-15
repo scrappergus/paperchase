@@ -3,3 +3,5 @@
 mup.json
 public/images/covers/
 settings.json
+
+templates/admin/adminDashboard.html
