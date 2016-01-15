@@ -942,6 +942,16 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #initiate-articles' : function(e){
+		e.preventDefault();
+		Meteor.call('intiateArticleCollection',function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		})
+	},
 	'click #process-all-xml' : function(e){
 		e.preventDefault();
 		Meteor.call('batchProcessXml',function(e,r){

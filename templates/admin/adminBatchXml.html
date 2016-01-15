@@ -6,6 +6,30 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
+                            <h3>Initiate Articles Collection</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <button id="initiate-articles" class="btn waves-effect waves-light red lighten-3">Initiate</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <!-- for getting PMID, PII, title into MongoLab DB. Crawler sends JSON to Paperchase to insert so that _id has same type. Via shell _id is Object. Via Mongo default is strig. -->
+                            <p>This will use the crawler to get the PII/PMID/Title pairs. Then via paperchase, the articles collection is created. The PII/Title comes from the production MySQL DB. The PMID comes from PubMed, via matching titles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
                             <h3>Process ALL Articles XML</h3>
                         </div>
                     </div>
