@@ -14,8 +14,7 @@ Meteor.methods({
 					//INSERT into authors
 					Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
 						if(error){
-							console.log('ERROR');
-							console.log(error);
+							console.error('ERROR',error);
 						}else{
 							authorsList[author]['ids']['mongo_id'] = mongo_id;
 						}
@@ -99,7 +98,7 @@ Meteor.methods({
 					}
 				});
 			}else{
-				console.log('file not found');
+				console.error('file not found');
 			}
 		});
 		return fut.wait();
@@ -164,11 +163,12 @@ Meteor.methods({
 			var idCharacters = idList[i]['_'];
 			articleProcessed['ids'][type] = idCharacters;
 		}
+		console.log(articleProcessed['ids']);
 		// PII required!
 		// -----------
-		if(!articleProcessed['ids']['pii']){
-			throw new Meteor.Error('XML is missing PII.');
-		}
+		// if(!articleProcessed['ids']['pii']){
+		// 	throw new Meteor.Error('XML is missing PII.');
+		// }
 
 		// AUTHORS
 		// -----------
