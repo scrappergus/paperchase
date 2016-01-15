@@ -1,4 +1,44 @@
 Meteor.methods({
+	batchProcessXml: function(){
+		console.log('..batchProcessXml');
+		var journalInfo = journalConfig.findOne();
+		var journalShortName = journalInfo.journal.short_name;
+		var articlesList = articles.find().fetch();
+		// console.log(articlesList);
+		var missingPii = [];
+		var xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/'
+		for(var a=0; a<articlesList.length ; a++){
+			// console.log('--' + a);
+			if(articlesList[a]['ids']['pii']){
+				console.log('--' + articlesList[a]['ids']['pii']);
+				// get XML and update DB
+				var articleXML = xmlUrl + articlesList[a]['ids']['pii'] + '.xml';
+				Meteor.call('parseXmlAfterUpload',articleXML, function(error,result){
+					if(error){
+						console.error('parseXmlAfterUpload',error);
+					}else{
+						// maintain PII when batch updating via XML
+						var articleInfo = articles.findOne(articlesList[a]['_id']);
+						if(articleInfo.ids && articleInfo.ids.pii){
+							result.ids.pii = articleInfo.ids.pii;
+						}
+						Meteor.call('updateArticle',articlesList[a]['_id'], result,function(articleUpdateError,articleUpdate){
+							if(articleUpdateError){
+								console.error('Could not update article doc: ' + articlesList[a]['_id'], articleUpdateError);
+							}else{
+								console.log(articlesList[a]['_id'] + ' Updated');
+							}
+						})
+					}
+				});
+			}else{
+				missingPii.push(articlesList[a]['_id']);
+			}
+			if(parseInt(articlesList.length-1) == a){
+				console.log('MISSING PII',missingPii);
+			}
+		}
+	},
 	batchUpdateXml: function(journal,cb){
 		// crawl all journal XML and upload to S3
 		// THIS IS DEPRECATED. Moved to crawler.
