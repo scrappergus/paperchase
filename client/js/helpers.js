@@ -44,6 +44,10 @@ if (Meteor.isClient) {
 	});
 	// Dates
 	// -----
+	Template.registerHelper('timestamp', function(date) {
+		date = new Date(date);
+		return date.getTime();
+	});
 	Template.registerHelper('dateDayExists',function(date){
 		//if the date object should have a day value associated with it
 		if(moment(date).format('HH') == 00){
