@@ -104,8 +104,13 @@ if (Meteor.isClient) {
 		return moment(date).format('D');
 	});
 	Template.registerHelper('dashedDateToWordDate',function(date) {
-		var d = new Date(date);
-		return moment(d).format('MMMM D, YYYY');
+		// console.log('----- fix: ' + date);
+		// date = date + ' 00:00:00';
+		// var d = new Date(date);
+
+		// console.log('dashedDateToWordDate: ' + d + ' = ' + date + ' = ' +  moment(d).format('MMMM D, YYYY'));
+		// return moment(d).format('MMMM D, YYYY');
+		return date;
 	});
 	// Equals
 	// -------
