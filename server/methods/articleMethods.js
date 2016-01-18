@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		// console.log('--updateArticle |  mongoId = ' + mongoId);
+		console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 		if(!mongoId){
 			// New Article
@@ -252,7 +252,7 @@ Meteor.methods({
 				}
 				d += ' 00:00:00.0000';
 				var dd = new Date(d);
-				console.log(dateType + ' = ' + dd);
+				// console.log(dateType + ' = ' + dd);
 				articleProcessed['dates'][dateType] = dd;
 			}
 		}
@@ -544,10 +544,10 @@ Meteor.methods({
 					var c = Meteor.call('compareValuesXmlWithDb', valueKey, xmlValue[valueKey], dbValue[valueKey]);
 					if(c){
 						// append to other conflicts in this object
-						conflict += valueKey + ': ' + c.conflict + ' ';
+						conflict += '<br/>' + valueKey + ': ' + c.conflict + ' ';
 					}
 				}else if(dbValue[valueKey] != '' && Object.keys(dbValue[valueKey]).length != 0){
-					conflict += valueKey + ': Missing in XML. In database, ';
+					conflict += '<br/>' + valueKey + ': Missing in XML. In database.';
 					if(valueKey == 'affiliations_numbers'){
 						for(var aff in dbValue[valueKey]){
 							conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
@@ -567,7 +567,7 @@ Meteor.methods({
 		}else{
 			// Object is empty in DB.
 			for(var valueKey in xmlValue){
-				conflict += valueKey + ': Missing in database. In XML, ';
+				conflict += '<br/>' + valueKey + ': Missing in database. In XML.';
 				keyCount++;
 				// console.log(keyCount);
 				if(keyCount == Object.keys(xmlValue).length){
@@ -630,7 +630,7 @@ Meteor.methods({
 		}
 	},
 	compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
-		console.log('..compareProcessedXmlWithDb');
+		// console.log('..compareProcessedXmlWithDb');
 		// Take the XML data and compare with the data from the DB
 		// this is for the article form and after XML is uploaded
 		// Note: There are things in dbArticle that are not in the XML. For example, if an article is advance or feature

@@ -28,7 +28,7 @@ Meteor.methods({
 		}
 	},
 	parseXmlAfterUpload: function(url){
-		console.log('..parseXmlAfterUpload : ' + ', xml: ' + url);
+		// console.log('..parseXmlAfterUpload : ' + ', xml: ' + url);
 		var fut = new future();
 		var xmlString;
 		// after uploading XML to S3, parse some info to add to DB
