@@ -179,5 +179,30 @@ Meteor.methods({
 			}
 		});
 		return fut.wait();
+	},
+	allArticlesAddPaperchaseId: function(){
+		var articlesList = articles.find().fetch();
+		for(var a=0 ; a<articlesList.length ; a++){
+
+			if(articlesList[a]['ids']['pii']){
+				articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
+			}else if(articlesList[a]['ids']['doi']){
+				articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['doi'];
+			}
+
+			if(articlesList[a]['ids']['paperchase_id']){
+				Meteor.call('updateArticle',articlesList[a]['_id'],{'ids' : articlesList[a]['ids']},function(e,r){
+					if(e){
+						console.error('ERROR. Update Article',e);
+					}else if(r){
+						console.log('UPDATED');
+					}
+				});
+			}else{
+				console.log('..missing IDS. Cannot add paperchase ID: ' + articlesList[a]['_id']);
+			}
+			// console.log(articlesList[a]['ids']);
+
+		}
 	}
 });

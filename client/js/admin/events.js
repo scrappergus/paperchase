@@ -665,10 +665,6 @@ Template.AdminArticleForm.events({
 			var key = $(this).attr('id');
 			if($(this).hasClass('date')){
 				dates[key] = new Date($(this).val());
-				// check if day included
-				if($('#dates-' + key + '-no-day').prop('checked')){
-					dates[key].setHours(12,0,0,0)
-				}
 			}else if($(this).hasClass('history')){
 				history[key] = new Date($(this).val());
 			}
@@ -685,25 +681,20 @@ Template.AdminArticleForm.events({
 
 		// VALIDATION
 		// -------
-		// TODO: COMPLETE
-		// -------
-		// DATES
-			// Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
-			// collection - Any article with a specified @pub-type="collection" must also have one <pub-date> with @pub-type="epub". Epub dates must contain a <day>, <month>, and <year>.
 		// title
-		// console.log(articleUpdateObj);
 		if(articleUpdateObj.title === ''){
 			invalid.push({
 				'fieldset_id' : 'article-title',
 				'message' : 'Article title is required'
 			});
 		}
-		if(!articleUpdateObj.ids.pii || articleUpdateObj.ids.pii == ''){
-			invalid.push({
-				'fieldset_id' : 'ids',
-				'message' : 'PII is required'
-			});
-		}
+		// PII
+		// if(!articleUpdateObj.ids.pii || articleUpdateObj.ids.pii == ''){
+		// 	invalid.push({
+		// 		'fieldset_id' : 'ids',
+		// 		'message' : 'PII is required'
+		// 	});
+		// }
 
 		// Submit to DB or show invalid errors
 		if(invalid.length > 0){
@@ -711,12 +702,16 @@ Template.AdminArticleForm.events({
 		}else{
 			// save to db
 			// -------
+			// console.log(articleUpdateObj);
 			Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 				if(error){
 					alert(error.message);
 					Meteor.formActions.error();
 				}
 				if(result){
+					if(!mongoId){
+						mongoId = result;
+					}
 					Router.go('AdminArticleOverview',{_id : mongoId});
 
 					// Meteor.formActions.success();
@@ -931,6 +926,16 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #add-paperchase-id' : function(e){
+		e.preventDefault();
+		Meteor.call('allArticlesAddPaperchaseId',function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		})
+	},
 	'click #initiate-articles' : function(e){
 		e.preventDefault();
 		Meteor.call('intiateArticleCollection',function(e,r){
@@ -1200,20 +1205,6 @@ Template.s3Upload.events({
 							xmlUrl = res.secure_url;
 							Session.set('xml-uploaded',true);
 
-
-							// Meteor.call('preProcessArticle',mongoId,function(error,article){
-							// 	if(error){
-							// 		console.log('ERROR - preProcessArticle');
-							// 		console.log(error);
-							// 	}
-							// 	if(article){
-							// 		console.log('article');
-							// 		console.log(article);
-							// 		Session.set('article',article);
-							// 	}
-							// });
-
-
 							// Post uploading. Parse XML from S3 then preprocess for form
 							// Now making user verify information before updating DB
 							Meteor.call('parseXmlAfterUpload',xmlUrl, function(e,parsedArticle){
@@ -1221,20 +1212,20 @@ Template.s3Upload.events({
 									console.error('XML not parsed from server = ' + xmlUrl);
 									console.error(e);
 									Meteor.formActions.errorMessage('<b>XML not parsed from server</b> <br/>' + e.error + '<br/>' + xmlUrl);
-								}
-								if(parsedArticle){
+								}else if(parsedArticle){
+									// console.log('parsedArticle=',parsedArticle);
 									Meteor.call('preProcessArticle',mongoId,parsedArticle,function(ee,processedArticle){
 										if(ee){
 											console.error('Could not process article data for form. Mongo ID = ' + mongoId);
 											console.error(ee);
 											Meteor.formActions.errorMessage('<b>Could not process article data for form<b> <br/>' + xmlUrl);
-										}
-										if(processedArticle){
-											// console.log('article');
-											// console.log(processedArticle);
+										}else if(processedArticle){
+											// console.log('processedArticle',processedArticle);
 											Session.set('article',processedArticle);
 										}
-									})
+									});
+								}else{
+									console.error('Could not process article data for form. Mongo ID = ' + mongoId);
 								}
 							});
 						}
