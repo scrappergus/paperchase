@@ -67,5 +67,18 @@ Meteor.methods({
 		});
 
 		return fut.wait();
+	},
+	getAllArticlesPmcXml: function(){
+		console.log('..getAllArticlesPmcXml');
+		var requestURL =  journalConfig.findOne().api.crawler + '/crawl_xml/' + journalConfig.findOne().journal.short_name;
+		Meteor.http.get(requestURL, function(error,result){
+			if(error){
+				console.error(error);
+				fut['throw'](error);
+				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
+			}else if(result){
+				console.log('All XML Saved',result);
+			}
+		});
 	}
 });

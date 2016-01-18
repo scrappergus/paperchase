@@ -941,6 +941,16 @@ Template.AdminBatchXml.events({
 			}
 		})
 	},
+	'click #get-articles-pmc-xml' : function(e){
+		e.preventDefault();
+		Meteor.call('getAllArticlesPmcXml',function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		})
+	},
 	'click #process-all-xml' : function(e){
 		e.preventDefault();
 		Meteor.call('batchProcessXml',function(e,r){
