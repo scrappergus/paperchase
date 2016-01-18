@@ -229,33 +229,23 @@ Meteor.methods({
 			var dateType =  dates[i]['$']['pub-type'];
 			if(dateType != 'collection'){
 				var d = '';
-				var hadDay = false;
 				if(dates[i]['month']){
 					d += dates[i]['month'][0] + ' ';
 				}
 				if(dates[i]['day']){
 					d += dates[i]['day'][0] + ', ';
 					// hadDay = true;
-				}else{
-					//usually for type collection
-					// REMOVED saving collection date. this will come from the issue doc
-					// d += 1 + ', ';
 				}
 				if(dates[i]['year']){
 					d += dates[i]['year'][0];
 				}
-				if(hadDay){
-					//gonna use time of the day to differentiate dates that had this and didn't
-					d += ' 00:00:00.0000';
-				}else{
-					// d += ' 12:00:00.0000';
-				}
-				d += ' 00:00:00.0000';
+				d += ' 06:00:00.0000';
 				var dd = new Date(d);
 				// console.log(dateType + ' = ' + dd);
 				articleProcessed['dates'][dateType] = dd;
 			}
 		}
+		// console.log(articleProcessed['dates']);
 
 		// HISTORY DATES
 		// -----------

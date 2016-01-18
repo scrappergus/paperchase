@@ -1,6 +1,6 @@
 Meteor.methods({
 	fileExistsOnS3: function(url){
-		console.log('..fileExistsOnS3');
+		console.log('..fileExistsOnS3: ' + url);
 		var fut = new future();
 		Meteor.http.get(url,function(error, result) {
 			if(error){

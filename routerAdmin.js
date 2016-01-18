@@ -16,10 +16,22 @@ Router.route('/admin/doi_status_csv/',{
 				throw new Meteor.Error(503, 'ERROR: DOI Registered Check', error);
 			}else if(result){
 				for(var i=0 ; i< result.length ; i++){
-					var epub = moment(result[i]['epub']).format('YYYY-MM-D');
-					var deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
-					var indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
-					csvData += result[i]['pii'] + ',' + result[i]['registered'] + ',' + deposited + ',' + indexed + ',' + result[i]['article_date'] + ',' + epub + ',' + result[i]['doi'] + ',' + result[i]['pmc'] + ',' + result[i]['pmid'] + '\n';
+					var epub,
+						deposited,
+						indexed,
+						articleDate,
+						doi,
+						pmc,
+						pmid;
+
+					epub = moment(result[i]['epub']).format('YYYY-MM-D');
+					deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
+					indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
+					articleDate = result[i]['article_date'];
+					doi = result[i]['doi'];
+					pmc = result[i]['pmc'];
+					pmid = result[i]['pmid'];
+					csvData += result[i]['pii'] + ',' + result[i]['registered'] + ',' + deposited + ',' + indexed + ',' + articleDate + ',' + epub + ',' + doi + ',' + pmc + ',' + pmid + '\n';
 				}
 			}
 		});
