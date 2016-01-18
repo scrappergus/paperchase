@@ -9,7 +9,6 @@ Meteor.methods({
 			Meteor.http.get(requestURL, function(error,result){
 				if(error){
 					console.error(error);
-					fut['throw'](error);
 					throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 				}else if(result){
 					// combine with articles DB
@@ -74,7 +73,6 @@ Meteor.methods({
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
 				console.error(error);
-				fut['throw'](error);
 				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
 			}else if(result){
 				console.log('All XML Saved',result);
