@@ -57,11 +57,7 @@ if (Meteor.isClient) {
 		}
 	});
 	Template.registerHelper('placeholderDate',function(date){
-		if(moment(date).format('HH') == 00){
-			return moment(date).format('M D, YYYY');;
-		}else{
-			return moment(date).format('M YYYY');;
-		}
+		return moment(date).format('M D, YYYY');
 	});
 	Template.registerHelper('getMonthWord', function(month) {
 		var d = new Date(month);
