@@ -266,6 +266,7 @@ Meteor.methods({
 				if(history[i]['year']){
 					d += history[i]['year'][0] + ' ';
 				}
+				d += ' 06:00:00.0000';
 				var dd = new Date(d);
 				articleProcessed['history'][dateType] = dd;
 			}
