@@ -11,6 +11,7 @@
 					<tr>
 						<th data-field="pii">PII</th>
 						<th data-field="registered">Registered</th>
+						<th data-field=""></th>
 						<th data-field="deposited">Deposited</th>
 						<th data-field="indexed">Indexed</th>
 						<th data-field="article-date-doi">DOI: Article Date</th>
@@ -18,7 +19,6 @@
 						<th data-field="doi">DOI</th>
 						<th data-field="pmc">PMC</th>
 						<th data-field="pubmed">PubMed</th>
-						<th data-field=""></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -27,6 +27,7 @@
 					<tr>
 						<td>{{pii}}</td>
 						<td>{{registered}}</td>
+						<td><a href="{{doiRegisterUrl}}/{{pii}}?epub={{timestamp epub}}" class="btn">Register</a></td>
 						<td>{{#if deposited}}{{formatDate deposited.timestamp}}{{/if}}</td>
 						<td>{{#if indexed_date}}{{formatDate indexed_date}}{{/if}}</td>
 						<td>{{#if article_date}}{{dashedDateToWordDate article_date}}{{/if}}</td>
