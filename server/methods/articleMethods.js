@@ -104,6 +104,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	articleXmlToJson: function(xml,articleJson){
+		// console.log('..articleXmlToJson');
 		// Process JSON for meteor templating and mongo db
 		// xml - xml string
 		// articleJson - parsed XML to JSON. but not in the schema we need.
@@ -239,7 +240,7 @@ Meteor.methods({
 				if(dates[i]['year']){
 					d += dates[i]['year'][0];
 				}
-				d += ' 06:00:00.0000';
+				d += ' 00:00:00.0000';
 				var dd = new Date(d);
 				// console.log(dateType + ' = ' + dd);
 				articleProcessed['dates'][dateType] = dd;
@@ -266,7 +267,7 @@ Meteor.methods({
 				if(history[i]['year']){
 					d += history[i]['year'][0] + ' ';
 				}
-				d += ' 06:00:00.0000';
+				d += ' 00:00:00.0000';
 				var dd = new Date(d);
 				articleProcessed['history'][dateType] = dd;
 			}
