@@ -8,10 +8,10 @@ Meteor.methods({
 		var missingPii = [];
 		var xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/'
 		for(var a=0; a<articlesList.length ; a++){
-			if(articlesList[a]['ids']['pii']){
+			if(articlesList[a]['ids']['paperchase_id']){
 				// console.log('-- PII: ' + articlesList[a]['ids']['pii']);
 				// get XML and update DB
-				var articleXML = xmlUrl + articlesList[a]['ids']['pii'] + '.xml';
+				var articleXML = xmlUrl + articlesList[a]['ids']['paperchase_id'] + '.xml';
 				Meteor.call('fileExistsOnS3', articleXML, function(errExists,exists){
 					if(errExists){
 						console.error('File Does Not Exist', errExists);
@@ -25,6 +25,7 @@ Meteor.methods({
 								if(articleInfo.ids && articleInfo.ids.pii){
 									result.ids.pii = articleInfo.ids.pii;
 								}
+								result.ids.paperchase_id = articleInfo.ids.paperchase_id;
 								Meteor.call('updateArticle',articlesList[a]['_id'], result,function(articleUpdateError,articleUpdate){
 									if(articleUpdateError){
 										console.error('Could not update article doc: ' + articlesList[a]['_id'], articleUpdateError);
