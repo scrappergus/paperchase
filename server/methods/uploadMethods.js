@@ -1,4 +1,18 @@
 Meteor.methods({
+	fileExistsOnS3: function(url){
+		console.log('..fileExistsOnS3: ' + url);
+		var fut = new future();
+		Meteor.http.get(url,function(error, result) {
+			if(error){
+				// throw new Meteor.Error(500, 'XML file not found', 'The URL did not return a file: ' + url);
+				// console.error('XML file not found',error);
+				fut['return'](false);
+			}else if(result){
+				fut['return'](true);
+			}
+		});
+		return fut.wait();
+	},
 	piiFromXmlFileNameCheck: function(filename){
 		var article;
 		// console.log('...piiFromXmlFileNameCheck : ' + filename);
@@ -21,9 +35,10 @@ Meteor.methods({
 		// TODO: update DB after uploaded to S3. Look into lambda fxns on aws
 		Meteor.http.get(url,function(error, result) {
 			if(error){
-				throw new Meteor.Error(500, 'XML file not found', 'The URL did not return a file: ' + url);
-			}
-			if(result){
+				// throw new Meteor.Error(500, 'XML file not found', 'The URL did not return a file: ' + url);
+				console.error('XML file not found',error);
+				fut['throw'](error);
+			}else if(result){
 				// console.log(result.content);
 				xmlString = result.content.toString();
 				// console.log(xmlString);

@@ -30,16 +30,16 @@ Router.configure({
 });
 
 if (Meteor.isClient) {
-    Router.onBeforeAction(function() {
-            // Site Settings
-            // ------------------------
-            Meteor.subscribe('sectionsVisible');
-            Meteor.subscribe('sortedList','sections');
-            Meteor.subscribe('journalConfig', function(){
-                    Session.set('journal', journalConfig.findOne());
-                });
-            this.next();
-        });
+	Router.onBeforeAction(function() {
+		// Site Settings
+		// ------------------------
+		Meteor.subscribe('sectionsVisible');
+		Meteor.subscribe('sortedList','sections');
+		Meteor.subscribe('journalConfig', function(){
+			Session.set('journal', journalConfig.findOne());
+		});
+		this.next();
+	});
 }
 
 Meteor.startup(function () {

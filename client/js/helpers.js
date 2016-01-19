@@ -44,6 +44,10 @@ if (Meteor.isClient) {
 	});
 	// Dates
 	// -----
+	Template.registerHelper('timestamp', function(date) {
+		date = new Date(date);
+		return date.getTime();
+	});
 	Template.registerHelper('dateDayExists',function(date){
 		//if the date object should have a day value associated with it
 		if(moment(date).format('HH') == 00){
@@ -53,11 +57,7 @@ if (Meteor.isClient) {
 		}
 	});
 	Template.registerHelper('placeholderDate',function(date){
-		if(moment(date).format('HH') == 00){
-			return moment(date).format('M D, YYYY');;
-		}else{
-			return moment(date).format('M YYYY');;
-		}
+		return moment(date).format('M D, YYYY');
 	});
 	Template.registerHelper('getMonthWord', function(month) {
 		var d = new Date(month);
@@ -102,6 +102,17 @@ if (Meteor.isClient) {
 	});
 	Template.registerHelper('getDay',function(date) {
 		return moment(date).format('D');
+	});
+	Template.registerHelper('dashedDateToWordDate',function(date) {
+		var datePieces = date.split('-');
+		for(var piece=0 ; piece < datePieces.length ; piece++){
+			if(datePieces[piece].length == 1){
+				datePieces[piece] = '0' + datePieces[piece];
+			}
+		}
+		dateFixed = datePieces.join('-');
+		var d = new Date(dateFixed + 'T06:00:00.000Z');
+		return moment(d).format('MMMM D, YYYY');
 	});
 	// Equals
 	// -------

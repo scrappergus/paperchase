@@ -1,8 +1,50 @@
 /*
  ADMIN ROUTES
 */
-if (Meteor.isClient) {
 
+// Download
+Router.route('/admin/doi_status_csv/',{
+	name: 'doiStatusCsv',
+	where: 'server',
+	action: function(){
+		var filename = journalConfig.findOne().journal.short_name + '_doi_status.csv';
+		var csvData = 'PII,Registered,Deposited,Indexed, DOI Article Date,Article Date, DOI, PMC ID, PubMed ID' + '\n';
+		Meteor.call('getAllArticlesDoiStatus',function(error,result){
+			if(error){
+				console.error('ERROR - get DOI status');
+				console.error(error);
+				throw new Meteor.Error(503, 'ERROR: DOI Registered Check', error);
+			}else if(result){
+				for(var i=0 ; i< result.length ; i++){
+					var epub,
+						deposited,
+						indexed,
+						articleDate,
+						doi,
+						pmc,
+						pmid;
+
+					epub = moment(result[i]['epub']).format('YYYY-MM-D');
+					deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
+					indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
+					articleDate = result[i]['article_date'];
+					doi = result[i]['doi'];
+					pmc = result[i]['pmc'];
+					pmid = result[i]['pmid'];
+					csvData += result[i]['pii'] + ',' + result[i]['registered'] + ',' + deposited + ',' + indexed + ',' + articleDate + ',' + epub + ',' + doi + ',' + pmc + ',' + pmid + '\n';
+				}
+			}
+		});
+		this.response.writeHead(200, {
+		  'Content-Type': 'text/csv',
+		  'Content-Disposition': 'attachment; filename=' + filename
+		});
+		this.response.write(csvData);
+		this.response.end();
+	}
+});
+
+if (Meteor.isClient) {
 	// Variables
 	// ----------
 	Session.setDefault('article',null);	// Article Form
@@ -18,11 +60,20 @@ if (Meteor.isClient) {
 	Session.setDefault('newsId',null);
 	// Paper sections
 	Session.setDefault('paperSectionId',null);
+	// DOI Status, articles list
+	Session.set('articles-doi-status',null);
 
 
 	Router.route('/admin', {
 		name: 'admin.dashboard',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articlesRecentFive')
@@ -42,6 +93,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/about', {
 		name: 'AdminAbout',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | About ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('about'),
@@ -65,6 +123,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/site-control', {
 		name: 'AdminSiteControl',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Site Control ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('sectionsAll'),
@@ -86,6 +151,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/news',{
 		name: 'AdminNews',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | News ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return [
 				Meteor.subscribe('newsListAll')
@@ -95,6 +167,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/news-add',{
 		name: 'AdminNewsAdd',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Add News ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return [
 				// Meteor.subscribe('news')
@@ -103,6 +182,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/news-edit/:_id',{
 		name: 'AdminNewsEdit',
+		title: function() {
+			var pageTitle = 'Admin | Edit News ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
 			Session.set('newsId',this.params._id);
@@ -119,6 +205,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/recommendations',{
 		name: 'AdminRecommendations',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Recommendations ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return [
 				Meteor.subscribe('recommendations')
@@ -135,6 +228,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/recommendation/:_id',{
 		name: 'AdminRecommendationUpdate',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Recommendations ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return [
 				Meteor.subscribe('recommendationData',this.params._id)
@@ -153,6 +253,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/data_submissions',{
 		name: 'AdminDataSubmissions',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Data Submissions ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		onBeforeAction: function(){
 			Session.set('submission_list',null);
 			Session.set('error',false);
@@ -169,6 +276,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/data_submissions/past',{
 		name: 'AdminDataSubmissionsPast',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Past Data Submissions ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('adminUsers'),
@@ -191,12 +305,26 @@ if (Meteor.isClient) {
 	Router.route('/admin/upload/xml',{
 		name: 'AdminArticleXmlUpload',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | XML Upload ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 	});
 
 	// Article
 	Router.route('/admin/articles',{
 		name: 'adminArticlesDashboard',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Articles Dashboard';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('feature'),
@@ -229,6 +357,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/articles/list',{
 		name: 'AdminArticlesList',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Articles List';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 			Meteor.subscribe('articles')
@@ -243,6 +378,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/article/:_id',{
 		name: 'AdminArticleOverview',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Article ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		onBeforeAction: function(){
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
@@ -273,6 +415,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/article/:_id/edit',{
 		name: 'AdminArticle',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Edit Article ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		onBeforeAction: function(){
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
@@ -313,6 +462,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/add_article/',{
 		name: 'AdminArticleAdd',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Add Article ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		onBeforeAction: function(){
 			Meteor.call('preProcessArticle',function(error,result){
 				if(error){
@@ -327,9 +483,43 @@ if (Meteor.isClient) {
 		},
 	});
 
+	// DOI
+	Router.route('/admin/doi_status', {
+		name: 'AdminDoiStatus',
+		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | DOI Status ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		onBeforeAction: function(){
+			Meteor.call('getAllArticlesDoiStatus',function(error,result){
+				if(error){
+					console.error('ERROR - get DOI status');
+					console.error(error);
+					throw new Meteor.Error(503, 'ERROR: DOI Registered Check', error);
+				}
+				if(result){
+					Session.set('articles-doi-status',result);
+				}
+			});
+			this.next();
+		}
+	});
+
+
 	// Advance articles
 	Router.route('/admin/articles/advance',{
 		name: 'AdminAdvanceArticles',
+		title: function() {
+			var pageTitle = 'Admin | Advance Articles ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -417,6 +607,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/articles/advance-diff',{
 		name: 'AdminAdvanceArticlesDiff',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Advance Articles Difference ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('advance'),
@@ -492,6 +689,13 @@ if (Meteor.isClient) {
 	// Sections
 	Router.route('/admin/sections', {
 		name: 'AdminSections',
+		title: function() {
+			var pageTitle = 'Admin | Sections ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -501,6 +705,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/sections-add', {
 		name: 'AdminSectionsAdd',
+		title: function() {
+			var pageTitle = 'Admin | Add Section ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -510,6 +721,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/sections/:_id',{
 		name: 'AdminSectionPapers',
+		title: function() {
+			var pageTitle = 'Admin | Section Papers ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
 			Session.set('paperSectionId',this.params._id);
@@ -523,6 +741,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/sections-edit/:_id',{
 		name: 'AdminSectionsEdit',
+		title: function() {
+			var pageTitle = 'Admin | Edit Section ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
 			Session.set('paperSectionId',this.params._id);
@@ -538,6 +763,13 @@ if (Meteor.isClient) {
 	// Archive
 	Router.route('/admin/archive', {
 		name: 'adminArchive',
+		title: function() {
+			var pageTitle = 'Admin | Archive ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -552,6 +784,13 @@ if (Meteor.isClient) {
 	// TODO: LIMIT subscription of articles to just issue
 	Router.route('/admin/issue/:vi', {
 		name: 'AdminIssue',
+		title: function() {
+			var pageTitle = 'Admin | Issue ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			var vi = this.params.vi;
@@ -584,6 +823,13 @@ if (Meteor.isClient) {
 	// Users
 	Router.route('/admin/users', {
 		name: 'AdminUsers',
+		title: function() {
+			var pageTitle = 'Admin | Users ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -601,6 +847,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/user/:_id', {
 		name: 'AdminUser',
+		title: function() {
+			var pageTitle = 'Admin | User ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -633,6 +886,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/user/:_id/subs', {
 		name: 'AdminUserSubs',
+		title: function() {
+			var pageTitle = 'Admin | User ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -654,12 +914,26 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/adduser', {
 		name: 'AdminAddUser',
+		title: function() {
+			var pageTitle = 'Admin | Add User ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin'
 	});
 
 	// Authors
 	Router.route('/admin/authors', {
 		name: 'AdminAuthors',
+		title: function() {
+			var pageTitle = 'Admin | Authors ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -677,6 +951,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/author/:_id', {
 		name: 'AdminAuthor',
+		title: function() {
+			var pageTitle = 'Admin | Author ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -700,6 +981,13 @@ if (Meteor.isClient) {
 	// Editorial Board
 	Router.route('/admin/editorial-board', {
 		name: 'AdminEditorialBoard',
+		title: function() {
+			var pageTitle = 'Admin | Editorial Board ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -719,6 +1007,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/editorial-board/add', {
 		name: 'AdminEditorialBoardAdd',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Add Editorial Board ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		data: function(){
 			if(this.ready()){
 				return {
@@ -729,6 +1024,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/editorial-board/edit/:_id', {
 		name: 'AdminEditorialBoardEdit',
+		title: function() {
+			var pageTitle = 'Admin | Edit Editorial Board ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		onBeforeAction: function(){
 			// TODO
@@ -752,6 +1054,13 @@ if (Meteor.isClient) {
 	// For Authors
 	Router.route('/admin/for-authors', {
 		name: 'AdminForAuthors',
+		title: function() {
+			var pageTitle = 'Admin | For Authors ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		layoutTemplate: 'Admin',
 		waitOn: function(){
 			return[
@@ -777,6 +1086,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/institution', {
 		name: 'AdminInstitution',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Institutions ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('institutions')
@@ -790,6 +1106,13 @@ if (Meteor.isClient) {
 	});
 	Router.route('/admin/institution/add', {
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Add Institution ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		name: 'AdminInstitutionAdd',
 		data: function(){
 			return {
@@ -800,6 +1123,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/institution/edit/:_id', {
 		layoutTemplate: 'Admin',
 		name: 'AdminInstitutionForm',
+		title: function() {
+			var pageTitle = 'Admin | Edit Institution ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 			Meteor.subscribe('institution',this.params._id)
@@ -817,6 +1147,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/crawl',{
 		name: 'adminCrawl',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Crawl ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		data: function(){
 			if(this.ready()){
 				var journal;
@@ -834,6 +1171,13 @@ if (Meteor.isClient) {
 	Router.route('/admin/batch_process', {
 		name: 'AdminBatchXml',
 		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Batch Process ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articles')

@@ -91,6 +91,9 @@ html,body{
 	.brand-logo {
 		position: relative;
 		top: 2px;
+		img{
+			width: 100%;
+		}
 	}
 	nav{
 		a{
