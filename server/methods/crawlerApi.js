@@ -1,7 +1,6 @@
 Meteor.methods({
 	intiateArticleCollection: function(){
 		console.log('..intiateArticleCollection');
-		// var fut = new future();
 		//for initiating articles collection. PII/PMID/Title sent from crawler
 		// first make sure there are 0 docs
 		if(articles.find().fetch().length == 0){
@@ -14,19 +13,28 @@ Meteor.methods({
 					// combine with articles DB
 					var articlesList = JSON.parse(result.content);
 					for(var a=0 ; a<articlesList.length ; a++){
+						if(articlesList[a]['ids']['pii']){
+							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
+						}else if(articlesList[a]['ids']['doi']){
+							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['doi'];
+						}else{
+							console.log('..missing IDS');
+							console.log(articlesList[a]);
+						}
+						// console.log(articlesList[a]['ids']);
 						Meteor.call('addArticle',articlesList[a],function(addError,articleAdded){
 							if(addError){
 								console.error('addError: ' + articlesList[a]['pii'], addError);
 							}else if(articleAdded){
-								console.log('added: '+ articlesList[a]['pii']);
+								console.log('added: '+ articleAdded);
 							}
 						});
 					}
-					// fut['return'](articlesDoiList);
+				}else{
+					console.error('Could Not Initiate Articles Collection');
 				}
 			});
 		}
-		// return fut.wait();
 	},
 	getAllArticlesDoiStatus: function(){
 		// console.log('..getAllArticlesDoiStatus');
