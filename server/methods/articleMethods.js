@@ -230,20 +230,15 @@ Meteor.methods({
 			var dateType =  dates[i]['$']['pub-type'];
 			if(dateType != 'collection'){
 				var d = '';
-				if(dates[i]['month']){
+				if(dates[i]['month'] && dates[i]['day'] && dates[i]['year']){
 					d += dates[i]['month'][0] + ' ';
+					d += dates[i]['day'][0] + ' ';
+					d += dates[i]['year'][0] + ' ';
+					d += ' 00:00:00.0000';
+					var dd = new Date(d);
+					// console.log(dateType + ' = ' + dd);
+					articleProcessed['dates'][dateType] = dd;
 				}
-				if(dates[i]['day']){
-					d += dates[i]['day'][0] + ', ';
-					// hadDay = true;
-				}
-				if(dates[i]['year']){
-					d += dates[i]['year'][0];
-				}
-				d += ' 00:00:00.0000';
-				var dd = new Date(d);
-				// console.log(dateType + ' = ' + dd);
-				articleProcessed['dates'][dateType] = dd;
 			}
 		}
 		// console.log(articleProcessed['dates']);
@@ -258,18 +253,14 @@ Meteor.methods({
 			for(var i = 0 ; i < historyLength ; i++){
 				var dateType = history[i]['$']['date-type'];
 				var d = '';
-				if(history[i]['month']){
-					d += history[i]['month'][0] + ' ';
+				if(history[i]['month'] && history[i]['day'] && history[i]['year']){
+					d += dates[i]['month'][0] + ' ';
+					d += dates[i]['day'][0] + ' ';
+					d += dates[i]['year'][0] + ' ';
+					d += ' 00:00:00.0000';
+					var dd = new Date(d);
+					articleProcessed['history'][dateType] = dd;
 				}
-				if(history[i]['day']){
-					d += history[i]['day'][0] + ', ';
-				}
-				if(history[i]['year']){
-					d += history[i]['year'][0] + ' ';
-				}
-				d += ' 00:00:00.0000';
-				var dd = new Date(d);
-				articleProcessed['history'][dateType] = dd;
 			}
 		}
 
