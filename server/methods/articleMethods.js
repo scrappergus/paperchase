@@ -108,8 +108,8 @@ Meteor.methods({
 		// Process JSON for meteor templating and mongo db
 		// xml - xml string
 		// articleJson - parsed XML to JSON. but not in the schema we need.
-
 		var article = articleJson[0]['front'][0]['article-meta'][0];
+
 		var articleProcessed = {};
 		// TITLE
 		// -----------
@@ -132,7 +132,6 @@ Meteor.methods({
 		if(article['lpage']){
 			articleProcessed['page_end'] = parseInt(article['lpage'][0]);
 		}
-
 		// KEYWORDS
 		// -----------
 		if(article['kwd-group']){
@@ -254,9 +253,9 @@ Meteor.methods({
 				var dateType = history[i]['$']['date-type'];
 				var d = '';
 				if(history[i]['month'] && history[i]['day'] && history[i]['year']){
-					d += dates[i]['month'][0] + ' ';
-					d += dates[i]['day'][0] + ' ';
-					d += dates[i]['year'][0] + ' ';
+					d += history[i]['month'][0] + ' ';
+					d += history[i]['day'][0] + ' ';
+					d += history[i]['year'][0] + ' ';
 					d += ' 00:00:00.0000';
 					var dd = new Date(d);
 					articleProcessed['history'][dateType] = dd;
@@ -264,7 +263,7 @@ Meteor.methods({
 			}
 		}
 
-		// console.log(articleProcessed);
+		// console.log('articleProcessed',articleProcessed);
 		return articleProcessed;
 	},
 	processXmlString: function(xml){
@@ -283,7 +282,7 @@ Meteor.methods({
 					// if getting XML via crawling PMC
 					// Or if uploading PMC XML
 					articlePreProcess = result['pmc-articleset']['article'];
-					// console.log('articlePreProcess = ');console.log(articlePreProcess);
+					// console.log('articlePreProcess ',articlePreProcess);
 					articleProcessed = Meteor.call('articleXmlToJson', xml, articlePreProcess,function(e,r){ // pass XML string (for title) AND JSON for meta
 						if(e){
 							console.error(e);
