@@ -21,6 +21,7 @@ Meteor.methods({
 							console.log('..missing IDS');
 							console.log(articlesList[a]);
 						}
+						articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['paperchase_id'].replace(/\//g,'_');
 						// console.log(articlesList[a]['ids']);
 						Meteor.call('addArticle',articlesList[a],function(addError,articleAdded){
 							if(addError){

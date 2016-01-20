@@ -39,7 +39,8 @@ pubIdTypeList = {
 	'pmid':'PubMed ID',
 	// 'publisher-id':'Publisher’s identifier',
 	// 'sici':'Serial Item and Contribution Identifier',
-	// 'std-designation':'The official number of a standard, from a standards body such as ISO, NISO, IEEE, ASME'
+	// 'std-designation':'The official number of a standard, from a standards body such as ISO, NISO, IEEE, ASME',
+	'paperchase_id' : 'Paperchase ID' //NOT JATS. Internal only
 }
 articleTypeList = {
 	'abstract' : 'The article itself is an abstract (of a paper or presentation) that usually has been presented or published separately.',

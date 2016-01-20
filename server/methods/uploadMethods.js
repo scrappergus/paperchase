@@ -13,12 +13,12 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	piiFromXmlFileNameCheck: function(filename){
+	paperchaseIdFromXmlFileNameCheck: function(filename){
 		var article;
-		// console.log('...piiFromXmlFileNameCheck : ' + filename);
+		// console.log('...paperchaseIdFromXmlFileNameCheck : ' + filename);
 		// Versioning is based on file name, which is based on PII. Make sure filename is PII.xml
-		var pii = filename.replace('.xml','');
-		article = articles.findOne({'ids.pii' : pii});
+		var paperchaseId = filename.replace('.xml','');
+		article = articles.findOne({'ids.paperchase_id' : paperchaseId});
 		if(article){
 			// console.log('article = ' + article._id);
 			return article._id;
@@ -28,7 +28,7 @@ Meteor.methods({
 		}
 	},
 	parseXmlAfterUpload: function(url){
-		// console.log('..parseXmlAfterUpload : ' + ', xml: ' + url);
+		console.log('..parseXmlAfterUpload : ' + url);
 		var fut = new future();
 		var xmlString;
 		// after uploading XML to S3, parse some info to add to DB

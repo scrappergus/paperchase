@@ -1181,15 +1181,15 @@ Template.s3Upload.events({
 		// Uploader only allows 1 file at a time.
 		// TODO: versioning is based on file name, which is based on PII. Make sure filename is PII.xml
 		if(file && file['type'] == 'text/xml'){
-			Meteor.call('piiFromXmlFileNameCheck',file['name'],function(error, mongoId){
+			Meteor.call('paperchaseIdFromXmlFileNameCheck',file['name'],function(error, mongoId){
 				if(error){
 					console.error(error);
-					// PII not in DB
+					// Paperchase ID not in DB
 					// TODO: add control for adding article to DB
 					Meteor.formActions.errorMessage(error.details);
 				}
 				if(mongoId){
-					// PII exists in DB. Upload XML to S3.
+					// Paperchase ID exists in DB. Upload XML to S3.
 					S3.upload({
 						Bucket: 'paperchase-' + journalShortName,
 						files: files,
