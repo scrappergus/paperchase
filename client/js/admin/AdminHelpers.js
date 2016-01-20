@@ -67,7 +67,7 @@ Template.AdminDoiStatus.helpers({
 							var epubTimestamp = paperchase.dates.epub;
 								epubTimestamp = new Date(epubTimestamp);
 								epubTimestamp =	epubTimestamp.getTime();
-							return new Spacebars.SafeString('<a class="btn btn-small" href="' + paperchase.doiRegisterUrl + paperchase.ids.pii + '?epub=' + epubTimestamp + '">Register</a>');
+							return new Spacebars.SafeString('<a class="btn btn-sm" href="' + paperchase.doiRegisterUrl + paperchase.ids.pii + '?epub=' + epubTimestamp + '">Register</a>');
 						}else{
 							return '';
 						}
@@ -75,7 +75,7 @@ Template.AdminDoiStatus.helpers({
 				},
 				{
 					key: 'crossref_epub_date',
-					label: 'DOI: Epub',
+					label: 'DOI: EPub',
 					fn: function(date){
 						if(date){
 							return Meteor.dates.dashedToWord(date);
