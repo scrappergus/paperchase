@@ -121,6 +121,16 @@ Meteor.methods({
 									console.log(r);
 								}
 							});
+						}else if(articleInfo && articleInfo['dates']){
+							var convertedDate = Meteor.dates.dashedToDate(articlesList[i]['crossref_epub_date']);
+							console.log('Update : ' + articlesList[i]['paperchase']['_id'] + ' / ' + convertedDate);
+							articles.update({_id : articlesList[i]['paperchase']['_id']}, {$set: {'dates.epub' : convertedDate}},function(e,r){
+								if(e){
+									console.error('Update Article Error',e);
+								}else if(r){
+									console.log(r);
+								}
+							});
 						}
 					}
 				}
