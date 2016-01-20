@@ -86,7 +86,7 @@ Meteor.methods({
 					if(articlesList[i]['published']){
 						var pii = articlesList[i]['idarticles'].toString();
 						var epubDate = new Date(articlesList[i]['published'] + ' 00:00:00.0000');
-						console.log(pii + ': ' + articlesList[i]['published'] + ' : ' + epubDate);
+						// console.log(pii + ': ' + articlesList[i]['published'] + ' : ' + epubDate);
 						articles.update({'ids.pii' : pii},{$set: {'dates.epub' :epubDate}});
 					}
 				}
