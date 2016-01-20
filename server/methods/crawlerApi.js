@@ -97,5 +97,40 @@ Meteor.methods({
 				}
 			}
 		});
+	},
+	getCrossRefEpub: function(){
+		console.log('..getCrossRefEpub');
+		var fut = new future();
+		Meteor.call('getAllArticlesDoiStatus',function(error,articlesList){
+			if(error){
+				console.error('getCrossRefEpub/getAllArticlesDoiStatus', error);
+			}else if(articlesList){
+				// console.log('result',result);
+				console.log(articlesList.length);
+				for(var i=0 ; i<articlesList.length ; i++){
+					console.log('----' + i);
+					if(articlesList[i]['crossref_epub_date']){
+						console.log(articlesList[i]['crossref_epub_date']);
+						// see if Paperchase DB is missing Epub, if so add this date.
+						var articleInfo = articles.findOne(articlesList[i]['paperchase']['_id']);
+						console.log(articleInfo['_id']);
+						console.log(articleInfo['dates']);
+						if(articleInfo && articleInfo['dates'] && !articleInfo['dates']['epub']){
+							console.log('MISSING DATE');
+							var convertedDate = Meteor.dates.dashedToDate(articlesList[i]['crossref_epub_date']);
+							console.log('Update : ' + articlesList[i]['paperchase']['_id'] + ' / ' + convertedDate)
+							articles.update({_id : articlesList[i]['paperchase']['_id']}, {$set: {'dates.epub' : convertedDate}},function(e,r){
+								if(e){
+									console.error('Update Article Error',e);
+								}else if(r){
+									console.log(r);
+								}
+							});
+						}
+					}
+				}
+			}
+		});
+		return fut.wait();
 	}
 });
