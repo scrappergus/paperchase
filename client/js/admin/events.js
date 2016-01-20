@@ -926,6 +926,17 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #get-articles-legacy-dates' : function(e){
+		e.preventDefault();
+		// console.log('..clicked');
+		Meteor.call('getLegacyEpub',function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #add-paperchase-id' : function(e){
 		e.preventDefault();
 		Meteor.call('allArticlesAddPaperchaseId',function(e,r){
