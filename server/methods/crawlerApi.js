@@ -54,14 +54,7 @@ Meteor.methods({
 				var articlesDoiList = JSON.parse(result.content);
 
 				for(var a=0 ; a<articlesDoiList.length ; a++){
-					var pii = articlesDoiList[a]['pii'];
-					// console.log('..PII ' + pii);
-					var articleInfo = articles.findOne({'ids.pii': pii},{'dates.epub' : 1, 'ids' : 1});
-					if(articleInfo){
-						articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL; //keep within paperchase object, because this is needed for the reactive table. can only pass 1 key/value into function
-					}else{
-						console.log('DB Missing PII ' + pii);
-					}
+					articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL;
 				}
 				fut['return'](articlesDoiList);
 			}
