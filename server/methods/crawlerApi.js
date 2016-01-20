@@ -41,8 +41,8 @@ Meteor.methods({
 		// console.log('..getAllArticlesDoiStatus');
 		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalConfig.findOne().journal.short_name;
+		var registerURL = journalConfig.findOne().api.doi;
 		// console.log('requestURL = ' + requestURL);
-		var registerURL =  journalConfig.findOne().api.doi + journalConfig.findOne().journal.short_name;
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
 				console.error(error);
@@ -50,7 +50,19 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 			}else if(result){
 				// combine with articles DB
+				// console.log('articles',result.content);
 				var articlesDoiList = JSON.parse(result.content);
+
+				for(var a=0 ; a<articlesDoiList.length ; a++){
+					var pii = articlesDoiList[a]['pii'];
+					// console.log('..PII ' + pii);
+					var articleInfo = articles.findOne({'ids.pii': pii},{'dates.epub' : 1, 'ids' : 1});
+					if(articleInfo){
+						articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL; //keep within paperchase object, because this is needed for the reactive table. can only pass 1 key/value into function
+					}else{
+						console.log('DB Missing PII ' + pii);
+					}
+				}
 				fut['return'](articlesDoiList);
 			}
 		});
@@ -72,7 +84,7 @@ Meteor.methods({
 	getLegacyEpub: function(){
 		// use crawler to return JSON of article epub dates from legacy DB
 		// then update the articles collection in the paperchase DB
-		console.log('..getLegacyEpub');
+		// console.log('..getLegacyEpub');
 		var requestURL =  journalConfig.findOne().api.crawler + '/articles_epub_legacy/' + journalConfig.findOne().journal.short_name;
 		// console.log(requestURL);
 		Meteor.http.get(requestURL, function(error,articlesListRes){
@@ -81,7 +93,7 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
 			}else if(articlesListRes){
 				articlesList = articlesListRes.data;
-				console.log('articles = ',articlesList.length);
+				// console.log('articles = ',articlesList.length);
 				for(var i=0 ; i<articlesList.length ; i++){
 					if(articlesList[i]['published']){
 						var pii = articlesList[i]['idarticles'].toString();

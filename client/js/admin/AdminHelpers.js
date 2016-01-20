@@ -22,8 +22,121 @@ Template.AdminSiteControl.helpers({
 // DOI Status
 // ---------------
 Template.AdminDoiStatus.helpers({
-	articles: function(){
+	articlesList: function(){
 		return Session.get('articles-doi-status');
+	},
+	settings: function(){
+		return {
+			rowsPerPage: 50,
+			showFilter: false,
+			fields: [
+				{
+					key: 'paperchase',
+					label: 'PII',
+					fn: function(paperchase){
+						return paperchase.ids.pii;
+					}
+				},
+				{
+					key: 'doi',
+					label: 'DOI'
+				},
+				{
+					key: 'deposited',
+					label: 'Deposited',
+					fn: function(deposited){
+						return Meteor.dates.wordDate(deposited.timestamp);
+					}
+				},
+				{
+					key: 'indexed_date',
+					label: 'Indexed',
+					fn: function(indexed_date){
+						return Meteor.dates.wordDate(indexed_date);
+					}
+				},
+				{
+					key: 'registered',
+					label: 'Registered'
+				},
+				{
+					key: 'paperchase',
+					label: '',
+					fn: function(paperchase){
+						if(paperchase.ids.pii && paperchase.dates &&  paperchase.dates.epub){
+							var epubTimestamp = paperchase.dates.epub;
+								epubTimestamp = new Date(epubTimestamp);
+								epubTimestamp =	epubTimestamp.getTime();
+							return new Spacebars.SafeString('<a class="btn btn-small" href="' + paperchase.doiRegisterUrl + paperchase.ids.pii + '?epub=' + epubTimestamp + '">Register</a>');
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: 'crossref_epub_date',
+					label: 'DOI: Epub',
+					fn: function(date){
+						if(date){
+							return Meteor.dates.dashedToWord(date);
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: 'crossref_print_date',
+					label: 'DOI: Print',
+					fn: function(date){
+						if(date){
+							return Meteor.dates.dashedToWord(date);
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: 'paperchase',
+					label: 'EPub',
+					fn: function(paperchase){
+						if(paperchase.dates &&  paperchase.dates.epub){
+							return Meteor.dates.article(paperchase.dates.epub);
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: 'paperchase',
+					label: 'PMC',
+					fn: function(paperchase){
+						if(paperchase.ids &&  paperchase.ids.pmc){
+							return new Spacebars.SafeString('<a target="_BLANK" href="http://www.ncbi.nlm.nih.gov/pmc/' + paperchase.ids.pmc + '">PMC</a>');
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: 'paperchase',
+					label: 'PubMed',
+					fn: function(paperchase){
+						if(paperchase.ids &&  paperchase.ids.pmid){
+							return new Spacebars.SafeString('<a target="_BLANK" href="http://www.ncbi.nlm.nih.gov/pubmed/' + paperchase.ids.pmid + '">PubMed</a>');
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: 'paperchase',
+					label: '',
+					fn: function(paperchase){
+						return new Spacebars.SafeString('<a href="/admin/article/' + paperchase._id + '">View</a>');
+					}
+				}
+			]
+		}
 	}
 })
 

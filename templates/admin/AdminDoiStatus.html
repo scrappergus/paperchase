@@ -5,45 +5,8 @@
 			<a id="download-doi-status-csv" href="{{pathFor 'doiStatusCsv'}}" class="btn">Download CSV</a>
 		</div>
 	</div>
-	{{#if articles}}
-			<table>
-				<thead>
-					<tr>
-						<th data-field="pii">PII</th>
-						<th data-field="doi">DOI</th>
-						<th data-field="deposited">Deposited</th>
-						<th data-field="indexed">Indexed</th>
-						<th data-field="registered">Registered</th>
-						<th data-field=""></th>
-						<th data-field="article-epub-doi">DOI: Article EPub</th>
-						<th data-field="article-print-doi">DOI: Article Print</th>
-						<th data-field="article-date">Article Date</th>
-						<th data-field="pmc">PMC</th>
-						<th data-field="pubmed">PubMed</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each articles}}
-					<tr>
-						{{#with paperchase}}<td>{{ids.pii}}</td>{{/with}}
-						<td><!-- <a href="{{doi}}">{{doi}}</a> -->{{doi}}</td>
-						<td>{{#if deposited}}{{formatDate deposited.timestamp}}{{/if}}</td>
-						<td>{{#if indexed_date}}{{formatDate indexed_date}}{{/if}}</td>
-						<td>{{registered}}</td>
-						<td><a href="{{doiRegisterUrl}}/{{pii}}?epub={{timestamp epub}}" class="btn btn-sm">Register</a></td>
-						<td>{{#if crossref_epub_date}}{{dashedDateToWordDate crossref_epub_date}}{{/if}}</td>
-						<td>{{#if crossref_print_date}}{{dashedDateToWordDate crossref_print_date}}{{/if}}</td>
-						{{#with paperchase}}
-						<td>{{#if dates.epub}}{{articleDate dates.epub}}{{else}}N/A{{/if}}</td>
-						<td>{{#if ids.pmc}}<a href="http://www.ncbi.nlm.nih.gov/pmc/{{ids.pmc}}">PMC</a>{{else}}N/A{{/if}}</td>
-						<td>{{#if ids.pmid}}<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{ids.pmid}}">PubMed</a>{{else}}N/A{{/if}}</td>
-						{{/with}}
-						<td><a href="{{pathFor 'AdminArticleOverview' _id=paperchase._id}}">Article Overview</a></td>
-					</tr>
-					{{/each}}
-				</tbody>
-			</table>
+	{{#if articlesList}}
+		{{> reactiveTable class="table table-bordered table-hover" collection=articlesList settings=settings}}
 	{{else}}
 		{{>ProcessingNotHidden}}
 	{{/if}}
