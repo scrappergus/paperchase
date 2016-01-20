@@ -35,7 +35,7 @@
 						<td>{{#if crossref_epub_date}}{{dashedDateToWordDate crossref_epub_date}}{{/if}}</td>
 						<td>{{#if crossref_print_date}}{{dashedDateToWordDate crossref_print_date}}{{/if}}</td>
 						{{#with paperchase}}
-						<td>{{#if epub}}{{articleDate epub}}{{else}}N/A{{/if}}</td>
+						<td>{{#if dates.epub}}{{articleDate dates.epub}}{{else}}N/A{{/if}}</td>
 						<td>{{#if ids.pmc}}<a href="http://www.ncbi.nlm.nih.gov/pmc/{{ids.pmc}}">PMC</a>{{else}}N/A{{/if}}</td>
 						<td>{{#if ids.pmid}}<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{ids.pmid}}">PubMed</a>{{else}}N/A{{/if}}</td>
 						{{/with}}
