@@ -80,7 +80,7 @@ if (Meteor.isClient) {
 		return moment(date).format('YYYY/MM/DD');
 	});
 	Template.registerHelper('formatDate', function(date) {
-		return moment(date).format('MMMM D, YYYY');
+		return Meteor.dates.wordDate(date);
 	});
 	Template.registerHelper('formatDateNumber', function(date) {
 		return moment(date).format('MM/D/YYYY');
@@ -89,7 +89,7 @@ if (Meteor.isClient) {
 		return moment(date).format('MMMM YYYY');
 	});
 	Template.registerHelper('articleDate', function(date) {
-		return moment(date).format('MMMM D, YYYY');
+		return Meteor.dates.article(date);
 	});
 	Template.registerHelper('collectionDate',function(date) {
 		return moment(date).format('MMMM YYYY');
@@ -104,15 +104,7 @@ if (Meteor.isClient) {
 		return moment(date).format('D');
 	});
 	Template.registerHelper('dashedDateToWordDate',function(date) {
-		var datePieces = date.split('-');
-		for(var piece=0 ; piece < datePieces.length ; piece++){
-			if(datePieces[piece].length == 1){
-				datePieces[piece] = '0' + datePieces[piece];
-			}
-		}
-		dateFixed = datePieces.join('-');
-		var d = new Date(dateFixed + 'T06:00:00.000Z');
-		return moment(d).format('MMMM D, YYYY');
+		return Meteor.dates.dashedToWord(date);
 	});
 	// Equals
 	// -------

@@ -1034,3 +1034,23 @@ Meteor.sorter = {
 		return ordered;
 	}
 }
+
+Meteor.dates = {
+	article: function(date){
+		return moment(date).format('MMMM D, YYYY');
+	},
+	wordDate: function(date){
+		return moment(date).format('MMMM D, YYYY');
+	},
+	dashedToWord: function(date){
+		var datePieces = date.split('-');
+		for(var piece=0 ; piece < datePieces.length ; piece++){
+			if(datePieces[piece].length == 1){
+				datePieces[piece] = '0' + datePieces[piece];
+			}
+		}
+		dateFixed = datePieces.join('-');
+		var d = new Date(dateFixed + 'T06:00:00.000Z');
+		return moment(d).format('MMMM D, YYYY');
+	}
+}
