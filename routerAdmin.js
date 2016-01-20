@@ -8,7 +8,7 @@ Router.route('/admin/doi_status_csv/',{
 	where: 'server',
 	action: function(){
 		var filename = journalConfig.findOne().journal.short_name + '_doi_status.csv';
-		var csvData = 'PII,Registered,Deposited,Indexed, DOI Article Date,Article Date, DOI, PMC ID, PubMed ID' + '\n';
+		var csvData = 'PII,Registered,Deposited,Indexed, DOI Article Date, DOI Article Print Date,Article Date, DOI, PMC ID, PubMed ID' + '\n';
 		Meteor.call('getAllArticlesDoiStatus',function(error,result){
 			if(error){
 				console.error('ERROR - get DOI status');
@@ -16,22 +16,49 @@ Router.route('/admin/doi_status_csv/',{
 				throw new Meteor.Error(503, 'ERROR: DOI Registered Check', error);
 			}else if(result){
 				for(var i=0 ; i< result.length ; i++){
-					var epub,
-						deposited,
-						indexed,
-						articleDate,
-						doi,
-						pmc,
-						pmid;
+					var epub = '',
+						registered = '',
+						deposited = '',
+						indexed = '',
+						crossRefEpub = '',
+						crossRefPrint = '',
+						doi = '',
+						pmc = '',
+						pmid = '',
+						pii = '';
 
-					epub = moment(result[i]['epub']).format('YYYY-MM-D');
-					deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
-					indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
-					articleDate = result[i]['article_date'];
-					doi = result[i]['doi'];
-					pmc = result[i]['pmc'];
-					pmid = result[i]['pmid'];
-					csvData += result[i]['pii'] + ',' + result[i]['registered'] + ',' + deposited + ',' + indexed + ',' + articleDate + ',' + epub + ',' + doi + ',' + pmc + ',' + pmid + '\n';
+					if(result[i]['paperchase']['dates'] && result[i]['paperchase']['dates']['epub']){
+						epub = moment(result[i]['paperchase']['dates']['epub']).format('YYYY-MM-D');
+					}
+					if(result[i]['paperchase']['ids']['pmc']){
+						pmc = result[i]['paperchase']['ids']['pmc'];
+					}
+					if(result[i]['paperchase']['ids']['pmid']){
+						pmid = result[i]['paperchase']['ids']['pmid'];
+					}
+					if(result[i]['paperchase']['ids']['pii']){
+						pii = result[i]['paperchase']['ids']['pii'];
+					}
+					if(result[i]['deposited']['timestamp']){
+						deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
+					}
+					if(result[i]['indexed_date']){
+						indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
+					}
+					if(result[i]['crossref_epub_date']){
+						crossRefEpub = result[i]['crossref_epub_date'];
+					}
+					if(result[i]['crossref_print_date']){
+						crossRefPrint = result[i]['crossref_print_date'];
+					}
+					if(result[i]['doi']){
+						doi = result[i]['doi'];
+					}
+					if(result[i]['registered']){
+						registered = result[i]['registered'];
+					}
+
+					csvData += pii + ',' + registered + ',' + deposited + ',' + indexed + ',' + crossRefEpub + ',' + crossRefPrint + ',' + epub + ',' + doi + ',' + pmc + ',' + pmid + '\n';
 				}
 			}
 		});
