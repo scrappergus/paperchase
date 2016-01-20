@@ -68,5 +68,29 @@ Meteor.methods({
 				console.log('All XML Saved',result);
 			}
 		});
+	},
+	getLegacyEpub: function(){
+		// use crawler to return JSON of article epub dates from legacy DB
+		// then update the articles collection in the paperchase DB
+		console.log('..getLegacyEpub');
+		var requestURL =  journalConfig.findOne().api.crawler + '/articles_epub_legacy/' + journalConfig.findOne().journal.short_name;
+		// console.log(requestURL);
+		Meteor.http.get(requestURL, function(error,articlesListRes){
+			if(error){
+				console.error(error);
+				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
+			}else if(articlesListRes){
+				articlesList = articlesListRes.data;
+				console.log('articles = ',articlesList.length);
+				for(var i=0 ; i<articlesList.length ; i++){
+					if(articlesList[i]['published']){
+						var pii = articlesList[i]['idarticles'].toString();
+						var epubDate = new Date(articlesList[i]['published'] + ' 00:00:00.0000');
+						console.log(pii + ': ' + articlesList[i]['published'] + ' : ' + epubDate);
+						articles.update({'ids.pii' : pii},{$set: {'dates.epub' :epubDate}});
+					}
+				}
+			}
+		});
 	}
 });
