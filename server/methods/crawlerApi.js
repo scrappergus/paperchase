@@ -65,15 +65,42 @@ Meteor.methods({
 	},
 	getAllArticlesPmcXml: function(){
 		console.log('..getAllArticlesPmcXml');
+		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/crawl_xml/' + journalConfig.findOne().journal.short_name;
+
+		var missingInPaperchase = [];
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
 				console.error(error);
 				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
 			}else if(result){
-				console.log('All XML Saved',result);
+				// console.log('All XML Saved',result);
+				// Loop through all articles in response and update the XML collection in the DB
+				articlesList = result.data;
+				var updatedCount = 0;
+				if(articlesList.length > 1){
+					// All article processed on crawler. Now update the XML collection. Return those without a paperchase_id to user.
+					for(var i=0 ; i<articlesList.length ; i++){
+						var paperchaseId = articlesList[i]['paperchase_id'];
+						if(paperchaseId){
+							updated = xmlCollection.update({paperchase_id: paperchaseId},{$set:articlesList[i]},{upsert: true});
+						}else{
+							missingInPaperchase.push(articlesList[i]);
+						}
+						if(i == parseInt(articlesList.length -1)){
+							// TODO: fut not returning..
+							// fut['return'][missingInPaperchase];
+							console.log('Could not update these. They are missing paperchase_id:',missingInPaperchase);
+						}
+					}
+				}else{
+					// No articles were updated
+					console.error('No article XML was updated in crawl');
+					fut['return'](true);
+				}
 			}
 		});
+		return fut.wait();
 	},
 	getLegacyEpub: function(){
 		// use crawler to return JSON of article epub dates from legacy DB
