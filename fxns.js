@@ -36,6 +36,7 @@ Meteor.organize = {
 		var res = []
 		for(var i = 0; i < issL ; i++){
 			var issue = issues[i];
+			issue.cover = Meteor.issue.coverPath(issue.volume, issue.issue);
 			if(!res[issue['volume']]){
 				res[issue['volume']] = [];
 			}
