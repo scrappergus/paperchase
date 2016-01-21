@@ -1063,6 +1063,10 @@ Meteor.dates = {
 Meteor.issue = {
 	coverPath : function(volume,issue){
 		var journal =  journalConfig.findOne().journal.short_name;
-		return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + '.png';
+		var fileType = '.png';
+		if(journal == 'genes_and_cancer'){
+			fileType = '.gif';
+		}
+		return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + fileType;
 	}
 }
