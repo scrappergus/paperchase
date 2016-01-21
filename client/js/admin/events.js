@@ -970,11 +970,14 @@ Template.AdminBatchXml.events({
 	},
 	'click #get-articles-pmc-xml' : function(e){
 		e.preventDefault();
+		Meteor.formActions.saving();
 		Meteor.call('getAllArticlesPmcXml',function(e,r){
 			if(e){
 				console.error(e);
+				Meteor.formActions.error();
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.success();
 			}
 		})
 	},
