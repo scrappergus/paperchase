@@ -370,7 +370,7 @@ if (Meteor.isClient) {
 					journal = Session.get('journal').journal;
 				}
 
-				if(sorted['articles']){
+				if(sorted && sorted['articles']){
 					sortedArticles = sorted['articles'];
 				}
 				return {
