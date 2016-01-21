@@ -214,6 +214,17 @@ Template.AdminArticlesList.helpers({
 					label: 'PII'
 				},
 				{
+					key: 'dates.epub',
+					label: 'EPub',
+					fn: function(date){
+						if(date){
+							return Meteor.dates.article(date);
+						}else{
+							return '';
+						}
+					}
+				},
+				{
 					key: '_id',
 					label: '',
 					sortable: false,
