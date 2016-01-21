@@ -40,7 +40,8 @@ Meteor.methods({
 	getAllArticlesDoiStatus: function(){
 		// console.log('..getAllArticlesDoiStatus');
 		var fut = new future();
-		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalConfig.findOne().journal.short_name;
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalShortName;
 		var registerURL = journalConfig.findOne().api.doi;
 		// console.log('requestURL = ' + requestURL);
 		Meteor.http.get(requestURL, function(error,result){
@@ -54,7 +55,7 @@ Meteor.methods({
 				var articlesDoiList = JSON.parse(result.content);
 
 				for(var a=0 ; a<articlesDoiList.length ; a++){
-					articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL;
+					articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL + journalShortName + '/';
 				}
 				fut['return'](articlesDoiList);
 			}
