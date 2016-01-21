@@ -43,7 +43,7 @@ Meteor.methods({
 		// get assets
 		for(var i=0 ; i< issueArticles.length ; i++){
 			// console.log(issueArticles[i]['_id']);
-			issueArticles[i]['assets'] = Meteor.call('availableAssests', issueArticles[i]['_id']);
+			issueArticles[i]['assets'] = Meteor.call('articleAssests', issueArticles[i]['_id']);
 			if(i == parseInt(issueArticles.length - 1)){
 				issueData['articles']
 				// console.log(issueData);

@@ -556,7 +556,7 @@ if (Meteor.isClient) {
 			}
 
 			// get xml, figures, pdf links
-			Meteor.call('availableAssests', this.params._id, function(error, result) {
+			Meteor.call('articleAssests', this.params._id, function(error, result) {
 				if(result){
 					Session.set('article-assets',result);
 				}
