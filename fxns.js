@@ -1058,3 +1058,10 @@ Meteor.dates = {
 		return d;
 	}
 }
+
+Meteor.issue = {
+	coverPath : function(volume,issue){
+		var journal =  journalConfig.findOne().journal.short_name;
+		return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + '.png';
+	}
+}

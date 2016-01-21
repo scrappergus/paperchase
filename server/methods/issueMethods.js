@@ -37,6 +37,7 @@ Meteor.methods({
 		// console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
 		var fut = new future();
 		var issueData = issues.findOne({'issue': issue, 'volume': volume});
+		issueData.cover = Meteor.issue.coverPath(volume,issue);
 		// console.log(issueData);
 		var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
 		// console.log(issueArticles);
