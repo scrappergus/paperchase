@@ -135,7 +135,22 @@ Meteor.methods({
 		// KEYWORDS
 		// -----------
 		if(article['kwd-group']){
-			articleProcessed['keywords'] =  article['kwd-group'][0]['kwd'];
+			articleProcessed['keywords'] = [];
+			var keywords = article['kwd-group'][0]['kwd'];
+			for(var kw=0 ; kw<keywords.length ; kw++){
+				if(typeof  keywords[kw] == 'object'){
+					var kwStyled = '',
+						kwStyeType = '';
+					for(var kwKey in  keywords[kw]){
+						kwStyeType += kwKey;
+					}
+					kwStyled = '<' + kwStyeType + '>' + keywords[kw][kwStyeType] + '<' + kwStyeType + '/>';
+					articleProcessed['keywords'].push(kwStyled);
+
+				}else{
+					articleProcessed['keywords'].push(keywords[kw]);
+				}
+			}
 		}
 
 		// ABSTRACT
