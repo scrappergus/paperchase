@@ -4,44 +4,45 @@ Meteor.methods({
 	availableAssests: function(mongoId){
 		// console.log('... availableAssests ' + mongoId);
 		// for the issue and article page. show appropriate button
-		var fut = new future();
-		var pii,
-			articleInfo,
-			configSettings,
-			assetsLink,
-			resLinks;
-		articleInfo = articles.findOne({'_id' : mongoId});
-		if(articleInfo){
-			pii = articleInfo.ids.pii;
-			configSettings = journalConfig.findOne({});
-			assetsLink = configSettings.api.assets;
+		// DEPRECATED. WAS WHEN CRAWLER STORED DATA
+		// var fut = new future();
+		// var pii,
+		// 	articleInfo,
+		// 	configSettings,
+		// 	assetsLink,
+		// 	resLinks;
+		// articleInfo = articles.findOne({'_id' : mongoId});
+		// if(articleInfo){
+		// 	pii = articleInfo.ids.pii;
+		// 	configSettings = journalConfig.findOne({});
+		// 	assetsLink = configSettings.api.assets;
 
-			if(pii){
-				// console.log('assetsLink + pii');console.log(assetsLink + pii);
-				// get asset links
-				// ----------------
-				resLinks = Meteor.http.get(assetsLink + pii);
-				// console.log('resLinks');console.log(resLinks);
-				if(resLinks && resLinks.content != '{"error":"No XML data found for this PII."}'){
-					resLinks = resLinks.content;
-					resLinks = JSON.parse(resLinks);
-					resLinks = resLinks[0];
-					if(resLinks.figures && resLinks.figures.length === 0){
-						delete resLinks.figures;
-					}
-					// console.log(resLinks);
-					fut['return'](resLinks);
-				}else{
-					// console.log('no assets');
-					fut['return']({});
-				}
-			}else{
-				fut['return']({});
-			}
-			return fut.wait();
-		}else{
-			return;
-		}
+		// 	if(pii){
+		// 		// console.log('assetsLink + pii');console.log(assetsLink + pii);
+		// 		// get asset links
+		// 		// ----------------
+		// 		resLinks = Meteor.http.get(assetsLink + pii);
+		// 		// console.log('resLinks');console.log(resLinks);
+		// 		if(resLinks && resLinks.content != '{"error":"No XML data found for this PII."}'){
+		// 			resLinks = resLinks.content;
+		// 			resLinks = JSON.parse(resLinks);
+		// 			resLinks = resLinks[0];
+		// 			if(resLinks.figures && resLinks.figures.length === 0){
+		// 				delete resLinks.figures;
+		// 			}
+		// 			// console.log(resLinks);
+		// 			fut['return'](resLinks);
+		// 		}else{
+		// 			// console.log('no assets');
+		// 			fut['return']({});
+		// 		}
+		// 	}else{
+		// 		fut['return']({});
+		// 	}
+		// 	return fut.wait();
+		// }else{
+		// 	return;
+		// }
 	},
 	getAssetsForFullText: function(mongoId){
 		// console.log('... mongo id = ' + mongoId);
