@@ -20,7 +20,7 @@ Meteor.methods({
 			articleProcessed['volume'] = parseInt(article['volume'][0]);
 		}
 		if(article['issue']){
-			articleProcessed['issue'] = parseInt(article['issue'][0]);
+			articleProcessed['issue'] = article['issue'][0];
 		}
 		if(article['fpage']){
 			articleProcessed['page_start'] = parseInt(article['fpage'][0]);
