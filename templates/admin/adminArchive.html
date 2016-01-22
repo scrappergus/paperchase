@@ -1,7 +1,11 @@
 <template name="AdminArchive">
 	<ul class="collection">
 	{{#each volumes}}
-		<li class="collection-item collection-header"><h3>Volume {{volume}}</h3></li>
+		<li class="collection-item collection-header">
+			<h3>Volume {{volume}}</h3>
+			<a class="btn btn-sm" href="{{pathFor 'AdminVolume' v=volume}}">Edit Order</a>
+		</li>
+
 		{{#each issues_data}}
 			<li class="collection-item"><a href="/admin/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}}</a></li>
 		{{/each}}
