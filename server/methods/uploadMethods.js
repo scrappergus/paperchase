@@ -36,7 +36,7 @@ Meteor.methods({
 		Meteor.http.get(url,function(error, result) {
 			if(error){
 				// throw new Meteor.Error(500, 'XML file not found', 'The URL did not return a file: ' + url);
-				console.error('XML file not found',error);
+				console.error('XML file not found');
 				fut['throw'](error);
 			}else if(result){
 				// console.log(result.content);
