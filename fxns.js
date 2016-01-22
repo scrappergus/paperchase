@@ -15,35 +15,6 @@ Meteor.organize = {
 		}
 		return diff;
 	},
-	issuesIntoVolumes: function(volList,issList){
-		// console.log('-issuesIntoVolumes');
-		// console.log(volList);
-		// console.log(issList);
-		//group issues by volume
-		var issues = Meteor.organize.groupIssuesByVol(issList);
-
-		//loop through volumes to add issues. this will keep the order descending so that the most recent vol is at the top
-		var volListLength = volList.length;
-		for(var idx = 0; idx < volListLength ; idx++){
-			volList[idx]['issues'] = issues[volList[idx]['volume']];
-		}
-		// console.log(volList);
-		return volList;
-	},
-	groupIssuesByVol: function(issues){
-		// console.log('...groupIssuesByVol');
-		var issL = issues.length;
-		var res = []
-		for(var i = 0; i < issL ; i++){
-			var issue = issues[i];
-			issue.cover = Meteor.issue.coverPath(issue.volume, issue.issue);
-			if(!res[issue['volume']]){
-				res[issue['volume']] = [];
-			}
-			res[issue['volume']].push(issue);
-		}
-		return res;
-	},
 	getIssueArticlesByID: function(id){
 		var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();
 		issueArticles = Meteor.organize.groupArticles(issueArticles);
@@ -337,25 +308,6 @@ Meteor.adminArticle = {
 
 		Session.set('article',article);
 	},
-	initiateDates: function(){
-		// console.log('-- initiateDates');
-		// Collection dates don't usually have dd. So using time of day to differentiate date objects that have days and those that don't
-		// TIME OF DAY 00:00:00, had a day in the XML. Otherwise did NOT have a day. Just month and year.
-		$('.datepicker').each(function(i){
-			var datePlaceholderFormat = 'mmmm d, yyyy';
-			var placeholder = $(this).attr('placeholder');
-			//if placeholder has 3 pieces, then the date should be shown in the placeholder
-			var placeholderPieces = placeholder.split(' ');
-			if(placeholderPieces.length != 3){
-				var datePlaceholderFormat = 'mmmm yyyy';
-			}
-			var pick = $(this).pickadate({
-				format: datePlaceholderFormat
-			});
-			var picker = pick.pickadate('picker');
-			picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
-		});
-	},
 	addDateOrHistory: function(dateType,e){
 		e.preventDefault();
 		var article = Session.get('article');
@@ -443,9 +395,9 @@ Meteor.adminArticle = {
 			]
 		});
 
-		// dates - handled in template helper, article. uses function to loop through dates and initiate
+		// dates
 		// ------
-		Meteor.adminArticle.initiateDates();
+		// Initiated on partial template rendering, templateAdmin.js
 
 		// issue, article type
 		// ------
@@ -1057,16 +1009,38 @@ Meteor.dates = {
 		dateFixed = datePieces.join('-');
 		var d = new Date(dateFixed + 'T06:00:00.000Z');
 		return d;
-	}
+	},
+	initiateDatesInput: function(){
+		// console.log('-- initiateDatesInput');
+		$('.datepicker').each(function(i){
+			var datePlaceholderFormat = 'mmmm d, yyyy';
+			var placeholder = $(this).attr('placeholder');
+			var pick = $(this).pickadate({
+				format: datePlaceholderFormat
+			});
+			var picker = pick.pickadate('picker');
+			picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
+		});
+	},
 }
 
 Meteor.issue = {
+	urlPieces: function(vi){
+		var pieces = vi.match('v([0-9]+)i(.*)');
+		var res = {volume : pieces[1], issue : pieces[2]};
+		return res;
+	},
 	coverPath : function(volume,issue){
-		var journal =  journalConfig.findOne().journal.short_name;
-		var fileType = '.png';
-		if(journal == 'genes_and_cancer'){
-			fileType = '.gif';
+		if(journalConfig){
+			var journal =  journalConfig.findOne().journal.short_name;
+			var fileType = '.png';
+			if(journal == 'genesandcancer'){
+				fileType = '.gif';
+				return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + '_n' + issue + fileType;
+			}else{
+				return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + fileType;
+			}
+
 		}
-		return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + fileType;
 	}
 }
