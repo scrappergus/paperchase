@@ -135,7 +135,7 @@ Meteor.methods({
 			}else if(articlesList){
 				for(var i=0 ; i<articlesList.length ; i++){
 					if(articlesList[i]['crossref_epub_date']){
-						console.log(articlesList[i]['crossref_epub_date']);
+						// console.log(articlesList[i]['crossref_epub_date']);
 						// see if Paperchase DB is missing Epub, if so add this date.
 						var articleInfo = articles.findOne(articlesList[i]['paperchase']['_id']);
 						if(articleInfo && articleInfo['dates'] && !articleInfo['dates']['epub']){
