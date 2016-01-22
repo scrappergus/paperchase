@@ -11,8 +11,7 @@ Meteor.methods({
 					throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 				}else if(result){
 					// combine with articles DB
-					// var articlesList = JSON.parse(result.content);
-					articlesList = agingarticleslist;
+					var articlesList = JSON.parse(result.content);
 					for(var a=0 ; a<articlesList.length ; a++){
 						if(articlesList[a]['ids']['pii']){
 							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
