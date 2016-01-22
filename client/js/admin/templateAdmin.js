@@ -32,10 +32,10 @@ Template.AdminArticleForm.onRendered(function () {
 	Meteor.adminArticle.readyArticleForm();
 });
 Template.AdminDateInput.onRendered(function() {
-	Meteor.adminArticle.initiateDates();
+	Meteor.dates.initiateDatesInput();
 });
 Template.AdminHistoryInput.onRendered(function() {
-	Meteor.adminArticle.initiateDates();
+	Meteor.dates.initiateDatesInput();
 });
 Template.AdminArticleFormAuthors.onRendered(function() {
 	Meteor.adminArticle.initiateAuthorsSortable();
@@ -58,12 +58,17 @@ Template.AdminArticleXmlUpload.onRendered(function () {
     Session.set('xml-uploaded',false);
 });
 
+
+// Volume
+// ------
+Template.AdminVolume.onRendered(function () {
+    $('.issues-list').sortable();
+});
+
 // Issue
 // ------
 Template.AdminIssue.onRendered(function () {
-	var pick = $('#issue-date').pickadate();
-	var picker = pick.pickadate('picker');
-	picker.set('select', $('#issue-date').data('value'), { format: 'yyyy/mm/dd' })
+    Meteor.dates.initiateDatesInput();
 });
 
 
