@@ -288,14 +288,19 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
+			Meteor.call('archive',function(error,result){
+				if(error){
+					console.error('Archive Error', error);
+				}else if(result){
+					Session.set('archive',result);
+				}
+			});
 			Session.set('submission_list',null);
 			Session.set('error',false);
 			this.next();
 		},
 		waitOn: function(){
 			return[
-				Meteor.subscribe('issues'),
-				Meteor.subscribe('volumes'),
 				Meteor.subscribe('articleTypes')
 			]
 		}
@@ -789,7 +794,7 @@ if (Meteor.isClient) {
 
 	// Archive
 	Router.route('/admin/archive', {
-		name: 'adminArchive',
+		name: 'AdminArchive',
 		title: function() {
 			var pageTitle = 'Admin | Archive ';
 			if(Session.get('journal')){
@@ -798,17 +803,19 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		layoutTemplate: 'Admin',
-		waitOn: function(){
-			return[
-				Meteor.subscribe('volumes'),
-				Meteor.subscribe('issues'),
-				Meteor.subscribe('articles')
-			]
+		onBeforeAction: function(){
+			Meteor.call('archive',function(error,result){
+				if(error){
+					console.error('Archive Error', error);
+				}else if(result){
+					Session.set('archive',result);
+				}
+			});
+			this.next();
 		}
 	});
 
 	// Issue
-	// TODO: LIMIT subscription of articles to just issue
 	Router.route('/admin/issue/:vi', {
 		name: 'AdminIssue',
 		title: function() {
@@ -819,32 +826,62 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		layoutTemplate: 'Admin',
-		waitOn: function(){
-			var vi = this.params.vi;
-			var matches = vi.match('v([0-9]+)i([0-9]+)');
-			var volume = parseInt(matches[1]);
-			var issue = parseInt(matches[2]);
-			return[
-				Meteor.subscribe('articles'),
-				Meteor.subscribe('issue',volume,issue)
-			]
+		onBeforeAction: function(){
+			Session.set('issue',null);
+			var pieces = Meteor.issue.urlPieces(this.params.vi);
+			// TODO: add redirect if no issue
+			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
+				if(error){
+					console.log('ERROR - getIssueAndAssets');
+					console.log(error);
+				}
+				if(result){
+					Session.set('issue',result);
+				}
+			});
+
+			this.next();
 		},
-		data: function(){
-			if(this.ready()){
-				var vi = this.params.vi;
-				var matches = vi.match('v([0-9]+)i([0-9]+)');
-				var volume = parseInt(matches[1]);
-				var issue = parseInt(matches[2]);
-				var issueData = issues.findOne({'volume' : parseInt(volume), 'issue':issue});
-				var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
-				issueData['articles'] = issueArticles;
-				var data = {
-					issue: issueData
-				};
-				//do not change issue variable name in data, we need this to get mongoid to update the doc
-				return data;
+	});
+	Router.route('/admin/add_issue/', {
+		name: 'AdminAddIssue',
+		title: function() {
+			var pageTitle = 'Admin | Add Issue ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
 			}
-		}
+			return pageTitle;
+		},
+		layoutTemplate: 'Admin',
+	});
+
+	// Volume
+	Router.route('/admin/volume/:v', {
+		name: 'AdminVolume',
+		title: function() {
+			var pageTitle = 'Admin | Volume ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Session.set('volume',null);
+			// TODO: add redirect if no volume
+
+			Meteor.call('getVolume', this.params.v, function(error,result){
+				if(error){
+					console.log('ERROR - getVolume');
+					console.log(error);
+				}
+				if(result){
+					Session.set('volume',result);
+				}
+			});
+
+			this.next();
+		},
 	});
 
 	// Users
@@ -921,10 +958,19 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		layoutTemplate: 'Admin',
+		onBeforeAction: function(){
+			Meteor.call('archive',function(error,result){
+				if(error){
+					console.error('Archive Error', error);
+				}else if(result){
+					Session.set('archive',result);
+				}
+			});
+			this.next();
+		},
 		waitOn: function(){
 			return[
-				Meteor.subscribe('userData',this.params._id),
-				Meteor.subscribe('issues')
+				Meteor.subscribe('userData',this.params._id)
 			]
 		},
 		data: function(){
