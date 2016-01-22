@@ -1,43 +1,6 @@
 Meteor.methods({
-	processXML: function(fileName,batch){
-		// for importing XML to DB
-		// TODO: verify this is still working after moving processing to new function, processXmlFile
-		if(fileName)
-		var xmlString;
-		var fut = new future();
-
-		var filePath = '/Users/jl/sites/paperchase/uploads/xml/';//TODO: add paths
-		if(batch){
-			filePath = '/Users/jl/sites/paperchase/uploads/xml/';
-		}
-
-		var file = filePath + fileName;
-		fs.exists(file, function(fileok){
-			if(fileok){
-				fs.readFile(file, function(error, data) {
-					if(data)
-					xmlString = data.toString();
-					if(error){
-						throw new Meteor.Error(500, 'Cannot read XML' , error);
-					}else{
-						Meteor.call('processXmlString',xmlString,function(error,result){
-							if(error){
-								throw new Meteor.Error(500, 'Cannot process XML' , error);
-							}
-							if(result){
-								fut['return'](result);
-							}
-						});
-					}
-				});
-			}else{
-				console.error('file not found');
-			}
-		});
-		return fut.wait();
-	},
-	articleXmlToJson: function(xml,articleJson){
-		// console.log('..articleXmlToJson');
+	articleToSchema: function(xml,articleJson){
+		// console.log('..articleToSchema');
 		// Process JSON for meteor templating and mongo db
 		// xml - xml string
 		// articleJson - parsed XML to JSON. but not in the schema we need.
@@ -216,8 +179,7 @@ Meteor.methods({
 	},
 	processXmlString: function(xml){
 		// console.log('..processXmlString');
-		var articleProcessed;
-		var articlePreProcess;
+		var articleJson;
 		var fut = new future();
 		parseString(xml, function (error, result) {
 			if(error){
@@ -229,9 +191,9 @@ Meteor.methods({
 				if(result['pmc-articleset']){
 					// if getting XML via crawling PMC
 					// Or if uploading PMC XML
-					articlePreProcess = result['pmc-articleset']['article'];
-					// console.log('articlePreProcess ',articlePreProcess);
-					articleProcessed = Meteor.call('articleXmlToJson', xml, articlePreProcess,function(e,r){ // pass XML string (for title) AND JSON for meta
+					articleJson = result['pmc-articleset']['article'];
+					// console.log('articleJson ',articleJson);
+					Meteor.call('articleToSchema', xml, articleJson,function(e,r){ // pass XML string (for title) AND JSON
 						if(e){
 							console.error(e);
 							fut['throw'](e);
