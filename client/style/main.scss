@@ -280,6 +280,19 @@ html,body{
 		}
 	}
 
+/* Archive ------------------------*/
+	.archive-issue{
+		float:left;
+		display:block;
+		width: 25%;
+		img{
+			width: 90%;
+		}
+		&:nth-child(4n+1){
+			clear: both;
+		};
+	}
+
 /* Buttons ------------------------*/
 	.btn{
 		@extend .serif;
