@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		console.log('--updateArticle |  mongoId = ' + mongoId);
+		// console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 		if(!mongoId){
 			// New Article
@@ -82,7 +82,8 @@ Meteor.methods({
 				// This also checks volume collection and inserts if needed.
 				issueId = Meteor.call('addIssue',{
 					'volume': volume,
-					'issue': issue
+					'issue': issue,
+					'issue_linkable' : issue.replace(/\//g,'_') // remove any slashed to avoid URL linking problems
 				});
 			}
 		}
@@ -171,18 +172,7 @@ Meteor.methods({
 
 			// Issues
 			// ------
-			// get ALL issues and volumes for list options and organize by volume
-			var volumesList = Meteor.call('getAllVolumes');
-			var issuesList = Meteor.call('getAllIssues');
-			if(article.issue_id){
-				// console.log('issue_id = ' + article.issue_id);
-				for(var i=0 ; i<issuesList.length ; i++){
-					if(issuesList[i]['_id'] === article.issue_id){
-						issuesList[i]['selected'] = true;
-					}
-				}
-			}
-			article.volumes = Meteor.organize.issuesIntoVolumes(volumesList,issuesList);
+			article.volumes = Meteor.call('archive',article.issue_id);
 
 			// Pub Status
 			// ----------
