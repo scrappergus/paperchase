@@ -37,6 +37,9 @@ Meteor.methods({
 		}
 		return vol;
 	},
+	updateVolume: function(volumeId, updateObj){
+		return volumes.update({_id :volumeId },updateObj);
+	},
 	addIssue: function(issueData){
 		//check if volume exists, if not add
 		var vol,

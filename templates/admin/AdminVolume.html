@@ -1,17 +1,36 @@
 <template name="AdminVolume">
 	{{>AdminHeader header="Volume" header_extra=volume.volume}}
+	{{>saving}}
+	{{>Error}}
+	{{>successMessage what="Volume"}}
+	<form>
+	{{#if volume}}
 	{{#with volume}}
+	{{>AdminVolumeIssue}}
+	{{/with}}
+	{{/if}}
 	<div class="row">
 		<div class="col s12">
-		{{#each issues_data}}
-		<ul class="issues-list">
-			<li>
-				Issue {{issue}}
-			</li>
-		</ul>
-		{{/each}}
+			{{>SaveBtn}}
 		</div>
 	</div>
-	{{/with}}
-	{{>SaveBtn}}
+	</form>
+</template>
+<template name="AdminVolumeIssue">
+	<div class="row">
+		<div class="col s12">
+		<ul id="volume-issues-list">
+		{{#each issues_data}}
+			<li class="row valign-wrapper" id="{{_id}}">
+				<div class="col s12 m1 center-align">
+					<i class="material-icons pointer">&#xE8D5;</i>
+				</div>
+				<div class="col s12 m11">
+					Issue {{issue}}
+				</div>
+			</li>
+		{{/each}}
+		</ul>
+		</div>
+	</div>
 </template>

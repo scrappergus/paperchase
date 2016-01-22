@@ -105,11 +105,16 @@
 
 /* Sortable Lists ------------------*/
 	/* about, for authors, site control */
-	.about-sections-list, .sections-list, .side-nav-options, .issues-list{
+	.about-sections-list, .sections-list, .side-nav-options, #volume-issues-list{
 		li{
 			padding: $pad-md;
 			margin: $margin-md 0;
 			background: $gray-0;
 			cursor: pointer;
 		}
+	}
+	#volume-issues-list{
+		display: block;
+		float: left;
+		width: 100%;
 	}

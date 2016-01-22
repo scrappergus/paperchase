@@ -61,8 +61,8 @@ Template.AdminArticleXmlUpload.onRendered(function () {
 
 // Volume
 // ------
-Template.AdminVolume.onRendered(function () {
-    $('.issues-list').sortable();
+Template.AdminVolumeIssue.onRendered(function () {
+    $('#volume-issues-list').sortable();
 });
 
 // Issue
