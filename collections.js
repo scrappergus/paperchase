@@ -420,10 +420,11 @@ if (Meteor.isServer) {
     return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
   });
   Meteor.publish('issue', function (volume,issue) {
-    return issues.find({volume: parseInt(volume), issue: parseInt(issue)});
+    return issues.find({volume: parseInt(volume), issue_linkable: issue});
   });
   Meteor.publish('issueArticles', function (volume,issue) {
-    return articles.find({volume: parseInt(volume), issue: parseInt(issue)});
+    var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
+    return articles.find({issue_id : issueinfo['_id']});
   });
   Meteor.publish('currentIssue',function(){
     return issues.find({},{sort : {volume:-1,issue:-1}});
