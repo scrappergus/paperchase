@@ -253,10 +253,7 @@ Template.AdminArticleXmlUpload.helpers({
 // ---------------
 Template.AdminDataSubmissions.helpers({
 	volumes: function(){
-		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-		var iss = issues.find({},{sort : {issue:-1}}).fetch();
-		var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-		return res;
+		return Session.get('archive');
 	},
 	articles: function(){
 		// console.log('..Articles helper');
@@ -431,10 +428,7 @@ Template.AdminNewsForm.helpers({
 // ---------------
 Template.AdminUserSubs.helpers({
 	volumes: function(){
-		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-		var iss = issues.find({},{sort : {issue:-1}}).fetch();
-		var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-		return res;
+		return Session.get('archive');
 	}
 });
 
@@ -442,10 +436,23 @@ Template.AdminUserSubs.helpers({
 // ---------------
 Template.AdminArchive.helpers({
 	volumes: function(){
-		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-		var iss = issues.find({},{sort : {issue:-1}}).fetch();
-		var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-		return res;
+		return Session.get('archive');
+	}
+});
+
+// Volume
+// ---------------
+Template.AdminVolume.helpers({
+	volume: function(){
+		return Session.get('volume');
+	}
+});
+
+// Issue
+// ---------------
+Template.AdminIssue.helpers({
+	issueData: function(){
+		return Session.get('issue');
 	}
 });
 
