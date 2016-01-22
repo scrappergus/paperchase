@@ -88,10 +88,7 @@ Template.Contact.helpers({
 // -------------
 Template.Archive.helpers({
 	volumes: function(){
-		var vol = volumes.find({},{sort : {volume:-1}}).fetch();
-		var iss = issues.find({},{sort : {issue:-1}}).fetch();
-		var res = Meteor.organize.issuesIntoVolumes(vol,iss);
-		return res;
+		return Session.get('archive');
 	}
 });
 // Editorial Board
