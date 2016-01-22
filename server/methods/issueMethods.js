@@ -1,7 +1,6 @@
 Meteor.methods({
 	archive: function(articleIssueId){
 		//combine vol and issue collections
-
 		var issuesList = issues.find({},{}).fetch();
 		var volumesList = volumes.find({},{sort : {volume:-1}}).fetch();
 		var issuesObj = {};
@@ -57,7 +56,7 @@ Meteor.methods({
 			issueId = iss['_id'];
 		}
 		if(!vol){
-			Meteor.call('addVolume',issueData['volume'],issueData['issue'], function(error,_id){
+			Meteor.call('addVolume',issueData['volume'],issueId, function(error,_id){
 				if(error){
 					console.log('ERROR: ' + error.message);
 				}
