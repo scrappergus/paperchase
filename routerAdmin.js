@@ -139,9 +139,11 @@ if (Meteor.isClient) {
 			// {#each}} currently only accepts arrays, cursors or falsey values.
 			if(this.ready()){
 				var sorted  = sorters.findOne();
-				return {
-					sections : sorted['ordered']
-				};
+				if(sorted){
+					return {
+						sections : sorted['ordered']
+					};
+				}
 			}
 		}
 	});
