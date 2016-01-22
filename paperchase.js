@@ -295,6 +295,8 @@ if (Meteor.isClient) {
 	Session.setDefault('section-nav',null);
 	// for section papers list
 	Session.setDefault('article-list',null);
+	// for archive.
+	Session.setDefault('archive',null);
 
 	Router.route('/', {
 		name: 'Home',
@@ -373,11 +375,15 @@ if (Meteor.isClient) {
 			}
 			return pageTitle + 'Archive';
 		},
-		waitOn: function(){
-			return[
-				Meteor.subscribe('volumes'),
-				Meteor.subscribe('issues')
-			]
+		onBeforeAction: function(){
+			Meteor.call('archive',function(error,result){
+				if(error){
+					console.error('Archive Error', error);
+				}else if(result){
+					Session.set('archive',result);
+				}
+			});
+			this.next();
 		}
 	});
 
@@ -486,32 +492,22 @@ if (Meteor.isClient) {
 		name: 'Issue',
 		layoutTemplate: 'Visitor',
 		title: function() {
-			var pageTitle = '',
-				vi = this.params.vi;
-			var matches = vi.match('v([0-9]+)i([0-9]+)');
-			var volume = parseInt(matches[1]);
-			var issue = parseInt(matches[2]);
+			var pageTitle = '';
+			var pieces = Meteor.issue.urlPieces(this.params.vi);
+
 			if(Session.get('journal')){
 				pageTitle = Session.get('journal').journal.name + ' | ';
 			}
-			return pageTitle + 'Volume ' + volume + ', Issue ' + issue;
+			return pageTitle + 'Volume ' + pieces.volume + ', Issue ' + pieces.issue;
 		},
 		onBeforeAction: function(){
+			// console.log('before');
 			// console.log('..before');
 			Session.set('issue',null);
-			var vi = this.params.vi;
-			var matches = vi.match('v([0-9]+)i([0-9]+)');
-			var volume = parseInt(matches[1]);
-			var issue = parseInt(matches[2]);
-
+			var pieces = Meteor.issue.urlPieces(this.params.vi);
 			// TODO: add redirect if no issue
 
-			// for issue header while articles are processing and we retrieve assets links from API
-			var issueData = issues.findOne();
-			// console.log(issueData);
-			Session.set('issue',issueData);
-
-			Meteor.call('getIssueAndAssets',volume,issue,function(error,result){
+			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
 				if(error){
 					console.log('ERROR - getIssueAndAssets');
 					console.log(error);
@@ -523,16 +519,6 @@ if (Meteor.isClient) {
 
 			this.next();
 		},
-		waitOn: function(){
-			var vi = this.params.vi;
-			var matches = vi.match('v([0-9]+)i([0-9]+)');
-			var volume = parseInt(matches[1]);
-			var issue = parseInt(matches[2]);
-			return[
-				Meteor.subscribe('issue',volume,issue),
-				Meteor.subscribe('issueArticles',volume,issue)
-			]
-		}
 	});
 
 	// Article
