@@ -1,5 +1,14 @@
+<template name="AdminAddIssue">
+	{{>AdminHeader header="Add Issue"}}
+	<div class="row">
+		<div class="col s12">
+			<H4>not developed yet</H4>
+		</div>
+	</div>
+</template>
 <template name="AdminIssue">
-{{#with issue}}
+	{{>AdminHeader header="Issue"}}
+	{{#with issueData}}
 	<div class="row">
 		<div class="col s12">
 			<h3>Volume {{volume}}, Issue {{issue}}</h3>
@@ -55,5 +64,5 @@
 			</ul>
 		</div>
 	</div>
-{{/with}}
+	{{/with}}
 </template>

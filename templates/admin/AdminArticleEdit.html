@@ -141,7 +141,7 @@
 						<option value="">&mdash;&mdash; Select Issue &mdash;&mdash;</option>
 						{{#each volumes}}
 						<option disabled>&mdash; Volume {{volume}} &mdash;</option>
-						{{#each issues}}
+						{{#each issues_data}}
 						<option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">Volume {{volume}}, Issue {{issue}}</option>
 						{{/each}}
 						{{/each}}
