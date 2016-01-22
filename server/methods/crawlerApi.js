@@ -11,17 +11,24 @@ Meteor.methods({
 					throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 				}else if(result){
 					// combine with articles DB
-					var articlesList = JSON.parse(result.content);
+					// var articlesList = JSON.parse(result.content);
+					articlesList = agingarticleslist;
 					for(var a=0 ; a<articlesList.length ; a++){
 						if(articlesList[a]['ids']['pii']){
 							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
 						}else if(articlesList[a]['ids']['doi']){
 							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['doi'];
+						}else if(articlesList[a]['ids']['pmid']){
+							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pmid'];
 						}else{
 							console.log('..missing IDS');
 							console.log(articlesList[a]);
 						}
-						articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['paperchase_id'].replace(/\//g,'_');
+						if(articlesList[a]['ids']['paperchase_id']){
+							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['paperchase_id'].replace(/\//g,'_');
+						}else{
+							console.log('MISSING paperchase_id: ' + JSON.stringify(articlesList[a]['ids']));
+						}
 						// console.log(articlesList[a]['ids']);
 						Meteor.call('addArticle',articlesList[a],function(addError,articleAdded){
 							if(addError){
