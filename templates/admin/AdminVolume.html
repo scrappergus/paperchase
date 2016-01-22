@@ -1,0 +1,17 @@
+<template name="AdminVolume">
+	{{>AdminHeader header="Volume" header_extra=volume.volume}}
+	{{#with volume}}
+	<div class="row">
+		<div class="col s12">
+		{{#each issues_data}}
+		<ul class="issues-list">
+			<li>
+				Issue {{issue}}
+			</li>
+		</ul>
+		{{/each}}
+		</div>
+	</div>
+	{{/with}}
+	{{>SaveBtn}}
+</template>
