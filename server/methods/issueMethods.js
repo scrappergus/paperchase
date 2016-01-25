@@ -18,8 +18,10 @@ Meteor.methods({
 					// For providing all available issues on the article form
 					issuesObj[volumeIssuesId]['selected'] = true;
 				}
-				issuesObj[volumeIssuesId]['cover'] = Meteor.issue.coverPath(issuesObj[volumeIssuesId]['volume'],issuesObj[volumeIssuesId]['issue']);
-				volumesList[v]['issues_data'].push(issuesObj[volumeIssuesId]);
+				if(issuesObj[volumeIssuesId]){
+					issuesObj[volumeIssuesId]['cover'] = Meteor.issue.coverPath(issuesObj[volumeIssuesId]['volume'],issuesObj[volumeIssuesId]['issue']);
+					volumesList[v]['issues_data'].push(issuesObj[volumeIssuesId]);
+				}
 			}
 		}
 		// console.log('volumesList',volumesList);
