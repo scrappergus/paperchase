@@ -108,6 +108,15 @@ Template.AdminDoiStatus.helpers({
 						}else{
 							return '';
 						}
+					},
+					cellClass: function (value, object) {
+						if(object.crossref_epub_date){
+							if(object.paperchase.dates && object.paperchase.dates.epub){
+								if(Meteor.dates.dashedToWord(object.crossref_epub_date)  !=  Meteor.dates.article(object.paperchase.dates.epub)){
+									return 'article-date-conflict';
+								}
+							}
+						}
 					}
 				},
 				{
