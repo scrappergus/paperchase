@@ -61,7 +61,10 @@ Meteor.methods({
 				var articlesDoiList = JSON.parse(result.content);
 
 				for(var a=0 ; a<articlesDoiList.length ; a++){
-					articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL + journalShortName + '/';
+					if(articlesDoiList[a]['paperchase']){ // Only neccessary to check for this when we cannot determine if ANY articles have DOI registerd. For ex, no DOI in article doc, or no DOI setting in crawler for journal
+						articlesDoiList[a]['paperchase'].doiRegisterUrl = registerURL + journalShortName + '/';
+					}
+
 				}
 				fut['return'](articlesDoiList);
 			}
