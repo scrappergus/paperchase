@@ -45,14 +45,18 @@ Template.AdminDoiStatus.helpers({
 					key: 'deposited',
 					label: 'Deposited',
 					fn: function(deposited){
-						return Meteor.dates.wordDate(deposited.timestamp);
+						if(deposited){
+							return Meteor.dates.wordDate(deposited.timestamp);
+						}
 					}
 				},
 				{
 					key: 'indexed_date',
 					label: 'Indexed',
 					fn: function(indexed_date){
-						return Meteor.dates.wordDate(indexed_date);
+						if(indexed_date){
+							return Meteor.dates.wordDate(indexed_date);
+						}
 					}
 				},
 				{
