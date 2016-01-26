@@ -17,6 +17,12 @@ Template.AdminSiteControl.onRendered(function () {
 	$('.side-nav-options').sortable();
 });
 
+// DOI Status
+// ---------------
+Template.piiFilter.onCreated(function () {
+    this.filter = new ReactiveTable.Filter('piiFilter', ['paperchase.ids.pii']);
+});
+
 // Article
 // ------------
 Template.AdminArticle.onRendered(function () {

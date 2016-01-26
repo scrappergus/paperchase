@@ -15,6 +15,16 @@ Template.AdminSiteControl.events({
 	}
 });
 
+// DOI Status
+// --------------------
+Template.piiFilter.events({
+   'keyup .pii-filter-input, input .pii-filter-input': function (e, template) {
+		var input = $(e.target).val();
+		// console.log('input',input);
+		template.filter.set(input);
+	}
+});
+
 // Editorial Board
 // ----------------
 Template.AdminEditorialBoardForm.events({

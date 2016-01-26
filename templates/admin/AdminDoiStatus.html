@@ -5,9 +5,20 @@
 			<a id="download-doi-status-csv" href="{{pathFor 'doiStatusCsv'}}" class="btn">Download CSV</a>
 		</div>
 	</div>
+
 	{{#if articlesList}}
+		{{>piiFilter}}
 		{{> reactiveTable class="table table-bordered table-hover" collection=articlesList settings=settings}}
 	{{else}}
 		{{>ProcessingNotHidden}}
 	{{/if}}
+</template>
+
+<template name="piiFilter">
+	<div class="input-group">
+		<span class="input-group-addon">
+			<span>PII</span>
+		</span>
+		<input class="form-control pii-filter-input" id="piiFilter" type="text"/>
+	</div>
 </template>
