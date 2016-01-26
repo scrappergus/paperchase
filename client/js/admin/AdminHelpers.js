@@ -28,13 +28,13 @@ Template.AdminDoiStatus.helpers({
 	settings: function(){
 		return {
 			rowsPerPage: 50,
-			showFilter: false,
+			filters: ['piiFilter'],
 			fields: [
 				{
-					key: 'paperchase',
+					key: 'paperchase.ids.pii',
 					label: 'PII',
-					fn: function(paperchase){
-						return paperchase.ids.pii;
+					fn: function(pii){
+						return pii;
 					}
 				},
 				{
