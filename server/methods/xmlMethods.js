@@ -4,9 +4,22 @@ Meteor.methods({
 		// Process JSON for meteor templating and mongo db
 		// xml - xml string
 		// articleJson - parsed XML to JSON. but not in the schema we need.
+		var journalMeta = articleJson[0]['front'][0]['journal-meta'][0];
 		var article = articleJson[0]['front'][0]['article-meta'][0];
 
 		var articleProcessed = {};
+
+		// PUBLISHER
+		// -----------
+		if(journalMeta['publisher']){
+			for(var i = 0 ; i < journalMeta['publisher'].length ; i++){
+				if( journalMeta['publisher'][i]['publisher-name']){
+					articleProcessed.publisher = journalMeta['publisher'][i]['publisher-name'][0];
+				}
+			}
+		}
+
+
 		// TITLE
 		// -----------
 		var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
