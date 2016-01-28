@@ -5,9 +5,15 @@ Meteor.methods({
 		var assets = {};
 		if(article.ids.paperchase_id){
 			var paperchaseId = article.ids.paperchase_id;
+			// XML
 			var xmlAsset = xmlCollection.findOne({'ids.paperchase_id' : paperchaseId});
-			if(xmlAsset && xmlAsset.full_xml){
-				assets.full_xml_url = xmlAsset.full_xml;
+			if(xmlAsset && xmlAsset.xml_url){
+				assets.full_xml_url = xmlAsset.xml_url;
+			}
+			// PDF
+			var pdfAsset = pdfCollection.findOne({'ids.paperchase_id' : paperchaseId});
+			if(pdfAsset && pdfAsset.pdf_url){
+				assets.full_xml_url = xmlAsset.pdf_url;
 			}
 		}
 		// console.log(assets);
