@@ -959,6 +959,17 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #process-all-pdf': function(e){
+		e.preventDefault();
+		// console.log('..clicked');
+		Meteor.call('getAllPmcPdf',function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #get-articles-crossref-dates' : function(e){
 		e.preventDefault();
 		// console.log('..clicked');
