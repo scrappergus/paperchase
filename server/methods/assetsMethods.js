@@ -5,7 +5,7 @@ Meteor.methods({
 		var assets = {};
 		if(article.ids.paperchase_id){
 			var paperchaseId = article.ids.paperchase_id;
-			var xmlAsset = xmlCollection.findOne({paperchase_id : paperchaseId});
+			var xmlAsset = xmlCollection.findOne({'ids.paperchase_id' : paperchaseId});
 			if(xmlAsset && xmlAsset.full_xml){
 				assets.full_xml_url = xmlAsset.full_xml;
 			}
