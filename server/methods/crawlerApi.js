@@ -72,9 +72,7 @@ Meteor.methods({
 	getAllArticlesPmcXml: function(){
 		console.log('..getAllArticlesPmcXml');
 		var fut = new future();
-		// var requestURL = 'http://localhost:4932';
-		var requestURL =  journalConfig.findOne().api.crawler;
-		requestURL += '/crawl_xml/' + journalConfig.findOne().journal.short_name;
+		var requestURL =  journalConfig.findOne().api.crawler + '/crawl_xml/' + journalConfig.findOne().journal.short_name;
 
 		var missingInPaperchase = [];
 		Meteor.http.get(requestURL, function(error,result){
@@ -177,9 +175,7 @@ Meteor.methods({
 		// use crawler to get PDF from PMC, save to S3
 		console.log('..getAllPmcPdf');
 		var fut = new future();
-		var requestUrl = journalConfig.findOne().api.crawler;
-		// var requestURL = 'http://localhost:4932';
-		requestURL += '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		var requestUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
 
 		var missingInPaperchase = [];
 		Meteor.http.get(requestURL, function(error,result){
