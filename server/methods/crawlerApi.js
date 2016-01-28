@@ -88,7 +88,7 @@ Meteor.methods({
 				if(articlesList.length > 1){
 					// All article processed on crawler. Now update the XML collection. Return those without a paperchase_id to user.
 					for(var i=0 ; i<articlesList.length ; i++){
-						var paperchaseId = articlesList[i]['paperchase_id'];
+						var paperchaseId = articlesList[i]['ids']['paperchase_id'];
 						if(paperchaseId){
 							updated = xmlCollection.update({paperchase_id: paperchaseId},{$set:articlesList[i]},{upsert: true});
 						}else{
