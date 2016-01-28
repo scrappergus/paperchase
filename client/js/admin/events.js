@@ -961,59 +961,75 @@ Template.AdminAdvanceArticles.events({
 Template.AdminBatchXml.events({
 	'click #process-all-pdf': function(e){
 		e.preventDefault();
+		window.scrollTo(0, 0);
+		Meteor.formActions.saving();
 		// console.log('..clicked');
 		Meteor.call('getAllPmcPdf',function(e,r){
 			if(e){
 				console.error(e);
+				Meteor.formActions.error();
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.successMessage(r + ' PDFs downloaded');
 			}
 		});
 	},
 	'click #get-articles-crossref-dates' : function(e){
 		e.preventDefault();
+		window.scrollTo(0, 0);
 		// console.log('..clicked');
 		Meteor.call('getCrossRefEpub',function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.successMessage(r + ' CrossRef Dates added');
 			}
 		});
 	},
 	'click #get-articles-legacy-dates' : function(e){
 		e.preventDefault();
+		window.scrollTo(0, 0);
 		// console.log('..clicked');
 		Meteor.call('getLegacyEpub',function(e,r){
 			if(e){
 				console.error(e);
+				Meteor.formActions.error();
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.successMessage(r + ' Legacy Dates added');
 			}
 		});
 	},
 	'click #add-paperchase-id' : function(e){
 		e.preventDefault();
+		window.scrollTo(0, 0);
 		Meteor.call('allArticlesAddPaperchaseId',function(e,r){
 			if(e){
 				console.error(e);
+				Meteor.formActions.error();
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.successMessage(r + ' Paperchase ID added');
 			}
 		})
 	},
 	'click #initiate-articles' : function(e){
 		e.preventDefault();
+		window.scrollTo(0, 0);
 		Meteor.call('intiateArticleCollection',function(e,r){
 			if(e){
 				console.error(e);
+				Meteor.formActions.error();
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.successMessage(r + ' Articles Collection Created');
 			}
 		})
 	},
 	'click #get-articles-pmc-xml' : function(e){
 		e.preventDefault();
+		window.scrollTo(0, 0);
 		Meteor.formActions.saving();
 		Meteor.call('getAllArticlesPmcXml',function(e,r){
 			if(e){
@@ -1021,7 +1037,7 @@ Template.AdminBatchXml.events({
 				Meteor.formActions.error();
 			}else if(r){
 				// console.log('r',r);
-				Meteor.formActions.success();
+				Meteor.formActions.successMessage(r + ' XML Saved');
 			}
 		});
 	},
@@ -1032,6 +1048,7 @@ Template.AdminBatchXml.events({
 				console.error(e);
 			}else if(r){
 				console.log(r);
+				Meteor.formActions.successMessage(r + ' XML Processed');
 			}
 		})
 	},
