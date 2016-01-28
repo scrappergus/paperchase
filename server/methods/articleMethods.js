@@ -122,11 +122,11 @@ Meteor.methods({
 		if(!articleId){
 			article = {}; // For a new article
 			article.ids = {};
-			article.ids.pii = Meteor.call('getNewPii');
+			// article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
 		}else if(!article && !articleByPii){
 			article = {}; // Article by PII not found. Then act like this is a new article
 			article.ids = {};
-			article.ids.pii = Meteor.call('getNewPii');
+			// article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
 		}
 
 		if(article){
