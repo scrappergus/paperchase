@@ -3,26 +3,31 @@ Meteor.methods({
 		console.log('..batchProcessXml');
 		var journalInfo = journalConfig.findOne();
 		var journalShortName = journalInfo.journal.short_name;
-		var articlesList = articles.find().fetch();
+		var articlesList = articles.find({}).fetch();
 		// console.log(articlesList);
 		var missingPii = [];
 		var xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/'
 		for(var a=0; a<articlesList.length ; a++){
 		// for(var a=0; a< 1; a++){
+			console.log('-- ' + a);
+			// console.log(articlesList[a]);
 			if(articlesList[a]['ids']['paperchase_id']){
-				// console.log('-- PII: ' + articlesList[a]['ids']['pii']);
+				// console.log('-- ' + JSON.stringify(articlesList[a]['ids']));
 				// get XML and update DB
+				// TODO: Use xml collection to get URL
 				var articleXML = xmlUrl + articlesList[a]['ids']['paperchase_id'] + '.xml';
+				// console.log('articleXML',articleXML);
 				Meteor.call('parseXmlAfterUpload',articleXML, function(error,result){
 					if(error){
 						console.error('parseXmlAfterUpload',error);
 					}else if(result){
+						// console.log('result',result);
 						// maintain PII when batch updating via XML
 						var articleInfo = articles.findOne(articlesList[a]['_id']);
 						if(articleInfo.ids && articleInfo.ids.pii){
 							result.ids.pii = articleInfo.ids.pii;
 						}
-						result.ids.paperchase_id = articleInfo.ids.paperchase_id;
+						result.ids = articleInfo.ids;
 						Meteor.call('updateArticle',articlesList[a]['_id'], result,function(articleUpdateError,articleUpdate){
 							if(articleUpdateError){
 								console.error('Could not update article doc: ' + articlesList[a]['_id'], articleUpdateError);
@@ -200,5 +205,38 @@ Meteor.methods({
 			// console.log(articlesList[a]['ids']);
 
 		}
+	},
+	checkAllArticlesAssets: function(assetType){
+		console.log('..checkAllArticlesAssets : ' + assetType);
+		var fut = new future();
+		var journalInfo = journalConfig.findOne();
+		var journalShortName = journalInfo.journal.short_name;
+		var articlesList = articles.find().fetch();
+		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/' + assetType + '/';
+		for(var i = 0 ; i < articlesList.length; i++){
+			var paperchaseId = articlesList[i].ids.paperchase_id;
+			var assetUrl = assetBaseUrl + paperchaseId + '.' + assetType;
+			console.log(paperchaseId,assetUrl);
+			if(paperchaseId){
+				Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
+					if(result){
+						var assetData = {
+							'ids' : articlesList[i].ids
+						}
+						assetData[assetType + '_url'] = assetUrl;
+						Meteor.call('updateAssetDoc',assetType, paperchaseId, assetData, function(updateError,updateResult){
+							if(updateResult){
+								console.log('updateResult',updateResult);
+							}
+						});
+					}
+				});
+			}
+			if(i == parseInt(articlesList.length - 1)){
+				fut['return'](true);
+			}
+
+		}
+		return fut.wait();
 	}
 });

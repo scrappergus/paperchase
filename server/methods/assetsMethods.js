@@ -19,5 +19,54 @@ Meteor.methods({
 		}
 		// console.log(assets);
 		return assets;
+	},
+	assetExistsOnS3: function(url){
+		var fut = new future();
+		Meteor.http.get(url , function(error,result){
+			if(error){
+				console.error('Asset Check Error: ',error);
+				fut['return'](false);
+			}else if(result){
+				console.log(url + ' Exists');
+				fut['return'](true);
+			}
+		});
+		return fut.wait();
+	},
+	updateAssetDoc: function(assetType, paperchaseId, assetData){
+		// var collection = global[assetType];
+		// if (collection instanceof Meteor.Collection) {
+		// 	console.log('..updateAssetDoc: ', assetType, paperchaseId );
+		// 	collection.update({'ids.paperchase_id' : paperchaseId},assetData, {upsert:true}, function(updateError,updateRes){
+		// 		if(updateError){
+		// 			console.error('updateError',updateError);
+		// 			return;
+		// 		}else if(updateRes){
+		// 			return updateRes;
+		// 		}
+		// 	});
+		// }else{
+		// 	console.log('not a collection');
+		// }
+		//TODO: Get above to work, using variable name as collection
+		if(assetType == 'pdf'){
+			pdfCollection.update({'ids.paperchase_id' : paperchaseId},assetData, {upsert:true}, function(updateError,updateRes){
+				if(updateError){
+					console.error('updateError',updateError);
+					return;
+				}else if(updateRes){
+					return updateRes;
+				}
+			});
+		}else if(assetType == 'xml'){
+			xmlCollection.update({'ids.paperchase_id' : paperchaseId},assetData, {upsert:true}, function(updateError,updateRes){
+				if(updateError){
+					console.error('updateError',updateError);
+					return;
+				}else if(updateRes){
+					return updateRes;
+				}
+			});
+		}
 	}
 });
