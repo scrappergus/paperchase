@@ -2,60 +2,40 @@ xpath = Meteor.npmRequire('xpath');
 dom = Meteor.npmRequire('xmldom').DOMParser;
 Meteor.methods({
 	getAssetsForFullText: function(mongoId){
-		// console.log('... mongo id = ' + mongoId);
+		// console.log('... getAssetsForFullText: ' + mongoId);
 		var fut = new future();
 		var articleJson,
-			articleFullTextLink,
-			articleFullText = [],
-			articleFullTextXml,
-			pii,
-			pmid,
 			articleInfo,
-			configSettings,
-			assetsLink,
-			resLinks,
-			resXml,
+			figures = [],
 			xml;
 		articleInfo = articles.findOne({'_id' : mongoId});
 		if(articleInfo){
-			pmid = articleInfo.ids.pmid;
-			pii = articleInfo.ids.pii;
-			configSettings = journalConfig.findOne({});
-			assetsLink = configSettings.api.assets;
-		}
-
-
-		if(pii){
-			// get asset links
-			// ---------------
-			resLinks = Meteor.http.get(assetsLink + pii);
-			if(resLinks){
-				resLinks = resLinks.content;
-				resLinks = JSON.parse(resLinks);
-				resLinks = resLinks[0];
-				// console.log('resLinks');console.log(resLinks);
-				articleFullTextLink = resLinks.full_xml_url;
-			}
-
-			// get XML
-			// ---------------
-			if(articleFullTextLink){
-				resXml = Meteor.http.get(articleFullTextLink);
-				if(resXml){
-					xml = resXml.content;
-					// console.log(xml);
+			Meteor.call('articleAssests',mongoId, function(assetsError, assets){
+				if(assetsError){
+					console.error('assetsError',assetsError);
+				}else if(assets && assets.xml_url){
+					// console.log('XML URL',assets.xml_url);
+					if(assets.figures){
+						figures = assets.figures;
+					}
+					Meteor.http.get(assets.xml_url,function(getXmlError, xmlRes){
+						if(getXmlError){
+							console.error('getXmlError',getXmlError);
+							fut['throw'](getXmlError);
+						}else if(xmlRes){
+							xml = xmlRes.content;
+							Meteor.call('fullTextToJson',xml, figures, function(convertXmlError, convertedXml){
+								if(convertXmlError){
+									console.error('convertXmlError',convertXmlError);
+									fut['throw'](convertXmlError);
+								}else if(convertedXml){
+									fut['return'](convertedXml);
+								}
+							});
+						}
+					});
 				}
-			}
-
-			// convert XML
-			// ---------------
-			if(xml){
-				var articleJson = Meteor.call('fullTextToJson',xml, resLinks.figures);
-			}
-		}
-		if(articleJson){
-			articleJson.figures = resLinks.figures;
-			fut['return'](articleJson);
+			});
 		}
 		return fut.wait();
 	},
