@@ -14,7 +14,7 @@ Meteor.methods({
 			// PDF
 			var pdfAsset = pdfCollection.findOne({'ids.paperchase_id' : paperchaseId});
 			if(pdfAsset && pdfAsset.pdf_url){
-				assets.pdf_url = xmlAsset.pdf_url;
+				assets.pdf_url = pdfAsset.pdf_url;
 			}
 		}
 		// console.log(assets);
