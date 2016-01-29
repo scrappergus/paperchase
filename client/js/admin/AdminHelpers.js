@@ -78,8 +78,8 @@ Template.AdminDoiStatus.helpers({
 					}
 				},
 				{
-					key: 'crossref_epub_date',
-					label: 'DOI: EPub',
+					key: 'crossref_print_date',
+					label: 'DOI: Print',
 					fn: function(date){
 						if(date){
 							return Meteor.dates.dashedToWord(date);
@@ -89,8 +89,8 @@ Template.AdminDoiStatus.helpers({
 					}
 				},
 				{
-					key: 'crossref_print_date',
-					label: 'DOI: Print',
+					key: 'crossref_epub_date',
+					label: 'DOI: EPub',
 					fn: function(date){
 						if(date){
 							return Meteor.dates.dashedToWord(date);
