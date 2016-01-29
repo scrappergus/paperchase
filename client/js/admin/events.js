@@ -959,18 +959,47 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #check-all-pdf': function(e){
+		e.preventDefault();
+		Meteor.call('checkAllArticlesAssets', 'pdf', function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #process-all-pdf': function(e){
 		e.preventDefault();
-		window.scrollTo(0, 0);
-		Meteor.formActions.saving();
+		// response takes too long. Do not wait for crawler
+		// window.scrollTo(0, 0);
+
+		// Meteor.formActions.saving();
 		// console.log('..clicked');
 		Meteor.call('getAllPmcPdf',function(e,r){
 			if(e){
 				console.error(e);
-				Meteor.formActions.error();
+				// Meteor.formActions.error();
 			}else if(r){
 				console.log(r);
-				Meteor.formActions.successMessage(r + ' PDFs downloaded');
+				// Meteor.formActions.successMessage(r + ' PDFs downloaded');
+			}
+		});
+	},
+	'click #process-all-pdf': function(e){
+		e.preventDefault();
+		// response takes too long. Do not wait for crawler
+		// window.scrollTo(0, 0);
+
+		// Meteor.formActions.saving();
+		// console.log('..clicked');
+		Meteor.call('getAllPmcPdf',function(e,r){
+			if(e){
+				console.error(e);
+				// Meteor.formActions.error();
+			}else if(r){
+				console.log(r);
+				// Meteor.formActions.successMessage(r + ' PDFs downloaded');
 			}
 		});
 	},

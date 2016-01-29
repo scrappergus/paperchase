@@ -77,14 +77,15 @@ Meteor.methods({
 		var missingInPaperchase = [];
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
-				console.error(error);
+				console.error('getAllArticlesPmcXml',error);
 				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
 			}else if(result){
 				// console.log('All XML Saved',result);
 				// Loop through all articles in response and update the XML collection in the DB
 				articlesList = result.data;
-				if(articlesList.length > 1){
-					// All article processed on crawler. Now update the XML collection. Return those without a paperchase_id to user.
+				console.log('articlesList',articlesList);
+				if(articlesList.length > 0){
+					// All article processed on crawler. Now update the XML collection.
 					for(var i=0 ; i<articlesList.length ; i++){
 						var paperchaseId = articlesList[i]['ids']['paperchase_id'];
 						if(paperchaseId){
@@ -175,39 +176,16 @@ Meteor.methods({
 		// use crawler to get PDF from PMC, save to S3
 		console.log('..getAllPmcPdf');
 		var fut = new future();
-		var requestUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		var crawlPdfUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		// console.log('crawlPdfUrl',crawlPdfUrl);
 
 		var missingInPaperchase = [];
-		Meteor.http.get(requestURL, function(error,result){
+		Meteor.http.get(crawlPdfUrl, function(error,result){
 			if(error){
 				console.error(error);
 				throw new Meteor.Error(503, 'ERROR: PDF to S3' , error);
 			}else if(result){
-				// Loop through all articles in response and update the PDF collection in the DB
-				articlesList = result.data;
-				if(articlesList.length > 0){
-					// All article processed on crawler. Now update the PDF collection. Return those without a paperchase_id to user.
-					for(var i=0 ; i<articlesList.length ; i++){
-						console.log(articlesList[i]['ids']);
-						var paperchaseId = articlesList[i]['ids']['paperchase_id'];
-						delete articlesList[i].ids._id; //remove the mongo ID from the article doc
-						if(paperchaseId){
-							updated =pdfCollection.update({paperchase_id: paperchaseId},{$set:articlesList[i]},{upsert: true});
-						}else{
-							missingInPaperchase.push(articlesList[i]);
-						}
-						if(i == parseInt(articlesList.length -1)){
-							// TODO: fut not returning..
-							// fut['return'][missingInPaperchase];
-							fut['return'](articlesList.length);
-							console.log('Could not update these. They are missing paperchase_id:',missingInPaperchase);
-						}
-					}
-				}else{
-					// No articles were updated
-					console.error('No article XML was updated in crawl');
-					fut['return'](0);
-				}
+				fut['return'](true);
 			}
 		});
 		return fut.wait();

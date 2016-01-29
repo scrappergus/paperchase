@@ -73,7 +73,18 @@
                     </div>
                     <div class="row">
                         <div class="col s12">
-                            <p>For any article doc with ids.pmc, the crawler will save the PDF to S3 and then return JSON with URLs</p>
+                            <p>For any article doc with ids.pmc, the crawler will save the PDF to S3. Response takes too long. So use next step to check if asset exists</p>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col s12">
+                            <h3>4. PDF asset check</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <button id="check-all-pdf" class="btn waves-effect waves-light red lighten-3">Check PDF</button>
                         </div>
                     </div>
                 </div>
