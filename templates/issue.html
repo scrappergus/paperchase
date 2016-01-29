@@ -41,10 +41,10 @@
 			<h4>{{{title}}}</h4>
 			<h5>{{>AuthorsList}}</h5>
 			{{#if page_start}}<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>{{/if}}
-
+			{{>ArticleButtons}}
 			<!-- TODO -->
 			<!-- use button partial -->
-			<span class="article-btns">
+			<!-- <span class="article-btns">
 						{{#if abstract}}<a class="blue-grey darken-1 waves-effect waves-light btn" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
 						{{#if isSubscribed}}
 						{{#if assets.pdf_url}}
@@ -63,7 +63,7 @@
 						<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
 						{{/if}}
 						{{/if}}
-			</span>
+			</span> -->
 		</li>
 		{{/each}}
 	</ul>

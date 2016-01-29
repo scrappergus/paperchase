@@ -297,6 +297,7 @@ if (Meteor.isClient) {
 	Session.setDefault('article-list',null);
 	// for archive.
 	Session.setDefault('archive',null);
+	Session.setDefault('article-visitor',null);
 
 	Router.route('/', {
 		name: 'Home',
@@ -542,9 +543,9 @@ if (Meteor.isClient) {
 			}
 
 			// get xml, figures, pdf links
-			Meteor.call('articleAssests', this.params._id, function(error, result) {
+			Meteor.call('articleAndAssests', this.params._id, function(error, result) {
 				if(result){
-					Session.set('article-assets',result);
+					Session.set('article-visitor',result);
 				}
 			});
 			this.next();
@@ -557,12 +558,8 @@ if (Meteor.isClient) {
 		},
 		data: function(){
 			if(this.ready()){
-				var id = this.params._id;
-				Session.set('article-id',this.params._id);
-				var article;
-				article = articles.findOne({'_id': id});
 				return {
-					article: article
+					article: Session.get('article-visitor')
 				};
 			}
 		}

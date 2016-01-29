@@ -265,4 +265,13 @@ Meteor.methods({
 
 		}
 	},
+	articleAndAssests: function(mongoId){
+		//for visitor
+		var article = articles.findOne({_id : mongoId});
+		var assets = Meteor.call('articleAssests',mongoId);
+		for(var asset in assets){
+			article[asset] = assets[asset];
+		}
+		return article;
+	}
 });

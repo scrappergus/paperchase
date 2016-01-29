@@ -101,7 +101,10 @@ Meteor.methods({
 		// get assets
 		for(var i=0 ; i< issueArticles.length ; i++){
 			// console.log(issueArticles[i]['_id']);
-			issueArticles[i]['assets'] = Meteor.call('articleAssests', issueArticles[i]['_id']);
+			var articleAssets = Meteor.call('articleAssests', issueArticles[i]['_id']);
+			for(var asset in articleAssets){
+				issueArticles[i][asset] = articleAssets[asset];
+			}
 			if(i == parseInt(issueArticles.length - 1)){
 				issueData['articles']
 				// console.log(issueData);
