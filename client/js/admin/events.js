@@ -723,13 +723,13 @@ Template.AdminArticleForm.events({
 				'message' : 'Article title is required'
 			});
 		}
-		// PII
-		// if(!articleUpdateObj.ids.paperchase_id || articleUpdateObj.ids.paperchase_id == ''){
-		// 	invalid.push({
-		// 		'fieldset_id' : 'ids',
-		// 		'message' : 'at least one ID (PII, DOI, PMC ID or PMID) is required'
-		// 	});
-		// }
+		// paperchase_id
+		if(!articleUpdateObj.ids.paperchase_id || articleUpdateObj.ids.paperchase_id == ''){
+			invalid.push({
+				'fieldset_id' : 'ids',
+				'message' : 'at least one ID (PII, DOI, PMC or PMID) is required'
+			});
+		}
 
 		// Submit to DB or show invalid errors
 		if(invalid.length > 0){
