@@ -656,15 +656,6 @@ Template.AdminArticleForm.events({
 
 		// ids
 		// -------
-
-		/*
-		    generatePaperchaseId
-		    placeholder for algorithm that determines paperchase_id
-		*/
-		function generatePaperchaseId(ids) {
-			return ids[Object.keys(ids)[0]];
-		}
-
 		$('.article-id').each(function(i) {
 			var k = $(this).attr('id'); //of the form, article-id-key
 			k = k.split('-');
@@ -672,10 +663,7 @@ Template.AdminArticleForm.events({
 			ids[k] = $(this).val();
 		});
 
-		if (!ids.paperchase_id) {
-			ids.paperchase_id = generatePaperchaseId(ids);
-		}
-
+		ids.paperchase_id = ids.paperchase_id || ids.pii || ids.doi || ids.mpcid || ids.pmid;
 		articleUpdateObj.ids = ids;
 
 		// All affiliations
@@ -736,10 +724,10 @@ Template.AdminArticleForm.events({
 			});
 		}
 		// PII
-		// if(!articleUpdateObj.ids.pii || articleUpdateObj.ids.pii == ''){
+		// if(!articleUpdateObj.ids.paperchase_id || articleUpdateObj.ids.paperchase_id == ''){
 		// 	invalid.push({
 		// 		'fieldset_id' : 'ids',
-		// 		'message' : 'PII is required'
+		// 		'message' : 'at least one ID (PII, DOI, PMC ID or PMID) is required'
 		// 	});
 		// }
 
