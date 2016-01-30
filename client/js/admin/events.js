@@ -582,7 +582,8 @@ Template.AdminArticleForm.events({
 			dates = {},
 			history = {},
 			authors = [],
-			keywords = [];
+			keywords = [],
+			ids = {};
 
 		var invalid = [];
 
@@ -653,16 +654,29 @@ Template.AdminArticleForm.events({
 			articleUpdateObj['pub_status'] = $('#article-pub-status').val();
 		}
 
-
 		// ids
 		// -------
-		articleUpdateObj['ids'] = {};
-		$('.article-id').each(function(i){
+
+		/*
+		    generatePaperchaseId
+		    placeholder for algorithm that determines paperchase_id
+		*/
+		function generatePaperchaseId(ids) {
+			return ids[Object.keys(ids)[0]];
+		}
+
+		$('.article-id').each(function(i) {
 			var k = $(this).attr('id'); //of the form, article-id-key
-				k = k.split('-');
-				k = k[2];
-			articleUpdateObj['ids'][k] = $(this).val();
+			k = k.split('-');
+			k = k[2];
+			ids[k] = $(this).val();
 		});
+
+		if (!ids.paperchase_id) {
+			ids.paperchase_id = generatePaperchaseId(ids);
+		}
+
+		articleUpdateObj.ids = ids;
 
 		// All affiliations
 		// -------
