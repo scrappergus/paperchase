@@ -663,7 +663,7 @@ Template.AdminArticleForm.events({
 			ids[k] = $(this).val();
 		});
 
-		ids.paperchase_id = ids.paperchase_id || ids.pii || ids.doi || ids.mpcid || ids.pmid;
+		ids.paperchase_id = ids.paperchase_id || ids.pii || ids.doi || ids.pmc || ids.pmid;
 		articleUpdateObj.ids = ids;
 
 		// All affiliations
@@ -740,8 +740,18 @@ Template.AdminArticleForm.events({
 			// console.log(articleUpdateObj);
 			Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 				if(error){
-					alert(error.message);
-					Meteor.formActions.error();
+					// Check if error is from duplicate paperchase_id
+					// if true handle as validation error, else alert error.
+					if (error.message === '[Duplicate paperchase_id]') {
+						invalid.push({
+							'fieldset_id' : 'ids',
+							'message' : error.details
+						});
+						Meteor.formActions.invalid(invalid);
+					} else {
+						alert(error.message);
+						Meteor.formActions.error();
+					}
 				}
 				if(result){
 					if(!mongoId){
