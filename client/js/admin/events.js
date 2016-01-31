@@ -727,7 +727,7 @@ Template.AdminArticleForm.events({
 		if(!articleUpdateObj.ids.paperchase_id || articleUpdateObj.ids.paperchase_id == ''){
 			invalid.push({
 				'fieldset_id' : 'ids',
-				'message' : 'at least one ID (PII, DOI, PMC or PMID) is required'
+				'message' : 'at least one ID (paperchase_id, pii, doi, pmc or pmid) is required'
 			});
 		}
 
