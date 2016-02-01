@@ -214,24 +214,26 @@ Meteor.methods({
 		var articlesList = articles.find().fetch();
 		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/' + assetType + '/';
 		for(var i = 0 ; i < articlesList.length; i++){
-			var paperchaseId = articlesList[i].ids.paperchase_id;
-			var assetUrl = assetBaseUrl + paperchaseId + '.' + assetType;
-			console.log(paperchaseId,assetUrl);
-			if(paperchaseId){
-				Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
-					if(result){
-						var assetData = {
-							'ids' : articlesList[i].ids
-						}
-						assetData[assetType + '_url'] = assetUrl;
-						Meteor.call('updateAssetDoc',assetType, paperchaseId, assetData, function(updateError,updateResult){
-							if(updateResult){
-								console.log('updateResult',updateResult);
-							}
-						});
+			var articleMongoId = articlesList[i]._id;
+			var assetUrl = assetBaseUrl + articleMongoId + '.' + assetType;
+			console.log(i, articlesList[i]._id,assetUrl);
+			Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
+				if(result){
+					var assetData = {
+						'ids' : articlesList[i].ids
 					}
-				});
-			}
+					assetData.ids.mongo_id = articleMongoId;
+					assetData[assetType + '_url'] = assetUrl;
+					// console.log(articleMongoId,assetData);
+					Meteor.call('updateAssetDoc',assetType, articleMongoId, assetData, function(updateError,updateResult){
+						if(updateError){
+							console.error(updateError);
+						}else if(updateResult){
+							console.log('updateResult',updateResult);
+						}
+					});
+				}
+			});
 			if(i == parseInt(articlesList.length - 1)){
 				fut['return'](true);
 			}

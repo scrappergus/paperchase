@@ -1,6 +1,6 @@
 Meteor.methods({
 	articleAssests: function(mongoId){
-		// console.log('... articleAssests: Mongo ID ', mongoId);
+		console.log('... articleAssests: Mongo ID ', mongoId);
 		var article = articles.findOne({_id : mongoId});
 		var assets = {};
 		if(article.ids.paperchase_id){
@@ -33,7 +33,8 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	updateAssetDoc: function(assetType, paperchaseId, assetData){
+	updateAssetDoc: function(assetType, articleMongoId, assetData){
+		// console.log('..updateAssetDoc',assetType, articleMongoId, assetData);
 		// var collection = global[assetType];
 		// if (collection instanceof Meteor.Collection) {
 		// 	console.log('..updateAssetDoc: ', assetType, paperchaseId );
@@ -50,7 +51,7 @@ Meteor.methods({
 		// }
 		//TODO: Get above to work, using variable name as collection
 		if(assetType == 'pdf'){
-			pdfCollection.update({'ids.paperchase_id' : paperchaseId},assetData, {upsert:true}, function(updateError,updateRes){
+			pdfCollection.update({'ids.mongo_id' : articleMongoId},assetData, {upsert:true}, function(updateError,updateRes){
 				if(updateError){
 					console.error('updateError',updateError);
 					return;
@@ -59,7 +60,7 @@ Meteor.methods({
 				}
 			});
 		}else if(assetType == 'xml'){
-			xmlCollection.update({'ids.paperchase_id' : paperchaseId},assetData, {upsert:true}, function(updateError,updateRes){
+			xmlCollection.update({'ids.mongo_id' : articleMongoId},assetData, {upsert:true}, function(updateError,updateRes){
 				if(updateError){
 					console.error('updateError',updateError);
 					return;

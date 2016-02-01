@@ -33,17 +33,6 @@ Meteor.methods({
 		// console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 
-		// if duplicate paperchase_id exists in articles, throw error
-		articles.find({'ids.paperchase_id' : articleData.ids.paperchase_id})
-			.fetch()
-			.forEach(function(article) {
-				if (article._id !== mongoId) {
-					var error = new Meteor.Error('Duplicate paperchase_id');
-					error.details =  'an article with paperchase_id ' + article.ids.paperchase_id + ' already exists in the database';
-					throw error;
-				}
-			});
-
 		if(!mongoId){
 			// New Article
 			// make sure article does not already exist

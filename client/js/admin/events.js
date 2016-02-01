@@ -663,7 +663,6 @@ Template.AdminArticleForm.events({
 			ids[k] = $(this).val();
 		});
 
-		ids.paperchase_id = ids.paperchase_id || ids.pii || ids.doi || ids.pmc || ids.pmid;
 		articleUpdateObj.ids = ids;
 
 		// All affiliations
@@ -723,13 +722,6 @@ Template.AdminArticleForm.events({
 				'message' : 'Article title is required'
 			});
 		}
-		// paperchase_id
-		if(!articleUpdateObj.ids.paperchase_id || articleUpdateObj.ids.paperchase_id == ''){
-			invalid.push({
-				'fieldset_id' : 'ids',
-				'message' : 'at least one ID (paperchase_id, pii, doi, pmc or pmid) is required'
-			});
-		}
 
 		// Submit to DB or show invalid errors
 		if(invalid.length > 0){
@@ -740,26 +732,13 @@ Template.AdminArticleForm.events({
 			// console.log(articleUpdateObj);
 			Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
 				if(error){
-					// Check if error is from duplicate paperchase_id
-					// if true handle as validation error, else alert error.
-					if (error.message === '[Duplicate paperchase_id]') {
-						invalid.push({
-							'fieldset_id' : 'ids',
-							'message' : error.details
-						});
-						Meteor.formActions.invalid(invalid);
-					} else {
-						alert(error.message);
-						Meteor.formActions.error();
-					}
-				}
-				if(result){
+					alert(error.message);
+					Meteor.formActions.error();
+				}else if(result){
 					if(!mongoId){
 						mongoId = result;
 					}
 					Router.go('AdminArticleOverview',{_id : mongoId});
-
-					// Meteor.formActions.success();
 				}
 			});
 		}
