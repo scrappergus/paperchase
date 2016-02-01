@@ -959,6 +959,16 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #check-all-xml': function(e){
+		e.preventDefault();
+		Meteor.call('checkAllArticlesAssets', 'xml', function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #check-all-pdf': function(e){
 		e.preventDefault();
 		Meteor.call('checkAllArticlesAssets', 'pdf', function(e,r){
