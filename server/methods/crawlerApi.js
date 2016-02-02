@@ -167,5 +167,50 @@ Meteor.methods({
 			}
 		});
 		return fut.wait();
+	},
+	fillInViaPubMed: function(){
+		console.log('..fillInViaPubMed');
+		var fut = new future();
+		var requestURL =  journalConfig.findOne().api.crawler + '/fill_in_articles_from_pubmed/' + journalConfig.findOne().journal.short_name;
+
+		Meteor.http.get(requestURL, function(error,result){
+			if(error){
+				console.error('fillInViaPubMed',error);
+				throw new Meteor.Error(503, 'ERROR: fillInViaPubMed' , error);
+			}else if(result){
+				missingInDb = result.data.missingInPaperchase;
+				inDbUpdate = result.data.paperchaseWithoutPmidUpdate; // No PMID saved but matched via PII
+				console.log('missingInDb',missingInDb);
+				console.log('inDbUpdate',inDbUpdate);
+				if(missingInDb.length > 0){
+					for(var i=0 ; i<missingInDb.length ; i++){
+						if(missingInDb[i]){ // need to check for existence because could be null when object move to inDbUpdate array in crawler
+							Meteor.call('addArticle',missingInDb[i],function(addError,articleAdded){
+								if(addError){
+									console.error('addError: ', addError);
+								}else if(articleAdded){
+									console.log('added: '+ articleAdded);
+								}
+							});
+						}
+					}
+				}
+				if(inDbUpdate.length > 0){
+					for(var i=0 ; i<inDbUpdate.length ; i++){
+						var articleMongoId = inDbUpdate[i]._id;
+						delete inDbUpdate[i]._id;
+						Meteor.call('updateArticle',articleMongoId, {ids: inDbUpdate[i]},function(updateError,articleUpdated){
+							if(updateError){
+								console.error('updateError: ' + inDbUpdate[i].pmid, inDbUpdate);
+							}else if(articleUpdated){
+								console.log('updated: '+ articleMongoId);
+							}
+						});
+					}
+				}
+
+			}
+		});
+		return fut.wait();
 	}
 });

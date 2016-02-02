@@ -950,6 +950,16 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #fill-in-via-pubmed': function(e){
+		e.preventDefault();
+		Meteor.call('fillInViaPubMed', 'xml', function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #check-all-xml': function(e){
 		e.preventDefault();
 		Meteor.call('checkAllArticlesAssets', 'xml', function(e,r){
