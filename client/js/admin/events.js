@@ -950,6 +950,16 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatchXml.events({
+	'click #get-missing-assets' : function(e){
+		e.preventDefault();
+		Meteor.call('getMissingAssets', function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #fill-in-via-pubmed': function(e){
 		e.preventDefault();
 		Meteor.call('fillInViaPubMed', 'xml', function(e,r){
