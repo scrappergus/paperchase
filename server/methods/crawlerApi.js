@@ -70,11 +70,7 @@ Meteor.methods({
 				if(articlesList.length > 0){
 					// All article processed on crawler. Now update the XML collection.
 					for(var i=0 ; i<articlesList.length ; i++){
-						if(paperchaseId){
-							updated = xmlCollection.update({'ids.mongo_id': articlesList[i]._id},{$set:articlesList[i]},{upsert: true});
-						}else{
-							missingInPaperchase.push(articlesList[i]);
-						}
+						updated = xmlCollection.update({'ids.mongo_id': articlesList[i]._id},{$set:articlesList[i]},{upsert: true});
 						if(i == parseInt(articlesList.length -1)){
 							// TODO: fut not returning..
 							fut['return'](articlesList.length);
