@@ -11,35 +11,33 @@ Meteor.methods({
 		// for(var a=0; a< 1; a++){
 			console.log('-- ' + a);
 			// console.log(articlesList[a]);
-			if(articlesList[a]['ids']['paperchase_id']){
-				// console.log('-- ' + JSON.stringify(articlesList[a]['ids']));
-				// get XML and update DB
-				// TODO: Use xml collection to get URL
-				var articleXML = xmlUrl + articlesList[a]['ids']['paperchase_id'] + '.xml';
-				// console.log('articleXML',articleXML);
-				Meteor.call('parseXmlAfterUpload',articleXML, function(error,result){
-					if(error){
-						console.error('parseXmlAfterUpload',error);
-					}else if(result){
-						// console.log('result',result);
-						// maintain PII when batch updating via XML
-						var articleInfo = articles.findOne(articlesList[a]['_id']);
-						if(articleInfo.ids && articleInfo.ids.pii){
-							result.ids.pii = articleInfo.ids.pii;
-						}
-						result.ids = articleInfo.ids;
-						Meteor.call('updateArticle',articlesList[a]['_id'], result,function(articleUpdateError,articleUpdate){
-							if(articleUpdateError){
-								console.error('Could not update article doc: ' + articlesList[a]['_id'], articleUpdateError);
-							}else{
-								console.log('  '+articlesList[a]['_id'] + ' Updated');
-							}
-						});
+
+			// console.log('-- ' + JSON.stringify(articlesList[a]['ids']));
+			// get XML and update DB
+			// TODO: Use xml collection to get URL
+			var articleXML = xmlUrl + articlesList[a]._id + '.xml';
+			// console.log('articleXML',articleXML);
+			Meteor.call('parseXmlAfterUpload',articleXML, function(error,result){
+				if(error){
+					console.error('parseXmlAfterUpload',error);
+				}else if(result){
+					// console.log('result',result);
+					// maintain PII when batch updating via XML
+					var articleInfo = articles.findOne(articlesList[a]['_id']);
+					if(articleInfo.ids && articleInfo.ids.pii){
+						result.ids.pii = articleInfo.ids.pii;
 					}
-				});
-			}else{
-				missingPii.push(articlesList[a]['_id']);
-			}
+					result.ids = articleInfo.ids;
+					Meteor.call('updateArticle',articlesList[a]['_id'], result,function(articleUpdateError,articleUpdate){
+						if(articleUpdateError){
+							console.error('Could not update article doc: ' + articlesList[a]['_id'], articleUpdateError);
+						}else{
+							console.log('  '+articlesList[a]['_id'] + ' Updated');
+						}
+					});
+				}
+			});
+
 			if(parseInt(articlesList.length-1) == a){
 				// console.log('MISSING PII',missingPii);
 			}
@@ -182,29 +180,29 @@ Meteor.methods({
 		return fut.wait();
 	},
 	allArticlesAddPaperchaseId: function(){
-		var articlesList = articles.find().fetch();
-		for(var a=0 ; a<articlesList.length ; a++){
+		// var articlesList = articles.find().fetch();
+		// for(var a=0 ; a<articlesList.length ; a++){
 
-			if(articlesList[a]['ids']['pii']){
-				articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
-			}else if(articlesList[a]['ids']['doi']){
-				articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['doi'];
-			}
+		// 	if(articlesList[a]['ids']['pii']){
+		// 		articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
+		// 	}else if(articlesList[a]['ids']['doi']){
+		// 		articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['doi'];
+		// 	}
 
-			if(articlesList[a]['ids']['paperchase_id']){
-				Meteor.call('updateArticle',articlesList[a]['_id'],{'ids' : articlesList[a]['ids']},function(e,r){
-					if(e){
-						console.error('ERROR. Update Article',e);
-					}else if(r){
-						console.log('UPDATED');
-					}
-				});
-			}else{
-				console.log('..missing IDS. Cannot add paperchase ID: ' + articlesList[a]['_id']);
-			}
-			// console.log(articlesList[a]['ids']);
+		// 	if(articlesList[a]['ids']['paperchase_id']){
+		// 		Meteor.call('updateArticle',articlesList[a]['_id'],{'ids' : articlesList[a]['ids']},function(e,r){
+		// 			if(e){
+		// 				console.error('ERROR. Update Article',e);
+		// 			}else if(r){
+		// 				console.log('UPDATED');
+		// 			}
+		// 		});
+		// 	}else{
+		// 		console.log('..missing IDS. Cannot add paperchase ID: ' + articlesList[a]['_id']);
+		// 	}
+		// 	// console.log(articlesList[a]['ids']);
 
-		}
+		// }
 	},
 	checkAllArticlesAssets: function(assetType){
 		console.log('..checkAllArticlesAssets : ' + assetType);
@@ -214,6 +212,7 @@ Meteor.methods({
 		var articlesList = articles.find().fetch();
 		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/' + assetType + '/';
 		for(var i = 0 ; i < articlesList.length; i++){
+		// for(var i = 0 ; i <1; i++){
 			var articleMongoId = articlesList[i]._id;
 			var assetUrl = assetBaseUrl + articleMongoId + '.' + assetType;
 			console.log(i, articlesList[i]._id,assetUrl);

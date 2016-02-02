@@ -13,22 +13,6 @@ Meteor.methods({
 					// combine with articles DB
 					var articlesList = JSON.parse(result.content);
 					for(var a=0 ; a<articlesList.length ; a++){
-						if(articlesList[a]['ids']['pii']){
-							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pii'];
-						}else if(articlesList[a]['ids']['doi']){
-							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['doi'];
-						}else if(articlesList[a]['ids']['pmid']){
-							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['pmid'];
-						}else{
-							console.log('..missing IDS');
-							console.log(articlesList[a]);
-						}
-						if(articlesList[a]['ids']['paperchase_id']){
-							articlesList[a]['ids']['paperchase_id'] = articlesList[a]['ids']['paperchase_id'].replace(/\//g,'_');
-						}else{
-							console.log('MISSING paperchase_id: ' + JSON.stringify(articlesList[a]['ids']));
-						}
-						// console.log(articlesList[a]['ids']);
 						Meteor.call('addArticle',articlesList[a],function(addError,articleAdded){
 							if(addError){
 								console.error('addError: ' + articlesList[a]['pii'], addError);
@@ -74,7 +58,6 @@ Meteor.methods({
 		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/crawl_xml/' + journalConfig.findOne().journal.short_name;
 
-		var missingInPaperchase = [];
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
 				console.error('getAllArticlesPmcXml',error);
@@ -87,16 +70,14 @@ Meteor.methods({
 				if(articlesList.length > 0){
 					// All article processed on crawler. Now update the XML collection.
 					for(var i=0 ; i<articlesList.length ; i++){
-						var paperchaseId = articlesList[i]['ids']['paperchase_id'];
 						if(paperchaseId){
-							updated = xmlCollection.update({paperchase_id: paperchaseId},{$set:articlesList[i]},{upsert: true});
+							updated = xmlCollection.update({'ids.mongo_id': articlesList[i]._id},{$set:articlesList[i]},{upsert: true});
 						}else{
 							missingInPaperchase.push(articlesList[i]);
 						}
 						if(i == parseInt(articlesList.length -1)){
 							// TODO: fut not returning..
 							fut['return'](articlesList.length);
-							console.log('Could not update these. They are missing paperchase_id:',missingInPaperchase);
 						}
 					}
 				}else{
@@ -176,7 +157,8 @@ Meteor.methods({
 		// use crawler to get PDF from PMC, save to S3
 		console.log('..getAllPmcPdf');
 		var fut = new future();
-		var crawlPdfUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		// var crawlPdfUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		var crawlPdfUrl = 'http://localhost:4932/'+ 'crawl_pdf/' + journalConfig.findOne().journal.short_name;
 		// console.log('crawlPdfUrl',crawlPdfUrl);
 
 		var missingInPaperchase = [];
