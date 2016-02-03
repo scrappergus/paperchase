@@ -3,21 +3,27 @@
     {{>saving}}
     {{>Success}}
     {{>Error}}
-    {{#with audit}}
+
     <div class="row">
         <div class="col s12">
             <div class="card grey lighten-4">
                 <div class="card-content"><div class="row"><div class="col s12">
                     <h3>Articles Audit</h3>
+                    {{#if audit}}
+                    {{#with audit}}
                     <h4>{{articles}} = articles</h4>
                     <h4>{{articles_without_pmc}} = articles without PMC ID</h4>
                     <h4>{{pdf}} = PDF</h4>
                     <h4>{{xml}} = XML</h4>
+                    {{/with}}
+                    {{else}}
+                    {{>Progress}}
+                    {{/if}}
                 </div></div></div>
             </div>
         </div>
     </div>
-    {{/with}}
+
     <div class="row">
         <div class="col s12">
             <div class="card orange lighten-5">
