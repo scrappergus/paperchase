@@ -280,10 +280,12 @@ Meteor.methods({
 		var result = {};
 		var allArticles = articles.find({},{_id : 1}).fetch();
 		var articlesWithoutPmc = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
+		var articlesWithoutPmid = articles.find({'ids.pmid' : {$exists:false}},{_id : 1}).fetch();
 		var pdfList = pdfCollection.find({},{_id : 1}).fetch();
 		var xmlList = xmlCollection.find({},{_id : 1}).fetch();
 		result.articles = allArticles.length;
 		result.articles_without_pmc = articlesWithoutPmc.length;
+		result.articles_without_pmid = articlesWithoutPmid.length;
 		result.pdf = pdfList.length;
 		result.xml = xmlList.length;
 		return result;
