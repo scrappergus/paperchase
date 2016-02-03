@@ -10,11 +10,12 @@
                 <div class="card-content">
                     <div class="row">
                         <h2>Articles Setup</h2>
-                        <p>Articles DB and XML</p>
+                        <p>Articles DB and XML/PDF on S3</p>
                     </div>
                     <div class="row">
                         <div class="col s12">
                             <h3>1. Initiate Articles Collection</h3>
+                            <p>This will use the crawler to get the PII/PMID/Title pairs. Then via paperchase, the articles collection is created. The PII/Title comes from the production MySQL DB. The PMID comes from PubMed, via matching titles.</p>
                         </div>
                     </div>
                     <div class="row">
@@ -22,16 +23,11 @@
                             <button id="initiate-articles" class="btn waves-effect waves-light red lighten-3">Initiate</button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <!-- for getting PMID, PII, title into MongoLab DB. Crawler sends JSON to Paperchase to insert so that _id has same type. Via shell _id is Object. Via Mongo default is strig. -->
-                            <p>This will use the crawler to get the PII/PMID/Title pairs. Then via paperchase, the articles collection is created. The PII/Title comes from the production MySQL DB. The PMID comes from PubMed, via matching titles.</p>
-                        </div>
-                    </div>
                     <hr/>
                     <div class="row">
                         <div class="col s12">
                             <h3>2. Save all PMC XML to S3</h3>
+                            <p>This will use the crawler, which gets a list of PMID and then gets PMC ID. The PMC ID is then used to get PMC XML, which is saved to the journal bucket on S3.</p>
                         </div>
                     </div>
                     <div class="row">
@@ -39,15 +35,11 @@
                             <button id="get-articles-pmc-xml" class="btn waves-effect waves-light red lighten-3">Get XML</button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <p>This will use the crawler, which gets a list of PMID and then gets PMC ID. The PMC ID is then used to get PMC XML, which is saved to the journal bucket on S3.</p>
-                        </div>
-                    </div>
                     <hr/>
                     <div class="row">
                         <div class="col s12">
                             <h3>3. Process ALL Articles XML</h3>
+                            <p>This will loop through all articles in the DB and if the XML exists, process</p>
                         </div>
                     </div>
                     <div class="row">
@@ -55,15 +47,11 @@
                             <button id="process-all-xml" class="btn waves-effect waves-light red lighten-3">Process All XML</button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <p>This will loop through all articles in the DB and if the XML exists, process</p>
-                        </div>
-                    </div>
                     <hr/>
                     <div class="row">
                         <div class="col s12">
                             <h3>3. Save ALL PMC PDF</h3>
+                            <p>For any article doc with ids.pmc, the crawler will save the PDF to S3. Response takes too long. So use next step to check if asset exists</p>
                         </div>
                     </div>
                     <div class="row">
@@ -71,38 +59,34 @@
                             <button id="process-all-pdf" class="btn waves-effect waves-light red lighten-3">Get PDF</button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <p>For any article doc with ids.pmc, the crawler will save the PDF to S3. Response takes too long. So use next step to check if asset exists</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-            <div class="card blue lighten-5">
+            <div class="card orange lighten-5">
                 <div class="card-content">
                     <h2>Article Assets</h2>
+                    <h3>Asset S3 Check</h3>
                     <div class="row">
                         <div class="col s12">
-                            <h3>PDF asset check</h3>
+                            <h4>PDF asset check</h4>
                             <button id="check-all-pdf" class="btn waves-effect waves-light red lighten-3">Check PDF</button>
                         </div>
                     </div>
-                    <hr/>
                     <div class="row">
                         <div class="col s12">
-                            <h3>XML asset check</h3>
+                            <h4>XML asset check</h4>
                             <button id="check-all-xml" class="btn waves-effect waves-light red lighten-3">Check XML</button>
                         </div>
                     </div>
                     <hr/>
+                    <h3>Get and Save Assets</h3>
                     <div class="row">
                         <div class="col s12">
-                            <h3>Get Missing Assets via PMC</h3>
-                            <button id="get-missing-assets" class="btn waves-effect waves-light red lighten-3">Get Assets</button>
+                            <h4>Get Missing Assets via PMC</h4>
+                            <button id="get-missing-assets" class="btn waves-effect waves-light red lighten-3">Get Missing Assets</button>
                         </div>
                     </div>
                 </div>
@@ -111,38 +95,36 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <div class="card blue lighten-5">
+            <div class="card green lighten-5">
                 <div class="card-content">
-                    <h2>Fill in Articles</h2>
+                    <h2>Fill in Articles Collection</h2>
+                    <h3>Get New Articles</h3>
                     <div class="row">
                         <div class="col s12">
-                            <h3>Via PubMed</h3>
-                            <button id="fill-in-via-pubmed" class="btn waves-effect waves-light red lighten-3">Get Articles</button>
+                            <h4>Add New Articles Via PubMed</h4>
+                            <button id="fill-in-via-pubmed" class="btn waves-effect waves-light red lighten-3">Get New PubMed Articles</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <div class="card blue lighten-5">
-                <div class="card-content">
+                    <h3>IDs</h3>
                     <div class="row">
-                        <h2>Articles Additional Setup</h2>
+                        <div class="col s12">
+                            <h4>Get Missing PMC ID Via PubMed</h4>
+                            <button id="fill-in-pmcid" class="btn waves-effect waves-light red lighten-3">Get PMC IDs</button>
+                        </div>
                     </div>
+                    <h3>Dates</h3>
                     <div class="row">
                         <div class="col s12">
                             <h4>Via Legacy DB</h4>
-                            <button id="get-articles-legacy-dates" class="btn waves-effect waves-light red lighten-3">Get Dates</button>
                             <p>Get Epub, will update any article found in legacy with EPub</p>
+                            <button id="get-articles-legacy-dates" class="btn waves-effect waves-light red lighten-3">Get Dates</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col s12">
                             <h4>Via CrossRef</h4>
-                            <button id="get-articles-crossref-dates" class="btn waves-effect waves-light red lighten-3">Get Dates</button>
                             <p>Get Epub, will only update those without EPub in Paperchase and Epub is at CrossRef</p>
+                            <button id="get-articles-crossref-dates" class="btn waves-effect waves-light red lighten-3">Get Dates</button>
                         </div>
                     </div>
                 </div>
@@ -270,13 +252,13 @@
             <button id="intake-advance" class="btn waves-effect waves-light orange lighten-3">Intake Advance</button>
         </div>
     </div> -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
-                            <h3>Get EJP Manuscripts</h3>
+                            <h3>NEVER FINISHED. Get EJP Manuscripts</h3>
                         </div>
                     </div>
                     <div class="row">
@@ -287,14 +269,15 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
+    </div> -->
+    <!-- <div class="row">
+
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
-                            <h3>XML from PMC</h3>
+                            <h3>DEPRECATED XML from PMC</h3>
                             <h4>based on list of PMID, in pmid.js</h4>
                         </div>
                     </div>
@@ -324,7 +307,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="row">
         <div class="col s12">
             <div class="card">
@@ -409,13 +392,13 @@
             </div>
         </div>
     </div>
-    <div class="row">
+   <!--  <div class="row">
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
-                            <h3>Paperchase ID</h3>
+                            <h3>DEPRECATED Paperchase ID</h3>
                             <h4>for All Articles</h4>
                             <p>Use PII, or DOI</p>
                         </div>
@@ -428,5 +411,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
