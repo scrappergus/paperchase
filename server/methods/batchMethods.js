@@ -219,10 +219,36 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
+	getMissingPmids: function(){
+		var fut = new future();
+		var apiBase = journalConfig.findOne().api.crawler;
+		var missingPmidList = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
+		for(var i=0 ; i<missingPmidList.length ; i++ ){
+			var urlApi =  apiBase + '/article_ids_via_pmid/' + missingPmidList[i].ids.pmid;
+			Meteor.http.get(urlApi, function(error,result){
+				if(error){
+					console.error('Get PMC ID error',error);
+				}else if(result){
+					articleData = result.data;
+					if(articleData.ids.pmc){
+						Meteor.call('updateArticleByPmid', articleData.ids.pmid, {'ids.pmc': articleData.ids.pmc}, function(updateError,updateResult){
+							if(updateError){
+								console.error('Update Article',updateError);
+							}else if(updateResult){
+
+							}
+						});
+					}
+
+				}
+			});
+		}
+		return fut.wait();
+	},
 	getMissingAssets: function(){
 		console.log('..getMissingAssets');
 		var articlesList = articles.find({},{_id : 1}).fetch();
-		console.log('  article count = ' + articlesList.length);
+		console.log('__article count = ' + articlesList.length);
 		var pdfFetch = pdfCollection.find({},{'ids.mongo_id' : 1}).fetch();
 		var xmlFetch = xmlCollection.find({},{'ids.mongo_id' : 1}).fetch();
 		var journalShortName = journalConfig.findOne().journal.short_name;
@@ -232,6 +258,7 @@ Meteor.methods({
 		var missing = {};
 		missing.pdf = [];
 		missing.xml = [];
+		missing.no_pmc = [];
 		for(var pdfIdx=0 ; pdfIdx<pdfFetch.length ; pdfIdx++){
 			pdfList[pdfFetch[pdfIdx].ids.mongo_id] = true;
 		}
@@ -240,16 +267,22 @@ Meteor.methods({
 		}
 		// TODO: add check for if asset on S3 but DB just does not have it. Avoid reuploading assets via PMC.
 		for(var a = 0 ; a < articlesList.length ; a++){
-			if(!pdfList[articlesList[a]._id]){
-				missing.pdf.push(articlesList[a]._id);
+			if(articlesList[a].ids.pmc){
+				if(!pdfList[articlesList[a]._id]){
+					missing.pdf.push(articlesList[a]._id);
+				}
+				if(!xmlList[articlesList[a]._id]){
+					missing.xml.push(articlesList[a]._id);
+				}
+			}else{
+				missing.no_pmc.push(articlesList[a]._id);
 			}
-			if(!xmlList[articlesList[a]._id]){
-				missing.xml.push(articlesList[a]._id);
-			}
+
 			if(a == parseInt(articlesList.length-1)){
 				// console.log('missing',missing);
-				console.log('XML missing = ' + missing.xml.length);
-				console.log('PDF missing = ' + missing.pdf.length);
+				console.log('___Fetch XML count = ' + missing.xml.length);
+				console.log('___Fetch PDF count = ' + missing.pdf.length);
+				console.log('___NO PMC ID = ', missing.no_pmc.length);
 				// console.log(missing.pdf);
 				if(missing.xml.length > 0){
 					for(var i=0 ; i<missing.xml.length ; i++){
@@ -274,6 +307,7 @@ Meteor.methods({
 					}
 				}
 				if(missing.pdf.length > 0){
+
 					for(var i=0 ; i<missing.pdf.length ; i++){
 						var pdfUrlApi = crawlUrl + '/get_article_pmc_pdf/' + journalShortName + '/' + missing.pdf[i];
 						Meteor.http.get(pdfUrlApi , function(error,result){
