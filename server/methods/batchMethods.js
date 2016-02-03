@@ -250,6 +250,7 @@ Meteor.methods({
 				// console.log('missing',missing);
 				console.log('XML missing = ' + missing.xml.length);
 				console.log('PDF missing = ' + missing.pdf.length);
+				// console.log(missing.pdf);
 				if(missing.xml.length > 0){
 					for(var i=0 ; i<missing.xml.length ; i++){
 						var xmlUrlApi = crawlUrl + '/get_article_pmc_xml/' + journalShortName + '/' + missing.xml[i];
@@ -271,8 +272,9 @@ Meteor.methods({
 							}
 						});
 					}
-					if(missing.pdf.length > 0){
-						for(var i=0 ; i<missing.pdf.length ; i++){
+				}
+				if(missing.pdf.length > 0){
+					for(var i=0 ; i<missing.pdf.length ; i++){
 						var pdfUrlApi = crawlUrl + '/get_article_pmc_pdf/' + journalShortName + '/' + missing.pdf[i];
 						Meteor.http.get(pdfUrlApi , function(error,result){
 							if(error){
@@ -285,13 +287,11 @@ Meteor.methods({
 										if(updatePdfError){
 											console.error('updatePdfError',updatePdfError);
 										}else if(updatePdfRes){
-
 										}
 									});
 								}
 							}
 						});
-						}
 					}
 				}
 			}
