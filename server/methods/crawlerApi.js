@@ -180,8 +180,10 @@ Meteor.methods({
 			}else if(result){
 				missingInDb = result.data.missingInPaperchase;
 				inDbUpdate = result.data.paperchaseWithoutPmidUpdate; // No PMID saved but matched via PII
+				inDbMissingPmid = result.data.paperchaseWithoutPmid;
 				console.log('missingInDb',missingInDb);
 				console.log('inDbUpdate',inDbUpdate);
+				console.log('inDbMissingPmid',inDbMissingPmid);
 				if(missingInDb.length > 0){
 					for(var i=0 ; i<missingInDb.length ; i++){
 						if(missingInDb[i]){ // need to check for existence because could be null when object move to inDbUpdate array in crawler
