@@ -284,81 +284,41 @@
     </div> -->
     <div class="row">
         <div class="col s12">
-            <div class="card">
+            <div class="card lime lighten-3">
                 <div class="card-content">
+                    <h3>Do Not Use</h3>
+                    <p>I believe this is outdated</p>
                     <div class="row">
                         <div class="col s12">
                             <h3>Get PII</h3>
                             <h4>for All Articles</h4>
                             <p>Based on articles in articles collection. Uses 'ids.pmid' in article doc to query PubMed for PII</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
                             <button id="get-all-pii" class="btn waves-effect waves-light">Get PII For ALL Articles</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
+                    <hr/>
                     <div class="row">
                         <div class="col s12">
                             <h3>Author Affiliations</h3>
                             <h4>for All Articles</h4>
                             <p>Based on articles in articles collection. Uses 'ids.pmid' in article doc to query PubMed for affiliations</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
                             <p>Queries articles collection. Loops through articles. Gets XML response from PubMed with author affiliations. Loops through authors in article doc, matches author to the response from PubMed. Adds affilation to: author object in article doc, affiliations array in article doc, known affiliations array in author doc.</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
                             <button id="get-all-authors-affiliations" class="btn waves-effect waves-light">Get Author Affiliations</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
+                    <hr/>
                     <div class="row">
                         <div class="col s12">
                             <h3>Pub Status</h3>
                             <h4>for All Articles</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
                             <button id="get-all-pub-status" class="btn waves-effect waves-light">Get Articles Pub Status</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <div class="card">
-                <div class="card-content">
                     <div class="row">
                         <div class="col s12">
                             <h3>Author Affiliations</h3>
                             <h4>for All Articles</h4>
                             <p>Add integer of affiliation to author based on affiliation string. For batch processing only</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
                             <button id="update-authors-affs" class="btn waves-effect waves-light">Update Affiliations</button>
                         </div>
                     </div>
@@ -366,6 +326,7 @@
             </div>
         </div>
     </div>
+
    <!--  <div class="row">
         <div class="col s12">
             <div class="card">
