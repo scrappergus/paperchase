@@ -949,7 +949,7 @@ Template.AdminAdvanceArticles.events({
 
 // Batch
 // ----------------
-Template.AdminBatchXml.events({
+Template.AdminBatch.events({
 	'click #fill-in-pmcid' : function(e){
 		e.preventDefault();
 		Meteor.call('getMissingPmids', function(e,r){

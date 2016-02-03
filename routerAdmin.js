@@ -88,7 +88,9 @@ if (Meteor.isClient) {
 	// Paper sections
 	Session.setDefault('paperSectionId',null);
 	// DOI Status, articles list
-	Session.set('articles-doi-status',null);
+	Session.setDefault('articles-doi-status',null);
+	// Batch page
+	Session.setDefault('articles-assets-audit',null);
 
 
 	Router.route('/admin', {
@@ -1244,7 +1246,7 @@ if (Meteor.isClient) {
 
 	//this route is used to query pmc for all xml.. don't go here.
 	Router.route('/admin/batch_process', {
-		name: 'AdminBatchXml',
+		name: 'AdminBatch',
 		layoutTemplate: 'Admin',
 		title: function() {
 			var pageTitle = 'Admin | Batch Process ';
@@ -1253,10 +1255,16 @@ if (Meteor.isClient) {
 			}
 			return pageTitle;
 		},
-		waitOn: function(){
-			return[
-				Meteor.subscribe('articles')
-			]
-		},
+		onBeforeAction: function(){
+			Meteor.call('allArticlesAssetsAudit',function(error,result){
+				if(error){
+					throw new Meteor.Error(error);
+				}else{
+					Session.set('articles-assets-audit',result);
+
+				};
+			});
+			this.next();
+		}
 	});
 }

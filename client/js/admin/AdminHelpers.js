@@ -504,4 +504,14 @@ Template.AdminSectionPapers.helpers({
 	papers: function() {
 		return articles.find().fetch(); // subscription is limited to just these section papers, so we can return the whole collection
 	}
-})
+});
+
+// Batch
+// ---------------
+Template.AdminBatch.helpers({
+	audit: function(){
+		return  Session.get('articles-assets-audit');
+	}
+});
+
+

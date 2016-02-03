@@ -56,7 +56,7 @@ Meteor.methods({
 		return articles.update({'_id' : mongoId}, {$push: updateObj});
 	},
 	updateArticleByPmid: function(pmid, articleData){
-		// console.log('--updateArticleByPmid |  pmid = '+pmid);
+		// console.log('--updateArticleByPmid |  pmid = '+pmid, articleData);
 		return articles.update({'ids.pmid' : pmid}, {$set: articleData});
 	},
 	addToArticleAffiliationsByPmid: function(pmid, affiliation){
@@ -274,5 +274,17 @@ Meteor.methods({
 			article[asset] = assets[asset];
 		}
 		return article;
+	},
+	allArticlesAssetsAudit: function(){
+		var result = {};
+		var allArticles = articles.find({},{_id : 1}).fetch();
+		var articlesWithoutPmc = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
+		var pdfList = pdfCollection.find({},{_id : 1}).fetch();
+		var xmlList = xmlCollection.find({},{_id : 1}).fetch();
+		result.articles = allArticles.length;
+		result.articles_without_pmc = articlesWithoutPmc.length;
+		result.pdf = pdfList.length;
+		result.xml = xmlList.length;
+		return result;
 	}
 });
