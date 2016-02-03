@@ -1,0 +1,26 @@
+<template name="AdminArticlesAudit">
+    {{>AdminHeader header="Articles Audit"}}
+    <div class="row">
+        <div class="col s12">
+               {{>AdminArticlesAuditContent}}
+          </div>
+     </div>
+</template>
+<template name="AdminArticlesAuditContent">
+     {{#if paperchaseAudit}}
+          {{#with paperchaseAudit}}
+          <h3>Paperchase Database</h3>
+          <h4>{{articles}} = articles</h4>
+          <h4>{{articles_without_pmid}} = articles without PubMed ID</h4>
+          <h4>{{articles_without_pmc}} = articles without PMC ID</h4>
+          <h4>{{pdf}} = PDF</h4>
+          <h4>{{xml}} = XML</h4>
+          {{/with}}
+          <h3>PubMed Database</h3>
+          <h4>{{#if ncbiAudit}}{{ncbiAudit.pubmed}} = articles{{else}}N/A{{/if}}</h4>
+          <h3>PMC Database</h3>
+          <h4>{{#if ncbiAudit}}{{ncbiAudit.pmc}} = articles{{else}}N/A{{/if}}</h4>
+     {{else}}
+     {{>Progress}}
+     {{/if}}
+</template>

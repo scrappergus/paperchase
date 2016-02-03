@@ -214,5 +214,29 @@ Meteor.methods({
 			}
 		});
 		return fut.wait();
+	},
+	pubMedAndPmcAudit: function(){
+		var fut = new future();
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		var baseRequestUrl =  journalConfig.findOne().api.crawler + '/ncbi/article_count';
+		var result = {};
+		var baseRequestUrlPubMed = baseRequestUrl + '/pubmed/' + journalShortName;
+		var baseRequestUrlPmc = baseRequestUrl + '/pmc/' + journalShortName;
+		Meteor.http.get(baseRequestUrlPubMed, function(pubMedError,pubMedResult){
+			if(pubMedError){
+				throw new Meteor.Error(503, 'pubMedAndPmcAudit PubMed' , pubMedError);
+			}else if(pubMedResult){
+				result.pubmed = pubMedResult.content;
+				Meteor.http.get(baseRequestUrlPmc, function(pmcError,pmcResult){
+					if(pmcError){
+						throw new Meteor.Error(503, 'pubMedAndPmcAudit PMC' , pmcError);
+					}else if(pmcResult){
+						result.pmc = pmcResult.content;
+						fut['return'](result);
+					}
+				});
+			}
+		});
+		return fut.wait();
 	}
 });

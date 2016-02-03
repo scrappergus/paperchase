@@ -508,9 +508,12 @@ Template.AdminSectionPapers.helpers({
 
 // Batch
 // ---------------
-Template.AdminBatch.helpers({
-	audit: function(){
+Template.AdminArticlesAuditContent.helpers({
+	paperchaseAudit: function(){
 		return  Session.get('articles-assets-audit');
+	},
+	ncbiAudit: function(){
+		return  Session.get('articles-ncbi-audit');
 	}
 });
 
