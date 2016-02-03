@@ -291,10 +291,10 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
-	getMissingPmids: function(){
+	getMissingPmcIds: function(){
 		var fut = new future();
 		var apiBase = journalConfig.findOne().api.crawler;
-		var missingPmidList = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
+		var missingPmidList = articles.find({'ids.pmc' : {$exists:false},'ids.pmid' : {$exists:true}},{_id : 1}).fetch();
 		for(var i=0 ; i<missingPmidList.length ; i++ ){
 			var urlApi =  apiBase + '/article_ids_via_pmid/' + missingPmidList[i].ids.pmid;
 			Meteor.http.get(urlApi, function(error,result){
@@ -302,6 +302,7 @@ Meteor.methods({
 					console.error('Get PMC ID error',error);
 				}else if(result){
 					articleData = result.data;
+					console.log(articleData);
 					if(articleData.ids.pmc){
 						Meteor.call('updateArticleByPmid', articleData.ids.pmid, {'ids.pmc': articleData.ids.pmc}, function(updateError,updateResult){
 							if(updateError){
