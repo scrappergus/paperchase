@@ -950,6 +950,16 @@ Template.AdminAdvanceArticles.events({
 // Batch
 // ----------------
 Template.AdminBatch.events({
+	'click #fill-in-pmcid-pmid': function(e){
+		e.preventDefault();
+		Meteor.call('getMissingPmidPmcViaPii', function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
 	'click #fill-in-pmcid' : function(e){
 		e.preventDefault();
 		Meteor.call('getMissingPmids', function(e,r){

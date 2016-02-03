@@ -219,6 +219,52 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
+	getMissingPmidPmcViaPii: function(){
+		console.log('..getMissingPmidPmcViaPii');
+		var fut = new future();
+		var apiBase = journalConfig.findOne().api.crawler;
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		var urlApi =  apiBase + '/pubmed/all_titles_and_all_ids/' + journalShortName;
+		var missingIdList = articles.find({ $or: [ { 'ids.pmc' : {$exists:false} }, { 'ids.pmid' : {$exists:false} } ] }).fetch();
+		var pubMedByPii = {};
+
+		console.log('  Paperchase missingIdList length = ',missingIdList.length);
+		if(missingIdList.length > 0 ){
+			Meteor.http.get(urlApi, function(error,result){
+				if(error){
+					console.error('getMissingPmidPmc',error);
+				}else if(result){
+					var pubMedList = result.data; // result = all titles and all IDs at PubMed for journal
+					console.log('  pubMedList length = ',pubMedList.length);
+					pubMedList.forEach(function(pubMedArticle) {
+						if(pubMedArticle.ids.pii){
+							pubMedByPii[pubMedArticle.ids.pii] = pubMedArticle;
+						}
+					});
+					missingIdList.forEach(function(article){
+						if(article.ids.pii && pubMedByPii[article.ids.pii]){
+							var updateObj = {};
+							if(!article.ids.pmc && pubMedByPii[article.ids.pii].ids.pmc){
+								updateObj['ids.pmc'] = pubMedByPii[article.ids.pii].ids.pmc;
+							}
+							if(!article.ids.pmid && pubMedByPii[article.ids.pii].ids.pmid){
+								updateObj['ids.pmid']= pubMedByPii[article.ids.pii].ids.pmid;
+							}
+
+							Meteor.call('updateArticle', article._id, updateObj, function(updateError,updateRes){
+								if(updateError){
+									console.error('PMC/PMID ID update',updateError);
+								}
+							});
+						}
+					});
+				}
+			});
+		}else{
+			fut['return'](true);
+		}
+		return fut.wait();
+	},
 	getMissingPmids: function(){
 		var fut = new future();
 		var apiBase = journalConfig.findOne().api.crawler;

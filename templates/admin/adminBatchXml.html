@@ -74,7 +74,17 @@
                     <div class="row">
                         <div class="col s12">
                             <h4>Get Missing PMC ID Via PubMed</h4>
+                            <p>PMID required to match PMC ID</p>
+                            <p>Will not query all articles at PubMed, only will query missing PMC ID using PMID</p>
                             <button id="fill-in-pmcid" class="btn waves-effect waves-light red lighten-3">Get PMC IDs</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <h4>Get Missing PubMed and PMC ID Via PII</h4>
+                            <p>PII required to match PMID and PMC ID</p>
+                            <p>Will query all articles at PubMed to get IDs list to match with PII saved.</p>
+                            <button id="fill-in-pmcid-pmid" class="btn waves-effect waves-light red lighten-3">Get PMC and PubMed IDs</button>
                         </div>
                     </div>
                     <h3>Dates</h3>
