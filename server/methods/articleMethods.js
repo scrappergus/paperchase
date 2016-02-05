@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		// console.log('--updateArticle |  mongoId = ' + mongoId);
+		console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 
 		if(!mongoId){
@@ -49,6 +49,9 @@ Meteor.methods({
 		}else{
 			throw new Meteor.Error('ERROR: Duplicate Article - ' + duplicateArticle._id);
 		}
+	},
+	updateArticleBy: function(where, what){
+		return articles.update(where, {$set: what});
 	},
 	pushArticle: function(mongoId, field, articleData){
 		var updateObj = {};
@@ -288,6 +291,23 @@ Meteor.methods({
 		result.articles_without_pmid = articlesWithoutPmid.length;
 		result.pdf = pdfList.length;
 		result.xml = xmlList.length;
+		return result;
+	},
+	duplicateArticles: function(){
+		var result = {};
+		var queryRes = {};
+		queryRes.pii = articles.aggregate([{$group : { _id: '$ids.pii' ,  count : { $sum: 1}}},{$match : { count : { $gt : 1 } }} ]);
+		queryRes.pmid = articles.aggregate([{$group : { _id: '$ids.pmid' ,  count : { $sum: 1}}},{$match : { count : { $gt : 1 } }} ]);
+		queryRes.titles = articles.aggregate([{$group : { _id: '$title' ,  count : { $sum: 1}}},{$match : { count : { $gt : 1 } }} ]);
+
+		for(var duplicateType in queryRes){
+			if(queryRes[duplicateType].length > 0 && queryRes[duplicateType][0]._id != null){
+				result[duplicateType] = queryRes[duplicateType];
+			}else{
+				result[duplicateType] = null; //for templating
+			}
+		}
+
 		return result;
 	}
 });

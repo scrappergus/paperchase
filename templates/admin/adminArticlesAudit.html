@@ -2,8 +2,15 @@
     {{>AdminHeader header="Articles Audit"}}
     <div class="row">
         <div class="col s12">
-               {{>AdminArticlesAuditContent}}
-          </div>
+          {{>AdminArticlesAuditContent}}
+          <h3>Duplicates</h3>
+          {{#each arrayify duplicates}}
+            <div class="row"><div class="col s12">
+              <h4>{{name}}</h4>
+              {{#if value}}{{#each value}}<p>{{_id}}</p>{{/each}}{{else}}<p>None Found</p>{{/if}}
+            </div></div>
+          {{/each}}
+        </div>
      </div>
 </template>
 <template name="AdminArticlesAuditContent">

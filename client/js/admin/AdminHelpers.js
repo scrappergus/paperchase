@@ -506,8 +506,13 @@ Template.AdminSectionPapers.helpers({
 	}
 });
 
-// Batch
+// Audit
 // ---------------
+Template.AdminArticlesAudit.helpers({
+	duplicates: function(){
+		return  Session.get('articles-duplicate');
+	}
+});
 Template.AdminArticlesAuditContent.helpers({
 	paperchaseAudit: function(){
 		return  Session.get('articles-assets-audit');

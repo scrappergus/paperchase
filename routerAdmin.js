@@ -92,6 +92,8 @@ if (Meteor.isClient) {
 	// Batch page
 	Session.setDefault('articles-assets-audit',null);
 	Session.setDefault('articles-ncbi-audit',null);
+	// Articles audit
+	Session.setDefault('articles-duplicate', null);
 
 
 	Router.route('/admin', {
@@ -435,6 +437,13 @@ if (Meteor.isClient) {
 					throw new Meteor.Error(error);
 				}else{
 					Session.set('articles-ncbi-audit',result);
+				};
+			});
+			Meteor.call('duplicateArticles',function(error,result){
+				if(error){
+					throw new Meteor.Error(error);
+				}else{
+					Session.set('articles-duplicate',result);
 				};
 			});
 			this.next();
