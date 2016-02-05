@@ -23,7 +23,7 @@
                 <tr>
                   <td>{{duplicate_field}}</td>
                   <td>{{count}}</td>
-                  <td>{{#each mongo_ids}}<div class="clearfix"></div><a href="{{pathFor 'AdminArticleOverview'}}">{{.}}</a>{{/each}}</td>
+                  <td>{{#each mongo_ids}}<div class="clearfix"></div><a href="{{pathFor 'AdminArticleOverview' _id=.}}">{{.}}</a>{{/each}}</td>
                 </tr>
                 {{/each}}
                 {{else}}
