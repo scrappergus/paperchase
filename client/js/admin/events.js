@@ -960,9 +960,9 @@ Template.AdminBatch.events({
 			}
 		});
 	},
-	'click #fill-in-pmcid' : function(e){
+	'click #fill-in-pmid' : function(e){
 		e.preventDefault();
-		Meteor.call('getMissingPmcIds', function(e,r){
+		Meteor.call('getMissingPubMedIds', function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){
