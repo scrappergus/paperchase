@@ -153,8 +153,8 @@ Meteor.methods({
 		// use crawler to get PDF from PMC, save to S3
 		console.log('..getAllPmcPdf');
 		var fut = new future();
-		// var crawlPdfUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
-		var crawlPdfUrl = 'http://localhost:4932/'+ 'crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		var crawlPdfUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
+		// var crawlPdfUrl = 'http://localhost:4932/'+ 'crawl_pdf/' + journalConfig.findOne().journal.short_name;
 		// console.log('crawlPdfUrl',crawlPdfUrl);
 
 		var missingInPaperchase = [];
@@ -172,6 +172,7 @@ Meteor.methods({
 		console.log('..fillInViaPubMed');
 		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/fill_in_articles_from_pubmed/' + journalConfig.findOne().journal.short_name;
+		// var requestURL =  'http://localhost:4932' + '/fill_in_articles_from_pubmed/' + journalConfig.findOne().journal.short_name;
 
 		Meteor.http.get(requestURL, function(error,result){
 			if(error){
@@ -179,10 +180,10 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: fillInViaPubMed' , error);
 			}else if(result){
 				missingInDb = result.data.missingInPaperchase;
-				inDbUpdate = result.data.paperchaseWithoutPmidUpdate; // No PMID saved but matched via PII
+				inDbUpdate = result.data.paperchaseUpdatePmid; // No PMID saved but matched via PII
 				inDbMissingPmid = result.data.paperchaseWithoutPmid;
-				console.log('missingInDb',missingInDb);
-				console.log('inDbUpdate',inDbUpdate);
+				console.log('missingInDb',missingInDb.length);
+				console.log('inDbUpdate',inDbUpdate.length);
 				console.log('inDbMissingPmid',inDbMissingPmid);
 				if(missingInDb.length > 0){
 					for(var i=0 ; i<missingInDb.length ; i++){
@@ -198,27 +199,33 @@ Meteor.methods({
 					}
 				}
 				if(inDbUpdate.length > 0){
-					for(var i=0 ; i<inDbUpdate.length ; i++){
-						var articleMongoId = inDbUpdate[i]._id;
-						delete inDbUpdate[i]._id;
-						Meteor.call('updateArticle',articleMongoId, {ids: inDbUpdate[i]},function(updateError,articleUpdated){
-							if(updateError){
-								console.error('updateError: ' + inDbUpdate[i].pmid, inDbUpdate);
-							}else if(articleUpdated){
-								console.log('updated: '+ articleMongoId);
-							}
-						});
-					}
+					inDbUpdate.forEach(function(articleToUpdate){
+						var updateObj = {};
+						console.log(articleToUpdate.ids);
+						updateObj['ids.pmid'] = articleToUpdate.ids.pmid;
+						if(articleToUpdate.ids.pmc){
+							updateObj['ids.pmc'] = articleToUpdate.ids.pmc;
+							console.log(updateObj);
+							Meteor.call('updateArticle', articleToUpdate.ids.mongo_id, updateObj,function(updateError,articleUpdated){
+								if(updateError){
+									console.error('updateError: ' + inDbUpdate[i].pmid, inDbUpdate);
+								}else if(articleUpdated){
+									console.log('updated: '+ articleUpdated);
+								}
+							});
+						}
+					});
 				}
-
 			}
 		});
 		return fut.wait();
 	},
 	pubMedAndPmcAudit: function(){
+		// console.log('..pubMedAndPmcAudit');
 		var fut = new future();
 		var journalShortName = journalConfig.findOne().journal.short_name;
 		var baseRequestUrl =  journalConfig.findOne().api.crawler + '/ncbi/article_count';
+		// console.log(baseRequestUrl);
 		var result = {};
 		var baseRequestUrlPubMed = baseRequestUrl + '/pubmed/' + journalShortName;
 		var baseRequestUrlPmc = baseRequestUrl + '/pmc/' + journalShortName;
