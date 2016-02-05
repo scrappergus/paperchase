@@ -4,12 +4,37 @@
         <div class="col s12">
           {{>AdminArticlesAuditContent}}
           <h3>Duplicates</h3>
-          {{#each arrayify duplicates}}
-            <div class="row"><div class="col s12">
-              <h4>{{name}}</h4>
-              {{#if value}}{{#each value}}<p>{{_id}}</p>{{/each}}{{else}}<p>None Found</p>{{/if}}
-            </div></div>
-          {{/each}}
+          <table class="bordered">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Duplicate Count</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each arrayify duplicates}}
+                <tr class="table-group-header">
+                  <td><h4>{{name}}</h4></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+                {{#if value}}{{#each value}}
+                <tr>
+                  <td>{{duplicate_field}}</td>
+                  <td>{{count}}</td>
+                  <td>{{#each mongo_ids}}<div class="clearfix"></div><a href="{{pathFor 'AdminArticleOverview'}}">{{.}}</a>{{/each}}</td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr>
+                  <td>&nbsp;</td>
+                  <td>None Found</td>
+                </tr>
+                {{/if}}
+              {{/each}}
+            </tbody>
+          </table>
         </div>
      </div>
 </template>
