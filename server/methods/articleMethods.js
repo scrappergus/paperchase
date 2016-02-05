@@ -302,7 +302,7 @@ Meteor.methods({
 					_id: {
 						duplicate_field : '$ids.pii'
 					} ,
-					data: { '$addToSet' : { 'id' : '$_id' } },
+					data: { '$addToSet' : { 'id' : '$_id','article_type' : '$article_type.name' } },
 					count : {
 						$sum: 1
 					}
@@ -323,7 +323,7 @@ Meteor.methods({
 					_id: {
 						duplicate_field : '$ids.pmid'
 					} ,
-					data: { '$addToSet' : { 'id' : '$_id' } },
+					data: { '$addToSet' : { 'id' : '$_id','article_type' : '$article_type.name' } },
 					count : {
 						$sum: 1
 					}
@@ -343,7 +343,7 @@ Meteor.methods({
 					_id: {
 						duplicate_field : '$title'
 					} ,
-					data: { '$addToSet' : { 'id' : '$_id' } },
+					data: { '$addToSet' : { 'id' : '$_id', 'article_type' : '$article_type.name' } },
 					count : {
 						$sum: 1
 					}
@@ -369,9 +369,11 @@ Meteor.methods({
 						count: duplicate.count
 					} // if object not reformatted, _id : {} return from aggregratio causes underscore to throw error Meteor does not currently support objects other than ObjectID as ids
 					if(duplicate.data){
+						obj.article_types = [];
 						obj.mongo_ids = [];
-						duplicate.data.forEach(function(mongoId){
-							obj.mongo_ids.push(mongoId.id);
+						duplicate.data.forEach(function(duplicateArticle){
+							obj.mongo_ids.push(duplicateArticle.id);
+							obj.article_types.push(duplicateArticle.article_type);
 						});
 						// console.log(duplicate.data);
 					}
