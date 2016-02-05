@@ -62,7 +62,9 @@ matb33:collection-hooks@0.8.1
 materialize:materialize@0.97.5
 meteor@1.1.10
 meteor-base@1.0.1
+meteorhacks:aggregate@1.3.0
 meteorhacks:async@1.0.0
+meteorhacks:collection-utils@1.2.0
 meteorhacks:inject-initial@1.0.3
 meteorhacks:kadira@2.26.3
 meteorhacks:meteorx@1.4.1
