@@ -133,6 +133,7 @@ Template.AdminForAuthorsForm.onDestroyed(function () {
 Template.AdminAdvanceArticles.onRendered(function() {
     $('#advance-table').sortable();
 });
+
 Template.AdminAdvanceArticles.onRendered(function() {
     $('.lean-overlay').remove();
 
@@ -162,7 +163,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
 
                 Meteor.call('updateList', 'advance', newsort, function(a,b,c) {
                     var sorted  = sorters.findOne({name:'advance'});
-                    var output = [];
+                    var output = Meteor.advance.groupArticles(sorted.articles);
                     var last_article = {};
                     var recent = true;
 
@@ -323,8 +324,6 @@ Template.AdminAdvanceArticles.onRendered(function() {
         });
     });
 });
-
-
 
 Template.AdminAdvanceArticlesDiff.onRendered(function() {
     $('.delete-article').click(function() {
