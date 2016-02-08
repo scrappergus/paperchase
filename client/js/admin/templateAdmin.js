@@ -232,95 +232,95 @@ Template.AdminAdvanceArticles.onRendered(function() {
         var sort_section_id = $(this).attr('data-section-id');
         var out = [];
         $.each(newsort, function(k,v) {
-                if(v.section_id == sort_section_id) {
-                    newsort[k].section.sort(function(a,b){
-                        var c = new Date(a.date);
-                        var d = new Date(b.date);
-                        return d-c;
-                    });
-                }
-                $.each(v.section, function(key, article) {
-                    out.push(article.id);
+            if(v.section_id == sort_section_id) {
+                newsort[k].section.sort(function(a,b){
+                    var c = new Date(a.date);
+                    var d = new Date(b.date);
+                    return d-c;
                 });
-            });
+            }
 
-
-            Meteor.call('updateList', 'advance', out, function(a,b,c) {
-                var sorted  = sorters.findOne({name:'advance'});
-                var output = [];
-                var last_article = {};
-                var recent = true;
-                for (var i = 0; i < sorted.articles.length; i++){
-                    article = sorted.articles[i];
-
-                    //make a copy of the next article for comparison
-                    next_article = sorted.articles[i+1] || false;
-
-                    //things that happen on the first entry
-                    if(i==0) {
-                        article['first'] = true;
-                        article['section_start'] = true;
-                    }
-
-                    //mark the rest as not being first
-                    first = false;
-
-                    //things that happen if we're starting a new section
-                    if(article.section_name != last_article.section_name) {
-                        article['section_start'] = true;
-                    }
-
-                    //things that happen if we're ending a section
-                    if(article.section_name != next_article.section_name) {
-                        article['section_end'] = true;
-                    }
-
-                    //record this entry for comparison on the next
-                    last_article = article;
-                    //record changes to actual article entry
-                    if(article.section_start) {
-                        section_name = article.section_name;
-                        if(section_name == 'Research Papers' && recent === true) {
-                            recent = false;
-                            section_name = 'Recent Research Papers';
-                        }
-
-                        output.push({
-                            articles:[],
-                            section_name:section_name
-                        });
-                    }
-
-                    output[output.length-1]['articles'].push(article);
-                }
-
-                //$('#modal1').closeModal();
-                $('.admin-content-area').empty();
-
-                Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+            $.each(v.section, function(key, article) {
+                out.push(article.id);
             });
         });
 
-        $('.publish-advanced').click(function(e) {
-            e.preventDefault();
 
-            newsort = [];
-            $('.article').each(function(a,b,c) {
-                newsort.push({
-                    'article_id':  $(this).attr('data-article-id')
-                });
-            });
+        Meteor.call('updateList', 'advance', out, function(a,b,c) {
+            var sorted  = sorters.findOne({name:'advance'});
+            var output = [];
+            var last_article = {};
+            var recent = true;
+            for (var i = 0; i < sorted.articles.length; i++){
+                article = sorted.articles[i];
 
-            $('#modal1').openModal({
-                dismissible: true,
-                complete: function() {
-                    $('.lean-overlay').remove();
+                //make a copy of the next article for comparison
+                next_article = sorted.articles[i+1] || false;
+
+                //things that happen on the first entry
+                if(i==0) {
+                    article['first'] = true;
+                    article['section_start'] = true;
                 }
-            });
 
-            Meteor.call('advancePublish', newsort, function() {
-                $('#modal1').closeModal({
+                //mark the rest as not being first
+                first = false;
+
+                //things that happen if we're starting a new section
+                if(article.section_name != last_article.section_name) {
+                    article['section_start'] = true;
+                }
+
+                //things that happen if we're ending a section
+                if(article.section_name != next_article.section_name) {
+                    article['section_end'] = true;
+                }
+
+                //record this entry for comparison on the next
+                last_article = article;
+                //record changes to actual article entry
+                if(article.section_start) {
+                    section_name = article.section_name;
+                    if(section_name == 'Research Papers' && recent === true) {
+                        recent = false;
+                        section_name = 'Recent Research Papers';
+                    }
+
+                    output.push({
+                        articles:[],
+                        section_name:section_name
+                    });
+                 }
+
+                output[output.length-1]['articles'].push(article);
+            }
+
+            //$('#modal1').closeModal();
+            $('.admin-content-area').empty();
+
+            Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+        });
+    });
+
+    $('.publish-advanced').click(function(e) {
+        e.preventDefault();
+
+        newsort = [];
+        $('.article').each(function(a,b,c) {
+            newsort.push({
+                'article_id':  $(this).attr('data-article-id')
             });
+        });
+
+        $('#modal1').openModal({
+            dismissible: true,
+            complete: function() {
+                $('.lean-overlay').remove();
+            }
+        });
+
+        Meteor.call('advancePublish', newsort, function() {
+            $('#modal1').closeModal({});
         });
     });
 });
