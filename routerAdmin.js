@@ -608,10 +608,10 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var sorted  = sorters.findOne({name:'advance'});
-				var output = [];
-				var last_article = {};
-                var section_count = 0;
-                var section_start_index = 0;
+				// var output = [];
+				// var last_article = {};
+                // var section_count = 0;
+                // var section_start_index = 0;
 
                 var output = Meteor.advance.groupArticles(sorted.articles);
 

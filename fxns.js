@@ -1048,6 +1048,8 @@ Meteor.issue = {
 Meteor.advance = {
 	groupArticles: function(articles){
 		var recent = true;
+		var section_count = 0;
+		var section_start_index = 0;
 		var output = [];
 		var last_article = {};
 		for (var i = 0; i < articles.length; i++){
@@ -1080,6 +1082,8 @@ Meteor.advance = {
 			//record changes to actual article entry
 			if(article.section_start) {
 				section_name = article.section_name;
+				section_id = article.section_id;
+
 				if(section_name == 'Research Papers' && recent === true) {
 					recent = false;
 					section_name = 'Recent Research Papers';
@@ -1087,10 +1091,17 @@ Meteor.advance = {
 
 				output.push({
 					articles:[],
-					section_name:section_name
+					section_name:section_name,
+					section_id:section_id
 				});
+
+				//set section count in previous section
+				output[section_start_index]['section_length'] = section_count;
+				section_count = 0;
+				section_start_index = output.length - 1;
 			}
 
+			section_count++;
 			output[output.length-1]['articles'].push(article);
 		}
 		return output;
