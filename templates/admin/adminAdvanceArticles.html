@@ -21,7 +21,7 @@
     </div>
     <form>
 
-	<div class="publish-advanced fixed-action-btn" style="bottom: 45px; right: 24px; background: white;">
+	<div class="publish-advanced fixed-action-btn card" style="bottom: 45px; right: 24px; background: white; paddig:10px;">
         <h5>Total count: {{total}}</h5>
         <h5>Last published:<br>{{pubdate}}<br>{{pubtime}}</h5>
 		<button class="waves-effect waves-light btn-large">
@@ -59,9 +59,12 @@
                 <ul class="article-sections">
                     {{#each sections}}
                     <li class="article-section">
-                        <h2 style="display:inline;"><i class="material-icons handle" style="cursor:pointer;">&#xE8D5;</i> {{section_name}} <span class="badge">{{section_length}} articles</span></h2> <a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a>
-                        <ul class="articles">
+                        <ul class="article-section-header">
+                            <li> <h2 class="advance-section-header"><i class="material-icons handle" style="cursor:pointer;">&#xE8D5;</i> {{section_name}} <span class="right font-md">{{section_length}} articles</span></h2></li>
+                            <li style="margin:0 10px 0 0"><a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a></li>
+                        </ul>
 
+                        <ul class="articles">
                             {{#each articles}}
                             <li class="article" data-article-id={{_id}}>
                                 <div class="row">
@@ -75,7 +78,6 @@
                                         <label class="right" for="{{_id}}"></label></div>
                                 </div>
                             </li>
-
                             {{/each}}
                         </ul>
                     </li>
