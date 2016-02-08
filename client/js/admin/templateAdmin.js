@@ -50,12 +50,6 @@ Template.AdminArticleFormAffiliations.onRendered(function() {
 	Meteor.adminArticle.initiateAffiliationsSortable();
 });
 
-// Advance
-// -------
-Template.AdminAdvanceArticles.onRendered(function() {
-	$('#advance-table').sortable();
-});
-
 // XML Upload
 // ----------
 Template.AdminArticleXmlUpload.onRendered(function () {
@@ -136,6 +130,9 @@ Template.AdminForAuthorsForm.onDestroyed(function () {
 
 // Advance
 // -------
+Template.AdminAdvanceArticles.onRendered(function() {
+    $('#advance-table').sortable();
+});
 Template.AdminAdvanceArticles.onRendered(function() {
         $('.lean-overlay').remove();
 
