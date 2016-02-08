@@ -15,7 +15,7 @@
             <tbody>
               {{#each arrayify duplicates}}
                 <tr class="table-group-header">
-                  <td><h4>{{name}}</h4></td>
+                  <td><h4>{{name}} {{#if value}}: {{countItems value}} Values are Duplicated{{/if}}</h4></td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
