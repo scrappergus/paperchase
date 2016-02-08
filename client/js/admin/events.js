@@ -1547,3 +1547,20 @@ Template.AdminRecommendationUpdate.events({
 		});
 	}
 });
+
+// Advance
+// -----------------
+Template.AdminAdvanceArticles.events({
+	'click .delete-article': function(e,t){
+		e.preventDefault();
+		$('#modal1').openModal();
+		var id = $(e.target).attr('data-delete-id');
+		Meteor.call('sorterRemoveItem', 'advance', id, function() {
+			$('.admin-content-area').empty();
+			var sorted  = sorters.findOne({name:'advance'});
+			var output = Meteor.advance.groupArticles(sorted.articles);
+			$('#modal1').closeModal();
+			Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+		});
+	}
+})

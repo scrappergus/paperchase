@@ -178,19 +178,19 @@ Template.AdminAdvanceArticles.onRendered(function() {
         }
     });
 
-    $('.delete-article').click(function() {
-        $('#modal1').openModal();
-        var id = $(this).attr('data-delete-id');
-        Meteor.call('sorterRemoveItem', 'advance', id, function() {
-            $('.admin-content-area').empty();
+    // $('.delete-article').click(function() {
+    //     $('#modal1').openModal();
+    //     var id = $(this).attr('data-delete-id');
+    //     Meteor.call('sorterRemoveItem', 'advance', id, function() {
+    //         $('.admin-content-area').empty();
 
-            var sorted  = sorters.findOne({name:'advance'});
+    //         var sorted  = sorters.findOne({name:'advance'});
 
-            var output = Meteor.advance.groupArticles(sorted.articles);
-            $('#modal1').closeModal();
-            Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
-        });
-    });
+    //         var output = Meteor.advance.groupArticles(sorted.articles);
+    //         $('#modal1').closeModal();
+    //         Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+    //     });
+    // });
 
     $('.sort-section-dates').click(function(e) {
         var newsort = [];
