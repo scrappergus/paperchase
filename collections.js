@@ -469,7 +469,7 @@ if (Meteor.isServer) {
     return articles.find({'feature':true},{sort:{'_id':1}});
   });
   Meteor.publish('advance', function () {
-    var articlesList = articles.find({advance : true});
+    var articlesList = articles.find();
     return articlesList;
   });
   Meteor.publish('submissions', function () {
