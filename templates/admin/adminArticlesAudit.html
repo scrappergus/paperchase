@@ -2,8 +2,44 @@
     {{>AdminHeader header="Articles Audit"}}
     <div class="row">
         <div class="col s12">
-               {{>AdminArticlesAuditContent}}
-          </div>
+          {{>AdminArticlesAuditContent}}
+          <table class="bordered">
+            <thead>
+              <tr>
+                <th><h3>Duplicates</h3></th>
+                <th>Duplicate Count</th>
+                <th>Article Type</th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each arrayify duplicates}}
+                <tr class="table-group-header">
+                  <td><h4>{{name}}</h4></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+                {{#if value}}{{#each value}}
+                <tr>
+                  <td>{{duplicate_field}}</td>
+                  <td>{{count}}</td>
+                  <td>{{#each article_types}}<div class="clearfix"></div>{{.}}{{/each}}</td>
+                  <td>{{#each mongo_ids}}<div class="clearfix"></div><a href="{{pathFor 'AdminArticleOverview' _id=.}}">{{.}}</a>{{/each}}</td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr>
+                  <td>None Found</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+                {{/if}}
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
      </div>
 </template>
 <template name="AdminArticlesAuditContent">

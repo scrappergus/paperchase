@@ -91,6 +91,9 @@ if (Meteor.isClient) {
 	Session.setDefault('articles-doi-status',null);
 	// Batch page
 	Session.setDefault('articles-assets-audit',null);
+	Session.setDefault('articles-ncbi-audit',null);
+	// Articles audit
+	Session.setDefault('articles-duplicate', null);
 
 
 	Router.route('/admin', {
@@ -410,6 +413,42 @@ if (Meteor.isClient) {
 				articles : articles.find().fetch()
 			}
 		}
+	});
+	Router.route('/admin/articles/audit',{
+		name: 'AdminArticlesAudit',
+		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Articles Audit';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		onBeforeAction: function(){
+			Meteor.call('allArticlesAssetsAudit',function(error,result){
+				if(error){
+					throw new Meteor.Error(error);
+				}else{
+					Session.set('articles-assets-audit',result);
+				};
+			});
+			Meteor.call('pubMedAndPmcAudit',function(error,result){
+				if(error){
+					throw new Meteor.Error(error);
+				}else{
+					Session.set('articles-ncbi-audit',result);
+				};
+			});
+			Meteor.call('duplicateArticles',function(error,result){
+				if(error){
+					throw new Meteor.Error(error);
+				}else{
+					Session.set('articles-duplicate',result);
+				};
+			});
+			this.next();
+		}
+
 	});
 	Router.route('/admin/article/:_id',{
 		name: 'AdminArticleOverview',
@@ -1261,7 +1300,13 @@ if (Meteor.isClient) {
 					throw new Meteor.Error(error);
 				}else{
 					Session.set('articles-assets-audit',result);
-
+				};
+			});
+			Meteor.call('pubMedAndPmcAudit',function(error,result){
+				if(error){
+					throw new Meteor.Error(error);
+				}else{
+					Session.set('articles-ncbi-audit',result);
 				};
 			});
 			this.next();

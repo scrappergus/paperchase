@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		// console.log('--updateArticle |  mongoId = ' + mongoId);
+		console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 
 		if(!mongoId){
@@ -49,6 +49,9 @@ Meteor.methods({
 		}else{
 			throw new Meteor.Error('ERROR: Duplicate Article - ' + duplicateArticle._id);
 		}
+	},
+	updateArticleBy: function(where, what){
+		return articles.update(where, {$set: what});
 	},
 	pushArticle: function(mongoId, field, articleData){
 		var updateObj = {};
@@ -288,6 +291,101 @@ Meteor.methods({
 		result.articles_without_pmid = articlesWithoutPmid.length;
 		result.pdf = pdfList.length;
 		result.xml = xmlList.length;
+		return result;
+	},
+	duplicateArticles: function(){
+		var result = {};
+		var queryRes = {};
+		queryRes.pii = articles.aggregate([
+			{
+				$group : {
+					_id: {
+						duplicate_field : '$ids.pii'
+					} ,
+					data: { '$addToSet' : { 'id' : '$_id','article_type' : '$article_type.name' } },
+					count : {
+						$sum: 1
+					}
+				}
+			},
+			{
+				$match : {
+					count : {
+						$gt : 1
+					}
+				}
+			}
+		]);
+
+		queryRes.pmid = articles.aggregate([
+			{
+				$group : {
+					_id: {
+						duplicate_field : '$ids.pmid'
+					} ,
+					data: { '$addToSet' : { 'id' : '$_id','article_type' : '$article_type.name' } },
+					count : {
+						$sum: 1
+					}
+				}
+			},
+			{
+				$match : {
+					count : {
+						$gt : 1
+					}
+				}
+			}
+		]);
+		queryRes.titles = articles.aggregate([
+			{
+				$group : {
+					_id: {
+						duplicate_field : '$title'
+					} ,
+					data: { '$addToSet' : { 'id' : '$_id', 'article_type' : '$article_type.name' } },
+					count : {
+						$sum: 1
+					}
+				}
+			},
+			{
+				$match : {
+					count : {
+						$gt : 1
+					}
+				}
+			}
+		]);
+		// queryRes.pmid = articles.aggregate([{$group : { _id: {duplicate_field: '$ids.pmid'} ,  count : { $sum: 1}}},{$match : { count : { $gt : 1 } }} ]);
+		// queryRes.  = articles.aggregate([{$group : { _id: {duplicate_field: '$title'} ,  count : { $sum: 1}}},{$match : { count : { $gt : 1 } }} ]);
+
+		for(var duplicateType in queryRes){
+			if(queryRes[duplicateType].length > 0 && queryRes[duplicateType][0]._id != null){
+				var duplicateList = [];
+				queryRes[duplicateType].forEach(function(duplicate){
+					var obj = {
+						duplicate_field: duplicate._id.duplicate_field,
+						count: duplicate.count
+					} // if object not reformatted, _id : {} return from aggregratio causes underscore to throw error Meteor does not currently support objects other than ObjectID as ids
+					if(duplicate.data){
+						obj.article_types = [];
+						obj.mongo_ids = [];
+						duplicate.data.forEach(function(duplicateArticle){
+							obj.mongo_ids.push(duplicateArticle.id);
+							obj.article_types.push(duplicateArticle.article_type);
+						});
+						// console.log(duplicate.data);
+					}
+					duplicateList.push(obj);
+				});
+
+				result[duplicateType] = duplicateList;
+			}else{
+				result[duplicateType] = null; //for templating
+			}
+		}
+		// console.log(result.pii);
 		return result;
 	}
 });

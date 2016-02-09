@@ -291,17 +291,49 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
-	getMissingPmids: function(){
+	getMissingPubMedIds: function(){
+		// var fut = new future();
+		var apiBase = journalConfig.findOne().api.crawler;
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		var urlApi =  apiBase + '/pubmed/ids_via_pii/' + journalShortName;
+		var missingList = articles.find({'ids.pmid' : {$exists:false},'ids.pii' : {$exists:true}},{_id : 1,ids:1}).fetch();
+		for(var i=0 ; i<missingList.length ; i++ ){
+			if(missingList[i].ids.pii){
+				var urlApiByPii = urlApi + '/' + missingList[i].ids.pii;
+				Meteor.http.get(urlApiByPii, function(error,result){
+					if(error){
+						console.error('Get PubMed ID error',error);
+					}else if(result){
+						articleData = result.data;
+						if(articleData && articleData.ids.pmid){
+							console.log(articleData);
+							Meteor.call('updateArticleBy', {'ids.pii' : articleData.ids.pii}, {'ids.pmid': articleData.ids.pmid}, function(updateError,updateResult){
+								if(updateError){
+									console.error('Update Article',updateError);
+								}else if(updateResult){
+
+								}
+							});
+						}
+					}
+				});
+			}
+
+		}
+		// return fut.wait();
+	},
+	getMissingPmcIds: function(){
 		var fut = new future();
 		var apiBase = journalConfig.findOne().api.crawler;
-		var missingPmidList = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
-		for(var i=0 ; i<missingPmidList.length ; i++ ){
-			var urlApi =  apiBase + '/article_ids_via_pmid/' + missingPmidList[i].ids.pmid;
+		var missingPmcList = articles.find({'ids.pmc' : {$exists:false},'ids.pmid' : {$exists:true}},{_id : 1}).fetch();
+		for(var i=0 ; i<missingPmcList.length ; i++ ){
+			var urlApi =  apiBase + '/article_ids_via_pmid/' + missingPmcList[i].ids.pmid;
 			Meteor.http.get(urlApi, function(error,result){
 				if(error){
 					console.error('Get PMC ID error',error);
 				}else if(result){
 					articleData = result.data;
+					// console.log(articleData);
 					if(articleData.ids.pmc){
 						Meteor.call('updateArticleByPmid', articleData.ids.pmid, {'ids.pmc': articleData.ids.pmc}, function(updateError,updateResult){
 							if(updateError){

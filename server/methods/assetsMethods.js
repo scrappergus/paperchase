@@ -20,7 +20,7 @@ Meteor.methods({
 		var fut = new future();
 		Meteor.http.get(url , function(error,result){
 			if(error){
-				console.error('Asset Check Error: ',error);
+				// console.error('Asset Check Error: ',error);
 				fut['return'](false);
 			}else if(result){
 				console.log(url + ' Exists');
