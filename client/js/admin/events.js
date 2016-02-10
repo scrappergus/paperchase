@@ -186,38 +186,38 @@ Template.AdminUser.events({
 	}
 });
 Template.AdminUserSubs.events({
-        'submit form' : function(e,t) {
-            e.preventDefault();
-            Meteor.formActions.saving();
+		'submit form' : function(e,t) {
+			e.preventDefault();
+			Meteor.formActions.saving();
 
-            var subs = [];
-            $('.sub-cb').each(function() {
-                    if($(this).prop('checked')) {
-                        var v = $(this).attr('data-volume');
-                        var i = $(this).attr('data-issue');
+			var subs = [];
+			$('.sub-cb').each(function() {
+					if($(this).prop('checked')) {
+						var v = $(this).attr('data-volume');
+						var i = $(this).attr('data-issue');
 
-                        subs.push(obj = {
-                            type: 'issue'
-                            ,volume: v
-                            ,issue: i
-                        });
+						subs.push(obj = {
+							type: 'issue'
+							,volume: v
+							,issue: i
+						});
 
 
 
-                    }
-                });
+					}
+				});
 
-            Meteor.call('updateSubs', t.data.u._id,  subs, function(error, result){
-                    if(error){
-                        console.log('ERROR');
-                        console.log(error);
-                        Meteor.formActions.error();
-                    }else{
-                        Meteor.formActions.success();
-                    }
-                });
+			Meteor.call('updateSubs', t.data.u._id,  subs, function(error, result){
+					if(error){
+						console.log('ERROR');
+						console.log(error);
+						Meteor.formActions.error();
+					}else{
+						Meteor.formActions.success();
+					}
+				});
 
-        }
+		}
 });
 Template.AdminAddUser.events({
 	'click .role-cb': function(e){
@@ -1370,34 +1370,34 @@ Template.s3Upload.events({
 // Institutions
 // ----------------
 Template.AdminInstitution.events({
-        'click .del-btn': function(e,t){
-            Meteor.call('removeInstitution', this['_id'], function(error, result){
-                });
-        }
+		'click .del-btn': function(e,t){
+			Meteor.call('removeInstitution', this['_id'], function(error, result){
+				});
+		}
 });
 Template.AdminInstitutionAdd.events({
-        'submit form': function(e,t){
-            var formType = Session.get('formType');
+		'submit form': function(e,t){
+			var formType = Session.get('formType');
 
-            e.preventDefault();
-            //        Meteor.formActions.saving();
+			e.preventDefault();
+			//        Meteor.formActions.saving();
 
-            //commont to insert and update
-            obj = {
-                institution: $('[name=institution]').val()
-                ,address: $('[name=address]').val()
-            };
+			//commont to insert and update
+			obj = {
+				institution: $('[name=institution]').val()
+				,address: $('[name=address]').val()
+			};
 
-            Meteor.call('addInstitution', obj, function(error, result){
-                    if(error){
-                        console.log('ERROR');
-                        console.log(error);
-                        Meteor.formActions.error();
-                    }else{
-                        Meteor.formActions.success();
-                    }
-                });
-        }
+			Meteor.call('addInstitution', obj, function(error, result){
+					if(error){
+						console.log('ERROR');
+						console.log(error);
+						Meteor.formActions.error();
+					}else{
+						Meteor.formActions.success();
+					}
+				});
+		}
 
 });
 Template.AdminInstitutionForm.onCreated(function() {
@@ -1405,94 +1405,94 @@ Template.AdminInstitutionForm.onCreated(function() {
 });
 
 Template.AdminInstitutionForm.events({
-        'click .edit-btn': function(e){
-            $(".institution-form").show();
-        }
-        ,'click .del-btn': function(e,t){
-            var mongoId = t.data.institution._id;
-            Meteor.call('removeInstitution', mongoId, function(error, result){
-                });
-        }
-        ,'click .add-ip-btn': function(e,t){
-            t.showIPFields.set(true);
-        }
-        ,'click .cancel-new-ip-btn': function(e,t) {
-            t.showIPFields.set(false);
-        }
-        ,'click .save-new-ip-btn': function(e,t) {
-            var mongoId = t.data.institution._id;
+		'click .edit-btn': function(e){
+			$(".institution-form").show();
+		}
+		,'click .del-btn': function(e,t){
+			var mongoId = t.data.institution._id;
+			Meteor.call('removeInstitution', mongoId, function(error, result){
+				});
+		}
+		,'click .add-ip-btn': function(e,t){
+			t.showIPFields.set(true);
+		}
+		,'click .cancel-new-ip-btn': function(e,t) {
+			t.showIPFields.set(false);
+		}
+		,'click .save-new-ip-btn': function(e,t) {
+			var mongoId = t.data.institution._id;
 
-            var obj = {
-                'IPRanges': {startIP: $('.add-startIP').val(), endIP: $('.add-endIP').val()}
-            };
+			var obj = {
+				'IPRanges': {startIP: $('.add-startIP').val(), endIP: $('.add-endIP').val()}
+			};
 
-            Meteor.call('addIPRangeToInstitution', mongoId, obj, function(error, result){
-                    if(error){
-                        console.log('ERROR');
-                        console.log(error);
-                        Meteor.formActions.error();
-                    }else{
-                        Meteor.formActions.success();
-                        t.showIPFields.set(false);
-                    }
-                });
+			Meteor.call('addIPRangeToInstitution', mongoId, obj, function(error, result){
+					if(error){
+						console.log('ERROR');
+						console.log(error);
+						Meteor.formActions.error();
+					}else{
+						Meteor.formActions.success();
+						t.showIPFields.set(false);
+					}
+				});
 
-        }
-        ,'click .del-ip-btn': function(e,t) {
-            var mongoId = t.data.institution._id;
-            console.log(this);
-            console.log(mongoId);
+		}
+		,'click .del-ip-btn': function(e,t) {
+			var mongoId = t.data.institution._id;
+			console.log(this);
+			console.log(mongoId);
 
-            obj = {
-                'IPRanges': this
-            };
+			obj = {
+				'IPRanges': this
+			};
 
-            Meteor.call('removeInstitutionIPRange', mongoId, obj, function(error, result){
-                    if(error){
-                        console.log('ERROR');
-                        console.log(error);
-                        Meteor.formActions.error();
-                    }else{
-                        Meteor.formActions.success();
-                    }
-                });
+			Meteor.call('removeInstitutionIPRange', mongoId, obj, function(error, result){
+					if(error){
+						console.log('ERROR');
+						console.log(error);
+						Meteor.formActions.error();
+					}else{
+						Meteor.formActions.success();
+					}
+				});
 
-        }
-        ,'submit form': function(e,t){
-            var formType = Session.get('formType');
+		}
+		,'submit form': function(e,t){
+			var formType = Session.get('formType');
 
-            e.preventDefault();
-            //        Meteor.formActions.saving();
+			e.preventDefault();
+			//        Meteor.formActions.saving();
 
-            //commont to insert and update
-            obj = {
-                institution: $('[name=institution]').val()
-                ,address: $('[name=address]').val()
-            };
+			//commont to insert and update
+			obj = {
+				institution: $('[name=institution]').val()
+				,address: $('[name=address]').val()
+			};
 
-            var mongoId = t.data.institution._id;
+			var mongoId = t.data.institution._id;
 
-            obj.IPRanges = [];
+			obj.IPRanges = [];
 
-            $('.iprange-start').each(function(a,b,c) {
-                    obj.IPRanges[a] = {startIP: $(this).val()};
-                });
+			$('.iprange-start').each(function(a,b,c) {
+					obj.IPRanges[a] = {startIP: $(this).val()};
+				});
 
-            $('.iprange-end').each(function(a,b,c) {
-                    obj.IPRanges[a]['endIP'] = $(this).val();
-                });
+			$('.iprange-end').each(function(a,b,c) {
+					obj.IPRanges[a]['endIP'] = $(this).val();
+				});
 
 
-            Meteor.call('updateInstitution', mongoId, obj, function(error, result){
-                    if(error){
-                        console.log('ERROR');
-                        console.log(error);
-                        Meteor.formActions.error();
-                    }else{
-                        Meteor.formActions.success();
-                    }
-                });
-        }
+			Meteor.call('updateInstitution', mongoId, obj, function(error, result){
+					if(error){
+						console.log('ERROR');
+						console.log(error);
+						Meteor.formActions.error();
+					}else{
+						Meteor.formActions.success();
+					}
+				});
+		}
 });
 
 // Recommend
@@ -1525,37 +1525,73 @@ Template.AdminRecommendationUpdate.events({
 Template.AdminAdvanceArticles.events({
 	'submit form': function(e){
 		e.preventDefault();
-		var advance = [],
-			remove = [];
-		$('.advanced-article').each(function(){
-			var mongoId = $(this).attr('id');
-			if($(this).prop('checked')){
-				advance.push(mongoId);
-			}else{
-				remove.push(mongoId);
+		newsort = [];
+		$('.article').each(function(a,b,c) {
+			newsort.push({
+				'article_id':  $(this).attr('data-article-id')
+			});
+		});
+
+		$('#advance-modal').openModal({
+			dismissible: true,
+			complete: function() {
+				$('.lean-overlay').remove();
 			}
 		});
-		Meteor.call('updateList', 'advance', advance, remove, function(error,result){
-			if(error){
-				console.log('ERROR - updateList');
-				console.log(error);
-			}
-			if(result){
-				Meteor.formActions.success();
-			}
+
+		Meteor.call('advancePublish', newsort, function() {
+			$('#advance-modal').closeModal({});
 		});
-		// just update articles collection, there is a hook to updaate sorters
 	},
+	// 'click #save-advance-order': function(e,t){
+	// 	e.preventDefault();
+
+	// 	console.log('order');
+	// },
 	'click .delete-article': function(e,t){
 		e.preventDefault();
-		$('#modal1').openModal();
 		var id = $(e.target).attr('data-delete-id');
-		Meteor.call('sorterRemoveItem', 'advance', id, function() {
-			$('.admin-content-area').empty();
-			var sorted  = sorters.findOne({name:'advance'});
-			var output = Meteor.advance.groupArticles(sorted.articles);
-			$('#modal1').closeModal();
-			Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: output}, $('.admin-content-area').get()[0]);
+		$('#advance-modal').openModal({
+			ready: function(){
+				Meteor.call('sorterRemoveItem', 'advance', id, function(error, result) {
+					if(result){
+						var sorterOrder = sorters.findOne({name:'advance'});
+						var output = Meteor.advance.groupArticles(sorterOrder.articles);
+						Session.set('advance-admin',output);
+						$('#advance-modal').closeModal({
+							ready: function(){
+								console.log('close modal');
+							}
+						});
+					}
+				});
+			}
 		});
+	},
+	'click .sort-section-dates': function(e,t){
+		e.preventDefault();
+		var sectionId = $(e.target).attr('data-section-id');
+		var allAdvance = Session.get('advance-admin');
+		var sectionToUpdate;
+		var sectionToUpdateIdx;
+		allAdvance.forEach(function(section,index){
+			if(section.section_id == sectionId){
+				sectionToUpdate = section;
+				sectionToUpdateIdx = index;
+			}
+		});
+		if(sectionToUpdate){
+			sectionToUpdate.articles.forEach(function(article){
+				if(article.dates && article.dates.epub){
+				}else{
+					article.epub =null;
+				}
+			});
+			sectionToUpdate.articles.sort(function(a,b){
+				return new Date(a.dates.epub).getTime() - new Date(b.dates.epub).getTime()
+			});
+		}
+		allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
+		Session.set('advance-admin',allAdvance);
 	}
 })

@@ -522,4 +522,10 @@ Template.AdminArticlesAuditContent.helpers({
 	}
 });
 
-
+// Advance
+// ---------------
+Template.AdminAdvanceArticles.helpers({
+	sections: function(){
+		return  Session.get('advance-admin');
+	},
+});

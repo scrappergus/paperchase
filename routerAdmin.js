@@ -94,6 +94,8 @@ if (Meteor.isClient) {
 	Session.setDefault('articles-ncbi-audit',null);
 	// Articles audit
 	Session.setDefault('articles-duplicate', null);
+	// Advance
+	Session.setDefault('advance-admin',null);
 
 
 	Router.route('/admin', {
@@ -617,8 +619,10 @@ if (Meteor.isClient) {
 
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 
+                Session.set('advance-admin',output);
+
 				return{
-					sections: output,
+					// sections: output,
                     pubdate: advance.pubtime.toLocaleDateString(),
                     pubtime: advance.pubtime.toLocaleTimeString(),
                     total: sorted.articles.length
