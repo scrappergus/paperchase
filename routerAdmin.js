@@ -95,7 +95,11 @@ if (Meteor.isClient) {
 	// Articles audit
 	Session.setDefault('articles-duplicate', null);
 	// Advance
-	Session.setDefault('advance-admin',null);
+	Session.setDefault('advanceAdmin',null);
+	// forms
+	Session.setDefault('savedMessage',null);
+	Session.setDefault('errorMessage',null);
+	Session.setDefault('statusModalAction',null);
 
 
 	Router.route('/admin', {
@@ -619,7 +623,7 @@ if (Meteor.isClient) {
 
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 
-                Session.set('advance-admin',output);
+                Session.set('advanceAdmin',output);
 
 				return{
 					// sections: output,

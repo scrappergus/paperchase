@@ -37,6 +37,17 @@ Meteor.methods({
         var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});
 		return res;
 	},
+    batchSorterRemoveItem: function(listName,idList){
+        var removed = idList.map(function(mongoId){
+            Meteor.call('sorterRemoveItem',listName, mongoId, function(error,result){
+                if(result){
+                    return mongoId;
+                }
+            });
+        });
+        // return fut.wait();
+        return removed;
+    },
 	updateList: function(listName, list){
 		// console.log('... sorterUpdateList = ' + listName );
 		// update sorters collection

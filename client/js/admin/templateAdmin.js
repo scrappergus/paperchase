@@ -182,4 +182,6 @@ Template.AdminAdvanceArticlesDiff.onRendered(function() {
 
 Template.AdminSections.onRendered(function() {
     Session.set('paperSectionId',null);
+    Session.set('errorMessage',null);
+    Session.set('savedMessage',null);
 });

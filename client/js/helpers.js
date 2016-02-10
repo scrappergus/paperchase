@@ -206,4 +206,9 @@ if (Meteor.isClient) {
 
             return inst_match || false;
 	});
+	Template.registerHelper('actionSaving', function(action){
+		if(action && action.toLowerCase() == 'saving'){
+			return true;
+		}
+	});
 }

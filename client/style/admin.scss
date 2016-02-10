@@ -17,6 +17,11 @@
 	fieldset.invalid{
 		border-color: $red;
 	}
+
+	.checkbox-red[type="checkbox"]:checked + label:before{
+		border-right: 2px solid $red;
+		border-bottom: 2px solid $red;
+	}
 /* General ------------------------*/
 	.admin-container{
 		padding-left: 240px;

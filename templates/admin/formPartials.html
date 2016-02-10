@@ -19,11 +19,20 @@
 		</div>
 	</div>
 </template>
-
 <template name="Error">
 	<div class="row error hide">
 		<div class="col s8 offset-s2 red lighten-4">
 			<h5>Error</h5>
+		</div>
+	</div>
+</template>
+<template name="ErrorModal">
+	<div id="error-modal" class="modal">
+		<div class="modal-content center-align">
+			<div class="center-align">
+				<h3 class="center-align">Error</h3>
+				{{#if what}}<h4>{{{what}}}</h4>{{/if}}
+			</div>
 		</div>
 	</div>
 </template>
@@ -99,7 +108,8 @@
 <template name="SuccessModal">
 	<div id="success-modal" class="modal">
 		<div class="modal-content center-align">
-			<h3>{{what}} Saved</h3>
+			<h3>{{#if what}}{{what}} {{/if}}Saved</h3>
+			{{#if details}}<h4>{{{details}}}</h4>{{/if}}
 		</div>
 	</div>
 </template>
@@ -138,6 +148,35 @@
 			<h4>Saving</h4>
 			<!-- {{>loadingGif}} -->
 			{{>Progress}}
+		</div>
+	</div>
+</template>
+<template name="SavingModal">
+	<div id="saving-modal" class="modal">
+		<div class="modal-content center-align">
+			<div class="center-align">
+				<h3 class="center-align">Saving</h3>
+				{{>Progress}}
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+		</div>
+	</div>
+</template>
+
+<!-- saving/success/error-->
+<template name="StatusModal">
+	<div id="status-modal" class="modal">
+		<div class="modal-content center-align">
+			<div class="center-align">
+				<h3 class="center-align">{{action}}</h3>
+				{{#if actionSaving action}}{{>Progress}}{{/if}}
+				{{#if details}}<h4>{{{details}}}</h4>{{/if}}
+			</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
 		</div>
 	</div>
 </template>

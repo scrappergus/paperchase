@@ -526,6 +526,15 @@ Template.AdminArticlesAuditContent.helpers({
 // ---------------
 Template.AdminAdvanceArticles.helpers({
 	sections: function(){
-		return  Session.get('advance-admin');
+		return  Session.get('advanceAdmin');
 	},
+	statusAction: function(){
+		return Session.get('statusModalAction');
+	},
+	savedMessage: function(){
+		return  Session.get('savedMessage');
+	},
+	errorMessage: function(){
+		return  Session.get('errorMessage');
+	}
 });
