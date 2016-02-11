@@ -580,6 +580,13 @@ Meteor.adminUser = {
 
 Meteor.formActions = {
 	saving: function(){
+		Session.set('statusModalAction','Saving');
+		Session.set('savedMessage',null);
+		Session.set('errorMessage',null);
+		if($('#status-modal').length){
+			$('#status-modal').openModal();
+		}
+
 		// inline messages
 		$('.save-btn').addClass('hide');
 		$('.saving').removeClass('hide');
@@ -602,8 +609,17 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-wait').removeClass('hide');
 		}
 
+		//TODO: use 1 modal for all actions - StatusModal
+		if($('#saving-modal').length){
+			$('#saving-modal').openModal({
+				dismissible: false
+			});
+		}
+
+
 		//reset
 		Session.set('errorMessages',null);
+		Session.set('advanceAdminSavingMsg',null);
 		$('input').removeClass('invalid');
 		$('textarea').removeClass('invalid');
 		$('input').removeClass('valid');
@@ -658,6 +674,8 @@ Meteor.formActions = {
 		}
 	},
 	errorMessage: function(message){
+		Session.set('statusModalAction','Error');
+
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
 		$('.success').addClass('hide');
@@ -675,6 +693,17 @@ Meteor.formActions = {
 		if($('#save-btn').length){
 			$('#save-btn').find('.show-save').removeClass('hide');
 			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+
+		// modals
+		// TODO: use 1 modal for all actions - StatusModal
+		if($('#saving-modal').length){
+			$('#saving-modal').closeModal();
+		}
+		if($('#error-modal').length){
+			$('#error-modal').openModal({
+				dismissible: true
+			});
 		}
 	},
 	success: function(){
@@ -696,13 +725,19 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-wait').addClass('hide');
 		}
 
-		// success modals
+		// modals
 		if($('#success-modal').length){
-			$('#success-modal').openModal();
+			$('#success-modal').openModal({
+				dismissible: true
+			});
 		}
-
+		if($('#saving-modal').length){
+			$('#saving-modal').closeModal();
+		}
 	},
 	successMessage: function(message){
+		Session.set('statusModalAction','Saved');
+
 		// inline messages
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
@@ -722,11 +757,22 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-wait').addClass('hide');
 		}
 
-		// success modals
-		if($('#success-modal').length){
+		// modals
+		// TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
+		if($('#saving-modal').length){
+			$('#saving-modal').closeModal({
+				complete: function(){
+					if($('#success-modal').length){
+						$('#success-modal').openModal({
+							ready: function(){
+							}
+						});
+					}
+				}
+			});
+		}else if($('#success-modal').length){
 			$('#success-modal').openModal();
 		}
-
 	},
 	removePastedStyle: function(e){
 		e.preventDefault();
@@ -1104,6 +1150,7 @@ Meteor.advance = {
 			section_count++;
 			output[output.length-1]['articles'].push(article);
 		}
+		// console.log('output',output);
 		return output;
 	}
 }
