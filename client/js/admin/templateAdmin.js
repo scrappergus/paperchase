@@ -137,10 +137,9 @@ Template.AdminAdvanceArticles.onRendered(function() {
 Template.AdminAdvanceArticles.onRendered(function() {
     $('.lean-overlay').remove();
 
-    $('body').prepend($('.advance-drop-spot-box').detach());
 
-    $('.articles, .article-sections, .advance-drop-spot').sortable({
-        connectWith: '.articles, .advance-drop-spot',
+    $('.articles, .article-sections').sortable({
+        connectWith: '.articles',
         cursor: 'move',
         handle: '.handle',
         zIndex: 9999,
@@ -149,7 +148,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
         },
         update: function(e, ui) {
             console.log('update!');
-            if($(e.toElement).hasClass('advance-drop-spot') == false && $(e.toElement).hasClass('drop-placeholder') == false) {
+            if($(e.toElement).hasClass('drop-placeholder') == false) {
                 $('#advance-modal').openModal({
                     dismissible: true,
                     ready: function() {
