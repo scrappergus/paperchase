@@ -3,7 +3,7 @@ Meteor.methods({
 		// not always used for articles. for ex, use this for about and for authors sections.
 		// TODO add to the beginning of set
 
-		if(listName == 'articles') {
+		if(listName == 'advance') {
 			//find the position to insert at
 			article = articles.findOne({"_id": mongoId});
 			if(article) {
