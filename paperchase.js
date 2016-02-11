@@ -118,18 +118,18 @@ Router.route('/xml-cite-set/:_filename',{
 // INTAKE ROUTES
 Router.route('/admin/add-legacy-platform-article/',{
 	where: 'server',
+	name: 'AddLegacyAdvanceArticle',
 	action: function(){
-        var response = this.response;
-        Meteor.call('legacyArticleIntake', this.params.query, function(err, res) {
-                if(err) {
-                    response.setHeader('Content-Type', 'application/json');
-                    response.end(JSON.stringify({'success':false}));
-                }
-                else {
-                    response.setHeader('Content-Type', 'application/json');
-                    response.end(JSON.stringify({'success':true}));
-                }
-            });
+		var response = this.response;
+		Meteor.call('legacyArticleIntake', this.params.query, function(err, res) {
+			if(err) {
+				response.setHeader('Content-Type', 'application/json');
+				response.end(JSON.stringify({'success':false}));
+			} else {
+				response.setHeader('Content-Type', 'application/json');
+				response.end(JSON.stringify({'success':true}));
+			}
+		});
 	}
 });
 
