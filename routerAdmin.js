@@ -705,6 +705,15 @@ if (Meteor.isClient) {
                         }
                     });
 
+                only_ojs.forEach(function(ojsArticle){
+                	ojsArticle.query = {
+                		id : ojsArticle.pii,
+                		journal: 'oncotarget',
+                		id_type: 'pii',
+                		advance: true
+                	}
+                });
+
                 return {
                     "ojs_count": ojs_count,
                     "pc_count": pc_count,

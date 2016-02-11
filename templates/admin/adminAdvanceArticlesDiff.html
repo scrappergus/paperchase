@@ -8,7 +8,7 @@
             <h3>OJS Only</h3>
             <ul>{{#each only_ojs}}
                 <li>
-                    {{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a href="http://galaxy.oncotarget.com/admin/add-legacy-platform-article/?advance=1&id_type=pii&id={{pii}}&journal=oncotarget">Add to Paperchase</a>
+                    {{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a>
                 </li>
                 {{/each}}
             </ul>
