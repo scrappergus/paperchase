@@ -19,17 +19,14 @@ Meteor.methods({
                 }
 
                 var res = sorters.update({name : listName}, {$push : {
-                            'order': {
-                                $each: [mongoId],
-                                $position: position
-                            }}});
+                    'order': {
+                        $each: [mongoId],
+                        $position: position
+                }}});
             }
-
-        }
-        else {
+        } else {
             var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}},{upsert: true});
         }
-
 
         return res;
     },
