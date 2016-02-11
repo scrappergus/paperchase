@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		console.log('--updateArticle |  mongoId = ' + mongoId);
+		// console.log('--updateArticle |  mongoId = ' + mongoId);
 		var duplicateArticle;
 
 		if(!mongoId){
