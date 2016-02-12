@@ -1614,12 +1614,12 @@ Template.AdminAdvanceArticles.events({
 	'click .sort-section-dates': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
-		var sectionId = $(e.target).attr('data-section-id');
+		var sectionName = $(e.target).attr('data-section-name');
 		var allAdvance = Session.get('advanceAdmin');
 		var sectionToUpdate;
 		var sectionToUpdateIdx;
 		allAdvance.forEach(function(section,index){
-			if(section.section_id == sectionId){
+			if(section.section_name == sectionName){
 				sectionToUpdate = section;
 				sectionToUpdateIdx = index;
 			}

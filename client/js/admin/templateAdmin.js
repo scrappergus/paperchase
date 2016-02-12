@@ -145,7 +145,7 @@ Template.AdminAdvanceArticles.onRendered(function() {
         },
         update: function(e, ui) {
             var newOrder = Meteor.advance.orderViaAdmin();
-            var output = Meteor.advance.groupArticles(sorted.articles);
+            var output = Meteor.advance.groupArticles(newOrder);
             Session.set('advanceAdmin',output); // keep ui up to date with session variable
         }
     });
