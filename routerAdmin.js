@@ -94,6 +94,8 @@ if (Meteor.isClient) {
 	Session.setDefault('articles-ncbi-audit',null);
 	// Articles audit
 	Session.setDefault('articles-duplicate', null);
+	// Advance
+	Session.setDefault('advanceAdmin',null);
 	// forms
 	Session.setDefault('savedMessage',null);
 	Session.setDefault('errorMessage',null);
@@ -622,8 +624,10 @@ if (Meteor.isClient) {
 
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 
+                Session.set('advanceAdmin',output);
+
 				return{
-					sections: output,
+					// sections: output,
                     pubdate: advance.pubtime.toLocaleDateString(),
                     pubtime: advance.pubtime.toLocaleTimeString(),
                     total: sorted.articles.length

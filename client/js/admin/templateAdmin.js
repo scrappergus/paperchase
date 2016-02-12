@@ -142,6 +142,11 @@ Template.AdminAdvanceArticles.onRendered(function() {
         zIndex: 9999,
         start: function(e,ui) {
             $(ui.item).css('z-index', 12000);
+        },
+        update: function(e, ui) {
+            var newOrder = Meteor.advance.orderViaAdmin();
+            var output = Meteor.advance.groupArticles(sorted.articles);
+            Session.set('advanceAdmin',output); // keep ui up to date with session variable
         }
     });
 });
