@@ -1595,7 +1595,6 @@ Template.AdminAdvanceArticles.events({
 					if(result){
 						var sorterOrder = sorters.findOne({name:'advance'});
 						var output = Meteor.advance.groupArticles(sorterOrder.articles);
-						Session.set('advanceAdmin',output);
 						$('#status-modal').closeModal({
 							ready: function(){
 							},
@@ -1615,7 +1614,7 @@ Template.AdminAdvanceArticles.events({
 		e.preventDefault();
 		Meteor.formActions.saving();
 		var sectionId = $(e.target).attr('data-section-id');
-		var allAdvance = Session.get('advanceAdmin');
+		var allAdvance = Meteor.advance.orderViaAdmin();
 		var sectionToUpdate;
 		var sectionToUpdateIdx;
 		allAdvance.forEach(function(section,index){
@@ -1635,7 +1634,6 @@ Template.AdminAdvanceArticles.events({
 				return new Date(a.dates.epub).getTime() - new Date(b.dates.epub).getTime()
 			});
 			allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
-			Session.set('advanceAdmin',allAdvance);
 			Session.set('modalMessage', 'Section sorted by date');
 			Meteor.formActions.updating();
 		}else{

@@ -525,9 +525,6 @@ Template.AdminArticlesAuditContent.helpers({
 // Advance
 // ---------------
 Template.AdminAdvanceArticles.helpers({
-	sections: function(){
-		return  Session.get('advanceAdmin');
-	},
 	statusAction: function(){
 		return Session.get('statusModalAction');
 	},
