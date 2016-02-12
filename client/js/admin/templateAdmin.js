@@ -147,7 +147,6 @@ Template.AdminAdvanceArticles.onRendered(function() {
             $(ui.item).css('z-index', 12000);
         },
         update: function(e, ui) {
-            console.log('update!');
             if($(e.toElement).hasClass('drop-placeholder') == false) {
                 $('#advance-modal').openModal({
                     dismissible: true,
