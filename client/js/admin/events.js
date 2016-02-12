@@ -1634,6 +1634,7 @@ Template.AdminAdvanceArticles.events({
 			sectionToUpdate.articles.sort(function(a,b){
 				return new Date(a.dates.epub).getTime() - new Date(b.dates.epub).getTime()
 			});
+			sectionToUpdate.articles.reverse();
 			allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
 			Session.set('advanceAdmin',allAdvance);
 			Session.set('modalMessage', 'Section sorted by date');
