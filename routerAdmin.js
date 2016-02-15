@@ -97,6 +97,7 @@ if (Meteor.isClient) {
 	// Advance
 	Session.setDefault('advanceAdmin',null);
 	Session.setDefault('advanceDiff',null);
+	Session.setDefault('advanceLegacy',null);
 	// forms
 	Session.setDefault('savedMessage',null);
 	Session.setDefault('errorMessage',null);
@@ -646,9 +647,14 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Meteor.call('compareWithLegacy', function(error,result){
-				if(result){
-					Session.set('advanceDiff',result)
+			Meteor.call('ojsGetAdvanceArticles', function(error,ojsArticles){
+				if(ojsArticles){
+					Session.set('advanceLegacy',ojsArticles)
+					Meteor.call('compareWithLegacy', ojsArticles, function(error,result){
+						if(result){
+							Session.set('advanceDiff',result)
+						}
+					});
 				}
 			});
 			this.next();

@@ -280,7 +280,7 @@ Meteor.methods({
 
 		return articleUpdate;
 	},
-	ojsAdvanceArticles: function(){
+	ojsGetAdvanceArticles: function(){
 		var fut = new future();
 		var requestURL = 'http://impactjournals.com//ojs-api/?v=5&i=0';
 		var res;

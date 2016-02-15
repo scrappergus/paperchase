@@ -1633,7 +1633,8 @@ Template.AdminAdvanceArticlesDiff.events({
 			if(error){
 				Meteor.formActions.errorMessage();
 			} else if(result) {
-				Meteor.call('compareWithLegacy', function(error,result){
+				var legacyArticles = Session.get('advanceLegacy');
+				Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
 					if(result){
 						Meteor.formActions.successMessage('Article Removed');
 						Session.set('advanceDiff',result)
