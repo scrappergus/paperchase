@@ -579,9 +579,9 @@ Meteor.adminUser = {
 }
 
 Meteor.formActions = {
-	saving: function(){
+	saving: function(message){
 		Session.set('statusModalAction','Saving');
-		Session.set('modalMessage',null);
+		Session.set('statusModalDetails',message);
 
 		// inline messages
 		$('.save-btn').addClass('hide');
@@ -724,6 +724,7 @@ Meteor.formActions = {
 	},
 	errorMessage: function(message){
 		Session.set('statusModalAction','Error');
+		Session.set('statusModalDetails',message);
 
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');

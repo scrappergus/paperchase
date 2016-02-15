@@ -102,7 +102,7 @@ if (Meteor.isClient) {
 	Session.setDefault('savedMessage',null);
 	Session.setDefault('errorMessage',null);
 	Session.setDefault('statusModalAction',null);
-	Session.setDefault('modalMessage',null);
+	Session.setDefault('statusModalDetails',null);
 
 
 	Router.route('/admin', {

@@ -1544,34 +1544,6 @@ Template.AdminAdvanceArticles.events({
 			}
 		});
 	},
-	'click #advance-batch-delete': function(e,t){
-		e.preventDefault();
-		Meteor.formActions.saving();
-
-		var removeMongoIds = [];
-		var removePii = [];
-		$('.remove-article').each(function(){
-			if($(this).prop('checked')) {
-				// console.log('remove: ' + $(this).attr('data-article-id'));
-				removeMongoIds.push($(this).attr('data-article-id'));
-				removePii.push($(this).attr('data-article-pii'));
-			}
-		});
-		setTimeout(function(){
-			Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,result){
-				if(result && result.length == removeMongoIds.length){
-					Session.set('modalMessage', removeMongoIds.length + ' Articles Removed <br> ' + removePii.join(', '));
-					Meteor.formActions.successMessage();
-				}else if(result){
-					Session.set('modalMessage', removeMongoIds.length + ' Articles Removed. Some were not removed.<br>Requested: ' + removeMongoIds.length + '<br>Removed: ' + result.length);
-					Meteor.formActions.successMessage();
-				}else if(error){
-					Session.set('modalMessage', 'Could not remove articles');
-					Meteor.formActions.errorMessage();
-				}
-			});
-		}, 500); // so that if server response is fast, saving modal appears, at least for half second
-	},
 	'click #save-advance-order': function(e,t){
 		e.preventDefault();
 		var newOrder = Meteor.advance.orderViaAdmin();
@@ -1665,4 +1637,36 @@ Template.AdminAdvanceArticlesDiff.events({
 			}
 		});
 	}
+});
+
+Template.AdminAdvanceBatchDelete.events({
+	'click #advance-batch-delete': function(e,t){
+		e.preventDefault();
+		Meteor.formActions.saving();
+
+		var removeMongoIds = [];
+		var removePii = [];
+		$('.remove-article').each(function(){
+			if($(this).prop('checked')) {
+				// console.log('remove: ' + $(this).attr('data-article-id'));
+				removeMongoIds.push($(this).attr('data-article-id'));
+				removePii.push($(this).attr('data-article-pii'));
+			}
+		});
+		setTimeout(function(){
+			Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,result){
+				var message;
+				if(result && result.length == removeMongoIds.length){
+					message = removeMongoIds.length + ' Articles Removed <br> ' + removePii.join(', ');
+					Meteor.formActions.successMessage(message);
+				}else if(result){
+					message = removeMongoIds.length + ' Articles Removed. Some were not removed.<br>Requested: ' + removeMongoIds.length + '<br>Removed: ' + result.length;
+					Meteor.formActions.successMessage(message);
+				}else if(error){
+					message = 'Could not remove articles';
+					Meteor.formActions.errorMessage(message);
+				}
+			});
+		}, 500); // so that if server response is fast, saving modal appears, at least for half second
+	},
 });
