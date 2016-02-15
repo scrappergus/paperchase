@@ -13,24 +13,35 @@
 	<div class="row">
 		<div class="col s12">
 			<h3>OJS Only</h3>
-			<ul>{{#each ojsOnly}}
-				<li>
-					{{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a>
-				</li>
-				{{/each}}
-			</ul>
+			<table class="card striped">
+				<tbody>
+					{{#each ojsOnly}}
+					<tr>
+						<td>{{pii}}</td>
+						<td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></td>
+						<td><a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a></td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col s12">
 			<h3>Paperchase Only</h3>
-			<ul>
-				{{#each paperchaseOnly}}
-				<li>
-					{{ids.pii}} - <a href="/admin/article/{{_id}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a>
-				</li>
-				{{/each}}
-			</ul>
+			<table class="card striped">
+				<tbody>
+					{{#each paperchaseOnly}}
+					<tr>
+						<td>{{ids.pii}}</td>
+						<td><a href="/admin/article/{{_id}}">Paperchase</a></td>
+						<td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a></td>
+						<td><a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a></td>
+						<td><input type="checkbox" data-article-id="{{_id}}" data-article-pii="{{ids.pii}}" id="{{_id}}-remove-article" class="remove-article checkbox-red"><label for="{{_id}}-remove-article"></label></td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
 		</div>
 	</div>
 	{{/with}}
