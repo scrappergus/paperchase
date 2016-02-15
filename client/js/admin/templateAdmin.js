@@ -172,13 +172,6 @@ Template.AdminAdvanceArticles.onRendered(function() {
     });
 });
 
-Template.AdminAdvanceArticlesDiff.onRendered(function() {
-    $('.delete-article').click(function() {
-        var id = $(this).attr('data-delete-id');
-        Meteor.call('sorterRemoveItem', 'advance', id);
-    });
-});
-
 Template.AdminSections.onRendered(function() {
     Session.set('paperSectionId',null);
     Session.set('errorMessage',null);

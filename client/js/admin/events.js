@@ -1622,4 +1622,24 @@ Template.AdminAdvanceArticles.events({
 		allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
 		Session.set('advanceAdmin',allAdvance);
 	}
-})
+});
+
+Template.AdminAdvanceArticlesDiff.events({
+	'click .delete-article': function(e){
+		Meteor.formActions.saving();
+		e.preventDefault();
+		var id = $(e.target).attr('data-delete-id');
+		Meteor.call('sorterRemoveItem', 'advance', id, function(error,result){
+			if(error){
+				Meteor.formActions.errorMessage();
+			} else if(result) {
+				Meteor.call('compareWithLegacy', function(error,result){
+					if(result){
+						Meteor.formActions.successMessage('Article Removed');
+						Session.set('advanceDiff',result)
+					}
+				});
+			}
+		});
+	}
+});

@@ -1,5 +1,6 @@
 <template name="AdminAdvanceArticlesDiff">
     {{>AdminHeader header="Advance Article Platform Integration"}}
+    {{>StatusModal what='Advance Articles'}}
     {{#if advanceDiff}}
     {{#with advanceDiff}}
     <ul>
@@ -21,7 +22,7 @@
             <ul>
                 {{#each paperchaseOnly}}
                 <li>
-                    {{ids.pii}} - <a href="/admin/article/{{_id}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons">delete</i></a>
+                    {{ids.pii}} - <a href="/admin/article/{{_id}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a>
                 </li>
                 {{/each}}
             </ul>
