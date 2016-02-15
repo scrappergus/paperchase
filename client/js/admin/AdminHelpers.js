@@ -479,6 +479,14 @@ Template.AdminNav.helpers({
 		}
 	}
 });
+Template.StatusModal.helpers({
+	action: function(){
+		return  Session.get('statusModalAction');
+	},
+	details: function(){
+		return Session.get('statusModalDetails');
+	},
+});
 
 
 // Sections
