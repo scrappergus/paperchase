@@ -1,35 +1,40 @@
 <template name="AdminAdvanceArticlesDiff">
-    {{>AdminHeader header="Advance Article Platform Integration"}}
-    {{>StatusModal what='Advance Articles'}}
-    {{#if advanceDiff}}
-    {{#with advanceDiff}}
-    <ul>
-        <li>OJS Count: {{ojsCount}}</li>
-        <li>Paperchase Count: {{paperchaseCount}}</li>
-        <li>Total Count: {{allPiiCount}}</li>
-        <li>
-            <h3>OJS Only</h3>
-            <ul>{{#each ojsOnly}}
-                <li>
-                    {{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a>
-                </li>
-                {{/each}}
-            </ul>
-        </li>
-
-        <li>
-            <h3>Paperchase Only</h3>
-            <ul>
-                {{#each paperchaseOnly}}
-                <li>
-                    {{ids.pii}} - <a href="/admin/article/{{_id}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a>
-                </li>
-                {{/each}}
-            </ul>
-        </li>
-    </ul>
-    {{/with}}
-    {{else}}
-    {{>Progress}}
-    {{/if}}
+	{{>AdminHeader header="Advance Article Platform Integration"}}
+	{{>StatusModal what='Advance Articles'}}
+	{{#if advanceDiff}}
+	{{#with advanceDiff}}
+	<div class="row">
+		<div class="col s12">
+			<h4>OJS Count: {{ojsCount}}</h4>
+			<h4>Paperchase Count: {{paperchaseCount}}</h4>
+			<h4>Total Count: {{allPiiCount}}</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<h3>OJS Only</h3>
+			<ul>{{#each ojsOnly}}
+				<li>
+					{{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<h3>Paperchase Only</h3>
+			<ul>
+				{{#each paperchaseOnly}}
+				<li>
+					{{ids.pii}} - <a href="/admin/article/{{_id}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+	{{/with}}
+	{{else}}
+	{{>Progress}}
+	{{/if}}
 </template>
