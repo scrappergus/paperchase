@@ -538,3 +538,8 @@ Template.AdminAdvanceArticles.helpers({
 		return  Session.get('errorMessage');
 	}
 });
+Template.AdminAdvanceArticlesDiff.helpers({
+	advanceDiff: function(){
+		return  Session.get('advanceDiff');
+	},
+});

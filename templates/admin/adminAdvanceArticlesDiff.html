@@ -1,12 +1,14 @@
 <template name="AdminAdvanceArticlesDiff">
-    <h2>Advance Article Platform Integration</h2>
+    {{>AdminHeader header="Advance Article Platform Integration"}}
+    {{#if advanceDiff}}
+    {{#with advanceDiff}}
     <ul>
-        <li>OJS Count: {{ojs_count}}</li>
-        <li>Paperchase Count: {{pc_count}}</li>
-        <li>Total Count: {{total_count}}</li>
+        <li>OJS Count: {{ojsCount}}</li>
+        <li>Paperchase Count: {{paperchaseCount}}</li>
+        <li>Total Count: {{allPiiCount}}</li>
         <li>
             <h3>OJS Only</h3>
-            <ul>{{#each only_ojs}}
+            <ul>{{#each ojsOnly}}
                 <li>
                     {{pii}} - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a>&nbsp;-&nbsp;<a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a>
                 </li>
@@ -17,12 +19,16 @@
         <li>
             <h3>Paperchase Only</h3>
             <ul>
-                {{#each only_pc}}
+                {{#each paperchaseOnly}}
                 <li>
-                    {{pii}} - <a href="/admin/article/{{paperchaseId}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{paperchaseId}}"><i class="small material-icons">delete</i></a>
+                    {{ids.pii}} - <a href="/admin/article/{{_id}}">Paperchase</a> - <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a> <a class="delete-article btn-floating btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons">delete</i></a>
                 </li>
                 {{/each}}
             </ul>
         </li>
     </ul>
+    {{/with}}
+    {{else}}
+    {{>Progress}}
+    {{/if}}
 </template>

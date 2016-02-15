@@ -74,7 +74,7 @@ Meteor.methods({
 				return true; // DO we need a response to Legacy platform?
 			}
             else {
-                throw new Meteor.Error("legacy-intake-failure", 
+                throw new Meteor.Error("legacy-intake-failure",
                     "Article ("+idType+": "+ idValue +") was not added to Paperchase.")
             }
 
@@ -113,7 +113,7 @@ Meteor.methods({
 			// TODO: Add journal param?
 			// requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
 			requestUrl += '?' + idType + '=' + idValue;
-			// console.log(requestUrl);
+			console.log(requestUrl);
 			var res;
 			res = Meteor.http.get(requestUrl);
 			if(res){
@@ -279,6 +279,19 @@ Meteor.methods({
 		// TODO: Pub Status. Query PubMed.
 
 		return articleUpdate;
+	},
+	ojsAdvanceArticles: function(){
+		var fut = new future();
+		var requestURL = 'http://impactjournals.com//ojs-api/?v=5&i=0';
+		var res;
+		res = Meteor.http.get(requestURL);
+
+		if(res){
+			fut['return'](res.data.articles);
+		}else{
+			throw new Meteor.Error(500, 'ojsAdvanceArticles' , error);
+		}
+		return fut.wait();
 	}
 });
 
