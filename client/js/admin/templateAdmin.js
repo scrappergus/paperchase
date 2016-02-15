@@ -135,9 +135,6 @@ Template.AdminAdvanceArticles.onRendered(function() {
 });
 
 Template.AdminAdvanceArticles.onRendered(function() {
-    $('.lean-overlay').remove();
-
-
     $('.articles, .article-sections').sortable({
         connectWith: '.articles',
         cursor: 'move',
@@ -147,31 +144,16 @@ Template.AdminAdvanceArticles.onRendered(function() {
             $(ui.item).css('z-index', 12000);
         },
         update: function(e, ui) {
-            console.log('update!');
-            if($(e.toElement).hasClass('drop-placeholder') == false) {
-                $('#advance-modal').openModal({
-                    dismissible: true,
-                    ready: function() {
-                        var newsort = [];
-                        $('.article').each(function() {
-                            newsort.push($(this).attr('data-article-id'));
-                        });
-
-                        Meteor.call('updateList', 'advance', newsort, function() {
-                            var sorterOrder  = sorters.findOne({name:'advance'});
-                            var output = Meteor.advance.groupArticles(sorterOrder.articles);
-                            $('#advance-modal').closeModal();
-                            Session.set('advance-admin',output);
-                        });
-                    }
-                });
-            }else {
-                $('.drop-placeholder').empty();
-            }
+            var newOrder = Meteor.advance.orderViaAdmin();
+            var output = Meteor.advance.groupArticles(newOrder);
+            Session.set('advanceAdmin',output); // keep ui up to date with session variable
         }
     });
 });
 
+
+// Sections
+// -------
 Template.AdminSections.onRendered(function() {
     Session.set('paperSectionId',null);
     Session.set('errorMessage',null);
