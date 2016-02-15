@@ -1525,22 +1525,23 @@ Template.AdminRecommendationUpdate.events({
 Template.AdminAdvanceArticles.events({
 	'submit form': function(e){
 		e.preventDefault();
+		Meteor.formActions.saving();
+
 		newsort = [];
-		$('.article').each(function(a,b,c) {
+		$('.article').each(function() {
 			newsort.push({
 				'article_id':  $(this).attr('data-article-id')
 			});
 		});
 
-		$('#advance-modal').openModal({
-			dismissible: true,
-			complete: function() {
-				$('.lean-overlay').remove();
+		Meteor.call('advancePublish', newsort, function(error,result) {
+			if(error){
+				Session.set('modalMessage', 'Could not publish');
+				Meteor.formActions.errorMessage();
+			}else if(result){
+				Session.set('modalMessage', 'Advance was published');
+				Meteor.formActions.successMessage();
 			}
-		});
-
-		Meteor.call('advancePublish', newsort, function() {
-			$('#advance-modal').closeModal({});
 		});
 	},
 	'click #advance-batch-delete': function(e,t){
@@ -1559,51 +1560,66 @@ Template.AdminAdvanceArticles.events({
 		setTimeout(function(){
 			Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,result){
 				if(result && result.length == removeMongoIds.length){
-					Session.set('savedMessage', removeMongoIds.length + ' Articles Removed <br> ' + removePii.join(', '));
+					Session.set('modalMessage', removeMongoIds.length + ' Articles Removed <br> ' + removePii.join(', '));
 					Meteor.formActions.successMessage();
 				}else if(result){
-					Session.set('savedMessage', removeMongoIds.length + ' Articles Removed. Some were not removed.<br>Requested: ' + removeMongoIds.length + '<br>Removed: ' + result.length);
+					Session.set('modalMessage', removeMongoIds.length + ' Articles Removed. Some were not removed.<br>Requested: ' + removeMongoIds.length + '<br>Removed: ' + result.length);
 					Meteor.formActions.successMessage();
 				}else if(error){
-					Session.set('errorMessage', 'Could not remove articles');
+					Session.set('modalMessage', 'Could not remove articles');
 					Meteor.formActions.errorMessage();
 				}
 			});
 		}, 500); // so that if server response is fast, saving modal appears, at least for half second
 	},
-	// 'click #save-advance-order': function(e,t){
-	// 	e.preventDefault();
-
-	// 	console.log('order');
-	// },
+	'click #save-advance-order': function(e,t){
+		e.preventDefault();
+		var newOrder = Meteor.advance.orderViaAdmin();
+		// console.log('newOrder',newOrder);
+		Meteor.call('updateList','advance',newOrder, function(error,result){
+			if(error){
+				Session.set('modalMessage', 'Could not update order');
+				Meteor.formActions.errorMessage();
+			}else if(result){
+				Session.set('modalMessage', 'Order Saved');
+				Meteor.formActions.successMessage();
+			}
+		});
+	},
 	'click .delete-article': function(e,t){
 		e.preventDefault();
 		var id = $(e.target).attr('data-delete-id');
-		$('#advance-modal').openModal({
+		$('#status-modal').openModal({
 			ready: function(){
 				Meteor.call('sorterRemoveItem', 'advance', id, function(error, result) {
 					if(result){
 						var sorterOrder = sorters.findOne({name:'advance'});
 						var output = Meteor.advance.groupArticles(sorterOrder.articles);
 						Session.set('advanceAdmin',output);
-						$('#advance-modal').closeModal({
+						$('#status-modal').closeModal({
 							ready: function(){
-								console.log('close modal');
-							}
+							},
+		                    complete: function() {
+		                        $('.lean-overlay').remove();
+		                    }
 						});
 					}
 				});
+			},
+			complete: function() {
+				$('.lean-overlay').remove();
 			}
 		});
 	},
 	'click .sort-section-dates': function(e,t){
 		e.preventDefault();
-		var sectionId = $(e.target).attr('data-section-id');
+		Meteor.formActions.saving();
+		var sectionName = $(e.target).attr('data-section-name');
 		var allAdvance = Session.get('advanceAdmin');
 		var sectionToUpdate;
 		var sectionToUpdateIdx;
 		allAdvance.forEach(function(section,index){
-			if(section.section_id == sectionId){
+			if(section.section_name == sectionName){
 				sectionToUpdate = section;
 				sectionToUpdateIdx = index;
 			}
@@ -1618,9 +1634,15 @@ Template.AdminAdvanceArticles.events({
 			sectionToUpdate.articles.sort(function(a,b){
 				return new Date(a.dates.epub).getTime() - new Date(b.dates.epub).getTime()
 			});
+			sectionToUpdate.articles.reverse();
+			allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
+			Session.set('advanceAdmin',allAdvance);
+			Session.set('modalMessage', 'Section sorted by date');
+			Meteor.formActions.updating();
+		}else{
+			Session.set('modalMessage', 'Could not sort section by date');
+			Meteor.formActions.errorMessage();
 		}
-		allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
-		Session.set('advanceAdmin',allAdvance);
 	}
 });
 

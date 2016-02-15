@@ -1,35 +1,15 @@
 <template name="AdminAdvanceArticles">
 	{{>AdminHeader header="Advance Articles"}}
-	<div id="advance-modal" class="modal">
-		<div class="modal-content center-align">
-			<div class=" center-align">
-				<h4 class="center-align">Saving...</h4>
-				<div class="preloader-wrapper big active center-align">
-					<div class="spinner-layer spinner-blue">
-						<div class="circle-clipper left">
-							 <div class="circle"></div>
-						</div>
-						<div class="gap-patch">
-							<div class="circle"></div>
-						</div>
-						<div class="circle-clipper right">
-							<div class="circle"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	{{>StatusModal what='Advance Articles' action=statusAction details=savedMessage}}
+	{{>StatusModal what='Advance Articles' action=statusAction details=modalMessage}}
 
 	<form>
 		<div class="publish-advanced fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
 			<h5>Total count:<br>{{total}}</h5>
 			<h5>Last published:<br>{{pubdate}}<br>{{pubtime}}</h5>
 			<button class="waves-effect waves-light btn-large submit" type="submit">Publish</button>
-			<!-- <div class="clearfix" style="margin-bottom:10px;"></div> -->
-			<!-- <button class="waves-effect waves-light btn-large blue" id="save-advance-order">Save Order</button> -->
+			<div class="clearfix" style="margin-bottom:10px;"></div>
+			<button class="waves-effect waves-light btn-large green" id="save-advance-order">Save Order</button>
 			<div class="clearfix" style="margin-bottom:10px;"></div>
 			<button class="waves-effect waves-light btn btn-sm red" id="advance-batch-delete">Batch Delete</button>
 			<div class="show-wait hide">
@@ -64,7 +44,7 @@
 					<li class="article-section">
 						<ul class="article-section-header">
 							<li> <h2 class="advance-section-header"><i class="material-icons handle" style="cursor:pointer;">&#xE8D5;</i> {{section_name}} <span class="right font-md">{{section_length}} articles</span></h2></li>
-							<li style="margin:0 10px 0 0"><a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-id="{{section_id}}">Sort section by dates</a></li>
+							<li style="margin:0 10px 0 0"><a style="margin-bottom:14px;" class="sort-section-dates waves-effect waves-light btn btn-small" data-section-name="{{section_name}}">Sort section by dates</a></li>
 						</ul>
 
 						<ul class="articles">

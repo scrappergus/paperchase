@@ -581,11 +581,7 @@ Meteor.adminUser = {
 Meteor.formActions = {
 	saving: function(){
 		Session.set('statusModalAction','Saving');
-		Session.set('savedMessage',null);
-		Session.set('errorMessage',null);
-		if($('#status-modal').length){
-			$('#status-modal').openModal();
-		}
+		Session.set('modalMessage',null);
 
 		// inline messages
 		$('.save-btn').addClass('hide');
@@ -609,6 +605,14 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-wait').removeClass('hide');
 		}
 
+
+		if($('#status-modal').length){
+			$('#status-modal').openModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
 		//TODO: use 1 modal for all actions - StatusModal
 		if($('#saving-modal').length){
 			$('#saving-modal').openModal({
@@ -619,7 +623,52 @@ Meteor.formActions = {
 
 		//reset
 		Session.set('errorMessages',null);
-		Session.set('advanceAdminSavingMsg',null);
+		$('input').removeClass('invalid');
+		$('textarea').removeClass('invalid');
+		$('input').removeClass('valid');
+		$('textarea').removeClass('valid');
+	},
+	updating: function(){
+		Session.set('statusModalAction','Updated');
+
+		// inline messages
+		$('.save-btn').addClass('hide');
+		$('.saving').removeClass('hide');
+		$('.success').addClass('hide');
+		$('.error').addClass('hide');
+		//sending and saving forms have shared class names
+
+		// invalid notification
+		$('fieldset').removeClass('invalid');
+
+
+		//fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').addClass('hide');
+			$('#fixed-save-btn').find('.show-wait').removeClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').addClass('hide');
+			$('#save-btn').find('.show-wait').removeClass('hide');
+		}
+
+		if($('#status-modal').length){
+			$('#status-modal').openModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
+		//TODO: use 1 modal for all actions - StatusModal
+		if($('#saving-modal').length){
+			$('#saving-modal').openModal({
+				dismissible: false
+			});
+		}
+
+		//reset
+		Session.set('errorMessages',null);
 		$('input').removeClass('invalid');
 		$('textarea').removeClass('invalid');
 		$('input').removeClass('valid');
@@ -737,7 +786,7 @@ Meteor.formActions = {
 	},
 	successMessage: function(message){
 		Session.set('statusModalAction','Saved');
-
+		Session.set('statusModalDetails',message);
 		// inline messages
 		$('.save-btn').removeClass('hide');
 		$('.saving').addClass('hide');
@@ -758,6 +807,13 @@ Meteor.formActions = {
 		}
 
 		// modals
+		if($('#status-modal').length){
+			$('#status-modal').openModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
 		// TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
 		if($('#saving-modal').length){
 			$('#saving-modal').closeModal({
@@ -1152,5 +1208,12 @@ Meteor.advance = {
 		}
 		// console.log('output',output);
 		return output;
+	},
+	orderViaAdmin: function(){
+		var order = [];
+		$('.article').each(function(){
+			order.push($(this).attr('data-article-id'));
+		});
+		return order;
 	}
 }

@@ -539,11 +539,8 @@ Template.AdminAdvanceArticles.helpers({
 	statusAction: function(){
 		return Session.get('statusModalAction');
 	},
-	savedMessage: function(){
-		return  Session.get('savedMessage');
-	},
-	errorMessage: function(){
-		return  Session.get('errorMessage');
+	modalMessage: function(){
+		return  Session.get('modalMessage');
 	}
 });
 Template.AdminAdvanceArticlesDiff.helpers({
