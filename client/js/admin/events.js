@@ -1653,20 +1653,28 @@ Template.AdminAdvanceBatchDelete.events({
 				removePii.push($(this).attr('data-article-pii'));
 			}
 		});
-		setTimeout(function(){
-			Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,result){
-				var message;
-				if(result && result.length == removeMongoIds.length){
+		Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,result){
+			var message;
+			if(result){
+				if(t.view.parentView.name == 'Template.AdminAdvanceArticlesDiff'){
+					var legacyArticles = Session.get('advanceLegacy');
+					Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
+						if(result){
+							Session.set('advanceDiff',result)
+						}
+					});
+				}
+				if(result.length == removeMongoIds.length){
 					message = removeMongoIds.length + ' Articles Removed <br> ' + removePii.join(', ');
 					Meteor.formActions.successMessage(message);
-				}else if(result){
+				}else{
 					message = removeMongoIds.length + ' Articles Removed. Some were not removed.<br>Requested: ' + removeMongoIds.length + '<br>Removed: ' + result.length;
 					Meteor.formActions.successMessage(message);
-				}else if(error){
-					message = 'Could not remove articles';
-					Meteor.formActions.errorMessage(message);
 				}
-			});
-		}, 500); // so that if server response is fast, saving modal appears, at least for half second
+			}else{
+				message = 'Could not remove articles';
+				Meteor.formActions.errorMessage(message);
+			}
+		});
 	},
 });
