@@ -26,6 +26,7 @@ Meteor.methods({
 			// OJS Articles
 			result.ojsCount = legacyArticles.length;
 			legacyArticles.forEach(function(ojsA){
+				// console.log(ojsA.pii,'OJS');
 				allPii[ojsA.pii] = {
 					ojs : true
 				}
@@ -35,21 +36,17 @@ Meteor.methods({
 			var pcArticles = order.articles;
 			result.paperchaseCount = pcArticles.length;
 			pcArticles.forEach(function(pcA){
-				if(allPii[pcA.ids.pii]){
-					allPii[pcA.ids.pii] = {
-						paperchase: true
-					}
-				}else{
-					allPii[pcA.ids.pii] = {
-						paperchase: false
-					} // needed for counting below
+				if(!allPii[pcA.ids.pii]){
+					allPii[pcA.ids.pii] = {};
 					result.paperchaseOnly.push(pcA);
 				}
+				allPii[pcA.ids.pii].paperchase = true;
 			});
 			// Compare. Get articles only in OJS
 			for(var pii in allPii){
+				// console.log(pii, allPii[pii]);
 				result.allPiiCount++;
-				if(!allPii[pii].paperchase){
+				if(allPii[pii].paperchase != true){
 					var ojsObj = {
 						pii: pii,
 						query: {
