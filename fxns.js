@@ -831,6 +831,52 @@ Meteor.formActions = {
 			$('#success-modal').openModal();
 		}
 	},
+	updatedMessage: function(message){
+		Session.set('statusModalAction','Updated');
+		Session.set('statusModalDetails',message);
+		// inline messages
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').removeClass('hide');
+		$('.error').addClass('hide');
+
+		$('.success-message').text(message);
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+
+		// modals
+		if($('#status-modal').length){
+			$('#status-modal').openModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
+		// TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
+		if($('#saving-modal').length){
+			$('#saving-modal').closeModal({
+				complete: function(){
+					if($('#success-modal').length){
+						$('#success-modal').openModal({
+							ready: function(){
+							}
+						});
+					}
+				}
+			});
+		}else if($('#success-modal').length){
+			$('#success-modal').openModal();
+		}
+	},
 	removePastedStyle: function(e){
 		e.preventDefault();
 		// console.log('..removePastedStyle');
@@ -1205,7 +1251,8 @@ Meteor.advance = {
 			}
 
 			section_count++;
-			output[output.length-1]['articles'].push(article);
+
+			output[output.length-1].articles.push(article);
 		}
 		// console.log('output',output);
 		return output;
