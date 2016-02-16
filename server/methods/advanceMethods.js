@@ -9,7 +9,7 @@ Meteor.methods({
 			out.push(article);
 		}
 
-		publish.insert({
+		return publish.insert({
 				name: 'advance'
 				,pubtime: new Date
 				,data: out
