@@ -144,7 +144,29 @@ Template.AdminAdvanceArticles.onRendered(function() {
             $(ui.item).css('z-index', 12000);
         },
         update: function(e, ui) {
-            var newOrder = Meteor.advance.orderViaAdmin();
+            var newOrder = [];
+            var newMongoIdOrder = Meteor.advance.orderViaAdmin(); // just returns mongo IDs
+            var allAdvance = Session.get('advanceAdmin');
+            var allAdvanceByMongo = {};
+            allAdvance.forEach(function(section){
+                section.articles.forEach(function(article){
+                    if(article.section_end){
+                        delete article.section_end;
+                    }
+                    if(article.section_start){
+                        delete article.section_start;
+                    }
+                    if(article.first){
+                        delete article.first;
+                    }
+
+                    allAdvanceByMongo[article._id] = article;
+                });
+            });
+            newMongoIdOrder.forEach(function(id){
+                newOrder.push(allAdvanceByMongo[id]); // so that we can maintain section information, article info
+            });
+
             var output = Meteor.advance.groupArticles(newOrder);
             Session.set('advanceAdmin',output); // keep ui up to date with session variable
         }
