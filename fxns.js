@@ -628,8 +628,9 @@ Meteor.formActions = {
 		$('input').removeClass('valid');
 		$('textarea').removeClass('valid');
 	},
-	updating: function(){
+	updating: function(message){
 		Session.set('statusModalAction','Updated');
+		Session.set('statusModalDetails',message);
 
 		// inline messages
 		$('.save-btn').addClass('hide');

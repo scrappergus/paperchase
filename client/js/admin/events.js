@@ -1609,8 +1609,7 @@ Template.AdminAdvanceArticles.events({
 			sectionToUpdate.articles.reverse();
 			allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
 			Session.set('advanceAdmin',allAdvance);
-			Session.set('modalMessage', 'Section sorted by date');
-			Meteor.formActions.updating();
+			Meteor.formActions.updating('Section sorted by date');
 		}else{
 			Session.set('modalMessage', 'Could not sort section by date');
 			Meteor.formActions.errorMessage();
