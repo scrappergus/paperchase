@@ -59,8 +59,19 @@
 		}
 	}
 /* Advance ------------------------*/
+	.article-section{
+		margin: $margin-xxl 0;
+	}
+	.articles.ui-sortable{
+		background-color: $gray-0;
+		border: 1px solid $gray-1;
+		padding-top: $pad-lg;
+		.article{
+			background: $gray-0;
+		}
+	}
 	.advance-section-header{
-		background: $gray-0;
+		background: $gray-1;
 		width: 100%;
 		margin: $margin-md 0;
 		padding: $pad-lg;
