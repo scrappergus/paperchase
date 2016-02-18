@@ -300,6 +300,9 @@ html,body{
 	.btn{
 		@extend .serif;
 	}
+	.btn.active{
+		background: $gray-2;
+	}
 	.btn-sm{
 		font-size: $font-sm;
 	}

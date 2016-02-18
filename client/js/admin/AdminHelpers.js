@@ -551,5 +551,5 @@ Template.AdminAdvanceArticlesSections.helpers({
 Template.AdminAdvanceArticlesDiff.helpers({
 	advanceDiff: function(){
 		return Session.get('advanceDiff');
-	},
+	}
 });

@@ -1,6 +1,8 @@
 <template name="AdminAdvanceArticles">
 	{{>AdminHeader header="Advance Articles - Sections"}}
 
+	{{>AdminAdvanceNav}}
+
 	{{>StatusModal what='Advance Articles' action=statusAction details=modalMessage}}
 
 	<form>
@@ -36,6 +38,16 @@
 
 <template name="AdminAdvanceBatchDelete">
 	<button class="waves-effect waves-light btn btn-sm red" id="advance-batch-delete">Batch Delete</button>
+</template>
+
+<template name="AdminAdvanceNav">
+	<div class="row">
+		<div class="col s12">
+			<a class="btn {{isActiveRoute 'AdminAdvanceArticles'}}" href="{{pathFor 'AdminAdvanceArticles'}}">Sections</a>
+			<a class="btn {{isActiveRoute 'AdminAdvanceArticlesResearch'}}" href="{{pathFor 'AdminAdvanceArticlesResearch'}}">Reseach Papers</a>
+			<a class="btn {{isActiveRoute 'AdminAdvanceArticlesDiff'}}" href="{{pathFor 'AdminAdvanceArticlesDiff'}}">Paperchase Vs Legacy</a>
+		</div>
+	</div>
 </template>
 
 <template name="AdminAdvanceArticlesResearch">
