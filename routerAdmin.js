@@ -96,6 +96,7 @@ if (Meteor.isClient) {
 	Session.setDefault('articles-duplicate', null);
 	// Advance
 	Session.setDefault('advanceAdmin',null);
+	Session.setDefault('savingOrder',false);
 	Session.setDefault('advanceDiff',null);
 	Session.setDefault('advanceLegacy',null);
 	// forms
@@ -619,7 +620,7 @@ if (Meteor.isClient) {
 				var sorted  = sorters.findOne({name:'advance'});
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 
-				var sections = Meteor.advance.dataForSectionsPage();
+                var sections = Meteor.advance.dataForSectionsPage(sorted.articles);
 				Session.set('advanceAdmin',sections);
 
 				return{

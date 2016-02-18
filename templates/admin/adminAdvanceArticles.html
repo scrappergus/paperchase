@@ -1,7 +1,6 @@
 <template name="AdminAdvanceArticles">
 	{{>AdminHeader header="Advance Articles - Sections"}}
 
-
 	{{>StatusModal what='Advance Articles' action=statusAction details=modalMessage}}
 
 	<form>
@@ -12,21 +11,27 @@
 			<div class="clearfix" style="margin-bottom:10px;"></div>
 			<button class="waves-effect waves-light btn-large green" id="save-advance-order">Save Order</button>
 		</div>
-
-		{{#if sections}}
-		<div class="row">
-			<div class="col s12">
-				<ul class="advance-sections">
-					{{#each sections}}
-					<li class="advance-section" data-name="{{section}}">
-						<h4><i class="material-icons handle">&#xE8D5;</i> {{section}}</h4><span>{{articles_count}} Articles</span>
-					</li>
-					{{/each}}
-				</ul>
-			</div>
-		</div>
+		{{#if savingOrder}}
+		{{else}}
+			{{>AdminAdvanceArticlesSections}}
 		{{/if}}
 	</form>
+</template>
+
+<template name="AdminAdvanceArticlesSections">
+	{{#if sections}}
+	<div class="row">
+		<div class="col s12">
+			<ul class="advance-sections">
+				{{#each sections}}
+				<li class="advance-section" data-name="{{section}}">
+					<h4><i class="material-icons handle">&#xE8D5;</i> {{section}}</h4><span>{{articles_count}} Articles</span>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+	{{/if}}
 </template>
 
 <template name="AdminAdvanceBatchDelete">
@@ -35,8 +40,6 @@
 
 <template name="AdminAdvanceArticlesResearch">
 	{{>AdminHeader header="Advance Articles - Research Papers"}}
-
-
 
 	{{>StatusModal what='Advance Articles - Research Papers' action=statusAction details=modalMessage}}
 

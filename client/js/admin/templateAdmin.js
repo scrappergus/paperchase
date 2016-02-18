@@ -130,11 +130,7 @@ Template.AdminForAuthorsForm.onDestroyed(function () {
 
 // Advance
 // -------
-Template.AdminAdvanceArticles.onRendered(function() {
-    $('#advance-table').sortable();
-});
-
-Template.AdminAdvanceArticles.onRendered(function() {
+Template.AdminAdvanceArticlesSections.onRendered(function() {
     $('.advance-sections').sortable({
         update: function(e, ui) {
             // console.log(ui);

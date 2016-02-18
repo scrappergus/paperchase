@@ -1579,20 +1579,22 @@ Template.AdminAdvanceArticles.events({
 	'click #save-advance-order': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
+		Session.set('savingOrder',true);
 		var sectionsOrder = Meteor.advance.getSectionsOrderViaAdmin();
 		// console.log(sectionsOrder);
 		Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
 			if(error){
 				Meteor.formActions.errorMessage('Section order not saved');
 			}else if(result){
-				// Session.set('advanceAdmin',null);
-                // var sections = Meteor.advance.dataForSectionsPage();
+				Session.set('savingOrder',false);
+				Session.set('advanceAdmin',null);
+                var sections = Meteor.advance.dataForSectionsPage();
                 // console.log('sections',sections);
 				// Session.set('advanceAdmin',sections); // does not work. template reverts to previous version despite session variable updating
 				// Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: sections}, $('.admin-content-area').get());
-				// Meteor.formActions.successMessage('Section order saved');
+				Meteor.formActions.successMessage('Section order saved');
 				// Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: sections}, $('.admin-content-area').get()[0]);
-				location.reload();
+				// location.reload();
 			}
 		});
 	},

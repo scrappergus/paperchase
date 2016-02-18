@@ -533,18 +533,23 @@ Template.AdminArticlesAuditContent.helpers({
 // Advance
 // ---------------
 Template.AdminAdvanceArticles.helpers({
-	sections: function(){
-		return  Session.get('advanceAdmin');
-	},
 	statusAction: function(){
 		return Session.get('statusModalAction');
 	},
 	modalMessage: function(){
 		return  Session.get('modalMessage');
+	},
+	savingOrder: function(){
+		return  Session.get('savingOrder');
+	}
+});
+Template.AdminAdvanceArticlesSections.helpers({
+	sections: function(){
+		return  Session.get('advanceAdmin');
 	}
 });
 Template.AdminAdvanceArticlesDiff.helpers({
 	advanceDiff: function(){
-		return  Session.get('advanceDiff');
+		return Session.get('advanceDiff');
 	},
 });
