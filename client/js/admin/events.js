@@ -1550,29 +1550,23 @@ Template.AdminAdvanceArticles.events({
 	'submit form': function(e){
 		e.preventDefault();
 		Meteor.formActions.saving();
+		Session.set('savingOrder',true);
 
 		var sectionsOrder = Meteor.advance.getSectionsOrderViaAdmin();
 
-		// Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
-		// 	if(error){
-		// 		Meteor.formActions.errorMessage('Section order not saved');
-		// 	}else if(result){
-  //               var sections = Meteor.advance.dataForSectionsPage();
-		// 		Session.set('advanceAdmin',sections);
-		// 		Meteor.call('advancePublish', function(error,result) {
-		// 			if(error){
-		// 				Meteor.formActions.errorMessage('Could not publish');
-		// 			}else if(result){
-		// 				Meteor.formActions.successMessage('Advance was published');
-		// 			}
-		// 		});
-		// 	}
-		// });
-		Meteor.call('advancePublish', function(error,result) {
+		Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
 			if(error){
-				Meteor.formActions.errorMessage('Could not publish');
+				Meteor.formActions.errorMessage('Section order not saved');
 			}else if(result){
-				Meteor.formActions.successMessage('Advance was published');
+				Session.set('savingOrder',false);
+				Session.set('advanceAdmin',null);
+				Meteor.call('advancePublish', function(error,result) {
+					if(error){
+						Meteor.formActions.errorMessage('Could not publish');
+					}else if(result){
+						Meteor.formActions.successMessage('Advance was published');
+					}
+				});
 			}
 		});
 	},
@@ -1588,13 +1582,7 @@ Template.AdminAdvanceArticles.events({
 			}else if(result){
 				Session.set('savingOrder',false);
 				Session.set('advanceAdmin',null);
-                var sections = Meteor.advance.dataForSectionsPage();
-                // console.log('sections',sections);
-				// Session.set('advanceAdmin',sections); // does not work. template reverts to previous version despite session variable updating
-				// Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: sections}, $('.admin-content-area').get());
 				Meteor.formActions.successMessage('Section order saved');
-				// Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: sections}, $('.admin-content-area').get()[0]);
-				// location.reload();
 			}
 		});
 	},
