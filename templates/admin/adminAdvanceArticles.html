@@ -85,7 +85,7 @@
 						<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
 					</td>
 					<td>
-						<a href="{{pathFor 'adminArticle' _id=_id}}">Paperchase</a>
+						<a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
 					</td>
 					<td>
 						<input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_name 'Recent Research Papers'}}checked{{/if}}" class="recent-research"/>
