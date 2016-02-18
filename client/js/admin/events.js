@@ -1522,99 +1522,80 @@ Template.AdminRecommendationUpdate.events({
 
 // Advance Articles
 // ----------------
+Template.AdminAdvanceArticlesResearch.events({
+	'submit form': function(e){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var researchPapers = {};
+		var regular = [];
+		$('.recent-research').each(function(){
+			if($(this).prop('checked')) {
+				researchPapers[$(this).attr('data-article-id')] = true;
+			}else{
+				researchPapers[$(this).attr('data-article-id')] = false;
+			}
+		});
+		Meteor.call('updateAdvanceResearch', researchPapers, function(error,result){
+			if(error){
+
+			}else if(result){
+				console.log('result',result);
+				Meteor.formActions.successMessage(result + ' Recent Articles');
+			}
+		});
+	}
+});
+
 Template.AdminAdvanceArticles.events({
 	'submit form': function(e){
 		e.preventDefault();
 		Meteor.formActions.saving();
 
-		newsort = [];
-		$('.article').each(function() {
-			newsort.push({
-				'article_id':  $(this).attr('data-article-id')
-			});
-		});
+		var sectionsOrder = Meteor.advance.getSectionsOrderViaAdmin();
 
-		Meteor.call('advancePublish', newsort, function(error,result) {
+		// Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
+		// 	if(error){
+		// 		Meteor.formActions.errorMessage('Section order not saved');
+		// 	}else if(result){
+  //               var sections = Meteor.advance.dataForSectionsPage();
+		// 		Session.set('advanceAdmin',sections);
+		// 		Meteor.call('advancePublish', function(error,result) {
+		// 			if(error){
+		// 				Meteor.formActions.errorMessage('Could not publish');
+		// 			}else if(result){
+		// 				Meteor.formActions.successMessage('Advance was published');
+		// 			}
+		// 		});
+		// 	}
+		// });
+		Meteor.call('advancePublish', function(error,result) {
 			if(error){
-				Session.set('modalMessage', 'Could not publish');
-				Meteor.formActions.errorMessage();
+				Meteor.formActions.errorMessage('Could not publish');
 			}else if(result){
-				Session.set('modalMessage', 'Advance was published');
-				Meteor.formActions.successMessage();
+				Meteor.formActions.successMessage('Advance was published');
 			}
 		});
 	},
-	'click #save-advance-order': function(e,t){
-		e.preventDefault();
-		var newOrder = Meteor.advance.orderViaAdmin();
-		// console.log('newOrder',newOrder);
-		Meteor.call('updateList','advance',newOrder, function(error,result){
-			if(error){
-				Session.set('modalMessage', 'Could not update order');
-				Meteor.formActions.errorMessage();
-			}else if(result){
-				Session.set('modalMessage', 'Order Saved');
-				Meteor.formActions.successMessage();
-			}
-		});
-	},
-	'click .delete-article': function(e,t){
-		e.preventDefault();
-		var id = $(e.target).attr('data-delete-id');
-		$('#status-modal').openModal({
-			ready: function(){
-				Meteor.call('sorterRemoveItem', 'advance', id, function(error, result) {
-					if(result){
-						var sorterOrder = sorters.findOne({name:'advance'});
-						var output = Meteor.advance.groupArticles(sorterOrder.articles);
-						Session.set('advanceAdmin',output);
-						$('#status-modal').closeModal({
-							ready: function(){
-							},
-		                    complete: function() {
-		                        $('.lean-overlay').remove();
-		                    }
-						});
-					}
-				});
-			},
-			complete: function() {
-				$('.lean-overlay').remove();
-			}
-		});
-	},
-	'click .sort-section-dates': function(e,t){
-		e.preventDefault();
-		Meteor.formActions.saving();
-		var sectionName = $(e.target).attr('data-section-name');
-		var allAdvance = Session.get('advanceAdmin');
-		var sectionToUpdate;
-		var sectionToUpdateIdx;
-		allAdvance.forEach(function(section,index){
-			if(section.section_name == sectionName){
-				sectionToUpdate = section;
-				sectionToUpdateIdx = index;
-			}
-		});
-		if(sectionToUpdate){
-			sectionToUpdate.articles.forEach(function(article){
-				if(article.dates && article.dates.epub){
-				}else{
-					article.epub =null;
-				}
-			});
-			sectionToUpdate.articles.sort(function(a,b){
-				return new Date(a.dates.epub).getTime() - new Date(b.dates.epub).getTime()
-			});
-			sectionToUpdate.articles.reverse();
-			allAdvance.splice(sectionToUpdateIdx, 1, sectionToUpdate);
-			Session.set('advanceAdmin',allAdvance);
-			Meteor.formActions.updating('Section sorted by date');
-		}else{
-			Session.set('modalMessage', 'Could not sort section by date');
-			Meteor.formActions.errorMessage();
-		}
-	}
+	// 'click #save-advance-order': function(e,t){
+	// 	e.preventDefault();
+	// 	Meteor.formActions.saving();
+	// 	var sectionsOrder = Meteor.advance.getSectionsOrderViaAdmin();
+	// 	// console.log(sectionsOrder);
+	// 	Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
+	// 		if(error){
+	// 			Meteor.formActions.errorMessage('Section order not saved');
+	// 		}else if(result){
+	// 			// Session.set('advanceAdmin',null);
+ //                // var sections = Meteor.advance.dataForSectionsPage();
+ //                // console.log('sections',sections);
+	// 			// Session.set('advanceAdmin',sections); // does not work. template reverts to previous version despite session variable updating
+	// 			// Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: sections}, $('.admin-content-area').get());
+	// 			// Meteor.formActions.successMessage('Section order saved');
+	// 			// Blaze.renderWithData(Template.AdminAdvanceArticles, {sections: sections}, $('.admin-content-area').get()[0]);
+	// 			location.reload();
+	// 		}
+	// 	});
+	// },
 });
 
 Template.AdminAdvanceArticlesDiff.events({

@@ -23,13 +23,13 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
   var volume,
       issue;
   // Advance article. Update sorters colleciton.
-  if(modifier['$set']){
-    if(modifier['$set']['advance']){
-      Meteor.call('sorterAddItem','advance',doc._id);
-    }else{
-      Meteor.call('sorterRemoveItem','advance',doc._id);
-    }
-  }
+  // if(modifier['$set']){
+  //   if(modifier['$set']['advance']){
+  //     Meteor.call('sorterAddItem','advance',doc._id);
+  //   }else{
+  //     Meteor.call('sorterRemoveItem','advance',doc._id);
+  //   }
+  // }
 
   // for when we want to skip things in the hook
   if(modifier['$set']['batch']){

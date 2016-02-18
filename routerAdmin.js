@@ -617,22 +617,52 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var sorted  = sorters.findOne({name:'advance'});
-				// var output = [];
-				// var last_article = {};
-                // var section_count = 0;
-                // var section_start_index = 0;
-
-                var output = Meteor.advance.groupArticles(sorted.articles);
-
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 
-                Session.set('advanceAdmin',output);
+				var sections = Meteor.advance.dataForSectionsPage();
+				Session.set('advanceAdmin',sections);
 
 				return{
-					// sections: output,
                     pubdate: advance.pubtime.toLocaleDateString(),
                     pubtime: advance.pubtime.toLocaleTimeString(),
                     total: sorted.articles.length
+				}
+			}
+		}
+	});
+	Router.route('/admin/articles/advance/research',{
+		name: 'AdminAdvanceArticlesResearch',
+		title: function() {
+			var pageTitle = 'Admin | Advance Reseach Papers';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('publish'),
+				Meteor.subscribe('sections'),
+				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sorted  = sorters.findOne({name:'advance'});
+				var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
+				var res;
+
+				if(advanceSections['Recent Research Papers']){
+					res = advanceSections['Recent Research Papers'];
+					res = res.concat(advanceSections['Research Papers']);
+				}else{
+					res = advanceSections['Research Papers'];
+				}
+
+				return{
+                    articles: res
 				}
 			}
 		}

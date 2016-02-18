@@ -1196,67 +1196,24 @@ Meteor.issue = {
 }
 
 Meteor.advance = {
-	groupArticles: function(articles){
-		var recent = true;
-		var section_count = 0;
-		var section_start_index = 0;
-		var output = [];
-		var last_article = {};
-		for (var i = 0; i < articles.length; i++){
-			article = articles[i];
-
-			//make a copy of the next article for comparison
-			next_article = articles[i+1] || false;
-
-			//things that happen on the first entry
-			if(i==0) {
-				article['first'] = true;
-				article['section_start'] = true;
+	articlesBySection: function(articlesList){
+		var articlesBySection = {};
+		articlesList.forEach(function(article){
+			if(!articlesBySection[article.section_name]){
+				articlesBySection[article.section_name] = [];
 			}
-
-			//mark the rest as not being first
-			first = false;
-
-			//things that happen if we're starting a new section
-			if(article.section_name != last_article.section_name) {
-				article['section_start'] = true;
-			}
-
-			//things that happen if we're ending a section
-			if(article.section_name != next_article.section_name) {
-				article['section_end'] = true;
-			}
-
-			//record this entry for comparison on the next
-			last_article = article;
-			//record changes to actual article entry
-			if(article.section_start) {
-				section_name = article.section_name;
-				section_id = article.section_id;
-
-				if(section_name == 'Research Papers' && recent === true) {
-					recent = false;
-					section_name = 'Recent Research Papers';
-				}
-
-				output.push({
-					articles:[],
-					section_name:section_name,
-					section_id:section_id
-				});
-
-				//set section count in previous section
-				output[section_start_index]['section_length'] = section_count;
-				section_count = 0;
-				section_start_index = output.length - 1;
-			}
-
-			section_count++;
-
-			output[output.length-1].articles.push(article);
+			articlesBySection[article.section_name].push(article);
+		});
+		return articlesBySection;
+	},
+	dataForSectionsPage: function(){
+		var sorted  = sorters.findOne({name:'advance'});
+		var res = [];
+		var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
+		for(var section in advanceSections){
+			res.push({section: section, articles_count: advanceSections[section].length});
 		}
-		// console.log('output',output);
-		return output;
+		return res;
 	},
 	orderViaAdmin: function(){
 		var order = [];
@@ -1264,5 +1221,12 @@ Meteor.advance = {
 			order.push($(this).attr('data-article-id'));
 		});
 		return order;
+	},
+	getSectionsOrderViaAdmin: function(){
+		var sectionsOrder = [];
+		$('.advance-section').each(function(){
+			sectionsOrder.push($(this).attr('data-name'));
+		});
+		return sectionsOrder;
 	}
 }
