@@ -26,8 +26,49 @@
 		<div class="col s12">
 			<ul class="advance-sections">
 				{{#each sections}}
-				<li class="advance-section" data-name="{{section}}">
-					<h4><i class="material-icons handle">&#xE8D5;</i> {{section}}</h4><span>{{articles_count}} Articles</span>
+				<li class="advance-section card" data-name="{{section}}">
+					<div><h4><i class="material-icons handle">&#xE8D5;</i> {{section}}</h4></div>
+					<div>
+						<ul class="collapsible" data-collapsible="accordion">
+							<li>
+								<div class="collapsible-header">{{articles_count}} Articles</div>
+								<div class="collapsible-body">
+									<table class="bordered">
+										<thead>
+											<tr>
+												<th>Title</th>
+												<th>EPub</th>
+												<th>PII</th>
+												<th>OJS</th>
+												<th>Paperchase</th>
+											</tr>
+										</thead>
+										<tbody>
+											{{#each articles}}
+											<tr>
+												<td>
+													<h4>{{{title}}}</h4>
+												</td>
+												<td>
+													{{articleDate dates.epub}}
+												</td>
+												<td>
+													{{ids.pii}}
+												</td>
+												<td>
+													<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
+												</td>
+												<td>
+													<a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
+												</td>
+											</tr>
+											{{/each}}
+										</tbody>
+									</table>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</li>
 				{{/each}}
 			</ul>
@@ -35,6 +76,8 @@
 	</div>
 	{{/if}}
 </template>
+
+
 
 <template name="AdminAdvanceBatchDelete">
 	<button class="waves-effect waves-light btn btn-sm red" id="advance-batch-delete">Batch Delete</button>

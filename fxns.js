@@ -1211,7 +1211,7 @@ Meteor.advance = {
 		var res = [];
 		var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
 		for(var section in advanceSections){
-			res.push({section: section, articles_count: advanceSections[section].length});
+			res.push({section: section, articles_count: advanceSections[section].length, articles: advanceSections[section]});
 		}
 		return res;
 	},

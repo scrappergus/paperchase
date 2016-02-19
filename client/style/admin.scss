@@ -61,9 +61,12 @@
 /* Advance ------------------------*/
 	.advance-section{
 		background-color: $gray-0;
-		margin: $margin-md 0;
-		padding: $pad-md;
+		margin: $margin-lg 0;
+		padding: $pad-sm;
 		cursor: pointer;
+	}
+	.advance-section,.collapsible-header{
+		background-color: $gray-0;
 	}
 
 /* Article ------------------------*/

@@ -131,19 +131,10 @@ Template.AdminForAuthorsForm.onDestroyed(function () {
 // Advance
 // -------
 Template.AdminAdvanceArticlesSections.onRendered(function() {
-    $('.advance-sections').sortable({
-        update: function(e, ui) {
-            // console.log(ui);
-            // console.log('advanceAdmin',Session.get('advanceAdmin'));
-            // Session.set('advanceAdmin',sections);
-
-            // var sectionsOrder = Meteor.advance.getSectionsOrderViaAdmin();
-
-            // Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
-
-            // });
-        }
+    $('.collapsible').collapsible({
+        accordion : false
     });
+    $('.advance-sections').sortable();
 });
 
 
