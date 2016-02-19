@@ -64,6 +64,9 @@
 		margin: $margin-lg 0;
 		padding: $pad-sm;
 		cursor: pointer;
+		.collapsible-body{
+			background-color: $gray-1;
+		}
 	}
 	.advance-section,.collapsible-header{
 		background-color: $gray-0;
