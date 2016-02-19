@@ -89,7 +89,10 @@ if (Meteor.isClient) {
 		return moment(date).format('MMMM YYYY');
 	});
 	Template.registerHelper('articleDate', function(date) {
-		return Meteor.dates.article(date);
+		if(date){
+			return Meteor.dates.article(date);
+		}
+		return;
 	});
 	Template.registerHelper('collectionDate',function(date) {
 		return moment(date).format('MMMM YYYY');
