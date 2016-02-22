@@ -1,4 +1,52 @@
 Meteor.methods({
+	fullTextXmlReal: function(url){
+		var fut = new future();
+		var xml;
+		var figures = []; // just pass empty array, we are just wanting to check if the xml is real
+		Meteor.http.get(url , function(error,result){
+			if(error){
+				// console.error('Asset Check Error: ',error);
+				fut['return'](false);
+			}else if(result){
+				// console.log(url + ' Exists');
+				xml = result.content;
+				console.log(typeof xml);
+				// console.log('result',result);
+				Meteor.call('fullTextToJson',xml, figures, function(convertXmlError, convertedXml){
+					if(convertXmlError){
+						console.error('convertXmlError',convertXmlError);
+						fut['throw'](convertXmlError);
+					}else if(convertedXml){
+						fut['return'](true);
+					}
+				});
+			}
+		});
+		return fut.wait();
+	},
+	articlesWith: function(url,searchFor){
+		// console.log('url',url);
+		// console.log('searchFor',searchFor);
+		var fut = new future();
+		var xml;
+		var figures = []; // just pass empty array, we are just wanting to check if the xml is real
+		Meteor.http.get(url , function(error,result){
+			if(error){
+				// console.error('Asset Check Error: ',error);
+				fut['return'](false);
+			}else if(result){
+				// console.log(url + ' Exists');
+				xml = result.content;
+				if(xml.search(searchFor)!=-1){
+					console.log(searchFor,xml.search(searchFor));
+					fut['return'](true);
+				}else{
+					fut['return'](false);
+				}
+			}
+		});
+		return fut.wait();
+	},
 	articleAssests: function(mongoId){
 		console.log('... articleAssests: Mongo ID ', mongoId);
 		var article = articles.findOne({_id : mongoId});

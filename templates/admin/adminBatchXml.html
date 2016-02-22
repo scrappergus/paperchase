@@ -3,6 +3,7 @@
     {{>saving}}
     {{>Success}}
     {{>Error}}
+    {{>StatusModal}}
 
     <div class="row">
         <div class="col s12">
@@ -15,12 +16,33 @@
         </div>
     </div>
 
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card purple lighten-5">
+                <div class="card-content">
+                    <h2>Queries</h2>
+                    <h3>XML With __</h3>
+                    <div class="row">
+                        <div class="col s12">
+                            <p>Will take all articles and look in the XML to see if they have formulas</p>
+                            <form id="search-xml">
+                                <input type="text" id="search-for" placeholder="Search For"/>
+                                <input type="submit" class="btn waves-effect waves-light gray lighten-3">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col s12">
             <div class="card orange lighten-5">
                 <div class="card-content">
                     <h2>Article Assets</h2>
-                    <h3>Asset S3 Check</h3>
+                    <h3>Asset S3 Existence Check</h3>
                     <div class="row">
                         <div class="col s12">
                             <h4>PDF asset check</h4>
@@ -42,6 +64,15 @@
                             <h4>Get Missing Assets via PMC</h4>
                             <p>Takes all articles Mongo IDs for articles without and XML or PDF and sends a request to crawler to get and save them on S3. If succesful, XML and PDF collections are updated.</p>
                             <button id="get-missing-assets" class="btn waves-effect waves-light red lighten-3">Get Missing Assets</button>
+                        </div>
+                    </div>
+                    <hr/>
+                    <h3>Asset Real Check</h3>
+                    <div class="row">
+                        <div class="col s12">
+                            <h4>XML Real</h4>
+                            <p>Will take all articles Mongo IDs for articles and check if XML on S3 contains a body node, indicating it is full text</p>
+                            <button id="real-xml" class="btn waves-effect waves-light red lighten-3">Verify Full Text XML</button>
                         </div>
                     </div>
                 </div>

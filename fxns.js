@@ -675,6 +675,53 @@ Meteor.formActions = {
 		$('input').removeClass('valid');
 		$('textarea').removeClass('valid');
 	},
+	searching: function(message){
+		Session.set('statusModalAction','Searching');
+		Session.set('statusModalDetails',message);
+
+		// inline messages
+		$('.save-btn').addClass('hide');
+		$('.saving').removeClass('hide');
+		$('.success').addClass('hide');
+		$('.error').addClass('hide');
+		//sending and saving forms have shared class names
+
+		// invalid notification
+		$('fieldset').removeClass('invalid');
+
+
+		//fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').addClass('hide');
+			$('#fixed-save-btn').find('.show-wait').removeClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').addClass('hide');
+			$('#save-btn').find('.show-wait').removeClass('hide');
+		}
+
+		if($('#status-modal').length){
+			$('#status-modal').openModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
+		//TODO: use 1 modal for all actions - StatusModal
+		if($('#saving-modal').length){
+			$('#saving-modal').openModal({
+				dismissible: false
+			});
+		}
+
+		//reset
+		Session.set('errorMessages',null);
+		$('input').removeClass('invalid');
+		$('textarea').removeClass('invalid');
+		$('input').removeClass('valid');
+		$('textarea').removeClass('valid');
+	},
 	invalid: function(invalidData){
 		var invalidString = '';
 		for(var i=0 ; i < invalidData.length ; i++){
@@ -784,6 +831,52 @@ Meteor.formActions = {
 		}
 		if($('#saving-modal').length){
 			$('#saving-modal').closeModal();
+		}
+	},
+	resultMessage: function(message){
+		Session.set('statusModalAction','Result');
+		Session.set('statusModalDetails',message);
+		// inline messages
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').removeClass('hide');
+		$('.error').addClass('hide');
+
+		$('.success-message').text(message);
+
+		// fixed saved button
+		if($('#fixed-save-btn').length){
+			$('#fixed-save-btn').find('.show-save').removeClass('hide');
+			$('#fixed-save-btn').find('.show-wait').addClass('hide');
+		}
+		// saved button
+		if($('#save-btn').length){
+			$('#save-btn').find('.show-save').removeClass('hide');
+			$('#save-btn').find('.show-wait').addClass('hide');
+		}
+
+		// modals
+		if($('#status-modal').length){
+			$('#status-modal').openModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
+		// TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
+		if($('#saving-modal').length){
+			$('#saving-modal').closeModal({
+				complete: function(){
+					if($('#success-modal').length){
+						$('#success-modal').openModal({
+							ready: function(){
+							}
+						});
+					}
+				}
+			});
+		}else if($('#success-modal').length){
+			$('#success-modal').openModal();
 		}
 	},
 	successMessage: function(message){
@@ -1183,10 +1276,11 @@ Meteor.issue = {
 	coverPath : function(volume,issue){
 		if(journalConfig){
 			var journal =  journalConfig.findOne().journal.short_name;
+			var assetUrl =  journalConfig.findOne().assets;
 			var fileType = '.png';
 			if(journal == 'genesandcancer'){
 				fileType = '.gif';
-				return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + '_n' + issue + fileType;
+				return assetUrl + 'covers/' + 'cover_v' + volume + '_n' + issue + fileType;
 			}else{
 				return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + fileType;
 			}

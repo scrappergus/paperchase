@@ -962,12 +962,44 @@ Template.AdminBatch.events({
 			}
 		});
 	},
+	'click #real-xml': function(e){
+		e.preventDefault();
+		Meteor.call('batchRealXml', 'xml', function(e,r){
+			if(e){
+				console.error(e);
+			}else if(r){
+				console.log(r);
+			}
+		});
+	},
+	'submit #search-xml': function(e){
+		e.preventDefault();
+		Meteor.formActions.searching();
+		var search;
+		search = $('#search-for').val();
+		if(search){
+			Meteor.call('batcharticlesWith', search, function(e,r){
+				if(e){
+					Meteor.formActions.errorMessage(e);
+					console.error(e);
+				}else if(r){
+					console.log(r);
+					Meteor.formActions.resultMessage(r.toString());
+				}
+			});
+		}else{
+			Meteor.formActions.errorMessage('Search is empty. Please enter something to search for in the input.');
+		}
+
+	},
 	'click #check-all-xml': function(e){
 		e.preventDefault();
 		Meteor.call('checkAllArticlesAssets', 'xml', function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){
+
+				r.forEach()
 				console.log(r);
 			}
 		});

@@ -219,6 +219,74 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
+	batchRealXml: function(){
+		console.log('..batchRealXml : ');
+		var fut = new future();
+		var journalInfo = journalConfig.findOne();
+		var journalShortName = journalInfo.journal.short_name;
+		// var articlesList = articles.find({_id : {$in: notreal}}).fetch();
+		var articlesList = articles.find().fetch();
+		var notReal = [];
+		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/';
+		// for(var i = 0 ; i < articlesList.length; i++){
+		for(var i = 0 ; i < 10; i++){
+			var articleMongoId = articlesList[i]._id;
+			var assetUrl = assetBaseUrl + articleMongoId + '.xml';
+			console.log(i, articlesList[i]._id,assetUrl);
+			Meteor.call('fullTextXmlReal',assetUrl,function(error,result){
+				if(result){
+
+				}else{
+					notReal.push(articleMongoId);
+				}
+			});
+			if(i == parseInt(articlesList.length - 1)){
+				console.log('notReal',notReal);
+				fut['return'](notReal);
+			}
+			// var csvString=articlesList[i]._id + ',' + articlesList[i].ids.pii ;
+			// csvString += ','
+			// if(articlesList[i].volume){
+			// 	csvString += "Issue " + articlesList[i].volume;
+			// }
+
+			// csvString += ','
+			// if(articlesList[i].issue){
+			// 	csvString += "Issue " + articlesList[i].issue;
+			// }
+
+			// console.log(csvString);
+
+		}
+		return fut.wait();
+	},
+	batcharticlesWith: function(searchFor){
+		// console.log('..batcharticlesWith : ' + searchFor);
+		var fut = new future();
+		var journalInfo = journalConfig.findOne();
+		var journalShortName = journalInfo.journal.short_name;
+		var articlesList = articles.find().fetch();
+		var found = [];
+		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/';
+		for(var i = 0 ; i < articlesList.length; i++){
+		// for(var i = 0 ; i < 10; i++){
+			var articleMongoId = articlesList[i]._id;
+			var assetUrl = assetBaseUrl + articleMongoId + '.xml';
+			console.log(i, articlesList[i]._id,assetUrl);
+			Meteor.call('articlesWith',assetUrl,searchFor,function(error,result){
+				if(result){
+					// console.log('yes');
+					found.push(articleMongoId);
+				}
+			});
+			if(i == parseInt(articlesList.length - 1)){
+				// console.log('found',found);
+				fut['return'](found);
+			}
+
+		}
+		return fut.wait();
+	},
 	getMissingPmidPmcViaPii: function(){
 		console.log('..getMissingPmidPmcViaPii');
 		var fut = new future();
