@@ -89,6 +89,7 @@
 			<a class="btn {{isActiveRoute 'AdminAdvanceArticles'}}" href="{{pathFor 'AdminAdvanceArticles'}}">Sections</a>
 			<a class="btn {{isActiveRoute 'AdminAdvanceArticlesResearch'}}" href="{{pathFor 'AdminAdvanceArticlesResearch'}}">Reseach Papers</a>
 			<a class="btn {{isActiveRoute 'AdminAdvanceArticlesDiff'}}" href="{{pathFor 'AdminAdvanceArticlesDiff'}}">Paperchase Vs Legacy</a>
+			<a class="btn {{isActiveRoute 'AdminAdvanceArticlesRemove'}}" href="{{pathFor 'AdminAdvanceArticlesRemove'}}">Remove Articles</a>
 		</div>
 	</div>
 </template>
@@ -103,7 +104,6 @@
 		<div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
 			<button class="waves-effect waves-light btn-large submit" type="submit">Save</button>
 		</div>
-
 
 		<table class="striped">
 			<thead>
@@ -143,4 +143,66 @@
 			</tbody>
 		</table>
 	</form>
+</template>
+
+
+<template name="AdminAdvanceArticlesRemove">
+	{{>AdminHeader header="Advance Articles - Remove Articles"}}
+	{{>AdminAdvanceNav}}
+	{{>StatusModal what='Advance Articles' action=statusAction details=modalMessage}}
+	<div class="row">
+		<div class="col s12"><form>
+			<div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
+				{{>AdminAdvanceBatchDelete}}
+			</div>
+			<table class="striped">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>EPub</th>
+						<th>PII</th>
+						<th>Article Type</th>
+						<th>OJS</th>
+						<th>Paperchase</th>
+						<th>Batch Remove</th>
+						<th>Remove</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{#each articles}}
+				<tr>
+					<td>
+						{{{title}}}
+					</td>
+					<td>
+						{{articleDate dates.epub}}
+					</td>
+					<td>
+						{{ids.pii}}
+					</td>
+					<td>
+						{{article_type.type}}
+					</td>
+					<td>
+						<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
+					</td>
+					<td>
+						<a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
+					</td>
+					<td>
+						<input type="checkbox" data-article-id="{{_id}}" data-article-pii="{{ids.pii}}" id="{{_id}}-remove-article" class="remove-article checkbox-red"><label for="{{_id}}-remove-article"></label>
+					</td>
+					<td>
+						{{>AdvanceRemoveArticle}}
+					</td>
+				</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</form></div>
+	</div>
+</template>
+
+<template name="AdvanceRemoveArticle">
+	<a class="delete-article btn-floating right btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a>
 </template>

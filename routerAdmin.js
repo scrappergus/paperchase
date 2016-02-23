@@ -698,6 +698,32 @@ if (Meteor.isClient) {
 			]
 		}
 	});
+	Router.route('/admin/articles/advance/remove',{
+		name: 'AdminAdvanceArticlesRemove',
+		title: function() {
+			var pageTitle = 'Admin | Advance Remove';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('advance'),
+				Meteor.subscribe('sortedList','advance')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var sorted  = sorters.findOne({name:'advance'});
+				// console.log(sorted.articles);
+				return{
+                    articles: sorted.articles
+				}
+			}
+		}
+	});
 
 	// Sections
 	Router.route('/admin/sections', {

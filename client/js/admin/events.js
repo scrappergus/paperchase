@@ -1620,7 +1620,8 @@ Template.AdminAdvanceArticles.events({
 	},
 });
 
-Template.AdminAdvanceArticlesDiff.events({
+// Advance - remove articles
+Template.AdvanceRemoveArticle.events({
 	'click .delete-article': function(e){
 		Meteor.formActions.saving();
 		e.preventDefault();
@@ -1629,18 +1630,20 @@ Template.AdminAdvanceArticlesDiff.events({
 			if(error){
 				Meteor.formActions.errorMessage();
 			} else if(result) {
+				Meteor.formActions.successMessage('Article Removed');
 				var legacyArticles = Session.get('advanceLegacy');
-				Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
-					if(result){
-						Meteor.formActions.successMessage('Article Removed');
-						Session.set('advanceDiff',result)
-					}
-				});
+				if(legacyArticles){
+					Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
+						if(result){
+							// Meteor.formActions.successMessage('Article Removed');
+							Session.set('advanceDiff',result)
+						}
+					});
+				}
 			}
 		});
 	}
 });
-
 Template.AdminAdvanceBatchDelete.events({
 	'click #advance-batch-delete': function(e,t){
 		e.preventDefault();

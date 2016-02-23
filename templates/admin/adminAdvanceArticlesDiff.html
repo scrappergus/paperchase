@@ -41,7 +41,7 @@
 						<td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a></td>
 						<td><a href="/admin/article/{{_id}}">Paperchase</a></td>
 						<td><input type="checkbox" data-article-id="{{_id}}" data-article-pii="{{ids.pii}}" id="{{_id}}-remove-article" class="remove-article checkbox-red"><label for="{{_id}}-remove-article"></label></td>
-						<td><a class="delete-article btn-floating right btn-small waves-effect waves-light red" data-delete-id="{{_id}}"><i class="small material-icons" data-delete-id="{{_id}}">delete</i></a></td>
+						<td>{{>AdvanceRemoveArticle}}</td>
 					</tr>
 					{{/each}}
 				</tbody>
