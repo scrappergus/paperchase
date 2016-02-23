@@ -1571,8 +1571,8 @@ Template.AdminAdvanceArticlesResearch.events({
 			if(error){
 
 			}else if(result){
-				console.log('result',result);
-				Meteor.formActions.successMessage(result + ' Recent Articles');
+				// console.log('result',result);
+				Meteor.formActions.successMessage(result.recent + ' Recent Articles<br>' + result.updated + ' Articles Updated');
 			}
 		});
 	}

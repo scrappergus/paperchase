@@ -28,7 +28,7 @@ Meteor.methods({
 			// OJS Articles
 			result.ojsCount = legacyArticles.length;
 			legacyArticles.forEach(function(ojsA){
-				// console.log(ojsA.pii,'OJS');
+				// console.log('OJS', ojsA.pii);
 				allPii[ojsA.pii] = {
 					ojs : true
 				}
@@ -38,6 +38,7 @@ Meteor.methods({
 			var pcArticles = order.articles;
 			result.paperchaseCount = pcArticles.length;
 			pcArticles.forEach(function(pcA){
+				// console.log('paperchase', pcA.ids.pii)
 				if(!allPii[pcA.ids.pii]){
 					allPii[pcA.ids.pii] = {};
 					result.paperchaseOnly.push(pcA);
@@ -111,32 +112,71 @@ Meteor.methods({
 		var recent = 0;
 		var updated = 0;
 		var total = 0;
+		var result = {};
+		var order = sorters.findOne({name:'advance'});
+		var orderBySectionId = Meteor.call('orderBySectionId',order.articles);
 
 		for(var article in articles){
 			total++
 		}
+
+		// update all article docs
+		// and get order ready to update
 		for(var article in articles){
 			track++;
 			// console.log(article, articles[articles]);
 			var updateObj = {};
+			var updateArticle = false;
 			if(articles[article] == true){
+				// recent checked
 				updateObj.section_id = 0;
 				recent++;
+				if(orderBySectionId[0].indexOf(article) == -1 ){
+					// article was added to Recent Research Papers
+					updateArticle = true;
+				}
 			}else{
+				// recent NOT checked
+				if(orderBySectionId[0].indexOf(article) != -1 ){
+					// article was in Recent Research Papers but now removed
+					updateArticle = true;
+				}
 				updateObj.section_id = 5;
 			}
-			Meteor.call('updateArticle',article, updateObj, function(error,result){
-				if(error){
+			if(updateArticle){
+				// console.log('update: ',article,updateObj);
+				Meteor.call('updateArticle',article, updateObj, function(error,result){
+					if(error){
 
-				}else if(result){
-					updated++;
-				}
-			});
+					}else if(result){
+						updated++;
+					}
+				});
+			}
+
 			if(track == total){
-				fut['return'](recent);
+				result = {
+					recent: recent,
+					updated: updated
+				}
+				fut['return'](result);
 			}
 		}
 
+
+
+
 		return fut.wait();
+	},
+	orderBySectionId: function(articles){
+		var byId = {};
+		for(var i=0 ; i<articles.length ; i++){
+			if(!byId[articles[i].section_id]){
+				byId[articles[i].section_id] = [];
+			}
+			byId[articles[i].section_id].push(articles[i]._id);
+		}
+		// console.log('byId',byId);
+		return byId;
 	}
 });
