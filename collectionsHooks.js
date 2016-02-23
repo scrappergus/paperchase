@@ -11,13 +11,6 @@ articles.before.insert(function (userId, doc) {
   // console.log(doc['issue_id']);
 });
 articles.after.insert(function (userId, doc) {
-  // console.log('..after insert article');
-  //console.log(doc.advance);console.log(this._id);
-
-  // Advance
-  if(doc.advance){
-    Meteor.call('sorterAddItem','advance',this._id);
-  }
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
   var volume,

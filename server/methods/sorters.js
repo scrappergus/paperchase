@@ -1,34 +1,33 @@
 Meteor.methods({
 	sorterAddItem: function(listName,mongoId){
+		var fut = new future();
+		console.log('sorterAddItem',mongoId);
 		// not always used for articles. for ex, use this for about and for authors sections.
 		// TODO add to the beginning of set
 
 		if(listName == 'advance') {
+			var advanceOrder;
 			//find the position to insert at
-			article = articles.findOne({"_id": mongoId});
+			article = articles.findOne({_id: mongoId});
 			if(article) {
-				Meteor.call('sorterRemoveItem', listName, mongoId);
-				sorts = sorters.findOne({'name': listName});
-				position = sorts.order.length;
-				for(var i=0; i < sorts.order.length; i++) {
-					match = articles.findOne({"_id":sorts.order[i], section_id:article.section_id});
-					if(match) {
-						position = i;
-						i = sorts.order.length;
-					}
+				advanceOrder = sorters.findOne({name: 'advance'});
+				if(advanceOrder.order.indexOf(mongoId) == -1){
+					Meteor.call('addArticleToSection',mongoId, article.section_id, function(error,result){
+						if(result){
+							fut['return'](true);
+						}else{
+							fut['return'](false);
+						}
+					});
 				}
-
-				var res = sorters.update({name : listName}, {$push : {
-					'order': {
-						$each: [mongoId],
-						$position: position
-				}}});
 			}
 		} else {
 			var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}},{upsert: true});
+			fut['return'](res);
 		}
 
-		return res;
+		return fut.wait();
+		// return res;
 	},
 	sorterRemoveItem: function(listName,mongoId){
 		var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});

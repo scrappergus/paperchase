@@ -114,6 +114,7 @@ Meteor.methods({
 		var total = 0;
 		var result = {};
 		var order = sorters.findOne({name:'advance'});
+
 		var orderBySectionId = Meteor.call('orderBySectionId',order.articles);
 
 		for(var article in articles){
@@ -178,5 +179,23 @@ Meteor.methods({
 		}
 		// console.log('byId',byId);
 		return byId;
+	},
+	addArticleToSection: function(mongoId, sectionId){
+		// console.log('addArticleToSection',mongoId, sectionId);
+		var sorts = sorters.findOne({'name': 'advance'});
+		var position = sorts.order.length;
+		for(var i=0; i < sorts.order.length; i++) {
+			match = articles.findOne({_id:sorts.order[i], section_id:sectionId});
+			if(match) {
+				position = i;
+				i = sorts.order.length;
+			}
+		}
+
+		return sorters.update({name : 'advance'}, {$push : {
+			'order': {
+				$each: [mongoId],
+				$position: position
+		}}});
 	}
 });
