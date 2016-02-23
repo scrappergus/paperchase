@@ -19,7 +19,7 @@ Meteor.methods({
 		}
 	},
 	legacyArticleIntake: function(articleParams){
-		// console.log('...legacyArticleIntake');
+		console.log('...legacyArticleIntake');
 		// console.log(articleParams);
 		var idType = articleParams.id_type,
 			idValue = articleParams.id,
@@ -61,9 +61,13 @@ Meteor.methods({
 				if(article){
 					articleMongoId =  article['_id'];
 					if(article.section_id == 0){
-						processedArticleJson.section_id = 0; // Keep Recent Research Paperob
+						processedArticleJson.section_id = 0; // Keep in Recent Research Papers
 					}
-					Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch);
+					Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){
+						if(result){
+							Meteor.call('sorterAddItem','advance',articleMongoId);
+						}
+					});
 				}else{
 					// console.log('    Add = ' + processedArticleJson['title']);
 					processedArticleJson['doc_updates'] = {} ;
@@ -71,7 +75,11 @@ Meteor.methods({
 					if(processedArticleJson.article_type.type == 'Research Papers'){
 						processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
 					}
-					articleMongoId = Meteor.call('addArticle',processedArticleJson);
+					articleMongoId = Meteor.call('addArticle',processedArticleJson, function(error,result){
+						if(result){
+							Meteor.call('sorterAddItem','advance',articleMongoId);
+						}
+					});
 				}
 			}
 
