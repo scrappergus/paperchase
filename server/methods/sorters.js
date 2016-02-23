@@ -1,7 +1,7 @@
 Meteor.methods({
 	sorterAddItem: function(listName,mongoId){
 		var fut = new future();
-		console.log('sorterAddItem',mongoId);
+		// console.log('sorterAddItem',mongoId);
 		// not always used for articles. for ex, use this for about and for authors sections.
 		// TODO add to the beginning of set
 

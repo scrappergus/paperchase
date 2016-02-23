@@ -19,7 +19,7 @@ Meteor.methods({
 		}
 	},
 	legacyArticleIntake: function(articleParams){
-		console.log('...legacyArticleIntake');
+		// console.log('...legacyArticleIntake');
 		// console.log(articleParams);
 		var idType = articleParams.id_type,
 			idValue = articleParams.id,
