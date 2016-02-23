@@ -60,12 +60,17 @@ Meteor.methods({
 				// console.log('    '+processedArticleJson['title']);
 				if(article){
 					articleMongoId =  article['_id'];
-					// console.log('    Update = ' + processedArticleJson['title']);
+					if(article.section_id == 0){
+						processedArticleJson.section_id = 0; // Keep Recent Research Paperob
+					}
 					Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch);
 				}else{
 					// console.log('    Add = ' + processedArticleJson['title']);
 					processedArticleJson['doc_updates'] = {} ;
 					processedArticleJson['doc_updates']['created_by'] = 'OJS Intake';
+					if(processedArticleJson.article_type.type == 'Research Papers'){
+						processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
+					}
 					articleMongoId = Meteor.call('addArticle',processedArticleJson);
 				}
 			}
