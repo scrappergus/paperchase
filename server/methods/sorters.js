@@ -12,7 +12,7 @@ Meteor.methods({
 			if(article) {
 				advanceOrder = sorters.findOne({name: 'advance'});
 				if(advanceOrder.order.indexOf(mongoId) == -1){
-					Meteor.call('addArticleToSection',mongoId, article.section_id, function(error,result){
+					Meteor.call('advanceAddArticleToSection',mongoId, article.section_id, function(error,result){
 						if(result){
 							fut['return'](true);
 						}else{

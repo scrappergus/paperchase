@@ -111,16 +111,13 @@ Meteor.methods({
 		var track = 0;
 		var recent = 0;
 		var updated = 0;
-		var total = 0;
 		var result = {};
 		var order = sorters.findOne({name:'advance'});
-
 		var orderBySectionId = Meteor.call('orderBySectionId',order.articles);
-
+		var total = 0;
 		for(var article in articles){
 			total++
 		}
-
 		// update all article docs
 		// and get order ready to update
 		for(var article in articles){
@@ -147,10 +144,13 @@ Meteor.methods({
 			if(updateArticle){
 				// console.log('update: ',article,updateObj);
 				Meteor.call('updateArticle',article, updateObj, function(error,result){
-					if(error){
-
-					}else if(result){
-						updated++;
+					if(result){
+						// now update the order
+						Meteor.call('advanceMoveArticle', article, updateObj.section_id, function(error,result){
+							if(result){
+								updated++;
+							}
+						});
 					}
 				});
 			}
@@ -180,8 +180,8 @@ Meteor.methods({
 		// console.log('byId',byId);
 		return byId;
 	},
-	addArticleToSection: function(mongoId, sectionId){
-		// console.log('addArticleToSection',mongoId, sectionId);
+	advanceAddArticleToSection: function(mongoId, sectionId){
+		// console.log('advanceAddArticleToSection',mongoId, sectionId);
 		var sorts = sorters.findOne({'name': 'advance'});
 		var position = sorts.order.length;
 		for(var i=0; i < sorts.order.length; i++) {
@@ -197,5 +197,23 @@ Meteor.methods({
 				$each: [mongoId],
 				$position: position
 		}}});
+	},
+	advanceMoveArticle: function(mongoId, newSectionId){
+		// console.log('advanceMoveArticle',mongoId,newSectionId)
+		var fut = new future();
+		Meteor.call('sorterRemoveItem', 'advance', mongoId, function(error,result){
+			if(error){
+				fut['return'](error);
+			}else if(result){
+				Meteor.call('advanceAddArticleToSection', mongoId, newSectionId, function(error,result){
+					if(error){
+						fut['return'](error);
+					}else if(result){
+						fut['return'](true);
+					}
+				});
+			}
+		})
+		return fut.wait();
 	}
 });
