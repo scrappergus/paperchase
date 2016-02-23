@@ -57,7 +57,6 @@ Meteor.methods({
 				if(advance){
 					processedArticleJson.advance = true;
 				}
-				// console.log('    '+processedArticleJson['title']);
 				if(article){
 					articleMongoId =  article['_id'];
 					if(article.section_id == 0){
@@ -126,7 +125,7 @@ Meteor.methods({
 			// TODO: Add journal param?
 			// requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
 			requestUrl += '?' + idType + '=' + idValue;
-			console.log(requestUrl);
+			// console.log(requestUrl);
 			var res;
 			res = Meteor.http.get(requestUrl);
 			if(res){
