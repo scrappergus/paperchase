@@ -563,8 +563,11 @@ Template.AdminArticleForm.events({
 		Meteor.adminArticle.articleListButton('ids');
 	},
 	'click .remove-id': function(e){
-		if($(e.target).attr('id').replace('remove-','') != 'pii'){
+		var idType = $(e.target).attr('id').replace('remove-','');
+		if(idType != 'pii'){
 			Meteor.adminArticle.removeKeyFromArticleObject('ids',e);
+		}else if(idType === 'pii'){
+			alert('PII cannot be removed from article');
 		}
 	},
 	// Submit
@@ -962,13 +965,16 @@ Template.AdminBatch.events({
 			}
 		});
 	},
-	'click #real-xml': function(e){
+	'click #xml-audit-csv': function(e){
 		e.preventDefault();
+		Meteor.formActions.searching();
 		Meteor.call('batchRealXml', 'xml', function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){
-				console.log(r);
+				console.log('r',r);
+				Meteor.formActions.resultMessage(r);
+				// this.redirect('xmlAudit',{data:r});
 			}
 		});
 	},
