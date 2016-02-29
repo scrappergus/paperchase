@@ -70,6 +70,23 @@ Router.route('/admin/doi_status_csv/',{
 		this.response.end();
 	}
 });
+// Router.route('/admin/xml_audit/',{
+// 	name: 'xmlAudit',
+// 	where: 'server',
+// 	action: function(){
+// 		var filename = journalConfig.findOne().journal.short_name + '_xml_audit.csv';
+// 		var csvData = '' + '\n';
+// 		console.log('data', this.request.data);
+// 		csvData += this.request.data;
+
+// 		this.response.writeHead(200, {
+// 		  'Content-Type': 'text/csv',
+// 		  'Content-Disposition': 'attachment; filename=' + filename
+// 		});
+// 		this.response.write(csvData);
+// 		this.response.end();
+// 	}
+// });
 
 if (Meteor.isClient) {
 	// Variables
@@ -472,6 +489,8 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
+			// console.log('before!',Session.get('article'));
+			Session.set('article',null);
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
@@ -494,7 +513,10 @@ if (Meteor.isClient) {
 		},
 		data: function(){
 			if(this.ready()){
-				Session.set('article',articles.findOne());
+				var article = articles.findOne();
+				if(article._id == this.params._id){ // hack for timing problem when subscried to articles already
+					Session.set('article',articles.findOne());
+				}
 			}
 		}
 	});
@@ -509,6 +531,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
+			Session.set('article',null);
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
 			if(!articleExistsExists){
@@ -556,6 +579,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
+			Session.set('article',null);
 			Meteor.call('preProcessArticle',function(error,result){
 				if(error){
 					console.log('ERROR - preProcessArticle');
