@@ -30,7 +30,7 @@ Meteor.methods({
 		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		// console.log('--updateArticle |  mongoId = ' + mongoId);
+		// console.log('--updateArticle |  mongoId = ' + mongoId, articleData);
 		var duplicateArticle;
 
 		if(!mongoId){
@@ -100,7 +100,7 @@ Meteor.methods({
 	},
 	getNewPii: function(){
 		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
-		return parseInt(highestPii.ids.pii + 1);
+		return parseInt(highestPii.ids.pii) + 1;
 	},
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
