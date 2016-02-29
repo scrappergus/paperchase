@@ -84,7 +84,13 @@
 	<div class="row">
 		<div class="col s12">
 			<h5>Dates:</h5>
-			{{>ArticleDates}}
+			{{#each arrayify dates}}
+				{{#if equals name 'collection'}}
+					<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+					{{else}}
+					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+				{{/if}}
+			{{/each}}
 		</div>
 	</div>
 	{{/if}}
