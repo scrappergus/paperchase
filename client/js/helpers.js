@@ -151,8 +151,17 @@ if (Meteor.isClient) {
 		for (var key in obj) result.push({name:key,value:obj[key]});
 		return result;
 	});
+	// Count
+	// --------
 	Template.registerHelper('countItems', function(items) {
 		return items.length;
+	});
+	Template.registerHelper('countKeys', function(object) {
+		var count = 0;
+		for(var key in object){
+			count++;
+		}
+		return count;
 	});
 	// Subscribers
 	// -------
