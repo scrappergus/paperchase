@@ -514,7 +514,7 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var article = articles.findOne();
-				if(article._id == this.params._id){ // hack for timing problem when subscried to articles already
+				if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
 					Session.set('article',articles.findOne());
 				}
 			}
