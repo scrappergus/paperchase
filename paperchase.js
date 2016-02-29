@@ -545,6 +545,8 @@ if (Meteor.isClient) {
 			// get xml, figures, pdf links
 			Meteor.call('articleAndAssests', this.params._id, function(error, result) {
 				if(result){
+					// console.log('result',result);
+					result.journal = Session.get('journal').journal.short_name;
 					Session.set('article-visitor',result);
 				}
 			});
