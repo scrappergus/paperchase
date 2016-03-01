@@ -578,9 +578,12 @@ if (Meteor.isClient) {
 
 			// Get assets and fulltext
 			Session.set('article-text', null);
-			Meteor.call('availableAssests', this.params._id, function(error, result) {
+			// get xml, figures, pdf links
+			Meteor.call('articleAndAssests', this.params._id, function(error, result) {
 				if(result){
-					Session.set('article-assets',result);
+					// console.log('result',result);
+					result.journal = Session.get('journal').journal.short_name;
+					Session.set('article-visitor',result);
 				}
 			});
 			Meteor.call('getAssetsForFullText', this.params._id, function(error, result) {
@@ -601,12 +604,8 @@ if (Meteor.isClient) {
 		},
 		data: function(){
 			if(this.ready()){
-				var id = this.params._id;
-				Session.set('article-id',this.params._id);
-				var article;
-				article = articles.findOne({'_id': id});
 				return {
-					article: article
+					article: Session.get('article-visitor')
 				};
 			}
 		},
