@@ -77,16 +77,31 @@ if (Meteor.isClient) {
 		return month[d.getMonth()];
 	});
 	Template.registerHelper('inputDate', function(date) {
-		return moment(date).format('YYYY/MM/DD');
+		if(date){
+			return moment(date).format('YYYY/MM/DD');
+		}else{
+			return;
+		}
+
 	});
 	Template.registerHelper('formatDate', function(date) {
-		return Meteor.dates.wordDate(date);
+		if(date){
+
+			return Meteor.dates.wordDate(date);
+		}
+		return;
 	});
 	Template.registerHelper('formatDateNumber', function(date) {
-		return moment(date).format('MM/D/YYYY');
+		if(date){
+			return moment(date).format('MM/D/YYYY');
+		}
+		return;
 	});
 	Template.registerHelper('formatIssueDate', function(date) {
-		return moment(date).format('MMMM YYYY');
+		if(date){
+			return moment(date).format('MMMM YYYY');
+		}
+		return;
 	});
 	Template.registerHelper('articleDate', function(date) {
 		if(date){
@@ -95,19 +110,34 @@ if (Meteor.isClient) {
 		return;
 	});
 	Template.registerHelper('collectionDate',function(date) {
-		return moment(date).format('MMMM YYYY');
+		if(date){
+			return moment(date).format('MMMM YYYY');
+		}
+		return;
 	});
 	Template.registerHelper('getYear',function(date) {
-		return moment(date).format('YYYY');
+		if(date){
+			return moment(date).format('YYYY');
+		}
+		return;
 	});
 	Template.registerHelper('getMonth',function(date) {
-		return moment(date).format('MMMM');
+		if(date){
+			return moment(date).format('MMMM');
+		}
+		return;
 	});
 	Template.registerHelper('getDay',function(date) {
-		return moment(date).format('D');
+		if(date){
+			return moment(date).format('D');
+		}
+		return;
 	});
 	Template.registerHelper('dashedDateToWordDate',function(date) {
-		return Meteor.dates.dashedToWord(date);
+		if(date){
+			return Meteor.dates.dashedToWord(date);
+		}
+		return;
 	});
 	// Equals
 	// -------
