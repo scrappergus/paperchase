@@ -85,8 +85,11 @@ html,body{
 			margin-bottom:0.3em;
 		}
 	}
-	.pad-md{
+	.pad-sm{
 		padding: $pad-sm;
+	}
+	.pad-md{
+		padding: $pad-md;
 	}
 
 /* Navigation ------------------------*/
