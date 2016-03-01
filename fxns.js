@@ -1278,13 +1278,8 @@ Meteor.issue = {
 			var journal =  journalConfig.findOne().journal.short_name;
 			var assetUrl =  journalConfig.findOne().assets;
 			var fileType = '.png';
-			if(journal == 'genesandcancer'){
-				fileType = '.gif';
-				return assetUrl + 'covers/' + 'cover_v' + volume + '_n' + issue + fileType;
-			}else{
-				return '/images/journal/' + journal + '/covers/' + 'cover_v' + volume + 'n' + issue + fileType;
-			}
-
+			var fileName = issues.findOne({volume: parseInt(volume), issue: String(issue)})._id;
+			return assetUrl + 'covers/' + fileName + fileType;
 		}
 	}
 }
