@@ -58,6 +58,23 @@
 									<input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
 								</div>
 							</div>
+							<h4>Display:</h4>
+							{{#with date_settings}}
+							<div class="row">
+								<div class="input-field col s12 m4">
+									<input class="date-setting" type="checkbox" id="display-day" checked="{{checked day}}"/>
+									<label for="display-day">Day</label>
+								</div>
+								<div class="input-field col s12 m4">
+									<input class="date-setting" type="checkbox" id="display-month" checked="{{checked month}}"/>
+									<label for="display-month">Month</label>
+								</div>
+								<div class="input-field col s12 m4">
+									<input class="date-setting" type="checkbox" id="display-year" checked="{{checked year}}"/>
+									<label for="display-year">Year</label>
+								</div>
+							</div>
+							{{/with}}
 						</fieldset>
 
 						<div class="row">

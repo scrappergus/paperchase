@@ -97,9 +97,19 @@ if (Meteor.isClient) {
 		}
 		return;
 	});
-	Template.registerHelper('formatIssueDate', function(date) {
+	Template.registerHelper('formatIssueDate', function(date,settings) {
 		if(date){
-			return moment(date).format('MMMM YYYY');
+			if(settings.day && settings.month && settings.year){
+				return moment(date).format('d MMMM, YYYY');
+			}else if(settings.month && settings.year){
+				return moment(date).format('MMMM YYYY');
+			}else if(settings.day && settings.year){
+				return moment(date).format('d YYYY'); //TODO prevent day being selected if no month
+			}else if(settings.day && settings.month){
+				return moment(date).format('Do MMMM');
+			}else if(settings.year){
+				return moment(date).format('YYYY');
+			}
 		}
 		return;
 	});

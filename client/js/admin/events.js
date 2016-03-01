@@ -291,21 +291,26 @@ Template.AdminIssueForm.events({
 	'submit form': function(e,t){
 		e.preventDefault();
 		Meteor.formActions.saving();
-		// console.log('t',t);
 		var mongoId = $('#mongo-id').attr('data-id');
-		// console.log('mongoId',mongoId);
-		var date = $('#issue-date').val();
+		var pubDate = $('#issue-date').val();
 
 		updateObj = {
-			pub_date: null
+			pub_date: null,
+			date_settings: {}
 		};
 
-		if(date){
-			date = new Date(date);
-			updateObj = {
-				'pub_date' : date
-			}
+		if(pubDate){
+			pubDate = new Date(pubDate);
+			updateObj.pub_date = pubDate;
 		}
+
+		$('.date-setting').each(function(){
+			var type = $(this).attr('id').replace('display-','');
+			updateObj.date_settings[type] = false;
+			if($(this).prop('checked')){
+				updateObj.date_settings[type] = true;
+			}
+		});
 
 		Meteor.call('updateIssue', mongoId, updateObj, function(error, result){
 			if(error){
