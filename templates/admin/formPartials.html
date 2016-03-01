@@ -37,6 +37,18 @@
 	</div>
 </template>
 
+<!-- Required Fields -->
+<template name="RequiredSymbol">
+	<i class="material-icons orange-type">&#xE3E7;</i>
+</template>
+<template name="RequiredSymbolRowMessage">
+	<div class="row">
+		<div class="col s12 orange-type">
+			{{>RequiredSymbol}} = Required
+		</div>
+	</div>
+</template>
+
 <!--SAVE PARTIALS-->
 <template name="FixedSaveBtn">
 	<div id="fixed-save-btn" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
