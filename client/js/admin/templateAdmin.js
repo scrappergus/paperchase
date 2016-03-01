@@ -67,7 +67,7 @@ Template.AdminVolumeIssue.onRendered(function () {
 
 // Issue
 // ------
-Template.AdminIssue.onRendered(function () {
+Template.AdminIssueForm.onRendered(function () {
     Meteor.dates.initiateDatesInput();
 });
 
