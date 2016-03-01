@@ -860,7 +860,7 @@ if (Meteor.isClient) {
 		onBeforeAction: function(){
 			Session.set('issue',null);
 			var pieces = Meteor.issue.urlPieces(this.params.vi);
-			// TODO: add redirect if no issue
+
 			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
 				if(error){
 					console.log('ERROR - getIssueAndAssets');
@@ -868,6 +868,8 @@ if (Meteor.isClient) {
 				}
 				if(result){
 					Session.set('issue',result);
+				}else{
+					Router.go('AdminAddIssue');
 				}
 			});
 

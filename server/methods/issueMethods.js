@@ -93,26 +93,32 @@ Meteor.methods({
 	getIssueAndAssets: function(volume, issue){
 		// console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
 		var fut = new future();
+		var journal = journalConfig.findOne({}).journal.short_name;
 		var issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
-		// console.log('issueData',issueData);
-		issueData.cover = Meteor.issue.coverPath(volume,issue);
-		var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
-		// console.log(issueArticles);
-		// get assets
-		for(var i=0 ; i< issueArticles.length ; i++){
-			// console.log(issueArticles[i]['_id']);
-			var articleAssets = Meteor.call('articleAssests', issueArticles[i]['_id']);
-			for(var asset in articleAssets){
-				issueArticles[i][asset] = articleAssets[asset];
+
+		if(issueData){
+			issueData.cover = Meteor.issue.coverPath(volume,issue);
+
+			var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
+
+			// get assets
+			for(var i=0 ; i< issueArticles.length ; i++){
+				var articleAssets = Meteor.call('articleAssests', issueArticles[i]['_id']);
+				for(var asset in articleAssets){
+					issueArticles[i][asset] = articleAssets[asset];
+				}
+				issueArticles[i].journal = journal;
+				if(i == parseInt(issueArticles.length - 1)){
+					issueData['articles']
+					fut['return'](issueData);
+				}
 			}
-			if(i == parseInt(issueArticles.length - 1)){
-				issueData['articles']
-				// console.log(issueData);
-				fut['return'](issueData);
-			}
+
+			issueData['articles'] = issueArticles;
+		}else{
+			fut['return']();
 		}
 
-		issueData['articles'] = issueArticles;
 		return fut.wait();
 	},
 	getAllIssues: function(){
