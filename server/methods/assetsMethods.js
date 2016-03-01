@@ -10,15 +10,19 @@ Meteor.methods({
 			}else if(result){
 				// console.log(url + ' Exists');
 				xml = result.content;
-				console.log(typeof xml);
+				// console.log(typeof xml);
 				// console.log('result',result);
 				Meteor.call('fullTextToJson',xml, figures, function(convertXmlError, convertedXml){
 					if(convertXmlError){
 						console.error('convertXmlError',convertXmlError);
 						fut['throw'](convertXmlError);
 					}else if(convertedXml){
-						fut['return'](true);
+						// console.log('convertedXml',convertedXml);
+						fut['return'](convertedXml);
+					}else{
+						fut['return'](false);// todo: handle when there is no xml
 					}
+
 				});
 			}
 		});
@@ -48,7 +52,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	articleAssests: function(mongoId){
-		console.log('... articleAssests: Mongo ID ', mongoId);
+		// console.log('... articleAssests: Mongo ID ', mongoId);
 		var article = articles.findOne({_id : mongoId});
 		var assets = {};
 		// XML
