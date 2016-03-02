@@ -24,7 +24,7 @@ Meteor.methods({
 							fut['throw'](getXmlError);
 						}else if(xmlRes){
 							xml = xmlRes.content;
-							Meteor.call('fullTextToJson',xml, figures, function(convertXmlError, convertedXml){
+							Meteor.call('fullTextToJson',xml, figures, mongoId, function(convertXmlError, convertedXml){
 								if(convertXmlError){
 									console.error('convertXmlError',convertXmlError);
 									fut['throw'](convertXmlError);
@@ -39,7 +39,7 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
-	fullTextToJson: function(xml, figures){
+	fullTextToJson: function(xml, figures, mongoId){
 		// Full XML processing. Content, and References
 		// console.log('... fullTextToJson');
 		var fut = new future();
@@ -53,10 +53,9 @@ Meteor.methods({
 		if(sections[0]){
 			// Sections
 			for(var section = 0 ; section < sections.length ; section++){
-				// console.log('-------section = ' + section);
 				// console.log(sections[section].childNodes.length);
 				var sectionType;
-				var sectionObject = Meteor.fullText.sectionToJson(sections[section],figures);
+				var sectionObject = Meteor.fullText.sectionToJson(sections[section],figures, mongoId);
 				for(var sectionAttr = 0 ; sectionAttr < sections[section].attributes.length ; sectionAttr++){
 					// console.log(sections[section].attributes[sectionAttr]);
 					if(sections[section].attributes[sectionAttr].nodeName === 'sec-type'){
@@ -70,12 +69,12 @@ Meteor.methods({
 				}
 				articleObject.sections.push(sectionObject);
 			}
-		}else{
+		}else if(xpath.select('//body', doc)){
 			var body =  xpath.select('//body', doc);
 			// there will only be 1 body node, so use body[0]
 			// no <sec>
 			// just create 1 section
-			var sectionObject = Meteor.fullText.sectionToJson(body[0],figures);
+			var sectionObject = Meteor.fullText.sectionToJson(body[0],figures, mongoId);
 			articleObject.sections.push(sectionObject);
 		}
 
@@ -86,6 +85,7 @@ Meteor.methods({
 		// we want to search for //ref because that has the ID attribute. We do not want to rely on the index of the reference for the ID.
 		var references = xpath.select('//ref', doc);
 		if(references[0]){
+			// console.log('referencesreferences', references[0]);
 			articleObject.references = [];
 			for(var referenceIdx = 0 ; referenceIdx < references.length ; referenceIdx++){
 				var reference = references[referenceIdx];
@@ -128,13 +128,14 @@ Meteor.methods({
 
 // for handling sections of XML, content, special elements like figures, references, tables
 Meteor.fullText = {
-	sectionToJson: function(section,figures){
+	sectionToJson: function(section,figures, mongoId){
 		// XML processing of part of the content, <sec>
 		// console.log('...sectionToJson');
+		// console.log(section);
 		var sectionObject = {};
 		sectionObject.content = [];
-
 		for(var c = 0 ; c < section.childNodes.length ; c++){
+			// console.log('c = '  + c);
 			var sec = section.childNodes[c];
 			var content,
 				contentType;
@@ -157,7 +158,7 @@ Meteor.fullText = {
 					content += Meteor.fullText.traverseTable(sec);
 					content += '</table>';
 				}else if(sec.localName === 'fig'){
-					content = Meteor.fullText.convertFigure(sec,figures);
+					content = Meteor.fullText.convertFigure(sec,figures,mongoId);
 					contentType = 'figure';
 				}else{
 					content = Meteor.fullText.convertContent(sec);
@@ -191,59 +192,67 @@ Meteor.fullText = {
 			// --------
 			for(var cc = 0 ; cc < node.childNodes.length ; cc++){
 				var childNode = node.childNodes[cc];
-				var nodeAnchor = '',
-					nValue = '';
-				// console.log('cc = ' + cc );
-				if(childNode.localName != null){
-					content += '<' + childNode.localName + '>';
-				}
+				if(childNode){
+					var nodeAnchor = '',
+						nValue = '';
+					// console.log('cc = ' + cc );
+					if(childNode.localName != null){
+						content += '<' + childNode.localName + '>';
+					}
 
-				// Special tags - xref
-				// --------
-				if(childNode.localName === 'xref'){
-					// Determine - Reference or Figure?
-					nValue = childNode.childNodes[0].nodeValue;
-					var attributes = childNode.attributes;
-					// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
-					for(var attr = 0 ; attr < attributes.length ; attr++){
-						// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
-						if(attributes[attr].nodeName === 'rid'){
-							nodeAnchor = attributes[attr].nodeValue;
+					// Special tags - xref
+					// --------
+					if(childNode.localName === 'xref'){
+						// Determine - Reference or Figure?
+						if(childNode.childNodes[0]){
+							nValue = childNode.childNodes[0].nodeValue;
+							var attributes = childNode.attributes;
+							// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
+							for(var attr = 0 ; attr < attributes.length ; attr++){
+								// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
+								if(attributes[attr].nodeName === 'rid'){
+									nodeAnchor = attributes[attr].nodeValue;
+								}
+							}
+							content += '<a href="#' + nodeAnchor + '"  class="anchor">';
+							content += nValue;
+							content += '</a>';
 						}
+					}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+						// console.log('else if 1');
+						//plain text or external link
+						if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
+							content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
+						}else if(childNode.nodeValue){
+							content += childNode.nodeValue;
+						}
+					}else if(childNode.childNodes){
+						content += Meteor.fullText.convertContent(childNode);
 					}
-					content += '<a href="#' + nodeAnchor + '"  class="anchor">';
-					content += nValue;
-					content += '</a>';
-				}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
-					//plain text or external link
-					if(childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
-						content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
-					}else{
-						content += childNode.nodeValue;
-					}
-				}else if(childNode.childNodes){
-					content += Meteor.fullText.convertContent(childNode);
-				}
 
-				if(childNode.localName != null){
-					content += '</' + childNode.localName + '>';
+					if(childNode.localName != null){
+						content += '</' + childNode.localName + '>';
+					}
+					// console.log(content);
 				}
-				// console.log(content);
 			}
 		}
 		content = Meteor.fullText.fixTags(content);
 		return content;
 	},
-	convertFigure: function(node,figures){
+	convertFigure: function(node,figures,mongoId){
+		// console.log('..convertFigure',figures);
+		var figureAssetsUrl = journalConfig.findOne().assets;
 		var figObj = {};
 		// get the figure ID
 		for(var figAttr = 0 ; figAttr < node.attributes.length ; figAttr++){
 			if(node.attributes[figAttr].localName === 'id'){
 				figObj.id = node.attributes[figAttr].nodeValue;
+				// console.log(figObj.id);
+				var figId = figObj.id.replace('F','');
 				for(var f = 0 ; f < figures.length ; f++){
-					if(figures[f]['figureID'] === figObj.id){
-						// TODO : are there ever more than 1 image in this array? assets api response has an array of images for each fig.. waiting for example
-						figObj.url = figures[f]['imgURLs'][0];
+					if(figures[f].id === figId){
+						figObj.url = figureAssetsUrl + 'paper_figures/' + figures[f].file;
 					}
 				}
 			}

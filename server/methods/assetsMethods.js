@@ -65,6 +65,11 @@ Meteor.methods({
 		if(pdfAsset && pdfAsset.pdf_url){
 			assets.pdf_url = pdfAsset.pdf_url;
 		}
+		// Figures
+		var figureAssets = figCollection.findOne({'ids.mongo_id' : mongoId});
+		if(figureAssets && figureAssets.figures.length > 0){
+			assets.figures = figureAssets.figures;
+		}
 		// console.log(assets);
 		return assets;
 	},
