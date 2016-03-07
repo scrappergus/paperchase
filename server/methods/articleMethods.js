@@ -122,7 +122,7 @@ Meteor.methods({
 				issueId = Meteor.call('addIssue',{
 					'volume': volume,
 					'issue': issue,
-					'issue_linkable' : issue.replace(/\//g,'_') // remove any slashed to avoid URL linking problems
+					'issue_linkable' : Meteor.fxns.linkeableIssue(issue) // remove any slashed to avoid URL linking problems
 				});
 			}
 		}

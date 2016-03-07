@@ -48,8 +48,11 @@ Meteor.methods({
 			issueId;
 		issueData['issue'] = issueData['issue'];
 		issueData['volume'] = parseInt(issueData['volume']);
+		if(!issueData.issue_linkable){
+			issueData.issue_linkable = Meteor.fxns.linkeableIssue(issueData.issue);
+		}
 		vol = volumes.findOne({'volume':issueData['volume']});
-		//double check that issue does not exit
+		//double check that issue does not exist
 		iss = issues.findOne({'volume':issueData['volume'],'issue':issueData['issue']});
 
 		if(!iss){

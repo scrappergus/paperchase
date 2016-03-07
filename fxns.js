@@ -1281,6 +1281,9 @@ Meteor.issue = {
 			var fileName = issues.findOne({volume: parseInt(volume), issue: String(issue)})._id;
 			return assetUrl + 'covers/' + fileName + fileType;
 		}
+	},
+	linkeableIssue: function(issue){
+		return issue.replace(/\//g,'_');
 	}
 }
 
