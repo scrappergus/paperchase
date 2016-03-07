@@ -1,7 +1,7 @@
 // All of these methods are for admin article
 Meteor.methods({
 	addArticle: function(articleData){
-		// console.log('--addArticle | pmid = '+articleData['ids']['pmid']);
+		// console.log('--addArticle', articleData);
 
 		if(articleData['authors']){
 			var authorsList = articleData['authors'];
@@ -26,8 +26,17 @@ Meteor.methods({
 			}
 		}
 
-		//INSERT into articles colection
-		return articles.insert(articleData);
+		if(articleData.volume && articleData.issue){
+			// check if article doc
+			Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
+				if(result){
+					articleData.issue_id = result;
+					return articles.insert(articleData);
+				}
+			});
+		}else{
+			return articles.insert(articleData);
+		}
 	},
 	updateArticle: function(mongoId, articleData, batch){
 		// console.log('--updateArticle |  mongoId = ' + mongoId, articleData);
