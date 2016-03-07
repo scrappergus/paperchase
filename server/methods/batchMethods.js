@@ -463,8 +463,8 @@ Meteor.methods({
 		var tracker = 0;
 		var fut = new future();
 		var apiBase = journalConfig.findOne().api.crawler;
-		// var apiBase = 'http://localhost:4932/';
-		var urlApi =  apiBase + 'article_info_via_pmid/';
+		// var apiBase = 'http://localhost:4932';
+		var urlApi =  apiBase + '/article_info_via_pmid/';
 
 		var missingByMongo = {};
 		var missingVolList = articles.find({volume : {$exists:false},'ids.pmid' : {$exists:true}},{_id : 1}).fetch();
@@ -486,6 +486,7 @@ Meteor.methods({
 			var url = urlApi + missingByMongo[mongoId].ids.pmid;
 			Meteor.http.get( url, function(error,result){
 				if(result){
+					// console.log(url, result);
 					var articleData = JSON.parse(result.content);
 					var updateObj = {};
 					if(articleData.volume){
@@ -498,7 +499,7 @@ Meteor.methods({
 						if(updateError){
 							console.error('Update Article',updateError);
 						}else if(articleData.volume && updateResult){
-							console.log('++');
+							// console.log('++');
 							totalUpdate++;
 						}
 						tracker++;
