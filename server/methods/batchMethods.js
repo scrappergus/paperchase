@@ -462,8 +462,8 @@ Meteor.methods({
 		var totalMissing = 0;
 		var tracker = 0;
 		var fut = new future();
-		// var apiBase = journalConfig.findOne().api.crawler;
-		var apiBase = 'http://localhost:4932/';
+		var apiBase = journalConfig.findOne().api.crawler;
+		// var apiBase = 'http://localhost:4932/';
 		var urlApi =  apiBase + 'article_info_via_pmid/';
 
 		var missingByMongo = {};
