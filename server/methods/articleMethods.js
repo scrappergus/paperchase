@@ -1,63 +1,79 @@
 // All of these methods are for admin article
 Meteor.methods({
 	addArticle: function(articleData){
-		// console.log('--addArticle', articleData);
-
-		if(articleData['authors']){
-			var authorsList = articleData['authors'];
-			for(var author = 0 ; author < authorsList.length; author++){
-				//check if author doc exists in authors collection
-				var authorDoc;
-				authorsList[author]['ids'] = {};
-				authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
-				if(!authorDoc){
-					//INSERT into authors
-					Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
-						if(error){
-							console.error('ERROR',error);
+		// console.log('--addArticle');
+		var fut = new future();
+		Meteor.call('articleExistenceCheck',articleData,function(error,result){
+			if(error){
+				// console.error('addArticle',error);
+				throw new Meteor.Error('ERROR: Article - ', error);
+				// return error;
+			}else if(result){
+				fut['return'](result);
+				return result; //article already exists, but return the doc so we can notify user
+			}else{
+				if(articleData['authors']){
+					var authorsList = articleData['authors'];
+					for(var author = 0 ; author < authorsList.length; author++){
+						//check if author doc exists in authors collection
+						var authorDoc;
+						authorsList[author]['ids'] = {};
+						authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
+						if(!authorDoc){
+							//INSERT into authors
+							Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
+								if(error){
+									console.error('ERROR',error);
+								}else{
+									authorsList[author]['ids']['mongo_id'] = mongo_id;
+								}
+							});
 						}else{
-							authorsList[author]['ids']['mongo_id'] = mongo_id;
+							//author doc already exists
+							authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
+						}
+					}
+				}
+
+				if(articleData.volume && articleData.issue){
+					// check if article doc
+					Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
+						if(result){
+							articleData.issue_id = result;
 						}
 					});
-				}else{
-					//author doc already exists
-					authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
 				}
-			}
-		}
 
-		if(articleData.volume && articleData.issue){
-			// check if article doc
-			Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
-				if(result){
-					articleData.issue_id = result;
-					return articles.insert(articleData);
-				}
-			});
-		}else{
-			return articles.insert(articleData);
-		}
+				// console.log('articleData',articleData);
+				fut['return'](articles.insert(articleData));
+				// return articles.insert(articleData);
+			}
+		});
+		return fut.wait();
 	},
 	updateArticle: function(mongoId, articleData, batch){
-		// console.log('--updateArticle |  mongoId = ' + mongoId, articleData);
-		var duplicateArticle;
+		var fut = new future();
+		// console.log('--updateArticle');
 
+		// the returned result will either be the result from updating/inserting the article doc,
+		// if inserting an article and a duplicate was found, then that is returned.
 		if(!mongoId){
-			// New Article
-			// make sure article does not already exist
-			// TODO: loose title check
-			duplicateArticle = articles.findOne({title : articleData.title});
-		}
-		if(!mongoId && !duplicateArticle){
 			// Add new article
-			return Meteor.call('addArticle', articleData);
+			Meteor.call('addArticle', articleData, function(error,result){
+				if(error){
+					throw new Meteor.Error('ERROR: Article - ', error);
+				}else if(result){
+					// return result;
+					fut['return'](result);
+				}
+			});
 		}else if(mongoId){
 			// Update existing
 			articleData.batch = batch;
-			return articles.update({'_id' : mongoId}, {$set: articleData});
-		}else{
-			throw new Meteor.Error('ERROR: Duplicate Article - ' + duplicateArticle._id);
+			var updated = articles.update({'_id' : mongoId}, {$set: articleData});
+			fut['return'](updated);
 		}
+		return fut.wait();
 	},
 	updateArticleBy: function(where, what){
 		return articles.update(where, {$set: what});
@@ -366,5 +382,35 @@ Meteor.methods({
 		}
 		// console.log(result.pii);
 		return result;
+	},
+	articleExistenceCheck: function(articleData){
+		// console.log('--articleExistenceCheck',articleData);
+		// before inserting article, check if doc already exists
+		// right now only title required, so check for IDs before adding to query
+		var query =  [
+			{
+				'title': articleData.title
+			}
+		];
+
+		if(articleData.ids.pmid){
+			query.push({
+				'ids.pmid': articleData.ids.pmid
+			});
+		}
+		if(articleData.ids.pmc){
+			query.push({
+				'ids.pmc': articleData.ids.pmc
+			});
+		}
+		if(articleData.ids.pii){
+			query.push({
+				'ids.pii': articleData.ids.pii
+			});
+		}
+		var exists = articles.findOne({ $or: query });
+		if(exists){
+			return exists;
+		}
 	}
 });
