@@ -85,6 +85,16 @@ Meteor.methods({
 	},
 	updateArticleByPmid: function(pmid, articleData){
 		// console.log('--updateArticleByPmid |  pmid = '+pmid, articleData);
+
+		if(articleData.volume && articleData.issue){
+			// check if article doc
+			Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
+				if(result){
+					articleData.issue_id = result;
+				}
+			});
+		}
+
 		return articles.update({'ids.pmid' : pmid}, {$set: articleData});
 	},
 	addToArticleAffiliationsByPmid: function(pmid, affiliation){

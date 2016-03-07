@@ -752,10 +752,14 @@ Template.AdminArticleForm.events({
 					alert(error.message);
 					Meteor.formActions.error();
 				}else if(result){
-					if(!mongoId){
-						mongoId = result;
+					if(typeof result == 'object'){
+						Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
+					}else{
+						if(!mongoId){
+							mongoId = result;
+						}
+						Router.go('AdminArticleOverview',{_id : mongoId});
 					}
-					Router.go('AdminArticleOverview',{_id : mongoId});
 				}
 			});
 		}
@@ -1092,6 +1096,19 @@ Template.AdminBatch.events({
 			}else if(r){
 				console.log(r);
 				Meteor.formActions.successMessage(r + ' Legacy Dates added');
+			}
+		});
+	},
+	'click #fill-in-article-pubmed-info': function(e){
+		// console.log('..get-articles-volume-issue');
+		e.preventDefault();
+		window.scrollTo(0, 0);
+		Meteor.call('getPubMedInfo',function(e,r){
+			if(e){
+				console.error(e);
+				Meteor.formActions.error();
+			}else if(r){
+				Meteor.formActions.successMessage(r);
 			}
 		});
 	},

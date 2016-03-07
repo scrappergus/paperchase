@@ -225,37 +225,76 @@ Meteor.methods({
 		var journalInfo = journalConfig.findOne();
 		var journalShortName = journalInfo.journal.short_name;
 		// var articlesList = articles.find({_id : {$in: notreal}}).fetch();
+		var blobCount = 0;
+		var okCount = 0;
+		var missingCount = 0;
 		var articlesList = articles.find().fetch();
-		var notReal = [];
+		var csvString = 'Mongo ID, PII, PMID, PMC, Volume, Issue, Status\n';
 		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/';
-		// for(var i = 0 ; i < articlesList.length; i++){
-		for(var i = 0 ; i < 10; i++){
+		for(var i = 0 ; i < articlesList.length; i++){
+		// for(var i = 0 ; i < 10; i++){
+			// if(articlesList[i].ids.pii && articlesList[i].ids.pii == '10.1177_1947601913501075'){
 			var articleMongoId = articlesList[i]._id;
 			var assetUrl = assetBaseUrl + articleMongoId + '.xml';
-			console.log(i, articlesList[i]._id,assetUrl);
+			console.log(i, articlesList[i]._id, assetUrl);
 			Meteor.call('fullTextXmlReal',assetUrl,function(error,result){
-				if(result){
-
+				csvString += articlesList[i]._id + ',';
+				if(articlesList[i].ids.pii){
+					csvString += articlesList[i].ids.pii;
 				}else{
-					notReal.push(articleMongoId);
+					csvString += '';
 				}
+				csvString += ',';
+
+				if(articlesList[i].ids.pmid){
+					csvString += articlesList[i].ids.pmid;
+				}else{
+					csvString += '';
+				}
+				csvString += ',';
+
+				if(articlesList[i].ids.pmc){
+					csvString += articlesList[i].ids.pmc;
+				}else{
+					csvString += '';
+				}
+				csvString += ',';
+
+				if(articlesList[i].volume){
+					csvString += articlesList[i].volume;
+				}else{
+					csvString += '';
+				}
+				csvString += ',';
+
+				if(articlesList[i].issue){
+					csvString += 'Issue' + articlesList[i].issue; //add string so that excel does not parse dashed issues as dates
+				}else{
+					csvString += '';
+				}
+				csvString += ',';
+
+				if(result && result.sections.length < 2){
+					csvString += 'Blob'; //TODO: could just be paragraphs within body.
+					blobCount++;
+					// console.log(articlesList[i]._id, articlesList[i].ids.pii, ' Blob', result);
+					// result is lenght of body sections. if 1 then we cannot use this xml
+				}else if(result && result.sections.length >1){
+					csvString += 'Ok';
+					okCount++;
+				}else{
+					csvString += 'Missing';
+					missingCount++;
+				}
+
+				csvString += '\n';
 			});
+			// }
 			if(i == parseInt(articlesList.length - 1)){
-				console.log('notReal',notReal);
-				fut['return'](notReal);
+				console.log('csvString',csvString);
+				console.log('missing ',missingCount, '. ok =', okCount,'. blob =', blobCount);
+				fut['return'](csvString);
 			}
-			// var csvString=articlesList[i]._id + ',' + articlesList[i].ids.pii ;
-			// csvString += ','
-			// if(articlesList[i].volume){
-			// 	csvString += "Issue " + articlesList[i].volume;
-			// }
-
-			// csvString += ','
-			// if(articlesList[i].issue){
-			// 	csvString += "Issue " + articlesList[i].issue;
-			// }
-
-			// console.log(csvString);
 
 		}
 		return fut.wait();
@@ -416,6 +455,63 @@ Meteor.methods({
 			});
 		}
 		return fut.wait();
+	},
+	getPubMedInfo: function(){
+		// console.log('..getPubMedInfo');
+		var totalUpdate = 0;
+		var totalMissing = 0;
+		var tracker = 0;
+		var fut = new future();
+		// var apiBase = journalConfig.findOne().api.crawler;
+		var apiBase = 'http://localhost:4932/';
+		var urlApi =  apiBase + 'article_info_via_pmid/';
+
+		var missingByMongo = {};
+		var missingVolList = articles.find({volume : {$exists:false},'ids.pmid' : {$exists:true}},{_id : 1}).fetch();
+		var missingIssList = articles.find({issue : {$exists:false},'ids.pmid' : {$exists:true}},{_id : 1}).fetch();
+
+		missingVolList.forEach(function(article){
+			missingByMongo[article._id] = article;
+			totalMissing++;
+		});
+		missingIssList.forEach(function(article){
+			if(!missingByMongo[article._id]){
+				missingByMongo[article._id] = article;
+				totalMissing++;
+			}
+		});
+
+		for(mongoId in missingByMongo){
+			// console.log(mongoId);
+			var url = urlApi + missingByMongo[mongoId].ids.pmid;
+			Meteor.http.get( url, function(error,result){
+				if(result){
+					var articleData = JSON.parse(result.content);
+					var updateObj = {};
+					if(articleData.volume){
+						updateObj.volume;
+					}
+					if(articleData.issue){
+						updateObj.issue;
+					}
+					Meteor.call('updateArticleByPmid', articleData.ids.pmid, articleData, function(updateError,updateResult){
+						if(updateError){
+							console.error('Update Article',updateError);
+						}else if(articleData.volume && updateResult){
+							console.log('++');
+							totalUpdate++;
+						}
+						tracker++;
+						if(tracker == totalMissing){
+							var result = totalMissing + ' total articles missing Volume/Issue. ' + totalUpdate + ' Articles were updated.'
+							fut['return'](result);
+						}
+					});
+				}
+			});
+		}
+		return fut.wait();
+
 	},
 	getMissingAssets: function(){
 		console.log('..getMissingAssets');
