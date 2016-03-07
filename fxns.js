@@ -21,13 +21,16 @@ Meteor.organize = {
 		return issueArticles;
 	},
 	groupArticles: function(articles) {
-		var articlesL = articles.length;
 		var grouped = [];
-		for(var i = 0 ; i < articlesL ; i++){
-			var type = articles[i]['article_type']['short_name'];
+		for(var i = 0 ; i < articles.length ; i++){
+			var type = ''; //for articles without a type
+			if(articles[i]['article_type']){
+				type = articles[i]['article_type']['short_name'];
+			}
+
 			if(!grouped[type]){
 				grouped[type] = [];
-				 articles[i]['start_group'] = true;
+				articles[i]['start_group'] = true;
 			}
 			//grouped[type].push(articles[i]);
 		}

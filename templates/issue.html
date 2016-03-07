@@ -24,7 +24,10 @@
 	<ul>
 		{{#each articles}}
 		{{#if start_group}}
+		{{#if article_type}}
+		{{! make sure to check for if no article type}}
 		<li style="margin: 10px 10px 0 0; display:inline-block;"><a class="anchor waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.name}}</a></li>
+		{{/if}}
 		{{/if}}
 		{{/each}}
 	</ul>
