@@ -24,7 +24,11 @@
 			{{/if}}
 			<div class="row no-margin">
 				{{#each arrayify ids}}
+					{{#if equals name 'doi'}}
+					<div class="col s4"><h6><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></h6></div>
+					{{else}}
 					<div class="col s4"><h6><label>{{name}}:</label> {{value}}</h6></div>
+					{{/if}}
 				{{/each}}
 			</div>
 
