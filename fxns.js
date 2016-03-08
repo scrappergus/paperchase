@@ -1236,14 +1236,14 @@ Meteor.sorter = {
 
 Meteor.dates = {
 	article: function(date){
-		return moment(date).format('MMMM D, YYYY');
+		return moment(date).tz('America/New_York').format('MMMM D, YYYY');
 	},
 	wordDate: function(date){
-		return moment(date).format('MMMM D, YYYY');
+		return moment(date).tz('America/New_York').format('MMMM D, YYYY');
 	},
 	dashedToWord: function(date){
 		date = Meteor.dates.dashedToDate(date);
-		return moment(date).format('MMMM D, YYYY');
+		return moment(date).tz('America/New_York').format('MMMM D, YYYY');
 	},
 	dashedToDate: function(date){
 		var datePieces = date.split('-');
