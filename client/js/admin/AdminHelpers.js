@@ -249,6 +249,47 @@ Template.AdminArticlesList.helpers({
 		}
 	}
 });
+Template.AdminAop.helpers({
+	settings: function(){
+		return {
+			rowsPerPage: 10,
+			showFilter: false,
+			fields: [
+				{
+					key: 'title',
+					label: 'Title',
+					fn: function(title){
+						var t = Meteor.admin.titleInTable(title);
+						return new Spacebars.SafeString(t);
+					}
+				},
+				{
+					key: 'ids.pii',
+					label: 'PII'
+				},
+				{
+					key: 'dates.epub',
+					label: 'EPub',
+					fn: function(date){
+						if(date){
+							return Meteor.dates.article(date);
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					key: '_id',
+					label: '',
+					sortable: false,
+					fn: function(value){
+						return new Spacebars.SafeString('<a href="/admin/article/' + value + '">View</a>');
+					}
+				}
+			]
+		}
+	}
+});
 
 // Upload
 // XML

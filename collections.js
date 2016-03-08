@@ -475,6 +475,9 @@ if (Meteor.isServer) {
   Meteor.publish('submissions', function () {
     return submissions.find();
   });
+  Meteor.publish('aop', function () {
+    return articles.find({'issue_id':{$exists:false}},{sort:{'_id':1}});
+  });
 
   // Users
   // ----------------

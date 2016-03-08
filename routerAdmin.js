@@ -127,7 +127,7 @@ if (Meteor.isClient) {
 		name: 'admin.dashboard',
 		layoutTemplate: 'Admin',
 		title: function() {
-			var pageTitle = 'Admin | ';
+			var pageTitle = 'Admin | Home ';
 			if(Session.get('journal')){
 				pageTitle += ': ' + Session.get('journal').journal.name;
 			}
@@ -387,7 +387,7 @@ if (Meteor.isClient) {
 		title: function() {
 			var pageTitle = 'Admin | Articles Dashboard';
 			if(Session.get('journal')){
-				pageTitle += ': ' + Session.get('journal').journal.name;
+				pageTitle += ' : ' + Session.get('journal').journal.name;
 			}
 			return pageTitle;
 		},
@@ -621,6 +621,30 @@ if (Meteor.isClient) {
 
 
 	// Advance articles
+	Router.route('/admin/articles/aop',{
+		name: 'AdminAop',
+		title: function() {
+			var pageTitle = 'Admin | AOP ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		layoutTemplate: 'Admin',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('aop')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+
+				return{
+                    articles: articles.find().fetch()
+				}
+			}
+		}
+	});
 	Router.route('/admin/articles/advance',{
 		name: 'AdminAdvanceArticles',
 		title: function() {
@@ -863,8 +887,7 @@ if (Meteor.isClient) {
 
 			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
 				if(error){
-					console.log('ERROR - getIssueAndAssets');
-					console.log(error);
+					console.error('ERROR - getIssueAndAssets',error);
 				}
 				if(result){
 					Session.set('issue',result);

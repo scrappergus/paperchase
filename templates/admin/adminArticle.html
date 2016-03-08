@@ -120,3 +120,12 @@
 	{{/if}}
 	{{/with}}
 </template>
+
+<template name="AdminAop">
+	{{>AdminHeader header="AOP"}}
+	<div class="row">
+		<div class="col s12">
+			{{> reactiveTable collection=articles settings=settings}}
+		</div>
+	</div>
+</template>
