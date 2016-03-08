@@ -29,6 +29,20 @@
 							<h5>{{{title}}}</h5>
 							<p>{{>AuthorsList}}</p>
 							<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
+							{{#if countKeys dates}}
+							<div class="row">
+									<div class="col s12">
+										<h5>Dates:</h5>
+										{{#each arrayify dates}}
+											{{#if equals name 'collection'}}
+												<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+												{{else}}
+												<h6><label>{{name}}:</label> {{articleDate value}}</h6>
+											{{/if}}
+										{{/each}}
+									</div>
+							</div>
+							{{/if}}
 							<a class="waves-effect waves-light btn" href="{{pathFor 'AdminArticle'}}">View</a>
 						</li>
 						{{/each}}
