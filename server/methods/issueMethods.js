@@ -49,7 +49,7 @@ Meteor.methods({
 		issueData['issue'] = issueData['issue'];
 		issueData['volume'] = parseInt(issueData['volume']);
 		if(!issueData.issue_linkable){
-			issueData.issue_linkable = Meteor.fxns.linkeableIssue(issueData.issue);
+			issueData.issue_linkable = Meteor.issue.linkeableIssue(issueData.issue);
 		}
 		vol = volumes.findOne({'volume':issueData['volume']});
 		//double check that issue does not exist
@@ -77,7 +77,17 @@ Meteor.methods({
 		return issueId;
 	},
 	updateIssue: function(mongoId, update){
-		return issues.update({'_id':mongoId},{$set:update})
+		if(!mongoId){
+			Meteor.call('addIssue',update,function(error,result){
+				if(error){
+					console.error('addIssue',error);
+				}else if(result){
+					return result;
+				}
+			})
+		}else{
+			return issues.update({'_id':mongoId},{$set:update});
+		}
 	},
 	addVolume: function(volume,issue){
 		var insertObj = {'volume':volume};

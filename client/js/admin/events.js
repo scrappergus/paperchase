@@ -299,11 +299,13 @@ Template.AdminIssueForm.events({
 			date_settings: {}
 		};
 
+		// Date
 		if(pubDate){
 			pubDate = new Date(pubDate);
 			updateObj.pub_date = pubDate;
 		}
 
+		// Date settings
 		$('.date-setting').each(function(){
 			var type = $(this).attr('id').replace('display-','');
 			updateObj.date_settings[type] = false;
@@ -312,6 +314,10 @@ Template.AdminIssueForm.events({
 			}
 		});
 
+		// Volume/Issue
+		updateObj.volume = parseInt($('#issue-volume').val());
+		updateObj.issue = $('#issue-issue').val();
+		// console.log(updateObj);
 		Meteor.call('updateIssue', mongoId, updateObj, function(error, result){
 			if(error){
 				console.error('ERROR: updateIssue',error);
