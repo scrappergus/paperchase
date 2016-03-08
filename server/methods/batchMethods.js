@@ -1,4 +1,26 @@
 Meteor.methods({
+	batchDoiRegisteredCheck: function(){
+		var fut = new future();
+		var articlesList = articles.find({'ids.doi' : {$exists:false}}).fetch();
+		var updated = 0;
+		///article/:journalname/:pii/doi_status
+		for(var a=0 ; a<articlesList.length ; a++){
+			if(articlesList[a].ids && articlesList[a].ids.pii){
+				Meteor.call('doiRegisteredCheck', articlesList[a]._id,  articlesList[a].ids.pii, function(error,result){
+					if(error){
+						throw new Meteor.Error('doiRegisteredCheck' , pii, error);
+					}else if(result == 'Registered'){
+						updated++;
+						// console.log(result);
+					}
+					if(a == parseInt(articlesList.length -1)){
+						fut['return'](updated + ' DOIs Saved'); //return string in case 0 articles updated. will be false otherwise
+					}
+				});
+			}
+		}
+		return fut.wait();
+	},
 	batchProcessXml: function(){
 		console.log('..batchProcessXml');
 		var journalInfo = journalConfig.findOne();
@@ -512,7 +534,6 @@ Meteor.methods({
 			});
 		}
 		return fut.wait();
-
 	},
 	getMissingAssets: function(){
 		console.log('..getMissingAssets');

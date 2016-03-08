@@ -329,9 +329,21 @@ Template.AdminIssueForm.events({
 	}
 });
 
-// Article
+// Articles
 // ----------------
-Template.adminArticlesDashboard.events({
+Template.AdminArticlesDashboard.events({
+	'click #doi-register-check': function(e){
+		e.preventDefault();
+		///article/:journalname/:pii/doi_status
+		Meteor.call('batchDoiRegisteredCheck',function(error,result){
+			if(error){
+				console.error('ERROR: Batch DOI check',error);
+				Meteor.formActions.error();
+			}else if(result){
+				Meteor.formActions.successMessage(result);
+			}
+		});
+	},
 	'click #ojs-batch-update': function(e){
 		e.preventDefault();
 		// just for Oncotarget
@@ -340,6 +352,9 @@ Template.adminArticlesDashboard.events({
 		Meteor.call('batchUpdate');
 	}
 });
+
+// Article
+// ----------------
 Template.AdminArticleForm.events({
 	'click .anchor': function(e){
 		Meteor.general.scrollAnchor(e);

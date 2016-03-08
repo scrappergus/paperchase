@@ -382,7 +382,7 @@ if (Meteor.isClient) {
 
 	// Article
 	Router.route('/admin/articles',{
-		name: 'adminArticlesDashboard',
+		name: 'AdminArticlesDashboard',
 		layoutTemplate: 'Admin',
 		title: function() {
 			var pageTitle = 'Admin | Articles Dashboard';
@@ -393,6 +393,7 @@ if (Meteor.isClient) {
 		},
 		waitOn: function(){
 			return[
+				Meteor.subscribe('articles'),
 				Meteor.subscribe('feature'),
 				Meteor.subscribe('advance'),
 				Meteor.subscribe('sortedList','advance')

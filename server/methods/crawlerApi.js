@@ -245,5 +245,29 @@ Meteor.methods({
 			}
 		});
 		return fut.wait();
+	},
+	doiRegisteredCheck: function(mongoId, pii){
+		var fut = new future();
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		var requestUrl = journalConfig.findOne().api.crawler + '/article/' + journalShortName + '/' + pii + '/doi_status';
+
+		Meteor.http.get(requestUrl, function(error,result){
+			if(error){
+				throw new Meteor.Error('doiRegisteredCheck' , pii, error);
+			}else if(result){
+				if(result.data.registered == 'Registered'){
+					Meteor.call('updateArticle', mongoId, {'ids.doi' : result.data.doi}, function(error,result){
+						if(result){
+							fut['return']('Registered');
+						}else if(error){
+							fut['return'](error);
+						}
+					});
+				}else{
+					fut['return']('Not Registered');
+				}
+			}
+		});
+		return fut.wait();
 	}
 });

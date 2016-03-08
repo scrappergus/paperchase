@@ -151,7 +151,15 @@ Template.AdminDoiStatus.helpers({
 			]
 		}
 	}
-})
+});
+
+// Articles
+// ---------------
+Template.AdminArticlesDashboard.helpers({
+	MissingDoiCount : function(){
+		return articles.find({'ids.doi' : {$exists : false}}).fetch().length;
+	}
+});
 
 // Article
 // ---------------
