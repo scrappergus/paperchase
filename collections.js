@@ -429,6 +429,16 @@ if (Meteor.isServer) {
   Meteor.publish('currentIssue',function(){
     return issues.find({},{sort : {volume:-1,issue:-1}});
   });
+  Meteor.publish('articleIssue',function(articleMongoId){
+    // console.log('articleMongoId', articleMongoId);
+    var articleInfo = articles.findOne({_id : articleMongoId});
+    var issueId;
+    if(articleInfo.issue_id){
+      issueId = articleInfo.issue_id;
+    }
+    // console.log('articleInfo',articleInfo.issue_id);
+    return issues.find({_id : articleInfo.issue_id});
+  });
 
   // Articles
   // ---------

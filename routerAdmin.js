@@ -509,14 +509,21 @@ if (Meteor.isClient) {
 		},
 		waitOn: function(){
 			return[
-				Meteor.subscribe('articleInfo',this.params._id)
+				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('articleIssue',this.params._id)
 			]
 		},
 		data: function(){
 			if(this.ready()){
 				var article = articles.findOne();
 				if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-					Session.set('article',articles.findOne());
+					if(!article.volume && article.issue_id){
+						// for display purposes
+						var issueInfo = issues.findOne();
+						article.volume = issueInfo.volume;
+						article.issue = issueInfo.issue;
+					}
+					Session.set('article',article);
 				}
 			}
 		}

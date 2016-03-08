@@ -507,7 +507,7 @@ if (Meteor.isClient) {
 			Session.set('issue',null);
 			var pieces = Meteor.issue.urlPieces(this.params.vi);
 			// TODO: add redirect if no issue
-
+			// console.log('pieces',pieces);
 			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
 				if(error){
 					console.log('ERROR - getIssueAndAssets');
@@ -555,13 +555,21 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('articleIssue',this.params._id),
 				Meteor.subscribe('articleTypes')
 			]
 		},
 		data: function(){
 			if(this.ready()){
+				var article = Session.get('article-visitor');
+				if(!article.volume && article.issue_id){
+					// for display purposes
+					var issueInfo = issues.findOne();
+					article.volume = issueInfo.volume;
+					article.issue = issueInfo.issue;
+				}
 				return {
-					article: Session.get('article-visitor')
+					article: article
 				};
 			}
 		}
