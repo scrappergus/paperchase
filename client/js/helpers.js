@@ -42,6 +42,9 @@ if (Meteor.isClient) {
 			return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
 		}
 	});
+	Template.registerHelper('prettyDoi', function(doi) {
+		return doi.replace('http://dx.doi.org/','');
+	});
 	// Dates
 	// -----
 	Template.registerHelper('timestamp', function(date) {
