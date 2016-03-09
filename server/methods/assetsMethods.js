@@ -140,26 +140,27 @@ Meteor.methods({
 		}
 		var xmlAssetDoc = xmlCollection.findOne({'ids.mongo_id' : articleMongoId});
 		var xmlAssetDocId;
+
 		if(xmlAssetDoc){
 			xmlAssetDocId = xmlAssetDoc._id;
 		}
-		pdfCollection.update({_id : pdfAssetDocId}, {$set: {settings : pdfSettings}}, {upsert:true}, function(updateError,updateRes){
-			pdfQueried = true;
+
+		pdfCollection.update({_id : pdfAssetDocId}, {$set: {settings : pdfSettings}}, {upsert:false}, function(updateError,updateRes){
+			// pdfQueried = true;
 			if(updateError){
 				console.error('PDF settings updateError',updateError);
 				return;
-			}else if(updateRes){
-				xmlCollection.update({_id : xmlAssetDocId}, {$set: {settings : xmlSettings}}, {upsert:true}, function(updateError,updateRes){
-					xmlQueried = true;
-					if(updateError){
-						console.error('XML settings updateError',updateError);
-						return;
-					}else if(updateRes){
-						fut['return'](true);
-					}
-				});
 			}
+			xmlCollection.update({_id : xmlAssetDocId}, {$set: {settings : xmlSettings}}, {upsert:false}, function(updateError,updateRes){
+				xmlQueried = true;
+				if(updateError){
+					console.error('XML settings updateError',updateError);
+					return;
+				}
+				fut['return'](true);
+			});
 		});
+
 		return fut.wait();
 	},
 	renameArticleAsset: function(folder, originalFileName, articleMongoId){
