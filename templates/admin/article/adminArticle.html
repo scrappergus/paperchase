@@ -114,47 +114,6 @@
 	</div>
 	{{/if}}
 
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4">
-				<div class="card-content">
-					<h4>Files:</h4>
-					<div class="row">
-						<div class="col s12 m4">
-							{{#with assets}}
-							{{#if xml_url}}
-								<a class="btn" href="{{xml_url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
-							{{else}}
-							<h5>No XML</h5>
-							{{/if}}
-							{{/with}}
-						</div>
-						<div class="col s12 m4">
-							{{#with assets}}
-							{{#if pdf_url}}
-								<a class="btn" href="{{pdf_url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
-							{{else}}
-							<h5>No PDF</h5>
-							{{/if}}
-							{{/with}}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-5">
-				<div class="card-content">
-					<h4>PDF &amp; XML Uploader:</h4>
-					{{>s3Upload}}
-				</div>
-			</div>
-		</div>
-	</div>
-
 	{{#if countKeys history}}
 	<div class="row">
 		<div class="col s12">
@@ -179,6 +138,8 @@
 	</div>
 	{{/if}}
 	{{/with}}
+
+	{{>AdminArticleAssets article=article assets=assets}}
 </template>
 
 <template name="AdminAop">
@@ -188,4 +149,98 @@
 			{{> reactiveTable collection=articles settings=settings}}
 		</div>
 	</div>
+</template>
+
+<template name="AdminArticleAssets">
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-4">
+				<div class="card-content">
+					<form id="assets-form">
+					{{#with article}}
+					<input type="hidden" id="article-mongo-id" data-id="{{_id}}"/>
+					{{/with}}
+					<span class="card-title">Assets</span>
+					<div class="row">
+						<div class="col s12 m6">
+							<div class="card z-depth-0 blue-grey lighten-5">
+								<div class="card-content">
+									<div class="card-title">XML</div>
+									{{#with assets}}
+									{{#with xml}}
+									{{#if url}}
+										<div class="row">
+											<div class="col s12 m6">
+												<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
+											</div>
+											<div class="col s12 m6">
+												<input type="checkbox" id="display-xml" checked="{{checked settings.display}}"/>
+												<label for="display-xml">Display XML</label>
+											</div>
+										</div>
+									{{else}}
+									<h5>No XML</h5>
+									{{/if}}
+									{{/with}}
+									{{/with}}
+								</div>
+							</div>
+						</div>
+						<div class="col s12 m6">
+							<div class="card z-depth-0 blue-grey lighten-5">
+								<div class="card-content">
+									<div class="card-title">PDF</div>
+									{{#with assets}}
+									{{#with pdf}}
+									{{#if url}}
+										<div class="row">
+											<div class="col s12 m6">
+												<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
+											</div>
+											<div class="col s12 m6">
+												<input type="checkbox" id="display-pdf" checked="{{checked settings.display}}"/>
+												<label for="display-pdf">Display PDF</label>
+											</div>
+										</div>
+									{{else}}
+									<h5>No PDF</h5>
+									{{/if}}
+									{{/with}}
+									{{/with}}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s12 center-align">
+						{{>SaveBtn}}
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{#with article}}
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-4">
+				<div class="card-content">
+					<span class="card-title">Uploader</span>
+					<div class="row">
+						<div class="col s12 offset-m4 m4">
+							<div class="card z-depth-0 blue-grey lighten-5">
+								<div class="card-content">
+									<div class="card-title">XML &amp; PDF</div>
+									{{>s3Upload}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/with}}
 </template>

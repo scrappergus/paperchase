@@ -880,6 +880,33 @@ Template.s3Upload.events({
 		}
 	}
 });
+Template.AdminArticleAssets.events({
+	'submit form': function(e){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var articleMongoId = $('#article-mongo-id').attr('data-id');
+		var pdfSettings = {
+			display: false
+		};
+		var xmlSettings = {
+			display: false
+		};
+		if($('#display-xml').prop('checked')){
+			xmlSettings.display = true;
+		};
+		if($('#display-pdf').prop('checked')){
+			pdfSettings.display = true;
+		};
+		Meteor.call('updateAssetSettings',articleMongoId, pdfSettings, xmlSettings, function(error,result){
+			if(error){
+				Meteor.formActions.errorMessage();
+			}else if(result){
+				Meteor.formActions.successMessage('Asset settings updated');
+
+			}
+		});
+	}
+});
 
 // Indexers
 // ----------------

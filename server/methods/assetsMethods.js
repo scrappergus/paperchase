@@ -59,16 +59,16 @@ Meteor.methods({
 		// XML
 		var xmlAsset = xmlCollection.findOne({'ids.mongo_id' : mongoId});
 		if(xmlAsset && xmlAsset.file){
-			assets.xml_url = baseAssetsUrl + 'xml/' + xmlAsset.file;
-			// var xmlPathPieces = xmlAsset.filename.split('/');
-			// assets.xml_filename = xmlPathPieces[parseInt(xmlPathPieces.length - 1)];
+			assets.xml = xmlAsset;
+			assets.xml.url = baseAssetsUrl + 'xml/' + xmlAsset.file;
+			// assets.xml_settings = xmlAsset.settings;
 		}
 		// PDF
 		var pdfAsset = pdfCollection.findOne({'ids.mongo_id' : mongoId});
 		if(pdfAsset && pdfAsset.file){
-			assets.pdf_url = baseAssetsUrl + 'pdf/' +  pdfAsset.file;
-			// var pdfPathPieces = pdfAsset.filename.split('/');
-			// assets.pdf_filename = pdfPathPieces[parseInt(pdfPathPieces.length - 1)];
+			assets.pdf = pdfAsset;
+			assets.pdf.url = baseAssetsUrl + 'pdf/' +  pdfAsset.file;
+			// assets.pdf_settings = pdfAsset.settings;
 		}
 		// Figures
 		var figureAssets = figCollection.findOne({'ids.mongo_id' : mongoId});
@@ -125,6 +125,41 @@ Meteor.methods({
 				}
 			});
 		}
+		return fut.wait();
+	},
+	updateAssetSettings: function(articleMongoId, pdfSettings, xmlSettings){
+		// console.log('updateAssetSettings',articleMongoId);
+		// console.log('pdfSettings', pdfSettings);
+		// console.log('xmlSettings', xmlSettings);
+		// NOTE: update query is failing with nested ID. So query for asset mongo ID first.
+		var fut = new future();
+		var pdfAssetDoc = pdfCollection.findOne({'ids.mongo_id' : articleMongoId});
+		var pdfAssetDocId;
+		if(pdfAssetDoc){
+			pdfAssetDocId = pdfAssetDoc._id;
+		}
+		var xmlAssetDoc = xmlCollection.findOne({'ids.mongo_id' : articleMongoId});
+		var xmlAssetDocId;
+		if(xmlAssetDoc){
+			xmlAssetDocId = xmlAssetDoc._id;
+		}
+		pdfCollection.update({_id : pdfAssetDocId}, {$set: {settings : pdfSettings}}, {upsert:true}, function(updateError,updateRes){
+			pdfQueried = true;
+			if(updateError){
+				console.error('PDF settings updateError',updateError);
+				return;
+			}else if(updateRes){
+				xmlCollection.update({_id : xmlAssetDocId}, {$set: {settings : xmlSettings}}, {upsert:true}, function(updateError,updateRes){
+					xmlQueried = true;
+					if(updateError){
+						console.error('XML settings updateError',updateError);
+						return;
+					}else if(updateRes){
+						fut['return'](true);
+					}
+				});
+			}
+		});
 		return fut.wait();
 	},
 	renameArticleAsset: function(folder, originalFileName, articleMongoId){

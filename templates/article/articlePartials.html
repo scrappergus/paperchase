@@ -108,23 +108,38 @@
 <template name="ArticleButtons">
 	<span class="article-btns">
 		{{#if abstract}}<a class="blue-grey waves-effect waves-light btn {{isActiveRoute 'Article'}} {{#if isActiveRoute 'Article'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
-	    {{#if isSubscribed}}
-	    {{#if pdf_url}}
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pdf_url}}">PDF</a>
-	    {{/if}}
-	    {{#if  xml_url}}
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
-	    <a data-id="{{_id}}" class="blue-grey waves-effect waves-light btn {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
-	    {{/if}}
-	    {{else}}
-	    {{#if pdf_url}}
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
-	    {{/if}}
-	    {{#if xml_url}}
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
-	    <a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
-	    {{/if}}
-	    {{/if}}
+
+		{{#if isSubscribed}}
+
+		{{#if pdf.url}}
+		{{#if pdf.settings.display}}
+		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pdf.url}}">PDF</a>
+		{{/if}}
+		{{/if}}
+
+		{{#if xml.url}}
+		{{#if xml.settings.display}}
+		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
+		<a data-id="{{_id}}" class="blue-grey waves-effect waves-light btn {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+		{{/if}}
+		{{/if}}
+
+		{{else}}
+
+		{{#if pdf.url}}
+		{{#if pdf.settings.display}}
+		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
+		{{/if}}
+		{{/if}}
+
+		{{#if xml.url}}
+		{{#if xml.settings.display}}
+		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
+		{{/if}}
+		{{/if}}
+
+		{{/if}}
 	</span>
 </template>
 

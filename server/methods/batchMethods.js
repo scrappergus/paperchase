@@ -213,7 +213,7 @@ Meteor.methods({
 		// for(var i = 0 ; i <1; i++){
 			var articleMongoId = articlesList[i]._id;
 			var assetUrl = assetBaseUrl + articleMongoId + '.' + assetType;
-			console.log(i, articlesList[i]._id,assetUrl);
+			// console.log(i, articlesList[i]._id,assetUrl);
 			if(!pdfCollection.findOne({'ids.mongo_id' : articleMongoId}) || !xmlCollection.findOne({'ids.mongo_id' : articleMongoId}) ){
 				Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
 					if(result){
