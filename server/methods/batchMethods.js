@@ -214,31 +214,32 @@ Meteor.methods({
 			var articleMongoId = articlesList[i]._id;
 			var assetUrl = assetBaseUrl + articleMongoId + '.' + assetType;
 			console.log(i, articlesList[i]._id,assetUrl);
-			Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
-				if(result){
-					var assetData = {
-						'ids' : articlesList[i].ids
-					}
-					assetData.ids.mongo_id = articleMongoId;
-					// assetData[assetType + '_url'] = assetUrl;
-					assetData.file = articleMongoId + '.' + assetType;
-					// console.log(articleMongoId,assetData);
-					Meteor.call('updateAssetDoc',assetType, articleMongoId, assetData, function(updateError,updateResult){
-						if(updateError){
-							console.error(updateError);
-						}else if(updateResult){
-							console.log('updateResult',updateResult);
+			if(!pdfCollection.findOne({'ids.mongo_id' : articleMongoId}) || !xmlCollection.findOne({'ids.mongo_id' : articleMongoId}) ){
+				Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
+					if(result){
+						var assetData = {
+							'ids' : articlesList[i].ids
 						}
-					});
-				}else{
-					missingAssets.push(articleMongoId);
-				}
-			});
+						assetData.ids.mongo_id = articleMongoId;
+						// assetData[assetType + '_url'] = assetUrl;
+						assetData.file = articleMongoId + '.' + assetType;
+						// console.log(articleMongoId,assetData);
+						Meteor.call('updateAssetDoc',assetType, articleMongoId, assetData, function(updateError,updateResult){
+							if(updateError){
+								console.error(updateError);
+							}else if(updateResult){
+								console.log('updateResult',updateResult);
+							}
+						});
+					}else{
+						missingAssets.push(articleMongoId);
+					}
+				});
+			}
 			if(i == parseInt(articlesList.length - 1)){
 				// console.log('missingAssets',missingAssets);
 				fut['return'](missingAssets);
 			}
-
 		}
 		return fut.wait();
 	},
