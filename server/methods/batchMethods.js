@@ -220,7 +220,8 @@ Meteor.methods({
 						'ids' : articlesList[i].ids
 					}
 					assetData.ids.mongo_id = articleMongoId;
-					assetData[assetType + '_url'] = assetUrl;
+					// assetData[assetType + '_url'] = assetUrl;
+					assetData.file = articleMongoId + '.' + assetType;
 					// console.log(articleMongoId,assetData);
 					Meteor.call('updateAssetDoc',assetType, articleMongoId, assetData, function(updateError,updateResult){
 						if(updateError){
@@ -258,7 +259,7 @@ Meteor.methods({
 			// if(articlesList[i].ids.pii && articlesList[i].ids.pii == '10.1177_1947601913501075'){
 			var articleMongoId = articlesList[i]._id;
 			var assetUrl = assetBaseUrl + articleMongoId + '.xml';
-			console.log(i, articlesList[i]._id, assetUrl);
+			// console.log(i, articlesList[i]._id, assetUrl);
 			Meteor.call('fullTextXmlReal',assetUrl,function(error,result){
 				csvString += articlesList[i]._id + ',';
 				if(articlesList[i].ids.pii){

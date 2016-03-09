@@ -801,6 +801,7 @@ Template.s3Upload.events({
 		var file = files[0];
 		var fileNameId = file.name.replace('.xml','').replace('.pdf','');
 		var journalShortName = journalConfig.findOne().journal.short_name;
+		var journalBucket = 'paperchase-' + journalShortName;
 		// console.log('file',file);
 		// Uploader only allows 1 file at a time.
 		// Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
@@ -808,11 +809,11 @@ Template.s3Upload.events({
 			if(file['type'] == 'text/xml' || file['type'] == 'application/pdf'){
 				s3Folder = file['type'].replace('text/','').replace('application/','');
 				articleIds = articles.findOne({_id : articleMongoId}).ids;
-				if(articleMongoId != fileNameId){
-					Meteor.formActions.errorMessage('Filename must be article Mongo ID. Please rename file to upload.<br><b>Article Mongo ID = '+articleMongoId + '</b><br>!=<br><b>Filename = ' + fileNameId + '</b>');
-				}else{
+				// if(articleMongoId != fileNameId){
+				// 	Meteor.formActions.errorMessage('Filename must be article Mongo ID. Please rename file to upload.<br><b>Article Mongo ID = '+articleMongoId + '</b><br>!=<br><b>Filename = ' + fileNameId + '</b>');
+				// }else{
 					S3.upload({
-						Bucket: 'paperchase-' + journalShortName,
+						Bucket: journalBucket,
 						files: files,
 						path: s3Folder,
 						unique_name: false
@@ -821,37 +822,56 @@ Template.s3Upload.events({
 							console.error('Upload File Error', err);
 							Meteor.formActions.errorMessage('File not uploaded');
 						}else if(res){
-							secureUrl = res.secure_url;
-							var assetObj = {
-								relative_url : res.relative_url,
-								filename : res.file.name
-							}
+							// secureUrl = res.secure_url;
+							// console.log('res.file.name',res.file.name);
+							// TODO: only rename if filename not MongoID
+							Meteor.call('renameArticleAsset', s3Folder, res.file.name, articleMongoId, function(error,newFileName){
+								if(error){
 
-							assetObj[s3Folder + '_url'] = res.secure_url;
-
-							assetObj.ids = articleIds;
-							assetObj.ids.mongo_id = articleMongoId;
-
-							Meteor.call('updateAssetDoc', s3Folder, articleMongoId, assetObj, function(error,result){
-								if(result){
-									// clear files
-									S3.collection.remove({});
-
-									// update template data
-									Meteor.call('articleAssests', articleMongoId, function(error, result) {
+								}else if(newFileName){
+									var articleInfo = articles.findOne({_id : articleMongoId});
+									var assetObj = {
+										file: newFileName,
+										ids: {}
+									};
+									if(articleInfo.ids){
+										assetObj.ids = articleInfo.ids;
+									}
+									assetObj.ids.mongo_id = articleInfo._id;
+									Meteor.call('updateAssetDoc', s3Folder, articleMongoId, assetObj, function(error,result){
 										if(result){
-											// console.log('articleAssests',result);
-											Session.set('article-assets',result);
+											// clear files
+											S3.collection.remove({});
+
+											// update template data
+											Meteor.call('articleAssests', articleMongoId, function(error, result) {
+												if(result){
+													// console.log('articleAssests',result);
+													Session.set('article-assets',result);
+												}
+											});
+
+											// notify user
+											Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName);
+
+											// delete uploaded file, if not equal to MongoID
+											if(articleMongoId != fileNameId){
+												S3.delete(s3Folder + '/' + file.name,function(error,result){
+													if(error){
+														console.error('Could not delete original file: ' + file.name);
+													}
+													// if(result){
+														// console.log('Deleted original file: ' + file.name);
+													// }
+												});
+											}
 										}
 									});
-
-									// notify user
-									Meteor.formActions.successMessage(result);
 								}
 							});
 						}
 					});
-				}
+				// }
 			}else{
 				Meteor.formActions.errorMessage('Uploader is only for PDF or XML');
 			}

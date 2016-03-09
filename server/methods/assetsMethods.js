@@ -54,20 +54,21 @@ Meteor.methods({
 	articleAssests: function(mongoId){
 		// console.log('... articleAssests: Mongo ID ', mongoId);
 		var article = articles.findOne({_id : mongoId});
+		var baseAssetsUrl = journalConfig.findOne().assets;
 		var assets = {};
 		// XML
 		var xmlAsset = xmlCollection.findOne({'ids.mongo_id' : mongoId});
-		if(xmlAsset && xmlAsset.xml_url){
-			assets.xml_url = xmlAsset.xml_url;
-			var xmlPathPieces = xmlAsset.xml_url.split('/');
-			assets.xml_filename = xmlPathPieces[parseInt(xmlPathPieces.length - 1)];
+		if(xmlAsset && xmlAsset.file){
+			assets.xml_url = baseAssetsUrl + 'xml/' + xmlAsset.file;
+			// var xmlPathPieces = xmlAsset.filename.split('/');
+			// assets.xml_filename = xmlPathPieces[parseInt(xmlPathPieces.length - 1)];
 		}
 		// PDF
 		var pdfAsset = pdfCollection.findOne({'ids.mongo_id' : mongoId});
-		if(pdfAsset && pdfAsset.pdf_url){
-			assets.pdf_url = pdfAsset.pdf_url;
-			var pdfPathPieces = pdfAsset.pdf_url.split('/');
-			assets.pdf_filename = pdfPathPieces[parseInt(pdfPathPieces.length - 1)];
+		if(pdfAsset && pdfAsset.file){
+			assets.pdf_url = baseAssetsUrl + 'pdf/' +  pdfAsset.file;
+			// var pdfPathPieces = pdfAsset.filename.split('/');
+			// assets.pdf_filename = pdfPathPieces[parseInt(pdfPathPieces.length - 1)];
 		}
 		// Figures
 		var figureAssets = figCollection.findOne({'ids.mongo_id' : mongoId});
@@ -91,7 +92,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	updateAssetDoc: function(assetType, articleMongoId, assetData){
-		// console.log('..updateAssetDoc',assetType, articleMongoId, assetData);
+		console.log('..updateAssetDoc',assetType, articleMongoId, assetData);
 		// NOTE: update query is failing with nested ID. So query for asset mongo ID first.
 
 		var fut = new future();
@@ -106,7 +107,7 @@ Meteor.methods({
 					console.error('updateError',updateError);
 					return;
 				}else if(updateRes){
-					fut['return']('PDF Uploaded');
+					fut['return']('PDF');
 				}
 			});
 		}else if(assetType == 'xml'){
@@ -120,10 +121,28 @@ Meteor.methods({
 					console.error('updateError',updateError);
 					return;
 				}else if(updateRes){
-					fut['return']('XML Uploaded');
+					fut['return']('XML');
 				}
 			});
 		}
+		return fut.wait();
+	},
+	renameArticleAsset: function(folder, originalFileName, articleMongoId){
+		// console.log('renameArticleAsset')
+		var fut = new future();
+		var newFileName = articleMongoId + '.' + folder;
+		var source = folder + '/' + originalFileName;
+		var dest = folder + '/' + newFileName;
+		S3.knox.copyFile(source, dest, function(err, res){
+			if(err){
+				console.error('renameArticleAsset',err);
+				// fut['throw'](err);
+			}else if(res){
+				// console.log(res.statusCode);
+				// return newFileName;
+				fut['return'](newFileName);
+			}
+		});
 		return fut.wait();
 	}
 });
