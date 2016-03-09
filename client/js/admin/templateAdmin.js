@@ -50,15 +50,6 @@ Template.AdminArticleFormAffiliations.onRendered(function() {
 	Meteor.adminArticle.initiateAffiliationsSortable();
 });
 
-// XML Upload
-// ----------
-Template.AdminArticleXmlUpload.onRendered(function () {
-	Session.set('fileNameXML','');
-    Session.set('article',null);
-    Session.set('xml-uploaded',false);
-});
-
-
 // Volume
 // ------
 Template.AdminVolumeIssue.onRendered(function () {

@@ -166,6 +166,10 @@ Template.AdminArticlesDashboard.helpers({
 Template.AdminArticleOverview.helpers({
 	article : function(){
 		return Session.get('article');
+	},
+	assets: function(){
+		// console.log(Session.get('article-assets'));
+		return Session.get('article-assets');
 	}
 });
 Template.AdminArticle.helpers({
@@ -296,18 +300,6 @@ Template.AdminAop.helpers({
 				}
 			]
 		}
-	}
-});
-
-// Upload
-// XML
-// ---------------
-Template.AdminArticleXmlUpload.helpers({
-	uploaded: function(){
-		return Session.get('xml-uploaded');
-	},
-	articleProcessed: function(){
-		return Session.get('article');
 	}
 });
 

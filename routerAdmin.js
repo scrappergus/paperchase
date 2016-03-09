@@ -92,7 +92,6 @@ if (Meteor.isClient) {
 	// Variables
 	// ----------
 	Session.setDefault('article',null);	// Article Form
-	Session.setDefault('xml-uploaded',false);// After uploading XML
 
 	// For Authors
 	Session.setDefault('showForm',false);
@@ -121,6 +120,8 @@ if (Meteor.isClient) {
 	Session.setDefault('errorMessage',null);
 	Session.setDefault('statusModalAction',null);
 	Session.setDefault('statusModalDetails',null);
+	// Article
+	Session.setDefault('article-assets',null);
 
 
 	Router.route('/admin', {
@@ -368,17 +369,17 @@ if (Meteor.isClient) {
 
 	// Intake
 	// xml uploading
-	Router.route('/admin/upload/xml',{
-		name: 'AdminArticleXmlUpload',
-		layoutTemplate: 'Admin',
-		title: function() {
-			var pageTitle = 'Admin | XML Upload ';
-			if(Session.get('journal')){
-				pageTitle += ': ' + Session.get('journal').journal.name;
-			}
-			return pageTitle;
-		},
-	});
+	// Router.route('/admin/upload/xml',{
+	// 	name: 'AdminArticleXmlUpload',
+	// 	layoutTemplate: 'Admin',
+	// 	title: function() {
+	// 		var pageTitle = 'Admin | XML Upload ';
+	// 		if(Session.get('journal')){
+	// 			pageTitle += ': ' + Session.get('journal').journal.name;
+	// 		}
+	// 		return pageTitle;
+	// 	},
+	// });
 
 	// Article
 	Router.route('/admin/articles',{
@@ -504,6 +505,13 @@ if (Meteor.isClient) {
 				}else{
 					Router.go('AdminArticleAdd');
 				}
+			}else{
+				Meteor.call('articleAssests', this.params._id, function(error, result) {
+					if(result){
+						// console.log('articleAssests',result);
+						Session.set('article-assets',result);
+					}
+				});
 			}
 			this.next();
 		},

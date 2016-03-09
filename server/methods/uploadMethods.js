@@ -13,20 +13,6 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	paperchaseIdFromXmlFileNameCheck: function(filename){
-		var article;
-		// console.log('...paperchaseIdFromXmlFileNameCheck : ' + filename);
-		// Versioning is based on file name, which is based on PII. Make sure filename is PII.xml
-		var paperchaseId = filename.replace('.xml','');
-		article = articles.findOne({'ids.paperchase_id' : paperchaseId});
-		if(article){
-			// console.log('article = ' + article._id);
-			return article._id;
-		}else{
-			// console.log('NO PII');
-			throw new Meteor.Error(500, 'Error 500: Not found', 'PII is not found in the database');
-		}
-	},
 	parseXmlAfterUpload: function(url){
 		// console.log('..parseXmlAfterUpload : ' + url);
 		var fut = new future();

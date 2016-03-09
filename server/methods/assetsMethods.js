@@ -59,11 +59,15 @@ Meteor.methods({
 		var xmlAsset = xmlCollection.findOne({'ids.mongo_id' : mongoId});
 		if(xmlAsset && xmlAsset.xml_url){
 			assets.xml_url = xmlAsset.xml_url;
+			var xmlPathPieces = xmlAsset.xml_url.split('/');
+			assets.xml_filename = xmlPathPieces[parseInt(xmlPathPieces.length - 1)];
 		}
 		// PDF
 		var pdfAsset = pdfCollection.findOne({'ids.mongo_id' : mongoId});
 		if(pdfAsset && pdfAsset.pdf_url){
 			assets.pdf_url = pdfAsset.pdf_url;
+			var pdfPathPieces = pdfAsset.pdf_url.split('/');
+			assets.pdf_filename = pdfPathPieces[parseInt(pdfPathPieces.length - 1)];
 		}
 		// Figures
 		var figureAssets = figCollection.findOne({'ids.mongo_id' : mongoId});
@@ -88,39 +92,38 @@ Meteor.methods({
 	},
 	updateAssetDoc: function(assetType, articleMongoId, assetData){
 		// console.log('..updateAssetDoc',assetType, articleMongoId, assetData);
-		// var collection = global[assetType];
-		// if (collection instanceof Meteor.Collection) {
-		// 	console.log('..updateAssetDoc: ', assetType, paperchaseId );
-		// 	collection.update({'ids.paperchase_id' : paperchaseId},assetData, {upsert:true}, function(updateError,updateRes){
-		// 		if(updateError){
-		// 			console.error('updateError',updateError);
-		// 			return;
-		// 		}else if(updateRes){
-		// 			return updateRes;
-		// 		}
-		// 	});
-		// }else{
-		// 	console.log('not a collection');
-		// }
-		//TODO: Get above to work, using variable name as collection
+		// NOTE: update query is failing with nested ID. So query for asset mongo ID first.
+
+		var fut = new future();
 		if(assetType == 'pdf'){
-			pdfCollection.update({'ids.mongo_id' : articleMongoId},assetData, {upsert:true}, function(updateError,updateRes){
+			var assetDoc = pdfCollection.findOne({'ids.mongo_id' : articleMongoId});
+			var assetDocId;
+			if(assetDoc){
+				assetDocId = assetDoc._id;
+			}
+			pdfCollection.update({_id : assetDocId},assetData, {upsert:true}, function(updateError,updateRes){
 				if(updateError){
 					console.error('updateError',updateError);
 					return;
 				}else if(updateRes){
-					return updateRes;
+					fut['return']('PDF Uploaded');
 				}
 			});
 		}else if(assetType == 'xml'){
-			xmlCollection.update({'ids.mongo_id' : articleMongoId},assetData, {upsert:true}, function(updateError,updateRes){
+			var assetDoc = xmlCollection.findOne({'ids.mongo_id' : articleMongoId});
+			var assetDocId;
+			if(assetDoc){
+				assetDocId = assetDoc._id;
+			}
+			xmlCollection.update({_id : assetDocId},assetData, {upsert:true}, function(updateError,updateRes){
 				if(updateError){
 					console.error('updateError',updateError);
 					return;
 				}else if(updateRes){
-					return updateRes;
+					fut['return']('XML Uploaded');
 				}
 			});
 		}
+		return fut.wait();
 	}
 });

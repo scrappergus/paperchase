@@ -786,42 +786,78 @@ Template.AdminArticleForm.events({
 		}
 	}
 });
-Template.AdminArticleXmlUpload.events({
-	'click .update-article': function(e,t){
+
+// Article Assets
+// ----------------
+Template.s3Upload.events({
+	'click button.upload': function(e){
 		e.preventDefault();
-		var articleData = t.data['article'];
+		Meteor.formActions.saving();
+		var xmlUrl,
+			s3Folder,
+			articleIds;
+		var articleMongoId = $(e.target).closest('button').attr('data-id');
+		var files = $('input.file_bag')[0].files;
+		var file = files[0];
+		var fileNameId = file.name.replace('.xml','').replace('.pdf','');
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		// console.log('file',file);
+		// Uploader only allows 1 file at a time.
+		// Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
+		if(file){
+			if(file['type'] == 'text/xml' || file['type'] == 'application/pdf'){
+				s3Folder = file['type'].replace('text/','').replace('application/','');
+				articleIds = articles.findOne({_id : articleMongoId}).ids;
+				if(articleMongoId != fileNameId){
+					Meteor.formActions.errorMessage('Filename must be article Mongo ID. Please rename file to upload.<br><b>Article Mongo ID = '+articleMongoId + '</b><br>!=<br><b>Filename = ' + fileNameId + '</b>');
+				}else{
+					S3.upload({
+						Bucket: 'paperchase-' + journalShortName,
+						files: files,
+						path: s3Folder,
+						unique_name: false
+					},function(err,res){
+						if(err){
+							console.error('Upload File Error', err);
+							Meteor.formActions.errorMessage('File not uploaded');
+						}else if(res){
+							secureUrl = res.secure_url;
+							var assetObj = {
+								relative_url : res.relative_url,
+								filename : res.file.name
+							}
 
-		//add who UPDATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['last_update_date'] = new Date();
-		articleData['doc_updates']['last_update_by'] = Meteor.userId();
+							assetObj[s3Folder + '_url'] = res.secure_url;
 
-		var mongoId = $(e.target).attr('data-mongoid');
-		Meteor.call('updateArticle',mongoId,articleData, function(error,res){
-			if(error){
-				alert('ERROR: '+error.message);
+							assetObj.ids = articleIds;
+							assetObj.ids.mongo_id = articleMongoId;
+
+							Meteor.call('updateAssetDoc', s3Folder, articleMongoId, assetObj, function(error,result){
+								if(result){
+									// clear files
+									S3.collection.remove({});
+
+									// update template data
+									Meteor.call('articleAssests', articleMongoId, function(error, result) {
+										if(result){
+											// console.log('articleAssests',result);
+											Session.set('article-assets',result);
+										}
+									});
+
+									// notify user
+									Meteor.formActions.successMessage(result);
+								}
+							});
+						}
+					});
+				}
 			}else{
-				Router.go('adminArticle', {_id:mongoId});
+				Meteor.formActions.errorMessage('Uploader is only for PDF or XML');
 			}
-		});
-	},
-	'click .add-article': function(e,t){
-		e.preventDefault();
-
-		var articleData = t.data['article'];
-
-		//add who CREATED this article doc
-		articleData['doc_updates'] = {};
-		articleData['doc_updates']['created_date'] = new Date();
-		articleData['doc_updates']['created_by'] = Meteor.userId();
-
-		Meteor.call('addArticle', articleData, function(error,_id){
-			if(error){
-				alert('ERROR: ' + error.message);
-			}else{
-				Router.go('adminArticle', {_id:_id});
-			}
-		});
+		}else{
+			Meteor.formActions.errorMessage('Please select a PDF or XML file to upload.');
+		}
 	}
 });
 
@@ -1385,75 +1421,6 @@ Template.AdminCrawl.events({
 				Meteor.formActions.success();
 			}
 		});
-	}
-});
-
-// S3
-// -------------
-Template.s3Upload.events({
-	'click button.upload': function(){
-		Meteor.formActions.saving();
-		var xmlUrl;
-		var files = $('input.file_bag')[0].files;
-		var file = files[0];
-		var journalShortName = journalConfig.findOne().journal.short_name;
-		// Uploader only allows 1 file at a time.
-		// TODO: versioning is based on file name, which is based on PII. Make sure filename is PII.xml
-		if(file && file['type'] == 'text/xml'){
-			Meteor.call('paperchaseIdFromXmlFileNameCheck',file['name'],function(error, mongoId){
-				if(error){
-					console.error(error);
-					// Paperchase ID not in DB
-					// TODO: add control for adding article to DB
-					Meteor.formActions.errorMessage(error.details);
-				}
-				if(mongoId){
-					// Paperchase ID exists in DB. Upload XML to S3.
-					S3.upload({
-						Bucket: 'paperchase-' + journalShortName,
-						files: files,
-						path: 'xml',
-						unique_name: false
-					},function(err,res){
-						if(err){
-							console.error(err);
-							Meteor.formActions.errorMessage('XML not uploaded');
-						}
-						if(res){
-							Meteor.formActions.successMessage('XML Uploaded');
-							xmlUrl = res.secure_url;
-							Session.set('xml-uploaded',true);
-
-							// Post uploading. Parse XML from S3 then preprocess for form
-							// Now making user verify information before updating DB
-							Meteor.call('parseXmlAfterUpload',xmlUrl, function(e,parsedArticle){
-								if(e){
-									console.error('XML not parsed from server = ' + xmlUrl);
-									console.error(e);
-									Meteor.formActions.errorMessage('<b>XML not parsed from server</b> <br/>' + e.error + '<br/>' + xmlUrl);
-								}else if(parsedArticle){
-									// console.log('parsedArticle=',parsedArticle);
-									Meteor.call('preProcessArticle',mongoId,parsedArticle,function(ee,processedArticle){
-										if(ee){
-											console.error('Could not process article data for form. Mongo ID = ' + mongoId);
-											console.error(ee);
-											Meteor.formActions.errorMessage('<b>Could not process article data for form<b> <br/>' + xmlUrl);
-										}else if(processedArticle){
-											// console.log('processedArticle',processedArticle);
-											Session.set('article',processedArticle);
-										}
-									});
-								}else{
-									console.error('Could not process article data for form. Mongo ID = ' + mongoId);
-								}
-							});
-						}
-					});
-				}
-			});
-		}else{
-			Meteor.formActions.errorMessage('XML required');
-		}
 	}
 });
 

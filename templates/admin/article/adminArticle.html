@@ -71,6 +71,7 @@
 </template>
 
 <template name="AdminArticleOverview">
+	{{>StatusModal}}
 	{{#with article}}
 	<div class="row">
 		<div class="col s12">
@@ -97,6 +98,7 @@
 		</div>
 	</div>
 	{{/if}}
+
 	{{#if countKeys dates}}
 	<div class="row">
 		<div class="col s12">
@@ -111,6 +113,48 @@
 		</div>
 	</div>
 	{{/if}}
+
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-4">
+				<div class="card-content">
+					<h4>Files:</h4>
+					<div class="row">
+						<div class="col s12 m4">
+							{{#with assets}}
+							{{#if xml_url}}
+								<a class="btn" href="{{xml_url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
+							{{else}}
+							<h5>No XML</h5>
+							{{/if}}
+							{{/with}}
+						</div>
+						<div class="col s12 m4">
+							{{#with assets}}
+							{{#if pdf_url}}
+								<a class="btn" href="{{pdf_url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
+							{{else}}
+							<h5>No PDF</h5>
+							{{/if}}
+							{{/with}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-5">
+				<div class="card-content">
+					<h4>PDF &amp; XML Uploader:</h4>
+					{{>s3Upload}}
+				</div>
+			</div>
+		</div>
+	</div>
+
 	{{#if countKeys history}}
 	<div class="row">
 		<div class="col s12">
@@ -121,6 +165,7 @@
 		</div>
 	</div>
 	{{/if}}
+
 	{{#if keywords}}
 	<div class="row">
 		<div class="col s12">
