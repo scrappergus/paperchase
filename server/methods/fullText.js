@@ -13,12 +13,11 @@ Meteor.methods({
 			Meteor.call('articleAssests',mongoId, function(assetsError, assets){
 				if(assetsError){
 					console.error('assetsError',assetsError);
-				}else if(assets && assets.xml_url){
-					// console.log('XML URL',assets.xml_url);
+				}else if(assets && assets.xml.url){
 					if(assets.figures){
 						figures = assets.figures;
 					}
-					Meteor.http.get(assets.xml_url,function(getXmlError, xmlRes){
+					Meteor.http.get(assets.xml.url,function(getXmlError, xmlRes){
 						if(getXmlError){
 							console.error('getXmlError',getXmlError);
 							fut['throw'](getXmlError);
