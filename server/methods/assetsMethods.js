@@ -73,6 +73,10 @@ Meteor.methods({
 		// Figures
 		var figureAssets = figCollection.findOne({'ids.mongo_id' : mongoId});
 		if(figureAssets && figureAssets.figures.length > 0){
+			var figs = figureAssets.figures;
+			figs.forEach(function(fig){
+				fig.url = baseAssetsUrl + 'paper_figures/' + fig.file;
+			});
 			assets.figures = figureAssets.figures;
 		}
 		// console.log(assets);
@@ -92,15 +96,19 @@ Meteor.methods({
 		return fut.wait();
 	},
 	updateAssetDoc: function(assetType, articleMongoId, assetData){
-		console.log('..updateAssetDoc',assetType, articleMongoId, assetData);
+		// console.log('..updateAssetDoc',assetType, articleMongoId, assetData);
 		// NOTE: update query is failing with nested ID. So query for asset mongo ID first.
 
 		var fut = new future();
 		if(assetType == 'pdf'){
 			var assetDoc = pdfCollection.findOne({'ids.mongo_id' : articleMongoId});
+			var assetSettings = assetDoc.settings;
 			var assetDocId;
 			if(assetDoc){
 				assetDocId = assetDoc._id;
+			}
+			if(!assetData.settings){
+				assetData.settings = assetSettings; //maintain saved settings
 			}
 			pdfCollection.update({_id : assetDocId},assetData, {upsert:true}, function(updateError,updateRes){
 				if(updateError){
@@ -112,9 +120,13 @@ Meteor.methods({
 			});
 		}else if(assetType == 'xml'){
 			var assetDoc = xmlCollection.findOne({'ids.mongo_id' : articleMongoId});
+			var assetSettings = assetDoc.settings;
 			var assetDocId;
 			if(assetDoc){
 				assetDocId = assetDoc._id;
+			}
+			if(!assetData.settings){
+				assetData.settings = assetSettings; //maintain saved settings
 			}
 			xmlCollection.update({_id : assetDocId},assetData, {upsert:true}, function(updateError,updateRes){
 				if(updateError){
