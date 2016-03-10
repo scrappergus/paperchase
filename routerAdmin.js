@@ -122,6 +122,7 @@ if (Meteor.isClient) {
 	Session.setDefault('statusModalDetails',null);
 	// Article
 	Session.setDefault('article-assets',null);
+	// Session.setDefault('figureEditing',null);
 
 
 	Router.route('/admin', {
@@ -485,6 +486,118 @@ if (Meteor.isClient) {
 		layoutTemplate: 'Admin',
 		title: function() {
 			var pageTitle = 'Admin | Article ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		onBeforeAction: function(){
+			// console.log('before!',Session.get('article'));
+			Session.set('article',null);
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				// if the mongo id search found nothing, search by pii
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
+			}else{
+				Meteor.call('articleAssests', this.params._id, function(error, result) {
+					if(result){
+						// console.log('articleAssests',result);
+						Session.set('article-assets',result);
+					}
+				});
+			}
+			this.next();
+		},
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('articleIssue',this.params._id)
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var article = articles.findOne();
+				if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
+					if(!article.volume && article.issue_id){
+						// for display purposes
+						var issueInfo = issues.findOne();
+						article.volume = issueInfo.volume;
+						article.issue = issueInfo.issue;
+					}
+					Session.set('article',article);
+				}
+			}
+		}
+	});
+	Router.route('/admin/article/:_id/figures',{
+		name: 'AdminArticleFigures',
+		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Article Figures ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		onBeforeAction: function(){
+			// console.log('before!',Session.get('article'));
+			Session.set('article',null);
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				// if the mongo id search found nothing, search by pii
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
+			}else{
+				Meteor.call('articleAssests', this.params._id, function(error, result) {
+					if(result){
+						// console.log('articleAssests',result);
+						Session.set('article-assets',result);
+					}
+				});
+			}
+			this.next();
+		},
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('articleIssue',this.params._id)
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var article = articles.findOne();
+				if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
+					if(!article.volume && article.issue_id){
+						// for display purposes
+						var issueInfo = issues.findOne();
+						article.volume = issueInfo.volume;
+						article.issue = issueInfo.issue;
+					}
+					Session.set('article',article);
+				}
+			}
+		}
+	});
+	Router.route('/admin/article/:_id/assets',{
+		name: 'AdminArticleAssets',
+		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Article PDF and XML ';
 			if(Session.get('journal')){
 				pageTitle += ': ' + Session.get('journal').journal.name;
 			}

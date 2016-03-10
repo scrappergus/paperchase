@@ -33,6 +33,10 @@ Template.AdminArticle.onRendered(function () {
 		}, 500);
 	}
 });
+Template.AdminArticleAssets.onRendered(function () {
+	$('.materialboxed').materialbox();
+});
+
 // Article Form
 Template.AdminArticleForm.onRendered(function () {
 	Meteor.adminArticle.readyArticleForm();

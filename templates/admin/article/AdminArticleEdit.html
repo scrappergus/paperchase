@@ -1,5 +1,5 @@
 <template name="AdminArticle">
-	{{>AdminHeader header="Article"}}
+	{{>AdminHeader header="Article Edit"}}
 	<div class="row">
 		<div class="col s12">
 			{{#if articleProcessed}}
@@ -29,6 +29,8 @@
 
 <template name="AdminArticleForm">
 	{{#with article}}
+
+	{{>AdminArticleHeader}}
 	{{>StatusModal}}
 	{{#if conflicts}}
 		<div class="row error-box z-depth-1">

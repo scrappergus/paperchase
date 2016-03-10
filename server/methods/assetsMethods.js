@@ -79,6 +79,7 @@ Meteor.methods({
 			});
 			assets.figures = figureAssets.figures;
 		}
+		assets.article_mongo_id = mongoId;
 		// console.log(assets);
 		return assets;
 	},
@@ -192,5 +193,39 @@ Meteor.methods({
 			}
 		});
 		return fut.wait();
+	},
+	renameArticleFigure: function(originalFileName, figureId, articleMongoId){
+		// console.log('renameArticleFigure',originalFileName, figureId, articleMongoId)
+		var fut = new future();
+		var originalFilePieces = originalFileName.split('.');
+		var fileType = originalFilePieces[parseInt(originalFilePieces.length - 1)];
+		// todo fig. 1b handing, letter in id
+		var newFileName = articleMongoId + '_' + figureId + '.' + fileType;
+		var source = 'paper_figures/' + originalFileName;
+		var dest = 'paper_figures/' + newFileName;
+		// console.log('source',source);
+		// console.log('dest',dest);
+		S3.knox.copyFile(source, dest, function(err, res){
+			if(err){
+				console.error('renameArticleAsset',err);
+				// fut['throw'](err);
+			}else if(res){
+				// console.log('status',res.statusCode);
+				// return newFileName;
+				fut['return'](newFileName);
+			}
+		});
+		return fut.wait();
+	},
+	updateFiguresDoc: function(articleMongoId, articleFigures){
+		var figMongoId;
+		var articleInfo = articles.findOne({_id: articleMongoId}); //keep fig doc up to date with article doc, or if new fig then include
+		var articleIds = articleInfo.ids;
+		articleIds.mongo_id = articleInfo._id;
+		var figInfo = figCollection.findOne({'ids.mongo_id' : articleMongoId});
+		if(figInfo){
+			figMongoId = figInfo._id;
+		}
+		return figCollection.update({_id : figMongoId},{$set: {figures: articleFigures, ids: articleIds}}, {upsert:true});
 	}
 });

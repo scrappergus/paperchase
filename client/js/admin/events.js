@@ -797,81 +797,70 @@ Template.s3Upload.events({
 			s3Folder,
 			articleIds;
 		var articleMongoId = $(e.target).closest('button').attr('data-id');
+
 		var files = $('input.file_bag')[0].files;
 		var file = files[0];
 		var fileNameId = file.name.replace('.xml','').replace('.pdf','');
-		var journalShortName = journalConfig.findOne().journal.short_name;
-		var journalBucket = 'paperchase-' + journalShortName;
-		// console.log('file',file);
+
 		// Uploader only allows 1 file at a time.
 		// Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
 		if(file){
 			if(file['type'] == 'text/xml' || file['type'] == 'application/pdf'){
 				s3Folder = file['type'].replace('text/','').replace('application/','');
-				articleIds = articles.findOne({_id : articleMongoId}).ids;
-				// if(articleMongoId != fileNameId){
-				// 	Meteor.formActions.errorMessage('Filename must be article Mongo ID. Please rename file to upload.<br><b>Article Mongo ID = '+articleMongoId + '</b><br>!=<br><b>Filename = ' + fileNameId + '</b>');
-				// }else{
-					S3.upload({
-						Bucket: journalBucket,
-						files: files,
-						path: s3Folder,
-						unique_name: false
-					},function(err,res){
-						if(err){
-							console.error('Upload File Error', err);
-							Meteor.formActions.errorMessage('File not uploaded');
-						}else if(res){
-							// secureUrl = res.secure_url;
-							// console.log('res.file.name',res.file.name);
-							// TODO: only rename if filename not MongoID
-							Meteor.call('renameArticleAsset', s3Folder, res.file.name, articleMongoId, function(error,newFileName){
-								if(error){
+				Meteor.s3.upload(files,s3Folder,function(error,res){
+					if(error){
+						console.error('Upload File Error', error);
+						Meteor.formActions.errorMessage('File not uploaded');
+					}else if(res){
+						// TODO: only rename if filename not MongoID
+						Meteor.call('renameArticleAsset', s3Folder, res.file.name, articleMongoId, function(error,newFileName){
+							if(error){
 
-								}else if(newFileName){
-									var articleInfo = articles.findOne({_id : articleMongoId});
-									var assetObj = {
-										file: newFileName,
-										ids: {}
-									};
-									if(articleInfo.ids){
-										assetObj.ids = articleInfo.ids;
-									}
-									assetObj.ids.mongo_id = articleInfo._id;
-									Meteor.call('updateAssetDoc', s3Folder, articleMongoId, assetObj, function(error,result){
-										if(result){
-											// clear files
-											S3.collection.remove({});
+							}else if(newFileName){
+								var articleInfo = articles.findOne({_id : articleMongoId});
+								var assetObj = {
+									file: newFileName,
+									ids: {}
+								};
 
-											// update template data
-											Meteor.call('articleAssests', articleMongoId, function(error, result) {
-												if(result){
-													// console.log('articleAssests',result);
-													Session.set('article-assets',result);
-												}
-											});
-
-											// notify user
-											Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName);
-
-											// delete uploaded file, if not equal to MongoID
-											if(articleMongoId != fileNameId){
-												S3.delete(s3Folder + '/' + file.name,function(error,result){
-													if(error){
-														console.error('Could not delete original file: ' + file.name);
-													}
-													// if(result){
-														// console.log('Deleted original file: ' + file.name);
-													// }
-												});
-											}
-										}
-									});
+								if(articleInfo.ids){
+									assetObj.ids = articleInfo.ids;
 								}
-							});
-						}
-					});
-				// }
+								assetObj.ids.mongo_id = articleInfo._id;
+
+								Meteor.call('updateAssetDoc', s3Folder, articleMongoId, assetObj, function(error,result){
+									if(result){
+										// clear files
+										S3.collection.remove({});
+
+										// update template data
+										Meteor.call('articleAssests', articleMongoId, function(error, result) {
+											if(result){
+												// console.log('articleAssests',result);
+												Session.set('article-assets',result);
+											}
+										});
+
+										// notify user
+										Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName);
+
+										// delete uploaded file, if not equal to MongoID
+										if(articleMongoId != fileNameId){
+											S3.delete(s3Folder + '/' + file.name,function(error,result){
+												if(error){
+													console.error('Could not delete original file: ' + file.name);
+												}
+												// if(result){
+													// console.log('Deleted original file: ' + file.name);
+												// }
+											});
+										}
+									}
+								});
+							}
+						});
+					}
+				});
 			}else{
 				Meteor.formActions.errorMessage('Uploader is only for PDF or XML');
 			}
@@ -881,10 +870,10 @@ Template.s3Upload.events({
 	}
 });
 Template.AdminArticleAssets.events({
-	'submit form': function(e){
+	'submit #assets-form': function(e){
 		e.preventDefault();
 		Meteor.formActions.saving();
-		var articleMongoId = $('#article-mongo-id').attr('data-id');
+		var articleMongoId = $('#article-mongo-id').val();
 		var pdfSettings = {
 			display: false
 		};
@@ -905,6 +894,145 @@ Template.AdminArticleAssets.events({
 
 			}
 		});
+	}
+});
+Template.AdminArticleFigures.events({
+	'click .article-figure-edit': function(e){
+		e.preventDefault();
+		var figId = $(e.target).closest('button').attr('data-id');
+		// console.log(figId);
+		Session.set('figureEditing',figId);
+		var assets = Session.get('article-assets');
+		var figures = assets.figures;
+		figures.forEach(function(fig){
+			if(fig.id == figId){
+				fig.editing = true;
+			}
+		});
+		Session.set('article-assets',assets);
+	},
+	'click .article-figure-cancel': function(e){
+		e.preventDefault();
+		var figId = $(e.target).closest('button').attr('data-id');
+		// console.log(figId);
+		Session.set('figureEditing',figId);
+		var assets = Session.get('article-assets');
+		var figures = assets.figures;
+		figures.forEach(function(fig){
+			if(fig.id == figId){
+				fig.editing = false;
+			}
+		});
+		Session.set('article-assets',assets);
+	}
+});
+Template.s3FigureUpload.events({
+	'click button.upload': function(e){
+		// TODO: require FigID
+		// TODO: letter handling in fig id
+		// TODO: unique FigID
+
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var xmlUrl,
+			s3Folder,
+			articleIds;
+		var articleMongoId = $('#article-mongo-id').val();
+
+		var s3Folder = 'paper_figures';
+
+		var originalFigId = $(e.target).closest('button').attr('data-id');
+		var newFigId = $('fig-input-' + originalFigId).val();
+		if(!newFigId){
+			newFigId = originalFigId;
+		}
+		var files = $('input.file_bag')[0].files;
+		var file = files[0];
+
+		if(file){
+			var fileNamePieces = file.slice('_');
+			// Upload figure to s3
+			Meteor.s3.upload(files,s3Folder,function(error,result){
+				if(error){
+					console.error('Upload File Error', error);
+					Meteor.formActions.errorMessage('Figure not uploaded');
+				}else if(result){
+					// Rename figure to standard convention, mongoid_figid
+					Meteor.call('renameArticleFigure', result.file.name, newFigId, articleMongoId, function(error,newFileName){
+						if(error){
+
+						}else if(newFileName){
+							// Update the figures collection
+							var articleInfo = articles.findOne({_id : articleMongoId});
+							var articleFigures = Session.get('article-assets').figures;
+							articleFigures.forEach(function(fig){
+								if(fig.id == originalFigId){
+									fig.id = newFigId;
+									fig.file = newFileName;
+								}
+							});
+
+							Meteor.call('updateFiguresDoc', articleMongoId, articleFigures, function(error,result){
+								if(error){
+									Meteor.formActions.errorMessage('Error. Figure uploaded but could not update database.');
+								}else if(result){
+									Meteor.formActions.successMessage('Figure uploaded.');
+
+									// delete uploaded file, if not equal to MongoID_figId
+									if(articleMongoId != fileNamePieces[0]){
+										S3.delete('paper_figures/' + file.name,function(error,result){
+											if(error){
+												console.error('Could not delete original file: ' + file.name);
+											}
+										});
+									}
+								}
+							});
+						}
+					});
+				}
+			});
+		}else{
+			// Update the fig ID in the DB
+			// Update the uploaded figure name
+			// Meteor.call('renameArticleFigure', result.file.name, newFigId, articleMongoId, function(error,newFileName){
+			// 	if(error){
+
+			// 	}else if(newFileName){
+			// 				// Update the figures collection
+			// 				// console.log('newFileName',newFileName);
+			// 		var articleInfo = articles.findOne({_id : articleMongoId});
+			// 		var articleFigures = Session.get('article-assets').figures;
+			// 		articleFigures.forEach(function(fig){
+			// 			if(fig.id == originalFigId){
+			// 				fig.id = newFigId;
+			// 				fig.file = newFileName;
+			// 			}
+			// 		});
+			// 		// console.log('articleFigures',articleFigures);
+			// 		Meteor.call('updateFiguresDoc', articleMongoId, articleFigures, function(error,result){
+			// 			if(error){
+			// 				Meteor.formActions.errorMessage('Error. Figure uploaded but could not update database.');
+			// 			}else if(result){
+			// 				Meteor.formActions.successMessage('Figure uploaded.');
+
+			// 				// delete uploaded file, if not equal to MongoID
+			// 				if(articleMongoId != fileNamePieces[0]){
+			// 					// console.log('delete original');
+			// 					S3.delete('paper_figures/' + file.name,function(error,result){
+			// 						if(error){
+			// 							console.error('Could not delete original file: ' + file.name);
+			// 						}
+			// 						// if(result){
+			// 							// console.log('Deleted original file: ' + file.name);
+			// 						// }
+			// 					});
+			// 				}
+			// 			}
+			// 		});
+			// 	}
+			// });
+		}
 	}
 });
 
