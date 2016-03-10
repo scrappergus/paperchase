@@ -1138,7 +1138,7 @@ Meteor.adminSections = {
 		e.preventDefault();
 		var forDb = {};
 		var invalidData = [];
-		forDb.name = $('#section-name').val();
+		forDb.section_name = $('#section-name').val();
 		forDb.display = $('#section-display').is(':checked');
 
 		if(!forDb.name){
@@ -1154,7 +1154,7 @@ Meteor.adminSections = {
 				return index == 0 ? match.toLowerCase() : match.toUpperCase();
 			}); // based on http://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
 
-			forDb.dash_name = forDb.name.toLowerCase().replace(' ','-');
+			forDb.dash_name = forDb.name.toLowerCase().replace(/\s/g,'-').replace(':','');
 
 			// TODO: Check if section name already exists
 			// console.log(forDb);
@@ -1323,5 +1323,26 @@ Meteor.advance = {
 			sectionsOrder.push($(this).attr('data-name'));
 		});
 		return sectionsOrder;
+	}
+}
+
+Meteor.s3 = {
+	upload: function(files,folder,cb){
+		var journalShortName = journalConfig.findOne().journal.short_name;
+		var journalBucket = 'paperchase-' + journalShortName;
+
+		S3.upload({
+			Bucket: journalBucket,
+			files: files,
+			path: folder,
+			unique_name: false
+		},function(err,res){
+			if(err){
+				console.error('S3 upload error',err);
+				cb(err);
+			}else if(res){
+				cb(null, res);
+			}
+		});
 	}
 }
