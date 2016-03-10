@@ -1138,7 +1138,7 @@ Meteor.adminSections = {
 		e.preventDefault();
 		var forDb = {};
 		var invalidData = [];
-		forDb.section_name = $('#section-name').val();
+		forDb.name = $('#section-name').val();
 		forDb.display = $('#section-display').is(':checked');
 
 		if(!forDb.name){
