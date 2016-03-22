@@ -166,9 +166,21 @@ Template.AdminArticlesDashboard.helpers({
 Template.AdminArticleOverview.helpers({
 	article : function(){
 		return Session.get('article');
+	}
+});
+Template.AdminArticleFigures.helpers({
+	article : function(){
+		return Session.get('article');
 	},
 	assets: function(){
-		// console.log(Session.get('article-assets'));
+		return Session.get('article-assets');
+	}
+});
+Template.AdminArticleAssets.helpers({
+	article : function(){
+		return Session.get('article');
+	},
+	assets: function(){
 		return Session.get('article-assets');
 	}
 });
@@ -460,6 +472,12 @@ Template.s3Upload.helpers({
 		return S3.collection.find();
 	}
 });
+Template.s3FigureUpload.helpers({
+	'files': function(){
+		// console.log(S3.collection.find());
+		return S3.collection.find();
+	}
+});
 
 // News
 // ---------------
@@ -582,6 +600,11 @@ Template.AdminAdvanceArticles.helpers({
 	},
 	savingOrder: function(){
 		return  Session.get('savingOrder');
+	}
+});
+Template.AdminAdvanceArticlesTypes.helpers({
+	types: function(){
+		return  Session.get('advanceAdmin');
 	}
 });
 Template.AdminAdvanceArticlesSections.helpers({
