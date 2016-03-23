@@ -143,7 +143,7 @@ Router.route('/get-advance-articles/',{
 	},
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
-		var htmlString = "<html><head><meta name=\"robots\" content=\"noindex\"></head><body>";
+		var htmlString = "<html><head><meta name=\"robots\" content=\"noindex\"><meta name=\"google-site-verification\" content=\"63uPoFYXoHVMKO4Sp4sx5nmxlbDH0fBgMyk9rMiB68A\" /></head><body>";
 		var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 		if(advance){
 			var advanceList = advance.data;
