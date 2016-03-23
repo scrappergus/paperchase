@@ -397,9 +397,13 @@ Meteor.fullText = {
 			tableTitle = '';
 		for(var c = 0 ; c < node.childNodes.length ; c++){
 			var n = node.childNodes[c];
-			// console.log(n.localName);
 			// Start table el tag
-			if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){// table tag added in sectionToJson()
+			var elType = n.localName;
+			if(elType != null){
+				elType = Meteor.fullText.fixTableTags(elType);
+			}
+
+			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){// table tag added in sectionToJson()
 
 				var colspan = 1;
 
@@ -410,14 +414,17 @@ Meteor.fullText = {
 						}
 					};
 				}
-
-				nodeString += '<' + n.localName + ' colspan="' + colspan + '">';
+				if(elType === 'td' || elType === 'th'){
+					nodeString += '<' + elType + ' colspan="' + colspan + '">';
+				}else{
+					nodeString += '<' + elType + '>';
+				}
 			}
 			// do not combine with elseif, because we need to still close tag via code below
-			if(n.localName == 'label'){
+			if(elType == 'label'){
 				// Table Title - part one
 				tableLabel = Meteor.fullText.traverseTable(n);
-			}else if( n.localName == 'caption'){
+			}else if(elType == 'caption'){
 				// Table Title - part three
 				// do not use traversing functions. problem keeping title separate
 				for(var cc = 0 ; cc < n.childNodes.length ; cc++){
@@ -429,7 +436,7 @@ Meteor.fullText = {
 				}
 				tableHeading = '<h4>' + tableLabel + '. ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
 				nodeString += '<caption>' + tableHeading + '</caption>'
-			}else if(n.localName == 'table-wrap-foot'){
+			}else if(elType == 'table-wrap-foot'){
 				// console.log('..footer');
 				nodeString += '<tfoot>';
 				// console.log(n);
@@ -450,8 +457,8 @@ Meteor.fullText = {
 				}
 
 				// Close table el tag
-				if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){
-					nodeString += '</' + n.localName + '>'
+				if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){
+					nodeString += '</' + elType + '>'
 				}
 			}
 		}
@@ -479,7 +486,7 @@ Meteor.fullText = {
 		return string;
 	},
 	fixTags: function(content){
-		// console.log('...fixTags');
+		// console.log('...fixTags',content);
 		// Either object or string.
 		// Figures are the only one with content array containing objects instead of strings
 		if(typeof content == 'string'){
@@ -506,6 +513,20 @@ Meteor.fullText = {
 				var cap = Meteor.fullText.fixTags(content.caption);
 				content.caption = cap;
 			}
+		}
+
+		return content;
+	},
+	fixTableTags: function(content){
+		// console.log('...fixTableTags',content);
+		// separate from fixTags because we will be passing the node name, not with <>, because we don't want to globally replace 'bold' in table or 'italic',
+		// just in case they are actually within the text
+		if(typeof content == 'string'){
+			// style tags
+			content = content.replace(/italic/g,'i');
+			content = content.replace(/\/italic/g,'/i');
+			content = content.replace(/bold/g,'b');
+			content = content.replace(/\/bold/g,'/b');
 		}
 
 		return content;
