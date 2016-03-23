@@ -238,24 +238,6 @@ html,body{
 	.article-header-5{
 		@extend p;
 	}
-	.article-table{
-		@extend .box;
-		padding: 0px!important;
-		border: 1px solid $black-0;
-		table{
-			caption{
-				background: $gray-1;
-				padding: $pad-md;
-				border-bottom: 1px solid $black-0;
-			}
-			thead{;
-				border-bottom: 1px solid $black-0;
-				tr{
-					border: 0px!important; /* using .bordered on table, but we do not want table header bordered */
-				}
-			}
-		}
-	}
 	/* section nav */
 	.section-nav{
 		height: 90vh;
@@ -281,6 +263,28 @@ html,body{
 	.sticky-wrapper.is-sticky{
 		.section-nav{
 			overflow: scroll;
+		}
+	}
+	/*table*/
+	.article-table{
+		@extend .box;
+		border: 1px solid $black-0;
+		padding: 0px!important;
+		table{
+			caption{
+				background: $gray-1;
+				padding: $pad-md;
+				border-bottom: 1px solid $black-0;
+			}
+			thead{;
+				border-bottom: 1px solid $black-0;
+				tr{
+					border: 0px!important; /* using .bordered on table, but we do not want table header bordered */
+					th{
+						border: 1px solid $gray-1;
+					}
+				}
+			}
 		}
 	}
 
