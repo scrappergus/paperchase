@@ -766,6 +766,19 @@ Template.AdminArticleForm.events({
 	}
 });
 Template.AdminArticleXmlUpload.events({
+	'change #file-upload > input': function(e) {
+	  var file = e.target.files[0];
+	  var reader = new FileReader;
+	  var output = e.target.parentElement.querySelector('output');
+	  
+	  reader.onload = function(e) {
+		// process xml here
+		output.innerText = e.target.result;
+	  }
+
+	  reader.readAsText(file);
+	},
+	
 	'click .update-article': function(e,t){
 		e.preventDefault();
 		var articleData = t.data['article'];
