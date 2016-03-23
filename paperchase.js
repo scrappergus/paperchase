@@ -143,7 +143,7 @@ Router.route('/get-advance-articles/',{
 	},
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
-		var htmlString = "<body>";
+		var htmlString = "<html><head><meta name=\"robots\" content=\"noindex\"></head><body>";
 		var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 		if(advance){
 			var advanceList = advance.data;
@@ -269,7 +269,7 @@ if([2,10,12,14,16,20,21,34,35,40,36,30].indexOf(articleInfo.section_id) == -1) {
                 }
 			}
 
-			htmlString += '</body>';
+			htmlString += '</body></html>';
 			var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
 			this.response.writeHead(200, headers);
 			this.response.end(htmlString);
