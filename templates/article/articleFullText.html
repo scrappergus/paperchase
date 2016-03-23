@@ -60,7 +60,7 @@
 	<h3 id="main-text">Main Text</h3>
 	{{#each sections}}
 	<div class="section-container" id="{{sectionId}}">
-		<div class="article-header-{{headerLevel}}">{{{title}}}</div>
+		<div class="article-header-{{headerLevel}}">{{#if label}}{{{label}}} {{/if}}{{{title}}}</div>
 		{{#each content}}
 			{{#if equals contentType 'p'}}
 			<p>{{{content}}}</p>
