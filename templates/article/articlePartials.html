@@ -157,7 +157,7 @@
 	<li><a class="article-header-1 anchor" href="#abstract">Abstract</a></li>
 	{{/if}}
 	{{#each sections}}
-	<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>
+	{{#if title}}<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>{{/if}}
 	{{/each}}
 	{{#if references}}
 	<li><a class="article-header-1 anchor" href="#references">References</a></li>
