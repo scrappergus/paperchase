@@ -140,7 +140,9 @@ Meteor.fullText = {
 				contentType;
 			if(sec.localName != null){
 				// Different processing for different node types
-				if(sec.localName === 'title'){
+				if(sec.localName === 'label'){
+					sectionObject.label = Meteor.fullText.convertContent(sec);
+				}else if(sec.localName === 'title'){
 					sectionObject.title = Meteor.fullText.convertContent(sec);
 				}else if(sec.localName === 'table-wrap'){
 					// get attributes
@@ -398,9 +400,20 @@ Meteor.fullText = {
 			// console.log(n.localName);
 			// Start table el tag
 			if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){// table tag added in sectionToJson()
-				nodeString += '<' + n.localName + '>';
-			}
 
+				var colspan = 1;
+
+				if(n.attributes){
+					for(var attr in n.attributes){
+						if(n.attributes[attr].name === 'colspan'){
+							colspan = n.attributes[attr].nodeValue;
+						}
+					};
+				}
+
+				nodeString += '<' + n.localName + ' colspan="' + colspan + '">';
+			}
+			// do not combine with elseif, because we need to still close tag via code below
 			if(n.localName == 'label'){
 				// Table Title - part one
 				tableLabel = Meteor.fullText.traverseTable(n);
