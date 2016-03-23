@@ -70,14 +70,13 @@
 		{{/each}}
 	</div>
 	{{#if affiliations}}
+	{{#each arrayify affiliations}}
 	<h6>
 		<span class="affiliations">
-			{{#each arrayify affiliations}}
-			<div class="clearfix"></div>
-				{{affiliationNumber name}}. {{value}}
-			{{/each}}
+			{{affiliationNumber name}}. {{value}}
 		</span>
 	</h6>
+	{{/each}}
 	{{/if}}
 </template>
 
@@ -154,10 +153,36 @@
 </template>
 <template name="ArticleSectionsList">
 	{{#if abstract}}
-	<li><a class="article-header-1 anchor" href="#abstract">Abstract</a></li>
+	<li class="row">
+		<div class="col s12"><a class="article-header-0 anchor" href="#abstract">Abstract</a></div>
+	</li>
 	{{/if}}
+	<li class="row">
+		<div class="col s12"><a class="article-header-0 anchor" href="#main-text">Main Text</a></div>
+	</li>
 	{{#each sections}}
-	{{#if title}}<li><a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">{{{title}}}</a></li>{{/if}}
+	{{#if title}}
+		<li class="row">
+			{{#if equals headerLevel 1}}
+			<div class="col s12">
+				<a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">
+				{{#if label}}{{label}}&nbsp;{{/if}}{{{title}}}
+				</a>
+			</div>
+			{{else}}
+			<div class="col s1">
+				<a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">
+				{{#if label}}{{label}}{{else}}&nbsp;{{/if}}
+				</a>
+			</div>
+			<div class="col s10">
+				<a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">
+				{{{title}}}
+				</a>
+			</div>
+			{{/if}}
+		</li>
+	{{/if}}
 	{{/each}}
 	{{#if references}}
 	<li><a class="article-header-1 anchor" href="#references">References</a></li>
