@@ -1,3 +1,4 @@
+@import 'mixins';
 .sans{
   font-family: 'Open Sans', Geneva, sans-serif;
 }
@@ -5,93 +6,74 @@ h3,h5,p, .btn{
   @extend .sans;
 }
 
-/*http://typecast.com/blog/a-more-modern-scale-for-web-typography*/
+$breakpoints: (
+  medium: 43.75em,
+  large : 56.25em
+);
+
+
+$h1-font-sizes: (
+  null  : 2em,
+  medium: 2.5em,
+  large : 3em
+);
+$h2-font-sizes: (
+  null  : 1.625em,
+  medium: 2em,
+  large : 2.25em
+);
+$h3-font-sizes: (
+  null  : 1.375em,
+  medium: 1.5em,
+  large : 1.75em
+);
+$h4-font-sizes: (
+  null  : 1.125em
+);
+$h5-font-sizes: (
+  null  : 1.12em
+);
+$h6-font-sizes: (
+  null  : 1.1em
+);
+$h7-font-sizes: (
+  null  : 1.1em
+);
+$p-font-sizes: (
+  null  : (1em, 1.3)
+);
+$blockquote-font-sizes: (
+  null  : (1.25em, 1.3)
+);
+
 
 h1 {
-  font-size: 2em;
-  /* 2x body copy size = 32px */
-  line-height: 1.25;
-  /* 45px / 36px */
+  @include font-size($h1-font-sizes);
 }
-
 h2 {
-  font-size: 1.625em;
-  /* 1.625x body copy size = 26px */
-  line-height: 1.15384615;
-  /* 30px / 26px */
+  @include font-size($h2-font-sizes);
 }
 h3 {
-  font-size: 1.375em;
-  /* 1.375x body copy size = 22px */
-  line-height: 1.13636364;
-  /* 25px / 22px */
+  @include font-size($h3-font-sizes);
 }
-
 h4 {
-  font-size: 1.125em;
-  /* 1.125x body copy size = 18px */
-  line-height: 1.11111111;
+  @include font-size($h4-font-sizes);
 }
-
+h4 {
+  @include font-size($h4-font-sizes);
+}
 h5 {
-  font-size: 1em;
-  line-height: 1.11111111;
+  @include font-size($h5-font-sizes);
 }
 h6 {
-  font-size: 1em;
-  line-height: 1.11111111;
+  @include font-size($h6-font-sizes);
 }
-
+h7 {
+  @include font-size($h7-font-sizes);
+}
+p {
+  @include font-size($p-font-sizes);
+}
 blockquote {
-  font-size: 1.25em;
-  /* 20px / 16px */
-  line-height: 1.25;
-  /* 25px / 20px */
-}
-@media (min-width: 43.75em) {
-  h1 {
-    font-size: 2.5em;
-    /* 2.5x body copy size = 40px */
-    line-height: 1.125;
-  }
-  h2 {
-    font-size: 2em;
-    /* 2x body copy size = 32px */
-    line-height: 1.25;
-  }
-  h3 {
-    font-size: 1.5em;
-    /* 1.5x body copy size = 24px */
-    line-height: 1.25;
-  }
-  h4 {
-    line-height: 1.22222222;
-    /* (22px / 18px */
-  }
-  blockquote {
-    font-size: 1.5em;
-    /* 24px / 16px = */
-    line-height: 1.45833333;
-    /* 35px / 24px */
-  }
-}
-
-@media (min-width: 56.25em) {
-  h1 {
-    font-size: 3em;
-    /* 3x body copy size = 48px */
-    line-height: 1.05;
-    /* keep to a multiple of the 20px line height
-    and something more appropriate for display headings */
-  }
-  h2 {
-    font-size: 2.25em;
-    /* 2.25x body copy size = 36px */
-    line-height: 1.25;
-  }
-  h3 {
-    font-size: 1.75em;
-    /* 1.75x body copy size = 28px */
-    line-height: 1.25;
-  }
+  @include font-size($blockquote-font-sizes);
 }
