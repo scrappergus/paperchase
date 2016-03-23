@@ -262,30 +262,15 @@ html,body{
 		background: $white;
 		border: 1px solid $gray-2;
 		padding: $pad-md;
-		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
 		li{
 			margin-top: 0!important;
 			margin-bottom: 0!important;
-			/*overflow: hidden;*/
-			/*text-overflow: ellipsis;*/
 			border-bottom: 1px solid $gray-2;
 		}
 		a{
 			padding: $margin-md 0;
 			display: block;
-			/*width: 100%;*/
 		}
-		/*.article-header-1{
-			@extend h4;
-		}
-		.article-header-2{
-			@extend h5;
-			margin-left: $margin-md;
-		}
-		.article-header-3{
-			@extend p;
-			margin-left: $margin-lg;
-		}*/
 		a{
 			color: $color-paragraph!important;
 			&:hover{
@@ -295,7 +280,6 @@ html,body{
 	}
 	.sticky-wrapper.is-sticky{
 		.section-nav{
-			/*height: 90vh;*/ /* leave space for footer */
 			overflow: scroll;
 		}
 	}
