@@ -13,6 +13,9 @@ html,body{
 
 
 /* Type ------------------------*/
+	h1,h2,h3{
+		font-weight: bold;
+	}
 	h1{
 		color: $black-0;
 	}
@@ -35,7 +38,7 @@ html,body{
 		color: $color-paragraph;
 	}
 	strong {
-	 font-weight: bold;
+		font-weight: bold;
 	}
 	/* Type adjustments */
 	.truncate {
@@ -181,7 +184,7 @@ html,body{
 	}
 	.affiliations{
 		color: $gray-2;
-		font-size: $font-sm;
+		/*font-size: $font-sm;*/
 	}
 	.kw{
 		margin: $margin-sm 0 $margin-sm $margin-sm;
@@ -216,21 +219,24 @@ html,body{
 		margin: $margin-md 0;
 	}
 	/* section headers */
+	.article-header-0{
+		@extend h4;
+	}
 	.article-header-1{
 		@extend h5;
 	}
 	.article-header-2{
-		@extend h5;
+		@extend h6;
 	}
 	.article-header-3{
-		@extend h6;
+		@extend h7;
 	}
 	.article-header-4{
 		text-decoration: none!important;
-		@extend h7;
+		@extend h8;
 	}
 	.article-header-5{
-		@extend h8;
+		@extend p;
 	}
 	.article-table{
 		@extend .box;
@@ -258,14 +264,15 @@ html,body{
 		padding: $pad-md;
 		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
 		li{
-			/*margin: 0;*/
-			overflow: hidden;
-			text-overflow: ellipsis;
+			margin-top: 0!important;
+			margin-bottom: 0!important;
+			/*overflow: hidden;*/
+			/*text-overflow: ellipsis;*/
 			border-bottom: 1px solid $gray-2;
 		}
 		a{
-			/*padding: $margin-md 0;*/
-			/*display: block;*/
+			padding: $margin-md 0;
+			display: block;
 			/*width: 100%;*/
 		}
 		/*.article-header-1{
