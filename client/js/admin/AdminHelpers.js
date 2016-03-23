@@ -602,11 +602,11 @@ Template.AdminAdvanceArticles.helpers({
 		return  Session.get('savingOrder');
 	}
 });
-Template.AdminAdvanceArticlesTypes.helpers({
-	types: function(){
-		return  Session.get('advanceAdmin');
-	}
-});
+// Template.AdminAdvanceArticlesTypes.helpers({
+// 	types: function(){
+// 		return  Session.get('advanceAdmin');
+// 	}
+// });
 Template.AdminAdvanceArticlesSections.helpers({
 	sections: function(){
 		return  Session.get('advanceAdmin');
