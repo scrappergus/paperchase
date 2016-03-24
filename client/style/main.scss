@@ -371,10 +371,6 @@ html,body{
 	.card-header{
 		border-bottom: 2px solid $journal-primary-color;
 	}
-	.chip{
-		padding: $pad-sm;
-		margin-right: $margin-sm;
-	}
 
 /* Forms ------------------------*/
 	fieldset{
@@ -433,3 +429,10 @@ html,body{
 	}
 	* html .clearfix             { zoom: 1; } /* IE6 */
 	*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
+/* Media -----------------------*/
+.news-video{
+	display: inline-block;
+	padding: $pad-lg;
+	background: $gray-1;
+}

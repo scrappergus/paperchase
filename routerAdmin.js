@@ -100,7 +100,8 @@ if (Meteor.isClient) {
 	Session.set('showAboutForm',false);
 	Session.set('aboutSectionId', null);
 	// News
-	Session.setDefault('newsId',null);
+	// Session.setDefault('newsId',null);
+	Session.setDefault('newsData',null);
 	// Paper sections
 	Session.setDefault('paperSectionId',null);
 	// DOI Status, articles list
@@ -253,14 +254,19 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		layoutTemplate: 'Admin',
-		onBeforeAction: function(){
-			Session.set('newsId',this.params._id);
-			this.next();
-		},
+		// onBeforeAction: function(){
+		// 	// Session.set('newsId',this.params._id);
+		// 	this.next();
+		// },
 		waitOn: function(){
 			return [
 				Meteor.subscribe('newsItem', this.params._id)
 			]
+		},
+		data: function(){
+			if(this.ready()){
+				Session.set('newsData',newsList.findOne({_id : this.params._id}));
+			}
 		}
 	});
 
