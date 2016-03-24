@@ -277,6 +277,34 @@ Router.route('/get-advance-articles/',{
 	}
 });
 
+
+Router.route('/get-interviews/',{
+	where: 'server',
+	action: function(){
+		var interviews = newsList.find({display: true, interview: true},{sort: {'date':-1}}).fetch();
+		var htmlString = '<html><head><meta name="robots" content="noindex"></head><body>';
+		for(var i=0; i< interviews.length; i++){
+			var interview = interviews[i];
+			htmlString+= '<div>';
+			if(interview.title){
+				htmlString+= '<h3>' + interview.title + '</h3>';
+			}
+			if(interview.youTube){
+				htmlString+= '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + interview.youTube + '" frameborder="0" allowfullscreen></iframe>';
+			}
+			if(interview.content){
+				htmlString+= '<p>' + interview.content + '</p>';
+			}
+
+			htmlString+='</div>';
+		};
+		htmlString += '</body></html>';
+		var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+		this.response.writeHead(200, headers);
+		this.response.end(htmlString);
+	}
+});
+
 if (Meteor.isClient) {
 	Session.setDefault('formMethod','');
 	Session.setDefault('fileNameXML',''); //LIVE
