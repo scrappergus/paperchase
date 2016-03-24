@@ -136,6 +136,9 @@ Template.AdminNewsForm.events({
 		var newTag = $('.news-tag-input').code();
 		newTag = Meteor.formActions.cleanWysiwyg(newTag);
 		var newsData = Session.get('newsData');
+		if(!newsData){
+			newsData = {};
+		}
 		if(!newsData.tags){
 			newsData.tags = [];
 		}
