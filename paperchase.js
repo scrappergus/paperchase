@@ -295,6 +295,12 @@ Router.route('/get-interviews/',{
 			if(interview.content){
 				htmlString+= '<p>' + interview.content + '</p>';
 			}
+			if(interview.tags){
+				var tags = interview.tags;
+				for(var tag=0 ; tag < tags.length ; tag++){
+					htmlString+= '<span style="padding:10px;margin:0 10px 0 0;border:1px solid;">' + interview.tags[tag] + '</span>';
+				}
+			}
 
 			htmlString+='</div>';
 		};
