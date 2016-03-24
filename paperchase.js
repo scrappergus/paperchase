@@ -298,7 +298,7 @@ Router.route('/get-interviews/',{
 			if(interview.tags){
 				var tags = interview.tags;
 				for(var tag=0 ; tag < tags.length ; tag++){
-					htmlString+= '<span class="interview-tag" style="padding:10px;margin:0 10px 0 0;border:1px solid;float:left;display:block;width:auto;">' + interview.tags[tag] + '</span>';
+					htmlString+= '<span class="interview-tag" style="padding:5px;0px 10px 10px 0px;border:1px solid;float:left;display:block;width:auto;">' + interview.tags[tag] + '</span>';
 				}
 			}
 
