@@ -290,7 +290,7 @@ Router.route('/get-interviews/',{
 				htmlString+= '<h3>' + interview.title + '</h3>';
 			}
 			if(interview.youTube){
-				htmlString+= '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + interview.youTube + '" frameborder="0" allowfullscreen></iframe>';
+				htmlString+= '<iframe width="470" height="315" src="https://www.youtube.com/embed/' + interview.youTube + '" frameborder="0" allowfullscreen></iframe>';
 			}
 			if(interview.content){
 				htmlString+= '<p>' + interview.content + '</p>';
@@ -298,7 +298,7 @@ Router.route('/get-interviews/',{
 			if(interview.tags){
 				var tags = interview.tags;
 				for(var tag=0 ; tag < tags.length ; tag++){
-					htmlString+= '<span style="padding:10px;margin:0 10px 0 0;border:1px solid;">' + interview.tags[tag] + '</span>';
+					htmlString+= '<span class="interview-tag" style="padding:10px;margin:0 10px 0 0;border:1px solid;float:left;display:block;width:auto;">' + interview.tags[tag] + '</span>';
 				}
 			}
 
