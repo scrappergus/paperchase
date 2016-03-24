@@ -290,7 +290,7 @@ Router.route('/get-interviews/',{
 				htmlString+= '<h3>' + interview.title + '</h3>';
 			}
 			if(interview.youTube){
-				htmlString+= '<iframe width="470" height="315" src="https://www.youtube.com/embed/' + interview.youTube + '" frameborder="0" allowfullscreen></iframe>';
+				htmlString+= '<iframe width="470" height="265" src="https://www.youtube.com/embed/' + interview.youTube + '" frameborder="0" allowfullscreen></iframe>';
 			}
 			if(interview.content){
 				htmlString+= '<p>' + interview.content + '</p>';
