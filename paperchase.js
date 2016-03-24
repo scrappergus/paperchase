@@ -170,12 +170,12 @@ Router.route('/get-advance-articles/',{
                     prevSection = advanceList[last_index]['section_name'];
                 }
 				if(articleInfo['section_start']){
-//					if(prevSection){
-//						htmlString += '</div>';
-//					}
+					// if(prevSection){
+					// 	htmlString += '</div>';
+					// }
 
-//					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-//					htmlString += '<div class="articlewrapper">';
+					// htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+					// htmlString += '<div class="articlewrapper">';
 				}
 
 
@@ -203,8 +203,8 @@ Router.route('/get-advance-articles/',{
 			    htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
 
 				if(articleInfo.authors){
-//					htmlString += '<tr>';
-//					htmlString += '<td class="tocAuthors">';
+					// htmlString += '<tr>';
+					// htmlString += '<td class="tocAuthors">';
 
 					htmlString += '<span class="tocAuthors">';
 
