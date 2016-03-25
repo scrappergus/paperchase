@@ -394,11 +394,11 @@ Meteor.fullText = {
 
 		return authors;
 	},
-	traverseTable: function(node){
+	traverseTable: function(node,footerFlag){
 		// console.log('-----------------------traverseTable');
 		// TODO: make this more general for traversing all nodes, not just table
-
 		// TODO combine label and title
+		// TODO: remove footerFlag. Used to add label to table footers.
 		var nodeString = '',
 			tableHeading = '',
 			tableLabel = '',
@@ -413,7 +413,6 @@ Meteor.fullText = {
 				elType = Meteor.fullText.fixTableTags(elType);
 			}
 			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref'){// table tag added in sectionToJson()
-
 				var colspan;
 				var rowspan;
 				var elId;
@@ -448,6 +447,9 @@ Meteor.fullText = {
 					nodeString += ' id="' + elId + '"';;
 				}
 				nodeString += '>';
+				if(footerFlag && tableLabel){
+					nodeString += tableLabel + ' '; //temporary. Would like to not handle table footer labels this way.
+				}
 			}
 			// do not combine with elseif, because we need to still close tag via code below
 			if(elType == 'label'){
@@ -467,7 +469,7 @@ Meteor.fullText = {
 					tableLabel = tableLabel + '.';
 				}
 				tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
-				nodeString += '<caption>' + tableHeading + '</caption>'
+				nodeString += '<caption>' + tableHeading + '</caption>';
 			}else if(elType == 'table-wrap-foot'){
 				// console.log('..footer');
 				nodeString += Meteor.fullText.traverseTableFooter(n);
@@ -489,19 +491,28 @@ Meteor.fullText = {
 				}
 			}
 		}
-		// console.log(nodeString);
 		return nodeString;
 	},
 	traverseTableFooter: function(n){
-		// console.log(n);
 		var string = '';
 		string += '<tfoot>';
 
 		for(var c=0; c < n.childNodes.length ; c++){
 			if(n.childNodes[c].nodeName == 'fn'){
-				// console.log(n.childNodes[c].childNodes);
-				string += '<tr><td colspan="100">';
-				string += Meteor.fullText.traverseTable(n.childNodes[c]);
+				var elId;
+				if(n.childNodes[c].attributes){
+					for(var attr in n.childNodes[c].attributes){
+						if(n.childNodes[c].attributes[attr].name === 'id'){
+							elId = n.childNodes[c].attributes[attr].nodeValue;
+						}
+					};
+				}
+				string += '<tr><td colspan="100"';
+				if(elId){
+					string += ' id="'+elId+'"';
+				}
+				string += '>';
+				string += Meteor.fullText.traverseTable(n.childNodes[c],true);
 				string += '</td></tr>';
 			}else if(n.childNodes[c].nodeName == 'p'){
 				string += '<tr><td colspan="100">';
