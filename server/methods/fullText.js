@@ -415,11 +415,14 @@ Meteor.fullText = {
 			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref'){// table tag added in sectionToJson()
 
 				var colspan;
+				var rowspan;
 				var elId;
 				if(n.attributes){
 					for(var attr in n.attributes){
 						if(n.attributes[attr].name === 'colspan'){
 							colspan = n.attributes[attr].nodeValue;
+						}else if(n.attributes[attr].name === 'rowspan'){
+							rowspan = n.attributes[attr].nodeValue;
 						}else if(n.attributes[attr].name === 'id'){
 							elId = n.attributes[attr].nodeValue;
 						}
@@ -430,6 +433,9 @@ Meteor.fullText = {
 				nodeString += '<' + elType;
 				if(colspan){
 					nodeString += ' colspan="' + colspan + '"';
+				}
+				if(rowspan){
+					nodeString += ' rowspan="' + rowspan + '"';
 				}
 				if(elId){
 					nodeString += ' id="' + elId + '"';;
