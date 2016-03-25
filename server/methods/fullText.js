@@ -430,6 +430,13 @@ Meteor.fullText = {
 				}
 
 				// create the start tag
+				// console.log(elType);
+				if(elType === 'fn'){
+					elType = 'td';
+					if(!colspan){
+						colspan = "100";
+					}
+				}
 				nodeString += '<' + elType;
 				if(colspan){
 					nodeString += ' colspan="' + colspan + '"';
@@ -444,7 +451,7 @@ Meteor.fullText = {
 			}
 			// do not combine with elseif, because we need to still close tag via code below
 			if(elType == 'label'){
-				// Table Title - part one
+				// Table Title - part one, or footer
 				tableLabel = Meteor.fullText.traverseTable(n);
 			}else if(elType == 'caption'){
 				// Table Title - part three
@@ -463,14 +470,7 @@ Meteor.fullText = {
 				nodeString += '<caption>' + tableHeading + '</caption>'
 			}else if(elType == 'table-wrap-foot'){
 				// console.log('..footer');
-				nodeString += '<tfoot>';
-				// console.log(n);
-				nodeString += '<tr>';
-				nodeString += '<td>';
-				nodeString += Meteor.fullText.traverseTable(n);
-				nodeString += '</td>';
-				nodeString += '</tr>';
-				nodeString += '</tfoot>';
+				nodeString += Meteor.fullText.traverseTableFooter(n);
 			}else if(elType == 'xref'){
 				nodeString += Meteor.fullText.linkXref(n);
 			}else{
@@ -491,6 +491,26 @@ Meteor.fullText = {
 		}
 		// console.log(nodeString);
 		return nodeString;
+	},
+	traverseTableFooter: function(n){
+		// console.log(n);
+		var string = '';
+		string += '<tfoot>';
+
+		for(var c=0; c < n.childNodes.length ; c++){
+			if(n.childNodes[c].nodeName == 'fn'){
+				// console.log(n.childNodes[c].childNodes);
+				string += '<tr><td colspan="100">';
+				string += Meteor.fullText.traverseTable(n.childNodes[c]);
+				string += '</td></tr>';
+			}else if(n.childNodes[c].nodeName == 'p'){
+				string += '<tr><td colspan="100">';
+				string += Meteor.fullText.convertContent(n.childNodes[c]);
+				string += '</td></tr>';
+			}
+		}
+		string += '</tfoot>';
+		return string;
 	},
 	traverseNode: function(node){
 		// console.log('..traverseNode');
