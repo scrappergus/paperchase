@@ -574,6 +574,35 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	Router.route('/article/:_id/doi', {
+		name: 'ArticleDOI',
+//		layoutTemplate: 'Visitor',
+        action: function() {
+            htmlString = "";
+
+			var articleExistsExists = articles.findOne({'ids.pii': this.params._id});
+			if(articleExistsExists){
+                htmlString += articleExistsExists.doi;
+			}
+
+
+			var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+			this.response.writeHead(200, headers);
+			this.response.end(htmlString);
+
+        },
+		title: function() {
+			var pageTitle = '';
+			// console.log(Session.get('journal'));
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			var articleTitle = Meteor.article.pageTitle(this.params._id) + ' - DOI' ;
+			return pageTitle + articleTitle;
+		},
+	});
+
 	Router.route('/article/:_id/text', {
 		name: 'ArticleText',
 		layoutTemplate: 'Visitor',
