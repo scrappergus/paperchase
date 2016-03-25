@@ -489,8 +489,8 @@ Template.AdminNews.helpers({
 Template.AdminNewsForm.helpers({
 	news: function() {
 		var news = {}; // if undefined, the template form will not load. So we need an empty object.
-		if(Session.get('newsId')){
-			news = newsList.findOne({_id : Session.get('newsId')});
+		if(Session.get('newsData')){
+			news = Session.get('newsData');
 		}
 		return news;
 	}

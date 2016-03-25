@@ -140,7 +140,9 @@ Meteor.fullText = {
 				contentType;
 			if(sec.localName != null){
 				// Different processing for different node types
-				if(sec.localName === 'title'){
+				if(sec.localName === 'label'){
+					sectionObject.label = Meteor.fullText.convertContent(sec);
+				}else if(sec.localName === 'title'){
 					sectionObject.title = Meteor.fullText.convertContent(sec);
 				}else if(sec.localName === 'table-wrap'){
 					// get attributes
@@ -202,21 +204,7 @@ Meteor.fullText = {
 					// Special tags - xref
 					// --------
 					if(childNode.localName === 'xref'){
-						// Determine - Reference or Figure?
-						if(childNode.childNodes[0]){
-							nValue = childNode.childNodes[0].nodeValue;
-							var attributes = childNode.attributes;
-							// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
-							for(var attr = 0 ; attr < attributes.length ; attr++){
-								// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
-								if(attributes[attr].nodeName === 'rid'){
-									nodeAnchor = attributes[attr].nodeValue;
-								}
-							}
-							content += '<a href="#' + nodeAnchor + '"  class="anchor">';
-							content += nValue;
-							content += '</a>';
-						}
+						content += Meteor.fullText.linkXref(childNode);
 					}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
 						// console.log('else if 1');
 						//plain text or external link
@@ -237,6 +225,29 @@ Meteor.fullText = {
 			}
 		}
 		content = Meteor.fullText.fixTags(content);
+		return content;
+	},
+	linkXref: function(xrefNode){
+		// Determine - Reference or Figure or table-fn?
+		var content = '';
+		if(xrefNode.childNodes[0]){
+			nValue = xrefNode.childNodes[0].nodeValue;
+			if(nValue == null){
+				// there is styling withing the xref, for ex <sup>a</sup>
+				nValue = Meteor.fullText.convertContent(xrefNode);
+			}
+			var attributes = xrefNode.attributes;
+			// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
+			for(var attr = 0 ; attr < attributes.length ; attr++){
+				// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
+				if(attributes[attr].nodeName === 'rid'){
+					nodeAnchor = attributes[attr].nodeValue;
+				}
+			}
+			content += '<a href="#' + nodeAnchor + '"  class="anchor">';
+			content += nValue;
+			content += '</a>';
+		}
 		return content;
 	},
 	convertFigure: function(node,figures,mongoId){
@@ -395,16 +406,47 @@ Meteor.fullText = {
 			tableTitle = '';
 		for(var c = 0 ; c < node.childNodes.length ; c++){
 			var n = node.childNodes[c];
-			// console.log(n.localName);
+			// console.log(n.nodeName, n.nodeValue);
 			// Start table el tag
-			if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){// table tag added in sectionToJson()
-				nodeString += '<' + n.localName + '>';
+			var elType = n.localName;
+			if(elType != null){
+				elType = Meteor.fullText.fixTableTags(elType);
 			}
+			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref'){// table tag added in sectionToJson()
 
-			if(n.localName == 'label'){
+				var colspan;
+				var rowspan;
+				var elId;
+				if(n.attributes){
+					for(var attr in n.attributes){
+						if(n.attributes[attr].name === 'colspan'){
+							colspan = n.attributes[attr].nodeValue;
+						}else if(n.attributes[attr].name === 'rowspan'){
+							rowspan = n.attributes[attr].nodeValue;
+						}else if(n.attributes[attr].name === 'id'){
+							elId = n.attributes[attr].nodeValue;
+						}
+					};
+				}
+
+				// create the start tag
+				nodeString += '<' + elType;
+				if(colspan){
+					nodeString += ' colspan="' + colspan + '"';
+				}
+				if(rowspan){
+					nodeString += ' rowspan="' + rowspan + '"';
+				}
+				if(elId){
+					nodeString += ' id="' + elId + '"';;
+				}
+				nodeString += '>';
+			}
+			// do not combine with elseif, because we need to still close tag via code below
+			if(elType == 'label'){
 				// Table Title - part one
 				tableLabel = Meteor.fullText.traverseTable(n);
-			}else if( n.localName == 'caption'){
+			}else if(elType == 'caption'){
 				// Table Title - part three
 				// do not use traversing functions. problem keeping title separate
 				for(var cc = 0 ; cc < n.childNodes.length ; cc++){
@@ -414,9 +456,12 @@ Meteor.fullText = {
 						tableCaption += Meteor.fullText.convertContent(n.childNodes[cc]);
 					}
 				}
-				tableHeading = '<h4>' + tableLabel + '. ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
+				if(tableLabel.indexOf('.') == -1){
+					tableLabel = tableLabel + '.';
+				}
+				tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
 				nodeString += '<caption>' + tableHeading + '</caption>'
-			}else if(n.localName == 'table-wrap-foot'){
+			}else if(elType == 'table-wrap-foot'){
 				// console.log('..footer');
 				nodeString += '<tfoot>';
 				// console.log(n);
@@ -426,6 +471,8 @@ Meteor.fullText = {
 				nodeString += '</td>';
 				nodeString += '</tr>';
 				nodeString += '</tfoot>';
+			}else if(elType == 'xref'){
+				nodeString += Meteor.fullText.linkXref(n);
 			}else{
 				// Table content
 				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
@@ -437,8 +484,8 @@ Meteor.fullText = {
 				}
 
 				// Close table el tag
-				if(n.localName != null && n.localName != 'title' && n.localName != 'label' && n.localName != 'caption' && n.localName != 'table' && n.localName != 'table-wrap-foot'){
-					nodeString += '</' + n.localName + '>'
+				if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){
+					nodeString += '</' + elType + '>'
 				}
 			}
 		}
@@ -466,7 +513,7 @@ Meteor.fullText = {
 		return string;
 	},
 	fixTags: function(content){
-		// console.log('...fixTags');
+		// console.log('...fixTags',content);
 		// Either object or string.
 		// Figures are the only one with content array containing objects instead of strings
 		if(typeof content == 'string'){
@@ -475,6 +522,8 @@ Meteor.fullText = {
 			content = content.replace(/<\/italic>/g,'</i>');
 			content = content.replace(/<bold>/g,'<b>');
 			content = content.replace(/<\/bold>/g,'</b>');
+			content = content.replace(/<underline>/g,'<u>');
+			content = content.replace(/<\/underline>/g,'</u>');
 
 			// remove deprecated
 			content = content.replace(/<fn>/g,'');
@@ -495,6 +544,21 @@ Meteor.fullText = {
 			}
 		}
 
+		return content;
+	},
+	fixTableTags: function(content){
+		// console.log('...fixTableTags',content);
+		// separate from fixTags because we will be passing the node name, not with <>, because we don't want to globally replace 'bold' in table or 'italic',
+		// just in case they are actually within the text
+		if(typeof content == 'string'){
+			// style tags
+			content = content.replace(/italic/g,'i');
+			content = content.replace(/\/italic/g,'/i');
+			content = content.replace(/bold/g,'b');
+			content = content.replace(/\/bold/g,'/b');
+			content = content.replace(/underline/g,'u');
+			content = content.replace(/\/underline/g,'u');
+		}
 		return content;
 	}
 }

@@ -13,6 +13,9 @@ html,body{
 
 
 /* Type ------------------------*/
+	h1,h2,h3{
+		font-weight: bold;
+	}
 	h1{
 		color: $black-0;
 	}
@@ -32,10 +35,10 @@ html,body{
 		color: $black-2;
 	}
 	p{
-		color: $black-0;
+		color: $color-paragraph;
 	}
 	strong {
-	 font-weight: bold;
+		font-weight: bold;
 	}
 	/* Type adjustments */
 	.truncate {
@@ -181,7 +184,7 @@ html,body{
 	}
 	.affiliations{
 		color: $gray-2;
-		font-size: $font-sm;
+		/*font-size: $font-sm;*/
 	}
 	.kw{
 		margin: $margin-sm 0 $margin-sm $margin-sm;
@@ -216,19 +219,57 @@ html,body{
 		margin: $margin-md 0;
 	}
 	/* section headers */
-	.article-header-1{
-		@extend h2;
-	}
-	.article-header-2{
-		@extend h3;
-	}
-	.article-header-3{
+	.article-header-0{
 		@extend h4;
 	}
+	.article-header-1{
+		@extend h5;
+	}
+	.article-header-2{
+		@extend h6;
+	}
+	.article-header-3{
+		@extend h7;
+	}
+	.article-header-4{
+		text-decoration: none!important;
+		@extend h8;
+	}
+	.article-header-5{
+		@extend p;
+	}
+	/* section nav */
+	.section-nav{
+		height: 90vh;
+		background: $white;
+		border: 1px solid $gray-2;
+		padding: $pad-md;
+		li{
+			margin-top: 0!important;
+			margin-bottom: 0!important;
+			border-bottom: 1px solid $gray-2;
+		}
+		a{
+			padding: $margin-md 0;
+			display: block;
+		}
+		a{
+			color: $color-paragraph!important;
+			&:hover{
+				color: $link-text-hover!important;
+			};
+		}
+	}
+	.sticky-wrapper.is-sticky{
+		.section-nav{
+			overflow: scroll;
+		}
+	}
+	/*table*/
 	.article-table{
 		@extend .box;
-		padding: 0px!important;
 		border: 1px solid $black-0;
+		padding: 0px!important;
 		table{
 			caption{
 				background: $gray-1;
@@ -239,50 +280,11 @@ html,body{
 				border-bottom: 1px solid $black-0;
 				tr{
 					border: 0px!important; /* using .bordered on table, but we do not want table header bordered */
+					th{
+						border: 1px solid $gray-1;
+					}
 				}
 			}
-		}
-	}
-	/* section nav */
-	.section-nav{
-		height: 90vh;
-		background: $white;
-		border: 1px solid $gray-2;
-		padding: $pad-md;
-		/*height: calc(100vh - 100px - 70px); //minus header and footer*/
-		li{
-			margin: 0;
-			padding: $margin-md 0;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			border-bottom: 1px solid $gray-0;
-		}
-		a{
-			display: block;
-			width: 100%;
-		}
-		.article-header-1{
-			@extend h4;
-		}
-		.article-header-2{
-			@extend h5;
-			margin-left: $margin-md;
-		}
-		.article-header-3{
-			@extend p;
-			margin-left: $margin-lg;
-		}
-		a{
-			/*color: $link-text!important;*/
-			&:hover{
-				color: $link-text-hover!important;
-			};
-		}
-	}
-	.sticky-wrapper.is-sticky{
-		.section-nav{
-			/*height: 90vh;*/ /* leave space for footer */
-			overflow: scroll;
 		}
 	}
 
@@ -369,10 +371,6 @@ html,body{
 	.card-header{
 		border-bottom: 2px solid $journal-primary-color;
 	}
-	.chip{
-		padding: $pad-sm;
-		margin-right: $margin-sm;
-	}
 
 /* Forms ------------------------*/
 	fieldset{
@@ -431,3 +429,10 @@ html,body{
 	}
 	* html .clearfix             { zoom: 1; } /* IE6 */
 	*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
+/* Media -----------------------*/
+.news-video{
+	display: inline-block;
+	padding: $pad-lg;
+	background: $gray-1;
+}

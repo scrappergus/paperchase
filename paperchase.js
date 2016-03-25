@@ -170,12 +170,12 @@ Router.route('/get-advance-articles/',{
                     prevSection = advanceList[last_index]['section_name'];
                 }
 				if(articleInfo['section_start']){
-//					if(prevSection){
-//						htmlString += '</div>';
-//					}
+					// if(prevSection){
+					// 	htmlString += '</div>';
+					// }
 
-//					htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-//					htmlString += '<div class="articlewrapper">';
+					// htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+					// htmlString += '<div class="articlewrapper">';
 				}
 
 
@@ -203,8 +203,8 @@ Router.route('/get-advance-articles/',{
 			    htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
 
 				if(articleInfo.authors){
-//					htmlString += '<tr>';
-//					htmlString += '<td class="tocAuthors">';
+					// htmlString += '<tr>';
+					// htmlString += '<td class="tocAuthors">';
 
 					htmlString += '<span class="tocAuthors">';
 
@@ -238,8 +238,8 @@ Router.route('/get-advance-articles/',{
 				htmlString += '<span class="tocGalleys">';
 				// Abstract
 				if(articleInfo.legacy_files){
-//					if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
-if([2,10,12,14,16,20,21,34,35,40,36,30].indexOf(articleInfo.section_id) == -1) {
+					// if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
+					if([2,10,12,14,16,20,21,34,35,40,36,30].indexOf(articleInfo.section_id) == -1) {
 						htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
 						htmlString += '&nbsp;';
 					}
@@ -274,6 +274,40 @@ if([2,10,12,14,16,20,21,34,35,40,36,30].indexOf(articleInfo.section_id) == -1) {
 			this.response.writeHead(200, headers);
 			this.response.end(htmlString);
 		}
+	}
+});
+
+
+Router.route('/get-interviews/',{
+	where: 'server',
+	action: function(){
+		var interviews = newsList.find({display: true, interview: true},{sort: {'date':-1}}).fetch();
+		var htmlString = '<html><head><meta name="robots" content="noindex"></head><body>';
+		for(var i=0; i< interviews.length; i++){
+			var interview = interviews[i];
+			htmlString+= '<div>';
+			if(interview.title){
+				htmlString+= '<h3>' + interview.title + '</h3>';
+			}
+			if(interview.youTube){
+				htmlString+= '<iframe width="470" height="265" src="https://www.youtube.com/embed/' + interview.youTube + '" frameborder="0" allowfullscreen></iframe>';
+			}
+			if(interview.content){
+				htmlString+= '<p>' + interview.content + '</p>';
+			}
+			if(interview.tags){
+				var tags = interview.tags;
+				for(var tag=0 ; tag < tags.length ; tag++){
+					htmlString+= '<span class="interview-tag" style="padding:5px;0px 10px 10px 0px;border:1px solid;float:left;display:block;width:auto;">' + interview.tags[tag] + '</span>';
+				}
+			}
+
+			htmlString+='</div>';
+		};
+		htmlString += '</body></html>';
+		var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+		this.response.writeHead(200, headers);
+		this.response.end(htmlString);
 	}
 });
 
@@ -323,7 +357,7 @@ if (Meteor.isClient) {
 				feature : featureList,
 				eic: edboard.find({role: 'Editor-in-Chief'}) ,
 				eb: edboard.find({role: 'Founding Editorial Board'}),
-				news:  newsList.find({},{sort : {date: -1}}).fetch()
+				news:  newsList.find({display:true},{sort : {date: -1}}).fetch()
 			}
 		}
 	});

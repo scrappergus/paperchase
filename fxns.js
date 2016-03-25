@@ -134,16 +134,39 @@ Meteor.adminNews = {
 				['misc', ['codeview','link']]
 			]
 		});
+
+		// New Tag
+		// --------
+		$('.news-tag-input').materialnote({
+			onPaste: function(e){
+				Meteor.formActions.removePastedStyle(e);
+			},
+			toolbar: [
+				['style', ['italic','superscript','subscript']],
+				['undo', ['undo', 'redo', 'help']]
+			]
+		});
 	},
 	formGetData: function(e){
 		// console.log('..news formGetData');
 		e.preventDefault();
+		var invalidData = [];
 		var newsObj = {},
 			newsMongoId,
 			success;
 
+		newsObj.title;
+		newsObj.content;
+		newsObj.date;
+		newsObj.youTube;
+		newsObj.tags;
+		newsObj.interview;
+		newsObj.display;
+
 		Meteor.formActions.saving();
 		$('input').removeClass('invalid');
+
+		newsMongoId = $('#news-mongo-id').val();
 
 		// Title
 		// ------
@@ -160,27 +183,85 @@ Meteor.adminNews = {
 		// Date
 		// ------
 		var newsDate = $('#news-date').val();
-		newsDate = new Date(newsDate);
-		newsObj.date = newsDate;
+		if(newsDate){
+			newsDate = new Date(newsDate);
+			newsObj.date = newsDate;
+		}
+
+		// YouTube
+		// ------
+		var youTube = $('#news-youtube').val();
+		if(youTube.indexOf('http') != -1){
+			var invalidObj = {
+				'input_id' : 'news-youtube',
+				'message' : 'YouTube ID cannot include http. Please only include the ID, for ex: eEp7km4t4Qk'
+			}
+			invalidData.push(invalidObj);
+		}else{
+			newsObj.youTube = youTube;
+		}
+
+		// Tags
+		// ------
+		newsObj.tags = [];
+		$('.news-tag-text').each(function(){
+			// console.log($(this).html());
+			newsObj.tags.push($(this).html());
+		});
+
+		// Interview
+		// ------
+		newsObj.interview = $('#news-interview').is(':checked');
 
 		// Display
 		// ------
 		newsObj.display = $('#news-display').is(':checked');
 
-		// TODO: validation
-		// console.log('news');
-		// console.log(news);
-		newsMongoId = $('#news-mongo-id').val();
-		if(!newsMongoId){
-			// Insert
-			success = newsList.insert(newsObj);
+		// console.log(newsObj);
+
+		// Update/Insert/Invalid
+		// ------
+		if(invalidData.length > 0){
+			Meteor.formActions.invalid(invalidData);
 		}else{
-			// Update
-			success = newsList.update({_id : newsMongoId} , {$set: newsObj});
+			Meteor.adminNews.save(newsMongoId, newsObj);
 		}
-		if(success){
-			Meteor.formActions.success();
-		}
+	},
+	save: function(newsMongoId, newsObj){
+		Meteor.call('realYouTubeVideo', newsObj.youTube, function(error,result){
+			if(error){
+				// console.error('YouTube ID check',error);
+				Meteor.formActions.errorMessage('Could not save news.<br>The YouTube ID does not produce a video. Please verify that the ID is correct.');
+			}else{
+				if(!newsMongoId){
+					Meteor.call('addNews',newsObj,function(error,result){
+						if(error){
+							Meteor.formActions.errorMessage('Could not add news', error);
+						}else if(result){
+							Meteor.formActions.successMessage('News Added');
+						}
+					});
+				}else{
+					Meteor.call('updateNews',newsMongoId, newsObj,function(error,result){
+						if(error){
+							Meteor.formActions.errorMessage('Could not update news', error);
+						}else if(result){
+							Meteor.formActions.successMessage('News Updated');
+						}
+					});
+				}
+			}
+		});
+	},
+	showAddNewTag: function(e){
+		e.preventDefault();
+		$('#row-tag-btn').addClass('hide');
+		$('#row-tag-input').removeClass('hide');
+	},
+	hideAddNewTag: function(e){
+		e.preventDefault();
+		$('#row-tag-btn').removeClass('hide');
+		$('#row-tag-input').addClass('hide');
 	}
 }
 
@@ -732,8 +813,15 @@ Meteor.formActions = {
 			// TODO: adding invalid class does not work for WYSIWYG
 			invalidString += invalidData[i]['message'] + '    ';
 			if(i === 0){
+				var scrollToEl = 'body';
+				if(invalidData[i]['fieldset_id'] && $('#' + invalidData[i]['fieldset_id']).length > 0){
+					scrollToEl = '#' + invalidData[i]['fieldset_id']; // I believe this is deprecated, but lets leave it here for now and check for existence
+				}else if(invalidData[i]['input_id'] && $('#' + invalidData[i]['input_id']).length > 0){
+					scrollToEl = '#' + invalidData[i]['input_id'];
+				}
+				// console.log('scrollToEl = ', scrollToEl);
 				$('html, body').animate({
-					scrollTop: $('#' + invalidData[i]['fieldset_id']).position().top
+					scrollTop: $(scrollToEl).position().top
 				}, 500);
 			}
 		}
@@ -743,12 +831,12 @@ Meteor.formActions = {
 		$('.success').addClass('hide');
 		$('.error').removeClass('hide');
 
-		// fixed saved button
+		// fixed save button
 		if($('#fixed-save-btn').length){
 			$('#fixed-save-btn').find('.show-save').removeClass('hide');
 			$('#fixed-save-btn').find('.show-wait').addClass('hide');
 		}
-		// saved button
+		// save button
 		if($('#save-btn').length){
 			$('#save-btn').find('.show-save').removeClass('hide');
 			$('#save-btn').find('.show-wait').addClass('hide');
@@ -1204,7 +1292,7 @@ Meteor.general = {
 	},
 	scrollAnchor: function(e){
 		e.preventDefault();
-		var anchor = $(e.target).attr('href');
+		var anchor = $(e.target).closest('a').attr('href');
 		var navTop = Meteor.general.navHeight();
 		if(anchor){
 			anchor = anchor.replace('#','');

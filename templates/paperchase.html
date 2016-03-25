@@ -9,6 +9,9 @@
 					<h5>{{formatDate date}}</h5>
 					<h4>{{title}}</h4>
 					<p>{{{content}}}</p>
+					{{#if youTube}}
+						<div class="news-video"><iframe width="560" height="315" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe></div>
+					{{/if}}
 				</li>
 				{{/each}}
 			</ul>

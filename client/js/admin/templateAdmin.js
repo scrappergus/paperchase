@@ -69,6 +69,9 @@ Template.AdminIssueForm.onRendered(function () {
 
 // News
 // ------
+Template.AdminNewsEdit.onDestroyed(function () {
+	Session.set('newsData',null);
+});
 Template.AdminNewsForm.onRendered(function () {
 	Meteor.adminNews.readyForm();
 });
