@@ -143,7 +143,7 @@ Router.route('/get-advance-articles/',{
 	},
 	action: function(){
 		// var htmlString = '<head><meta charset="UTF-8"></head><body>';
-		var htmlString = "<html><head><meta name=\"robots\" content=\"noindex\"></head><body>";
+		var htmlString = "<html><head><meta name=\"robots\" content=\"noindex\"><meta name=\"google-site-verification\" content=\"63uPoFYXoHVMKO4Sp4sx5nmxlbDH0fBgMyk9rMiB68A\" /></head><body>";
 		var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
 		if(advance){
 			var advanceList = advance.data;
@@ -276,6 +276,26 @@ Router.route('/get-advance-articles/',{
 		}
 	}
 });
+
+
+Router.route('/article/:_id/doi', {
+        where: 'server',
+        action: function() {
+            htmlString = "";
+
+            var articleExistsExists = articles.findOne({'ids.pii': this.params._id});
+            if(articleExistsExists){
+                htmlString = articleExistsExists.ids.doi || '';
+            }
+
+
+            var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+            this.response.writeHead(200, headers);
+            this.response.end(htmlString);
+
+        }
+    });
+
 
 
 Router.route('/get-interviews/',{
@@ -608,6 +628,7 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
 	Router.route('/article/:_id/text', {
 		name: 'ArticleText',
 		layoutTemplate: 'Visitor',
