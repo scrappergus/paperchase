@@ -466,7 +466,7 @@ Meteor.fullText = {
 				nodeString += '<tfoot>';
 				// console.log(n);
 				nodeString += '<tr>';
-				nodeString += '<td>';
+				nodeString += '<td colspan="100">';
 				nodeString += Meteor.fullText.traverseTable(n);
 				nodeString += '</td>';
 				nodeString += '</tr>';
