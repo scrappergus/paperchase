@@ -227,12 +227,13 @@ Meteor.fullText = {
 		content = Meteor.fullText.fixTags(content);
 		return content;
 	},
-	linkXref: function(childNode){
-		// Determine - Reference or Figure?
+	linkXref: function(xrefNode){
+		// Determine - Reference or Figure or table-fn?
 		var content = '';
-		if(childNode.childNodes[0]){
-			nValue = childNode.childNodes[0].nodeValue;
-			var attributes = childNode.attributes;
+		if(xrefNode.childNodes[0]){
+			nValue = xrefNode.childNodes[0].nodeValue;
+			var attributes = xrefNode.attributes;
+			// console.log(attributes);
 			// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
 			for(var attr = 0 ; attr < attributes.length ; attr++){
 				// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
