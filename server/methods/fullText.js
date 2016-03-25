@@ -498,6 +498,8 @@ Meteor.fullText = {
 			content = content.replace(/<\/italic>/g,'</i>');
 			content = content.replace(/<bold>/g,'<b>');
 			content = content.replace(/<\/bold>/g,'</b>');
+			content = content.replace(/<underline>/g,'<u>');
+			content = content.replace(/<\/underline>/g,'</u>');
 
 			// remove deprecated
 			content = content.replace(/<fn>/g,'');
@@ -530,8 +532,9 @@ Meteor.fullText = {
 			content = content.replace(/\/italic/g,'/i');
 			content = content.replace(/bold/g,'b');
 			content = content.replace(/\/bold/g,'/b');
+			content = content.replace(/underline/g,'u');
+			content = content.replace(/\/underline/g,'u');
 		}
-
 		return content;
 	}
 }
