@@ -765,20 +765,64 @@ Template.AdminArticleForm.events({
 		}
 	}
 });
-Template.AdminArticleXmlUpload.events({
-	'change #file-upload > input': function(e) {
-	  var file = e.target.files[0];
-	  var reader = new FileReader;
-	  var output = e.target.parentElement.querySelector('output');
-	  
-	  reader.onload = function(e) {
-		// process xml here
-		output.innerText = e.target.result;
-	  }
 
-	  reader.readAsText(file);
-	},
-	
+Template.AdminArticleXmlUpload.events({
+	'change #get-xml-file': function(e) {
+		var file = e.target.files[0];
+		var reader = new FileReader;
+		var output = e.target.parentElement.querySelector('output');
+		var output = document.getElementById('output-preview');
+
+		output.innerText = '';
+		  
+		reader.onload = function(e) {
+			try {
+				var parser = new X2JS;
+				var xml = e.target.result;
+				var json = parser.xml_str2json(xml);
+				var data = json.ArticleSet.Article;
+				var authorData = data.AuthorList.Author;
+				var authorArr = Array.isArray(authorData) ? authorData : [authorData];
+				var authors = authorArr
+					.map(function(author) {
+					  	return {
+					    	name_first: author.FirstName.__text,
+					    	name_middle: author.MiddleName,
+					    	name_last: author.LastName
+					  	};
+					});
+
+				var idData = data.ArticleIdList.ArticleId;
+				var idArr = Array.isArray(idData) ? idData : [idData];
+				var ids = idArr
+					.reduce(function(obj, id) {
+					  	obj[id._IdType] = id.__text;
+					 	return obj;
+					}, {});
+
+				var article = {
+					title: data.ArticleTitle,
+					abstract: data.Abstract,
+					volume: data.Volume,
+					issue: data.Issue,
+					authors: authors,
+					ids: ids,
+					article_type: {
+					  name: ''
+					}
+				};
+
+				Blaze.renderWithData(Template.ArticleHeader, article, output);
+
+			} catch (err) {
+				output.innerText = 'Cannot parse XML. ' + err.toString();
+			}
+
+		}
+
+	  	reader.readAsText(file);
+	},	
+
 	'click .update-article': function(e,t){
 		e.preventDefault();
 		var articleData = t.data['article'];
