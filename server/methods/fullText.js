@@ -204,21 +204,7 @@ Meteor.fullText = {
 					// Special tags - xref
 					// --------
 					if(childNode.localName === 'xref'){
-						// Determine - Reference or Figure?
-						if(childNode.childNodes[0]){
-							nValue = childNode.childNodes[0].nodeValue;
-							var attributes = childNode.attributes;
-							// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
-							for(var attr = 0 ; attr < attributes.length ; attr++){
-								// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
-								if(attributes[attr].nodeName === 'rid'){
-									nodeAnchor = attributes[attr].nodeValue;
-								}
-							}
-							content += '<a href="#' + nodeAnchor + '"  class="anchor">';
-							content += nValue;
-							content += '</a>';
-						}
+						content += Meteor.fullText.linkXref(childNode);
 					}else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
 						// console.log('else if 1');
 						//plain text or external link
@@ -239,6 +225,25 @@ Meteor.fullText = {
 			}
 		}
 		content = Meteor.fullText.fixTags(content);
+		return content;
+	},
+	linkXref: function(childNode){
+		// Determine - Reference or Figure?
+		var content = '';
+		if(childNode.childNodes[0]){
+			nValue = childNode.childNodes[0].nodeValue;
+			var attributes = childNode.attributes;
+			// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
+			for(var attr = 0 ; attr < attributes.length ; attr++){
+				// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
+				if(attributes[attr].nodeName === 'rid'){
+					nodeAnchor = attributes[attr].nodeValue;
+				}
+			}
+			content += '<a href="#' + nodeAnchor + '"  class="anchor">';
+			content += nValue;
+			content += '</a>';
+		}
 		return content;
 	},
 	convertFigure: function(node,figures,mongoId){
@@ -397,12 +402,12 @@ Meteor.fullText = {
 			tableTitle = '';
 		for(var c = 0 ; c < node.childNodes.length ; c++){
 			var n = node.childNodes[c];
+			// console.log(n.nodeName, n.nodeValue);
 			// Start table el tag
 			var elType = n.localName;
 			if(elType != null){
 				elType = Meteor.fullText.fixTableTags(elType);
 			}
-
 			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){// table tag added in sectionToJson()
 
 				var colspan = 1;
