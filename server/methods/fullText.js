@@ -408,7 +408,7 @@ Meteor.fullText = {
 			if(elType != null){
 				elType = Meteor.fullText.fixTableTags(elType);
 			}
-			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){// table tag added in sectionToJson()
+			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref'){// table tag added in sectionToJson()
 
 				var colspan = 1;
 
@@ -454,6 +454,8 @@ Meteor.fullText = {
 				nodeString += '</td>';
 				nodeString += '</tr>';
 				nodeString += '</tfoot>';
+			}else if(elType == 'xref'){
+				nodeString += Meteor.fullText.linkXref(n);
 			}else{
 				// Table content
 				if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
