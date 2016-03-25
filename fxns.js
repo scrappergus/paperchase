@@ -1292,7 +1292,7 @@ Meteor.general = {
 	},
 	scrollAnchor: function(e){
 		e.preventDefault();
-		var anchor = $(e.target).attr('href');
+		var anchor = $(e.target).closest('a').attr('href');
 		var navTop = Meteor.general.navHeight();
 		if(anchor){
 			anchor = anchor.replace('#','');

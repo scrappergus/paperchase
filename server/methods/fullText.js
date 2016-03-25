@@ -232,8 +232,11 @@ Meteor.fullText = {
 		var content = '';
 		if(xrefNode.childNodes[0]){
 			nValue = xrefNode.childNodes[0].nodeValue;
+			if(nValue == null){
+				// there is styling withing the xref, for ex <sup>a</sup>
+				nValue = Meteor.fullText.convertContent(xrefNode);
+			}
 			var attributes = xrefNode.attributes;
-			// console.log(attributes);
 			// tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
 			for(var attr = 0 ; attr < attributes.length ; attr++){
 				// console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
@@ -411,20 +414,27 @@ Meteor.fullText = {
 			}
 			if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref'){// table tag added in sectionToJson()
 
-				var colspan = 1;
-
+				var colspan;
+				var elId;
 				if(n.attributes){
 					for(var attr in n.attributes){
 						if(n.attributes[attr].name === 'colspan'){
 							colspan = n.attributes[attr].nodeValue;
+						}else if(n.attributes[attr].name === 'id'){
+							elId = n.attributes[attr].nodeValue;
 						}
 					};
 				}
-				if(elType === 'td' || elType === 'th'){
-					nodeString += '<' + elType + ' colspan="' + colspan + '">';
-				}else{
-					nodeString += '<' + elType + '>';
+
+				// create the start tag
+				nodeString += '<' + elType;
+				if(colspan){
+					nodeString += ' colspan="' + colspan + '"';
 				}
+				if(elId){
+					nodeString += ' id="' + elId + '"';;
+				}
+				nodeString += '>';
 			}
 			// do not combine with elseif, because we need to still close tag via code below
 			if(elType == 'label'){
