@@ -434,7 +434,10 @@ Meteor.fullText = {
 						tableCaption += Meteor.fullText.convertContent(n.childNodes[cc]);
 					}
 				}
-				tableHeading = '<h4>' + tableLabel + '. ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
+				if(tableLabel.indexOf('.') == -1){
+					tableLabel = tableLabel + '.';
+				}
+				tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
 				nodeString += '<caption>' + tableHeading + '</caption>'
 			}else if(elType == 'table-wrap-foot'){
 				// console.log('..footer');
