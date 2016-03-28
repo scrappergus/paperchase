@@ -53,7 +53,7 @@ Meteor.methods({
 	},
 	updateArticle: function(mongoId, articleData, batch){
 		var fut = new future();
-		console.log('--updateArticle',mongoId,articleData);
+		// console.log('--updateArticle',mongoId,articleData);
 
 		// the returned result will either be the result from updating/inserting the article doc,
 		// if inserting an article and a duplicate was found, then that is returned.
