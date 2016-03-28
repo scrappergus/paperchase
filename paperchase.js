@@ -208,7 +208,7 @@ Router.route('/get-advance-articles/',{
 
 					htmlString += '<span class="tocAuthors">';
 
-					if(articleInfo['ids']['pii']){
+					if(articleInfo['ids']['doi']){
 						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
 					}
 					var authors = articleInfo.authors;
@@ -838,4 +838,17 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	Router.route('/search', {
+		name: 'Search',
+		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Search';
+		},
+	});
+
 }
