@@ -268,4 +268,21 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+
+	Template.registerHelper('searchResults', function(action){
+            Meteor.subscribe("search", Session.get("searchValue"));
+            var searchVal = Session.get("searchValue");
+            if (searchVal != '' && searchVal !== undefined) {
+                return res = articles.find({}, { sort: [["score", "desc"]] });
+            }
+            else {
+                res = [];
+            }
+        });
+
+	Template.registerHelper('searchValue', function(){
+            return Session.get("searchValue");
+        });
+
 }

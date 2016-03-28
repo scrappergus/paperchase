@@ -845,4 +845,17 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	Router.route('/search', {
+		name: 'Search',
+		layoutTemplate: 'Visitor',
+		title: function() {
+			var pageTitle = '';
+			if(Session.get('journal')){
+				pageTitle = Session.get('journal').journal.name + ' | ';
+			}
+			return pageTitle + 'Search';
+		},
+	});
+
 }
