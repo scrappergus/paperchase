@@ -1018,45 +1018,7 @@ Template.s3FigureUpload.events({
 				}
 			});
 		}else{
-			// Update the fig ID in the DB
-			// Update the uploaded figure name
-			// Meteor.call('renameArticleFigure', result.file.name, newFigId, articleMongoId, function(error,newFileName){
-			// 	if(error){
-
-			// 	}else if(newFileName){
-			// 				// Update the figures collection
-			// 				// console.log('newFileName',newFileName);
-			// 		var articleInfo = articles.findOne({_id : articleMongoId});
-			// 		var articleFigures = Session.get('article-assets').figures;
-			// 		articleFigures.forEach(function(fig){
-			// 			if(fig.id == originalFigId){
-			// 				fig.id = newFigId;
-			// 				fig.file = newFileName;
-			// 			}
-			// 		});
-			// 		// console.log('articleFigures',articleFigures);
-			// 		Meteor.call('updateFiguresDoc', articleMongoId, articleFigures, function(error,result){
-			// 			if(error){
-			// 				Meteor.formActions.errorMessage('Error. Figure uploaded but could not update database.');
-			// 			}else if(result){
-			// 				Meteor.formActions.successMessage('Figure uploaded.');
-
-			// 				// delete uploaded file, if not equal to MongoID
-			// 				if(articleMongoId != fileNamePieces[0]){
-			// 					// console.log('delete original');
-			// 					S3.delete('paper_figures/' + file.name,function(error,result){
-			// 						if(error){
-			// 							console.error('Could not delete original file: ' + file.name);
-			// 						}
-			// 						// if(result){
-			// 							// console.log('Deleted original file: ' + file.name);
-			// 						// }
-			// 					});
-			// 				}
-			// 			}
-			// 		});
-			// 	}
-			// });
+			Meteor.formActions.errorMessage('Please select a figure file to upload.');
 		}
 	}
 });
