@@ -339,7 +339,7 @@ if (Meteor.isClient) {
 	Session.setDefault('errorMessages',null);
 	Session.setDefault('articleData',null);
 	Session.setDefault('article-id',null);// Article Overview, Article Full Text, Article Purchase
-	Session.setDefault('article-assets',null);
+	Session.setDefault('article-files',null);
 	Session.setDefault('article-text',null);
 	Session.setDefault('affIndex',null);
 	Session.setDefault('missingPii',null);
@@ -546,6 +546,11 @@ if (Meteor.isClient) {
 	Router.route('/issue/:vi', {
 		name: 'Issue',
 		layoutTemplate: 'Visitor',
+		waitOn: function(){
+			return[
+				Meteor.subscribe('journalConfig')
+			]
+		},
 		title: function() {
 			var pageTitle = '';
 			var pieces = Meteor.issue.urlPieces(this.params.vi);
@@ -562,9 +567,9 @@ if (Meteor.isClient) {
 			var pieces = Meteor.issue.urlPieces(this.params.vi);
 			// TODO: add redirect if no issue
 			// console.log('pieces',pieces);
-			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
+			Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, function(error,result){
 				if(error){
-					console.log('ERROR - getIssueAndAssets');
+					console.log('ERROR - getIssueAndFiles');
 					console.log(error);
 				}
 				if(result){
@@ -596,35 +601,25 @@ if (Meteor.isClient) {
 				Router.go('ArticleNotFound');
 			}
 
-			// get xml, figures, pdf links
-			Meteor.call('articleAndAssests', this.params._id, function(error, result) {
-				if(result){
-					// console.log('result',result);
-					result.journal = Session.get('journal').journal.short_name;
-					Session.set('article-visitor',result);
-				}
-			});
 			this.next();
 		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
 				Meteor.subscribe('articleIssue',this.params._id),
-				Meteor.subscribe('articleTypes')
+				Meteor.subscribe('articleTypes'),
+				Meteor.subscribe('journalConfig')
 			]
 		},
 		data: function(){
 			if(this.ready()){
-				var article = Session.get('article-visitor');
-				if(!article.volume && article.issue_id){
-					// for display purposes
-					var issueInfo = issues.findOne();
-					article.volume = issueInfo.volume;
-					article.issue = issueInfo.issue;
+				var article = articles.findOne({'_id': this.params._id});
+				if(article){
+					article = Meteor.article.readyData(article);
+					return {
+						article: article
+					};
 				}
-				return {
-					article: article
-				};
 			}
 		}
 	});
@@ -639,17 +634,10 @@ if (Meteor.isClient) {
 				Router.go('ArticleNotFound');
 			}
 
-			// Get assets and fulltext
+			// Get files and fulltext
 			Session.set('article-text', null);
-			// get xml, figures, pdf links
-			Meteor.call('articleAndAssests', this.params._id, function(error, result) {
-				if(result){
-					// console.log('result',result);
-					result.journal = Session.get('journal').journal.short_name;
-					Session.set('article-visitor',result);
-				}
-			});
-			Meteor.call('getAssetsForFullText', this.params._id, function(error, result) {
+
+			Meteor.call('getFilesForFullText', this.params._id, function(error, result) {
 				if(result){
 					if(articleExistsExists.abstract){
 						result.abstract = articleExistsExists.abstract;
@@ -662,14 +650,20 @@ if (Meteor.isClient) {
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
-				Meteor.subscribe('articleTypes')
+				Meteor.subscribe('articleIssue',this.params._id),
+				Meteor.subscribe('articleTypes'),
+				Meteor.subscribe('journalConfig')
 			]
 		},
 		data: function(){
 			if(this.ready()){
-				return {
-					article: Session.get('article-visitor')
-				};
+				var article = articles.findOne({'_id': this.params._id});
+				if(article){
+					article = Meteor.article.readyData(article);
+					return {
+						article: article
+					};
+				}
 			}
 		},
 		title: function() {
@@ -728,7 +722,6 @@ if (Meteor.isClient) {
 		data: function(){
 			if(this.ready()){
 				var id = this.params.query.article;
-				// var assets = Meteor.call('availableAssests',id);
 				Session.set('article-id',id);
 				var article;
 				article = articles.findOne({'_id': id});

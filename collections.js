@@ -15,11 +15,6 @@ journalConfig = new Mongo.Collection('config');
 contact = new Mongo.Collection('contact');
 articleTypes = new Mongo.Collection('article_types');
 sections = new Mongo.Collection('sections');
-// Files
-// -------
-xmlCollection = new Mongo.Collection('xml');
-pdfCollection = new Mongo.Collection('pdf');
-figCollection = new Mongo.Collection('figures');
 // Sorters
 // -------
 sorters = new Mongo.Collection('sorters', {
@@ -416,7 +411,8 @@ if (Meteor.isServer) {
       'site' : 1,
       'submission.url' : 1,
       'contact' : 1,
-      'edboard_roles' : 1
+      'edboard_roles' : 1,
+      'assets': 1
     }});
     return siteConfig;
   });
@@ -640,7 +636,7 @@ if (Meteor.isServer) {
       this.stop();
       return;
     }
-});
+  });
 
   // News
   // ----------------

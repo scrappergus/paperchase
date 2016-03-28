@@ -1,8 +1,8 @@
 xpath = Meteor.npmRequire('xpath');
 dom = Meteor.npmRequire('xmldom').DOMParser;
 Meteor.methods({
-	getAssetsForFullText: function(mongoId){
-		// console.log('... getAssetsForFullText: ' + mongoId);
+	getFilesForFullText: function(mongoId){
+		// console.log('... getFilesForFullText: ' + mongoId);
 		var fut = new future();
 		var articleJson,
 			articleInfo,
@@ -10,31 +10,29 @@ Meteor.methods({
 			xml;
 		articleInfo = articles.findOne({'_id' : mongoId});
 		if(articleInfo){
-			Meteor.call('articleAssests',mongoId, function(assetsError, assets){
-				if(assetsError){
-					console.error('assetsError',assetsError);
-				}else if(assets && assets.xml.url){
-					if(assets.figures){
-						figures = assets.figures;
+			articleInfo = Meteor.article.readyData(articleInfo);
+			if(articleInfo.files.figures){
+				figures = articleInfo.files.figures;
+			}
+			if(articleInfo.files.xml){
+				Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
+					if(getXmlError){
+						console.error('getXmlError',getXmlError);
+						fut['throw'](getXmlError);
+					}else if(xmlRes){
+						xml = xmlRes.content;
+						Meteor.call('fullTextToJson',xml, figures, mongoId, function(convertXmlError, convertedXml){
+							if(convertXmlError){
+								console.error('convertXmlError',convertXmlError);
+								fut['throw'](convertXmlError);
+							}else if(convertedXml){
+								fut['return'](convertedXml);
+							}
+						});
 					}
-					Meteor.http.get(assets.xml.url,function(getXmlError, xmlRes){
-						if(getXmlError){
-							console.error('getXmlError',getXmlError);
-							fut['throw'](getXmlError);
-						}else if(xmlRes){
-							xml = xmlRes.content;
-							Meteor.call('fullTextToJson',xml, figures, mongoId, function(convertXmlError, convertedXml){
-								if(convertXmlError){
-									console.error('convertXmlError',convertXmlError);
-									fut['throw'](convertXmlError);
-								}else if(convertedXml){
-									fut['return'](convertedXml);
-								}
-							});
-						}
-					});
-				}
-			});
+				});
+			}
+
 		}
 		return fut.wait();
 	},

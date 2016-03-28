@@ -16,6 +16,7 @@ Meteor.organize = {
 		return diff;
 	},
 	getIssueArticlesByID: function(id){
+		// console.log('getIssueArticlesByID');
 		var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();
 		issueArticles = Meteor.organize.groupArticles(issueArticles);
 		return issueArticles;
@@ -555,6 +556,26 @@ Meteor.dataSubmissions = {
 }
 
 Meteor.article = {
+	readyData: function(article){
+		if(!article.volume && article.issue_id){
+			// for display purposes
+			var issueInfo = issues.findOne();
+			article.volume = issueInfo.volume;
+			article.issue = issueInfo.issue;
+		}
+		if(article.files){
+			article.files = Meteor.article.linkFiles(article.files, article._id);
+		}
+		return article;
+	},
+	linkFiles:function(files,articleMongoId){
+		for(var file in files){
+			files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
+		}
+		files.journal = journalConfig.findOne({}).journal.short_name;
+		files._id = articleMongoId;
+		return files;
+	},
 	// articleExists: function(id,fullText){
 	// 	console.log('..articleExists = ' + id);
 	// 	var articleExists = articles.findOne({'_id': id});

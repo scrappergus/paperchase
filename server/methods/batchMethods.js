@@ -201,30 +201,29 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	checkAllArticlesAssets: function(assetType){
-		console.log('..checkAllArticlesAssets : ' + assetType);
+	checkAllArticlesFiles: function(assetType){
+		console.log('..checkAllArticlesFiles : ' + assetType);
+		// only for those without asset in article doc
 		var fut = new future();
 		var journalInfo = journalConfig.findOne();
 		var journalShortName = journalInfo.journal.short_name;
 		var articlesList = articles.find().fetch();
-		var missingAssets = [];
+		var missingFiles = [];
 		var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/' + assetType + '/';
 		for(var i = 0 ; i < articlesList.length; i++){
-		// for(var i = 0 ; i <1; i++){
-			var articleMongoId = articlesList[i]._id;
-			var assetUrl = assetBaseUrl + articleMongoId + '.' + assetType;
-			// console.log(i, articlesList[i]._id,assetUrl);
-			if(!pdfCollection.findOne({'ids.mongo_id' : articleMongoId}) || !xmlCollection.findOne({'ids.mongo_id' : articleMongoId}) ){
+		// for(var i = 0 ; i <10; i++){
+			var article = articlesList[i];
+			var articleMongoId = article._id;
+			var assetFileName = articleMongoId + '.' + assetType;
+			var assetUrl = assetBaseUrl + assetFileName;
+			console.log(i, articlesList[i]._id);
+			if(!article.files || !article.files[assetType]){
 				Meteor.call('assetExistsOnS3',assetUrl,function(error,result){
 					if(result){
-						var assetData = {
-							'ids' : articlesList[i].ids
-						}
-						assetData.ids.mongo_id = articleMongoId;
-						// assetData[assetType + '_url'] = assetUrl;
-						assetData.file = articleMongoId + '.' + assetType;
-						// console.log(articleMongoId,assetData);
-						Meteor.call('updateAssetDoc',assetType, articleMongoId, assetData, function(updateError,updateResult){
+						var updateObj = {};
+						var updateWhere = 'files.' + assetType;
+						updateObj[updateWhere] = {file: assetFileName, display:true};
+						Meteor.call('updateArticle',articleMongoId, updateObj, function(updateError,updateResult){
 							if(updateError){
 								console.error(updateError);
 							}else if(updateResult){
@@ -232,13 +231,13 @@ Meteor.methods({
 							}
 						});
 					}else{
-						missingAssets.push(articleMongoId);
+						missingFiles.push(articleMongoId);
 					}
 				});
 			}
 			if(i == parseInt(articlesList.length - 1)){
-				// console.log('missingAssets',missingAssets);
-				fut['return'](missingAssets);
+				// console.log('missingFiles',missingFiles);
+				fut['return'](missingFiles);
 			}
 		}
 		return fut.wait();
@@ -537,89 +536,80 @@ Meteor.methods({
 		}
 		return fut.wait();
 	},
-	getMissingAssets: function(){
-		console.log('..getMissingAssets');
+	getMissingFiles: function(){
+		// console.log('..getMissingFiles');
 		var articlesList = articles.find({},{_id : 1}).fetch();
 		console.log('__article count = ' + articlesList.length);
-		var pdfFetch = pdfCollection.find({},{'ids.mongo_id' : 1}).fetch();
-		var xmlFetch = xmlCollection.find({},{'ids.mongo_id' : 1}).fetch();
 		var journalShortName = journalConfig.findOne().journal.short_name;
 		var crawlUrl = journalConfig.findOne().api.crawler;
-		var pdfList = {};
-		var xmlList = {};
-		var missing = {};
-		missing.pdf = [];
-		missing.xml = [];
-		missing.no_pmc = [];
-		for(var pdfIdx=0 ; pdfIdx<pdfFetch.length ; pdfIdx++){
-			pdfList[pdfFetch[pdfIdx].ids.mongo_id] = true;
-		}
-		for(var xmlIdx=0 ; xmlIdx<xmlFetch.length ; xmlIdx++){
-			xmlList[xmlFetch[xmlIdx].ids.mongo_id] = true;
-		}
-		// TODO: add check for if asset on S3 but DB just does not have it. Avoid reuploading assets via PMC.
+		var missingPmc = 0;
+		var missingPdf = articles.find({'files.pdf':{$exists:false}}).fetch();
+		var missingXml = articles.find({'files.xml':{$exists:false}}).fetch();
+		// TODO: add check for if asset on S3 but DB just does not have it. Avoid reuploading files via PMC.
 		for(var a = 0 ; a < articlesList.length ; a++){
-			if(articlesList[a].ids.pmc){
-				if(!pdfList[articlesList[a]._id]){
-					missing.pdf.push(articlesList[a]._id);
-				}
-				if(!xmlList[articlesList[a]._id]){
-					missing.xml.push(articlesList[a]._id);
-				}
-			}else{
-				missing.no_pmc.push(articlesList[a]._id);
+			if(!articlesList[a].ids || !articlesList[a].ids.pmc){
+				missingPmc++;
 			}
+		}
 
-			if(a == parseInt(articlesList.length-1)){
-				// console.log('missing',missing);
-				console.log('___Fetch XML count = ' + missing.xml.length);
-				console.log('___Fetch PDF count = ' + missing.pdf.length);
-				console.log('___NO PMC ID = ', missing.no_pmc.length);
+		console.log('___Fetch XML count = ' + missingXml.length);
+		console.log('___Fetch PDF count = ' + missingPdf.length);
+		console.log('___NO PMC ID = ', missingPmc);
 				// console.log(missing.pdf);
-				if(missing.xml.length > 0){
-					for(var i=0 ; i<missing.xml.length ; i++){
-						var xmlUrlApi = crawlUrl + '/get_article_pmc_xml/' + journalShortName + '/' + missing.xml[i];
-						Meteor.http.get(xmlUrlApi , function(error,result){
-							if(error){
-								console.error('Asset Error: ',error);
-							}else if(result){
-								var assetData = result.data;
-								// console.log('Uploaded',assetData);
-								if(assetData && assetData.ids){
-									Meteor.call('updateAssetDoc','xml', assetData.ids.mongo_id , assetData, function(updateXmlError, updateXmlRes){
-										if(updateXmlError){
-											console.error('updateXmlError',updateXmlError);
-										}else if(updateXmlRes){
-
+		if(missingXml.length > 0){
+			for(var i=0 ; i<missingXml.length ; i++){
+				console.log('XML : ' + missingXml[i]._id);
+				var xmlUrlApi = crawlUrl + '/get_article_pmc_xml/' + journalShortName + '/' + missingXml[i]._id;
+				Meteor.http.get(xmlUrlApi , function(error,result){
+					if(error){
+						console.error('Asset Error: ',error);
+					}else if(result){
+						var assetData = result.data;
+						console.log('Uploaded',assetData.ids.mongo_id);
+						if(assetData && assetData.ids){
+									var articleMongoId =  assetData.ids.mongo_id;
+									var assetFileName =  assetData.ids.mongo_id + '.xml';
+									var updateObj = {};
+									var updateWhere = 'files.xml';
+									updateObj[updateWhere] = {file: assetFileName, display:true};
+									Meteor.call('updateArticle',articleMongoId, updateObj, function(updateError,updateResult){
+										if(updateError){
+											console.error(updateError);
+										}else if(updateResult){
+											console.log('updateResult',updateResult);
 										}
 									});
-								}
-							}
-						});
+						}
 					}
-				}
-				if(missing.pdf.length > 0){
-
-					for(var i=0 ; i<missing.pdf.length ; i++){
-						var pdfUrlApi = crawlUrl + '/get_article_pmc_pdf/' + journalShortName + '/' + missing.pdf[i];
-						Meteor.http.get(pdfUrlApi , function(error,result){
-							if(error){
-								console.error('Asset Error: ',error);
-							}else if(result){
-								var assetData = result.data;
-								// console.log('Uploaded',assetData);
-								if(assetData && assetData.ids){
-									Meteor.call('updateAssetDoc','pdf', assetData.ids.mongo_id , assetData, function(updatePdfError, updatePdfRes){
-										if(updatePdfError){
-											console.error('updatePdfError',updatePdfError);
-										}else if(updatePdfRes){
-										}
-									});
+				});
+			}
+		}
+		if(missingPdf.length > 0){
+			for(var i=0 ; i<missingPdf.length ; i++){
+				console.log('XML : ' + missingPdf[i]._id);
+				var pdfUrlApi = crawlUrl + '/get_article_pmc_pdf/' + journalShortName + '/' + missingPdf[i]._id;
+				Meteor.http.get(pdfUrlApi , function(error,result){
+					if(error){
+						console.error('Asset Error: ',error);
+					}else if(result){
+						var assetData = result.data;
+						console.log('Uploaded',assetData.ids.mongo_id);
+						if(assetData && assetData.ids){
+							var articleMongoId =  assetData.ids.mongo_id;
+							var assetFileName =  assetData.ids.mongo_id + '.pdf';
+							var updateObj = {};
+							var updateWhere = 'files.pdf';
+							updateObj[updateWhere] = {file: assetFileName, display:true};
+							Meteor.call('updateArticle',articleMongoId, updateObj, function(updateError,updateResult){
+								if(updateError){
+									console.error(updateError);
+								}else if(updateResult){
+									console.log('updateResult',updateResult);
 								}
-							}
-						});
+							});
+						}
 					}
-				}
+				});
 			}
 		}
 	}

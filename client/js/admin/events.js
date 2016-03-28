@@ -810,13 +810,14 @@ Template.AdminArticleForm.events({
 	}
 });
 
-// Article Assets
+// Article Files
 // ----------------
 Template.s3Upload.events({
 	'click button.upload': function(e){
 		e.preventDefault();
 		Meteor.formActions.saving();
-		var xmlUrl,
+		var article,
+			xmlUrl,
 			s3Folder,
 			articleIds;
 		var articleMongoId = $(e.target).closest('button').attr('data-id');
@@ -840,18 +841,9 @@ Template.s3Upload.events({
 							if(error){
 
 							}else if(newFileName){
-								var articleInfo = articles.findOne({_id : articleMongoId});
-								var assetObj = {
-									file: newFileName,
-									ids: {}
-								};
-
-								if(articleInfo.ids){
-									assetObj.ids = articleInfo.ids;
-								}
-								assetObj.ids.mongo_id = articleInfo._id;
-
-								Meteor.call('updateAssetDoc', s3Folder, articleMongoId, assetObj, function(error,result){
+								var updateAssetObj = {}
+								updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
+								Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
 									if(result){
 										// clear files
 										S3.collection.remove({});
@@ -860,7 +852,9 @@ Template.s3Upload.events({
 										Meteor.call('articleAssests', articleMongoId, function(error, result) {
 											if(result){
 												// console.log('articleAssests',result);
-												Session.set('article-assets',result);
+												// Session.set('article-files',result);
+												article = articles.findOne({_id : articleMongoId});
+												Session.set('article',article)
 											}
 										});
 
@@ -892,28 +886,36 @@ Template.s3Upload.events({
 		}
 	}
 });
-Template.AdminArticleAssets.events({
-	'submit #assets-form': function(e){
+Template.AdminArticleFiles.events({
+	'submit #files-form': function(e){
 		e.preventDefault();
 		Meteor.formActions.saving();
 		var articleMongoId = $('#article-mongo-id').val();
-		var pdfSettings = {
-			display: false
-		};
-		var xmlSettings = {
-			display: false
-		};
+
+		var fileSettings = Session.get('article').files;
+		var updateObj = {
+			pdf: {
+				file : fileSettings.pdf.file,
+				display: false
+			},
+			xml: {
+				file : fileSettings.xml.file,
+				display: false
+			}
+		}
+		//dotted update causing problems with update, so just pass filename with display settings for now
+
 		if($('#display-xml').prop('checked')){
-			xmlSettings.display = true;
+			updateObj.xml.display = true;
 		};
 		if($('#display-pdf').prop('checked')){
-			pdfSettings.display = true;
+			updateObj.pdf.display  = true;
 		};
-		Meteor.call('updateAssetSettings',articleMongoId, pdfSettings, xmlSettings, function(error,result){
+		Meteor.call('updateArticle',articleMongoId, {files: updateObj}, function(error,result){
 			if(error){
 				Meteor.formActions.errorMessage();
 			}else if(result){
-				Meteor.formActions.successMessage('Asset settings updated');
+				Meteor.formActions.successMessage('File settings updated');
 
 			}
 		});
@@ -925,28 +927,28 @@ Template.AdminArticleFigures.events({
 		var figId = $(e.target).closest('button').attr('data-id');
 		// console.log(figId);
 		Session.set('figureEditing',figId);
-		var assets = Session.get('article-assets');
-		var figures = assets.figures;
+		var files = Session.get('article-files');
+		var figures = files.figures;
 		figures.forEach(function(fig){
 			if(fig.id == figId){
 				fig.editing = true;
 			}
 		});
-		Session.set('article-assets',assets);
+		Session.set('article-files',files);
 	},
 	'click .article-figure-cancel': function(e){
 		e.preventDefault();
 		var figId = $(e.target).closest('button').attr('data-id');
 		// console.log(figId);
 		Session.set('figureEditing',figId);
-		var assets = Session.get('article-assets');
-		var figures = assets.figures;
+		var files = Session.get('article-files');
+		var figures = files.figures;
 		figures.forEach(function(fig){
 			if(fig.id == figId){
 				fig.editing = false;
 			}
 		});
-		Session.set('article-assets',assets);
+		Session.set('article-files',files);
 	}
 });
 Template.s3FigureUpload.events({
@@ -987,7 +989,7 @@ Template.s3FigureUpload.events({
 						}else if(newFileName){
 							// Update the figures collection
 							var articleInfo = articles.findOne({_id : articleMongoId});
-							var articleFigures = Session.get('article-assets').figures;
+							var articleFigures = Session.get('article-files').figures;
 							articleFigures.forEach(function(fig){
 								if(fig.id == originalFigId){
 									fig.id = newFigId;
@@ -1218,9 +1220,9 @@ Template.AdminBatch.events({
 			}
 		});
 	},
-	'click #get-missing-assets' : function(e){
+	'click #get-missing-files' : function(e){
 		e.preventDefault();
-		Meteor.call('getMissingAssets', function(e,r){
+		Meteor.call('getMissingFiles', function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){
@@ -1273,19 +1275,17 @@ Template.AdminBatch.events({
 	},
 	'click #check-all-xml': function(e){
 		e.preventDefault();
-		Meteor.call('checkAllArticlesAssets', 'xml', function(e,r){
+		Meteor.call('checkAllArticlesFiles', 'xml', function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){
-
-				r.forEach()
 				console.log(r);
 			}
 		});
 	},
 	'click #check-all-pdf': function(e){
 		e.preventDefault();
-		Meteor.call('checkAllArticlesAssets', 'pdf', function(e,r){
+		Meteor.call('checkAllArticlesFiles', 'pdf', function(e,r){
 			if(e){
 				console.error(e);
 			}else if(r){

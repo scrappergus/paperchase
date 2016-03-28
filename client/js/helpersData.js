@@ -104,16 +104,6 @@ Template.EdBoard.helpers({
 
 // Article
 // -------
-Template.Article.helpers({
-	assets: function(){
-		return Session.get('article-assets');
-	}
-});
-Template.ArticleButtons.helpers({
-	assets: function(){
-		return Session.get('article-assets');
-	}
-});
 Template.ArticleText.helpers({
 	fullText: function(){
 		// console.log(Session.get('article-text'));

@@ -107,7 +107,7 @@ if (Meteor.isClient) {
 	// DOI Status, articles list
 	Session.setDefault('articles-doi-status',null);
 	// Batch page
-	Session.setDefault('articles-assets-audit',null);
+	Session.setDefault('articles-files-audit',null);
 	Session.setDefault('articles-ncbi-audit',null);
 	// Articles audit
 	Session.setDefault('articles-duplicate', null);
@@ -121,9 +121,6 @@ if (Meteor.isClient) {
 	Session.setDefault('errorMessage',null);
 	Session.setDefault('statusModalAction',null);
 	Session.setDefault('statusModalDetails',null);
-	// Article
-	Session.setDefault('article-assets',null);
-	// Session.setDefault('figureEditing',null);
 
 
 	Router.route('/admin', {
@@ -461,11 +458,11 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Meteor.call('allArticlesAssetsAudit',function(error,result){
+			Meteor.call('allArticlesFilesAudit',function(error,result){
 				if(error){
 					throw new Meteor.Error(error);
 				}else{
-					Session.set('articles-assets-audit',result);
+					Session.set('articles-files-audit',result);
 				};
 			});
 			Meteor.call('pubMedAndPmcAudit',function(error,result){
@@ -512,13 +509,6 @@ if (Meteor.isClient) {
 				}else{
 					Router.go('AdminArticleAdd');
 				}
-			}else{
-				Meteor.call('articleAssests', this.params._id, function(error, result) {
-					if(result){
-						// console.log('articleAssests',result);
-						Session.set('article-assets',result);
-					}
-				});
 			}
 			this.next();
 		},
@@ -568,39 +558,28 @@ if (Meteor.isClient) {
 				}else{
 					Router.go('AdminArticleAdd');
 				}
-			}else{
-				Meteor.call('articleAssests', this.params._id, function(error, result) {
-					if(result){
-						// console.log('articleAssests',result);
-						Session.set('article-assets',result);
-					}
-				});
 			}
 			this.next();
 		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
-				Meteor.subscribe('articleIssue',this.params._id)
+				Meteor.subscribe('articleIssue',this.params._id),
+				Meteor.subscribe('journalConfig')
 			]
 		},
 		data: function(){
 			if(this.ready()){
-				var article = articles.findOne();
-				if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-					if(!article.volume && article.issue_id){
-						// for display purposes
-						var issueInfo = issues.findOne();
-						article.volume = issueInfo.volume;
-						article.issue = issueInfo.issue;
-					}
+				var article = articles.findOne({'_id': this.params._id});
+				if(article){
+					article = Meteor.article.readyData(article);
 					Session.set('article',article);
 				}
 			}
 		}
 	});
-	Router.route('/admin/article/:_id/assets',{
-		name: 'AdminArticleAssets',
+	Router.route('/admin/article/:_id/files',{
+		name: 'AdminArticleFiles',
 		layoutTemplate: 'Admin',
 		title: function() {
 			var pageTitle = 'Admin | Article PDF and XML ';
@@ -624,32 +603,21 @@ if (Meteor.isClient) {
 				}else{
 					Router.go('AdminArticleAdd');
 				}
-			}else{
-				Meteor.call('articleAssests', this.params._id, function(error, result) {
-					if(result){
-						// console.log('articleAssests',result);
-						Session.set('article-assets',result);
-					}
-				});
 			}
 			this.next();
 		},
 		waitOn: function(){
 			return[
 				Meteor.subscribe('articleInfo',this.params._id),
-				Meteor.subscribe('articleIssue',this.params._id)
+				Meteor.subscribe('articleIssue',this.params._id),
+				Meteor.subscribe('journalConfig')
 			]
 		},
 		data: function(){
 			if(this.ready()){
-				var article = articles.findOne();
-				if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-					if(!article.volume && article.issue_id){
-						// for display purposes
-						var issueInfo = issues.findOne();
-						article.volume = issueInfo.volume;
-						article.issue = issueInfo.issue;
-					}
+				var article = articles.findOne({'_id': this.params._id});
+				if(article){
+					article = Meteor.article.readyData(article);
 					Session.set('article',article);
 				}
 			}
@@ -1020,9 +988,9 @@ if (Meteor.isClient) {
 			Session.set('issue',null);
 			var pieces = Meteor.issue.urlPieces(this.params.vi);
 
-			Meteor.call('getIssueAndAssets', pieces.volume, pieces.issue, function(error,result){
+			Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, function(error,result){
 				if(error){
-					console.error('ERROR - getIssueAndAssets',error);
+					console.error('ERROR - getIssueAndFiles',error);
 				}
 				if(result){
 					Session.set('issue',result);
@@ -1443,11 +1411,11 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Meteor.call('allArticlesAssetsAudit',function(error,result){
+			Meteor.call('allArticlesFilesAudit',function(error,result){
 				if(error){
 					throw new Meteor.Error(error);
 				}else{
-					Session.set('articles-assets-audit',result);
+					Session.set('articles-files-audit',result);
 				};
 			});
 			Meteor.call('pubMedAndPmcAudit',function(error,result){

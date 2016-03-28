@@ -86,7 +86,7 @@
 		<div class="col s12">
 			<a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
 			<a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
-			<a href="{{pathFor 'AdminArticleAssets'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleAssets'}}">PDF and XML</a>
+			<a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">PDF and XML</a>
 			<a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
 		</div>
 	</div>
@@ -140,24 +140,24 @@
 	{{/with}}
 </template>
 
-<template name="AdminArticleAssets">
+<template name="AdminArticleFiles">
 	{{>AdminHeader header="Article PDF and XML"}}
 	{{>StatusModal}}
 	{{#with article}}
 	{{>AdminArticleHeader}}
-	{{/with}}
+
 	<div class="row">
 		<div class="col s12">
 			<div class="card blue-grey lighten-4 z-depth-0">
 				<div class="card-content">
-					<form id="assets-form">
-						<span class="card-title">Assets</span>
+					<form id="files-form">
+						<span class="card-title">Files</span>
 						<div class="row">
 							<div class="col s12 m6">
 								<div class="card z-depth-0 blue-grey lighten-5">
 									<div class="card-content">
 										<div class="card-title">XML</div>
-										{{#with assets}}
+										{{#with files}}
 										{{#with xml}}
 										{{#if url}}
 											<div class="row">
@@ -165,7 +165,7 @@
 													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
 												</div>
 												<div class="col s12 m6">
-													<input type="checkbox" id="display-xml" checked="{{checked settings.display}}"/>
+													<input type="checkbox" id="display-xml" checked="{{checked display}}"/>
 													<label for="display-xml">Display XML</label>
 												</div>
 											</div>
@@ -173,6 +173,8 @@
 										<h5>No XML</h5>
 										{{/if}}
 										{{/with}}
+										{{else}}
+										<h5>No XML</h5>
 										{{/with}}
 									</div>
 								</div>
@@ -181,7 +183,7 @@
 								<div class="card z-depth-0 blue-grey lighten-5">
 									<div class="card-content">
 										<div class="card-title">PDF</div>
-										{{#with assets}}
+										{{#with files}}
 										{{#with pdf}}
 										{{#if url}}
 											<div class="row">
@@ -189,7 +191,7 @@
 													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
 												</div>
 												<div class="col s12 m6">
-													<input type="checkbox" id="display-pdf" checked="{{checked settings.display}}"/>
+													<input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
 													<label for="display-pdf">Display PDF</label>
 												</div>
 											</div>
@@ -197,6 +199,8 @@
 										<h5>No PDF</h5>
 										{{/if}}
 										{{/with}}
+										{{else}}
+										<h5>No PDF</h5>
 										{{/with}}
 									</div>
 								</div>
@@ -212,27 +216,25 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="row">
 		<div class="col s12">
 			<div class="card blue-grey lighten-4 z-depth-0">
 				<div class="card-content">
-					{{#with article}}
-						<div class="row">
-							<div class="col s12 offset-m4 m4">
-								<div class="card z-depth-0 blue-grey lighten-5">
-									<div class="card-content">
-										<div class="card-title">XML &amp; PDF Uploader</div>
-										{{>s3Upload}}
-									</div>
+					<div class="row">
+						<div class="col s12 offset-m4 m4">
+							<div class="card z-depth-0 blue-grey lighten-5">
+								<div class="card-content">
+									<div class="card-title">XML &amp; PDF Uploader</div>
+									{{>s3Upload}}
 								</div>
 							</div>
 						</div>
-					{{/with}}
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	{{/with}}
 </template>
 
 <template name="AdminArticleFigures">
@@ -240,8 +242,7 @@
 	{{>StatusModal}}
 	{{#with article}}
 	{{>AdminArticleHeader}}
-	{{/with}}
-	{{#with assets}}
+	{{#with files}}
 	<div class="row">
 		<div class="col s12">
 			<div class="card blue-grey lighten-4 z-depth-0">
@@ -291,6 +292,7 @@
 			</div>
 		</div>
 	</div>
+	{{/with}}
 	{{/with}}
 </template>
 

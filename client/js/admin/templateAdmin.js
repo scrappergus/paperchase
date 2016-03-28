@@ -33,7 +33,7 @@ Template.AdminArticle.onRendered(function () {
 		}, 500);
 	}
 });
-Template.AdminArticleAssets.onRendered(function () {
+Template.AdminArticleFiles.onRendered(function () {
 	$('.materialboxed').materialbox();
 });
 

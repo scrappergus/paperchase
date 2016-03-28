@@ -53,7 +53,7 @@ Meteor.methods({
 	},
 	updateArticle: function(mongoId, articleData, batch){
 		var fut = new future();
-		// console.log('--updateArticle');
+		console.log('--updateArticle',mongoId,articleData);
 
 		// the returned result will either be the result from updating/inserting the article doc,
 		// if inserting an article and a duplicate was found, then that is returned.
@@ -71,7 +71,7 @@ Meteor.methods({
 			// Update existing
 			articleData.batch = batch;
 			var updated = articles.update({'_id' : mongoId}, {$set: articleData});
-			fut['return'](updated);
+			fut['return'](mongoId);
 		}
 		return fut.wait();
 	},
@@ -277,22 +277,22 @@ Meteor.methods({
 			return article;
 		}
 	},
-	articleAndAssests: function(mongoId){
+	articleAndFiles: function(mongoId){
 		//for visitor
 		var article = articles.findOne({_id : mongoId});
-		var assets = Meteor.call('articleAssests',mongoId);
-		for(var asset in assets){
-			article[asset] = assets[asset];
+		var files = Meteor.call('articleFiles',mongoId);
+		for(var file in files){
+			article[file] = files[file];
 		}
 		return article;
 	},
-	allArticlesAssetsAudit: function(){
+	allArticlesFilesAudit: function(){
 		var result = {};
-		var allArticles = articles.find({},{_id : 1}).fetch();
+		var allArticles = articles.find({},{_id : 1, files : 1}).fetch();
 		var articlesWithoutPmc = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
 		var articlesWithoutPmid = articles.find({'ids.pmid' : {$exists:false}},{_id : 1}).fetch();
-		var pdfList = pdfCollection.find({},{_id : 1}).fetch();
-		var xmlList = xmlCollection.find({},{_id : 1}).fetch();
+		var pdfList = articles.find({'files.pdf' : {$exists:true}},{_id : 1}).fetch();
+		var xmlList = articles.find({'files.xml' : {$exists:true}},{_id : 1}).fetch();
 		result.articles = allArticles.length;
 		result.articles_without_pmc = articlesWithoutPmc.length;
 		result.articles_without_pmid = articlesWithoutPmid.length;

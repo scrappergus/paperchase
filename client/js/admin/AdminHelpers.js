@@ -171,17 +171,11 @@ Template.AdminArticleOverview.helpers({
 Template.AdminArticleFigures.helpers({
 	article : function(){
 		return Session.get('article');
-	},
-	assets: function(){
-		return Session.get('article-assets');
 	}
 });
-Template.AdminArticleAssets.helpers({
+Template.AdminArticleFiles.helpers({
 	article : function(){
 		return Session.get('article');
-	},
-	assets: function(){
-		return Session.get('article-assets');
 	}
 });
 Template.AdminArticle.helpers({
@@ -582,7 +576,7 @@ Template.AdminArticlesAudit.helpers({
 });
 Template.AdminArticlesAuditContent.helpers({
 	paperchaseAudit: function(){
-		return  Session.get('articles-assets-audit');
+		return  Session.get('articles-files-audit');
 	},
 	ncbiAudit: function(){
 		return  Session.get('articles-ncbi-audit');

@@ -105,8 +105,8 @@ Meteor.methods({
 	findIssueByVolIssue: function(vol, iss){
 		return issues.findOne({'volume' : vol, 'issue': iss});
 	},
-	getIssueAndAssets: function(volume, issue){
-		// console.log('...getIssueAndAssets v = ' + volume + ', i = ' + issue);
+	getIssueAndFiles: function(volume, issue){
+		// console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
 		var fut = new future();
 		var journal = journalConfig.findOne({}).journal.short_name;
 		var issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
@@ -115,21 +115,13 @@ Meteor.methods({
 			issueData.cover = Meteor.issue.coverPath(volume,issue);
 
 			var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
-
-			// get assets
 			for(var i=0 ; i< issueArticles.length ; i++){
-				var articleAssets = Meteor.call('articleAssests', issueArticles[i]['_id']);
-				for(var asset in articleAssets){
-					issueArticles[i][asset] = articleAssets[asset];
-				}
-				issueArticles[i].journal = journal;
-				if(i == parseInt(issueArticles.length - 1)){
-					issueData['articles']
-					fut['return'](issueData);
+				if(issueArticles[i].files){
+					issueArticles[i].files = Meteor.article.linkFiles(issueArticles[i].files,issueArticles[i]._id);
 				}
 			}
-
-			issueData['articles'] = issueArticles;
+			issueData.articles = issueArticles;
+			fut['return'](issueData);
 		}else{
 			fut['return']();
 		}
