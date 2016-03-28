@@ -28,7 +28,7 @@ Meteor.methods({
 		}
 	},
 	getAllArticlesDoiStatus: function(){
-		// console.log('..getAllArticlesDoiStatus');
+		console.log('..getAllArticlesDoiStatus');
 		var fut = new future();
 		var journalShortName = journalConfig.findOne().journal.short_name;
 		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalShortName;
@@ -41,7 +41,7 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 			}else if(result){
 				// combine with articles DB
-				// console.log('articles',result.content);
+				console.log('articles',result.content);
 				var articlesDoiList = JSON.parse(result.content);
 
 				for(var a=0 ; a<articlesDoiList.length ; a++){
@@ -64,17 +64,26 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: XML to S3' , error);
 			}else if(result){
 				// console.log('All XML Saved',result);
-				// Loop through all articles in response and update the XML collection in the DB
+				// Loop through all articles in response and update the article docs
 				articlesList = result.data;
-				console.log('articlesList',articlesList);
+				// console.log('articlesList',articlesList);
 				if(articlesList.length > 0){
-					// All article processed on crawler. Now update the XML collection.
+					// All article processed on crawler. Now update the article doc and add XML to files.
 					for(var i=0 ; i<articlesList.length ; i++){
-						updated = xmlCollection.update({'ids.mongo_id': articlesList[i]._id},{$set:articlesList[i]},{upsert: true});
-						if(i == parseInt(articlesList.length -1)){
-							// TODO: fut not returning..
-							fut['return'](articlesList.length);
-						}
+						var updateObj = {};
+						var updateWhere = 'files.xml';
+						updateObj[updateWhere] = articlesList[i]._id + '.xml';
+						Meteor.call('updateArticle',articlesList[i]._id, updateObj, function(updateError,updateResult){
+							if(updateError){
+								console.error(updateError);
+							}else if(updateResult){
+								// console.log('updateResult',updateResult);
+								if(i == parseInt(articlesList.length -1)){
+									fut['return'](articlesList.length);
+								}
+							}
+						});
+						// updated = xmlCollection.update({'ids.mongo_id': articlesList[i]._id},{$set:articlesList[i]},{upsert: true});
 					}
 				}else{
 					// No articles were updated
@@ -150,7 +159,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	getAllPmcPdf: function(){
-		// use crawler to get PDF from PMC, save to S3
+		// use crawler to get PDF from PMC, save to S3, does not update db
 		console.log('..getAllPmcPdf');
 		var fut = new future();
 		var crawlPdfUrl = journalConfig.findOne().api.crawler + '/crawl_pdf/' + journalConfig.findOne().journal.short_name;
