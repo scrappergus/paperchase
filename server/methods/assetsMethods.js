@@ -51,38 +51,6 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	// articleAssests: function(mongoId){
-	// 	// console.log('... articleAssests: Mongo ID ', mongoId);
-	// 	var article = articles.findOne({_id : mongoId});
-	// 	var baseAssetsUrl = journalConfig.findOne().assets;
-	// 	var assets = {};
-	// 	// XML
-	// 	var xmlAsset = xmlCollection.findOne({'ids.mongo_id' : mongoId});
-	// 	if(xmlAsset && xmlAsset.file){
-	// 		assets.xml = xmlAsset;
-	// 		assets.xml.url = baseAssetsUrl + 'xml/' + xmlAsset.file;
-	// 		// assets.xml_settings = xmlAsset.settings;
-	// 	}
-	// 	// PDF
-	// 	var pdfAsset = pdfCollection.findOne({'ids.mongo_id' : mongoId});
-	// 	if(pdfAsset && pdfAsset.file){
-	// 		assets.pdf = pdfAsset;
-	// 		assets.pdf.url = baseAssetsUrl + 'pdf/' +  pdfAsset.file;
-	// 		// assets.pdf_settings = pdfAsset.settings;
-	// 	}
-	// 	// Figures
-	// 	var figureAssets = figCollection.findOne({'ids.mongo_id' : mongoId});
-	// 	if(figureAssets && figureAssets.figures.length > 0){
-	// 		var figs = figureAssets.figures;
-	// 		figs.forEach(function(fig){
-	// 			fig.url = baseAssetsUrl + 'paper_figures/' + fig.file;
-	// 		});
-	// 		assets.figures = figureAssets.figures;
-	// 	}
-	// 	assets.article_mongo_id = mongoId;
-	// 	// console.log(assets);
-	// 	return assets;
-	// },
 	assetExistsOnS3: function(url){
 		var fut = new future();
 		Meteor.http.get(url , function(error,result){
