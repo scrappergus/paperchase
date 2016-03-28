@@ -208,7 +208,7 @@ Router.route('/get-advance-articles/',{
 
 					htmlString += '<span class="tocAuthors">';
 
-					if(articleInfo['ids']['pii']){
+					if(articleInfo['ids']['doi']){
 						htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
 					}
 					var authors = articleInfo.authors;
