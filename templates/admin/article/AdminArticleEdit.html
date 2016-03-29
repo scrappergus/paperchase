@@ -1,5 +1,8 @@
 <template name="AdminArticle">
 	{{>AdminHeader header="Article Edit"}}
+	{{#with article}}
+	{{>AdminArticleHeader}}
+	{{/with}}
 	<div class="row">
 		<div class="col s12">
 			{{#if articleProcessed}}
@@ -30,21 +33,27 @@
 <template name="AdminArticleForm">
 	{{#with article}}
 
-	{{>AdminArticleHeader}}
 	{{>StatusModal}}
 	{{#if conflicts}}
-		<div class="row error-box z-depth-1">
-			<div class="col s12">
-				<h2 class="valign-wrapper" style="margin-top:0px;"><i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span></h2>
-				<ul>
-					{{#each conflicts}}
-						<li style="list-style-type:disc;">
-							<h3 style="margin-bottom:0px;">{{what}}</h3>
-							<p>{{{conflict}}}</p>
-						</li>
-					{{/each}}
-				</ul>
-				<p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
+		<div class="card red z-depth-0 lighten-4">
+			<div class="card-content">
+				<div class="card-title">
+					<div class="row">
+						<div class="col s12">
+							<h2 class="valign-wrapper" style="margin-top:0px;"><i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span></h2>
+							<h3>Save the form below to update the database</h3>
+							<p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
+						</div>
+					</div>
+				</div>
+				{{#each conflicts}}
+				<div class="row">
+					<h4>{{what}}</h4>
+					<div class="col s12">
+						{{{conflict}}}
+					</div>
+				</div>
+				{{/each}}
 			</div>
 		</div>
 	{{/if}}

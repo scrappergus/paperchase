@@ -36,6 +36,9 @@ Template.AdminArticle.onRendered(function () {
 Template.AdminArticleFiles.onRendered(function () {
 	$('.materialboxed').materialbox();
 });
+Template.AdminArticleFilesUploader.onDestroyed(function () {
+	Session.set('article',null);
+});
 
 // Article Form
 Template.AdminArticleForm.onRendered(function () {

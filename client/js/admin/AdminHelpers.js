@@ -176,9 +176,23 @@ Template.AdminArticleFigures.helpers({
 Template.AdminArticleFiles.helpers({
 	article : function(){
 		return Session.get('article');
+	},
+	verify: function(){
+		return Session.get('xml-verify');
+	}
+});
+Template.AdminArticleFilesUploader.helpers({
+	article : function(){
+		return Session.get('article');
+	},
+	verify: function(){
+		return Session.get('xml-verify');
 	}
 });
 Template.AdminArticle.helpers({
+	article : function(){
+		return Session.get('article');
+	},
 	articleProcessed: function(){
 		// session default for article is null. If new article, empty object.
 		if(Session.get('article') === null){

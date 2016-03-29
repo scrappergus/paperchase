@@ -646,6 +646,84 @@ Meteor.article = {
 	}
 }
 
+Meteor.articleFiles = {
+	verifyXml: function(articleMongoId,files){
+		var s3Folder = 'xml';
+		var file = files[0];
+		var reader = new FileReader;
+		var xmlString;
+
+		reader.onload = function(e) {
+			xmlString = e.target.result;
+
+			Meteor.call('processXmlString',xmlString, function(error,result){
+				if(error){
+					console.error('process XML for DB', error);
+					Meteor.formActions.errorMessage('Could not process XML for verification');
+				}else if(result){
+					// console.log('result',result);
+					Session.set('xml-verify',result);
+					Meteor.formActions.closeModal();
+					Meteor.general.scrollTo('xml-verify');
+				}
+			});
+		}
+		reader.readAsText(file);
+	},
+	uploadArticleFile: function(articleMongoId,s3Folder,files){
+		var file = files[0];
+		var fileNameId = file.name.replace('.xml','').replace('.pdf','');
+		Meteor.s3.upload(files,s3Folder,function(error,res){
+			if(error){
+				console.error('Upload File Error', error);
+				Meteor.formActions.errorMessage('File not uploaded');
+			}else if(res){
+				// TODO: only rename if filename not MongoID
+				Meteor.call('renameArticleAsset', s3Folder, res.file.name, articleMongoId, function(error,newFileName){
+					if(error){
+
+					}else if(newFileName){
+						var updateAssetObj = {}
+						updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
+						Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
+							if(result){
+								// clear files
+								S3.collection.remove({});
+
+								// update template data
+								Meteor.call('articleAssests', articleMongoId, function(error, result) {
+									if(result){
+										// console.log('articleAssests',result);
+										// Session.set('article-files',result);
+										article = articles.findOne({_id : articleMongoId});
+										Session.set('article',article)
+									}
+								});
+
+								// notify user
+								Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName);
+								// Session.set('xml-verify',null); // still want the form visible so that they can update the database.
+
+								// delete uploaded file, if not equal to MongoID
+								if(articleMongoId != fileNameId){
+									S3.delete(s3Folder + '/' + file.name,function(error,result){
+										if(error){
+											console.error('Could not delete original file: ' + file.name);
+										}
+										// if(result){
+											// console.log('Deleted original file: ' + file.name);
+										// }
+									});
+								}
+							}
+						});
+					}
+				});
+			}
+		});
+	}
+}
+
 Meteor.adminUser = {
 	getFormCheckBoxes: function(){
 		var roles = [];
@@ -1093,6 +1171,19 @@ Meteor.formActions = {
 	},
 	cleanWysiwyg: function(input){
 		return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
+	},
+	closeModal: function(){
+		$('.save-btn').removeClass('hide');
+		$('.saving').addClass('hide');
+		$('.success').removeClass('hide');
+		$('.error').addClass('hide');
+		if($('#status-modal').length){
+			$('#status-modal').closeModal({
+				complete: function() {
+					$('.lean-overlay').remove();
+				}
+			});
+		}
 	}
 }
 
@@ -1314,13 +1405,16 @@ Meteor.general = {
 	scrollAnchor: function(e){
 		e.preventDefault();
 		var anchor = $(e.target).closest('a').attr('href');
-		var navTop = Meteor.general.navHeight();
 		if(anchor){
 			anchor = anchor.replace('#','');
-			$('html, body').animate({
-				scrollTop: $('#' + anchor).position().top - navTop
-			}, 500);
+			Meteor.general.scrollTo(anchor);
 		}
+	},
+	scrollTo: function(anchorId){
+		var navTop = Meteor.general.navHeight();
+		$('html, body').animate({
+			scrollTop: $('#' + anchorId).position().top - navTop
+		}, 500);
 	}
 }
 

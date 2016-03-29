@@ -821,63 +821,15 @@ Template.s3Upload.events({
 			s3Folder,
 			articleIds;
 		var articleMongoId = $(e.target).closest('button').attr('data-id');
-
 		var files = $('input.file_bag')[0].files;
 		var file = files[0];
-		var fileNameId = file.name.replace('.xml','').replace('.pdf','');
-
 		// Uploader only allows 1 file at a time.
 		// Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
-		if(file){
-			if(file['type'] == 'text/xml' || file['type'] == 'application/pdf'){
-				s3Folder = file['type'].replace('text/','').replace('application/','');
-				Meteor.s3.upload(files,s3Folder,function(error,res){
-					if(error){
-						console.error('Upload File Error', error);
-						Meteor.formActions.errorMessage('File not uploaded');
-					}else if(res){
-						// TODO: only rename if filename not MongoID
-						Meteor.call('renameArticleAsset', s3Folder, res.file.name, articleMongoId, function(error,newFileName){
-							if(error){
-
-							}else if(newFileName){
-								var updateAssetObj = {}
-								updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
-								Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
-									if(result){
-										// clear files
-										S3.collection.remove({});
-
-										// update template data
-										Meteor.call('articleAssests', articleMongoId, function(error, result) {
-											if(result){
-												// console.log('articleAssests',result);
-												// Session.set('article-files',result);
-												article = articles.findOne({_id : articleMongoId});
-												Session.set('article',article)
-											}
-										});
-
-										// notify user
-										Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName);
-
-										// delete uploaded file, if not equal to MongoID
-										if(articleMongoId != fileNameId){
-											S3.delete(s3Folder + '/' + file.name,function(error,result){
-												if(error){
-													console.error('Could not delete original file: ' + file.name);
-												}
-												// if(result){
-													// console.log('Deleted original file: ' + file.name);
-												// }
-											});
-										}
-									}
-								});
-							}
-						});
-					}
-				});
+		if(files){
+			if(file['type'] == 'text/xml'){
+				Meteor.articleFiles.verifyXml(articleMongoId,files);
+			}else if(file['type'] == 'application/pdf'){
+				Meteor.articleFiles.uploadArticleFile(articleMongoId,'pdf',files);
 			}else{
 				Meteor.formActions.errorMessage('Uploader is only for PDF or XML');
 			}
@@ -919,6 +871,13 @@ Template.AdminArticleFiles.events({
 
 			}
 		});
+	}
+});
+Template.AdminArticleXmlVerify.events({
+	'click .upload': function(e){
+		var articleMongoId = Session.get('article')._id;
+		var files = $('input.file_bag')[0].files;
+		Meteor.articleFiles.uploadArticleFile(articleMongoId,'xml',files);
 	}
 });
 Template.AdminArticleFigures.events({

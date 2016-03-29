@@ -121,6 +121,9 @@ if (Meteor.isClient) {
 	Session.setDefault('errorMessage',null);
 	Session.setDefault('statusModalAction',null);
 	Session.setDefault('statusModalDetails',null);
+	// Article
+	Session.setDefault('xml-verify',null)
+	Session.setDefault('xml-file',null);
 
 
 	Router.route('/admin', {
@@ -373,17 +376,17 @@ if (Meteor.isClient) {
 
 	// Intake
 	// xml uploading
-	// Router.route('/admin/upload/xml',{
-	// 	name: 'AdminArticleXmlUpload',
-	// 	layoutTemplate: 'Admin',
-	// 	title: function() {
-	// 		var pageTitle = 'Admin | XML Upload ';
-	// 		if(Session.get('journal')){
-	// 			pageTitle += ': ' + Session.get('journal').journal.name;
-	// 		}
-	// 		return pageTitle;
-	// 	},
-	// });
+	Router.route('/admin/upload/xml',{
+		name: 'AdminArticleXmlUpload',
+		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | XML Upload ';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+	});
 
 	// Article
 	Router.route('/admin/articles',{
@@ -582,7 +585,52 @@ if (Meteor.isClient) {
 		name: 'AdminArticleFiles',
 		layoutTemplate: 'Admin',
 		title: function() {
-			var pageTitle = 'Admin | Article PDF and XML ';
+			var pageTitle = 'Admin | Article PDF and XML Setting';
+			if(Session.get('journal')){
+				pageTitle += ': ' + Session.get('journal').journal.name;
+			}
+			return pageTitle;
+		},
+		onBeforeAction: function(){
+			// console.log('before!',Session.get('article'));
+			Session.set('article',null);
+			// check if article exists
+			var articleExistsExists = articles.findOne({'_id': this.params._id});
+			if(!articleExistsExists){
+				// if the mongo id search found nothing, search by pii
+				var articlePii = String(this.params._id);
+				var articleByPii = articles.findOne({'ids.pii': articlePii});
+				// check if :_id is a pii and not Mongo ID
+				if(articleByPii){
+					Router.go('AdminArticle', {_id: articleByPii._id});
+				}else{
+					Router.go('AdminArticleAdd');
+				}
+			}
+			this.next();
+		},
+		waitOn: function(){
+			return[
+				Meteor.subscribe('articleInfo',this.params._id),
+				Meteor.subscribe('articleIssue',this.params._id),
+				Meteor.subscribe('journalConfig')
+			]
+		},
+		data: function(){
+			if(this.ready()){
+				var article = articles.findOne({'_id': this.params._id});
+				if(article){
+					article = Meteor.article.readyData(article);
+					Session.set('article',article);
+				}
+			}
+		}
+	});
+	Router.route('/admin/article/:_id/uploader',{
+		name: 'AdminArticleFilesUploader',
+		layoutTemplate: 'Admin',
+		title: function() {
+			var pageTitle = 'Admin | Article PDF and XML Uploader';
 			if(Session.get('journal')){
 				pageTitle += ': ' + Session.get('journal').journal.name;
 			}

@@ -1,0 +1,180 @@
+<template name="AdminArticleFiles">
+	{{>AdminHeader header="Article PDF and XML"}}
+	{{>StatusModal}}
+	{{#with article}}
+	{{>AdminArticleHeader}}
+
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-4 z-depth-0">
+				<div class="card-content">
+					<form id="files-form">
+						<span class="card-title">Files</span>
+						<div class="row">
+							<div class="col s12 m6">
+								<div class="card z-depth-0 blue-grey lighten-5">
+									<div class="card-content">
+										<div class="card-title">XML</div>
+										{{#with files}}
+										{{#with xml}}
+										{{#if url}}
+											<div class="row">
+												<div class="col s12 m6">
+													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
+												</div>
+												<div class="col s12 m6">
+													<input type="checkbox" id="display-xml" checked="{{checked display}}"/>
+													<label for="display-xml">Display XML</label>
+												</div>
+											</div>
+										{{else}}
+										<h5>No XML</h5>
+										{{/if}}
+										{{/with}}
+										{{else}}
+										<h5>No XML</h5>
+										{{/with}}
+									</div>
+								</div>
+							</div>
+							<div class="col s12 m6">
+								<div class="card z-depth-0 blue-grey lighten-5">
+									<div class="card-content">
+										<div class="card-title">PDF</div>
+										{{#with files}}
+										{{#with pdf}}
+										{{#if url}}
+											<div class="row">
+												<div class="col s12 m6">
+													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
+												</div>
+												<div class="col s12 m6">
+													<input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
+													<label for="display-pdf">Display PDF</label>
+												</div>
+											</div>
+										{{else}}
+										<h5>No PDF</h5>
+										{{/if}}
+										{{/with}}
+										{{else}}
+										<h5>No PDF</h5>
+										{{/with}}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col s12 center-align">
+							{{>SaveBtn what="PDF and XML Settings"}}
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/with}}
+</template>
+<template name="AdminArticleFilesUploader">
+	{{>AdminHeader header="Article PDF and XML"}}
+	{{>StatusModal}}
+	{{#with article}}
+	{{>AdminArticleHeader}}
+
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-4 z-depth-0">
+				<div class="card-content">
+					<div class="row">
+						<div class="col s12 offset-m4 m4">
+							<div class="card z-depth-0 blue-grey lighten-5">
+								<div class="card-content">
+									<div class="card-title">XML &amp; PDF Uploader</div>
+									{{>s3Upload}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/with}}
+	<div id="xml-verify"></div>
+	{{#if verify}}
+	{{>AdminArticleXmlVerify}}
+	{{/if}}
+</template>
+<template name="AdminArticleXmlVerify">
+	<div class="row">
+		<div class="col s12">
+			<h4>Please verify information from the XML before uploading.</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<button id="xml-verified" class="btn btn-primary upload"><i class="material-icons">&#xE2C6;</i> I have verified the XML and it is ready to upload {{file.name}}</button>
+		</div>
+	</div>
+	{{>AdminArticleForm}}
+</template>
+
+<template name="AdminArticleFigures">
+	{{>AdminHeader header="Article Figures"}}
+	{{>StatusModal}}
+	{{#with article}}
+	{{>AdminArticleHeader}}
+	{{#with files}}
+	<div class="row">
+		<div class="col s12">
+			<div class="card blue-grey lighten-4 z-depth-0">
+				<div class="card-content">
+					<span class="card-title">Figures</span>
+					{{#if figures}}
+					{{#each figures}}
+					{{#if editing}}
+					<div class="row">
+						<div class="col s12">
+							<div class="card z-depth-0 blue-grey lighten-5">
+								<div class="card-content">
+									<div class="row">
+										<div class="col s2 m4 right-align">
+											<input type="text" value="{{id}}" id="fig-input-{{id}}"/>
+											<label for="fig-input-{{id}}">Figure ID</label>
+										</div>
+										<div class="col s8 m4">
+											{{>s3FigureUpload figId=id}}
+										</div>
+										<div class="col s2 m4">
+											<button class="btn btn-cancel btn-floating article-figure-cancel" data-id="{{id}}"><i class="material-icons">&#xE15D;</i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{{else}}
+					<div class="row">
+						<div class="col s2 m4 right-align">
+							<h4>Fig. {{id}}</h4>
+						</div>
+						<div class="col s8 m4">
+							<img src="{{url}}" class="materialboxed admin-figure" alt="{{id}}">
+						</div>
+						<div class="col s2 m4">
+							<button class="btn btn-edit btn-floating article-figure-edit" data-id="{{id}}"><i class="material-icons">&#xE150;</i></button>
+						</div>
+					</div>
+					{{/if}}
+					{{/each}}
+					{{else}}
+					<h4>No Figures</h4>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/with}}
+	{{/with}}
+</template>
