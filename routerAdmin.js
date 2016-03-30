@@ -124,6 +124,7 @@ if (Meteor.isClient) {
 	// Article
 	Session.setDefault('xml-verify',null)
 	Session.setDefault('xml-file',null);
+	Session.setDefault('article-form',null);
 
 
 	Router.route('/admin', {
@@ -703,7 +704,7 @@ if (Meteor.isClient) {
 					console.log(error);
 				}
 				if(result){
-					Session.set('article',result);
+					Session.set('article-form',result);
 				}
 			});
 			this.next();
@@ -737,7 +738,7 @@ if (Meteor.isClient) {
 					console.log(error);
 				}
 				if(result){
-					Session.set('article',result);
+					Session.set('article-form',result);
 				}
 			});
 			this.next();

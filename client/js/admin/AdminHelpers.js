@@ -214,7 +214,7 @@ Template.AdminArticleAdd.helpers({
 });
 Template.AdminArticleForm.helpers({
 	article : function(){
-		return Session.get('article');
+		return Session.get('article-form');
 	}
 });
 Template.AddArticleDate.helpers({

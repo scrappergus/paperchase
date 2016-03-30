@@ -1095,7 +1095,7 @@ Template.AdminDataSubmissions.events({
 				console.log(error);
 			}
 			if(result){
-				Session.set('article',result);
+				Session.set('article-form',result);
 			}
 		});
 		// var articleIndex = $(e.target).closest('.collection-item').index();
