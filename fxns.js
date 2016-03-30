@@ -391,7 +391,7 @@ Meteor.adminArticle = {
 			article['authors'][a]['affiliations_list'] = affs;
 		}
 
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	addDateOrHistory: function(dateType,e){
 		e.preventDefault();
@@ -402,7 +402,7 @@ Meteor.adminArticle = {
 		}
 		article[dateType][type] = new Date();
 		article[dateType][type].setHours(0,0,0,0);
-		Session.set('article',article);
+		Session.set('article-form',article);
 
 		$('#add-article-' + dateType).closeModal();
 		$('.lean-overlay').remove();
@@ -412,7 +412,7 @@ Meteor.adminArticle = {
 		var article = Session.get('article');
 		var objectKey = $(e.target).attr('id').replace('remove-',''); //the key of the object in the article doc
 		delete article[articleKey][objectKey]; //the key in the object of the article doc
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	articleListOptions: function(articleKey){
 		// console.log('..articleListOptions');
@@ -426,8 +426,8 @@ Meteor.adminArticle = {
 			allListOptions = pubIdTypeList;
 		}
 
-		if(Session.get('article') && articleKey){
-			var article = Session.get('article');
+		if(Session.get('article-form') && articleKey){
+			var article = Session.get('article-form');
 			var current = article[articleKey]; // what the article has saved
 			for(var d in allListOptions){
 				if(!current || current[d] === undefined){ // do not test for empty string, adding a new ID type will add empty string to articles session variable
