@@ -176,9 +176,6 @@ Template.AdminArticleFigures.helpers({
 Template.AdminArticleFiles.helpers({
 	article : function(){
 		return Session.get('article');
-	},
-	verify: function(){
-		return Session.get('xml-verify');
 	}
 });
 Template.AdminArticleFilesUploader.helpers({
