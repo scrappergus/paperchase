@@ -493,7 +493,7 @@ Template.s3FigureUpload.helpers({
 // ---------------
 Template.AdminNews.helpers({
 	news: function() {
-		return newsList.find({display:true},{sort:{date:-1}});
+		return newsList.find({},{sort:{date:-1}});
 	}
 });
 Template.AdminNewsForm.helpers({
