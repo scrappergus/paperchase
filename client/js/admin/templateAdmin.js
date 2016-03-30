@@ -41,6 +41,9 @@ Template.AdminArticleFilesUploader.onDestroyed(function () {
 });
 
 // Article Form
+Template.AdminArticleForm.onDestroyed(function() {
+	Session.set('article-form',null);
+});
 Template.AdminArticleForm.onRendered(function () {
 	Meteor.adminArticle.readyArticleForm();
 });

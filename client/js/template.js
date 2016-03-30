@@ -49,9 +49,6 @@ Template.ArticleFigureViewer.onRendered(function() {
 Template.ArticleText.onRendered(function() {
 	// $('.materialboxed').materialbox();
 });
-Template.AdminArticleForm.onDestroyed(function() {
-	Session.set('article-form',null);
-});
 Template.ArticleFullText.onRendered(function() {
 	// $('.materialboxed').materialbox(); // popup image
 });
