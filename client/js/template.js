@@ -49,7 +49,7 @@ Template.ArticleFigureViewer.onRendered(function() {
 Template.ArticleText.onRendered(function() {
 	// $('.materialboxed').materialbox();
 });
-Template.ArticleForm.onDestroyed(function() {
+Template.AdminArticleForm.onDestroyed(function() {
 	Session.set('article-form',null);
 });
 Template.ArticleFullText.onRendered(function() {
