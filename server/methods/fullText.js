@@ -256,10 +256,9 @@ Meteor.fullText = {
 		for(var figAttr = 0 ; figAttr < node.attributes.length ; figAttr++){
 			if(node.attributes[figAttr].localName === 'id'){
 				figObj.id = node.attributes[figAttr].nodeValue;
-				// console.log(figObj.id);
 				var figId = figObj.id.replace('F','');
 				for(var f = 0 ; f < figures.length ; f++){
-					if(figures[f].id === figId){
+					if(figures[f].id.replace('f','') === figId){
 						figObj.url = figureAssetsUrl + 'paper_figures/' + figures[f].file;
 					}
 				}
