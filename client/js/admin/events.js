@@ -389,17 +389,17 @@ Template.AdminArticleForm.events({
 			authorIndex = $(e.target).closest('li').index(),
 			checkboxSettings = $(e.target).attr('id').split('-'),
 			affIndex = checkboxSettings[1],
-			article = Session.get('article');
+			article = Session.get('article-form');
 		if($(e.target).prop('checked')){
 			checked = true;
 		}
 		article.authors[authorIndex]['affiliations_list'][affIndex]['checked'] = checked;
 
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	'click #add-author' : function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var newAuthor = {
 			name_first: '',
 			name_middle: '',
@@ -435,20 +435,20 @@ Template.AdminArticleForm.events({
 			Meteor.adminArticle.initiateAuthorsSortable();
 		}
 
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	'click .remove-author': function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var authorIndex = $(e.target).closest('li').index();
 		article.authors.splice(authorIndex,1);
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	// Affiliations
 	// -------
 	'click #add-affiliation': function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		// first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
 		article['affiliations'] = Meteor.adminArticle.getAffiliations();
 		if(!article['affiliations']){
@@ -467,7 +467,7 @@ Template.AdminArticleForm.events({
 			}
 		}
 
-		Session.set('article',article);
+		Session.set('article-form',article);
 
 		// scroll to new affiliation <li>
 		// if no .affiliation-li:last-child, just added first affiliation. The dom isn't updated yet, so technically last-child is not the one just added
@@ -480,7 +480,7 @@ Template.AdminArticleForm.events({
 	'click .remove-affiliation': function(e,t){
 		// console.log('------------------------- remove-affiliation');
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var affiliationIndex = $(e.target).closest('li').index();
 
 		// first keep a record of names before index change, authorAffiliationsString
@@ -523,18 +523,18 @@ Template.AdminArticleForm.events({
 			}
 		}
 		article['affiliations'].splice(affiliationIndex, 1);
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	// Keywords
 	// -------
 	'click #add-kw': function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		if(!article.keywords){
 			article.keywords = [];
 		}
 		article.keywords.push('');
-		Session.set('article',article);
+		Session.set('article-form',article);
 		if($('.kw-li:last-child').length != 0){
 			$('html, body').animate({
 				scrollTop: $('.kw-li:last-child').find('input').position().top
@@ -543,10 +543,10 @@ Template.AdminArticleForm.events({
 	},
 	'click .remove-kw': function(e,t){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var kwIndex = $(e.target).closest('li').index();
 		article.keywords.splice(kwIndex,1);
-		Session.set('article',article);
+		Session.set('article-form',article);
 	},
 	// Dates
 	// -------
@@ -582,7 +582,7 @@ Template.AdminArticleForm.events({
 	},
 	'click .add-id-type': function(e){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var type = $(e.target).attr('id').replace('add-','');
 		if(!article['ids']){
 			article['ids'] = {};
@@ -597,7 +597,7 @@ Template.AdminArticleForm.events({
 						console.error(error);
 					}else if(newPii){
 						article['ids']['pii'] = newPii;
-						Session.set('article',article); // need to set session also here because of timinig problem with methods on server
+						Session.set('article-form',article); // need to set session also here because of timinig problem with methods on server
 					}
 				});
 			}else{
@@ -607,7 +607,7 @@ Template.AdminArticleForm.events({
 					}else if(savedPii){
 						// console.log(savedPii);
 						article['ids'][type] = savedPii;
-						Session.set('article',article);// need to set session also here because of timinig problem with methods on server
+						Session.set('article-form',article);// need to set session also here because of timinig problem with methods on server
 					}else{
 						article['ids'][type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
 					}
@@ -617,7 +617,7 @@ Template.AdminArticleForm.events({
 			article['ids'][type] = '';
 		}
 
-		Session.set('article',article);
+		Session.set('article-form',article);
 		Meteor.adminArticle.articleListButton('ids');
 	},
 	'click .remove-id': function(e){
@@ -648,7 +648,7 @@ Template.AdminArticleForm.events({
 
 		var invalid = [];
 
-		article = Session.get('article');
+		article = Session.get('article-form');
 		mongoId = article['_id'];
 
 		articleUpdateObj.page_start; // integer

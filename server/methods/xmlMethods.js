@@ -1,9 +1,184 @@
 Meteor.methods({
-	articleToSchema: function(xml,articleJson){
+	aopArticleToSchema: function(xml,article){
+		// XML is a string, used for title. article is JSON parsed from xml.
+
+		// console.log('article',article);
+		var articleProcessed = {};
+		articleProcessed.aop = true; // need this to prevent uploading XML to S3
+
+		// PUBLISHER
+		// -----------
+		if(article.Journal && article.Journal[0].PublisherName){
+			articleProcessed.publisher = article.Journal[0].PublisherName[0];
+		}
+
+		// TITLE
+		// -----------
+		if(article.ArticleTitle){
+			// use XML string instead of JSON
+			var articleTitle = xml.substring(xml.lastIndexOf('<ArticleTitle>')+14,xml.lastIndexOf('</ArticleTitle>'));
+			if(articleTitle.length > 0){
+				articleProcessed.title = articleTitle;
+			}
+		}
+
+		// META
+		// -----------
+		// volumes, issue, pages not supplied in sample AOP file
+
+		// KEYWORDS
+		// -----------
+		// TODO: Better handling when keyword has style. When arseing XML to JSON, cannot tell the order of text,
+		// for ex: <italic>test</italic> testing
+		// will return [ { _: ' testing', '$': { Name: 'value' }, italic: [ 'test' ] } ]
+		if(article.ObjectList){
+			articleProcessed.keywords = [];
+			var keywords = article.ObjectList[0]['Object'];
+			for(var kw=0 ; kw<keywords.length ; kw++){
+				if(keywords[kw].$.Type === 'keyword'){
+					// Check for styling within keywords
+					var kwNodeCount = 0;
+					for(var node in keywords[kw]['Param'][0]){
+						kwNodeCount++;
+					}
+					if(kwNodeCount > 2){
+						var keyword = '';
+						if(keywords[kw]['Param'][0]._){
+							keyword = keywords[kw]['Param'][0]._;
+						}
+						// there are style tags
+						// TODO: Better handling when keyword has style
+						for(var node in keywords[kw]['Param'][0]){
+							if(node != '_' && node != '$'){
+								keyword += '<' + node + '>' + keywords[kw]['Param'][0][node] + '</' + node + '>';
+								keyword = Meteor.fullText.fixTags(keyword);
+							}
+						}
+						articleProcessed.keywords.push(keyword);
+					}else{
+						articleProcessed.keywords.push(keywords[kw]['Param'][0]._);
+					}
+				}
+			}
+		}
+
+		// ABSTRACT
+		// -----------
+		if(article.Abstract){
+			articleProcessed.abstract = article.Abstract[0];
+		}
+
+		// ARTICLE TYPE
+		// -----------
+		// Was not in sample AOP file
+
+		// IDS
+		// -----------
+		if(article.ArticleIdList){
+			articleProcessed.ids = {};
+			for(var idIdx=0 ; idIdx < article.ArticleIdList[0].ArticleId.length ; idIdx++){
+				var idType;
+				var idValue;
+
+				idType = article.ArticleIdList[0].ArticleId[idIdx].$.IdType;
+				idValue = article.ArticleIdList[0].ArticleId[idIdx]._;
+
+				if(idType && idValue){
+					articleProcessed.ids[idType] = idValue;
+				}
+			}
+		}
+
+
+		// ALL AFFILIATIONS
+		// -----------
+		// Get affiliations before authors because AOP XML does not have affiliation IDs (PMC XML does)
+		if(article.AuthorList){
+			var authorsList = article.AuthorList[0].Author;
+			for(var authorIdx = 0 ; authorIdx < authorsList.length ; authorIdx++){
+				// Author Affiliations - Get all affiliations, for all authors, so we can get ID
+				if(authorsList[authorIdx].AffiliationInfo && !articleProcessed.affiliations){
+					articleProcessed.affiliations = [];
+				}
+				if(authorsList[authorIdx].AffiliationInfo){
+					var authorAffiliations = authorsList[authorIdx].AffiliationInfo[0].Affiliation;
+					for(var aff=0 ; aff < authorAffiliations.length ; aff++){
+						// console.log(articleProcessed.affiliations.indexOf(authorAffiliations[aff]));
+						if(articleProcessed.affiliations.indexOf(authorAffiliations[aff]) == -1){
+							articleProcessed.affiliations.push(authorAffiliations[aff]);
+							// console.log(authorAffiliations[aff]);
+						}
+					}
+				}
+			}
+		}
+
+		// AUTHORS
+		// -----------
+		if(article.AuthorList){
+			articleProcessed.authors = [];
+			var authorsList = article.AuthorList[0].Author;
+			for(var authorIdx = 0 ; authorIdx < authorsList.length ; authorIdx++){
+				var author = {};
+				author.name_first = '';
+				author.name_middle = '';
+				author.name_last = '';
+				author.name_suffix = '';
+				author.affiliations_numbers = [];
+				// Author Name
+				if(authorsList[authorIdx].FirstName){
+					if(typeof authorsList[authorIdx].FirstName[0] == 'object'){
+						author.name_first = authorsList[authorIdx].FirstName[0]._;
+					}else if(typeof authorsList[authorIdx].FirstName[0] == 'string'){
+						author.name_first = authorsList[authorIdx].FirstName[0];
+					}
+				}
+				if(authorsList[authorIdx].MiddleName){
+					if(typeof authorsList[authorIdx].MiddleName[0] == 'object'){
+						author.name_middle = authorsList[authorIdx].MiddleName[0]._;
+					}else if(typeof authorsList[authorIdx].MiddleName[0] == 'string'){
+						author.name_middle = authorsList[authorIdx].MiddleName[0];
+					}
+				}
+				if(authorsList[authorIdx].LastName){
+					if(typeof authorsList[authorIdx].LastName[0] == 'object'){
+						author.name_last = authorsList[authorIdx].LastName[0]._;
+					}else if(typeof authorsList[authorIdx].LastName[0] == 'string'){
+						author.name_last = authorsList[authorIdx].LastName[0];
+					}
+				}
+				if(authorsList[authorIdx].Suffix){
+					if(typeof authorsList[authorIdx].Suffix[0] == 'object'){
+						author.name_suffix = authorsList[authorIdx].Suffix[0]._;
+					}else if(typeof authorsList[authorIdx].Suffix[0] == 'string'){
+						author.name_suffix = authorsList[authorIdx].Suffix[0];
+					}
+				}
+				// Author Affiliations - Affiliation ID for author
+				if(authorsList[authorIdx].AffiliationInfo){
+					var authorAffiliations = authorsList[authorIdx].AffiliationInfo[0].Affiliation;
+					for(var aff=0 ; aff < authorAffiliations.length ; aff++){
+						author.affiliations_numbers.push(articleProcessed.affiliations.indexOf(authorAffiliations[aff]));
+					}
+				}
+				articleProcessed.authors.push(author);
+			}
+		}
+
+		// PUB DATES
+		// -----------
+		// None provided in AOP sample file. Does contain aheadofprint but we do not store this
+
+		// HISTORY DATES
+		// -----------
+		// None provided in AOP sample file. Does contain aheadofprint but we do not store this
+		// console.log(articleProcessed.authors);
+		return articleProcessed;
+	},
+	pmcArticleToSchema: function(xml,articleJson){
 		// console.log('..articleToSchema');
 		// Process JSON for meteor templating and mongo db
-		// xml - xml string
-		// articleJson - parsed XML to JSON. but not in the schema we need.
+		// xml is a string. articleJson is parsed XML to JSON. but not in the schema we need.
 		var journalMeta = articleJson[0]['front'][0]['journal-meta'][0];
 		var article = articleJson[0]['front'][0]['article-meta'][0];
 
@@ -29,6 +204,8 @@ Meteor.methods({
 		articleProcessed['title'] = titleTitle;
 
 
+		// META
+		// -----------
 		if(article['volume']){
 			articleProcessed['volume'] = parseInt(article['volume'][0]);
 		}
@@ -41,6 +218,7 @@ Meteor.methods({
 		if(article['lpage']){
 			articleProcessed['page_end'] = parseInt(article['lpage'][0]);
 		}
+
 		// KEYWORDS
 		// -----------
 		if(article['kwd-group']){
@@ -95,12 +273,6 @@ Meteor.methods({
 			var idCharacters = idList[i]['_'];
 			articleProcessed['ids'][type] = idCharacters;
 		}
-		// console.log(articleProcessed['ids']);
-		// PII required!
-		// -----------
-		// if(!articleProcessed['ids']['pii']){
-		// 	throw new Meteor.Error('XML is missing PII.');
-		// }
 
 		// AUTHORS
 		// -----------
@@ -190,36 +362,99 @@ Meteor.methods({
 		// console.log('articleProcessed',articleProcessed);
 		return articleProcessed;
 	},
-	processXmlString: function(xml){
-		// console.log('..processXmlString');
-		var articleJson;
+	xmlDtd: function(xmlString){
+		// TODO: use regex for dtd
+		var aopSearchPattern = '<!DOCTYPE ArticleSet PUBLIC "-\/\/NLM\/\/DTD PubMed 2.0\/\/EN" "http:\/\/www.ncbi.nlm.nih.gov:80\/entrez\/query\/static\/PubMed.dtd">';
+		var pmcSearchPattern = '<!DOCTYPE pmc-articleset PUBLIC "-\/\/NLM\/\/DTD ARTICLE SET 2.0\/\/EN" "http:\/\/dtd.nlm.nih.gov\/ncbi\/pmc\/articleset\/nlm-articleset-2.0.dtd">'
+		var aopRes = xmlString.search(aopSearchPattern);
+		var pmcRes = xmlString.search(pmcSearchPattern);
+		if(aopRes != -1){
+			return 'AOP';
+		}else if(pmcRes != -1){
+			return 'PMC';
+		}else{
+			return false;
+		}
+	},
+	parseXmltoJson: function(xml){
 		var fut = new future();
-		parseString(xml, function (error, result) {
+		parseString(xml, function (error, articleJson) {
 			if(error){
 				console.error('ERROR');
 				console.error(error);
 				return 'ERROR';
 			}else{
-				// IF XML parsed into string then get article info into JSON
-				if(result['pmc-articleset']){
-					// if getting XML via crawling PMC
-					// Or if uploading PMC XML
-					articleJson = result['pmc-articleset']['article'];
-					// console.log('articleJson ',articleJson);
-					Meteor.call('articleToSchema', xml, articleJson,function(e,r){ // pass XML string (for title) AND JSON
-						if(e){
-							console.error(e);
-							fut['throw'](e);
-						}
-						if(r){
-							fut['return'](r);
-						}
-					});
-				}else{
-					// could be PubMed XML
-					// or another dtd
-					fut['throw']('Could not process XML. XML must be PMC XML, not PubMed XML.');
-				}
+				fut['return'](articleJson);
+			}
+		});
+		return fut.wait();
+	},
+	processXmlString: function(xml){
+		// console.log('..processXmlString');
+		var fut = new future();
+		Meteor.call('xmlDtd',xml, function(error,dtd){
+			if(error){
+				console.error('DTD',error);
+			}else if(dtd && dtd === 'PMC'){
+				Meteor.call('processPmcXml',xml, function(error,result){
+					if(error){
+						console.error('processPmcXml',error);
+					}else if(result){
+						fut['return'](result);
+					}
+				});
+			}else if(dtd && dtd === 'AOP'){
+				Meteor.call('processAopXml',xml, function(error,result){
+					if(error){
+						console.error('processAopXml',error);
+					}else if(result){
+						fut['return'](result);
+					}
+				});
+			}else{
+				fut['throw']('Could not process XML.');
+			}
+		});
+
+		return fut.wait();
+	},
+	processAopXml: function(xmlString){
+		// this is XML sent to PubMed for citation before print
+		var fut = new future();
+		Meteor.call('parseXmltoJson',xmlString, function(error,articleJson){
+			if(error){
+				console.error('parseXmltoJson',error);
+			}else if(articleJson){
+				articleJson = articleJson['ArticleSet']['Article'];
+				articleJson = articleJson[0];
+				Meteor.call('aopArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
+					if(e){
+						console.error(e);
+						fut['throw'](e);
+					}else if(r){
+						fut['return'](r);
+					}
+				});
+			}
+		});
+		return fut.wait();
+	},
+	processPmcXml: function(xmlString){
+		// this is full text XML for PMC
+		var fut = new future();
+		Meteor.call('parseXmltoJson',xmlString, function(error,articleJson){
+			if(error){
+				console.error('parseXmltoJson',error);
+			}else if(articleJson){
+				articleJson = articleJson['pmc-articleset']['article'];
+				Meteor.call('pmcArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
+					if(e){
+						console.error(e);
+						fut['throw'](e);
+					}else if(r){
+						fut['return'](r);
+					}
+				});
 			}
 		});
 		return fut.wait();
@@ -240,10 +475,10 @@ Meteor.methods({
 					var c = Meteor.call('compareValuesXmlWithDb', valueKey, xmlValue[valueKey], dbValue[valueKey]);
 					if(c){
 						// append to other conflicts in this object
-						conflict += '<br/>' + valueKey + ': ' + c.conflict + ' ';
+						conflict += '<div class="clearfix"></div>' + valueKey + ': ' + c.conflict + ' ';
 					}
 				}else if(dbValue[valueKey] != '' && Object.keys(dbValue[valueKey]).length != 0){
-					conflict += '<br/>' + valueKey + ': Missing in XML. In database.';
+					conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in XML. In database.';
 					if(valueKey == 'affiliations_numbers'){
 						for(var aff in dbValue[valueKey]){
 							conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
@@ -263,7 +498,7 @@ Meteor.methods({
 		}else{
 			// Object is empty in DB.
 			for(var valueKey in xmlValue){
-				conflict += '<br/>' + valueKey + ': Missing in database. In XML.';
+				conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in database. In XML.';
 				keyCount++;
 				// console.log(keyCount);
 				if(keyCount == Object.keys(xmlValue).length){
@@ -286,7 +521,7 @@ Meteor.methods({
 			if(xmlValue === dbValue){
 			}else{
 				// keep type comparisson. affiliation numbers are checked here and are 0 based, which would be false when checking.
-				conflict.conflict = '<br><b>XML != Database</b><br>' + xmlValue + '<br>!=<br>' + dbValue;
+				conflict.conflict = '<div class="clearfix"></div><b>XML != Database</b><div class="clearfix"></div>' + xmlValue + '<div class="clearfix"></div>!=<div class="clearfix"></div>' + dbValue;
 			}
 		}else if(typeof xmlValue == 'object' && !Array.isArray(xmlValue)){
 			Meteor.call('compareObjectsXmlWithDb', xmlValue, dbValue, function(error,result){
@@ -361,14 +596,19 @@ Meteor.methods({
 					'conflict' : 'In XML, NOT in database'
 				});
 			}else if(dbArticle[articleKey] != '' && !xmlArticle[articleKey] && ignoreConflicts.indexOf(articleKey) == -1){
-				// If in DB but not in XML
-				// skip mongo ID, issue mongo ID, db doc_updates etc for comparing
-				// stringify database info in case type is object
-				merged[articleKeyXml] = xmlArticle[articleKeyXml];
-				merged['conflicts'].push({
-					'what' : articleKey,
-					'conflict' : 'In database, NOT in XML<br>' + JSON.stringify(dbArticle[articleKey])
-				});
+				if(typeof dbArticle[articleKey] === 'object' && Object.keys(dbArticle[articleKey]).length === 0){
+					// ignore empty objects in DB if there is nothing in the XML. There is no conflict
+				}else{
+					// If in DB but not in XML
+					// skip mongo ID, issue mongo ID, db doc_updates etc for comparing
+					// stringify database info in case type is object
+					merged[articleKeyXml] = xmlArticle[articleKeyXml];
+					merged['conflicts'].push({
+						'what' : articleKey,
+						'conflict' : 'In database, NOT in XML<div class="clearfix"></div>' + JSON.stringify(dbArticle[articleKey])
+					});
+				}
+
 			}else if(articleKey == '_id'){
 				merged[articleKey] = dbArticle[articleKey];
 			}else{

@@ -544,6 +544,7 @@ Meteor.fullText = {
 		// console.log('...fixTags',content);
 		// Either object or string.
 		// Figures are the only one with content array containing objects instead of strings
+		// using this function also in XML processing of keywords
 		if(typeof content == 'string'){
 			// style tags
 			content = content.replace(/<italic>/g,'<i>');

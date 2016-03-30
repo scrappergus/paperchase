@@ -380,7 +380,7 @@ Meteor.adminArticle = {
 	},
 	updateAffiliationsOrder: function(newIndex){
 		var originalIndex = Session.get('affIndex');
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 
 		// update the order of affiliations in the author objects
 		for(var a = 0; a < article.authors.length ; a++){
@@ -395,7 +395,7 @@ Meteor.adminArticle = {
 	},
 	addDateOrHistory: function(dateType,e){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var type = $(e.target).attr('id').replace('add-','');
 		if(!article[dateType]){
 			article[dateType] = {};
@@ -409,7 +409,7 @@ Meteor.adminArticle = {
 	},
 	removeKeyFromArticleObject: function(articleKey,e){
 		e.preventDefault();
-		var article = Session.get('article');
+		var article = Session.get('article-form');
 		var objectKey = $(e.target).attr('id').replace('remove-',''); //the key of the object in the article doc
 		delete article[articleKey][objectKey]; //the key in the object of the article doc
 		Session.set('article-form',article);
@@ -452,7 +452,6 @@ Meteor.adminArticle = {
 	},
 	readyArticleForm: function(){
 		// console.log('..readyArticleForm');
-		// console.log(Session.get('article'));
 
 		// title
 		// ------
@@ -661,10 +660,18 @@ Meteor.articleFiles = {
 					console.error('process XML for DB', error);
 					Meteor.formActions.errorMessage('Could not process XML for verification');
 				}else if(result){
-					// console.log('result',result);
-					Session.set('xml-verify',result);
 					Meteor.formActions.closeModal();
 					Meteor.general.scrollTo('xml-verify');
+					Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
+						if(error){
+							console.log('ERROR - preProcessArticle');
+							console.log(error);
+						}
+						if(result){
+							Session.set('xml-verify',true);
+							Session.set('article-form',result);
+						}
+					});
 				}
 			});
 		}

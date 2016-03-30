@@ -186,6 +186,11 @@ Template.AdminArticleFilesUploader.helpers({
 		return Session.get('xml-verify');
 	}
 });
+Template.AdminArticleXmlVerify.helpers({
+	article : function(){
+		return Session.get('article-form');
+	}
+});
 Template.AdminArticle.helpers({
 	article : function(){
 		return Session.get('article');

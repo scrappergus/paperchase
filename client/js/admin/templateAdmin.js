@@ -25,6 +25,9 @@ Template.piiFilter.onCreated(function () {
 
 // Article
 // ------------
+Template.AdminArticleOverview.onRendered(function (){
+	$('.lean-overlay').remove();
+});
 Template.AdminArticle.onRendered(function () {
 	// scroll to anchor
 	if(window.location.hash) {
@@ -37,7 +40,8 @@ Template.AdminArticleFiles.onRendered(function () {
 	$('.materialboxed').materialbox();
 });
 Template.AdminArticleFilesUploader.onDestroyed(function () {
-	Session.set('article',null);
+	Session.set('xml-verify',null);
+	Session.set('article-form',null);
 });
 
 // Article Form
