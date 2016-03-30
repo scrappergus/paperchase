@@ -93,8 +93,10 @@ Article Files Uploader
 
  - Can upload PMC or AOP (PubMed) XML
  - Only PMC XML is uploaded to S3, which is full text XML
- - AOP XML is used only to update the DB
+ - AOP XML is used only to update the DB.
+ - Since the same form is used for AOP and PMC XML, there's a flag in the session variable `article-form.aop` and if set to true, the upload button is hidden but the form is still displayed.
  - xmlMethods.js: This file contains functions to parse XML to JSON, and to get that JSON in the schema for the DB. Also contains functions for comparing XML JSON with DB JSON
+
 
 ----------
 
