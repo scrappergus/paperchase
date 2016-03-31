@@ -36,7 +36,7 @@ Template.AdminArticle.onRendered(function () {
 		}, 500);
 	}
 });
-Template.AdminArticleFiles.onRendered(function () {
+Template.AdminArticleFigures.onRendered(function () {
 	$('.materialboxed').materialbox();
 });
 Template.AdminArticleFilesUploader.onDestroyed(function () {
