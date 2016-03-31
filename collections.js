@@ -653,9 +653,9 @@ if (Meteor.isServer) {
 
   // Sections
   // ----------------
-   Meteor.publish('sections', function() {
+  Meteor.publish('sections', function() {
      return sections.find();
-   });
+  });
   Meteor.publish('sectionsAll', function(){
     // For admin pages
     return sections.find({});
@@ -676,10 +676,13 @@ if (Meteor.isServer) {
 
 
   // For advance
+  // ----------------
   Meteor.publish('publish', function () {
-          return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
-    });
+    return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+  });
 
+  // Search
+  // ----------------
   Meteor.publish("search", function(searchValue) {
         if (!searchValue) {
             return articles.find({});
