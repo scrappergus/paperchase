@@ -121,7 +121,27 @@ Meteor.methods({
 		if(article.Journal && article.Journal[0].Issue){
 			var isIEmpty = Meteor.general.isStringEmpty(article.Journal[0].Issue[0]);
 			if(!isIEmpty){
-				articleProcessed.issue = parseInt(article.Journal[0].Issue[0]);
+				articleProcessed.issue = Meteor.general.cleanString(article.Journal[0].Issue[0]);
+			}
+		}
+		// check if issue has changed
+		if(articleProcessed.volume && articleProcessed.issue){
+			// console.log(articleProcessed.volume + ' ' + articleProcessed.issue);
+			var articleVol = parseInt(articleProcessed.volume);
+			var articleIss = articleProcessed.issue.toString();
+			var articleIssueInfo = issues.findOne({volume : articleVol, issue : articleIss});
+			// console.log('articleIssueInfo',articleIssueInfo);
+			if(!articleIssueInfo){
+				Meteor.call('addIssue',{volume: articleVol, issue: articleIss},function(error,issueId){
+					if(error){
+						console.error('add issue',error);
+					}else if(issueId){
+						articleProcessed.issue_id = issueId;
+					}
+				});
+				// articleProcessed.notifyIssueDbMissing = true;
+			}else{
+				articleProcessed.issue_id = articleIssueInfo._id;
 			}
 		}
 		if(article.FirstPage){
@@ -182,9 +202,10 @@ Meteor.methods({
 		// ARTICLE TYPE
 		// -----------
 		if(article.PublicationType){
-			var articleType = articleTypes.findOne({'name' : article.PublicationType[0]});
+			var typeXml = Meteor.general.cleanString(article.PublicationType[0]);
+			var articleType = articleTypes.findOne({'name' : typeXml});
 			if(!articleType){
-				articleProcessed.articleTypeDbMissing = article.PublicationType[0];
+				articleProcessed.notifyArticleTypeDbMissing = typeXml;
 			}else{
 				articleProcessed.article_type = {};
 				articleProcessed.article_type.name = articleType.name;
@@ -223,9 +244,10 @@ Meteor.methods({
 				if(authorsList[authorIdx].AffiliationInfo){
 					var authorAffiliations = authorsList[authorIdx].AffiliationInfo[0].Affiliation;
 					for(var aff=0 ; aff < authorAffiliations.length ; aff++){
+						var affil = Meteor.general.cleanString(authorAffiliations[aff]);
 						// console.log(articleProcessed.affiliations.indexOf(authorAffiliations[aff]));
-						if(articleProcessed.affiliations.indexOf(authorAffiliations[aff]) == -1){
-							articleProcessed.affiliations.push(authorAffiliations[aff]);
+						if(articleProcessed.affiliations.indexOf(affil) == -1){
+							articleProcessed.affiliations.push(affil);
 							// console.log(authorAffiliations[aff]);
 						}
 					}
@@ -248,30 +270,30 @@ Meteor.methods({
 				// Author Name
 				if(authorsList[authorIdx].FirstName){
 					if(typeof authorsList[authorIdx].FirstName[0] == 'object'){
-						author.name_first = authorsList[authorIdx].FirstName[0]._;
+						author.name_first = Meteor.general.cleanString(authorsList[authorIdx].FirstName[0]._);
 					}else if(typeof authorsList[authorIdx].FirstName[0] == 'string'){
-						author.name_first = authorsList[authorIdx].FirstName[0];
+						author.name_first = Meteor.general.cleanString(authorsList[authorIdx].FirstName[0]);
 					}
 				}
 				if(authorsList[authorIdx].MiddleName){
 					if(typeof authorsList[authorIdx].MiddleName[0] == 'object'){
-						author.name_middle = authorsList[authorIdx].MiddleName[0]._;
+						author.name_middle = Meteor.general.cleanString(authorsList[authorIdx].MiddleName[0]._);
 					}else if(typeof authorsList[authorIdx].MiddleName[0] == 'string'){
-						author.name_middle = authorsList[authorIdx].MiddleName[0];
+						author.name_middle = Meteor.general.cleanString(authorsList[authorIdx].MiddleName[0]);
 					}
 				}
 				if(authorsList[authorIdx].LastName){
 					if(typeof authorsList[authorIdx].LastName[0] == 'object'){
-						author.name_last = authorsList[authorIdx].LastName[0]._;
+						author.name_last = Meteor.general.cleanString(authorsList[authorIdx].LastName[0]._);
 					}else if(typeof authorsList[authorIdx].LastName[0] == 'string'){
-						author.name_last = authorsList[authorIdx].LastName[0];
+						author.name_last = Meteor.general.cleanString(authorsList[authorIdx].LastName[0]);
 					}
 				}
 				if(authorsList[authorIdx].Suffix){
 					if(typeof authorsList[authorIdx].Suffix[0] == 'object'){
-						author.name_suffix = authorsList[authorIdx].Suffix[0]._;
+						author.name_suffix = Meteor.general.cleanString(authorsList[authorIdx].Suffix[0]._);
 					}else if(typeof authorsList[authorIdx].Suffix[0] == 'string'){
-						author.name_suffix = authorsList[authorIdx].Suffix[0];
+						author.name_suffix = Meteor.general.cleanString(authorsList[authorIdx].Suffix[0]);
 					}
 				}
 				// Author Affiliations - Affiliation ID for author
@@ -293,7 +315,7 @@ Meteor.methods({
 		// HISTORY DATES
 		// -----------
 		// None provided in AOP sample file. Does contain aheadofprint but we do not store this
-		// console.log(articleProcessed);
+		console.log(articleProcessed.issue_id);
 		return articleProcessed;
 	}
 });
@@ -639,11 +661,6 @@ Meteor.methods({
 						merged['conflicts'].push(conflict);
 					}
 				});
-			}else if(!dbArticle[keyDb] && xmlArticle[keyDb]){
-				merged['conflicts'].push({
-					'what' : keyDb,
-					'conflict' : 'In XML, NOT in database'
-				});
 			}else if(dbArticle[keyDb] == '' && xmlArticle[keyDb]){
 				merged['conflicts'].push({
 					'what' : keyDb,
@@ -662,11 +679,16 @@ Meteor.methods({
 						'conflict' : 'In database, NOT in XML<div class="clearfix"></div>' + JSON.stringify(dbArticle[keyDb])
 					});
 				}
-
 			}else if(keyDb == '_id'){
 				merged[keyDb] = dbArticle[keyDb];
 			}else if(keyDb == 'issue_id'){
-				merged[keyDb] = dbArticle[keyDb];
+				if(xmlArticle.issue_id && xmlArticle.issue_id != dbArticle[keyDb]){
+					merged['conflicts'].push({
+						'what' : 'Issue Changed',
+						'conflict' : '<div class="clearfix"></div><b>XML != Database</b><div class="clearfix"></div>' + xmlArticle.issue_id + '<div class="clearfix"></div>!=<div class="clearfix"></div>' + dbArticle[keyDb]
+					});
+				}
+				merged[keyDb] = dbArticle[keyDb]; // add DB issue_id value to merged,
 			}else{
 				// console.log('..else');
 				// the database value is empty and the XML does not have this
@@ -677,6 +699,12 @@ Meteor.methods({
 		for(var keyXml in xmlArticle){
 			if(!merged[keyXml]){
 				merged[keyXml] = xmlArticle[keyXml];
+				if(keyXml != 'issue_id'){
+					merged['conflicts'].push({
+						'what' : keyXml,
+						'conflict' : 'In XML, NOT in database: ' + xmlArticle[keyXml]
+					});
+				}
 			}
 		}
 

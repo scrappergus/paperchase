@@ -1195,15 +1195,6 @@ Meteor.formActions = {
 	}
 }
 
-Meteor.adminBatch = {
-	cleanString: function(string){
-		string = string.replace('<italic>','<i>').replace('</italic>','</i>');
-		string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
-		string = string.replace(/\s+/g,' '); // remove extra spaces
-		return string;
-	}
-}
-
 Meteor.adminShared = {
 	formGetData: function (e) {
 		var forDb = {}
@@ -1432,6 +1423,12 @@ Meteor.general = {
 		}else{
 			return false;
 		}
+	},
+	cleanString: function(string){
+		string = string.replace('<italic>','<i>').replace('</italic>','</i>');
+		string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
+		string = string.replace(/\s+/g,' '); // remove extra spaces
+		return string;
 	}
 }
 
@@ -1572,7 +1569,7 @@ Meteor.processXml = {
 		abstract = abstract.replace(/<\/p>/g,'');
 		abstract = abstract.replace(/<p>/g,'');
 		abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
-		abstract = Meteor.adminBatch.cleanString(abstract);
+		abstract = Meteor.general.cleanString(abstract);
 		return abstract;
 	}
 }

@@ -97,7 +97,7 @@ Article Files Uploader
  - AOP XML is used only to update the DB.
  - Since the same form is used for AOP and PMC XML, there's a flag in the session variable `article-form.aop` and if set to true, the upload button is hidden but the form is still displayed.
  - xmlMethods.js: This file contains functions to parse XML to JSON, and to get that JSON in the schema for the DB. Also contains functions for comparing XML JSON with DB JSON
-
+ - Issue handling: if volume and issue in XML, but no record in the issues collection, then insert. This happens on processing, so before the article form gets saved. The reason is because issues can be deleted/hidden easily (still a todo).
 
 ----------
 
