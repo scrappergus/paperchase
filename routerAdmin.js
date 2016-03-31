@@ -696,6 +696,8 @@ if (Meteor.isClient) {
 				}else{
 					Router.go('AdminArticleAdd');
 				}
+			}else{
+				Session.set('article',articleExistsExists);
 			}
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
