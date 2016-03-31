@@ -42,6 +42,7 @@ News
 ----
 Stored in the news collection. Doc contains - title, content, date, display, and also updates by users are tracked (just user id and date).
 Session variable `newsId` used in news form helper.
+
 **Database Publications**
 newsListAll: For admin only. doesn't limit news items not displayed to public
 newsListDisplay: Only news items to display to public
@@ -82,7 +83,7 @@ On article form, in meta section
 Article Form
 ----------------
 
-The data for the form comes from the session variable `article-form` and is not reactive.  The database data needs to be preprocessed to include all issues, all paper types etc so that the dropdown menus and buttons options (for ex, article type buttons) in the form are complete.
+The data for the form comes from the session variable `article-form` and is not reactive.  The database data needs to be preprocessed to include all issues, all paper types etc so that the dropdown menus and buttons options (for ex, article type buttons) in the form are complete. Another session variable `article` is used to show the article nav and header. This variable is set in the router. Don't use the session variable for `article-form` because that contains extra information not needed for the nav/header, and also we can show the header while the form is still processing.
 
 This form is used in multiple places (Add Article, Edit Article, Verify XML).
 
