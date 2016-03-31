@@ -65,14 +65,12 @@
 							</div>
 						</div>
 						{{#with files}}
-						{{#if pdf}}
-						{{#if xml}}
+						{{#if showFilesButton xml pdf}}
 						<div class="row">
 							<div class="col s12 center-align">
 							{{>SaveBtn what="PDF and XML Settings"}}
 							</div>
 						</div>
-						{{/if}}
 						{{/if}}
 						{{/with}}
 					</form>

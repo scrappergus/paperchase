@@ -45,6 +45,13 @@ if (Meteor.isClient) {
 	Template.registerHelper('prettyDoi', function(doi) {
 		return doi.replace('http://dx.doi.org/','');
 	});
+	Template.registerHelper('showFilesButton', function(xml,pdf) {
+		if(xml || pdf){
+			return true;
+		}else{
+			return false;
+		}
+	});
 	// Dates
 	// -----
 	Template.registerHelper('timestamp', function(date) {
