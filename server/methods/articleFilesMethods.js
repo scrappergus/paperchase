@@ -109,17 +109,6 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	updateFiguresDoc: function(articleMongoId, articleFigures){
-		var figMongoId;
-		var articleInfo = articles.findOne({_id: articleMongoId}); //keep fig doc up to date with article doc, or if new fig then include
-		var articleIds = articleInfo.ids;
-		articleIds.mongo_id = articleInfo._id;
-		var figInfo = figCollection.findOne({'ids.mongo_id' : articleMongoId});
-		if(figInfo){
-			figMongoId = figInfo._id;
-		}
-		return figCollection.update({_id : figMongoId},{$set: {figures: articleFigures, ids: articleIds}}, {upsert:true});
-	},
 	allArticlesFilesAudit: function(){
 		var result = {};
 		var allArticles = articles.find({},{_id : 1, files : 1}).fetch();

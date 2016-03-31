@@ -886,28 +886,32 @@ Template.AdminArticleFigures.events({
 		var figId = $(e.target).closest('button').attr('data-id');
 		// console.log(figId);
 		Session.set('figureEditing',figId);
-		var files = Session.get('article-files');
+		var article = Session.get('article');
+		var files = article.files;
 		var figures = files.figures;
 		figures.forEach(function(fig){
 			if(fig.id == figId){
 				fig.editing = true;
 			}
 		});
-		Session.set('article-files',files);
+		article.files.figures = figures;
+		Session.set('article',article);
 	},
 	'click .article-figure-cancel': function(e){
 		e.preventDefault();
 		var figId = $(e.target).closest('button').attr('data-id');
 		// console.log(figId);
 		Session.set('figureEditing',figId);
-		var files = Session.get('article-files');
+		var article = Session.get('article');
+		var files = article.files;
 		var figures = files.figures;
 		figures.forEach(function(fig){
 			if(fig.id == figId){
 				fig.editing = false;
 			}
 		});
-		Session.set('article-files',files);
+		article.files.figures = figures;
+		Session.set('article',article);
 	}
 });
 Template.s3FigureUpload.events({
@@ -926,7 +930,7 @@ Template.s3FigureUpload.events({
 		var s3Folder = 'paper_figures';
 
 		var originalFigId = $(e.target).closest('button').attr('data-id');
-		var newFigId = $('fig-input-' + originalFigId).val();
+		var newFigId = $('#fig-input-' + originalFigId).val();
 		if(!newFigId){
 			newFigId = originalFigId;
 		}
@@ -948,15 +952,16 @@ Template.s3FigureUpload.events({
 						}else if(newFileName){
 							// Update the figures collection
 							var articleInfo = articles.findOne({_id : articleMongoId});
-							var articleFigures = Session.get('article-files').figures;
+							var articleFigures = Session.get('article').files.figures;
 							articleFigures.forEach(function(fig){
 								if(fig.id == originalFigId){
 									fig.id = newFigId;
 									fig.file = newFileName;
 								}
+								delete fig.editing;
+								delete fig.url;
 							});
-
-							Meteor.call('updateFiguresDoc', articleMongoId, articleFigures, function(error,result){
+							Meteor.call('updateArticle', articleMongoId, {'files.figures' : articleFigures}, function(error,result){
 								if(error){
 									Meteor.formActions.errorMessage('Error. Figure uploaded but could not update database.');
 								}else if(result){
