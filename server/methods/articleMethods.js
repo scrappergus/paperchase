@@ -281,20 +281,6 @@ Meteor.methods({
 			return article;
 		}
 	},
-	allArticlesFilesAudit: function(){
-		var result = {};
-		var allArticles = articles.find({},{_id : 1, files : 1}).fetch();
-		var articlesWithoutPmc = articles.find({'ids.pmc' : {$exists:false}},{_id : 1}).fetch();
-		var articlesWithoutPmid = articles.find({'ids.pmid' : {$exists:false}},{_id : 1}).fetch();
-		var pdfList = articles.find({'files.pdf' : {$exists:true}},{_id : 1}).fetch();
-		var xmlList = articles.find({'files.xml' : {$exists:true}},{_id : 1}).fetch();
-		result.articles = allArticles.length;
-		result.articles_without_pmc = articlesWithoutPmc.length;
-		result.articles_without_pmid = articlesWithoutPmid.length;
-		result.pdf = pdfList.length;
-		result.xml = xmlList.length;
-		return result;
-	},
 	duplicateArticles: function(){
 		var result = {};
 		var queryRes = {};
