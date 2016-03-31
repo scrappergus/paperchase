@@ -499,7 +499,6 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
 			Session.set('article',null);
 			// check if article exists
 			var articleExistsExists = articles.findOne({'_id': this.params._id});
@@ -509,7 +508,7 @@ if (Meteor.isClient) {
 				var articleByPii = articles.findOne({'ids.pii': articlePii});
 				// check if :_id is a pii and not Mongo ID
 				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
+					Router.go('AdminArticleOverview', {_id: articleByPii._id});
 				}else{
 					Router.go('AdminArticleAdd');
 				}
@@ -558,7 +557,7 @@ if (Meteor.isClient) {
 				var articleByPii = articles.findOne({'ids.pii': articlePii});
 				// check if :_id is a pii and not Mongo ID
 				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
+					Router.go('AdminArticleFigures', {_id: articleByPii._id});
 				}else{
 					Router.go('AdminArticleAdd');
 				}
@@ -603,7 +602,7 @@ if (Meteor.isClient) {
 				var articleByPii = articles.findOne({'ids.pii': articlePii});
 				// check if :_id is a pii and not Mongo ID
 				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
+					Router.go('AdminArticleFiles', {_id: articleByPii._id});
 				}else{
 					Router.go('AdminArticleAdd');
 				}
@@ -648,7 +647,7 @@ if (Meteor.isClient) {
 				var articleByPii = articles.findOne({'ids.pii': articlePii});
 				// check if :_id is a pii and not Mongo ID
 				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
+					Router.go('AdminArticleFilesUploader', {_id: articleByPii._id});
 				}else{
 					Router.go('AdminArticleAdd');
 				}

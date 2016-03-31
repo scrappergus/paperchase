@@ -1422,6 +1422,14 @@ Meteor.general = {
 		$('html, body').animate({
 			scrollTop: $('#' + anchorId).position().top - navTop
 		}, 500);
+	},
+	isStringEmpty: function(string){
+		string = string.replace(/\r?\n|\r(^\s+|\s+$)+/g,'').replace(/\s/g, '');
+		if(string === ''){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
 
