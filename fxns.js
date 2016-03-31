@@ -647,6 +647,7 @@ Meteor.article = {
 
 Meteor.articleFiles = {
 	verifyXml: function(articleMongoId,files){
+		// console.log('..verifyXml');
 		var s3Folder = 'xml';
 		var file = files[0];
 		var reader = new FileReader;
@@ -1424,6 +1425,7 @@ Meteor.general = {
 		}, 500);
 	},
 	isStringEmpty: function(string){
+		// console.log('isStringEmpty',string);
 		string = string.replace(/\r?\n|\r(^\s+|\s+$)+/g,'').replace(/\s/g, '');
 		if(string === ''){
 			return true;
@@ -1562,5 +1564,15 @@ Meteor.s3 = {
 				cb(null, res);
 			}
 		});
+	}
+}
+
+Meteor.processXml = {
+	cleanAbstract: function(abstract){
+		abstract = abstract.replace(/<\/p>/g,'');
+		abstract = abstract.replace(/<p>/g,'');
+		abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
+		abstract = Meteor.adminBatch.cleanString(abstract);
+		return abstract;
 	}
 }

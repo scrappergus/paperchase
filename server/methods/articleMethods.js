@@ -153,7 +153,11 @@ Meteor.methods({
 			// Compare XML and Database
 			// Article exists in the database and this string is from the parsed XML uploaded to S3
 			articleFromDb = articles.findOne({'_id': articleId});
-			article = Meteor.call('compareProcessedXmlWithDb',article,articleFromDb);
+			Meteor.call('compareProcessedXmlWithDb',article,articleFromDb,function(error,result){
+				if(result){
+					article = result;
+				}
+			});
 		}
 
 		// New or Edit article? If articleId given and PII found, then editing.
