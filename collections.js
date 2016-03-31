@@ -680,7 +680,7 @@ if (Meteor.isServer) {
           return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
     });
 
-Meteor.publish("search", function(searchValue) {
+  Meteor.publish("search", function(searchValue) {
         if (!searchValue) {
             return articles.find({});
         }
@@ -701,7 +701,7 @@ Meteor.publish("search", function(searchValue) {
                 }
             }
         );
-    });
+  });
 }
 
 // SUBSCRIBE
