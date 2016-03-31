@@ -448,12 +448,16 @@ if (Meteor.isServer) {
   Meteor.publish('articleIssue',function(articleMongoId){
     // console.log('articleMongoId', articleMongoId);
     var articleInfo = articles.findOne({_id : articleMongoId});
-    var issueId;
-    if(articleInfo.issue_id){
-      issueId = articleInfo.issue_id;
+    var issueInfo;
+    if(articleInfo && articleInfo.issue_id){
+      issueInfo = issues.find({_id : articleInfo.issue_id});
     }
     // console.log('articleInfo',articleInfo.issue_id);
-    return issues.find({_id : articleInfo.issue_id});
+    if(issueInfo){
+      return issueInfo;
+    }else{
+      return [];
+    }
   });
 
   // Articles
@@ -462,13 +466,14 @@ if (Meteor.isServer) {
     return articles.find({},{sort : {volume:-1,issue:-1}});
   });
   Meteor.publish('articleInfo', function(id) {
-    // console.log('articleInfo - ' + id);
     var article = articles.findOne({'_id':id},{});
     // URL is based on Mongo ID. But a user could put PII instead, if so send PII info to redirect
     if(article){
       return articles.find({'_id':id},{});
+    }else if(articles.findOne({'ids.pii':id},{})){
+      return articles.find({'ids.pii':id},{});
     }else{
-      return  articles.find({'ids.pii':id},{});
+      return [];
     }
   });
   Meteor.publish('submission-set', function (queryType, queryParams) {
