@@ -281,15 +281,6 @@ Meteor.methods({
 			return article;
 		}
 	},
-	articleAndFiles: function(mongoId){
-		//for visitor
-		var article = articles.findOne({_id : mongoId});
-		var files = Meteor.call('articleFiles',mongoId);
-		for(var file in files){
-			article[file] = files[file];
-		}
-		return article;
-	},
 	allArticlesFilesAudit: function(){
 		var result = {};
 		var allArticles = articles.find({},{_id : 1, files : 1}).fetch();
