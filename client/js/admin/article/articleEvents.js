@@ -295,7 +295,7 @@ Template.AdminArticleForm.events({
 		var invalid = [];
 
 		article = Session.get('article-form');
-		mongoId = article['_id'];
+		mongoId = article._id;
 
 		articleUpdateObj.page_start; // integer
 		articleUpdateObj.page_end; // integer
@@ -307,22 +307,22 @@ Template.AdminArticleForm.events({
 		// -------
 		articleTitle = $('.article-title').code();
 		articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
-		articleUpdateObj['title'] = articleTitle;
+		articleUpdateObj.title = articleTitle;
 
 		// feature
 		// -------
 		if($('#feature-checkbox').prop('checked')){
-			articleUpdateObj['feature'] = true;
+			articleUpdateObj.feature = true;
 		}else{
-			articleUpdateObj['feature'] = false;
+			articleUpdateObj.feature = false;
 		}
 
 		// advance
 		// -------
 		if($('#advance-checkbox').prop('checked')){
-			articleUpdateObj['advance'] = true;
+			articleUpdateObj.advance = true;
 		}else{
-			articleUpdateObj['advance'] = false;
+			articleUpdateObj.advance = false;
 		}
 
 		// abstract
@@ -335,29 +335,29 @@ Template.AdminArticleForm.events({
 		// -------
 		// pages
 		if($('#page_start').val()){
-			articleUpdateObj['page_start'] = parseInt($('#page_start').val());
+			articleUpdateObj.page_start = parseInt($('#page_start').val());
 		}
 		if($('#page_end').val()){
-			articleUpdateObj['page_end'] = parseInt($('#page_end').val());
+			articleUpdateObj.page_end = parseInt($('#page_end').val());
 		}
 		// select options
 		// Issue
 		if($('#article-issue').val() != ''){
-			articleUpdateObj['issue_id'] = $('#article-issue').val();
+			articleUpdateObj.issue_id = $('#article-issue').val();
 		}
 		// Article type
 		if($('#article-type').val() != ''){
-			articleUpdateObj['article_type']['short_name'] = $('#article-type').val();
-			articleUpdateObj['article_type']['nlm_type'] = $('#article-type').attr('data-nlm');
-			articleUpdateObj['article_type']['name'] = $('#article-type option:selected').text();
+			articleUpdateObj.article_type.short_name = $('#article-type').val();
+			articleUpdateObj.article_type.nlm_type = $('#article-type').attr('data-nlm');
+			articleUpdateObj.article_type.name = $('#article-type option:selected').text();
 		}
 		// Article section
 		if($('#article-section').val() != ''){
-			articleUpdateObj['section'] = $('#article-section').val();
+			articleUpdateObj.section = $('#article-section').val();
 		}
 		// Article status
 		if($('#article-pub-status').val() != ''){
-			articleUpdateObj['pub_status'] = $('#article-pub-status').val();
+			articleUpdateObj.pub_status = $('#article-pub-status').val();
 		}
 
 		// ids
@@ -389,13 +389,13 @@ Template.AdminArticleForm.events({
 			});
 			$(this).find('.author-affiliation').each(function(i,o){
 				if($(o).prop('checked')){
-					author['affiliations_numbers'].push(parseInt(i));
+					author.affiliations_numbers.push(parseInt(i));
 				}
 			});
 			authors.push(author);
 		});
-		articleUpdateObj['authors'] = authors;
-		articleUpdateObj['affiliations'] = affiliations;
+		articleUpdateObj.authors = authors;
+		articleUpdateObj.affiliations = affiliations;
 
 
 		// Dates and History
@@ -408,29 +408,25 @@ Template.AdminArticleForm.events({
 				history[key] = new Date($(this).val());
 			}
 		});
-		articleUpdateObj['dates'] = dates;
-		articleUpdateObj['history'] = history;
+		articleUpdateObj.dates = dates;
+		articleUpdateObj.history = history;
 
 		// Keywords
 		// -------
 		$('.kw').each(function(i){
 			keywords.push($(this).val());
 		});
-		articleUpdateObj['keywords'] = keywords;
+		articleUpdateObj.keywords = keywords;
 
 		// VALIDATION and SAVE
 		// -------
 		// result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
 		Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
-			if(result){
-				console.log('result',result);
-			}
 			if(error){
 				console.error('validateArticle',error);
 			}else if(result && result.duplicate){
 				Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
 			}else if(result && result.invalid_list){
-				console.log('invalid');
 				Meteor.formActions.invalid(result.invalid_list);
 			}else if(result && result.saved){
 				if(!mongoId){

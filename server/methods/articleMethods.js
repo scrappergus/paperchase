@@ -2,16 +2,16 @@
 Meteor.methods({
 	addArticle: function(articleData){
 		// console.log('--addArticle');
-		var fut = new future();
-		Meteor.call('articleExistenceCheck',articleData,function(error,result){
-			if(error){
-				// console.error('addArticle',error);
-				throw new Meteor.Error('ERROR: Article - ', error);
-				// return error;
-			}else if(result){
-				fut['return'](result);
-				return result; //article already exists, but return the doc so we can notify user
-			}else{
+		// var fut = new future();
+		// Meteor.call('articleExistenceCheck',articleData,function(error,result){
+		// 	if(error){
+		// 		// console.error('addArticle',error);
+		// 		throw new Meteor.Error('ERROR: Article - ', error);
+		// 		// return error;
+		// 	}else if(result){
+		// 		fut['return'](result);
+		// 		return result; //article already exists, but return the doc so we can notify user
+		// 	}else{
 				if(articleData['authors']){
 					var authorsList = articleData['authors'];
 					for(var author = 0 ; author < authorsList.length; author++){
@@ -44,12 +44,14 @@ Meteor.methods({
 					});
 				}
 
-				// console.log('articleData',articleData);
-				fut['return'](articles.insert(articleData));
-				// return articles.insert(articleData);
-			}
-		});
-		return fut.wait();
+				return articles.insert(articleData);
+
+		// 		// console.log('articleData',articleData);
+				// fut['return'](articles.insert(articleData));
+		// 		// return articles.insert(articleData);
+		// 	}
+		// });
+		// return fut.wait();
 	},
 	updateArticle: function(mongoId, articleData, batch){
 		var fut = new future();
@@ -374,10 +376,10 @@ Meteor.methods({
 		// console.log(result.pii);
 		return result;
 	},
-	articleExistenceCheck: function(articleData){
-		// console.log('--articleExistenceCheck',articleData);
-		// before inserting article, check if doc already exists
-		// right now only title required, so check for IDs before adding to query
+	articleExistenceCheck: function(mongoId, articleData){
+		// console.log('--articleExistenceCheck');
+		// before inserting/updating article, check if doc already exists
+		// will return duplicate article doc, if found
 		var query =  [
 			{
 				'title': articleData.title
@@ -399,9 +401,71 @@ Meteor.methods({
 				'ids.pii': articleData.ids.pii
 			});
 		}
+		// console.log('query',query);
 		var exists = articles.findOne({ $or: query });
-		if(exists){
+		if(exists && exists._id != mongoId){
 			return exists;
+		}else{
+			return;
 		}
+	},
+	checkArticleInputs: function(articleData){
+		// will check for all required fields in form
+		// will return all invalid inputs
+		var invalid = [];
+
+		// title
+		if(articleData.title === ''){
+			invalid.push({
+				'fieldset_id' : 'article-title',
+				'message' : 'Article title is required'
+			});
+		}
+
+		return invalid;
+	},
+	validateArticle: function(mongoId, articleData){
+		var fut = new future();
+		var invalid = [];
+		var result = {};
+		// will check all required inputs are valid and check for duplicate article by PII
+		// will either return doc of duplicate article, invalid array, or boolean if article was updated
+
+		// first check for duplicates
+		Meteor.call('articleExistenceCheck',mongoId, articleData, function(error,duplicateExists){
+			if(error){
+				fut['throw'](error);
+			}else if(duplicateExists){
+				result = duplicateExists;
+				result.duplicate = true;
+				fut['return'](duplicateExists);
+			}else{
+				Meteor.call('checkArticleInputs',articleData, function(error,articleInvalid){
+					if(error){
+						fut['throw'](error);
+					}else if(articleInvalid && articleInvalid.length > 0){
+						result.invalid = true;
+						result.invalid_list = articleInvalid;
+						fut['return'](result);
+					}else{
+						// no duplicates and all valid. Now update/insert
+						Meteor.call('updateArticle',mongoId, articleData, function(error,articleSaved){
+							if(error){
+								fut['throw'](error);
+							}else if(articleSaved){
+								console.log('articleSaved',articleSaved);
+								result.article_id = articleSaved;
+								result.saved = true;
+								console.log('result',result);
+								fut['return'](result);
+							}
+						});
+					}
+				});
+
+			}
+		});
+
+		return fut.wait();
 	}
 });

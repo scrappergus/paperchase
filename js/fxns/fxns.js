@@ -260,15 +260,15 @@ Meteor.formActions = {
 	invalid: function(invalidData){
 		var invalidString = '';
 		for(var i=0 ; i < invalidData.length ; i++){
-			$('#' + invalidData[i]['fieldset_id']).addClass('invalid');
-			// TODO: adding invalid class does not work for WYSIWYG
-			invalidString += invalidData[i]['message'] + '    ';
+			$('#' + invalidData[i].fieldset_id).addClass('invalid');
+			// TODO: if we want to add invalid class to inputs then fix when adding to WYSIWYG, because does not work
+			invalidString += invalidData[i].message + '    ';
 			if(i === 0){
 				var scrollToEl = 'body';
-				if(invalidData[i]['fieldset_id'] && $('#' + invalidData[i]['fieldset_id']).length > 0){
-					scrollToEl = '#' + invalidData[i]['fieldset_id']; // I believe this is deprecated, but lets leave it here for now and check for existence
-				}else if(invalidData[i]['input_id'] && $('#' + invalidData[i]['input_id']).length > 0){
-					scrollToEl = '#' + invalidData[i]['input_id'];
+				if(invalidData[i].fieldset_id && $('#' + invalidData[i].fieldset_id).length > 0){
+					scrollToEl = '#' + invalidData[i].fieldset_id; // I believe this is deprecated, but lets leave it here for now and check for existence
+				}else if(invalidData[i].input_id && $('#' + invalidData[i].input_id).length > 0){
+					scrollToEl = '#' + invalidData[i].input_id;
 				}
 				// console.log('scrollToEl = ', scrollToEl);
 				$('html, body').animate({
@@ -293,7 +293,8 @@ Meteor.formActions = {
 			$('#save-btn').find('.show-wait').addClass('hide');
 		}
 
-		alert(invalidString);
+		Session.set('statusModalAction','Invalid');
+		Session.set('statusModalDetails',invalidString);
 	},
 	error: function(){
 		$('.save-btn').removeClass('hide');
