@@ -4,11 +4,11 @@ Meteor.methods({
   search: function(query) {
     var mongoClient = Meteor.npmRequire('mongodb').MongoClient;
     var esClient = Meteor.npmRequire('elasticsearch').Client({
-      host: Meteor.settings.search.elasticsearch
+      host: Meteor.settings.elasticsearch
     });
 
     function getArticles(ids) {
-      return mongoClient.connect(Meteor.settings.search.mongodb)
+      return mongoClient.connect(Meteor.settings.mongodb)
         .then(function(db) {
           return db.collection('articles').find({
             _id: {
@@ -57,7 +57,7 @@ Meteor.methods({
       return new Promise(function(resolve, reject) {
         esClient.search({
           size: 100,
-          index: Meteor.settings.search.journal,
+          index: Meteor.settings.index,
           body: {
             query: {
               bool: {
