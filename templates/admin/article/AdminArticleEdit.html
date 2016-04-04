@@ -68,6 +68,20 @@
 			</div>
 		</div>
 	{{/if}}
+	{{#if duplicate}}
+		<div class="card red z-depth-0 lighten-4">
+			<div class="card-content">
+				<div class="row no-margin">
+					<div class="col s12">
+						<h2>Duplicate Article Found</h2>
+						{{#with duplicate}}
+						<h3><a href="{{pathFor 'AdminArticleOverview' _id=_id}}">{{{title}}}</a></h3>
+						{{/with}}
+					</div>
+				</div>
+			</div>
+		</div>
+	{{/if}}
 	<form id="article-form">
 		<div class="row border-box">
 			<div class="col s12">

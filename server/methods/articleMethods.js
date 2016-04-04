@@ -142,7 +142,7 @@ Meteor.methods({
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
 		// article = parsed XML from S3 after upload
-		// console.log('..preProcessArticle = ' + articleId);
+		console.log('..preProcessArticle = ' + articleId);
 		// console.log(article);
 		var articleByPii,
 			articleFromDb;
@@ -158,6 +158,14 @@ Meteor.methods({
 			Meteor.call('compareProcessedXmlWithDb',article,articleFromDb,function(error,result){
 				if(result){
 					article = result;
+				}
+			});
+			// Check for duplicates
+			Meteor.call('articleExistenceCheck',articleId, article, function(error,duplicateFound){
+				if(error){
+					console.error('articleExistenceCheck',error);
+				}else if(duplicateFound){
+					article.duplicate = duplicateFound;
 				}
 			});
 		}
@@ -453,10 +461,8 @@ Meteor.methods({
 							if(error){
 								fut['throw'](error);
 							}else if(articleSaved){
-								console.log('articleSaved',articleSaved);
 								result.article_id = articleSaved;
 								result.saved = true;
-								console.log('result',result);
 								fut['return'](result);
 							}
 						});
