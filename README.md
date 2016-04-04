@@ -83,9 +83,13 @@ On article form, in meta section
 Article Form
 ----------------
 
+This form is used in multiple places (Add Article, Edit Article, Verify XML).
+
+**Data**
 The data for the form comes from the session variable `article-form` and is not reactive.  The database data needs to be preprocessed to include all issues, all paper types etc so that the dropdown menus and buttons options (for ex, article type buttons) in the form are complete. Another session variable `article` is used to show the article nav and header. This variable is set in the router. Don't use the session variable for `article-form` because that contains extra information not needed for the nav/header, and also we can show the header while the form is still processing.
 
-This form is used in multiple places (Add Article, Edit Article, Verify XML).
+**Saving**
+Whether using the form to create a new article doc, or updating an existing article doc, the article information is passed to validateArticle(mongoId, articleData) in /client/js/admin/article/articleMethods.js. This function will first check for duplicate articles. Duplicate articles are found using articleExistenceCheck(mongoId, articleData), which will query for title and IDs. If an article is found and the _id of the doc does not match the provided mongoId then validation is stopped and the user is notified. If no duplicate found, then the inputs are validated. Currently, only title is required and the only requirement is that it is not empty. validateArticle() will return an object, which has three flags checked on the event handler: duplicate, invalid, saved. If result.duplicate then the returned object is the duplicate article. If result.invalid, then the returned result contains all the invalid input IDs with messages for each. If result.saved then article was saved (updated or inserted). If saving the data, articleUpdate() is used. This will also insert and return _id if inserted.
 
 
 Article Files Uploader
@@ -119,6 +123,9 @@ XML files are versioned, so consistent naming is essential. In the Paperchase DB
 PDF files are versioned, so consistent naming is essential. In the Paperchase DB, this record is stored in the article doc (in the articles collection), within ‘files’
 
 **Figures**
+ - File naming: articleMongId_figureId.xml
+ - File storage: on AWS S3 in journal bucket (paperchase-journalshortname) in the paper_figures folder
+
 
 
 
