@@ -331,7 +331,6 @@ Template.AdminArticleForm.events({
 		articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
 		articleUpdateObj['abstract'] = articleAbstract;
 
-
 		// meta
 		// -------
 		// pages
@@ -369,14 +368,13 @@ Template.AdminArticleForm.events({
 			k = k[2];
 			ids[k] = $(this).val();
 		});
-
 		articleUpdateObj.ids = ids;
 
 		// All affiliations
 		// -------
 		affiliations = Meteor.adminArticle.getAffiliations();
 
-		// authors
+		// Authors
 		// -------
 		$('.author-row').each(function(idx,obj){
 			var author = {
@@ -400,7 +398,7 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['affiliations'] = affiliations;
 
 
-		// dates and history
+		// Dates and History
 		// -------
 		$('.datepicker').each(function(i){
 			var key = $(this).attr('id');
@@ -413,46 +411,34 @@ Template.AdminArticleForm.events({
 		articleUpdateObj['dates'] = dates;
 		articleUpdateObj['history'] = history;
 
-		// keywords
+		// Keywords
 		// -------
 		$('.kw').each(function(i){
 			keywords.push($(this).val());
 		});
 		articleUpdateObj['keywords'] = keywords;
 
-		// VALIDATION
+		// VALIDATION and SAVE
 		// -------
-		// title
-		if(articleUpdateObj.title === ''){
-			invalid.push({
-				'fieldset_id' : 'article-title',
-				'message' : 'Article title is required'
-			});
-		}
-
-		// Submit to DB or show invalid errors
-		if(invalid.length > 0){
-			Meteor.formActions.invalid(invalid);
-		}else{
-			// save to db
-			// -------
-			// console.log(articleUpdateObj);
-			Meteor.call('updateArticle', mongoId, articleUpdateObj, function(error,result){
-				if(error){
-					alert(error.message);
-					Meteor.formActions.error();
-				}else if(result){
-					if(typeof result == 'object'){
-						Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
-					}else{
-						if(!mongoId){
-							mongoId = result;
-						}
-						Router.go('AdminArticleOverview',{_id : mongoId});
-					}
+		// result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
+		Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
+			if(result){
+				console.log('result',result);
+			}
+			if(error){
+				console.error('validateArticle',error);
+			}else if(result && result.duplicate){
+				Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
+			}else if(result && result.invalid_list){
+				console.log('invalid');
+				Meteor.formActions.invalid(result.invalid_list);
+			}else if(result && result.saved){
+				if(!mongoId){
+					mongoId = result.article_id;
 				}
-			});
-		}
+				Router.go('AdminArticleOverview',{_id : mongoId});
+			}
+		});
 	}
 });
 
