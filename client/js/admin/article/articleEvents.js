@@ -230,37 +230,36 @@ Template.AdminArticleForm.events({
 		e.preventDefault();
 		var article = Session.get('article-form');
 		var type = $(e.target).attr('id').replace('add-','');
-		if(!article['ids']){
-			article['ids'] = {};
+		if(!article.ids){
+			article.ids = {};
 		}
 		// Special handling for PII. This is required to add/update article. Need to auto increment this ID
 		if(type == 'pii'){
 			// first make sure that the PII was not removed and then added in same form session.
 			// If so, then the PII could already be assigned to the article
-			if(!article['_id']){
+			if(!article._id){
 				Meteor.call('getNewPii',function(error,newPii){
 					if(error){
 						console.error(error);
 					}else if(newPii){
-						article['ids']['pii'] = newPii;
+						article.ids.pii = newPii;
 						Session.set('article-form',article); // need to set session also here because of timinig problem with methods on server
 					}
 				});
 			}else{
-				Meteor.call('getSavedPii',article['_id'],function(error,savedPii){
+				Meteor.call('getSavedPii',article._id,function(error,savedPii){
 					if(error){
 						console.error('Get PII', error);
 					}else if(savedPii){
-						// console.log(savedPii);
-						article['ids'][type] = savedPii;
+						article.ids.type = savedPii;
 						Session.set('article-form',article);// need to set session also here because of timinig problem with methods on server
 					}else{
-						article['ids'][type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
+						article.ids[type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
 					}
 				});
 			}
 		}else{
-			article['ids'][type] = '';
+			article.ids[type] = '';
 		}
 
 		Session.set('article-form',article);

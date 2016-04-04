@@ -132,8 +132,21 @@ Meteor.methods({
 		return issueId;
 	},
 	getSavedPii: function(mongoId){
+		// console.log('....getSavedPii');
+		var fut = new future();
 		var art = articles.findOne({_id : mongoId}, {ids:1});
-		return art.ids.pii;
+		if(art.ids.pii){
+			fut['return'](art.ids.pii);
+		}else{
+			Meteor.call('getNewPii',function(error,pii){
+				if(error){
+					console.error('getNewPii',error);
+				}else if(pii){
+					fut['return'](pii);
+				}
+			});
+		}
+		return fut.wait();
 	},
 	getNewPii: function(){
 		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
@@ -142,7 +155,7 @@ Meteor.methods({
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
 		// article = parsed XML from S3 after upload
-		console.log('..preProcessArticle = ' + articleId);
+		// console.log('..preProcessArticle = ' + articleId);
 		// console.log(article);
 		var articleByPii,
 			articleFromDb;
