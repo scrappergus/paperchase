@@ -315,7 +315,7 @@ Meteor.methods({
 		// HISTORY DATES
 		// -----------
 		// None provided in AOP sample file. Does contain aheadofprint but we do not store this
-		console.log(articleProcessed.issue_id);
+		// console.log(articleProcessed.issue_id);
 		return articleProcessed;
 	}
 });
