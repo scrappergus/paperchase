@@ -1,0 +1,250 @@
+@import "/{meta:susy}/susy";
+@import '../style/mixins';
+
+$susy: (
+  columns: 18,
+  gutters: 26px/45px,
+  gutter-position: after,
+  math: fluid,
+  output: float
+);
+
+/*================ Colors | Base Colors ================*/
+// Primary (blues)
+$blackpearl: #091523;
+$midnight: #0C1D31;
+$midnightblue: #033369;
+$deepcove: #012855;
+
+// Accents
+$berry: #A11B57;
+$darkberry: #90134B;
+
+// Text
+$water: #C5CDD6; // sidebar links
+$cello: #2E4057; // body text
+
+// Whites, backgrounds, etc.
+$faintgray: #F6F7F9; // sidebar backgrounds
+$lightgray: #E6E8EB; // keywords bg, affiliation
+$midgray: #7C8187;
+$deepgray: #2E4057; // fig descrip background
+
+
+/*================ Typography | Base Styles ================*/
+$futura: "futura-pt", Helvetica, Arial, sans-serif;
+$base-font-size:   17px;
+$base-line-height: 1.35;
+// $title-line-height: 1.11;
+
+// Document-Level
+html {
+  font-size: $base-font-size;
+  font-size: 1rem;
+}
+
+body {
+  color: $cello;
+}
+
+html, body {
+  font-family: $futura;
+  line-height: 1.35;
+  letter-spacing: 0.15px;
+}
+
+h1 {
+  color: $midnight;
+  font-size: 2.235rem;
+  line-height: 1.1;
+}
+
+h5,
+span.meta {
+  font-size: 0.8235rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.heavy {
+    font-weight: 700;
+  }
+}
+
+/*================ Layout | Base Modules ================*/
+
+// Default Grid
+.nav-sidebar,
+.sidebar {
+  float: left;
+  width: 100%;
+  height: 100%;
+
+  // todo: mobile styles
+  @include at-query($min, $medium) {
+    width: 260px;
+  }
+  
+  @include at-query($min, $large) {
+    width: 310px;
+  }
+}
+
+.nav-content,
+.content {
+  float: right;
+  width: 100%;
+  @include at-query($min, $medium) {
+    width: calc(100% - 260px);
+  }
+  @include at-query($min, $large) {
+    width: calc(100% - 310px);
+  }
+}
+
+/*================ Top Navigation | Base Modules ================*/
+.navigation {
+  height: 80px;
+  background-color: $midnightblue;
+  overflow: hidden;
+
+  .nav-sidebar {
+    padding: 20px 0 0 20px;
+    background: $deepcove;
+
+    .logo {
+      height: 50px;
+    }
+  }
+
+  .nav-content {
+    padding: 20px;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      float: right;
+      list-style-type: none;
+    }
+
+    ul li {
+      display: inline;
+    }
+  }
+}
+
+/*================ Sub Navigation | Base Modules ================*/
+.sub-nav {
+  height: 64px;
+  background-color: $faintgray;
+  @include padding-vertical(25px);
+}
+
+.sub-nav .breadcrumbs {
+  @include push(1 of 16);
+  @include span(12);
+  font-size: 0.8824rem;
+  
+  a { color: $midgray; }
+  
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul li {
+    display: inline;
+
+    &:after {
+      content: "\f105"; // fa-angle-right
+      font-family: FontAwesome;
+      margin: 0 10px 0 13px;
+      opacity: .35;
+      letter-spacing: 0.25px;
+    }
+
+    &:last-child:after { content: ""; }
+
+    strong {
+      color: #585E65;
+    }
+  }
+}
+
+.sub-nav .issn {
+  @include span(4);
+  
+  span.meta {
+    float: right;
+    color: rgba(162, 169, 176, .75);
+  }
+}
+
+
+/*================ Main Container | Base Modules ================*/
+.main { overflow: hidden; }
+
+.main .sidebar {
+  background-color: $blackpearl;
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+}
+
+.main .content {
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+  min-height: calc(100vh - 80px); // todo: fix this min-height nonsense
+}
+
+.main .content-yield {
+  margin-top: 60px;
+}
+
+.main .content-footer {
+  @include span(16);
+}
+
+/*================ Left Navigation | Base Modules ================*/
+.main .sidebar ul.nav-links {
+  
+  a li {
+    position: relative;
+    padding: 18px 0 15px 40px;
+    margin-bottom: 7px;
+    color: $water;
+    @include transition(background .25s ease-out, 
+                        color .25s ease-out);
+  }
+
+  a li:after {
+    content: "\f105"; // fa-angle-right
+    font-family: FontAwesome;
+    position: absolute;
+    top: 9px;
+    right: 13px;
+    font-size: 1.765rem;
+    color: lighten(#2E4057, 3%);
+    opacity: 0;
+    @include transition(opacity .25s ease-out, 
+                        right .25s ease-out);
+  }
+
+  a:hover li {
+    background: $midnight;
+    color: #fff;
+  }
+
+  a:hover li:after {
+    opacity: 1;
+    right: 18px;
+  }
+}
+
+/*================ Page Content | Page-Level Modules ================*/
+.page-content {
+  @include push(1 of 16);
+  @include span(10);
+}
+
+.page-sidebar {
+  @include span(4);
+}
