@@ -7,7 +7,6 @@
 iron:router
 accounts-password
 gadicohen:headers
-meteorhacks:kadira
 mizzao:user-status
 matb33:collection-hooks
 service-configuration
@@ -16,7 +15,6 @@ alanning:roles
 fourseven:scss
 gandev:server-eval
 peerlibrary:xml2js
-meteorhacks:npm
 npm-container
 momentjs:moment
 meteor-base
