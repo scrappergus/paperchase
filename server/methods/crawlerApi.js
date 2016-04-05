@@ -197,6 +197,9 @@ Meteor.methods({
 				if(missingInDb.length > 0){
 					for(var i=0 ; i<missingInDb.length ; i++){
 						if(missingInDb[i]){ // need to check for existence because could be null when object move to inDbUpdate array in crawler
+							if(missingInDb[i].dates && missingInDb[i].dates.epub){
+								missingInDb[i].dates.epub = new Date(missingInDb[i].dates.epub);
+							}
 							Meteor.call('addArticle',missingInDb[i],function(addError,articleAdded){
 								if(addError){
 									console.error('addError: ', addError);
