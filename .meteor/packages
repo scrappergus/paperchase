@@ -14,7 +14,6 @@ accounts-ui
 alanning:roles
 fourseven:scss
 gandev:server-eval
-peerlibrary:xml2js
 npm-container
 momentjs:moment
 meteor-base

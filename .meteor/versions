@@ -85,8 +85,6 @@ ordered-dict@1.0.4
 ostrio:cookies@1.0.1
 ostrio:iron-router-helper-class@1.0.0
 ostrio:iron-router-title@1.0.2
-peerlibrary:blocking@0.5.2
-peerlibrary:xml2js@0.4.8_1
 promise@0.5.1
 random@1.0.5
 rate-limit@1.0.0
