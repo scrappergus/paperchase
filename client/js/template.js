@@ -32,9 +32,6 @@ Template.SectionPapers.onRendered(function () {
 
 // Article
 // --------
-Template.ArticleFigures.onRendered(function() {
-	$('.owl-carousel').owlCarousel();
-});
 Template.ArticleFigureViewer.onRendered(function() {
 	$('.figure img, .table img').wrap('<div class="container"></div>');
 	var $panzoom = $('.figure img, .table img').panzoom({
