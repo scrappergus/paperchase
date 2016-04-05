@@ -28,7 +28,7 @@ Meteor.methods({
 		}
 	},
 	getAllArticlesDoiStatus: function(){
-		console.log('..getAllArticlesDoiStatus');
+		// console.log('..getAllArticlesDoiStatus');
 		var fut = new future();
 		var journalShortName = journalConfig.findOne().journal.short_name;
 		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalShortName;
@@ -41,7 +41,7 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 			}else if(result){
 				// combine with articles DB
-				console.log('articles',result.content);
+				// console.log('articles',result.content);
 				var articlesDoiList = JSON.parse(result.content);
 
 				for(var a=0 ; a<articlesDoiList.length ; a++){
