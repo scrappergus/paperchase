@@ -210,7 +210,7 @@ Meteor.methods({
 				if(inDbUpdate.length > 0){
 					inDbUpdate.forEach(function(articleToUpdate){
 						var updateObj = {};
-						console.log(articleToUpdate.ids);
+						// console.log(articleToUpdate.ids);
 						updateObj['ids.pmid'] = articleToUpdate.ids.pmid;
 						if(articleToUpdate.ids.pmc){
 							updateObj['ids.pmc'] = articleToUpdate.ids.pmc;
