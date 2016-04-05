@@ -1,6 +1,6 @@
 Meteor.methods({
 	intiateArticleCollection: function(){
-		console.log('..intiateArticleCollection');
+		// console.log('..intiateArticleCollection');
 		//for initiating articles collection. PII/PMID/Title sent from crawler
 		// first make sure there are 0 docs
 		if(articles.find().fetch().length == 0){
