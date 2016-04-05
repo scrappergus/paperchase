@@ -149,8 +149,20 @@ Meteor.methods({
 		return fut.wait();
 	},
 	getNewPii: function(){
+		// pii a string, so sorting is failing. below temp solution for this.
+		var articleByPii = {};
+		var articlesWithPiiCount = 0;
+		var allArticles = articles.find({},{ids:1}).fetch();
+		allArticles.forEach(function(article){
+			if(article.ids && article.ids.pii){
+				articleByPii[article.ids.pii] = article.ids.pii;
+				articlesWithPiiCount++;
+			}
+		});
+		// console.log('articleByPii',articleByPii[articlesWithPiiCount]);
+
 		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
-		return parseInt(highestPii.ids.pii) + 1;
+		return parseInt(articleByPii[articlesWithPiiCount]) + 1;
 	},
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
