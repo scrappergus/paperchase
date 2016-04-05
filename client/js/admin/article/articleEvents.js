@@ -251,7 +251,7 @@ Template.AdminArticleForm.events({
 					if(error){
 						console.error('Get PII', error);
 					}else if(savedPii){
-						article.ids.type = savedPii;
+						article.ids[type] = savedPii;
 						Session.set('article-form',article);// need to set session also here because of timinig problem with methods on server
 					}else{
 						article.ids[type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
