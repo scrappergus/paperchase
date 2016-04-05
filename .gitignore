@@ -4,3 +4,4 @@ mup.json
 public/images/covers/
 settings.json
 node_modules/
+server/awsConfig.js
