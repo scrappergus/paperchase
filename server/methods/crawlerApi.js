@@ -54,7 +54,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	getAllArticlesPmcXml: function(){
-		console.log('..getAllArticlesPmcXml');
+		// console.log('..getAllArticlesPmcXml');
 		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/crawl_xml/' + journalConfig.findOne().journal.short_name;
 
