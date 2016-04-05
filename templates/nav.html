@@ -1,19 +1,18 @@
 <template name="LeftNav">
-	<ul class="home-left-nav nav-links">
+	<ul class="nav-links">
 		{{#each links}}
-		{{#if display}}
-		<li><a href="{{pathFor route_name}}">{{name}}</a></li>
-		<div class="divider"></div>
-		{{/if}}
+			{{#if display}}
+			<a href="{{pathFor route_name}}"><li>{{name}}</li></a>
+			{{/if}}
 		{{/each}}
 
-		{{#if sectionsLinks}}
-		<li><h4>Sections</h4></li>
-		{{#each sectionsLinks}}
-		<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
-		<div class="divider"></div>
-		{{/each}}
-		{{/if}}
+		<!-- {{#if sectionsLinks}}
+			<li><h4>Sections</h4></li>
+			{{#each sectionsLinks}}
+			<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
+			<div class="divider"></div>
+			{{/each}}
+		{{/if}} -->
 	</ul>
 </template>
 

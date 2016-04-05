@@ -50,3 +50,5 @@ lepozepo:s3
 materialize:materialize
 meteorhacks:aggregate
 risul:moment-timezone
+meta:susy@2.3.3
+fortawesome:fontawesome

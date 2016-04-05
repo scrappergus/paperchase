@@ -24,6 +24,47 @@
           backface-visibility: $value!important;
 }
 
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+// CSS STUFF
+@mixin padding-vertical($value) {
+  padding-top: $value;
+  padding-bottom: $value - 2;
+}
+
+/*============================================================================
+  Dependency-free breakpoint mixin
+    - http://blog.grayghostvisuals.com/sass/sass-media-query-mixin/
+==============================================================================*/
+$small: 750px;
+$medium: 970px;
+$large: 1170px;
+$wide: 1400px;
+
+$min: min-width;
+$max: max-width;
+@mixin at-query ($constraint, $viewport1, $viewport2:null) {
+  @if $constraint == $min {
+    @media screen and ($min: $viewport1) {
+      @content;
+    }
+  } @else if $constraint == $max {
+    @media screen and ($max: $viewport1) {
+      @content;
+    }
+  } @else {
+    @media screen and ($min: $viewport1) and ($max: $viewport2) {
+      @content;
+    }
+  }
+}
+
 /* Type */
 /*https://www.smashingmagazine.com/2015/06/responsive-typography-with-sass-maps/*/
 @mixin font-size($fs-map, $fs-breakpoints: $breakpoints) {
