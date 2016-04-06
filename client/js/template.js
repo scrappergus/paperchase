@@ -1,4 +1,5 @@
 
+
 // Visitor
 // -------
 Template.Visitor.onRendered(function () {
@@ -19,6 +20,13 @@ Template.Home.onRendered(function () {
 	});
 });
 
+Template.scrollspyCard.onRendered(function() {
+	// hacky width workaround for fixed element
+	$( window ).resize(function() {
+	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
+	}).resize();
+});
+
 // Issue
 // ------
 Template.Issue.onDestroyed(function () {
@@ -33,9 +41,17 @@ Template.SectionPapers.onRendered(function () {
 
 // Article
 // --------
+Template.Article.onRendered(function() {
+	// hacky width workaround for fixed element
+	$( window ).resize(function() {
+	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
+	}).resize();
+});
+
 Template.ArticleFigures.onRendered(function() {
 	$('.owl-carousel').owlCarousel();
 });
+
 Template.ArticleFigureViewer.onRendered(function() {
 	$('.figure img, .table img').wrap('<div class="container"></div>');
 	var $panzoom = $('.figure img, .table img').panzoom({
