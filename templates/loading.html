@@ -1,17 +1,19 @@
 <template name="Loading">
-	<div class="page-content wide">
-		<h3>Loading</h3>
+	<div class="page-content wide loader">
+<!-- 		<h3>Loading</h3> -->
 		{{>Progress}}
 	</div>
 </template>
 
 <template name="Progress">
-	<div class="progress">
+	<!-- <div class="progress">
 		<div class="indeterminate"></div>
-	</div>
+	</div> -->
+
+  <div class="sp sp-circle"></div>  
 </template>
 
-<!-- todo: get rid of this template -->
+<!-- todo: get rid of this template if we can -->
 <template name="LoadingConfig">
 	{{>Loading}}
 </template>
