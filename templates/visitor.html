@@ -5,7 +5,6 @@
 	<title>Oncotarget</title>
 	<script src="https://use.typekit.net/dxi3iuf.js"></script>
 	<script>try{Typekit.load({ async: true });}catch(e){}</script>
-
 </head>
 
 <template name="Visitor">
@@ -26,6 +25,7 @@
 	<div class="main">
 		<!-- Sidebar -->
 		<div class="sidebar">
+			{{> SearchBox}}
 			{{>LeftNav}}
 			{{>ArticleSections}}
 		</div>
@@ -70,6 +70,10 @@
 			{{/each}}
 		</ul>
 	</div>
+</template>
+
+<template name="SearchBox">
+	<div class="search-box"><input type="search" placeholder="Search the Journal"></div>
 </template>
 
 <template name="PageHeader">
