@@ -15,16 +15,9 @@
         </ul>
    </div>
 
-   <!-- todo: make smoothscroll at scroll - 100px or so -->
+   <!-- todo: put this in a single template -->
    <div class="page-sidebar">
-       <div class="card sidebar-card fixed-scroll-card">
-            <h6 class="card-title">Table of Contents</h6>
-            <ul class="scrollspy toc">
-                {{#each sections}}
-                    <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
-                {{/each}}
-            </ul>
-        </div>
+     {{> scrollspyCard}}
    </div>
 
 
