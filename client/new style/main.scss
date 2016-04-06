@@ -48,9 +48,10 @@ html, body {
   font-family: $futura;
   line-height: 1.35;
   letter-spacing: 0.15px;
-  //  ???? not working
-  font-size: 17px;
-  font-size: 1rem;
+  
+  //  ???? not working, something is overriding rem
+  // font-size: 17px;
+  // font-size: 1rem;
 }
 
 // === Headings | Font Sizes
@@ -132,7 +133,7 @@ p {
 a.button,
 button.button {
   display: inline-block;
-  padding: 18px 38px 17px;
+  padding: 20px 38px 19px;
   @include border-radius(2px);
   margin-bottom: 20px;
   background: $deepgray;
@@ -152,6 +153,27 @@ button.button {
   &:hover {
     background: lighten($deepgray, 10%);
   }
+
+  &.primary {
+    background: $accent;
+  }
+
+  // todo: this is messy
+  &.end-cap {
+    position: relative;
+    padding: 20px 28px 19px 68px;
+
+    span.icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: $darkaccent;
+      padding: 14px;
+      border-top-left-radius: 2px;
+    }
+  }
+
+  span.icon { font-size: 25px; }
 }
 
 // button toggles
@@ -328,6 +350,7 @@ footer {
 
 .main .sidebar {
   background-color: $blackpearl;
+  font-size: 17px;
   margin-bottom: -99999px;
   padding-bottom: 99999px;
 }
@@ -344,8 +367,23 @@ footer {
 }
 
 /*================ Left Navigation | Base Modules ================*/
+.main .sidebar .search-box {
+  padding: 20px 40px 0;
+
+  input { 
+    font-size: 17px;
+    border-bottom: 2px solid #213245;
+  }
+
+  /* these have to be separate because css parser is broken for placeholder rules lol */
+  input::placeholder { color: #5B6C80 }
+  input::-webkit-input-placeholder { color: #5B6C80 }
+  input::-moz-placeholder { color: #5B6C80 }
+}
+
 .main .sidebar ul.nav-links {
-  
+  padding-top: 0;
+  margin-top: 0;
   a li {
     position: relative;
     padding: 21px 0 18px 40px;
@@ -359,10 +397,10 @@ footer {
     content: "\f105"; // fa-angle-right
     font-family: FontAwesome;
     position: absolute;
-    top: 9px;
+    top: 13px;
     right: 13px;
     font-size: 1.765rem;
-    color: lighten(#2E4057, 3%);
+    color: lighten(#2E4057, 10%);
     opacity: 0;
     @include transition(opacity .25s ease-out, 
                         right .25s ease-out);
@@ -392,11 +430,6 @@ footer {
 .page-sidebar {
   padding-left: 20px;
   @include span(5);
-
-  @include at-query($min, $wide) {
-    @include span(4);
-  }
-
 }
 
 .card {
@@ -461,6 +494,10 @@ footer {
       background: $accent;
     }
   }
+}
+
+.fixed-scroll-card {
+  position: fixed;
 }
 
 /*================ Main Article Content | Article-Level Modules ================*/
@@ -617,7 +654,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
   background: $lightgray;
   color: $kashmir;
   @include border-radius(2px);
-  font-size: 0.885rem;
+  font-size: 15px;
 
   &.dark {
     background-color: $deepgray;
@@ -650,4 +687,28 @@ ul.sectioned-list {
       padding: 0;
     }
   }
+}
+
+
+.sp {
+  width: 32px;
+  height: 32px;
+  clear: both;
+  margin: 20px auto;
+}
+
+.sp-circle {
+  border: 4px rgba($kashmir, 0.25) solid;
+  border-top: 4px rgba($kashmir, 1) solid;
+  border-radius: 50%;
+  -webkit-animation: spCircRot 1.5s infinite linear;
+  animation: spCircRot 1.5s infinite linear;
+}
+@-webkit-keyframes spCircRot {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(359deg); }
+}
+@keyframes spCircRot {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
 }

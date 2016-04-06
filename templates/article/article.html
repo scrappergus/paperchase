@@ -15,14 +15,15 @@
 	</div>
 
 	<div class="page-sidebar">
-		<!-- Todo: Implement views toggle -->
 		<div class="button-toggle">
 			<a href="#" class="button">Full Text</a>
 			<!-- <span>or</span> -->
 			<a href="#" class="button active">Abstract</a>
 		</div>
 
-		<a href="#" class="full-width button"><span class="btn-cap"></span> Download PDF</a>
+		<a href="#" class="full-width end-cap primary button">
+			<span class="icon icon-download"></span> Download PDF
+		</a>
 
 		<div class="card sidebar-card">
 			<h6 class="card-title">Corresponding Author</h6>
@@ -32,7 +33,7 @@
 
 		{{#with article}} {{#if keywords}}
 			<div class="card sidebar-card">
-				<h6 class="card-title">Keywords</h6>
+				<h6 class="card-title">Related Keywords</h6>
 					<div class="tags">
 						{{#each keywords}}
 							<a class="keyword tag">{{{.}}}</a>
