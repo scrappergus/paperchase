@@ -9,9 +9,9 @@ if (Meteor.isServer) {
 // async loader for fonts
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
-	WebFontConfig = {
-		google: { families: [ 'Lora:400,400italic,700,700italic:latin' , 'Open Sans'] }
-	};
+	// WebFontConfig = {
+	// 	google: { families: [ 'Lora:400,400italic,700,700italic:latin' , 'Open Sans'] }
+	// };
 	(function() {
 			var wf = document.createElement('script');
 			wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
@@ -468,6 +468,7 @@ if (Meteor.isClient) {
 
 	Router.route('/for-authors', {
 		name: 'ForAuthors',
+		title: 'For Authors',
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[
@@ -488,6 +489,7 @@ if (Meteor.isClient) {
 
 	Router.route('/about', {
 		name: 'About',
+		title: 'About the Journal',
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[

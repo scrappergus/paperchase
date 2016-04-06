@@ -47,8 +47,9 @@ vojtechklos:materialnote
 ostrio:iron-router-title
 tomi:upload-server
 lepozepo:s3
-materialize:materialize
 meteorhacks:aggregate
 risul:moment-timezone
 meta:susy@2.3.3
 fortawesome:fontawesome
+materialize:materialize
+monbro:iron-router-breadcrumb

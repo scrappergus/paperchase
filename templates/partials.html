@@ -1,3 +1,14 @@
 <template name="PersonName">
 	{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
 </template>
+
+<template name="scrollspyCard">
+  <div class="card sidebar-card fixed-scroll-card">
+    <h6 class="card-title">Table of Contents</h6>
+    <ul class="scrollspy toc">
+      <!-- {{#each sections}}
+          <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
+      {{/each}} -->
+    </ul>
+  </div>
+</template>

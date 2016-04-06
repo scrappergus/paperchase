@@ -1,24 +1,33 @@
 <template name="ForAuthors">
-    {{>PageHeader header="Information for Authors"}}
-    <div class="row">
-        <div class="col s12">
-            <ol class="roman-list">
-                {{#each sections}}
-                <li><a class="anchor" href="#section-{{@index}}">{{{title}}}</a></li>
-                {{/each}}
-            </ol>
-        </div>
+    <div class="page-content wide">
+        {{>PageHeader header="Information for Authors"}}
     </div>
-    <ol class="roman-list">
-    {{#each sections}}
-    <li id="section-{{@index}}">
-        <h2>{{{title}}}</h2>
-        <div class="row">
-            <div class="col s12">{{{content}}}</div>
+
+   <div class="page-content">
+
+        <ul class="sectioned-list">
+            {{#each sections}}
+            <li id="section-{{@index}}">
+                <h2>{{{title}}}</h2>
+                {{{content}}}
+            </li>
+            {{/each}}
+        </ul>
+   </div>
+
+   <!-- todo: make smoothscroll at scroll - 100px or so -->
+   <div class="page-sidebar">
+       <div class="card sidebar-card fixed-scroll-card">
+            <h6 class="card-title">Table of Contents</h6>
+            <ul class="scrollspy toc">
+                {{#each sections}}
+                    <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
+                {{/each}}
+            </ul>
         </div>
-    </li>
-    {{/each}}
-    </ol>
+   </div>
+
+
 </template>
 
 

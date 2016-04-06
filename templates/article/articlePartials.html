@@ -1,47 +1,53 @@
 <template name="ArticleHeaderTitle">
-
-	<h5>
+	<!-- todo: move pages and date from this area to a better spot -->
+	<h5 class="article-header">
 		{{#if article_type.name}} 
-			<span>{{article_type.name}}</span>
+			<span class="article-type">{{article_type.name}}</span>
 		{{/if}}
 		{{#if issue_id}}
-			<span><a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
+			<span>Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</span>
 		{{/if}}
+
+		{{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
+		
+		{{#if dates}} {{>ArticleDates}} {{/if}}
 	</h5>
 
-	<h2 id="article-title">{{{title}}}</h2>
-
+	<h1 id="article-title">{{{title}}}</h1>
 </template>
 
 <template name="ArticleHeader">
 	{{>ArticleHeaderTitle}}
+	<h3>{{>AuthorsRefList}}</h3>
 
-			<h3>{{>AuthorsRefList}}</h3>
-			<div class="row no-margin">
-				{{#if page_start}}<div class="col s4"><h6>pp {{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6></div>{{/if}}
-			</div>
-			{{#if dates}}
-				{{>ArticleDates}}
-			{{/if}}
-			<div class="row no-margin">
-				{{#each arrayify ids}}
-					{{#if equals name 'doi'}}
-					<div class="col s4"><h6><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></h6></div>
-					{{else}}
-					<div class="col s4"><h6><label>{{name}}:</label> {{value}}</h6></div>
-					{{/if}}
-				{{/each}}
-			</div>
+	<!-- todo: implement featured photo -->
+	<!-- {{#if featuredPhoto}} -->
+	<div class="featured-photo">
+		<img src="/example-fig.png" class="photo">
+		<span class="dark tag">From <strong>Figure 2</strong></span>
+	</div>
+	<!-- {{/if}} -->
+
+	<!-- {{#each arrayify ids}}
+		{{#if equals name 'doi'}}
+			<label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a>
+		{{else}}
+			<label>{{name}}:</label> {{value}}
+		{{/if}}
+	{{/each}} -->
 
 
-			{{>ArticleButtons _id=_id abstract=abstract files=files}}
+	<!-- {{>ArticleButtons _id=_id abstract=abstract files=files}} -->
 
 	{{#if abstract}}
-		<h3 id="abstract">Abstract</h3>
-		{{{abstract}}}
+		<div class="abstract article-text">
+			<h3 id="abstract">Abstract</h3>
+			<p>{{{abstract}}}</p>
+		</div>
 	{{/if}}
 </template>
 
+<!-- this not in use? -->
 <template name="AuthorsList">
 	<span class="authors">
 		{{#each authors}}
@@ -49,40 +55,42 @@
 		{{/each}}
 	</span>
 </template>
+
+<!-- this IS in use -->
 <template name="AuthorsRefList">
-	<div class="authors">
+	<h2 class="authors">
 		{{#each authors}}
-			<span class="author">
-				{{name_first}}
-				{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
+			<span>
+				{{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
 				{{#if affiliations_numbers}}
-					<sup class="author-affiliations">{{#each affiliations_numbers}}<span>{{affiliationNumber .}}<span class="comma">,&nbsp;</span></span>{{/each}}</sup>
+					<!-- todo: hook up real affiliation -->
+					<sup class="author-affiliations">{{#each affiliations_numbers}}<span><a href="#" class="tooltip--triangle" data-tooltip="Department of Obstetrics & Gynecology, The University of Texas Medical Branch at Galveston, Galveston, TX 77555-1062, USA">{{affiliationNumber .}}</a><span class="comma">,&nbsp;</span></span>{{/each}}</sup>
 				{{/if}}
 				<span class="comma">, </span>
 			</span>
 		{{/each}}
-	</div>
-	{{#if affiliations}}
-	{{#each arrayify affiliations}}
-	<h6>
-		<span class="affiliations">
-			{{affiliationNumber name}}. {{value}}
-		</span>
-	</h6>
-	{{/each}}
-	{{/if}}
+	</h2>
+
+	<!-- {{#if affiliations}}
+		{{#each arrayify affiliations}}
+		<h6>
+			<span class="affiliations">
+				{{affiliationNumber name}}. {{value}}
+			</span>
+		</h6>
+		{{/each}}
+	{{/if}} -->
 </template>
 
+<!-- Todo: make sure deleting this label isn't messing anything up -->
 <template name="ArticleDates">
-	<div class="row no-margin">
 	{{#each arrayify dates}}
 		{{#if equals name 'collection'}}
-			<div class="col s4"><h6><label>{{name}}:</label> {{collectionDate value}}</h6></div>
+			<span><!-- {{name}}:  -->{{collectionDate value}}</span>
 			{{else}}
-			<div class="col s4"><h6><label>{{name}}:</label> {{articleDate value}}</h6></div>
+			<span><!-- {{name}}:  -->{{articleDate value}}</span>
 		{{/if}}
 	{{/each}}
-	</div>
 </template>
 
 <template name="ArticleFigures">

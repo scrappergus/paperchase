@@ -40,6 +40,17 @@ Template.Footer.helpers({
 		}
 	}
 });
+
+// SubNav
+Template.subNav.helpers({
+	issn : function(){
+		var journalSettings = journalConfig.findOne();
+		if(journalSettings){
+			return journalSettings['journal']['issn'];
+		}
+	}
+});
+
 Template.ErrorMessages.helpers({
 	errors: function(){
 		return Session.get('errorMessages');
@@ -74,6 +85,7 @@ Template.MobileMenu.helpers({
 		return sectionsList;
 	}
 });
+
 // Contact
 // -------------
 Template.Contact.helpers({

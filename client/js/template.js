@@ -8,6 +8,7 @@ Template.Visitor.onRendered(function () {
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
+
 Template.Home.onRendered(function () {
 	$('.edboard-name').click(function() {
 		$(this).next().toggle();

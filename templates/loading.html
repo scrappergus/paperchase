@@ -1,9 +1,7 @@
 <template name="Loading">
-	<div class="row">
-		<div class="col s12">
-			<h3>Loading</h3>
-			{{>Progress}}
-		</div>
+	<div class="page-content wide">
+		<h3>Loading</h3>
+		{{>Progress}}
 	</div>
 </template>
 
@@ -13,10 +11,7 @@
 	</div>
 </template>
 
+<!-- todo: get rid of this template -->
 <template name="LoadingConfig">
-	<div class="container">
-		<div class="row white z-depth-2 container-main" style="margin-bottom:0px;">
-			<div class="col s12">{{>Loading}}</div>
-		</div>
-	</div>
+	{{>Loading}}
 </template>

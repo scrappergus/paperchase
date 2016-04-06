@@ -32,10 +32,24 @@
   transition: $args;
 }
 
-// CSS STUFF
+// FANCY CSS STUFF
 @mixin padding-vertical($value) {
   padding-top: $value;
   padding-bottom: $value - 2;
+}
+
+.uppercase-titles {
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+@mixin clearfix {
+  &:after {
+    content: ' ';
+    display: table;
+    clear: both;
+  }
 }
 
 /*============================================================================
@@ -45,7 +59,7 @@
 $small: 750px;
 $medium: 970px;
 $large: 1170px;
-$wide: 1400px;
+$wide: 1460px;
 
 $min: min-width;
 $max: max-width;

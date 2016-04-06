@@ -1,11 +1,13 @@
 <template name="About">
-	{{>PageHeader header="About the Journal"}}
-	{{#each sections}}
-	<div class="row">
-		<div class="col s12">
-			<h3>{{{title}}}</h3>
-			{{{content}}}
-		</div>
-	</div>
-	{{/each}}
+	<div class="page-content">
+    {{>PageHeader header="About the Journal"}}
+
+    <!-- todo: fix paragraph spacing in first section?? -->
+    <ul class="sectioned-list">
+      {{#each sections}}
+        <li><h3>{{{title}}}</h3>
+        {{{content}}}</li>
+      {{/each}} 
+    </ul>
+  </div>
 </template>

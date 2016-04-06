@@ -34,12 +34,8 @@
 		{{#if configLoaded}}
 			<div class="content">
 				{{> subNav}}
-
-				<div class="content-yield">
-					{{>yield}}
-				</div>
-
-				<div class="content-footer">
+				<div class="content-yield"> 
+					{{>yield}} 
 					{{> Footer}}
 				</div>
 			</div>
@@ -51,33 +47,39 @@
 
 <template name="subNav">
 	<div class="sub-nav">
-
-		<div class="breadcrumbs">
-			<ul>
-				<li><a href="/">Home</a></li>
-				<li><a href="#">Latest Issue</a></li>
-				<!-- TODO: create truncate helpers and hook this up to actual data -->
-				<li><strong>Placental membrance aging and HMGB1 signaling associated &hellip;</strong></li>
-			</ul>
-		</div>
+		{{> breadcrumbs}}
 
 		<div class="issn">
-			<span class="heavy meta">ONLINE ISSN: 1774-5690</span>
+			<span class="heavy meta">Online ISSN: {{issn}}</span>
 		</div>
 	</div>
 </template>
 
+<template name="breadcrumbs">
+	<div class="breadcrumbs">
+		<ul>
+			<li><a href="/">Home</a></li>
+			{{#each Breadcrumb}}
+				<li>
+					{{#if showLink}}
+              <a href="{{url}}">{{#with stripTitle title}} {{truncate this 60}} {{/with}}</a>
+          {{else}}
+              {{#with stripTitle title}} {{truncate this 60}} {{/with}}
+          {{/if}}
+        </li>
+			{{/each}}
+		</ul>
+	</div>
+</template>
 
 <template name="PageHeader">
-    <div class="row">
-        <div class="col s12">
-            <h1 class="page-header">{{header}}</h1>
-        </div>
-    </div>
+  <h1 class="page-header">{{header}}</h1>
 </template>
 
 <template name="Footer">
-	<p class="center-align">Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</p>
+	<div class="page-content">
+		<footer><span>Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</span></footer>
+	</div>
 </template>
 
 <template name="IP address">
