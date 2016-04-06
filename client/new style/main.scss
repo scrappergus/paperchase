@@ -76,13 +76,15 @@ span.meta {
 // }
 
 // === Headings | General
-h1 {
+h1, .h1 {
   color: $midnight;
   line-height: 1.1;
   font-weight: 700;
 }
 
-h2 {
+.h1 { text-transform: capitalize; } // todo: add more of these fixes
+
+h2, .h2 {
   color: $kashmir;
   text-transform: capitalize;
 }
@@ -95,7 +97,7 @@ h4 {
   @extend .uppercase-titles;
 }
 
-h5, span.meta {
+h5, .h5, span.meta {
   color: $kashmir;
   @extend .uppercase-titles;
 
@@ -300,7 +302,7 @@ footer {
 
     &:last-child { 
       font-weight: 700; 
-      a { color: $kashmir; }
+      a { color: darken($midgray, 7%); }
     }
     &:last-child:after { 
       content: ""; 
@@ -346,8 +348,8 @@ footer {
   
   a li {
     position: relative;
-    padding: 18px 0 15px 40px;
-    margin-bottom: 7px;
+    padding: 21px 0 18px 40px;
+    margin: 0;
     color: $water;
     @include transition(background .25s ease-out, 
                         color .25s ease-out);
