@@ -547,6 +547,7 @@ if (Meteor.isClient) {
 
 	Router.route('/issue/:vi', {
 		name: 'Issue',
+		parent: 'Archive',
 		layoutTemplate: 'Visitor',
 		waitOn: function(){
 			return[
@@ -587,6 +588,7 @@ if (Meteor.isClient) {
 	// -------
 	Router.route('/article/:_id', {
 		name: 'Article',
+		parent: 'Issue', // todo: implement real issue/volume nums
 		layoutTemplate: 'Visitor',
 		title: function() {
 			var pageTitle = '';
