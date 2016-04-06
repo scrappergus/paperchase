@@ -1,4 +1,3 @@
-xpath = Meteor.npmRequire('xpath');
 Meteor.methods({
 	getFilesForFullText: function(mongoId){
 		// console.log('... getFilesForFullText: ' + mongoId);
