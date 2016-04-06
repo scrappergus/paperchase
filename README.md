@@ -11,106 +11,6 @@ App Structure
  - **/templates:** client and admin templates
  - **/public:** static assets. (journal images, not article images)
 
-App Packages
-============
-**alanning:roles**
-For adding roles to user docs in the DB
-
-**aldeed:template-extension**
-For dynamic templates
-
-**aslagle:reactive-table**
-A reactive table designed for Meteor. Used on: AdminDataSubmissions, AdminDoiStatus, and adminArticle
-
-**accounts-password**
-For users accounts
-
-**bambattajb:sticky**
-Used on the full text section navigation.
-
-**blaze-html-templates**
-Compile HTML templates into reactive UI with Meteor Blaze
-
-**email**
-Allows sending email from a Meteor app. Published by mdg.
-
-**fourseven:scss**
-Sass and SCSS support
-
-**gadicohen:headers**
-For institutaion access. In helpers getInstitutionByIP and isSubscribedIP
-
-**gandev:server-eval**
-This allows server logs to be viewed in the browser console. Could be removed for productions.
-
-**hitchcott:panzoom**
-Used on ArticleFigureViewer to zoom in/out on figures
-
-**http**
-Used to make http requests.
-
-**iron:router**
-For client and server routes
-
-**jquery**
-
-**lepozepo:s3**
-Used for uploading files to AWS S3
-
-**logging**
-This is an internal Meteor package. Published by mdg
-
-**matb33:collection-hooks**
-For adjusting data on insert/update/delete of database collections
-
-**materialize:materialize**
-Used for front-end framework
-
-**meteorhacks:aggregate**
-A simple package to add proper aggregation support for Meteor. This is used to find duplicate articles by PII, PMID, and title, in function duplicateArticles() in articleMethods.js.
-
-**meteorhacks:npm**
-This allows us to use node.js packages. Using xml2js and xpath for XML parsing.
-
-**mizzao:jquery-ui**
-Smart package for jquery ui, which is used for sortable actions on admin site.
-
-**momentjs:moment**
-This is a smart package for moment, which is used to parse dates in JavaScript
-
-**mongo**
-Adaptor for using MongoDB and Minimongo over DDP
-
-**ostrio:iron-router-title**
-Used to change document.title via router.
-
-**reactive-var**
-A general-purpose reactive datatype for use with tracker. Published by mdg.
-
-**reload**
-The reload package handles the process of migrating an app: serializing the app's state, then shutting down and restarting the app. Published by mdg
-
-**risul:moment-timezone**
-Used to set timezone of application, so that article data processing doesn't change with timezone.
-
-**session**
-This package provide Session.Session is a special ReactiveDict whose contents are preserved across Hot Code Push.
-
-**spacebars**
-Meteor template language. Published by mdg
-
-**standard-minifiers**
-This package includes the JS and CSS standard minifiers in your Meteor project. Published by mdg.
-
-**tracker**
-Meteor Tracker is an incredibly tiny (~1k) but incredibly powerful library for transparent reactive programming in JavaScript.
-
-**vojtechklos:materialnote**
-Used on admin site for wysiwyg input.
-
-**zimme:active-route**
-Use to determine if the current route is the active one. For ex, to add active class to button groups.
-
 Deploy
 ============
  - change favicon to journal deploying (all journal favicons located in /public)
@@ -248,5 +148,104 @@ PDF files are versioned, so consistent naming is essential. In the Paperchase DB
  - File storage: on AWS S3 in journal bucket (paperchase-journalshortname) in the paper_figures folder
 
 
+App Packages
+============
+**alanning:roles**
+For adding roles to user docs in the DB
+
+**aldeed:template-extension**
+For dynamic templates
+
+**aslagle:reactive-table**
+A reactive table designed for Meteor. Used on: AdminDataSubmissions, AdminDoiStatus, and adminArticle
+
+**accounts-password**
+For users accounts
+
+**bambattajb:sticky**
+Used on the full text section navigation.
+
+**blaze-html-templates**
+Compile HTML templates into reactive UI with Meteor Blaze
+
+**email**
+Allows sending email from a Meteor app. Published by mdg.
+
+**fourseven:scss**
+Sass and SCSS support
+
+**gadicohen:headers**
+For institutaion access. In helpers getInstitutionByIP and isSubscribedIP
+
+**gandev:server-eval**
+This allows server logs to be viewed in the browser console. Could be removed for productions.
+
+**hitchcott:panzoom**
+Used on ArticleFigureViewer to zoom in/out on figures
+
+**http**
+Used to make http requests.
+
+**iron:router**
+For client and server routes
+
+**jquery**
+
+**lepozepo:s3**
+Used for uploading files to AWS S3
+
+**logging**
+This is an internal Meteor package. Published by mdg
+
+**matb33:collection-hooks**
+For adjusting data on insert/update/delete of database collections
+
+**materialize:materialize**
+Used for front-end framework
+
+**meteorhacks:aggregate**
+A simple package to add proper aggregation support for Meteor. This is used to find duplicate articles by PII, PMID, and title, in function duplicateArticles() in articleMethods.js.
+
+**meteorhacks:npm**
+This allows us to use node.js packages. Using xml2js and xpath for XML parsing.
+
+**mizzao:jquery-ui**
+Smart package for jquery ui, which is used for sortable actions on admin site.
+
+**momentjs:moment**
+This is a smart package for moment, which is used to parse dates in JavaScript
+
+**mongo**
+Adaptor for using MongoDB and Minimongo over DDP
+
+**ostrio:iron-router-title**
+Used to change document.title via router.
+
+**reactive-var**
+A general-purpose reactive datatype for use with tracker. Published by mdg.
+
+**reload**
+The reload package handles the process of migrating an app: serializing the app's state, then shutting down and restarting the app. Published by mdg
+
+**risul:moment-timezone**
+Used to set timezone of application, so that article data processing doesn't change with timezone.
+
+**session**
+This package provide Session.Session is a special ReactiveDict whose contents are preserved across Hot Code Push.
+
+**spacebars**
+Meteor template language. Published by mdg
+
+**standard-minifiers**
+This package includes the JS and CSS standard minifiers in your Meteor project. Published by mdg.
+
+**tracker**
+Meteor Tracker is an incredibly tiny (~1k) but incredibly powerful library for transparent reactive programming in JavaScript.
+
+**vojtechklos:materialnote**
+Used on admin site for wysiwyg input.
+
+**zimme:active-route**
+Use to determine if the current route is the active one. For ex, to add active class to button groups.
 
 
