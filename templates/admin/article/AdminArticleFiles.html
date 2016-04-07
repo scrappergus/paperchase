@@ -139,6 +139,56 @@
 	{{>StatusModal}}
 	{{#with article}}
 	{{>AdminArticleHeader}}
+	{{/with}}
+	{{#if xmlFigures}}
+<!--   <ul class="collapsible" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+      <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+    </li>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+      <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+    </li>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+      <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+    </li>
+  </ul>	 -->
+  	<div class="row">
+  		<div class="col s12">
+			<div class="card blue-grey lighten-4 z-depth-0">
+				<div class="card-content">
+					<span class="card-title">XML Figures</span>
+					<ul class="collapsible z-depth-0" data-collapsible="accordion">
+						<li>
+							<div class="collapsible-header">
+								<div class="row">
+									<div class="col s2"><b>ID</b></div>
+									<div class="col s2"><b>Label</b></div>
+									<div class="col s8"><b>Title</b></div>
+								</div>
+							</div>
+						</li>
+						{{#each xmlFigures}}
+						<li>
+							<div class="collapsible-header">
+								<div class="row">
+									<div class="col s2">{{id}}</div>
+									<div class="col s2">{{label}}</div>
+									<div class="col s8">{{title}}</div>
+								</div>
+							</div>
+							<div class="collapsible-body"><p>{{{caption}}}</p></div>
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+  		</div>
+  	</div>
+	{{/if}}
+	{{#with article}}
 	{{#with files}}
 	<div class="row">
 		<div class="col s12">
