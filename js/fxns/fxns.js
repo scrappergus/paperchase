@@ -314,7 +314,7 @@ Meteor.formActions = {
 		}
 	},
 	errorMessage: function(message){
-		Session.set('statusModalAction','Error');
+		Session.set('statusModalAction','<i class="material-icons">&#xE000;</i> Error');
 		Session.set('statusModalDetails',message);
 
 		$('.save-btn').removeClass('hide');
@@ -423,7 +423,7 @@ Meteor.formActions = {
 		}
 	},
 	successMessage: function(message){
-		Session.set('statusModalAction','Saved');
+		Session.set('statusModalAction','<i class="material-icons">&#xE86C;</i> Saved');
 		Session.set('statusModalDetails',message);
 		// inline messages
 		$('.save-btn').removeClass('hide');
@@ -469,7 +469,7 @@ Meteor.formActions = {
 		}
 	},
 	updatedMessage: function(message){
-		Session.set('statusModalAction','Updated');
+		Session.set('statusModalAction','<i class="material-icons">&#xE86C;</i> Updated');
 		Session.set('statusModalDetails',message);
 		// inline messages
 		$('.save-btn').removeClass('hide');

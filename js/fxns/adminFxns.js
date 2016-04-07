@@ -756,6 +756,25 @@ Meteor.articleFiles = {
 				});
 			}
 		});
+	},
+	figuresById: function(figures){
+		var figsById = {};
+
+		figures.forEach(function(fig){
+			figsById[fig.id] = fig;
+		});
+
+		return figsById;
+	},
+	verifyFigure: function(originalFigId, newFigId){
+		// if new figure, originalFigId = new
+		var figures = Session.get('article').files.figures;
+		var figsById = Meteor.articleFiles.figuresById(figures);
+		if(originalFigId != newFigId && figsById[newFigId]){
+			return false; // figure ID already exists for another figure
+		}else{
+			return true;
+		}
 	}
 }
 
