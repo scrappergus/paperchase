@@ -1,4 +1,3 @@
-
 // Visitor
 // -------
 Template.Visitor.onRendered(function () {
@@ -8,6 +7,7 @@ Template.Visitor.onRendered(function () {
 Template.Subscribe.onRendered(function () {
 	$('select').material_select();
 });
+
 Template.Home.onRendered(function () {
 	$('.edboard-name').click(function() {
 		$(this).next().toggle();
@@ -16,6 +16,13 @@ Template.Home.onRendered(function () {
 	$('.collapsible').collapsible({
 		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 	});
+});
+
+Template.scrollspyCard.onRendered(function() {
+	// hacky width workaround for fixed element
+	$( window ).resize(function() {
+	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
+}).resize();
 });
 
 // Issue
@@ -32,6 +39,17 @@ Template.SectionPapers.onRendered(function () {
 
 // Article
 // --------
+Template.Article.onRendered(function() {
+	// hacky width workaround for fixed element
+	$( window ).resize(function() {
+	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
+	}).resize();
+});
+
+Template.ArticleFigures.onRendered(function() {
+	$('.owl-carousel').owlCarousel();
+});
+
 Template.ArticleFigureViewer.onRendered(function() {
 	$('.figure img, .table img').wrap('<div class="container"></div>');
 	var $panzoom = $('.figure img, .table img').panzoom({

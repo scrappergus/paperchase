@@ -1,45 +1,45 @@
 <template name="Contact">
-	<h3>Contact Us</h3>
+	<div class="page-content">
+		<h2 class="h1">Contact Us</h2>
 
-	<div class="divider"></div>
+		<p>Please submit an article: <a href="{{submitLink}}" target="_BLANK">{{submitLink}}</a> </p>
 
-	<p>Please submit an article: <a href="{{submitLink}}" target="_BLANK">{{submitLink}}</a> </p>
+		{{#with contact}}
+			<p>
+				<b>Journal Office:</b>
+				<br>
+				{{#with address}}
+				{{street}}{{#if street_2}}, {{street_2}}{{/if}}
+				<br>
+				{{city}}, {{state}} {{zip}}
+				{{/with}}
+			</p>
 
-	{{#with contact}}
-	<p>
-		<b>Journal Office:</b>
-		<br>
-		{{#with address}}
-		{{street}}{{#if street_2}}, {{street_2}}{{/if}}
-		<br>
-		{{city}}, {{state}} {{zip}}
+			<p>
+				For questions related to preparation of your article for publication, please contact:<br>
+				{{#with publication_prep}}
+				<b>{{name}}</b>
+				<br>
+				{{title}}
+				<br>
+				<a href="mailto:{{email_address}}">{{email_address}}</a>
+				{{/with}}
+			</p>
+
+			{{#with general}}
+				{{#if email_address}}
+				<p>For general inquiries, email: <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
+				{{/if}}
+
+				{{#if phone}}
+				<p>Tel: {{phone}}</p>
+				{{/if}}
+
+				{{#if fax}}
+				<p>e-Fax: {{fax}}</p>
+				{{/if}}
+			{{/with}}
+
 		{{/with}}
-	</p>
-
-	<p>
-		For questions related to preparation of your article for publication, please contact:<br>
-		{{#with publication_prep}}
-		<b>{{name}}</b>
-		<br>
-		{{title}}
-		<br>
-		<a href="mailto:{{email_address}}">{{email_address}}</a>
-		{{/with}}
-	</p>
-
-	{{#with general}}
-	{{#if email_address}}
-	<p>For general inquiries, email: <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
-	{{/if}}
-
-	{{#if phone}}
-	<p>Tel: {{phone}}</p>
-	{{/if}}
-
-	{{#if fax}}
-	<p>e-Fax: {{fax}}</p>
-	{{/if}}
-	{{/with}}
-
-	{{/with}}
+	</div>
 </template>

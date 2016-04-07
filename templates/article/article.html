@@ -1,26 +1,55 @@
 <template name="Article">
 	{{> SubscribeModal}}
 
-	{{#with article}}
-	{{>ArticleHeader}}
-	{{/with}}
+	<div class="page-content">
+		{{#with article}}
+			{{>ArticleHeader}}
+		{{/with}}
 
-	{{#if isSubscribed}}
-	{{#if files.figures}}
-		<div class="row">
-			<div class="col s12">
+		{{#if isSubscribed}}
+			{{#if files.figures}}
 				<h3>Figures</h3>
 				{{>ArticleFigures figures=files.figures}}
-			</div>
-		</div>
-	{{/if}}
-	{{/if}}
+			{{/if}}
+		{{/if}}
+	</div>
 
-	{{#with article}}
-	{{#if keywords}}
-	{{#each keywords}}
-	<a class="btn waves-effect waves-light kw deep-orange lighten-2">{{{.}}}</a>
-	{{/each}}
-	{{/if}}
-	{{/with}}
+	<div class="page-sidebar">
+		<div class="button-toggle">
+			<a href="#" class="button">Full Text</a>
+			<!-- <span>or</span> -->
+			<a href="#" class="button active">Abstract</a>
+		</div>
+
+		<a href="#" class="full-width end-cap primary button">
+			<span class="icon icon-download"></span> Download PDF
+		</a>
+
+		<div class="card sidebar-card">
+			<h6 class="card-title">Corresponding Author</h6>
+			<p>Laura E. Niklason, MD, PhD<br />
+			<a href="#">emailaddress@email.com</a></p>
+		</div>
+
+		{{#with article}} {{#if keywords}}
+			<div class="card sidebar-card">
+				<h6 class="card-title">Related Keywords</h6>
+					<div class="tags">
+						{{#each keywords}}
+							<a class="keyword tag">{{{.}}}</a>
+						{{/each}}
+					</div>
+			</div>
+		{{/if}} {{/with}}
+
+		<div class="card sidebar-card fixed-scroll-card">
+			<h6 class="card-title">Table of Contents</h6>
+			<ul class="scrollspy toc">
+				<a href="#"><li>Abstract</li></a>
+				<a href="#"><li class="active">Introduction</li></a>
+				<a href="#"><li>Materials and Methods</li></a>
+				<a href="#"><li>References</li></a>
+			</ul>
+		</div>
+	</div>
 </template>

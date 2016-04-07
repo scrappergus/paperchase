@@ -1,0 +1,800 @@
+@import "/{meta:susy}/susy";
+@import '../style/mixins';
+
+$susy: (
+  columns: 18,
+  gutters: 26px/45px,
+  gutter-position: after,
+  math: fluid,
+  output: float
+);
+
+/*================ Colors | Base Colors ================*/
+// Primary (blues)
+$blackpearl: #091523;
+$midnight: #0C1D31;
+$midnightblue: #033369;
+$electric: #00479B;
+$link: #005AC2;
+
+// Accents (Berry)
+$accent: #A11B57;
+$darkaccent: #90134B;
+
+// Text
+$water: #C5CDD6; // left-sidebar links
+$cello: #2E4057; // body text
+$kashmir: #546B87; // right sidebar links & author text
+
+// Whites, backgrounds, etc.
+$faintgray: #F6F7F9; // sidebar backgrounds
+$lightgray: #E6E8EB; // keywords bg, affiliation
+$midgray: #7C8187;
+$deepgray: #2E4057; // fig descrip background
+
+
+/*================ Typography | Base Styles ================*/
+$futura: "futura-pt", Helvetica, Arial, sans-serif;
+// $base-font-size:   17px;
+$base-line-height: 1.35;
+
+// Document-Level
+body {
+  color: $cello;
+}
+
+html, body {
+  font-family: $futura;
+  line-height: 1.35;
+  letter-spacing: 0.15px;
+  
+  //  ???? not working, something is overriding rem
+  // font-size: 17px;
+  // font-size: 1rem;
+}
+
+// === Headings | General
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6 {
+  color: $cello;
+
+  &.accented { color: $accent; }
+  &.blue { color: $electric; }
+  &.heavy { font-weight: 700; }
+  &.caps { @extend .uppercase-titles; }
+}
+
+// === Headings | Font Sizes
+h1, .h1 { 
+  font-size: 38px; 
+}
+
+h2, .h2 {
+  font-size: 24px;
+}
+
+h3, .h3 { 
+  font-size: 19px; 
+}
+
+h4, .h4 { 
+  font-size: 17px; 
+}
+
+h5, .h5, h6, .h6,
+span.meta { 
+  font-size: 14px; 
+}
+
+h1, .h1 {
+  color: $midnight;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+h2, .h2 {
+  color: $kashmir;
+}
+
+h4 {
+  @extend .uppercase-titles;
+
+  &.blue-divider {
+    color: $electric;
+    padding: 0 0 10px;
+    margin: 40px 0 20px;
+    border-bottom: 3px solid $electric;
+  }
+}
+
+h5, .h5, span.meta {
+  color: $kashmir;
+  &.reg { font-weight: 500; }
+}
+
+a {
+  color: $link;
+  @include transition(color 0.25s ease-out);
+
+  &:hover { color: lighten($link, 10%); }
+}
+
+// Paragraph(s)
+p {
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+// buttons
+a.button,
+button.button {
+  position: relative;
+  display: inline-block;
+  padding: 20px 38px 19px;
+  @include border-radius(2px);
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+  font-size: 15px;
+  @extend .uppercase-titles;
+  letter-spacing: 0.58px;
+  @include transition(background 0.25s ease-out);
+  @include get-bg-hover($deepgray, 10%);
+
+  &.full-width {
+    display: block;
+    width: 100%;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  &.primary {
+    @include get-bg-hover($accent, 3%);
+  }
+
+  &.secondary {
+    @include get-bg-hover($electric, 7%);
+  }
+
+  &.small {
+    text-transform: none;
+    font-weight: 500;
+    margin: 0 5px 10px 0;
+    padding: 7px 10px;
+  }
+
+  &.end-cap {
+    padding: 20px 28px 19px 68px;
+
+    span.icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: $darkaccent;
+      @include transition(background 0.25s ease-out)
+      padding: 15px 16px;
+      border-top-left-radius: 2px;
+    }
+
+    // todo: make icon bounce slightly on hover
+    &:hover span.icon {
+      background: lighten($darkaccent, 2%);
+    }
+  }
+
+  span.icon { font-size: 25px; }
+}
+
+// button toggles
+.button-toggle {
+  border: 2px solid $faintgray;
+  @include border-radius(2px);
+  position: relative;
+  margin-bottom: 20px;
+  @include clearfix;
+}
+
+.button-toggle .button {
+  @include border-radius(0);
+  padding: 18px 15px 17px;
+  margin-bottom: 0;
+  width: 49.2%;
+  display: inline-block;
+  text-transform: capitalize;
+  font-weight: 500;
+  background: $faintgray;
+  color: $kashmir;
+
+  &.active {
+    font-weight: 700;
+    background: transparent;
+  }
+
+  &:hover {
+    background: $faintgray;
+  }
+
+  &:first-child { 
+    float: left; 
+  }
+  &:last-child { 
+    float: right; 
+  }
+}
+
+.button-toggle span {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+}
+
+/*================ Layout | Base Modules ================*/
+
+// Default Grid
+.nav-sidebar,
+.sidebar {
+  float: left;
+  width: 100%;
+  height: 100%;
+
+  // todo: mobile styles
+  @include at-query($min, $medium) {
+    width: 260px;
+  }
+  
+  @include at-query($min, $large) {
+    width: 310px;
+  }
+}
+
+.nav-content,
+.content {
+  float: right;
+  width: 100%;
+  @include at-query($min, $medium) {
+    width: calc(100% - 260px);
+  }
+  @include at-query($min, $large) {
+    width: calc(100% - 310px);
+  }
+}
+
+footer {
+  padding: 40px 0 50px;
+
+  span {
+    opacity: .5;
+    font-size: 14px;
+  }
+}
+
+/*================ Top Navigation | Base Modules ================*/
+.navigation {
+  height: 80px;
+  background-color: $midnightblue;
+  overflow: hidden;
+
+  .nav-sidebar {
+    padding: 20px 0 0 20px;
+    background: #012855;
+
+    .logo {
+      height: 50px;
+    }
+  }
+
+  .nav-content {
+    padding: 20px;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      float: right;
+      list-style-type: none;
+    }
+
+    ul li {
+      display: inline-block;
+      padding: 5px 20px;
+      margin: 8px 0;
+      font-size: 14px;
+      @extend .uppercase-titles;
+      border-left: 2px solid rgba(119, 130, 142, .2);
+      
+      a { color: #fff; }
+      &:first-child { border: none; }
+    }
+  }
+}
+
+/*================ Sub Navigation | Base Modules ================*/
+.sub-nav {
+  height: 64px;
+  background-color: $faintgray;
+  @include padding-vertical(25px);
+}
+
+.sub-nav .breadcrumbs {
+  @include push(1 of 16);
+  @include span(12);
+  font-size: 15px;
+  
+  a { color: $midgray; }
+  
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul li {
+    display: inline;
+
+    &:after {
+      content: "\f105"; // fa-angle-right
+      font-family: FontAwesome;
+      margin: 0 10px 0 13px;
+      opacity: .35;
+      letter-spacing: 0.25px;
+    }
+
+    &:last-child { 
+      font-weight: 700; 
+      a { color: darken($midgray, 7%); }
+    }
+    &:last-child:after { 
+      content: ""; 
+    }
+  }
+}
+
+.sub-nav .issn {
+  @include span(4);
+  
+  span.meta {
+    float: right;
+    color: rgba(162, 169, 176, .75);
+    @extend .uppercase-titles;
+  }
+}
+
+
+/*================ Main Container | Base Modules ================*/
+.main { 
+  overflow: hidden; 
+  min-height: 100vh; // secret sauce to 100% layout
+}
+
+.main .sidebar {
+  background-color: $blackpearl;
+  font-size: 17px;
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+}
+
+.main .content {
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+  min-height: calc(100vh - 80px); // todo: fix this min-height nonsense
+}
+
+.main .content-yield {
+  @include clearfix;
+  margin-top: 60px;
+}
+
+/*================ Left Navigation | Base Modules ================*/
+.main .sidebar .search-box {
+  padding: 20px 40px 0;
+
+  input { 
+    font-size: 17px;
+    border-bottom: 2px solid #213245;
+  }
+
+  /* these have to be separate because css parser is broken for placeholder rules lol */
+  input::placeholder { color: #5B6C80 }
+  input::-webkit-input-placeholder { color: #5B6C80 }
+  input::-moz-placeholder { color: #5B6C80 }
+}
+
+.main .sidebar ul.nav-links {
+  padding-top: 0;
+  margin-top: 0;
+  a li {
+    position: relative;
+    padding: 21px 0 18px 40px;
+    margin: 0;
+    color: $water;
+    @include transition(background .25s ease-out, 
+                        color .25s ease-out);
+  }
+
+  a li:after {
+    content: "\f105"; // fa-angle-right
+    font-family: FontAwesome;
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    font-size: 1.765rem;
+    color: lighten(#2E4057, 10%);
+    opacity: 0;
+    @include transition(opacity .25s ease-out, 
+                        right .25s ease-out);
+  }
+
+  a:hover li {
+    background: $midnight;
+    color: #fff;
+  }
+
+  a:hover li:after {
+    opacity: 1;
+    right: 18px;
+  }
+}
+
+/*================ Page Content | Page-Level Modules ================*/
+.page-content {
+  @include push(1 of 16);
+  @include span(10);
+
+  &.wide {
+    @include span(14);
+  }
+}
+
+.page-sidebar {
+  padding-left: 20px;
+  @include span(5);
+}
+
+// Sidebar Cards
+.card {
+  box-shadow: none;
+  @include border-radius(2px);
+  background-color: $faintgray;
+  padding: 25px;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  h6.card-title {
+    font-size: 14px;
+    @extend .uppercase-titles;
+    font-weight: 700;
+    color: $kashmir;
+    position: relative;
+    display: block;
+    padding-bottom: 10px;
+
+    // short horizontal rule
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 20%;
+      border-top: 2px solid rgba(119, 130, 142, .2);
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.card ul {
+  margin: 0 -25px; // card padding compensation
+
+  a li { color: $kashmir; }
+
+  li {
+    padding: 12px 20px; // 25 - 5
+    width: 100%;
+    border-left: 5px solid rgba(0,0,0,0);
+    @include transition(background 0.25s ease-out, color 0.25s ease-out, border-color 0.25s ease-out);
+
+    &:hover {
+      background: $lightgray;
+      border-color: darken($lightgray, 3%);
+    }
+
+    &.active {
+      background: $accent;
+      border-color: $darkaccent;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    &.active:hover {
+      background: $accent;
+    }
+  }
+}
+
+.fixed-scroll-card {
+  position: fixed;
+}
+
+// Page Titles
+.page-title {
+  span.page-desc {
+    display: block;
+    font-size: 14px;
+    margin: 12px 0 20px;
+    @extend .uppercase-titles;
+    color: rgba(162, 169, 176, .75);
+
+    &.accented { color: $accent; }
+
+    + h1 {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
+  span.issue-date {
+    @extend h2;
+    display: inline-block;
+    margin: 10px 0 10px;
+  }
+}
+
+
+// Table(s) of Contents 
+.toc-info {
+  margin: 30px 0;
+
+  h2.title, h6.desc {
+    line-height: 1.3;
+  }
+
+  h6.desc, span.meta {
+    font-size: 15px;
+    color: darken($kashmir, 10%);
+  }
+
+  h2.title {
+    font-size: 17px;
+    margin: 0 0 5px 0;
+    font-weight: 700;
+    color: $cello;
+  }
+
+  h6.desc { 
+    margin: 0; 
+    padding: 0;
+  }
+
+  span.meta {
+    margin: 10px 23px 0 0;
+    display: inline-block;
+  }
+}
+
+.article-links {
+  margin: 20px 0 50px;
+}
+
+/*================ Main Article Content | Article-Level Modules ================*/
+h5.article-header {
+  position: relative;
+  @extend .uppercase-titles;
+  left: 1px;
+
+  span {
+    margin-right: 10px;
+    padding-right: 15px;
+    border-right: 2px solid rgba(119, 130, 142, .2);
+    font-weight: 500;
+    &:last-child { border: 0 none; }
+  }
+
+  span.article-type {
+    color: $accent;
+    font-weight: 700;
+  }
+}
+
+h2.authors {
+  line-height: 1.35;
+  font-size: 20px;
+  
+  // superscript
+  sup.author-affiliations a {
+    font-size: 14px;
+    color: $kashmir;
+    font-weight: 500;
+
+    &:hover { color: $accent; }
+  }
+}
+
+.featured-photo {
+  width: 100%;
+  position: relative;
+  margin: 35px 0;
+
+  .photo {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .tag {
+    position: absolute;
+    bottom: -15px;
+    right: 20px;
+  }
+}
+
+.article-text {
+  margin-top: 3rem;
+
+  h3 {
+    @extend .uppercase-titles;
+    color: $electric;
+    border-bottom: 2px solid rgba(119, 130, 142, .2);
+    margin-bottom: 0;
+    padding-bottom: 8px;
+  }
+
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+
+  // Abstract-Specific Styles
+  &.abstract {
+    background: $faintgray;
+    padding: 20px 40px 30px;
+  }
+}
+
+/*================ Sidebar Article Content | Article-Level Modules ================*/
+
+// 
+// 
+// 
+// 
+
+
+/*================ Etc. | Misc Modules ================*/
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+// tooltips
+$cubic: cubic-bezier(.64,.09,.08,1);
+
+[class^="tooltip"] {
+  position: relative;
+  &:after {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    content: attr(data-tooltip);
+    padding: 12px 15px;
+    width: 450px;
+    bottom: 1.8em;
+    left: 50%;
+    transform: translateX(-50%) translateY(-2px);
+    background: $lightgray;
+    color: $cello;
+    // white-space: pre;
+    display: inline-block;
+    line-height: 1.3;
+    z-index: 2;
+    border-radius: 2px;
+    transition: opacity 0.2s $cubic, transform 0.2s $cubic;
+  }
+  &:hover {
+    &:after {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+}
+
+.tooltip--triangle {
+  &:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: solid 7px transparent;
+    border-right: solid 7px transparent;
+    border-top: solid 6px $lightgray;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    transform: translateX(-50%) translateY(-2px);
+    bottom: 1.45em;
+    left: 50%;
+    transition: opacity 0.2s $cubic, transform 0.2s $cubic;
+    z-index: 3;
+  }
+  &:hover {
+    &:before {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+}
+
+// tags
+.tags {
+  margin-top: 20px;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 15px;
+  margin: 0 5px 10px 0;
+  padding: 4px 10px;
+  background: $lightgray;
+  color: $kashmir;
+  @include border-radius(2px);
+
+  &.dark {
+    background-color: $deepgray;
+    color: #fff;
+  }
+}
+
+a.tag {
+  cursor: pointer; // todo: get rid of later
+  @include transition(background 0.25s ease-out,
+                      color 0.25s ease-out);
+  &:hover {
+    background: $accent;
+    color: #fff;
+  }
+}
+
+// lists
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul.sectioned-list {
+  li {
+    margin-bottom: 50px;
+
+    h2 {
+      margin: 0 0 10px 0;
+      padding: 0;
+    }
+  }
+}
+
+
+.sp {
+  width: 32px;
+  height: 32px;
+  clear: both;
+  margin: 20px auto;
+}
+
+.sp-circle {
+  border: 4px rgba($kashmir, 0.25) solid;
+  border-top: 4px rgba($kashmir, 1) solid;
+  border-radius: 50%;
+  -webkit-animation: spCircRot 1.5s infinite linear;
+  animation: spCircRot 1.5s infinite linear;
+}
+@-webkit-keyframes spCircRot {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(359deg); }
+}
+@keyframes spCircRot {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
+}

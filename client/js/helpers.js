@@ -213,6 +213,19 @@ if (Meteor.isClient) {
 		}
 		return count;
 	});
+	
+	Template.registerHelper('stripTitle', function(title) {
+		return title.substr(title.indexOf("|") + 1);
+	});
+
+	UI.registerHelper('truncate', function(str, limit) {
+		if ( str.length > 60 ) {
+			str = str.substr( 0, limit ) + "...";
+		}
+		return str;
+	});
+
+
 	// Subscribers
 	// -------
 	Template.registerHelper('clientIP', function() {
