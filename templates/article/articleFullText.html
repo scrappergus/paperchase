@@ -1,59 +1,60 @@
 <template name="ArticleText">
-	{{#with article}}
-		{{>ArticleHeader}}
+	<div class="page-content">
+		{{#with article}}
+			{{>ArticleHeader}}
 
-		{{#if ids.pii}}
+			{{#if ids.pii}}
+			{{else}}
+
+				<div class="center-align"><h4>Full Text Unavailable.</h4></div>
+
+			{{/if}}
+		{{/with}}
+
+		{{#if fullText}}
 		{{else}}
-		<div class="row">
-			<div class="col s12 red center-align"><h4>Full Text Unavailable.</h4></div>
-		</div>
-
+		{{>Loading}}
 		{{/if}}
-	{{/with}}
 
-	{{#if fullText}}
-	{{else}}
-	{{>Loading}}
-	{{/if}}
+		{{#with fullText}}
+			{{>ArticleFullText}}
 
-	{{#with fullText}}
-		{{>ArticleFullText}}
+			{{#if references}}
+				<h3 id="references">References</h3>
+				<ul>
+					{{#each references}}
+						<li id="R{{number}}">
+							<b>{{number}}.</b>
 
-		{{#if references}}
-			<h3 id="references">References</h3>
-			<ul>
-				{{#each references}}
-					<li id="R{{number}}">
-						<b>{{number}}.</b>
+							{{#if equals type 'journal'}}
+							{{#if authors}}<span> {{authors}}.</span>{{/if}}
+							{{#if title}}<span> {{title}}.</span>{{/if}}
+							{{#if source}}<span> {{source}}.</span>{{/if}}
+							{{#if year}}<span> {{year}};</span>{{/if}}
+							{{#if volume}}<span> {{volume}}:</span>{{/if}}
+							{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+							{{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{else}}{{getPmid .}}{{/if}}
+							{{/if}}
 
-						{{#if equals type 'journal'}}
-						{{#if authors}}<span> {{authors}}.</span>{{/if}}
-						{{#if title}}<span> {{title}}.</span>{{/if}}
-						{{#if source}}<span> {{source}}.</span>{{/if}}
-						{{#if year}}<span> {{year}};</span>{{/if}}
-						{{#if volume}}<span> {{volume}}:</span>{{/if}}
-						{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
-						{{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{else}}{{getPmid .}}{{/if}}
-						{{/if}}
-
-						{{#if equals type 'book'}}
-						{{#if authors}}<span> {{authors}}.</span>{{/if}}
-						{{#if year}}<span> {{year}}.</span>{{/if}}
-						{{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
-						{{#if volume}}<span> {{volume}}:</span>{{/if}}
-						{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
-						<span>(</span>
-						{{#if source}}<span>{{{source}}}</span>{{/if}}
-						{{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
-						{{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
-						<span>)</span>
-						<span>.</span>
-						{{/if}}
-					</li>
-				{{/each}}
-			</ul>
-		{{/if}}
-	{{/with}}
+							{{#if equals type 'book'}}
+							{{#if authors}}<span> {{authors}}.</span>{{/if}}
+							{{#if year}}<span> {{year}}.</span>{{/if}}
+							{{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
+							{{#if volume}}<span> {{volume}}:</span>{{/if}}
+							{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
+							<span>(</span>
+							{{#if source}}<span>{{{source}}}</span>{{/if}}
+							{{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
+							{{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
+							<span>)</span>
+							<span>.</span>
+							{{/if}}
+						</li>
+					{{/each}}
+				</ul>
+			{{/if}}
+		{{/with}}
+	</div>
 </template>
 
 <template name="ArticleFullText">

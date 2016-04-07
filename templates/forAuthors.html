@@ -1,24 +1,24 @@
 <template name="ForAuthors">
-    {{>PageHeader header="Information for Authors"}}
-    <div class="row">
-        <div class="col s12">
-            <ol class="roman-list">
-                {{#each sections}}
-                <li><a class="anchor" href="#section-{{@index}}">{{{title}}}</a></li>
-                {{/each}}
-            </ol>
-        </div>
+    <div class="page-content wide">
+        {{>PageHeader header="Information for Authors"}}
     </div>
-    <ol class="roman-list">
-    {{#each sections}}
-    <li id="section-{{@index}}">
-        <h2>{{{title}}}</h2>
-        <div class="row">
-            <div class="col s12">{{{content}}}</div>
-        </div>
-    </li>
-    {{/each}}
-    </ol>
+
+   <div class="page-content">
+      <ul class="sectioned-list">
+          {{#each sections}}
+          <li id="section-{{@index}}">
+              <h2 class="heavy accented">{{{title}}}</h2>
+              <p>{{{content}}}</p>
+          </li>
+          {{/each}}
+      </ul>
+   </div>
+
+
+   <div class="page-sidebar">
+     {{> scrollspyCard title="Table of Contents" items=sections}}
+   </div>
+
 </template>
 
 
