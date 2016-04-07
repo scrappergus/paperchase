@@ -1,57 +1,39 @@
 // All of these methods are for admin article
 Meteor.methods({
 	addArticle: function(articleData){
-		// console.log('--addArticle');
-		// var fut = new future();
-		// Meteor.call('articleExistenceCheck',articleData,function(error,result){
-		// 	if(error){
-		// 		// console.error('addArticle',error);
-		// 		throw new Meteor.Error('ERROR: Article - ', error);
-		// 		// return error;
-		// 	}else if(result){
-		// 		fut['return'](result);
-		// 		return result; //article already exists, but return the doc so we can notify user
-		// 	}else{
-				if(articleData['authors']){
-					var authorsList = articleData['authors'];
-					for(var author = 0 ; author < authorsList.length; author++){
-						//check if author doc exists in authors collection
-						var authorDoc;
-						authorsList[author]['ids'] = {};
-						authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
-						if(!authorDoc){
-							//INSERT into authors
-							Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
-								if(error){
-									console.error('ERROR',error);
-								}else{
-									authorsList[author]['ids']['mongo_id'] = mongo_id;
-								}
-							});
+		if(articleData['authors']){
+			var authorsList = articleData['authors'];
+			for(var author = 0 ; author < authorsList.length; author++){
+				//check if author doc exists in authors collection
+				var authorDoc;
+				authorsList[author]['ids'] = {};
+				authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
+				if(!authorDoc){
+					//INSERT into authors
+					Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
+						if(error){
+							console.error('ERROR',error);
 						}else{
-							//author doc already exists
-							authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
-						}
-					}
-				}
-
-				if(articleData.volume && articleData.issue){
-					// check if article doc
-					Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
-						if(result){
-							articleData.issue_id = result;
+							authorsList[author]['ids']['mongo_id'] = mongo_id;
 						}
 					});
+				}else{
+					//author doc already exists
+					authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
 				}
+			}
+		}
 
-				return articles.insert(articleData);
+		if(articleData.volume && articleData.issue){
+			// check if article doc
+			Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
+				if(result){
+					articleData.issue_id = result;
+				}
+			});
+		}
 
-		// 		// console.log('articleData',articleData);
-				// fut['return'](articles.insert(articleData));
-		// 		// return articles.insert(articleData);
-		// 	}
-		// });
-		// return fut.wait();
+		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
 		var fut = new future();
