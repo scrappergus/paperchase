@@ -2,12 +2,24 @@
 	{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
 </template>
 
+
 <!-- todo: set this up as a reusable template that can take an array of anchors? -->
 <template name="scrollspyCard">
    <div class="card sidebar-card fixed-scroll-card">
-        <h6 class="card-title">Table of Contents</h6>
+        <h6 class="card-title">{{title}}</h6>
         <ul class="scrollspy toc">
-            {{#each sections}}
+            {{#each items}}
+                <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
+            {{/each}}
+        </ul>
+    </div>
+</template>
+
+<template name="staticscrollCard">
+   <div class="card sidebar-card">
+        <h6 class="card-title">{{title}}</h6>
+        <ul class="scrollspy toc">
+            {{#each items}}
                 <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
             {{/each}}
         </ul>
