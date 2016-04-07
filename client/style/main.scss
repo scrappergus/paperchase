@@ -1,42 +1,16 @@
 @import 'variables';
 @import 'mixins';
-@import 'type';
+// @import 'type';
 @import 'admin';
 
 html,body{
 	min-height: 100%;
 	margin: 0;
 	padding: 0;
-	background-image: url(/images/backgrounds/exclusive_paper.png);
-   font-family: "Lora", sans-serif;
 }
 
 
 /* Type ------------------------*/
-	h1,h2,h3{
-		font-weight: bold;
-	}
-	h1{
-		color: $black-0;
-	}
-	h2{
-		color: $black-1;
-	}
-	h3{
-		color: $black-2;
-	}
-	h4{
-		color: $black-0;
-	}
-	h5{
-		color: $black-1;
-	}
-	h6{
-		color: $black-2;
-	}
-	p{
-		color: $color-paragraph;
-	}
 	strong {
 		font-weight: bold;
 	}
@@ -118,25 +92,25 @@ html,body{
 		border: 1px solid $gray-2;
 	}
 
-/* Footer ------------------------*/
-	.footer{
-		padding: 0 0;
-		.container{
-			min-height: 100px;
-		}
-		.row{
-			margin-top: 0;
-			margin-bottom: 0;
-		}
-		ul{
-			list-style: none;
-			text-align: center;
-			li{
-				display: inline-block;
-				margin: 0 auto;
-			}
-		}
-	}
+// /* Footer ------------------------*/
+// 	.footer{
+// 		padding: 0 0;
+// 		.container{
+// 			min-height: 100px;
+// 		}
+// 		.row{
+// 			margin-top: 0;
+// 			margin-bottom: 0;
+// 		}
+// 		ul{
+// 			list-style: none;
+// 			text-align: center;
+// 			li{
+// 				display: inline-block;
+// 				margin: 0 auto;
+// 			}
+// 		}
+// 	}
 
 /* Home ------------------------*/
 	.edboard-name {
@@ -158,9 +132,9 @@ html,body{
 	}
 
 /* Article ------------------------*/
-	#article-title{
-		margin:0px;
-	}
+	// #article-title{
+	// 	margin:0px;
+	// }
 	.authors{
 		span{
 			&:last-child{

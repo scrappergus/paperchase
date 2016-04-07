@@ -1,27 +1,25 @@
 <template name="Home">
-	<div class="row">
-		<div class="col s12 m10">
+		<div class="page-content">
 			{{#if news}}
-			<h3>News</h3>
-			<ul class="collection">
-				{{#each news}}
-				<li class="collection-item">
-					<h5>{{formatDate date}}</h5>
-					<h4>{{title}}</h4>
-					<p>{{{content}}}</p>
-					{{#if youTube}}
-						<div class="news-video"><iframe width="560" height="315" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe></div>
-					{{/if}}
-				</li>
-				{{/each}}
-			</ul>
+				<h1>News</h1>
+				<ul class="collection">
+					{{#each news}}
+					<li class="collection-item">
+						<h5>{{formatDate date}}</h5>
+						<h4>{{title}}</h4>
+						<p>{{{content}}}</p>
+						{{#if youTube}}
+							<div class="news-video"><iframe width="560" height="315" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe></div>
+						{{/if}}
+					</li>
+					{{/each}}
+				</ul>
 			{{/if}}
 		</div>
 
-		<div class="col s12 m2">
+		<div class="page-sidebar">
 			{{>HomePageEditorList}}
 		</div>
-	</div>
 </template>
 
 <template name="HomePageEditorList">

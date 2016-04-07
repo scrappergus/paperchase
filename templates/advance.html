@@ -1,23 +1,23 @@
 <template name="Advance">
 	{{> SubscribeModal}}
 
-	<h2>Advance Online Publications</h2>
-	<div class="divider"></div>
+	<div class="page-content">
+		<h2 class="h1">Advance Online Publications</h2>
 
-	<ul>
-		{{#each advance}}
-		<li class="collection-item">
-		{{#if section_start}}
-		<h4>{{section_name}}</h4>
-		{{/if}}
-		<h5>{{{title}}}</h5>
-		<p>{{>AuthorsList}}</p>
-		<p><a class="blue-grey darken-1 btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a>
-		{{>ArticleButtons article=article}}
-		</p>
-
-		</li>
-		<div class="divider"></div>
-		{{/each}}
-	</ul>
+		<ul>
+			{{#each advance}}
+				<li class="collection-item">
+					{{#if section_start}}
+						<h4>{{section_name}}</h4>
+					{{/if}}
+					<h5>{{{title}}}</h5>
+					<p>{{>AuthorsList}}</p>
+					<p><a class="blue-grey darken-1 btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a>
+						{{>ArticleButtons article=article}}
+					</p>
+				</li>
+				<div class="divider"></div>
+			{{/each}}
+		</ul>
+	</div>
 </template>
