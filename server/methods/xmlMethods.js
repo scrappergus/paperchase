@@ -1,6 +1,21 @@
 // Shared methods for all DTD types
 // -------------
 Meteor.methods({
+	getXml: function(url){
+		// console.log('getXml',url);
+		var fut = new future();
+		Meteor.http.get(url,function(getXmlError, xmlRes){
+			if(getXmlError){
+				console.error('getXmlError',getXmlError);
+				fut['throw'](getXmlError);
+			}else if(xmlRes){
+				xml = xmlRes.content;
+				fut['return'](xml);
+				// console.log('xml',xml);
+			}
+		});
+		return fut.wait();
+	},
 	xmlDtd: function(xmlString){
 		// console.log('xmlDtd',xmlString);
 		// TODO: use regex for dtd
@@ -46,6 +61,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	parseXmltoJson: function(xml){
+		// console.log('..parseXmltoJson');
 		var fut = new future();
 		parseString(xml, function (error, articleJson) {
 			if(error){
@@ -362,12 +378,13 @@ Meteor.methods({
 			}
 		}
 
-
+		// console.log(articleProcessed);
 		// TITLE
 		// -----------
 		var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
 		var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
 			titleTitle = titleTitle.replace('article-title>','');
+			// console.log('titleTitle',titleTitle);
 		if(titleTitle){
 			titleTitle = Meteor.general.cleanString(titleTitle);
 			articleProcessed.title = titleTitle;
@@ -527,6 +544,44 @@ Meteor.methods({
 
 		// console.log('articleProcessed',articleProcessed);
 		return articleProcessed;
+	},
+	pmcFiguresInXml: function(articleMongoId){
+		// for finding all figures referenced in the full text XML
+		var fut = new future();
+		var articleJson,
+			articleInfo,
+			doc,
+			dbFigures,
+			xmlFigures,
+			figuresResult = [];
+		var articleInfo = articles.findOne({_id : articleMongoId});
+
+		if(articleInfo && articleInfo.files && articleInfo.files.figures){
+			dbFigures = articleInfo.files.figures;
+		}
+
+		if(articleInfo && articleInfo.files && articleInfo.files.xml){
+			articleInfo = Meteor.article.readyData(articleInfo);
+			if(articleInfo.files.xml){
+				Meteor.call('getXml',articleInfo.files.xml.url, function(error,xml){
+					if(error){
+						console.error('getXmlError',error);
+						fut['throw'](error);
+					}else if(xml){
+						doc = new dom().parseFromString(xml);
+						xmlFigures = xpath.select('//fig', doc);
+						xmlFigures.forEach(function(figure){
+							var fig = Meteor.fullText.convertFigure(figure,dbFigures,articleMongoId);
+							figuresResult.push(fig);
+						});
+						fut['return'](figuresResult);
+					}
+				});
+			}
+		}else{
+			fut['return']();
+		}
+		return fut.wait();
 	}
 });
 
