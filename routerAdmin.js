@@ -122,8 +122,9 @@ if (Meteor.isClient) {
 	Session.setDefault('statusModalAction',null);
 	Session.setDefault('statusModalDetails',null);
 	// Article
-	Session.setDefault('xml-verify',null)
+	Session.setDefault('xml-verify',null);
 	Session.setDefault('xml-file',null);
+	Session.setDefault('xml-figures',null);
 	Session.setDefault('article-form',null);
 
 
@@ -389,7 +390,7 @@ if (Meteor.isClient) {
 		},
 	});
 
-	// Article
+	// Articles List
 	Router.route('/admin/articles',{
 		name: 'AdminArticlesDashboard',
 		layoutTemplate: 'Admin',
@@ -488,6 +489,7 @@ if (Meteor.isClient) {
 
 	});
 
+	// Single Article
 	Router.route('/admin/article/:_id',{
 		name: 'AdminArticleOverview',
 		layoutTemplate: 'Admin',
@@ -535,6 +537,13 @@ if (Meteor.isClient) {
 		},
 		onBeforeAction: function(){
 			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFigures');
+			Meteor.call('pmcFiguresInXml',this.params._id,function(error,result){
+				if(error){
+
+				}else if(result){
+					Session.set('xml-figures',result);
+				}
+			});
 			this.next();
 		},
 		waitOn: function(){
