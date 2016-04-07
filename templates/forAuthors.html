@@ -4,22 +4,20 @@
     </div>
 
    <div class="page-content">
-
-        <ul class="sectioned-list">
-            {{#each sections}}
-            <li id="section-{{@index}}">
-                <h2>{{{title}}}</h2>
-                {{{content}}}
-            </li>
-            {{/each}}
-        </ul>
+      <ul class="sectioned-list">
+          {{#each sections}}
+          <li id="section-{{@index}}">
+              <h2 class="heavy accented">{{{title}}}</h2>
+              {{{content}}}
+          </li>
+          {{/each}}
+      </ul>
    </div>
 
-   <!-- todo: put this in a single template -->
+
    <div class="page-sidebar">
-     {{> scrollspyCard}}
+     {{> scrollspyCard title="Table of Contents" items=sections}}
    </div>
-
 
 </template>
 

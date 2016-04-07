@@ -5,8 +5,10 @@
     <!-- todo: fix paragraph spacing in first section?? -->
     <ul class="sectioned-list">
       {{#each sections}}
-        <li><h3>{{{title}}}</h3>
-        {{{content}}}</li>
+        <li>
+          <h2 class="heavy accented">{{{title}}}</h2>
+          <p>{{{content}}}</p>
+        </li>
       {{/each}} 
     </ul>
   </div>
