@@ -14,7 +14,6 @@ $susy: (
 $blackpearl: #091523;
 $midnight: #0C1D31;
 $midnightblue: #033369;
-$deepcove: #012855;
 $electric: #00479B;
 $link: #005AC2;
 
@@ -54,12 +53,27 @@ html, body {
   // font-size: 1rem;
 }
 
+// === Headings | General
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6 {
+  color: $cello;
+
+  &.accented { color: $accent; }
+  &.blue { color: $electric; }
+  &.heavy { font-weight: 700; }
+  &.caps { @extend .uppercase-titles; }
+}
+
 // === Headings | Font Sizes
 h1, .h1 { 
   font-size: 38px; 
 }
 
-h2, .h2, h3, .h3 { 
+h2, .h2 {
+  font-size: 24px;
+}
+
+h3, .h3 { 
   font-size: 19px; 
 }
 
@@ -72,66 +86,62 @@ span.meta {
   font-size: 14px; 
 }
 
-// @include at-query($min, $wide) {
-//   h2, h3 { font-size: 21px; }
-// }
-
-// === Headings | General
 h1, .h1 {
   color: $midnight;
   line-height: 1.1;
   font-weight: 700;
 }
 
-.h1 { text-transform: capitalize; } // todo: add more of these fixes
-
 h2, .h2 {
   color: $kashmir;
-  text-transform: capitalize;
-}
-
-h3 {
-  @extend .uppercase-titles;
 }
 
 h4 {
   @extend .uppercase-titles;
+
+  &.blue-divider {
+    color: $electric;
+    padding: 0 0 10px;
+    margin: 40px 0 20px;
+    border-bottom: 3px solid $electric;
+  }
 }
 
 h5, .h5, span.meta {
   color: $kashmir;
-  @extend .uppercase-titles;
-
-  &.heavy { font-weight: 700; }
+  &.reg { font-weight: 500; }
 }
 
-span.article-type {
-  color: $accent;
-  font-weight: 700;
+span.page-desc {
+  font-size: 14px;
+  @extend .uppercase-titles;
+  color: rgba(162, 169, 176, .75);
+
+  &.accented { color: $accent; }
+
+  + h1 {
+    margin: 15px 0 0;
+    padding: 0;
+  }
 }
 
 a {
   color: $link;
   @include transition(color 0.25s ease-out);
 
-  &:hover {
-    color: lighten($link, 10%);
-  }
+  &:hover { color: lighten($link, 10%); }
 }
 
 // Paragraph(s)
 p {
   font-size: 17px;
   line-height: 1.4;
-
-  // @include at-query($min, $wide) {
-  //   font-size: 19px;
-  // }
 }
 
 // buttons
 a.button,
 button.button {
+  position: relative;
   display: inline-block;
   padding: 20px 38px 19px;
   @include border-radius(2px);
@@ -139,10 +149,9 @@ button.button {
   background: $deepgray;
   color: #fff;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   @extend .uppercase-titles;
   letter-spacing: 0.58px;
-  font-weight: 700;
   @include transition(background 0.25s ease-out);
 
   &.full-width {
@@ -154,13 +163,15 @@ button.button {
     background: lighten($deepgray, 10%);
   }
 
+  &:active {
+    top: 1px;
+  }
+
   &.primary {
     background: $accent;
   }
 
-  // todo: this is messy
   &.end-cap {
-    position: relative;
     padding: 20px 28px 19px 68px;
 
     span.icon {
@@ -269,7 +280,7 @@ footer {
 
   .nav-sidebar {
     padding: 20px 0 0 20px;
-    background: $deepcove;
+    background: #012855;
 
     .logo {
       height: 50px;
@@ -338,6 +349,7 @@ footer {
   span.meta {
     float: right;
     color: rgba(162, 169, 176, .75);
+    @extend .uppercase-titles;
   }
 }
 
@@ -432,6 +444,7 @@ footer {
   @include span(5);
 }
 
+// Sidebar Cards
 .card {
   box-shadow: none;
   @include border-radius(2px);
@@ -468,9 +481,7 @@ footer {
 .card ul {
   margin: 0 -25px; // card padding compensation
 
-  a li {
-    color: $kashmir;
-  }
+  a li { color: $kashmir; }
 
   li {
     padding: 12px 20px; // 25 - 5
@@ -500,21 +511,61 @@ footer {
   position: fixed;
 }
 
+// Page Titles
+.page-title {
+  span.issue-date {
+    @extend h2;
+    display: inline-block;
+    margin: 15px 0 10px;
+  }
+}
+
+
+// Table(s) of Contents 
+.toc-info {
+  margin: 30px 0 20px;
+
+  h2.title, h6.desc {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  h2.title {
+    margin: 0 0 5px 0;
+    font-weight: 700;
+    color: $cello;
+  }
+
+  h6.desc { 
+    margin: 0; 
+    padding: 0;
+    color: darken($kashmir, 10%);
+  }
+}
+
 /*================ Main Article Content | Article-Level Modules ================*/
 h5.article-header {
   position: relative;
+  @extend .uppercase-titles;
   left: 1px;
 
   span {
     margin-right: 10px;
     padding-right: 15px;
     border-right: 2px solid rgba(119, 130, 142, .2);
+    font-weight: 500;
     &:last-child { border: 0 none; }
+  }
+
+  span.article-type {
+    color: $accent;
+    font-weight: 700;
   }
 }
 
 h2.authors {
   line-height: 1.35;
+  font-size: 20px;
   
   // superscript
   sup.author-affiliations a {
@@ -547,7 +598,7 @@ h2.authors {
   margin-top: 3rem;
 
   h3 {
-    font-weight: 700;
+    @extend .uppercase-titles;
     color: $electric;
     border-bottom: 2px solid rgba(119, 130, 142, .2);
     margin-bottom: 0;
