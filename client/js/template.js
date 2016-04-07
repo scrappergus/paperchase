@@ -1,5 +1,3 @@
-
-
 // Visitor
 // -------
 Template.Visitor.onRendered(function () {

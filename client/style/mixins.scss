@@ -38,6 +38,13 @@
   padding-bottom: $value - 2;
 }
 
+@mixin get-bg-hover($value, $amt) {
+  background-color: $value;
+  &:hover {
+    background-color: lighten($value, $amt);
+  }
+}
+
 .uppercase-titles {
   letter-spacing: 0.5px;
   text-transform: uppercase;

@@ -112,19 +112,6 @@ h5, .h5, span.meta {
   &.reg { font-weight: 500; }
 }
 
-span.page-desc {
-  font-size: 14px;
-  @extend .uppercase-titles;
-  color: rgba(162, 169, 176, .75);
-
-  &.accented { color: $accent; }
-
-  + h1 {
-    margin: 15px 0 0;
-    padding: 0;
-  }
-}
-
 a {
   color: $link;
   @include transition(color 0.25s ease-out);
@@ -146,21 +133,17 @@ button.button {
   padding: 20px 38px 19px;
   @include border-radius(2px);
   margin-bottom: 20px;
-  background: $deepgray;
   color: #fff;
   text-align: center;
   font-size: 15px;
   @extend .uppercase-titles;
   letter-spacing: 0.58px;
   @include transition(background 0.25s ease-out);
+  @include get-bg-hover($deepgray, 10%);
 
   &.full-width {
     display: block;
     width: 100%;
-  }
-
-  &:hover {
-    background: lighten($deepgray, 10%);
   }
 
   &:active {
@@ -168,7 +151,18 @@ button.button {
   }
 
   &.primary {
-    background: $accent;
+    @include get-bg-hover($accent, 3%);
+  }
+
+  &.secondary {
+    @include get-bg-hover($electric, 7%);
+  }
+
+  &.small {
+    text-transform: none;
+    font-weight: 500;
+    margin: 0 5px 10px 0;
+    padding: 7px 10px;
   }
 
   &.end-cap {
@@ -179,8 +173,14 @@ button.button {
       top: 0;
       left: 0;
       background: $darkaccent;
-      padding: 14px;
+      @include transition(background 0.25s ease-out)
+      padding: 15px 16px;
       border-top-left-radius: 2px;
+    }
+
+    // todo: make icon bounce slightly on hover
+    &:hover span.icon {
+      background: lighten($darkaccent, 2%);
     }
   }
 
@@ -298,7 +298,15 @@ footer {
     }
 
     ul li {
-      display: inline;
+      display: inline-block;
+      padding: 5px 20px;
+      margin: 8px 0;
+      font-size: 14px;
+      @extend .uppercase-titles;
+      border-left: 2px solid rgba(119, 130, 142, .2);
+      
+      a { color: #fff; }
+      &:first-child { border: none; }
     }
   }
 }
@@ -513,24 +521,44 @@ footer {
 
 // Page Titles
 .page-title {
+  span.page-desc {
+    display: block;
+    font-size: 14px;
+    margin: 12px 0 20px;
+    @extend .uppercase-titles;
+    color: rgba(162, 169, 176, .75);
+
+    &.accented { color: $accent; }
+
+    + h1 {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
   span.issue-date {
     @extend h2;
     display: inline-block;
-    margin: 15px 0 10px;
+    margin: 10px 0 10px;
   }
 }
 
 
 // Table(s) of Contents 
 .toc-info {
-  margin: 30px 0 20px;
+  margin: 30px 0;
 
   h2.title, h6.desc {
-    font-size: 17px;
     line-height: 1.3;
   }
 
+  h6.desc, span.meta {
+    font-size: 15px;
+    color: darken($kashmir, 10%);
+  }
+
   h2.title {
+    font-size: 17px;
     margin: 0 0 5px 0;
     font-weight: 700;
     color: $cello;
@@ -539,8 +567,16 @@ footer {
   h6.desc { 
     margin: 0; 
     padding: 0;
-    color: darken($kashmir, 10%);
   }
+
+  span.meta {
+    margin: 10px 23px 0 0;
+    display: inline-block;
+  }
+}
+
+.article-links {
+  margin: 20px 0 50px;
 }
 
 /*================ Main Article Content | Article-Level Modules ================*/
@@ -699,13 +735,12 @@ $cubic: cubic-bezier(.64,.09,.08,1);
 
 .tag {
   display: inline-block;
-  // white-space: nowrap;
+  font-size: 15px;
   margin: 0 5px 10px 0;
   padding: 4px 10px;
   background: $lightgray;
   color: $kashmir;
   @include border-radius(2px);
-  font-size: 15px;
 
   &.dark {
     background-color: $deepgray;
