@@ -499,20 +499,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleOverview', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleOverview');
 			this.next();
 		},
 		waitOn: function(){
@@ -547,21 +534,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleFigures', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFigures');
 			this.next();
 		},
 		waitOn: function(){
@@ -592,21 +565,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleFiles', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFiles');
 			this.next();
 		},
 		waitOn: function(){
@@ -637,21 +596,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleFilesUploader', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFilesUploader');
 			this.next();
 		},
 		waitOn: function(){
@@ -682,22 +627,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}else{
-				Session.set('article',articleExistsExists);
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticle');
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
 				if(error){

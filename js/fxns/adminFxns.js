@@ -467,6 +467,24 @@ Meteor.adminArticle = {
 				Meteor.adminArticle.updateAffiliationsOrder(newIndex);
 			},
 		});
+	},
+	urlViaPiiOrMongo: function(articleId,articleRoute){
+		Session.set('article',null);
+		// determine ID type used in the URL of article pages
+		var articleExistsExists = articles.findOne({'_id': articleId});
+		if(!articleExistsExists){
+			// if the mongo id search found nothing, search by pii
+			var articlePii = String(articleId);
+			var articleByPii = articles.findOne({'ids.pii': articlePii});
+			// check if :_id is a pii and not Mongo ID
+			if(articleByPii){
+				Router.go(articleRoute, {_id: articleByPii._id});
+			}else{
+				Router.go('AdminArticleAdd');
+			}
+		}else{
+			Session.set('article',articleExistsExists);
+		}
 	}
 }
 
@@ -808,7 +826,6 @@ Meteor.processXml = {
 		return abstract;
 	}
 }
-
 
 Meteor.dataSubmissions = {
 	getPiiList: function(){
