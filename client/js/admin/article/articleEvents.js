@@ -498,6 +498,15 @@ Template.AdminArticleFiles.events({
 
 			}
 		});
+	},
+	'click .article-figure-delete': function(e){
+		e.preventDefault();
+		Meteor.formActions.saving();
+		var articleMongoId = $('#article-mongo-id').val();
+		console.log(articleMongoId);
+		var fileSettings = Session.get('article').files;
+		console.log(fileSettings);
+
 	}
 });
 Template.AdminArticleXmlVerify.events({
