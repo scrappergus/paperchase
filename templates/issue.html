@@ -21,7 +21,11 @@
 
 			<!-- Sidebar -->
 			<div class="page-sidebar">
-				<!-- todo: set up items helper-->
+				<div class="issue-scroller">
+					<span class="prev"><a href="#"><span class="icon icon-angle-left"></span> Prev</a></span>
+					<span class="current">Volume {{volume}}, Issue {{issue}}</span>
+					<span class="next"><a href="#">Next <span class="icon icon-angle-right"></span></a></span>
+				</div>
 				{{> scrollspyCard title="Explore This Issue" items=items}}
 			</div>
 		{{/with}}

@@ -25,6 +25,7 @@ if (Meteor.isClient) {
 	// var journal = journalConfig.findOne();
 	// Session.setDefault('journal',journal);
 }
+
 Router.configure({
 	loadingTemplate: 'Loading'
 });
@@ -630,6 +631,7 @@ if (Meteor.isClient) {
 
 	Router.route('/article/:_id/text', {
 		name: 'ArticleText',
+		parent: 'Issue', // todo: implement real issue/volume nums
 		layoutTemplate: 'Visitor',
 		onBeforeAction: function(){
 			// check if article exists

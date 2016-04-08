@@ -133,7 +133,7 @@ Template.ForAuthors.events({
 // Search
 // ------
 Template.Search.events({
-        'change .search-terms': function(e) {
-            Session.set('searchValue', $('.search-terms').val()); //reactive template variable for ErrorMessages will loop through these
-        }
-    });
+  'change .search-terms': function(e) {
+      Session.set('searchValue', $('.search-terms').val()); //reactive template variable for ErrorMessages will loop through these
+  }
+});

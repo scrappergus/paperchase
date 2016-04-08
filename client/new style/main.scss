@@ -364,17 +364,20 @@ footer {
   min-height: 100vh;
 }
 
-.main .sidebar {
-  background-color: $blackpearl;
-  font-size: 17px;
+.main .sidebar,
+.main .content {
+  overflow: hidden;
   margin-bottom: -99999px;
   padding-bottom: 99999px;
 }
 
+.main .sidebar {
+  background-color: $blackpearl;
+  font-size: 17px;
+}
+
 .main .content {
-  margin-bottom: -99999px;
-  padding-bottom: 99999px;
-  min-height: calc(100vh - 80px); // todo: fix this min-height nonsense
+  min-height: calc(100vh - 80px);
 }
 
 .main .content-yield {
@@ -384,9 +387,16 @@ footer {
 
 /*================ Left Navigation | Base Modules ================*/
 .main .sidebar .search-box {
-  padding: 20px 40px 0;
+  position: relative;
+  padding: 15px 70px 0 40px;
 
-  input { 
+  span.icon {
+    position: absolute;
+    top: 30px;
+  }
+
+  input {
+    padding-left: 30px;
     font-size: 17px;
     border-bottom: 2px solid #213245;
   }
@@ -575,6 +585,34 @@ footer {
 
 .article-links {
   margin: 20px 0 50px;
+}
+
+/*================ Issue Content | Issue-Level Modules ================*/
+.issue-scroller {
+  display: flex;
+  justify-content: space-between;
+  border-top: 2px solid #F0F0F0;
+  border-bottom: 2px solid #F0F0F0;
+  @include padding-vertical(14px);
+  margin-bottom: 20px;
+
+  span {
+    display: inline-block;
+    @extend .uppercase-titles;
+    font-size: 14px;
+
+    &.prev a,
+    &.next a {
+      color: $kashmir;
+    }
+
+    span.icon {
+      font-size: 11px;
+
+      &.icon-angle-right { margin-left: 3px; }
+      &.icon-angle-left { margin-right: 3px; }
+    }
+  }
 }
 
 /*================ Main Article Content | Article-Level Modules ================*/
