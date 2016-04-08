@@ -131,7 +131,7 @@ Template.AuthorsRefList.helpers({
 	tooltipAffiliation: function() {
 		var articleData = Template.parentData(2);
 		var authorData = Template.parentData(1);
-		var num = parseInt(authorData.affiliations_numbers);
+		var num = parseInt(this);
 		return articleData.affiliations[num];
 	}
 })
