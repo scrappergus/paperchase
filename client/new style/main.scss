@@ -222,14 +222,16 @@ button.button {
   &:last-child { 
     float: right; 
   }
-}
 
-.button-toggle span {
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
+  span {
+    display: inline-block;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 15px;
+  }
 }
 
 /*================ Layout | Base Modules ================*/
@@ -276,7 +278,6 @@ footer {
 .navigation {
   height: 80px;
   background-color: $midnightblue;
-  overflow: hidden;
 
   .nav-sidebar {
     padding: 20px 0 0 20px;
@@ -364,8 +365,7 @@ footer {
 
 /*================ Main Container | Base Modules ================*/
 .main { 
-  overflow: hidden; 
-  min-height: 100vh; // secret sauce to 100% layout
+  min-height: 100vh;
 }
 
 .main .sidebar {
@@ -516,7 +516,9 @@ footer {
 }
 
 .fixed-scroll-card {
-  position: fixed;
+  &.fixed-active {
+    position: fixed;
+  }
 }
 
 // Page Titles
@@ -660,6 +662,100 @@ h2.authors {
 // 
 // 
 
+
+/*================ Modals ================*/
+.lean-modal {
+  display: none;
+  width: 95%;
+  background: #fff;
+  position: absolute !important;
+
+  div.modal-body {
+    padding: 0 34px 34px;
+  }
+
+  .modal-top {
+    height: 38px;
+    position: relative;
+
+    span.icon-close {
+      position: absolute;
+      top: 9px;
+      right: 11px;
+      cursor: pointer;
+    }
+  }
+
+  @include at-query ($min, $medium) {
+    width: 635px;
+    div.modal-body {
+      padding: 0 34px 34px;
+    }
+  }
+}
+
+#lean_overlay {
+  position: fixed;
+  z-index:100;
+  top: 0px;
+  left: 0px;
+  height:100%;
+  width:100%;
+  background: #192028;
+  display: none;
+}
+
+/*================ Accounts UI | Overrides ================*/
+#login-dropdown-list {
+  box-shadow: none;
+  @include border-radius(2px);
+
+  a {
+    color: $kashmir;
+    text-decoration: none;
+    text-transform: capitalize;
+    font-size: 11px;
+    font-weight: 500;
+    margin: 5px 0 0;
+  }
+
+  a.login-close-text {
+    text-transform: uppercase;
+    font-weight: 700;
+    color: $electric;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  #login-buttons-password,
+  #login-buttons-forgot-password {
+    background: $electric;
+    text-transform: capitalize;
+    @include border-radius(2px);
+    @include padding-vertical(9px);
+    font-size: 14px;
+  }
+
+  #login-email-label-and-input,
+  #login-password-label-and-input {
+    margin: 0;
+    padding: 0;
+
+    #login-email,
+    #login-password {
+      margin-bottom: 5px;
+    }
+
+    #login-email-label,
+    #login-password-label {
+      text-transform: capitalize;
+    }
+  }
+}
+
+#forgot-password-email {
+  margin-bottom: 5px;
+}
 
 /*================ Etc. | Misc Modules ================*/
 .full-width {

@@ -10,7 +10,6 @@ gadicohen:headers
 mizzao:user-status
 matb33:collection-hooks
 service-configuration
-accounts-ui
 alanning:roles
 fourseven:scss
 gandev:server-eval
@@ -50,3 +49,4 @@ meta:susy@2.3.3
 fortawesome:fontawesome
 materialize:materialize
 monbro:iron-router-breadcrumb
+accounts-ui
