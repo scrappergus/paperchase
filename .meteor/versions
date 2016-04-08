@@ -69,6 +69,7 @@ meteorhacks:inject-initial@1.0.3
 meteorhacks:kadira@2.26.3
 meteorhacks:meteorx@1.4.1
 meteorhacks:npm@1.5.0
+meteorhacks:picker@1.0.3
 minifiers@1.1.7
 minimongo@1.0.10
 mizzao:build-fetcher@0.2.0

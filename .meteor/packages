@@ -51,3 +51,4 @@ materialize:materialize
 meteorhacks:aggregate
 risul:moment-timezone
 mvrx:bluebird
+meteorhacks:picker
