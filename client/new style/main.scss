@@ -54,7 +54,7 @@ html, body {
 }
 
 // === Headings | General
-h1,h2,h3,h4,h5,h6,
+ h1,h2,h3,h4,h5,h6,
 .h1,.h2,.h3,.h4,.h5,.h6 {
   color: $cello;
 
@@ -64,22 +64,12 @@ h1,h2,h3,h4,h5,h6,
   &.caps { @extend .uppercase-titles; }
 }
 
-// === Headings | Font Sizes
-h1, .h1 { 
-  font-size: 38px; 
-}
-
-h2, .h2 {
-  font-size: 24px;
-}
-
-h3, .h3 { 
-  font-size: 19px; 
-}
-
-h4, .h4 { 
-  font-size: 17px; 
-}
+// === Headings | Font Sizes, Etc.
+h1, .h1 { font-size: 38px; }
+h2, .h2 { font-size: 24px; 
+          color: $kashmir; }
+h3, .h3 { font-size: 19px; }
+h4, .h4 { font-size: 17px; }
 
 h5, .h5, h6, .h6,
 span.meta { 
@@ -90,10 +80,6 @@ h1, .h1 {
   color: $midnight;
   line-height: 1.1;
   font-weight: 700;
-}
-
-h2, .h2 {
-  color: $kashmir;
 }
 
 h4 {
@@ -299,6 +285,7 @@ footer {
     }
 
     ul li {
+      position: relative;
       display: inline-block;
       padding: 5px 20px;
       margin: 8px 0;
@@ -308,6 +295,15 @@ footer {
       
       a { color: #fff; }
       &:first-child { border: none; }
+      &.has-icon { padding-left: 30px; }
+
+      span.icon {
+        position: absolute;
+        display: inline-block;
+        font-size: 20px;
+        left: 0;
+        top: 1px;
+      }
     }
   }
 }
@@ -706,6 +702,12 @@ h2.authors {
 }
 
 /*================ Accounts UI | Overrides ================*/
+#login-buttons {
+  #login-sign-in-link,
+  #login-name-link {
+    text-decoration: none;
+  }
+}
 #login-dropdown-list {
   box-shadow: none;
   @include border-radius(2px);
@@ -728,7 +730,10 @@ h2.authors {
   }
 
   #login-buttons-password,
-  #login-buttons-forgot-password {
+  #login-buttons-forgot-password,
+  #login-buttons-open-change-password,
+  #login-buttons-logout,
+  #login-buttons-do-change-password {
     background: $electric;
     text-transform: capitalize;
     @include border-radius(2px);
@@ -737,17 +742,20 @@ h2.authors {
   }
 
   #login-email-label-and-input,
-  #login-password-label-and-input {
+  #login-password-label-and-input,
+  #login-old-password-label-and-input {
     margin: 0;
     padding: 0;
 
     #login-email,
-    #login-password {
+    #login-password,
+    #login-old-password {
       margin-bottom: 5px;
     }
 
     #login-email-label,
-    #login-password-label {
+    #login-password-label,
+    #login-old-password-label {
       text-transform: capitalize;
     }
   }
