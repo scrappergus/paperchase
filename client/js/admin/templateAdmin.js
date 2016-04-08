@@ -38,6 +38,9 @@ Template.AdminArticle.onRendered(function () {
 });
 Template.AdminArticleFigures.onRendered(function () {
 	$('.materialboxed').materialbox();
+	$('.collapsible').collapsible({
+		accordion : false
+	});
 });
 Template.AdminArticleFilesUploader.onDestroyed(function () {
 	Session.set('xml-verify',null);

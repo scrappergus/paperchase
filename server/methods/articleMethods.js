@@ -1,55 +1,39 @@
 // All of these methods are for admin article
 Meteor.methods({
 	addArticle: function(articleData){
-		// console.log('--addArticle');
-		var fut = new future();
-		Meteor.call('articleExistenceCheck',articleData,function(error,result){
-			if(error){
-				// console.error('addArticle',error);
-				throw new Meteor.Error('ERROR: Article - ', error);
-				// return error;
-			}else if(result){
-				fut['return'](result);
-				return result; //article already exists, but return the doc so we can notify user
-			}else{
-				if(articleData['authors']){
-					var authorsList = articleData['authors'];
-					for(var author = 0 ; author < authorsList.length; author++){
-						//check if author doc exists in authors collection
-						var authorDoc;
-						authorsList[author]['ids'] = {};
-						authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
-						if(!authorDoc){
-							//INSERT into authors
-							Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
-								if(error){
-									console.error('ERROR',error);
-								}else{
-									authorsList[author]['ids']['mongo_id'] = mongo_id;
-								}
-							});
+		if(articleData['authors']){
+			var authorsList = articleData['authors'];
+			for(var author = 0 ; author < authorsList.length; author++){
+				//check if author doc exists in authors collection
+				var authorDoc;
+				authorsList[author]['ids'] = {};
+				authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
+				if(!authorDoc){
+					//INSERT into authors
+					Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
+						if(error){
+							console.error('ERROR',error);
 						}else{
-							//author doc already exists
-							authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
-						}
-					}
-				}
-
-				if(articleData.volume && articleData.issue){
-					// check if article doc
-					Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
-						if(result){
-							articleData.issue_id = result;
+							authorsList[author]['ids']['mongo_id'] = mongo_id;
 						}
 					});
+				}else{
+					//author doc already exists
+					authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
 				}
-
-				// console.log('articleData',articleData);
-				fut['return'](articles.insert(articleData));
-				// return articles.insert(articleData);
 			}
-		});
-		return fut.wait();
+		}
+
+		if(articleData.volume && articleData.issue){
+			// check if article doc
+			Meteor.call('addIssue', {volume: articleData.volume, issue: articleData.issue}, function(error,result){
+				if(result){
+					articleData.issue_id = result;
+				}
+			});
+		}
+
+		return articles.insert(articleData);
 	},
 	updateArticle: function(mongoId, articleData, batch){
 		var fut = new future();
@@ -130,12 +114,37 @@ Meteor.methods({
 		return issueId;
 	},
 	getSavedPii: function(mongoId){
+		// console.log('....getSavedPii');
+		var fut = new future();
 		var art = articles.findOne({_id : mongoId}, {ids:1});
-		return art.ids.pii;
+		if(art.ids.pii){
+			fut['return'](art.ids.pii);
+		}else{
+			Meteor.call('getNewPii',function(error,pii){
+				if(error){
+					console.error('getNewPii',error);
+				}else if(pii){
+					fut['return'](pii);
+				}
+			});
+		}
+		return fut.wait();
 	},
 	getNewPii: function(){
+		// pii a string, so sorting is failing. below temp solution for this.
+		var articleByPii = {};
+		var articlesWithPiiCount = 0;
+		var allArticles = articles.find({},{ids:1}).fetch();
+		allArticles.forEach(function(article){
+			if(article.ids && article.ids.pii){
+				articleByPii[article.ids.pii] = article.ids.pii;
+				articlesWithPiiCount++;
+			}
+		});
+		// console.log('articleByPii',articleByPii[articlesWithPiiCount]);
+
 		var highestPii = articles.findOne({},{sort: {'ids.pii' : -1}});
-		return parseInt(highestPii.ids.pii) + 1;
+		return parseInt(articleByPii[articlesWithPiiCount]) + 1;
 	},
 	preProcessArticle: function(articleId,article){
 		// Article Form: On - Article Form & Data Submissions
@@ -156,6 +165,14 @@ Meteor.methods({
 			Meteor.call('compareProcessedXmlWithDb',article,articleFromDb,function(error,result){
 				if(result){
 					article = result;
+				}
+			});
+			// Check for duplicates
+			Meteor.call('articleExistenceCheck',articleId, article, function(error,duplicateFound){
+				if(error){
+					console.error('articleExistenceCheck',error);
+				}else if(duplicateFound){
+					article.duplicate = duplicateFound;
 				}
 			});
 		}
@@ -374,10 +391,10 @@ Meteor.methods({
 		// console.log(result.pii);
 		return result;
 	},
-	articleExistenceCheck: function(articleData){
-		// console.log('--articleExistenceCheck',articleData);
-		// before inserting article, check if doc already exists
-		// right now only title required, so check for IDs before adding to query
+	articleExistenceCheck: function(mongoId, articleData){
+		// console.log('--articleExistenceCheck');
+		// before inserting/updating article, check if doc already exists
+		// will return duplicate article doc, if found
 		var query =  [
 			{
 				'title': articleData.title
@@ -399,9 +416,69 @@ Meteor.methods({
 				'ids.pii': articleData.ids.pii
 			});
 		}
+		// console.log('query',query);
 		var exists = articles.findOne({ $or: query });
-		if(exists){
+		if(exists && exists._id != mongoId){
 			return exists;
+		}else{
+			return;
 		}
+	},
+	checkArticleInputs: function(articleData){
+		// will check for all required fields in form
+		// will return all invalid inputs
+		var invalid = [];
+
+		// title
+		if(articleData.title === ''){
+			invalid.push({
+				'fieldset_id' : 'article-title',
+				'message' : 'Article title is required'
+			});
+		}
+
+		return invalid;
+	},
+	validateArticle: function(mongoId, articleData){
+		var fut = new future();
+		var invalid = [];
+		var result = {};
+		// will check all required inputs are valid and check for duplicate article by PII
+		// will either return doc of duplicate article, invalid array, or boolean if article was updated
+
+		// first check for duplicates
+		Meteor.call('articleExistenceCheck',mongoId, articleData, function(error,duplicateExists){
+			if(error){
+				fut['throw'](error);
+			}else if(duplicateExists){
+				result = duplicateExists;
+				result.duplicate = true;
+				fut['return'](duplicateExists);
+			}else{
+				Meteor.call('checkArticleInputs',articleData, function(error,articleInvalid){
+					if(error){
+						fut['throw'](error);
+					}else if(articleInvalid && articleInvalid.length > 0){
+						result.invalid = true;
+						result.invalid_list = articleInvalid;
+						fut['return'](result);
+					}else{
+						// no duplicates and all valid. Now update/insert
+						Meteor.call('updateArticle',mongoId, articleData, function(error,articleSaved){
+							if(error){
+								fut['throw'](error);
+							}else if(articleSaved){
+								result.article_id = articleSaved;
+								result.saved = true;
+								fut['return'](result);
+							}
+						});
+					}
+				});
+
+			}
+		});
+
+		return fut.wait();
 	}
 });

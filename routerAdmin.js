@@ -122,8 +122,9 @@ if (Meteor.isClient) {
 	Session.setDefault('statusModalAction',null);
 	Session.setDefault('statusModalDetails',null);
 	// Article
-	Session.setDefault('xml-verify',null)
+	Session.setDefault('xml-verify',null);
 	Session.setDefault('xml-file',null);
+	Session.setDefault('xml-figures',null);
 	Session.setDefault('article-form',null);
 
 
@@ -389,7 +390,7 @@ if (Meteor.isClient) {
 		},
 	});
 
-	// Article
+	// Articles List
 	Router.route('/admin/articles',{
 		name: 'AdminArticlesDashboard',
 		layoutTemplate: 'Admin',
@@ -488,6 +489,7 @@ if (Meteor.isClient) {
 
 	});
 
+	// Single Article
 	Router.route('/admin/article/:_id',{
 		name: 'AdminArticleOverview',
 		layoutTemplate: 'Admin',
@@ -499,20 +501,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleOverview', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleOverview');
 			this.next();
 		},
 		waitOn: function(){
@@ -547,21 +536,14 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleFigures', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFigures');
+			Meteor.call('pmcFiguresInXml',this.params._id,function(error,result){
+				if(error){
+
+				}else if(result){
+					Session.set('xml-figures',result);
 				}
-			}
+			});
 			this.next();
 		},
 		waitOn: function(){
@@ -592,21 +574,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleFiles', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFiles');
 			this.next();
 		},
 		waitOn: function(){
@@ -637,21 +605,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			// console.log('before!',Session.get('article'));
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticleFilesUploader', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFilesUploader');
 			this.next();
 		},
 		waitOn: function(){
@@ -682,22 +636,7 @@ if (Meteor.isClient) {
 			return pageTitle;
 		},
 		onBeforeAction: function(){
-			Session.set('article',null);
-			// check if article exists
-			var articleExistsExists = articles.findOne({'_id': this.params._id});
-			if(!articleExistsExists){
-				// if the mongo id search found nothing, search by pii
-				var articlePii = String(this.params._id);
-				var articleByPii = articles.findOne({'ids.pii': articlePii});
-				// check if :_id is a pii and not Mongo ID
-				if(articleByPii){
-					Router.go('AdminArticle', {_id: articleByPii._id});
-				}else{
-					Router.go('AdminArticleAdd');
-				}
-			}else{
-				Session.set('article',articleExistsExists);
-			}
+			Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticle');
 
 			Meteor.call('preProcessArticle',this.params._id,function(error,result){
 				if(error){

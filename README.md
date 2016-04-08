@@ -2,6 +2,22 @@
 ========================
 An academic journal platform.
 
+App Structure
+============
+ - **/:** for client and server side. Some of these files will have checks for where on app part of file can be used, for ex: if `(Meteor.isClient) {}`
+ - **/client:** for client side
+ - **/js:** for client and server side
+ - **/server:** for server side
+ - **/templates:** client and admin templates
+ - **/public:** static assets. (journal images, not article images)
+
+Deploy
+============
+ - change favicon to journal deploying (all journal favicons located in /public)
+ - change settins.json
+ - change /server/awsConfig.js
+ -
+
 Visitor Site
 ============
 
@@ -83,9 +99,17 @@ On article form, in meta section
 Article Form
 ----------------
 
+This form is used in multiple places (Add Article, Edit Article, Verify XML).
+
+**Data**
+
 The data for the form comes from the session variable `article-form` and is not reactive.  The database data needs to be preprocessed to include all issues, all paper types etc so that the dropdown menus and buttons options (for ex, article type buttons) in the form are complete. Another session variable `article` is used to show the article nav and header. This variable is set in the router. Don't use the session variable for `article-form` because that contains extra information not needed for the nav/header, and also we can show the header while the form is still processing.
 
-This form is used in multiple places (Add Article, Edit Article, Verify XML).
+When adding PII, if the article doc had a PII in the DB then that is included in the form (for when if the user had removed PII while working on the form then wanted to add it back). If the article doc didn't have a PII, then the next incremental PII is included on the form.
+
+**Saving**
+
+Whether using the form to create a new article doc, or updating an existing article doc, the article information is passed to `validateArticle(mongoId, articleData)` in /client/js/admin/article/articleMethods.js. This function will first check for duplicate articles. Duplicate articles are found using `articleExistenceCheck(mongoId, articleData)`, which will query for title and IDs. If an article is found and the `_id` of the doc does not match the provided mongoId then validation is stopped and the user is notified. If no duplicate found, then the inputs are validated. Currently, only title is required and the only requirement is that it is not empty. `validateArticle()` will return an object, which has three flags checked on the event handler: duplicate, invalid, saved. If result.duplicate then the returned object is the duplicate article. If result.invalid, then the returned result contains all the invalid input IDs with messages for each. If result.saved then article was saved (updated or inserted). If saving the data, articleUpdate() is used. This will also insert and return `_id` if inserted.
 
 
 Article Files Uploader
@@ -98,6 +122,7 @@ Article Files Uploader
  - Since the same form is used for AOP and PMC XML, there's a flag in the session variable `article-form.aop` and if set to true, the upload button is hidden but the form is still displayed.
  - xmlMethods.js: This file contains functions to parse XML to JSON, and to get that JSON in the schema for the DB. Also contains functions for comparing XML JSON with DB JSON
  - Issue handling: if volume and issue in XML, but no record in the issues collection, then insert. This happens on processing, so before the article form gets saved. The reason is because issues can be deleted/hidden easily (still a todo).
+ - Duplicate article checked on processing. User is notified above article form.
 
 ----------
 
@@ -119,6 +144,108 @@ XML files are versioned, so consistent naming is essential. In the Paperchase DB
 PDF files are versioned, so consistent naming is essential. In the Paperchase DB, this record is stored in the article doc (in the articles collection), within ‘files’
 
 **Figures**
+ - File naming: articleMongId_figureId.xml
+ - File storage: on AWS S3 in journal bucket (paperchase-journalshortname) in the paper_figures folder
 
+
+App Packages
+============
+**alanning:roles**
+For adding roles to user docs in the DB
+
+**aldeed:template-extension**
+For dynamic templates
+
+**aslagle:reactive-table**
+A reactive table designed for Meteor. Used on: AdminDataSubmissions, AdminDoiStatus, and adminArticle
+
+**accounts-password**
+For users accounts
+
+**bambattajb:sticky**
+Used on the full text section navigation.
+
+**blaze-html-templates**
+Compile HTML templates into reactive UI with Meteor Blaze
+
+**email**
+Allows sending email from a Meteor app. Published by mdg.
+
+**fourseven:scss**
+Sass and SCSS support
+
+**gadicohen:headers**
+For institutaion access. In helpers getInstitutionByIP and isSubscribedIP
+
+**gandev:server-eval**
+This allows server logs to be viewed in the browser console. Could be removed for productions.
+
+**hitchcott:panzoom**
+Used on ArticleFigureViewer to zoom in/out on figures
+
+**http**
+Used to make http requests.
+
+**iron:router**
+For client and server routes
+
+**jquery**
+
+**lepozepo:s3**
+Used for uploading files to AWS S3
+
+**logging**
+This is an internal Meteor package. Published by mdg
+
+**matb33:collection-hooks**
+For adjusting data on insert/update/delete of database collections
+
+**materialize:materialize**
+Used for front-end framework
+
+**meteorhacks:aggregate**
+A simple package to add proper aggregation support for Meteor. This is used to find duplicate articles by PII, PMID, and title, in function duplicateArticles() in articleMethods.js.
+
+**meteorhacks:npm**
+This allows us to use node.js packages. Using xml2js and xpath for XML parsing.
+
+**mizzao:jquery-ui**
+Smart package for jquery ui, which is used for sortable actions on admin site.
+
+**momentjs:moment**
+This is a smart package for moment, which is used to parse dates in JavaScript
+
+**mongo**
+Adaptor for using MongoDB and Minimongo over DDP
+
+**ostrio:iron-router-title**
+Used to change document.title via router.
+
+**reactive-var**
+A general-purpose reactive datatype for use with tracker. Published by mdg.
+
+**reload**
+The reload package handles the process of migrating an app: serializing the app's state, then shutting down and restarting the app. Published by mdg
+
+**risul:moment-timezone**
+Used to set timezone of application, so that article data processing doesn't change with timezone.
+
+**session**
+This package provide Session.Session is a special ReactiveDict whose contents are preserved across Hot Code Push.
+
+**spacebars**
+Meteor template language. Published by mdg
+
+**standard-minifiers**
+This package includes the JS and CSS standard minifiers in your Meteor project. Published by mdg.
+
+**tracker**
+Meteor Tracker is an incredibly tiny (~1k) but incredibly powerful library for transparent reactive programming in JavaScript.
+
+**vojtechklos:materialnote**
+Used on admin site for wysiwyg input.
+
+**zimme:active-route**
+Use to determine if the current route is the active one. For ex, to add active class to button groups.
 
 

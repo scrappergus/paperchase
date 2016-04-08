@@ -68,7 +68,7 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	renameArticleAsset: function(folder, originalFileName, articleMongoId){
+	renameArticleAsset: function(articleMongoId, folder, originalFileName){
 		// console.log('renameArticleAsset')
 		var fut = new future();
 		var newFileName = articleMongoId + '.' + folder;
@@ -86,7 +86,7 @@ Meteor.methods({
 		});
 		return fut.wait();
 	},
-	renameArticleFigure: function(originalFileName, figureId, articleMongoId){
+	renameArticleFigure: function(articleMongoId, originalFileName, figureId){
 		// console.log('renameArticleFigure',originalFileName, figureId, articleMongoId)
 		var fut = new future();
 		var originalFilePieces = originalFileName.split('.');
@@ -95,16 +95,13 @@ Meteor.methods({
 		var newFileName = articleMongoId + '_' + figureId + '.' + fileType;
 		var source = 'paper_figures/' + originalFileName;
 		var dest = 'paper_figures/' + newFileName;
-		// console.log('source',source);
-		// console.log('dest',dest);
+
 		S3.knox.copyFile(source, dest, function(err, res){
 			if(err){
 				console.error('renameArticleAsset',err);
-				// fut['throw'](err);
+				fut.throw(err);
 			}else if(res){
-				// console.log('status',res.statusCode);
-				// return newFileName;
-				fut['return'](newFileName);
+				fut.return(newFileName);
 			}
 		});
 		return fut.wait();
@@ -122,5 +119,86 @@ Meteor.methods({
 		result.pdf = pdfList.length;
 		result.xml = xmlList.length;
 		return result;
+	},
+	updateArticleDbFigures: function(articleMongoId, articleFigures){
+		var fut = new future();
+		Meteor.call('updateArticle', articleMongoId, {'files.figures' : articleFigures}, function(error,result){
+			if(error){
+				fut.throw(error);
+			}else if(result){
+				fut.return(result);
+			}
+		});
+		return fut.wait();
+	},
+	afterUploadArticleFig: function(articleMongoId, originalFileName, originalFigId, newFigId){
+		// console.log('..afterUploadArticleFig');
+		var fut = new future();
+		var fileNamePieces = originalFileName.slice('_');
+		var figFound = false; // used to determine if new figure, or updating existing
+		// Article was already uploaded to S3. This needs to happen on the client.
+		// Now update the DB and rename the figure if not in standard format (articlemongoid_figid)
+
+		Meteor.call('renameArticleFigure', articleMongoId, originalFileName, newFigId, function(error,newFileName){
+			if(error){
+				error.userMessage = 'Figure not uploaded. Please try again.';
+				console.error('renameArticleFigure',error);
+				fut.throw(error);// though it was actually uploaded, it was not renamed to standard convention. So this file cannot be used.
+			}else if(newFileName){
+				var articleInfo = articles.findOne({_id : articleMongoId});
+				var articleFigures =articleInfo.files.figures;
+
+				// If updating existing figure
+				articleFigures.forEach(function(fig){
+					if(fig.id == originalFigId){
+						fig.id = newFigId;
+						fig.file = newFileName;
+						figFound = true;
+					}
+				});
+
+				// If new figure
+				if(!figFound){
+					articleFigures.push({
+						id: newFigId,
+						file: newFileName
+					});
+				}
+
+				Meteor.call('updateArticleDbFigures', articleMongoId, articleFigures, function(error,result){
+					if(error){
+						error.userMessage = 'Figure ' + newFileName + ' uploaded, but could not update the database. Contact IT and request DB update.' ;
+						fut.throw(error);
+						console.error('updateArticleDbFigures',error);
+					}else if(result){
+						fut.return('Figure uploaded and database updated: ' + newFileName);
+					}
+				});
+			}
+		});
+
+		try {
+			return fut.wait();
+		}
+		catch(err) {
+			throw new Meteor.Error(err.userMessage);
+		}
+	},
+	afterDeleteArticleFigure: function(articleMongoId,articleFigures){
+		var fut = new future();
+		Meteor.call('updateArticleDbFigures', articleMongoId, articleFigures, function(error,result){
+			if(error){
+				error.userMessage = 'Figure deleted but could not update the database. Contact IT and request DB update.';
+				fut.throw(error);
+			}else if(result){
+				fut.return('Figure deleted and database updated ');
+			}
+		});
+		try {
+			return fut.wait();
+		}
+		catch(err) {
+			throw new Meteor.Error(err.userMessage);
+		}
 	}
 });

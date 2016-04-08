@@ -1,6 +1,6 @@
 Meteor.methods({
 	intiateArticleCollection: function(){
-		console.log('..intiateArticleCollection');
+		// console.log('..intiateArticleCollection');
 		//for initiating articles collection. PII/PMID/Title sent from crawler
 		// first make sure there are 0 docs
 		if(articles.find().fetch().length == 0){
@@ -28,7 +28,7 @@ Meteor.methods({
 		}
 	},
 	getAllArticlesDoiStatus: function(){
-		console.log('..getAllArticlesDoiStatus');
+		// console.log('..getAllArticlesDoiStatus');
 		var fut = new future();
 		var journalShortName = journalConfig.findOne().journal.short_name;
 		var requestURL =  journalConfig.findOne().api.crawler + '/doi_status/' + journalShortName;
@@ -41,7 +41,7 @@ Meteor.methods({
 				throw new Meteor.Error(503, 'ERROR: DOI Registered Check' , error);
 			}else if(result){
 				// combine with articles DB
-				console.log('articles',result.content);
+				// console.log('articles',result.content);
 				var articlesDoiList = JSON.parse(result.content);
 
 				for(var a=0 ; a<articlesDoiList.length ; a++){
@@ -54,7 +54,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	getAllArticlesPmcXml: function(){
-		console.log('..getAllArticlesPmcXml');
+		// console.log('..getAllArticlesPmcXml');
 		var fut = new future();
 		var requestURL =  journalConfig.findOne().api.crawler + '/crawl_xml/' + journalConfig.findOne().journal.short_name;
 
@@ -197,6 +197,9 @@ Meteor.methods({
 				if(missingInDb.length > 0){
 					for(var i=0 ; i<missingInDb.length ; i++){
 						if(missingInDb[i]){ // need to check for existence because could be null when object move to inDbUpdate array in crawler
+							if(missingInDb[i].dates && missingInDb[i].dates.epub){
+								missingInDb[i].dates.epub = new Date(missingInDb[i].dates.epub);
+							}
 							Meteor.call('addArticle',missingInDb[i],function(addError,articleAdded){
 								if(addError){
 									console.error('addError: ', addError);
@@ -210,7 +213,7 @@ Meteor.methods({
 				if(inDbUpdate.length > 0){
 					inDbUpdate.forEach(function(articleToUpdate){
 						var updateObj = {};
-						console.log(articleToUpdate.ids);
+						// console.log(articleToUpdate.ids);
 						updateObj['ids.pmid'] = articleToUpdate.ids.pmid;
 						if(articleToUpdate.ids.pmc){
 							updateObj['ids.pmc'] = articleToUpdate.ids.pmc;
