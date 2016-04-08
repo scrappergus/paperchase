@@ -33,7 +33,6 @@ ecmascript-runtime@0.2.6
 ejson@1.0.7
 email@1.0.8
 fastclick@1.0.7
-fortawesome:fontawesome@4.5.0
 fourseven:scss@3.4.1
 gadicohen:headers@0.0.31
 gandev:server-eval@0.6.6
