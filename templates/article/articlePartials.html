@@ -1,5 +1,4 @@
 <template name="ArticleHeaderTitle">
-	<!-- todo: move pages and date from this area to a better spot -->
 	<h5 class="article-header">
 		{{#if article_type.name}} 
 			<span class="article-type">{{article_type.name}}</span>
@@ -49,7 +48,6 @@
 	{{/if}}
 </template>
 
-<!-- this not in use? -->
 <template name="AuthorsList">
 	<span class="authors">
 		{{#each authors}}
@@ -58,30 +56,18 @@
 	</span>
 </template>
 
-<!-- this IS in use -->
 <template name="AuthorsRefList">
 	<h2 class="authors">
 		{{#each authors}}
 			<span>
 				{{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
 				{{#if affiliations_numbers}}
-					<!-- todo: hook up real affiliation -->
-					<sup class="author-affiliations">{{#each affiliations_numbers}}<span><a href="#" class="tooltip--triangle" data-tooltip="Department of Obstetrics & Gynecology, The University of Texas Medical Branch at Galveston, Galveston, TX 77555-1062, USA">{{affiliationNumber .}}</a><span class="comma">,&nbsp;</span></span>{{/each}}</sup>
+					<sup class="author-affiliations">{{#each affiliations_numbers}}<span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,&nbsp;</span></span>{{/each}}</sup>
 				{{/if}}
 				<span class="comma">, </span>
 			</span>
 		{{/each}}
 	</h2>
-
-	<!-- {{#if affiliations}}
-		{{#each arrayify affiliations}}
-		<h6>
-			<span class="affiliations">
-				{{affiliationNumber name}}. {{value}}
-			</span>
-		</h6>
-		{{/each}}
-	{{/if}} -->
 </template>
 
 <!-- Todo: make sure deleting this label isn't messing anything up -->

@@ -127,6 +127,14 @@ Template.ArticleSections.helpers({
 		return Session.get('article-text');
 	}
 });
+Template.AuthorsRefList.helpers({
+	tooltipAffiliation: function() {
+		var articleData = Template.parentData(2);
+		var authorData = Template.parentData(1);
+		var num = parseInt(authorData.affiliations_numbers);
+		return articleData.affiliations[num];
+	}
+})
 
 // Issue
 // ------
