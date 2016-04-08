@@ -553,8 +553,14 @@ if (Meteor.isClient) {
 		},
 		title: function() {
 			var pageTitle = '';
-			var pieces = Meteor.issue.urlPieces(this.params.vi);
-
+			var pieces = {};
+			if(this.data && this.data().article && this.data().article.volume && this.data().article){
+				// for article breadcrumbs, which will try to use the issue mongo ID as the param, but we use vol/issue
+				pieces.volume = this.data().article.volume;
+				pieces.issue = this.data().article.issue;
+			}else{
+				pieces = Meteor.issue.urlPieces(this.params.vi);
+			}
 			if(Session.get('journal')){
 				pageTitle = Session.get('journal').journal.name + ' | ';
 			}
