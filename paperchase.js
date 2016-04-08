@@ -305,7 +305,7 @@ Router.route('/get-interviews/',{
 		var htmlString = '<html><head><meta name="robots" content="noindex"></head><body>';
 		for(var i=0; i< interviews.length; i++){
 			var interview = interviews[i];
-			htmlString+= '<div>';
+			htmlString+= '<div style="float:left;">';
 			if(interview.title){
 				htmlString+= '<h3>' + interview.title + '</h3>';
 			}
