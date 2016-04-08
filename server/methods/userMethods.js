@@ -1,4 +1,3 @@
-
 Meteor.methods({
     addUser: function (user) {
       var loggedInUser = Meteor.user()
