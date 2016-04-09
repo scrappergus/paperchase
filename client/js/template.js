@@ -62,16 +62,47 @@ Template.ArticleFigureViewer.onRendered(function() {
 				}).panzoom('zoom', true);
 });
 Template.ArticleText.onRendered(function() {
-	// $('.materialboxed').materialbox();
+    // $('.materialboxed').materialbox();
 });
 Template.ArticleFullText.onRendered(function() {
-	// $('.materialboxed').materialbox(); // popup image
+    // $('.materialboxed').materialbox(); // popup image
 });
 Template.ArticleFullText.onDestroyed(function () {
-	Session.set('article-text',null)
+    Session.set('article-text',null)
 });
 Template.ArticleSectionsList.onRendered(function() {
-	// console.log('..ArticleSectionsList');
-	var navTop = Meteor.general.navHeight();
-	$('.section-nav').sticky({topSpacing: navTop});
+    // console.log('..ArticleSectionsList');
+    var navTop = Meteor.general.navHeight();
+    $('.section-nav').sticky({topSpacing: navTop});
+});
+
+// Scrollspy
+// --------
+Template.scrollspyCard.onRendered(function() {
+    var sticky = $('.fixed-scroll-card');
+
+    if (sticky.length > 0) {
+        var stickyHeight = sticky.height();
+        var sidebarTop = parseInt(sticky.offset().top - 25) ;
+    }
+
+    // on scroll affix the sidebar
+    $(window).scroll(function () {
+        if (sticky.length > 0) {
+            var scrollTop = $(window).scrollTop();
+
+            if (sidebarTop < scrollTop) {
+                sticky.addClass('fixed-active');
+            }
+            else {
+                sticky.removeClass('fixed-active');
+            }
+        }
+    });
+
+    $(window).resize(function () {
+        if (sticky.length > 0) {
+            stickyHeight = sticky.height();
+        }
+    });
 });
