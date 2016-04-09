@@ -1,102 +1,96 @@
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-	<meta name="google-site-verification" content="63uPoFYXoHVMKO4Sp4sx5nmxlbDH0fBgMyk9rMiB68A" />
-	<title>Oncotarget</title>
-	<script src="https://use.typekit.net/dxi3iuf.js"></script>
-	<script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <meta name="google-site-verification" content="63uPoFYXoHVMKO4Sp4sx5nmxlbDH0fBgMyk9rMiB68A" />
+    <title>Oncotarget</title>
+    <script src="https://use.typekit.net/dxi3iuf.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
 </head>
 
 <template name="Visitor">
-	<!-- ========= Navigation ========= -->
-	<div class="navigation">
-		<div class="nav-sidebar">
-			<a href="/"><img src="/images/aging-logo-new.png" class="logo" alt="Aging"></a>
-		</div>
-		<div class="nav-content">
-			<ul>
-				<li class="has-icon"><a href="http://aging.msubmit.net/" target="_blank"><span class="icon icon-file"></span> Submit an Article</a></li>
-				<li>{{> loginButtons align="right"}}</li>
-			</ul>
-		</div>
-	</div>
+    <!-- ========= Navigation ========= -->
+    <div class="navigation">
+        <div class="nav-sidebar">
+            <a href="/"><img src="/images/aging-logo-new.png" class="logo" alt="Aging"></a>
+        </div>
+        <div class="nav-content">
+            <ul>
+                <li class="has-icon"><a href="http://aging.msubmit.net/" target="_blank"><span class="icon icon-file"></span> Submit an Article</a></li>
+                <li>{{> loginButtons align="right"}}</li>
+            </ul>
+        </div>
+    </div>
 
-	<!-- ========= Main Container ========= -->
-	<div class="main">
-		<!-- Sidebar -->
-		<div class="sidebar">
-			{{> SearchBox}}
-			{{>LeftNav}}
-			{{>ArticleSections}}
-		</div>
+    <!-- ========= Main Container ========= -->
+    <div class="main">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            {{> SearchBox}}
+            {{>LeftNav}}
+            {{>ArticleSections}}
+        </div>
 
-		<!-- Content -->
-		{{#if configLoaded}}
-			<div class="content">
-				{{> subNav}}
-				<div class="content-yield"> 
-					{{>yield}} 
-					{{> Footer}}
-				</div>
-			</div>
-		{{else}}
-			{{>LoadingConfig}}
-		{{/if}}
-	</div>
+        <!-- Content -->
+        {{#if configLoaded}}
+            <div class="content">
+                {{> subNav}}
+                <div class="content-yield">
+                    {{>yield}}
+                    {{> Footer}}
+                </div>
+            </div>
+        {{else}}
+            {{>LoadingConfig}}
+        {{/if}}
+    </div>
 </template>
 
 <template name="subNav">
-	<div class="sub-nav">
-		{{> breadcrumbs}}
+    <div class="sub-nav">
+        {{> breadcrumbs}}
 
-		<div class="issn">
-			<span class="meta">Online ISSN: {{issn}}</span>
-		</div>
-	</div>
+        <div class="issn">
+            <span class="meta">Online ISSN: {{issn}}</span>
+        </div>
+    </div>
 </template>
 
 <template name="breadcrumbs">
-	<div class="breadcrumbs">
-		<ul>
-			<li><a href="/">Home</a></li>
-			{{#each Breadcrumb}}
-				<li>
-					{{#if showLink}}
-              <a href="{{url}}">{{#with stripTitle title}} {{truncate this 60}} {{/with}}</a>
-          {{else}}
-              {{#with stripTitle title}} {{truncate this 60}} {{/with}}
-          {{/if}}
-        </li>
+    <div class="breadcrumbs">
+        <ul>
+            <li><a href="/">Home</a></li>
+            {{#each Breadcrumb}}
+                <li>{{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 60}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 60}} {{/with}} {{/if}}</li>
 			{{/each}}
-		</ul>
-	</div>
+        </ul>
+    </div>
 </template>
 
 <template name="SearchBox">
-	<div class="search-box">
-		<span class="icon icon-search"></span>
-		<input type="search" placeholder="Search the Journal">
-	</div>
+    <div class="search-box">
+        <span class="icon icon-search"></span>
+        <input type="search" placeholder="Search the Journal">
+    </div>
 </template>
 
 <template name="PageHeader">
-  <h1 class="page-header">{{header}}</h1>
+    <h1 class="page-header">{{header}}</h1>
 </template>
 
 <template name="Footer">
-	<div class="page-content">
-		<footer><span>Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</span></footer>
-	</div>
+    <div class="page-content">
+        <footer><span>Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</span></footer>
+    </div>
 </template>
 
 <template name="IP address">
-	<div class="ip-alert right-align">
-		<div class="container">
-			<p>You are viewing Aging from this IP address: {{clientIP}}</p>
-			{{#if isSubscribedIP}}
-			<p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
-			{{/if}}
-		</div>
-	</div>
+    <div class="ip-alert right-align">
+        <div class="container">
+            <p>You are viewing Aging from this IP address: {{clientIP}}</p>
+            {{#if isSubscribedIP}}
+            <p>You are subcribed at this institution: {{getInstitutionByIP.institution}}</p>
+            {{/if}}
+        </div>
+    </div>
 </template>
 

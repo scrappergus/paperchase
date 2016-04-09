@@ -1,5 +1,5 @@
 <template name="Home">
-		<div class="page-content">
+		<div class="page-content wide">
 			{{#if news}}
 				<h1>News</h1>
 				<ul class="collection">
@@ -17,33 +17,37 @@
 			{{/if}}
 		</div>
 
-		<div class="page-sidebar">
+		<div class="page-content wide">
 			{{>HomePageEditorList}}
 		</div>
 </template>
 
 <template name="HomePageEditorList">
-	<h3>Editorial Board</h3>
-	<h4>Editors-in-Chief</h4>
-	<ul class="home-page-editors-list">
-		{{#each eic}}
-		<li class="">
-			<p class="edboard-name"><strong>{{>PersonName}}</strong><br> {{{address}}}</p>
-			<p class="edboard-bio">{{{bio}}}</p>
-		</li>
-		{{/each}}
-	</ul>
+	<div class="section-half">
+		<h3>Editorial Board</h3>
+		<h4>Editors-in-Chief</h4>
+		<ul class="home-page-editors-list">
+			{{#each eic}}
+			<li class="">
+				<p class="edboard-name"><strong>{{>PersonName}}</strong><br> {{{address}}}</p>
+				<p class="edboard-bio">{{{bio}}}</p>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
 
-	<h4>Founding Editorial Board</h4>
-	<ul class="home-page-editors-list">
-		{{#each eb}}
-		<li class="">
-			<p class="edboard-name"><strong>{{>PersonName}}</strong><br>{{{address}}}</p>
-			<p class="edboard-bio">{{{bio}}}</p>
-		</li>
-		{{/each}}
-	</ul>
+	<div class="section-half">
+		<h4>Founding Editorial Board</h4>
+		<ul class="home-page-editors-list">
+			{{#each eb}}
+			<li class="">
+				<p class="edboard-name"><strong>{{>PersonName}}</strong><br>{{{address}}}</p>
+				<p class="edboard-bio">{{{bio}}}</p>
+			</li>
+			{{/each}}
+		</ul>
 
-	<a href="{{pathFor 'EdBoard'}}" class="blue-grey-text darken-3-text">See full editor's list</a>
+		<a href="{{pathFor 'EdBoard'}}" class="blue-grey-text darken-3-text">See full editor's list</a>
+	</div>
 	<br>
 </template>

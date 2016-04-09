@@ -399,6 +399,7 @@ footer {
     padding-left: 30px;
     font-size: 17px;
     border-bottom: 2px solid #213245;
+    color: #fff;
   }
 
   /* these have to be separate because css parser is broken for placeholder rules lol */
@@ -443,13 +444,19 @@ footer {
   }
 }
 
+/*================ Simple Grids | Page-Level Modules ================*/
+.section-half {
+  @include span(8);
+}
+
 /*================ Page Content | Page-Level Modules ================*/
 .page-content {
   @include push(1 of 16);
   @include span(10);
 
   &.wide {
-    @include span(14);
+    @include span(16);
+    padding-right: 30px; // todo: fix this hacky
   }
 }
 
@@ -522,8 +529,11 @@ footer {
 }
 
 .fixed-scroll-card {
+  position: relative;
+  top: 0; 
   &.fixed-active {
     position: fixed;
+    top: 25px;
   }
 }
 
