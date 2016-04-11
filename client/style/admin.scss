@@ -3,152 +3,152 @@
 @import 'type';
 
 /* Forms -----------------------------*/
-	.note-editor .note-toolbar{
-		background: $black-1;
-		overflow: hidden;
-	}
-	.note-editor .modal{
-		background-color: $black-0!important;
-		z-index: 5000!important;
-	}
-	.btn-toolbar{
-		z-index: 995!important; /* otherwise overlaps with modal */
-	}
-	fieldset.invalid{
-		border-color: $red;
-	}
+    .note-editor .note-toolbar{
+        background: $black-1;
+        overflow: hidden;
+    }
+    .note-editor .modal{
+        background-color: $black-0!important;
+        z-index: 5000!important;
+    }
+    .btn-toolbar{
+        z-index: 995!important; /* otherwise overlaps with modal */
+    }
+    fieldset.invalid{
+        border-color: $red;
+    }
 
-	.checkbox-red[type="checkbox"]:checked + label:before{
-		border-right: 2px solid $red;
-		border-bottom: 2px solid $red;
-	}
+    .checkbox-red[type="checkbox"]:checked + label:before{
+        border-right: 2px solid $red;
+        border-bottom: 2px solid $red;
+    }
 
 /* Navigation ------------------------*/
-	.admin-nav .brand-logo{
-		overflow: visible;
-	}
-	.admin-nav{
-		a{
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-	}
-	.admin-side-nav{
-		.logo{
-			margin-bottom: 20px;
-		}
-		.collapsible-header:not(.active){
-			color: $white;
-		}
-		li{
-			padding: 0;
-			&:hover{
-				a{
-					color: $blue-gray;
-				}
-			}
-		}
-		li:hover a{
-			color: $black-0;
-		}
-	}
+    .admin-nav .brand-logo{
+        overflow: visible;
+    }
+    .admin-nav{
+        a{
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    .admin-side-nav{
+        .logo{
+            margin-bottom: 20px;
+        }
+        .collapsible-header:not(.active){
+            color: $white;
+        }
+        li{
+            padding: 0;
+            &:hover{
+                a{
+                    color: $blue-gray;
+                }
+            }
+        }
+        li:hover a{
+            color: $black-0;
+        }
+    }
 
 /* Advance ------------------------*/
-	.advance-section{
-		background-color: $gray-0;
-		margin: $margin-lg 0;
-		padding: $pad-sm;
-		cursor: pointer;
-		.collapsible-body{
-			background-color: $gray-1;
-		}
-	}
-	.advance-section,.collapsible-header{
-		background-color: $gray-0;
-	}
+    .advance-section{
+        background-color: $gray-0;
+        margin: $margin-lg 0;
+        padding: $pad-sm;
+        cursor: pointer;
+        .collapsible-body{
+            background-color: $gray-1;
+        }
+    }
+    .advance-section,.collapsible-header{
+        background-color: $gray-0;
+    }
 
 /* Article ------------------------*/
-	.admin-figure{
-		height: 100px;
-		width: auto;
-	}
-	.note-editor{
-		border: 0px!important;
-		.btn-group{
-			.btn{
-				border-radius: 0px !important;
-				box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.16), 0 0px 0px 0 rgba(0, 0, 0, 0.12)!important;
-			}
-		}
-	}
-	#article-title{
-		.note-editable{
-			font-size: $font-lg; /*for article title*/
-		}
-	}
-	.add-btn{
-		text-transform: none!important;
-	}
+    .admin-figure{
+        height: 100px;
+        width: auto;
+    }
+    .note-editor{
+        border: 0px!important;
+        .btn-group{
+            .btn{
+                border-radius: 0px !important;
+                box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.16), 0 0px 0px 0 rgba(0, 0, 0, 0.12)!important;
+            }
+        }
+    }
+    #article-title{
+        .note-editable{
+            font-size: $font-lg; /*for article title*/
+        }
+    }
+    .add-btn{
+        text-transform: none!important;
+    }
 
-	#institution-form{
-		input,textarea{
-			margin: 0;
-		}
-	}
-	li.disabled{
-		@include opacity(0.2);
-	}
+    #institution-form{
+        input,textarea{
+            margin: 0;
+        }
+    }
+    li.disabled{
+        @include opacity(0.2);
+    }
 
 /* General ------------------------*/
-	.admin-container{
-		padding-left: 240px;
-		@media only screen and (max-width: 992px){
-			padding-left: 0px;
-		}
-	}
-	.admin-header{
-		margin: 0px;
-		/*color: $journal-primary-color;*/
-	}
-	.admin-sub-nav{
-		li{
-			padding: $pad-sm;
-			display: inline-block;
-		}
-	}
+    .admin-container{
+        padding-left: 240px;
+        @media only screen and (max-width: 992px){
+            padding-left: 0px;
+        }
+    }
+    .admin-header{
+        margin: 0px;
+        /*color: $journal-primary-color;*/
+    }
+    .admin-sub-nav{
+        li{
+            padding: $pad-sm;
+            display: inline-block;
+        }
+    }
 
 /* Misc ------------------------*/
-	.xml-upload{
-		padding: $pad-lg;
-		@include border-radius(5px);
-		.btn{
-			@include border-radius(5px);
-		}
-	}
+    .xml-upload{
+        padding: $pad-lg;
+        @include border-radius(5px);
+        .btn{
+            @include border-radius(5px);
+        }
+    }
 
 /* Sortable Lists ------------------*/
-	/* about, for authors, site control */
-	.about-sections-list, .sections-list, .side-nav-options, #volume-issues-list{
-		li{
-			padding: $pad-md;
-			margin: $margin-md 0;
-			background: $gray-0;
-			cursor: pointer;
-		}
-	}
-	#volume-issues-list{
-		display: block;
-		float: left;
-		width: 100%;
-	}
+    /* about, for authors, site control */
+    .about-sections-list, .sections-list, .side-nav-options, #volume-issues-list{
+        li{
+            padding: $pad-md;
+            margin: $margin-md 0;
+            background: $gray-0;
+            cursor: pointer;
+        }
+    }
+    #volume-issues-list{
+        display: block;
+        float: left;
+        width: 100%;
+    }
 
 /* DOI ------------------------*/
-	.article-date-conflict{
-		background: $red;
-		color: $white;
-	}
+    .article-date-conflict{
+        background: $red;
+        color: $white;
+    }
 
 /* Article audit ------------------------*/
-	.table-group-header{
-		background: $gray-0;
-	}
+    .table-group-header{
+        background: $gray-0;
+    }
