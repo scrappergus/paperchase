@@ -429,7 +429,7 @@ Template.AdminArticleForm.events({
         // VALIDATION and SAVE
         // -------
         // result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
-        console.log('articleUpdateObj',articleUpdateObj);
+        // console.log('articleUpdateObj',articleUpdateObj);
         Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
             if(error){
                 console.error('validateArticle',error);
