@@ -587,6 +587,8 @@ Meteor.methods({
 
 // Methods to compare XML with DB
 // -------------
+var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display'];
+
 Meteor.methods({
     compareObjectsXmlWithDb: function(xmlValue, dbValue){
         // console.log('..compareObjectsXmlWithDb');
@@ -699,8 +701,6 @@ Meteor.methods({
         // this is for the article form and after XML is uploaded
         // Note: There are things in dbArticle that are not in the XML. For example, if an article is advance or feature
         // Note: Merged data will be from the XML if there is a conflict
-
-        var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files'];
 
         var merged = {};
             merged['conflicts'] = [];
