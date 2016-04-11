@@ -360,7 +360,7 @@ Meteor.methods({
         return fut.wait();
     },
     pmcArticleToSchema: function(xml,articleJson){
-        // console.log('..articleToSchema');
+        console.log('..articleToSchema',articleJson);
         // Process JSON for meteor templating and mongo db
         // xml is a string. articleJson is parsed XML to JSON. but not in the schema we need.
         var journalMeta = articleJson[0]['front'][0]['journal-meta'][0];
