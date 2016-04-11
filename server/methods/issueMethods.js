@@ -29,6 +29,8 @@ Meteor.methods({
                     }
                     if(issuesObj[volumeIssuesId] && issuesObj[volumeIssuesId].cover){
                         issuesObj[volumeIssuesId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[volumeIssuesId].cover);
+                    }
+                    if(issuesObj[volumeIssuesId]){
                         volumesList[v].issues_data.push(issuesObj[volumeIssuesId]);
                     }
                 }
