@@ -428,12 +428,13 @@ Meteor.methods({
         // will check for all required fields in form
         // will return all invalid inputs
         var invalid = [];
+        var clear = '<div class="clearfix"></div>';
 
         // title
         if(articleData.title === ''){
             invalid.push({
                 'fieldset_id' : 'article-title',
-                'message' : 'Article title is required'
+                'message' : clear + 'Article title is required'
             });
         }
 
