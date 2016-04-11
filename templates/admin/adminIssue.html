@@ -12,8 +12,9 @@
                 <div class="card-content">
                     <span class="card-title">Volume {{volume}}, Issue {{issue}}</span>
                     {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
+                    <div class="clearfix"></div>
                     <a class="btn anchor" href="#issue-settings">Settings</a>
-                    <a class="btn anchor" href="#issue-Cover">Issue Cover</a>
+                    <a class="btn anchor" href="#issue-cover">Issue Cover</a>
                     <a class="btn anchor" href="#issue-contents">Issue Contents</a>
                 </div>
             </div>
@@ -22,7 +23,7 @@
 
     {{>AdminIssueForm}}
 
-    <div class="row" id="issue-Cover">
+    <div class="row" id="issue-cover">
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
