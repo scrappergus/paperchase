@@ -147,6 +147,28 @@
         </div>
     </div>
 
+
+    <div class="row"><div class="col s12">
+        <div class="card z-depth-0">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s12">
+                        <h3>Data Submissions</h3>
+                        {{#if submissions}}
+                        <ul>
+                        {{#each submissions}}
+                            <li>{{pubStatusAbbrev pub_status}}: {{formatDate created_date}}</li>
+                        {{/each}}
+                        </ul>
+                        {{else}}
+                        <h4>No Records Found</h4>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+
     {{/with}}
 </template>
 
