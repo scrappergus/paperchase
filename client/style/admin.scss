@@ -102,6 +102,7 @@
 /* General ------------------------*/
     main{
         height: 100%;
+        min-height: 100vh;
         &.admin{
             background-color: #eceff1;
         }
