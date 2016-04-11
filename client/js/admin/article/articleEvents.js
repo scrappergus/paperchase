@@ -324,6 +324,15 @@ Template.AdminArticleForm.events({
             articleUpdateObj.advance = false;
         }
 
+
+        // display
+        // -------
+        if($('#display-checkbox').prop('checked')){
+            articleUpdateObj.display = true;
+        }else{
+            articleUpdateObj.display = false;
+        }
+
         // abstract
         // -------
         articleAbstract = $('.article-abstract').code();
@@ -420,6 +429,7 @@ Template.AdminArticleForm.events({
         // VALIDATION and SAVE
         // -------
         // result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
+        console.log('articleUpdateObj',articleUpdateObj);
         Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
             if(error){
                 console.error('validateArticle',error);
