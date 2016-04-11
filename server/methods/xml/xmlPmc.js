@@ -151,6 +151,29 @@ Meteor.methods({
             }
         }
 
+        // CORRESPONDING AUTHOR
+        // -----------
+        articleProcessed.correspondence = []; //can have multiple corresp elements, for ex: pmid 26678252
+        if(article['author-notes'] && article['author-notes'][0].corresp){
+            for(var i=0 ; i < article['author-notes'][0].corresp.length ; i++){
+                var correspondence = {};
+                    correspondence.text = '';
+                for(var k in article['author-notes'][0].corresp[i]){
+                    if(k != 'email' && typeof article['author-notes'][0].corresp[i][k] == 'string' && article['author-notes'][0].corresp[i][k] != '; '){
+                        correspondence.text += article['author-notes'][0].corresp[i][k];
+                    }else if(k != 'email' && k != '$' && typeof article['author-notes'][0].corresp[i][k] == 'object'){
+                        correspondence.text += Meteor.xmlParse.traverseJson(article['author-notes'][0].corresp[i][k]);
+                    }else if(k == 'email'){
+                        correspondence.email = article['author-notes'][0].corresp[i][k][0];
+                    }
+                }
+                articleProcessed.correspondence.push(correspondence);
+            }
+        }
+
+        // AUTHOR NOTES
+        // -----------
+
         // ALL AFFILIATIONS
         // -----------
         articleProcessed.affiliations = [];
@@ -247,3 +270,17 @@ Meteor.methods({
         return fut.wait();
     }
 });
+
+Meteor.xmlParse = {
+    traverseJson: function(data){
+        // console.log('data',data);
+        // for when node value has style, but we do not want the style
+        var string = '';
+        for(var k in data){
+            if(typeof data[k] == 'string'){
+                string += data[k];
+            }
+        }
+        return string;
+    }
+}
