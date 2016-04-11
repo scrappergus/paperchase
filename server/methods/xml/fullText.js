@@ -1,3 +1,4 @@
+// methods used to create full text HTML from XML
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         // console.log('... getFilesForFullText: ' + mongoId);
