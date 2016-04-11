@@ -977,7 +977,7 @@ if (Meteor.isClient) {
             Session.set('issue',null);
             var pieces = Meteor.issue.urlPieces(this.params.vi);
 
-            Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, function(error,result){
+            Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, true, function(error,result){
                 if(error){
                     console.error('ERROR - getIssueAndFiles',error);
                 }

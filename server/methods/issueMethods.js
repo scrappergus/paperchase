@@ -115,12 +115,26 @@ Meteor.methods({
     findIssueByVolIssue: function(vol, iss){
         return issues.findOne({'volume' : vol, 'issue': iss});
     },
-    getIssueAndFiles: function(volume, issue){
+    getAllArticlesByIssueId: function(issueId){
+        var issueArticles = articles.find({'issue_id' : issueId},{sort : {page_start:1}}).fetch();
+        issueArticles = Meteor.organize.groupArticles(issueArticles);
+        return issueArticles;
+    },
+    getDisplayArticlesByIssueId: function(issueId){
+        var issueArticles = articles.find({'issue_id' : issueId, display: true},{sort : {page_start:1}}).fetch();
+        issueArticles = Meteor.organize.groupArticles(issueArticles);
+        return issueArticles;
+    },
+    getIssueAndFiles: function(volume, issue, admin){
         // console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
         var fut = new future();
         var journal,
             assetUrl,
             issueData;
+        var articlesToGet = 'getDisplayArticlesByIssueId';
+        if(admin){
+            articlesToGet = 'getAllArticlesByIssueId';
+        }
         journal = journalConfig.findOne({}).journal.short_name;
         assetUrl =  journalConfig.findOne().assets;
         issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
@@ -130,14 +144,21 @@ Meteor.methods({
                 issueData.coverPath = Meteor.issue.coverPath(assetUrl,issueData.cover);
             }
 
-            var issueArticles = Meteor.organize.getIssueArticlesByID(issueData._id);
-            for(var i=0 ; i< issueArticles.length ; i++){
-                if(issueArticles[i].files){
-                    issueArticles[i].files = Meteor.article.linkFiles(issueArticles[i].files,issueArticles[i]._id);
+            Meteor.call(articlesToGet,issueData._id, function(error,issueArticles){
+                if(error){
+                    console.error(error);
+                    fut.throw(error);
+                }else if(issueArticles){
+                    for(var i=0 ; i< issueArticles.length ; i++){
+                        if(issueArticles[i].files){
+                            issueArticles[i].files = Meteor.article.linkFiles(issueArticles[i].files,issueArticles[i]._id);
+                        }
+                    }
+                    issueData.articles = issueArticles;
+                    fut.return(issueData);
                 }
-            }
-            issueData.articles = issueArticles;
-            fut.return(issueData);
+            });
+
         }else{
             fut.return();
         }
@@ -179,7 +200,7 @@ Meteor.methods({
                 'message' : clear + 'Date is required'
             });
         }
-        console.log('invalid',invalid);
+        // console.log('invalid',invalid);
         return invalid;
     },
     renameCover: function(issueMongoId, originalFileName){
@@ -231,8 +252,8 @@ Meteor.methods({
             throw new Meteor.Error(err.userMessage);
         }
     },
-    validateIssue: function(mongoId, issueData){
-        console.log('validateIssue',mongoId, issueData);
+    validateIssue: function(issueMongoId, issueData){
+        // console.log('validateIssue',issueMongoId, issueData);
         var fut = new future();
         var invalid = [];
         var result = {};
@@ -247,24 +268,31 @@ Meteor.methods({
                 result.invalid_list = issueInvalid;
                 fut['return'](result);
             }else{
-                Meteor.call('findIssueByVolIssue',issueData.volume, issueData.issue, function(error,duplicateExists){
+                Meteor.call('findIssueByVolIssue',issueData.volume, issueData.issue, function(error,issueExists){
                     if(error){
-                        fut['throw'](error);
-                    }else if(duplicateExists){
-                        result = duplicateExists;
+                        fut.throw(error);
+                    }else if(issueExists && issueExists._id != issueMongoId){
+                        result = issueExists;
                         result.duplicate = true;
-                        fut['return'](duplicateExists);
+                        fut.return(issueExists);
                     }else{
                         // no duplicates and all valid. Now update/insert
-                        // Meteor.call('updateArticle',mongoId, articleData, function(error,articleSaved){
-                        //     if(error){
-                        //         fut['throw'](error);
-                        //     }else if(articleSaved){
-                        //         result.article_id = articleSaved;
-                        //         result.saved = true;
-                        //         fut['return'](result);
-                        //     }
-                        // });
+                        Meteor.call('updateIssue',issueMongoId, issueData, function(error,issueSaved){
+                            if(error){
+                                fut.throw(error);
+                            }else if(issueSaved){
+                                // hide or display issue articles based on issueData.display
+                                Meteor.call('updateArticleBy',{issue_id : issueMongoId}, {display : issueData.display}, function(error, articlesUpdated){
+                                    if(error){
+                                        fut.throw(error);
+                                    }else if(articlesUpdated){
+                                        result.issue_id = issueMongoId;
+                                        result.saved = true;
+                                        fut.return(result);
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }

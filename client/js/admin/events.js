@@ -325,7 +325,8 @@ Template.AdminIssueForm.events({
             volume: null,
             issue: null,
             pub_date: null,
-            date_settings: {}
+            date_settings: {},
+            display: false
         };
 
         // Date
@@ -351,18 +352,24 @@ Template.AdminIssueForm.events({
             issueData.issue = $('#issue-issue').val();
         }
 
+        // Display Issue
+        if($('#display-issue').prop('checked')){
+            issueData.display = true;
+        }
+
         Meteor.call('validateIssue', mongoId, issueData, function(error, result){
             if(error){
                 console.error('validateIssue',error);
             }else if(result && result.duplicate){
-                Meteor.formActions.errorMessage('Duplicate Issue Found: ' + '<a href="/admin/issue/v' + result.volume + 'i' + result.issue + '">Volume' + result.volume + ', Issue ' + result.issue + '</a>');
+                Meteor.formActions.errorMessage('Duplicate Issue Found: ' + '<a href="/admin/issue/v' + result.volume + 'i' + result.issue + '">Volume ' + result.volume + ', Issue ' + result.issue + '</a>');
             }else if(result && result.invalid_list){
                 Meteor.formActions.invalid(result.invalid_list);
             }else if(result && result.saved){
                 if(!mongoId){
                     mongoId = result.article_id;
                 }
-                Router.go('AdminIssue',{_id : mongoId});
+                Meteor.formActions.successMessage('Issue Updated');
+                // Router.go('AdminIssue',{volume : issueData.volume, issue: issueData.issue});
             }
         });
     }

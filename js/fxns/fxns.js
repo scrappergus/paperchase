@@ -15,12 +15,6 @@ Meteor.organize = {
         }
         return diff;
     },
-    getIssueArticlesByID: function(id){
-        // console.log('getIssueArticlesByID');
-        var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();
-        issueArticles = Meteor.organize.groupArticles(issueArticles);
-        return issueArticles;
-    },
     groupArticles: function(articles) {
         var grouped = [];
         for(var i = 0 ; i < articles.length ; i++){
