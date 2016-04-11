@@ -1,45 +1,45 @@
 <template name="s3Upload">
-	<div class="row"><div class="col s12 center-align">
-		{{>FileUploader}}
-	</div></div>
-	<div class="row"><div class="col s12 center-align">
-		{{#each files}}
-		<div class="row">
-			<div><b>{{file.original_name}}</b></div>
-			<div>{{percent_uploaded}}%</div>
-		</div>
-		{{/each}}
-	</div></div>
-	<div class="row"><div class="col s12 center-align">
-		<button class="btn btn-primary upload" data-id="{{_id}}"><i class="material-icons">&#xE2C6;</i> Upload</button>
-	</div></div>
+    <div class="row"><div class="col s12 center-align">
+        {{>FileUploader}}
+    </div></div>
+    <div class="row"><div class="col s12 center-align">
+        {{#each files}}
+        <div class="row">
+            <div><b>{{file.original_name}}</b></div>
+            <div>{{percent_uploaded}}%</div>
+        </div>
+        {{/each}}
+    </div></div>
+    <div class="row"><div class="col s12 center-align">
+        <button class="btn btn-primary upload" data-id="{{_id}}"><i class="material-icons">&#xE2C6;</i> Upload</button>
+    </div></div>
 </template>
 
 <template name="s3FigureUpload">
-	<div class="row"><div class="col s12 center-align">
-		{{>FileUploader}}
-	</div></div>
-	<div class="row"><div class="col s12 center-align">
-		{{#each files}}
-		<div class="row">
-			<div><b>{{file.original_name}}</b></div>
-			<div>{{percent_uploaded}}%</div>
-		</div>
-		{{/each}}
-	</div></div>
-	<div class="row"><div class="col s12 center-align">
-		<button class="btn btn-primary upload" data-id="{{figId}}"><i class="material-icons">&#xE2C6;</i> Upload &amp; Save</button>
-	</div></div>
+    <div class="row"><div class="col s12 center-align">
+        {{>FileUploader}}
+    </div></div>
+    <div class="row"><div class="col s12 center-align">
+        {{#each files}}
+        <div class="row">
+            <div><b>{{file.original_name}}</b></div>
+            <div>{{percent_uploaded}}%</div>
+        </div>
+        {{/each}}
+    </div></div>
+    <div class="row"><div class="col s12 center-align">
+        <button class="btn btn-primary upload" data-id="{{figId}}"><i class="material-icons">&#xE2C6;</i> Upload &amp; Save</button>
+    </div></div>
 </template>
 
 <template name="FileUploader">
-	<div class="file-field input-field">
-		<div class="btn">
-			<span>File</span>
-			<input class="file_bag" type="file">
-		</div>
-		<div class="file-path-wrapper">
-			<input class="file-path" type="text">
-		</div>
-	</div>
+    <div class="file-field input-field">
+        <div class="btn">
+            <span>File</span>
+            <input class="file_bag" type="file">
+        </div>
+        <div class="file-path-wrapper">
+            <input class="file-path" type="text">
+        </div>
+    </div>
 </template>
