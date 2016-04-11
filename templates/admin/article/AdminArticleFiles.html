@@ -1,286 +1,286 @@
 <template name="AdminArticleFiles">
-	{{>AdminHeader header="Article PDF and XML"}}
-	{{>StatusModal}}
-	{{#with article}}
-	{{>AdminArticleHeader}}
+    {{>AdminHeader header="Article PDF and XML"}}
+    {{>StatusModal}}
+    {{#with article}}
+    {{>AdminArticleHeader}}
 
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<form id="files-form">
-						<span class="card-title">Files</span>
-						<div class="row">
-							<div class="col s12 m6">
-								<div class="card z-depth-0 blue-grey lighten-5">
-									<div class="card-content">
-										<div class="card-title">XML</div>
-										{{#with files}}
-										{{#with xml}}
-										{{#if url}}
-											<div class="row">
-												<div class="col s12 m6">
-													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
-												</div>
-												<div class="col s12 m6">
-													<input type="checkbox" id="display-xml" checked="{{checked display}}"/>
-													<label for="display-xml">Display XML</label>
-												</div>
-											</div>
-										{{else}}
-										<h5>No XML</h5>
-										{{/if}}
-										{{/with}}
-										{{else}}
-										<h5>No XML</h5>
-										{{/with}}
-									</div>
-								</div>
-							</div>
-							<div class="col s12 m6">
-								<div class="card z-depth-0 blue-grey lighten-5">
-									<div class="card-content">
-										<div class="card-title">PDF</div>
-										{{#with files}}
-										{{#with pdf}}
-										{{#if url}}
-											<div class="row">
-												<div class="col s12 m6">
-													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
-												</div>
-												<div class="col s12 m6">
-													<input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
-													<label for="display-pdf">Display PDF</label>
-												</div>
-											</div>
-										{{else}}
-										<h5>No PDF</h5>
-										{{/if}}
-										{{/with}}
-										{{else}}
-										<h5>No PDF</h5>
-										{{/with}}
-									</div>
-								</div>
-							</div>
-						</div>
-						{{#with files}}
-						{{#if showFilesButton xml pdf}}
-						<div class="row">
-							<div class="col s12 center-align">
-							{{>SaveBtn what="PDF and XML Settings"}}
-							</div>
-						</div>
-						{{/if}}
-						{{/with}}
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	{{/with}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-4 z-depth-0">
+                <div class="card-content">
+                    <form id="files-form">
+                        <span class="card-title">Files</span>
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <div class="card z-depth-0 blue-grey lighten-5">
+                                    <div class="card-content">
+                                        <div class="card-title">XML</div>
+                                        {{#with files}}
+                                        {{#with xml}}
+                                        {{#if url}}
+                                            <div class="row">
+                                                <div class="col s12 m6">
+                                                    <a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
+                                                </div>
+                                                <div class="col s12 m6">
+                                                    <input type="checkbox" id="display-xml" checked="{{checked display}}"/>
+                                                    <label for="display-xml">Display XML</label>
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                        <h5>No XML</h5>
+                                        {{/if}}
+                                        {{/with}}
+                                        {{else}}
+                                        <h5>No XML</h5>
+                                        {{/with}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s12 m6">
+                                <div class="card z-depth-0 blue-grey lighten-5">
+                                    <div class="card-content">
+                                        <div class="card-title">PDF</div>
+                                        {{#with files}}
+                                        {{#with pdf}}
+                                        {{#if url}}
+                                            <div class="row">
+                                                <div class="col s12 m6">
+                                                    <a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
+                                                </div>
+                                                <div class="col s12 m6">
+                                                    <input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
+                                                    <label for="display-pdf">Display PDF</label>
+                                                </div>
+                                            </div>
+                                        {{else}}
+                                        <h5>No PDF</h5>
+                                        {{/if}}
+                                        {{/with}}
+                                        {{else}}
+                                        <h5>No PDF</h5>
+                                        {{/with}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#with files}}
+                        {{#if showFilesButton xml pdf}}
+                        <div class="row">
+                            <div class="col s12 center-align">
+                            {{>SaveBtn what="PDF and XML Settings"}}
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/with}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
 </template>
 <template name="AdminArticleFilesUploader">
-	{{>AdminHeader header="Article PDF and XML"}}
-	{{>StatusModal}}
-	{{#with article}}
-	{{>AdminArticleHeader}}
+    {{>AdminHeader header="Article PDF and XML"}}
+    {{>StatusModal}}
+    {{#with article}}
+    {{>AdminArticleHeader}}
 
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<div class="row">
-						<div class="col s12 offset-m4 m4">
-							<div class="card z-depth-0 blue-grey lighten-5">
-								<div class="card-content">
-									<div class="card-title">XML &amp; PDF Uploader</div>
-									{{>s3Upload}}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	{{/with}}
-	<div id="xml-verify"></div>
-	{{#if verify}}
-	{{>AdminArticleXmlVerify}}
-	{{/if}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-4 z-depth-0">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 offset-m4 m4">
+                            <div class="card z-depth-0 blue-grey lighten-5">
+                                <div class="card-content">
+                                    <div class="card-title">XML &amp; PDF Uploader</div>
+                                    {{>s3Upload}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
+    <div id="xml-verify"></div>
+    {{#if verify}}
+    {{>AdminArticleXmlVerify}}
+    {{/if}}
 </template>
 <template name="AdminArticleXmlVerify">
-	{{#if article.aop}}
-	<div class="row">
-		<div class="col s12">
-			<h4>Verify AOP XML information below before saving to the database.</h4>
-			<p>AOP files are not stored, they are only used to update the database.</p>
-		</div>
-	</div>
-	{{else}}
-	<div class="row">
-		<div class="col s12">
-			<h4>Please verify information from the XML before uploading.</h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12">
-			<button id="xml-verified" class="btn btn-primary upload"><i class="material-icons">&#xE2C6;</i> I have verified the XML and it is ready to upload {{file.name}}</button>
-		</div>
-	</div>
-	{{/if}}
+    {{#if article.aop}}
+    <div class="row">
+        <div class="col s12">
+            <h4>Verify AOP XML information below before saving to the database.</h4>
+            <p>AOP files are not stored, they are only used to update the database.</p>
+        </div>
+    </div>
+    {{else}}
+    <div class="row">
+        <div class="col s12">
+            <h4>Please verify information from the XML before uploading.</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <button id="xml-verified" class="btn btn-primary upload"><i class="material-icons">&#xE2C6;</i> I have verified the XML and it is ready to upload {{file.name}}</button>
+        </div>
+    </div>
+    {{/if}}
 
-	{{>AdminArticleForm}}
+    {{>AdminArticleForm}}
 </template>
 
 <template name="AdminArticleFigures">
-	{{>AdminHeader header="Article Figures"}}
-	{{>StatusModal}}
-	{{#with article}}
-	{{>AdminArticleHeader}}
-	{{/with}}
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<span class="card-title">Figure Counts</span>
-					{{#with article}}
-					<div class="row">
-						<div class="col s12">
-						{{#if files.figures}}
-						{{countItems files.figures}}
-						{{else}}
-						0
-						{{/if}}
-						&nbsp;Figures in Database
-						</div>
-					</div>
-					{{/with}}
-					{{#with xmlFigures}}
-					<div class="row">
-						<div class="col s12">
-						{{#if xmlFigures}}
-						{{countItems xmlFigures}}
-						{{else}}
-						0
-						{{/if}}
-						&nbsp;Figures in XML
-						</div>
-					</div>
-					{{/with}}
-				</div>
-			</div>
-		</div>
-	</div>
-	{{#with article}}
-	{{#with files}}
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<span class="card-title">Figure Uploader</span>
-					<div class="row" id="article-figure-request">
-						<div class="col s12">
-							<button class="btn btn-add btn-floating article-figure-add"><i class="material-icons">&#xE147;</i></button>
-						</div>
-					</div>
-					<div class="row hide" id="article-figure-uploader">
-						{{>AdminArticleFigureUploader uploadType='New' id='new'}}
-					</div>
-					{{#if figures}}
-					{{#each figures}}
-					{{#if editing}}
-					<div class="row">
-						{{>AdminArticleFigureUploader uploadType='Edit' id=id}}
-					</div>
-					{{else}}
-					<div class="row">
-						<div class="col s2 m4 right-align">
-							<h4>Fig. {{id}}</h4>
-						</div>
-						<div class="col s8 m4">
-							<img src="{{url}}" class="materialboxed admin-figure" alt="{{id}}">
-						</div>
-						<div class="col s2 m4">
-							<button class="btn btn-edit btn-floating article-figure-edit" data-id="{{id}}"><i class="material-icons">&#xE150;</i></button>
-						</div>
-					</div>
-					{{/if}}
-					{{/each}}
-					{{else}}
-					<h4>No Figures</h4>
-					{{/if}}
-				</div>
-			</div>
-		</div>
-	</div>
-	{{/with}}
-	{{/with}}
-	{{#if xmlFigures}}
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<span class="card-title">XML Figures</span>
-					<ul class="collapsible z-depth-0" data-collapsible="accordion">
-						<li>
-							<div class="collapsible-header">
-								<div class="row">
-									<div class="col s2"><b>ID</b></div>
-									<div class="col s2"><b>Label</b></div>
-									<div class="col s8"><b>Title</b></div>
-								</div>
-							</div>
-						</li>
-						{{#each xmlFigures}}
-						<li>
-							<div class="collapsible-header">
-								<div class="row">
-									<div class="col s2">{{id}}</div>
-									<div class="col s2">{{label}}</div>
-									<div class="col s8">{{title}}</div>
-								</div>
-							</div>
-							<div class="collapsible-body"><p>{{{caption}}}</p></div>
-						</li>
-						{{/each}}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	{{/if}}
+    {{>AdminHeader header="Article Figures"}}
+    {{>StatusModal}}
+    {{#with article}}
+    {{>AdminArticleHeader}}
+    {{/with}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-4 z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Figure Counts</span>
+                    {{#with article}}
+                    <div class="row">
+                        <div class="col s12">
+                        {{#if files.figures}}
+                        {{countItems files.figures}}
+                        {{else}}
+                        0
+                        {{/if}}
+                        &nbsp;Figures in Database
+                        </div>
+                    </div>
+                    {{/with}}
+                    {{#with xmlFigures}}
+                    <div class="row">
+                        <div class="col s12">
+                        {{#if xmlFigures}}
+                        {{countItems xmlFigures}}
+                        {{else}}
+                        0
+                        {{/if}}
+                        &nbsp;Figures in XML
+                        </div>
+                    </div>
+                    {{/with}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{#with article}}
+    {{#with files}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-4 z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Figure Uploader</span>
+                    <div class="row" id="article-figure-request">
+                        <div class="col s12">
+                            <button class="btn btn-add btn-floating article-figure-add"><i class="material-icons">&#xE147;</i></button>
+                        </div>
+                    </div>
+                    <div class="row hide" id="article-figure-uploader">
+                        {{>AdminArticleFigureUploader uploadType='New' id='new'}}
+                    </div>
+                    {{#if figures}}
+                    {{#each figures}}
+                    {{#if editing}}
+                    <div class="row">
+                        {{>AdminArticleFigureUploader uploadType='Edit' id=id}}
+                    </div>
+                    {{else}}
+                    <div class="row">
+                        <div class="col s2 m4 right-align">
+                            <h4>Fig. {{id}}</h4>
+                        </div>
+                        <div class="col s8 m4">
+                            <img src="{{url}}" class="materialboxed admin-figure" alt="{{id}}">
+                        </div>
+                        <div class="col s2 m4">
+                            <button class="btn btn-edit btn-floating article-figure-edit" data-id="{{id}}"><i class="material-icons">&#xE150;</i></button>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/each}}
+                    {{else}}
+                    <h4>No Figures</h4>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
+    {{/with}}
+    {{#if xmlFigures}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-4 z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">XML Figures</span>
+                    <ul class="collapsible z-depth-0" data-collapsible="accordion">
+                        <li>
+                            <div class="collapsible-header">
+                                <div class="row">
+                                    <div class="col s2"><b>ID</b></div>
+                                    <div class="col s2"><b>Label</b></div>
+                                    <div class="col s8"><b>Title</b></div>
+                                </div>
+                            </div>
+                        </li>
+                        {{#each xmlFigures}}
+                        <li>
+                            <div class="collapsible-header">
+                                <div class="row">
+                                    <div class="col s2">{{id}}</div>
+                                    <div class="col s2">{{label}}</div>
+                                    <div class="col s8">{{title}}</div>
+                                </div>
+                            </div>
+                            <div class="collapsible-body"><p>{{{caption}}}</p></div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
 </template>
 
 <template name="AdminArticleFigureUploader">
-	<div class="col s12">
-		<div class="card z-depth-0 blue-grey lighten-5">
-			<div class="card-content">
-				<span class="card-title">{{uploadType}} Figure</span>
-				<div class="row">
-					<div class="col s2 m4 right-align">
-						<input type="text" value="{{id}}" id="fig-input-{{id}}" class="right-align" />
-						<label for="fig-input-{{id}}">Figure ID</label>
-					</div>
-					<div class="col s8 m4">
-						{{>s3FigureUpload figId=id}}
-					</div>
-					<div class="col s2 m2">
-						<button class="btn btn-cancel btn-floating article-figure-cancel" data-id="{{id}}"><i class="material-icons">&#xE15D;</i></button>
-					</div>
-					{{#if equals uploadType 'Edit'}}
-					<div class="col s2 m2">
-						<button class="btn btn-delete btn-floating article-figure-delete right" data-id="{{id}}"><i class="material-icons">&#xE872;</i></button>
-					</div>
-					{{/if}}
-				</div>
-				<div class="row">
-					<div class="col s12">
-						<p>Figure id, label, title, and caption are taken from the XML. This uploader is solely to upload new figure files. ID is required only for file naming purposes. ID must match the figure ID in the XML.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="col s12">
+        <div class="card z-depth-0 blue-grey lighten-5">
+            <div class="card-content">
+                <span class="card-title">{{uploadType}} Figure</span>
+                <div class="row">
+                    <div class="col s2 m4 right-align">
+                        <input type="text" value="{{id}}" id="fig-input-{{id}}" class="right-align" />
+                        <label for="fig-input-{{id}}">Figure ID</label>
+                    </div>
+                    <div class="col s8 m4">
+                        {{>s3FigureUpload figId=id}}
+                    </div>
+                    <div class="col s2 m2">
+                        <button class="btn btn-cancel btn-floating article-figure-cancel" data-id="{{id}}"><i class="material-icons">&#xE15D;</i></button>
+                    </div>
+                    {{#if equals uploadType 'Edit'}}
+                    <div class="col s2 m2">
+                        <button class="btn btn-delete btn-floating article-figure-delete right" data-id="{{id}}"><i class="material-icons">&#xE872;</i></button>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <p>Figure id, label, title, and caption are taken from the XML. This uploader is solely to upload new figure files. ID is required only for file naming purposes. ID must match the figure ID in the XML.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

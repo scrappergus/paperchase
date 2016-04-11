@@ -1,70 +1,70 @@
 <template name="AdminAbout">
-	{{>AdminHeader header="About"}}
-	<div class="row">
-		<div class="col s12">
-			<button id="add-about-section" class="waves-effect waves-light btn btn-add right"><i class="material-icons">&#xE147;</i> About Section</button>
-		</div>
-	</div>
-	{{>SuccessModal what='About Order'}}
-	{{#if sections}}
-	<div class="row">
-		<div class="col s12">
-			<h2>About Order</h2>
-			<ol class="roman-list sections-list">
-			{{#each sections}}
-				<li id="section-title-{{_id}}">{{{title}}}</li>
-			{{/each}}
-			</ol>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12">
-			<button id="save-about-section-order" class="waves-effect waves-light btn btn-update right">Save About Order</button>
-		</div>
-	</div>
-	<div class="divider"></div>
+    {{>AdminHeader header="About"}}
+    <div class="row">
+        <div class="col s12">
+            <button id="add-about-section" class="waves-effect waves-light btn btn-add right"><i class="material-icons">&#xE147;</i> About Section</button>
+        </div>
+    </div>
+    {{>SuccessModal what='About Order'}}
+    {{#if sections}}
+    <div class="row">
+        <div class="col s12">
+            <h2>About Order</h2>
+            <ol class="roman-list sections-list">
+            {{#each sections}}
+                <li id="section-title-{{_id}}">{{{title}}}</li>
+            {{/each}}
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <button id="save-about-section-order" class="waves-effect waves-light btn btn-update right">Save About Order</button>
+        </div>
+    </div>
+    <div class="divider"></div>
 
-	<h2>About Sections</h2>
-	<ol class="roman-list">
-		{{#each sections}}
-		<li>
-		{{#if editingAboutSection _id}}
-		<div class="row">
-			<div class="col s12 card grey lighten-5">
-				<div id="add-section-container">
-					<h2>Edit About Section</h2>
-					{{>AdminAboutForm}}
-				</div>
-			</div>
-		</div>
-		{{else}}
-		<h3 id="section-{{@index}}">
-			{{{title}}}
-			<button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
-		</h3>
-		{{{content}}}
-		{{/if}}
-		</li>
-		{{/each}}
-	</ol>
-	{{/if}}
+    <h2>About Sections</h2>
+    <ol class="roman-list">
+        {{#each sections}}
+        <li>
+        {{#if editingAboutSection _id}}
+        <div class="row">
+            <div class="col s12 card grey lighten-5">
+                <div id="add-section-container">
+                    <h2>Edit About Section</h2>
+                    {{>AdminAboutForm}}
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <h3 id="section-{{@index}}">
+            {{{title}}}
+            <button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
+        </h3>
+        {{{content}}}
+        {{/if}}
+        </li>
+        {{/each}}
+    </ol>
+    {{/if}}
 
-	<div id="add-about-section-container">
-	{{#if showAboutForm}}
-	<div class="divider"></div>
-	<div class="row">
-		<div class="col s12 card grey lighten-5">
-			<h2>New About Section</h2>
-			{{>AdminAboutForm}}
-		</div>
-	</div>
-	{{/if}}
-	</div>
+    <div id="add-about-section-container">
+    {{#if showAboutForm}}
+    <div class="divider"></div>
+    <div class="row">
+        <div class="col s12 card grey lighten-5">
+            <h2>New About Section</h2>
+            {{>AdminAboutForm}}
+        </div>
+    </div>
+    {{/if}}
+    </div>
 </template>
 
 <template name="AdminAboutForm">
-	{{#with section}}
-	{{>SuccessModal what='About Section'}}
-	{{>SectionForm}}
-	{{/with}}
+    {{#with section}}
+    {{>SuccessModal what='About Section'}}
+    {{>SectionForm}}
+    {{/with}}
 </template>

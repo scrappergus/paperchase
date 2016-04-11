@@ -1,162 +1,162 @@
 <template name="AdminArticlesDashboard">
-	{{>AdminHeader header="Article Dashboard"}}
-	{{>StatusModal}}
-	<div class="row">
-		<div class="col s4">
-			<ul class="collection card">
-				<li class="collection-item"><a href="{{pathFor 'AdminArticleAdd'}}">Add Article</a></li>
-				<li class="collection-item"><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
-				<li class="collection-item"><a href="{{pathFor 'AdminAdvanceArticles'}}">Advance Articles</a></li>
-			</ul>
-			{{#with journal}}
-			{{#if equals short_name 'oncotarget'}}
-			<br><br>
-			<button id="ojs-batch-update" class="blue-grey darken-1 waves-effect waves-light btn">Batch Update Via OJS</button>
-			{{/if}}
-			{{/with}}
-		</div>
-		<div class="col s4">
-			<div class="card">
-				<div class="card-content">
-					<h4>DOI</h4>
-					<h5>{{MissingDoiCount}} Papers Without DOI Saved</h5>
-					<button id="doi-register-check" class="btn">DOI Registered Check</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m4">
-			<div class="card">
-				<div class="card-content">
-					<h5>Feature Articles</h5>
-					<div class="row">
-						<div class="col s12">
-							<ul class="collection">
-							{{#each feature}}
-								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
-							{{/each}}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col s4">
-			<div class="card">
-				<div class="card-content">
-					<h5>Advance Articles</h5>
-					<div class="row">
-						<div class="col s12">
-							<ul class="collection">
-							{{#each advance}}
-								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
-							{{/each}}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    {{>AdminHeader header="Article Dashboard"}}
+    {{>StatusModal}}
+    <div class="row">
+        <div class="col s4">
+            <ul class="collection card">
+                <li class="collection-item"><a href="{{pathFor 'AdminArticleAdd'}}">Add Article</a></li>
+                <li class="collection-item"><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
+                <li class="collection-item"><a href="{{pathFor 'AdminAdvanceArticles'}}">Advance Articles</a></li>
+            </ul>
+            {{#with journal}}
+            {{#if equals short_name 'oncotarget'}}
+            <br><br>
+            <button id="ojs-batch-update" class="blue-grey darken-1 waves-effect waves-light btn">Batch Update Via OJS</button>
+            {{/if}}
+            {{/with}}
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content">
+                    <h4>DOI</h4>
+                    <h5>{{MissingDoiCount}} Papers Without DOI Saved</h5>
+                    <button id="doi-register-check" class="btn">DOI Registered Check</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content">
+                    <h5>Feature Articles</h5>
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="collection">
+                            {{#each feature}}
+                                <li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content">
+                    <h5>Advance Articles</h5>
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="collection">
+                            {{#each advance}}
+                                <li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <template name="AdminArticlesList">
-	{{>AdminHeader header="Articles"}}
-	<div class="row">
-		<div class="col s12">
-			{{> reactiveTable collection=articles settings=settings}}
-		</div>
-	</div>
+    {{>AdminHeader header="Articles"}}
+    <div class="row">
+        <div class="col s12">
+            {{> reactiveTable collection=articles settings=settings}}
+        </div>
+    </div>
 </template>
 
 <template name="AdminAop">
-	{{>AdminHeader header="AOP"}}
-	<div class="row">
-		<div class="col s12">
-			{{> reactiveTable collection=articles settings=settings}}
-		</div>
-	</div>
+    {{>AdminHeader header="AOP"}}
+    <div class="row">
+        <div class="col s12">
+            {{> reactiveTable collection=articles settings=settings}}
+        </div>
+    </div>
 </template>
 
 <!-- individual article below, multiple articles above -->
 
 <template name="AdminArticleButtons">
-	<div class="row">
-		<div class="col s12">
-			<a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
-			<a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
-			<a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">PDF &amp; XML Settings</a>
-			<a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">PDF &amp; XML Uploader</a>
-			<a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col s12">
+            <a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
+            <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
+            <a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">PDF &amp; XML Settings</a>
+            <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">PDF &amp; XML Uploader</a>
+            <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
+        </div>
+    </div>
 </template>
 
 <template name="AdminArticleOverview">
-	{{>AdminHeader header="Article Overview"}}
-	{{>StatusModal}}
-	{{#with article}}
+    {{>AdminHeader header="Article Overview"}}
+    {{>StatusModal}}
+    {{#with article}}
 
-	{{>AdminArticleHeader}}
+    {{>AdminArticleHeader}}
 
-	{{#if countKeys dates}}
-	<div class="row">
-		<div class="col s12">
-			<h5>Dates:</h5>
-			{{#each arrayify dates}}
-				{{#if equals name 'collection'}}
-					<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
-					{{else}}
-					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-				{{/if}}
-			{{/each}}
-		</div>
-	</div>
-	{{/if}}
+    {{#if countKeys dates}}
+    <div class="row">
+        <div class="col s12">
+            <h5>Dates:</h5>
+            {{#each arrayify dates}}
+                {{#if equals name 'collection'}}
+                    <h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+                    {{else}}
+                    <h6><label>{{name}}:</label> {{articleDate value}}</h6>
+                {{/if}}
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
 
-	{{#if countKeys history}}
-	<div class="row">
-		<div class="col s12">
-			<h5>History:</h5>
-			{{#each arrayify history}}
-			<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-			{{/each}}
-		</div>
-	</div>
-	{{/if}}
+    {{#if countKeys history}}
+    <div class="row">
+        <div class="col s12">
+            <h5>History:</h5>
+            {{#each arrayify history}}
+            <h6><label>{{name}}:</label> {{articleDate value}}</h6>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
 
-	{{#if keywords}}
-	<div class="row">
-		<div class="col s12">
-			<h5>Keywords:</h5>
-			<ul>
-				{{#each keywords}}
-				<li><h6>{{{.}}}</h6></li>
-				{{/each}}
-			</ul>
-		</div>
-	</div>
-	{{/if}}
-	{{/with}}
+    {{#if keywords}}
+    <div class="row">
+        <div class="col s12">
+            <h5>Keywords:</h5>
+            <ul>
+                {{#each keywords}}
+                <li><h6>{{{.}}}</h6></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    {{/if}}
+    {{/with}}
 </template>
 
 <template name="AdminArticleHeader">
-	{{>AdminArticleButtons}}
-	{{>ArticleHeaderTitle}}
-	<input type="hidden" id="article-mongo-id" value="{{_id}}"/>
-	{{#if countKeys ids}}
-	<div class="row">
-		<div class="col s12">
-			<h5>IDs:</h5>
-			{{#each arrayify ids}}
-				{{#if equals name 'doi'}}
-				<div class="col s4"><h6><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></h6></div>
-				{{else}}
-				<div class="col s4"><h6><label>{{name}}:</label> {{value}}</h6></div>
-				{{/if}}
-			{{/each}}
-		</div>
-	</div>
-	{{/if}}
+    {{>AdminArticleButtons}}
+    {{>ArticleHeaderTitle}}
+    <input type="hidden" id="article-mongo-id" value="{{_id}}"/>
+    {{#if countKeys ids}}
+    <div class="row">
+        <div class="col s12">
+            <h5>IDs:</h5>
+            {{#each arrayify ids}}
+                {{#if equals name 'doi'}}
+                <div class="col s4"><h6><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></h6></div>
+                {{else}}
+                <div class="col s4"><h6><label>{{name}}:</label> {{value}}</h6></div>
+                {{/if}}
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
 </template>
