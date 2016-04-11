@@ -64,7 +64,7 @@
                             <h4>Fig. {{id}}</h4>
                         </div>
                         <div class="col s8 m4">
-                            <img src="{{url}}" class="materialboxed admin-figure" alt="{{id}}">
+                            <img src="{{url}}" class="materialboxed admin-figure" alt="{{id}}" id="figure-{{id}}">
                         </div>
                         <div class="col s2 m4">
                             <button class="btn btn-edit btn-floating article-figure-edit" data-id="{{id}}"><i class="material-icons">&#xE150;</i></button>
@@ -79,6 +79,7 @@
             </div>
         </div>
     </div>
+
     {{/with}}
     {{/with}}
     {{>AdminArticleFiguresXml}}
@@ -92,7 +93,7 @@
             <div class="card blue-grey lighten-4 z-depth-0">
                 <div class="card-content">
                     <span class="card-title">XML Figures</span>
-                    <ul class="collapsible z-depth-0" data-collapsible="accordion">
+                    <ul class="figures-xml z-depth-0" data-collapsible="accordion">
                         <li>
                             <div class="collapsible-header">
                                 <div class="row">

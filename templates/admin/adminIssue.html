@@ -8,18 +8,36 @@
     {{#with issueData}}
     <div class="row">
         <div class="col s12">
-            <h3>Volume {{volume}}, Issue {{issue}}</h3>
-            {{#if pub_date}}<h5>{{formatDate pub_date}}</h5>{{/if}}
+            <div class="card blue-grey lighten-4 z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Volume {{volume}}, Issue {{issue}}</span>
+                    {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
+                    <a class="btn anchor" href="#issue-settings">Settings</a>
+                    <a class="btn anchor" href="#issue-Cover">Issue Cover</a>
+                    <a class="btn anchor" href="#issue-contents">Issue Contents</a>
+                </div>
+            </div>
         </div>
     </div>
 
     {{>AdminIssueForm}}
 
-    <div class="row">
+    <div class="row" id="issue-Cover">
         <div class="col s12">
-            <div class="card">
+            <div class="card z-depth-0">
                 <div class="card-content">
-                    <span class="card-title"><h4>Issue Contents</h4></span>
+                    <span class="card-title">Issue Cover</span>
+                    {{>IssueCoverUploader}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="issue-contents">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Issue Contents</span>
                     <ul class="collection with-header">
                         {{#each articles}}
                         {{#if start_group}}
@@ -55,23 +73,18 @@
 </template>
 
 <template name="AdminIssueForm">
-    <div class="row">
+    <div class="row" id="issue-settings">
         <div class="col s12">
-            <div class="card">
+            <div class="card z-depth-0">
                 <div class="card-content">
-                    <span class="card-title"><h4>Issue Settings</h4></span>
+                    <span class="card-title">Issue Settings</span>
                     <form>
                         <div data-id="{{_id}}" id="mongo-id"></div>
 
                         {{>StatusModal what='Issue'}}
 
-                        <fieldset>
-                            <legend>{{>RequiredSymbol}} Date</legend>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
-                                </div>
-                            </div>
+                        <fieldset id="volume-and-issue">
+                            <legend>{{>RequiredSymbol}} Volume/Issue</legend>
                             <div class="row">
                                 <div class="input-field col s12 m6">
                                     <input type="number" id="issue-volume" value="{{volume}}">
@@ -82,7 +95,19 @@
                                     <label for="issue-issue" class="{{#if issue}}active{{/if}}">Issue</label>
                                 </div>
                             </div>
-                            <h4>Display:</h4>
+                        </fieldset>
+
+                        <fieldset id="issue-date">
+                            <legend>{{>RequiredSymbol}} Date</legend>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset id="issue-date-setting">
+                            <legend>Date Display Settings</legend>
                             <div class="row">
                                 <div class="input-field col s12 m4">
                                     <input class="date-setting" type="checkbox" id="display-day" checked="{{checked date_settings.day}}"/>

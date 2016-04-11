@@ -108,11 +108,17 @@ Meteor.methods({
     getIssueAndFiles: function(volume, issue){
         // console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
         var fut = new future();
-        var journal = journalConfig.findOne({}).journal.short_name;
-        var issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
+        var journal,
+            assetUrl,
+            issueData;
+        journal = journalConfig.findOne({}).journal.short_name;
+        assetUrl =  journalConfig.findOne().assets;
+        issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
 
         if(issueData){
-            issueData.cover = Meteor.issue.coverPath(volume,issue);
+            if(issueData.cover){
+                issueData.coverPath = assetUrl + 'covers/' + issueData.cover;
+            }
 
             var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
             for(var i=0 ; i< issueArticles.length ; i++){
@@ -134,4 +140,126 @@ Meteor.methods({
     getAllVolumes: function(){
         return volumes.find().fetch();
     },
+    checkIssueInputs: function(issueData){
+        // will check for all required fields in form
+        // will return all invalid inputs
+        var invalid = [];
+        var clear = '<div class="clearfix"></div>';
+
+        // Volume
+        if(!issueData.volume){
+            invalid.push({
+                'fieldset_id' : 'volume-and-issue',
+                'message' : clear + 'Volume is required'
+            });
+        }
+
+        // Issue
+        if(!issueData.volume){
+            invalid.push({
+                'fieldset_id' : 'volume-and-issue',
+                'message' : clear + 'Issue is required'
+            });
+        }
+
+        // Date
+        if(!issueData.pub_date){
+            invalid.push({
+                'fieldset_id' : 'issue-date',
+                'message' : clear + 'Date is required'
+            });
+        }
+        console.log('invalid',invalid);
+        return invalid;
+    },
+    renameCover: function(issueMongoId, originalFileName){
+        // console.log('renameCover',issueMongoId, originalFileName);
+        var fut = new future();
+        var originalFilePieces = originalFileName.split('.');
+        var fileType = originalFilePieces[parseInt(originalFilePieces.length - 1)];
+        var newFileName = issueMongoId + '.' + fileType;
+        var source = 'covers/' + originalFileName;
+        var dest = 'covers/' + newFileName;
+
+        S3.knox.copyFile(source, dest, function(err, res){
+            if(err){
+                console.error('renameArticleAsset',err);
+                fut.throw(err);
+            }else if(res){
+                fut.return(newFileName);
+            }
+        });
+        return fut.wait();
+    },
+    afterUploadCover: function(issueMongoId, originalFileName){
+        // console.log('afterUploadCover',issueMongoId, originalFileName);
+        var fut = new future();
+        // will rename the figure to issuemongoid and update the database with filenmae
+        Meteor.call('renameCover', issueMongoId, originalFileName, function(error,newFileName){
+            if(error){
+                error.userMessage = 'Cover not uploaded. Please try again.';
+                console.error('renameCover',error);
+                fut.throw(error);// though it was actually uploaded, it was not renamed to standard convention. So this file cannot be used.
+            }else if(newFileName){
+
+                Meteor.call('updateIssue', issueMongoId, {cover : newFileName}, function(error,result){
+                    if(error){
+                        error.userMessage = 'Cover ' + newFileName + ' uploaded, but could not update the database. Contact IT and request DB update.' ;
+                        fut.throw(error);
+                        console.error('updateIssue after cover',error);
+                    }else if(result){
+                        fut.return('Cover uploaded and database updated: ' + newFileName);
+                    }
+                });
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err.userMessage);
+        }
+    },
+    validateIssue: function(mongoId, issueData){
+        console.log('validateIssue',mongoId, issueData);
+        var fut = new future();
+        var invalid = [];
+        var result = {};
+        // will check all required inputs are valid and check for duplicate issues by volume/issue
+        // will either return doc of duplicate issue, invalid array, or boolean if issue was updated
+
+        Meteor.call('checkIssueInputs', issueData, function(error,issueInvalid){
+            if(error){
+                fut['throw'](error);
+            }else if(issueInvalid && issueInvalid.length > 0){
+                result.invalid = true;
+                result.invalid_list = issueInvalid;
+                fut['return'](result);
+            }else{
+                Meteor.call('findIssueByVolIssue',issueData.volume, issueData.issue, function(error,duplicateExists){
+                    if(error){
+                        fut['throw'](error);
+                    }else if(duplicateExists){
+                        result = duplicateExists;
+                        result.duplicate = true;
+                        fut['return'](duplicateExists);
+                    }else{
+                        // no duplicates and all valid. Now update/insert
+                        // Meteor.call('updateArticle',mongoId, articleData, function(error,articleSaved){
+                        //     if(error){
+                        //         fut['throw'](error);
+                        //     }else if(articleSaved){
+                        //         result.article_id = articleSaved;
+                        //         result.saved = true;
+                        //         fut['return'](result);
+                        //     }
+                        // });
+                    }
+                });
+            }
+        });
+
+        return fut.wait();
+    }
 });

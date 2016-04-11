@@ -161,6 +161,16 @@ Uploading: Uses template s3FigureUpload. First the file is uploaded to the paper
 Updating/Adding New Figure: Both actions use same template event from s3FigureUpload, which will also verify that the figure ID is unique. They also use the server method afterUploadArticleFig(), which has flag in the function, `figFound`, to determine if new or existing figure updated.
 
 
+Issue Form
+-------------
+**Validation and Duplicate Check**
+Submit form event uses method ‘validateIssue()‘ to check all required inputs and make sure there are no duplicate issues (via Volume and Issue search).
+
+Issue Cover
+-------------
+The cover is uploaded using the template ‘IssueCoverUploader‘. The upload event is on the client, using the template events. Covers cannot be added when adding an issue. Covers can only be added to existing issues.
+
+
 App Packages
 ============
 **alanning:roles**

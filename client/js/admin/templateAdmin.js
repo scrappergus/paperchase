@@ -40,7 +40,7 @@ Template.AdminArticleFigures.onRendered(function () {
     $('.materialboxed').materialbox();
 });
 Template.AdminArticleFiguresXml.onRendered(function () {
-    $('.collapsible').collapsible({
+    $('.figures-xml').collapsible({
         accordion : false
     });
 });
@@ -77,6 +77,9 @@ Template.AdminVolumeIssue.onRendered(function () {
 
 // Issue
 // ------
+Template.IssueCoverUploader.onRendered(function () {
+    $('.materialboxed').materialbox();
+});
 Template.AdminIssueForm.onRendered(function () {
     Meteor.dates.initiateDatesInput();
 });
