@@ -82,11 +82,12 @@
 
     {{/with}}
     {{/with}}
+    {{#if xmlFigures}}
     {{>AdminArticleFiguresXml}}
+    {{/if}}
 </template>
 
 <template name="AdminArticleFiguresXml">
-    {{#if xmlFigures}}
     {{#with xmlFigures}}
     <div class="row">
         <div class="col s12">
@@ -121,7 +122,6 @@
         </div>
     </div>
     {{/with}}
-    {{/if}}
 </template>
 
 <template name="AdminArticleFigureUploader">
