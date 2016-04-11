@@ -1,27 +1,35 @@
 Meteor.methods({
     archive: function(articleIssueId){
         //combine vol and issue collections
-        var issuesList = issues.find({},{}).fetch();
-        var volumesList = volumes.find({},{sort : {volume:-1}}).fetch();
+        var journal,
+            assetUrl,
+            issuesList,
+            volumesList;
         var issuesObj = {};
+
+        journal = journalConfig.findOne({}).journal.short_name;
+        assetUrl =  journalConfig.findOne().assets;
+        issuesList = issues.find({},{}).fetch();
+        volumesList = volumes.find({},{sort : {volume:-1}}).fetch();
+
         for(var i=0 ; i<issuesList.length ; i++){
-            issuesObj[issuesList[i]['_id']] = issuesList[i];
+            issuesObj[issuesList[i]._id] = issuesList[i];
         }
 
         for(var v=0 ; v < volumesList.length ; v++){
-            volumesList[v]['issues_data'] = [];
-            var volumeIssues = volumesList[v]['issues'];
+            volumesList[v].issues_data = [];
+            var volumeIssues = volumesList[v].issues;
             if(volumeIssues !== undefined) {
                 for(var vi=0 ; vi < volumeIssues.length ; vi++){
                     var volumeIssuesId = volumeIssues[vi];
                     // add cover path to issue
                     if(articleIssueId && volumeIssuesId == articleIssueId){
                         // For providing all available issues on the article form
-                        issuesObj[volumeIssuesId]['selected'] = true;
+                        issuesObj[volumeIssuesId].selected = true;
                     }
-                    if(issuesObj[volumeIssuesId]){
-                        issuesObj[volumeIssuesId]['cover'] = Meteor.issue.coverPath(issuesObj[volumeIssuesId]['volume'],issuesObj[volumeIssuesId]['issue']);
-                        volumesList[v]['issues_data'].push(issuesObj[volumeIssuesId]);
+                    if(issuesObj[volumeIssuesId] && issuesObj[volumeIssuesId].cover){
+                        issuesObj[volumeIssuesId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[volumeIssuesId].cover);
+                        volumesList[v].issues_data.push(issuesObj[volumeIssuesId]);
                     }
                 }
             }
@@ -117,19 +125,19 @@ Meteor.methods({
 
         if(issueData){
             if(issueData.cover){
-                issueData.coverPath = assetUrl + 'covers/' + issueData.cover;
+                issueData.coverPath = Meteor.issue.coverPath(assetUrl,issueData.cover);
             }
 
-            var issueArticles = Meteor.organize.getIssueArticlesByID(issueData['_id']);
+            var issueArticles = Meteor.organize.getIssueArticlesByID(issueData._id);
             for(var i=0 ; i< issueArticles.length ; i++){
                 if(issueArticles[i].files){
                     issueArticles[i].files = Meteor.article.linkFiles(issueArticles[i].files,issueArticles[i]._id);
                 }
             }
             issueData.articles = issueArticles;
-            fut['return'](issueData);
+            fut.return(issueData);
         }else{
-            fut['return']();
+            fut.return();
         }
 
         return fut.wait();

@@ -654,22 +654,9 @@ Meteor.issue = {
         var res = {volume : pieces[1], issue : pieces[2]};
         return res;
     },
-    // coverPath : function(volume,issue){
-    //     var journal,
-    //         assetUrl,
-    //         fileName,
-    //         filePath;
-    //     console.log(volume,issue);
-    //     if(journalConfig){
-    //         journal =  journalConfig.findOne().journal.short_name;
-    //         assetUrl =  journalConfig.findOne().assets;
-    //         fileName = issues.findOne({volume: parseInt(volume), issue: String(issue)}).cover;
-    //         if(fileName){
-    //             filePath = assetUrl + 'covers/' + fileName
-    //         }
-    //     }
-    //     return filePath;
-    // },
+    coverPath : function(assetUrl,fileName){
+        return assetUrl + 'covers/' + fileName;
+    },
     linkeableIssue: function(issue){
         return issue.replace(/\//g,'_');
     }
