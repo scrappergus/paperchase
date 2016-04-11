@@ -7,10 +7,10 @@ Meteor.methods({
         Meteor.http.get(url,function(getXmlError, xmlRes){
             if(getXmlError){
                 console.error('getXmlError',getXmlError);
-                fut['throw'](getXmlError);
+                fut.throw(getXmlError);
             }else if(xmlRes){
                 xml = xmlRes.content;
-                fut['return'](xml);
+                fut.return(xml);
                 // console.log('xml',xml);
             }
         });
@@ -42,7 +42,7 @@ Meteor.methods({
                     if(error){
                         console.error('processPmcXml',error);
                     }else if(result){
-                        fut['return'](result);
+                        fut.return(result);
                     }
                 });
             }else if(dtd && dtd === 'AOP'){
@@ -50,11 +50,11 @@ Meteor.methods({
                     if(error){
                         console.error('processAopXml',error);
                     }else if(result){
-                        fut['return'](result);
+                        fut.return(result);
                     }
                 });
             }else{
-                fut['throw']('Could not process XML.');
+                fut.throw('Could not process XML.');
             }
         });
 
@@ -69,7 +69,7 @@ Meteor.methods({
                 console.error(error);
                 return 'ERROR';
             }else{
-                fut['return'](articleJson);
+                fut.return(articleJson);
             }
         });
         return fut.wait();
@@ -85,16 +85,16 @@ Meteor.methods({
         Meteor.call('parseXmltoJson',xmlString, function(error,articleJson){
             if(error){
                 console.error('parseXmltoJson',error);
-                fut['return'](error);
+                fut.return(error);
             }else if(articleJson){
                 articleJson = articleJson.ArticleSet.Article;
                 articleJson = articleJson[0];
                 Meteor.call('aopArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
                     if(e){
                         console.error(e);
-                        fut['throw'](e);
+                        fut.throw(e);
                     }else if(r){
-                        fut['return'](r);
+                        fut.return(r);
                     }
                 });
             }
@@ -350,9 +350,9 @@ Meteor.methods({
                 Meteor.call('pmcArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
                     if(e){
                         console.error(e);
-                        fut['throw'](e);
+                        fut.throw(e);
                     }else if(r){
-                        fut['return'](r);
+                        fut.return(r);
                     }
                 });
             }
@@ -566,7 +566,7 @@ Meteor.methods({
                 Meteor.call('getXml',articleInfo.files.xml.url, function(error,xml){
                     if(error){
                         console.error('getXmlError',error);
-                        fut['throw'](error);
+                        fut.throw(error);
                     }else if(xml){
                         doc = new dom().parseFromString(xml);
                         xmlFigures = xpath.select('//fig', doc);
@@ -574,12 +574,12 @@ Meteor.methods({
                             var fig = Meteor.fullText.convertFigure(figure,dbFigures,articleMongoId);
                             figuresResult.push(fig);
                         });
-                        fut['return'](figuresResult);
+                        fut.return(figuresResult);
                     }
                 });
             }
         }else{
-            fut['return']();
+            fut.return();
         }
         return fut.wait();
     }
@@ -623,7 +623,7 @@ Meteor.methods({
                 // console.log(keyCount);
                 if(keyCount == Object.keys(dbValue).length){
                     // console.log('CONFLICT = ');console.log(conflict);
-                    fut['return'](conflict);
+                    fut.return(conflict);
                 }
             }
         }else{
@@ -634,7 +634,7 @@ Meteor.methods({
                 // console.log(keyCount);
                 if(keyCount == Object.keys(xmlValue).length){
                     // console.log('CONFLICT = ');console.log(conflict);
-                    fut['return'](conflict);
+                    fut.return(conflict);
                 }
             }
         }
