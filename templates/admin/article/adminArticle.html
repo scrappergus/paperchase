@@ -163,9 +163,9 @@
                         <div class="col s12">
                             {{#each arrayify ids}}
                                 {{#if equals name 'doi'}}
-                                <div class="admin-article-id"><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></div>
+                                <div class="admin-id"><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></div>
                                 {{else}}
-                                <div class="admin-article-id"><label>{{name}}:</label> {{value}}</div>
+                                <div class="admin-id"><label>{{name}}:</label> {{value}}</div>
                                 {{/if}}
                             {{/each}}
                         </div>

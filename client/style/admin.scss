@@ -86,10 +86,6 @@
             font-size: $font-lg; /*for article title*/
         }
     }
-    .admin-article-id{
-        margin: $margin-md $margin-sm $margin-sm 0;
-        display: inline-block;
-    }
     .add-btn{
         text-transform: none!important;
     }
@@ -110,6 +106,11 @@
         &.admin{
             background-color: #cfd8dc;
         }
+    }
+    .admin-id{
+        margin: $margin-md $margin-sm $margin-sm 0;
+        display: inline-block;
+        /*for article ids and issue mongo id*/
     }
     .admin-container{
         padding-left: 240px;

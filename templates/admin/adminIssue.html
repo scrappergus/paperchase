@@ -11,6 +11,7 @@
             <div class="card blue-grey lighten-5 z-depth-0">
                 <div class="card-content">
                     <h2 class="no-margin">Volume {{volume}}, Issue {{issue}}</h2>
+                    <div class="admin-id"><label>Mongo ID:</label> {{_id}}</div>
                     {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
                     <p>{{#if articles}}{{countItems articles}}{{else}}No{{/if}} articles in the issue.</p>
                 </div>
