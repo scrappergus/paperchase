@@ -176,6 +176,11 @@ Template.AdminArticleFigures.helpers({
         return Session.get('xml-figures');
     }
 });
+Template.AdminArticleFiguresXml.helpers({
+    xmlFigures : function(){
+        return Session.get('xml-figures');
+    }
+});
 Template.AdminArticleFiles.helpers({
     article : function(){
         return Session.get('article');

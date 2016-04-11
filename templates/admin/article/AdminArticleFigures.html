@@ -81,7 +81,12 @@
     </div>
     {{/with}}
     {{/with}}
+    {{>AdminArticleFiguresXml}}
+</template>
+
+<template name="AdminArticleFiguresXml">
     {{#if xmlFigures}}
+    {{#with xmlFigures}}
     <div class="row">
         <div class="col s12">
             <div class="card blue-grey lighten-4 z-depth-0">
@@ -114,6 +119,7 @@
             </div>
         </div>
     </div>
+    {{/with}}
     {{/if}}
 </template>
 
