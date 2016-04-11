@@ -100,6 +100,12 @@
     }
 
 /* General ------------------------*/
+    main{
+        height: 100%;
+        &.admin{
+            background-color: #eceff1;
+        }
+    }
     .admin-container{
         padding-left: 240px;
         @media only screen and (max-width: 992px){

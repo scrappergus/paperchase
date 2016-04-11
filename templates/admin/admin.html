@@ -3,15 +3,11 @@
 <header>
     {{>AdminNav}}
 </header>
-<main>
+<main class="admin">
     <div class="admin-container">
         <div class="row">
             <div class="col s12">
-                <div class="card">
-                    <div class="card-content admin-content-area">
-                        {{>yield}}
-                    </div>
-                </div>
+                {{>yield}}
             </div>
         </div>
     </div>
