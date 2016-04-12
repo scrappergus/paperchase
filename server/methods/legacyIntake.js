@@ -294,7 +294,7 @@ Meteor.methods({
 	},
 	ojsGetAdvanceArticles: function(){
 		var fut = new future();
-		var requestURL = 'http://impactjournals.com//ojs-api/?v=5&i=0';
+		var requestURL = 'http://www.impactjournals.com//ojs-api/?v=5&i=0';
 		var res;
 		res = Meteor.http.get(requestURL);
 

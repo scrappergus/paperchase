@@ -94,5 +94,16 @@ Meteor.methods({
 			});
 
 		}
-	}
+	},
+    crossrefRecordIntake: function(doiRecord) {
+        console.log(doiRecord);
+
+        if(articleMongoId){
+            return true; // DO we need a response to Legacy platform?
+        }
+        else {
+            throw new Meteor.Error("crossref-cache-failure",
+                "CrossRef record was not cached.")
+        }
+    }
 });
