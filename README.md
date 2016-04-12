@@ -166,6 +166,10 @@ Issue Form
 **Validation and Duplicate Check**
 Submit form event uses method ‘validateIssue()‘ to check all required inputs and make sure there are no duplicate issues (via Volume and Issue search).
 
+Issue Deletion
+-------------
+Deleting an issue will delete all issue information from the database and remove all issue information for its articles. User input to confirm deletion is sent to deleteIssue(), which makes sure that the input === 'DELETE'. If so then, the issue doc is copied to the issues_deleted collection via deleteIssueDatabase() and the original doc is removed from the issues collection. Then all articles in the issue are updated (just issue information removed from article docs). TODO: Cover deleting on S3.
+
 Issue Cover
 -------------
 The cover is uploaded using the template ‘IssueCoverUploader‘. The upload event is on the client, using the template events. Covers cannot be added when adding an issue. Covers can only be added to existing issues.

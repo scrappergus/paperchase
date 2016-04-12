@@ -3,6 +3,25 @@
 Template.AdminIssue.events({
     'click .anchor': function(e){
         Meteor.general.scrollAnchor(e);
+    },
+    'click #delete-issue': function(e){
+        e.preventDefault();
+        $('#delete-request').addClass('hide');
+        $('#delete-verify').removeClass('hide');
+    },
+    'click #delete-confirmation': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        var input = $('#issue-delete-input').val();
+        Meteor.call('deleteIssue', Session.get('issue')._id, input, function(error,result){
+            if(error){
+                console.error('deleteIssue',error);
+                Meteor.formActions.errorMessage('Could not delete the issue.<br>' + error.error);
+            }else if(result){
+                Session.set('articles-updated',result);
+                Router.go('AdminIssueDeleted');
+            }
+        });
     }
 });
 Template.AdminIssueForm.events({

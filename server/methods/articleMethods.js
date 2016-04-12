@@ -62,6 +62,13 @@ Meteor.methods({
     updateArticleBy: function(where, what){
         return articles.update(where, {$set: what});
     },
+    unsetArticles: function(where, what){
+        var articlesToUpdate = articles.find(where).fetch()
+        var updated = articles.update(where, {$unset: what},{ multi: true });
+        if(updated){
+            return articlesToUpdate; // this will be docs pre update.
+        }
+    },
     pushArticle: function(mongoId, field, articleData){
         var updateObj = {};
         updateObj[field] = articleData;
@@ -112,6 +119,9 @@ Meteor.methods({
         }
         // console.log(issueId);
         return issueId;
+    },
+    articlesByIssueId: function(issueMongoId){
+        return articles.find({issue_id : issueMongoId}).fetch();
     },
     getSavedPii: function(mongoId){
         // console.log('....getSavedPii');
@@ -481,5 +491,25 @@ Meteor.methods({
         });
 
         return fut.wait();
+    },
+    removeArticlesFromIssue: function(issueMongoId){
+        var fut = new future();
+        var fieldsToRemove = {issue_id : '', issue: '', volume : ''};
+
+        Meteor.call('unsetArticles',{issue_id : issueMongoId}, fieldsToRemove, function(error,articlesUpdated){
+            if(error){
+                console.error('unsetArticles',error);
+                fut.throw(error);
+            }else if(articlesUpdated){
+                fut.return(articlesUpdated);
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     }
 });

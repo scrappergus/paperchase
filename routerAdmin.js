@@ -126,6 +126,7 @@ if (Meteor.isClient) {
     Session.setDefault('xml-file',null);
     Session.setDefault('xml-figures',null);
     Session.setDefault('article-form',null);
+    Session.setDefault('articles-updated',null); //right now just for when deleting an issue, removing issue info from docs
 
 
     Router.route('/admin', {
@@ -990,6 +991,17 @@ if (Meteor.isClient) {
 
             this.next();
         },
+    });
+    Router.route('/admin/issue_deleted', {
+        name: 'AdminIssueDeleted',
+        title: function() {
+            var pageTitle = 'Admin | Issue Deleted ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin'
     });
     Router.route('/admin/add_issue/', {
         name: 'AdminAddIssue',
