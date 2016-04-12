@@ -520,8 +520,6 @@ Meteor.fullText = {
         return string;
     },
     traverseNode: function(node){
-        // console.log('..traverseNode');
-        // console.log(node.childNodes.length);
         var string = '';
         if(node.childNodes){
             for(var c = 0 ; c < node.childNodes.length ; c++){
