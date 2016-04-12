@@ -271,16 +271,4 @@ Meteor.methods({
     }
 });
 
-Meteor.xmlParse = {
-    traverseJson: function(data){
-        // console.log('data',data);
-        // for when node value has style, but we do not want the style
-        var string = '';
-        for(var k in data){
-            if(typeof data[k] == 'string'){
-                string += data[k];
-            }
-        }
-        return string;
-    }
-}
+
