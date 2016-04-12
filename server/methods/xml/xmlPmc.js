@@ -34,25 +34,20 @@ Meteor.methods({
         // PUBLISHER
         // -----------
         if(journalMeta.publisher){
-            for(var i = 0 ; i < journalMeta.publisher.length ; i++){
-                if( journalMeta.publisher[i]['publisher-name']){
-                    articleProcessed.publisher = journalMeta.publisher[i]['publisher-name'][0];
+            Meteor.xmlPmc.publisher(journalMeta, function(publisher){
+                if(publisher){
+                    articleProcessed.publisher = publisher;
                 }
-            }
+            });
         }
 
-        // console.log(articleProcessed);
         // TITLE
         // -----------
-        var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
-        var titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
-            titleTitle = titleTitle.replace('article-title>','');
-            // console.log('titleTitle',titleTitle);
-        if(titleTitle){
-            titleTitle = Meteor.general.cleanString(titleTitle);
-            articleProcessed.title = titleTitle;
-        }
-
+        Meteor.xmlPmc.title(xml,function(title){
+            if(title){
+                articleProcessed.title = title;
+            }
+        });
 
         // META
         // -----------
@@ -68,35 +63,25 @@ Meteor.methods({
         if(article.lpage){
             articleProcessed.page_end = parseInt(article.lpage[0]);
         }
+
         // KEYWORDS
         // -----------
         if(article['kwd-group']){
-            articleProcessed.keywords = [];
-            var keywords = article['kwd-group'][0]['kwd'];
-            for(var kw=0 ; kw<keywords.length ; kw++){
-                if(typeof  keywords[kw] == 'object'){
-                    var kwStyled = '',
-                        kwStyeType = '';
-                    for(var kwKey in  keywords[kw]){
-                        kwStyeType += kwKey;
-                    }
-                    kwStyled = '<' + kwStyeType + '>' + keywords[kw][kwStyeType] + '<' + kwStyeType + '/>';
-                    articleProcessed.keywords.push(kwStyled);
-
-                }else{
-                    articleProcessed.keywords.push(keywords[kw]);
+            Meteor.xmlPmc.keywords(article['kwd-group'][0]['kwd'], function(keywords){
+                if(keywords && keywords.length > 0){
+                    articleProcessed.keywords = keywords;
                 }
-            }
+            });
         }
 
         // ABSTRACT
         // -----------
         if(article.abstract){
-            var abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
-                abstract = abstract.replace('abstract>\n ', '');
-                // abstract = abstract.replace('</p>\n','</p>');
-                abstract = Meteor.processXml.cleanAbstract(abstract);
-                articleProcessed.abstract = abstract;
+            Meteor.xmlPmc.abstract(xml, function(abstract){
+                if(abstract){
+                    articleProcessed.abstract = abstract;
+                }
+            });
         }
 
         // ARTICLE TYPE
@@ -104,71 +89,41 @@ Meteor.methods({
         //TODO: These are nlm type, possible that publisher has its own type of articles
         //TODO: Update article type collection if this type not present
         if(article['article-categories']){
-            articleProcessed.article_type = {};
-            articleProcessed.article_type.name = article['article-categories'][0]['subj-group'][0]['subject'][0];
-            articleProcessed.article_type.short_name =  articleJson[0]['$']['article-type'];
+            Meteor.xmlPmc.articleType(articleJson, function(articleType){
+                if(articleType){
+                    articleProcessed.article_type = articleType;
+                }
+            });
         }
 
         // IDS
         // -----------
-        articleProcessed.ids = {};
-        var idList = article['article-id'];
-        var idListLength = idList.length;
-        for(var i = 0 ; i < idListLength ; i++){
-            var type = idList[i]['$']['pub-id-type'];
-            var idCharacters = idList[i]['_'];
-            articleProcessed.ids[type] = idCharacters;
-        }
+        Meteor.xmlPmc.ids(article['article-id'], function(ids){
+            if(ids){
+                articleProcessed.ids = ids;
+            }
+        });
 
         // AUTHORS
         // -----------
         if(article['contrib-group']){
-            articleProcessed.authors = [];
             var authorsList = article['contrib-group'][0].contrib;
-            var authorsListLength = authorsList.length;
-            for(var i = 0 ; i < authorsListLength ; i++){
-                var author = {};
-                if(authorsList[i].name){
-                    if(authorsList[i].name[0]['given-names']){
-                        author.name_first = authorsList[i].name[0]['given-names'][0];
-                    }
-                    if(authorsList[i].name[0].surname[0]){
-                        author.name_last = authorsList[i].name[0].surname[0];
-                    }
+            Meteor.xmlPmc.authors(authorsList,function(authors){
+                if(authors && authors.length > 0){
+                    articleProcessed.authors = authors;
                 }
-
-                // Author affiliations
-                if(authorsList[i].xref){
-                    author.affiliations_numbers = [];
-                    for(var authorAff=0 ; authorAff<authorsList[i].xref.length ; authorAff++){
-                        if(authorsList[i].xref[authorAff].sup){
-                            var affNumber = parseInt(authorsList[i].xref[authorAff].sup[0]-1);
-                            author.affiliations_numbers.push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
-                        }
-                    }
-                }
-                articleProcessed.authors.push(author);
-            }
+            });
         }
 
         // CORRESPONDING AUTHOR
         // -----------
         articleProcessed.correspondence = []; //can have multiple corresp elements, for ex: pmid 26678252
         if(article['author-notes'] && article['author-notes'][0].corresp){
-            for(var i=0 ; i < article['author-notes'][0].corresp.length ; i++){
-                var correspondence = {};
-                    correspondence.text = '';
-                for(var k in article['author-notes'][0].corresp[i]){
-                    if(k != 'email' && typeof article['author-notes'][0].corresp[i][k] == 'string' && article['author-notes'][0].corresp[i][k] != '; '){
-                        correspondence.text += article['author-notes'][0].corresp[i][k];
-                    }else if(k != 'email' && k != '$' && typeof article['author-notes'][0].corresp[i][k] == 'object'){
-                        correspondence.text += Meteor.xmlParse.traverseJson(article['author-notes'][0].corresp[i][k]);
-                    }else if(k == 'email'){
-                        correspondence.email = article['author-notes'][0].corresp[i][k][0];
-                    }
+            Meteor.xmlPmc.authorsCorresponding(article['author-notes'][0].corresp,function(correspondence){
+                if(correspondence && correspondence.length > 1){
+                    articleProcessed.correspondence = correspondence;
                 }
-                articleProcessed.correspondence.push(correspondence);
-            }
+            });
         }
 
         // AUTHOR NOTES
@@ -178,54 +133,31 @@ Meteor.methods({
         // -----------
         articleProcessed.affiliations = [];
         if(article['aff']){
-            // console.log('------affiliations=');
-            // console.log(JSON.stringify(article['aff']));
-            for(var aff=0 ; aff < article.aff.length ; aff++){
-                articleProcessed.affiliations.push(article.aff[aff]._);
-            }
+            Meteor.xmlPmc.authorsAffiliations(article.aff, function(affiliations){
+                if(affiliations && affiliations.length > 0){
+                    articleProcessed.affiliations = affiliations;
+                }
+            });
         }
 
         // PUB DATES
         // -----------
-        articleProcessed.dates = {};
-        var dates = article['pub-date'];
-        var datesLength = dates.length;
-        for(var i = 0 ; i < datesLength ; i++){
-            var dateType =  dates[i]['$']['pub-type'];
-            if(dateType != 'collection'){
-                var d = '';
-                if(dates[i].month && dates[i].day && dates[i].year){
-                    d += dates[i].month[0] + ' ';
-                    d += dates[i].day[0] + ' ';
-                    d += dates[i].year[0] + ' ';
-                    d += ' 00:00:00.0000';
-                    var dd = new Date(d);
-                    // console.log(dateType + ' = ' + dd);
-                    articleProcessed.dates[dateType] = dd;
+        if(article['pub-date']){
+            Meteor.xmlPmc.dates(article['pub-date'], function(dates){
+                if(dates){
+                    articleProcessed.dates = dates;
                 }
-            }
+            });
         }
-        // console.log(articleProcessed.dates);
 
         // HISTORY DATES
         // -----------
         if(article.history){
-            articleProcessed.history = {};
-            var history = article.history[0].date;
-            var historyLength = history.length;
-
-            for(var i = 0 ; i < historyLength ; i++){
-                var dateType = history[i]['$']['date-type'];
-                var d = '';
-                if(history[i].month && history[i].day && history[i].year){
-                    d += history[i].month[0] + ' ';
-                    d += history[i].day[0] + ' ';
-                    d += history[i].year[0] + ' ';
-                    d += ' 00:00:00.0000';
-                    var dd = new Date(d);
-                    articleProcessed.history[dateType] = dd;
+            Meteor.xmlPmc.history(article.history[0].date, function(history){
+                if(history){
+                    articleProcessed.history = history;
                 }
-            }
+            });
         }
 
         // console.log('articleProcessed',articleProcessed);
@@ -271,4 +203,165 @@ Meteor.methods({
     }
 });
 
+// below are used by processPmcXml()
+Meteor.xmlPmc = {
+    abstract: function(xml,cb){
+        // uses XML string to get abstract
+        var abstract;
+        abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
+        abstract = abstract.replace('abstract>\n ', '');
+        abstract = Meteor.processXml.cleanAbstract(abstract);
+        cb(abstract);
+    },
+    articleType: function(articleJson,cb){
+        // keywords is JSON from XML to get keywords. Need to pass entire JSON and not part because the short name is an attribute on article element
+        var article_type = {};
+        var article = articleJson[0]['front'][0]['article-meta'][0];
+        article_type.name = article['article-categories'][0]['subj-group'][0]['subject'][0];
+        article_type.short_name =  articleJson[0]['$']['article-type'];
+        cb(article_type);
+    },
+    authors: function(authorsList,cb){
+        var authors = [];
+        for(var i = 0 ; i < authorsList.length ; i++){
+            var author = {};
+            if(authorsList[i].name){
+                if(authorsList[i].name[0]['given-names']){
+                    author.name_first = authorsList[i].name[0]['given-names'][0];
+                }
+                if(authorsList[i].name[0].surname[0]){
+                    author.name_last = authorsList[i].name[0].surname[0];
+                }
+            }
+
+            // Author affiliations
+            if(authorsList[i].xref){
+                author.affiliations_numbers = [];
+                for(var authorAff=0 ; authorAff<authorsList[i].xref.length ; authorAff++){
+                    if(authorsList[i].xref[authorAff].sup){
+                        var affNumber = parseInt(authorsList[i].xref[authorAff].sup[0]-1);
+                        author.affiliations_numbers.push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
+                    }
+                }
+            }
+            authors.push(author);
+        }
+        cb(authors);
+    },
+    authorsAffiliations: function(affiliations,cb){
+        var affiliationsResult = [];
+        for(var aff=0 ; aff < affiliations.length ; aff++){
+            affiliationsResult.push(affiliations[aff]._.trim());
+        }
+        cb(affiliationsResult);
+    },
+    authorsCorresponding: function(corresp,cb){
+        // corresp is JSON from XML to get all correspondence elements
+        var allCorrespondence = [];
+        for(var i=0 ; i < corresp.length ; i++){
+            var correspondence = {};
+            correspondence.text = '';
+            for(var k in corresp[i]){
+                if(k != 'email' && typeof corresp[i][k] == 'string' && corresp[i][k] != '; '){
+                    correspondence.text += corresp[i][k];
+                }else if(k != 'email' && k != '$' && typeof corresp[i][k] == 'object'){
+                    correspondence.text += Meteor.xmlParse.traverseJson(corresp[i][k]);
+                }else if(k == 'email'){
+                    correspondence.email = corresp[i][k][0];
+                }
+            }
+            allCorrespondence.push(correspondence);
+        }
+        cb(allCorrespondence);
+    },
+    dates: function(dates,cb){
+        var datesResult = {};
+        for(var i = 0 ; i < dates.length ; i++){
+            var dateType =  dates[i]['$']['pub-type'];
+            if(dateType != 'collection'){
+                var d = '';
+                if(dates[i].month && dates[i].day && dates[i].year){
+                    d += dates[i].month[0] + ' ';
+                    d += dates[i].day[0] + ' ';
+                    d += dates[i].year[0] + ' ';
+                    d += ' 00:00:00.0000';
+                    var dd = new Date(d);
+                    // console.log(dateType + ' = ' + dd);
+                   datesResult[dateType] = dd;
+                }
+            }
+        }
+        cb(datesResult)
+    },
+    history: function(history,cb){
+        var historyResult = {};
+        for(var i = 0 ; i < history.length ; i++){
+            var dateType = history[i]['$']['date-type'];
+            var d = '';
+            if(history[i].month && history[i].day && history[i].year){
+                d += history[i].month[0] + ' ';
+                d += history[i].day[0] + ' ';
+                d += history[i].year[0] + ' ';
+                d += ' 00:00:00.0000';
+                var dd = new Date(d);
+                historyResult[dateType] = dd;
+            }
+        }
+        cb(historyResult);
+    },
+    ids: function(idList,cb){
+        // idList is JSON from XML to get IDs
+        var ids = {};
+        for(var i = 0 ; i < idList.length ; i++){
+            var type = idList[i]['$']['pub-id-type'];
+            var idCharacters = idList[i]['_'];
+
+            ids[type] = idCharacters;
+        }
+        cb(ids);
+    },
+    keywords: function(keywords,cb){
+        // keywords is JSON from XML to get keywords
+        var result = [];
+        for(var kw=0 ; kw<keywords.length ; kw++){
+            if(typeof  keywords[kw] == 'object'){
+                var kwStyled = '',
+                    kwStyeType = '';
+                for(var kwKey in  keywords[kw]){
+                    kwStyeType += kwKey;
+                }
+                kwStyled = '<' + kwStyeType + '>' + keywords[kw][kwStyeType] + '<' + kwStyeType + '/>';
+                result.push(kwStyled);
+
+            }else{
+                result.push(keywords[kw]);
+            }
+        }
+        cb(result);
+    },
+    publisher: function(journalMeta,cb){
+        // journalMeta is JSON from XML to get publisher name
+        var publisher;
+        for(var i = 0 ; i < journalMeta.publisher.length ; i++){
+            if( journalMeta.publisher[i]['publisher-name']){
+                publisher = journalMeta.publisher[i]['publisher-name'][0];
+            }
+        }
+        cb(publisher);
+    },
+    title: function(xml,cb){
+        // title is from XML string
+        var titleTitle;
+
+        var titleGroup = xml.substring(xml.lastIndexOf('<title-group>')+1,xml.lastIndexOf('</title-group>'));
+
+        titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
+        titleTitle = titleTitle.replace('article-title>','');
+        if(titleTitle){
+            titleTitle = Meteor.general.cleanString(titleTitle);
+        }
+
+        cb(titleTitle);
+    }
+}
 
