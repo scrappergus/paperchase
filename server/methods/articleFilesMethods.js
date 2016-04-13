@@ -69,7 +69,7 @@ Meteor.methods({
         return fut.wait();
     },
     renameArticleAsset: function(articleMongoId, folder, originalFileName){
-        // console.log('renameArticleAsset')
+        console.log('renameArticleAsset',articleMongoId);
         var fut = new future();
         var newFileName = articleMongoId + '.' + folder;
         var source = folder + '/' + originalFileName;
@@ -79,9 +79,7 @@ Meteor.methods({
                 console.error('renameArticleAsset',err);
                 // fut['throw'](err);
             }else if(res){
-                // console.log(res.statusCode);
-                // return newFileName;
-                fut['return'](newFileName);
+                fut.return(newFileName);
             }
         });
         return fut.wait();
@@ -123,6 +121,17 @@ Meteor.methods({
     updateArticleDbFigures: function(articleMongoId, articleFigures){
         var fut = new future();
         Meteor.call('updateArticle', articleMongoId, {'files.figures' : articleFigures}, function(error,result){
+            if(error){
+                fut.throw(error);
+            }else if(result){
+                fut.return(result);
+            }
+        });
+        return fut.wait();
+    },
+    updateArticleDbSupps: function(articleMongoId, suppMaterials){
+        var fut = new future();
+        Meteor.call('updateArticle', articleMongoId, {'files.supplementary' : suppMaterials}, function(error,result){
             if(error){
                 fut.throw(error);
             }else if(result){
@@ -192,6 +201,40 @@ Meteor.methods({
                 fut.throw(error);
             }else if(result){
                 fut.return('Figure deleted and database updated ');
+            }
+        });
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err.userMessage);
+        }
+    },
+    afterUploadXmlFilesCheck:function(articleMongoId, fileName){
+        // console.log('..afterUploadXmlFilesCheck',articleMongoId, fileName);
+        var fut = new future();
+        // Supps
+        var journalInfo = journalConfig.findOne();
+        var journalShortName = journalInfo.journal.short_name;
+        var assetBaseUrl = journalInfo.assets + 'xml/';
+        var assetUrl = assetBaseUrl + fileName;
+        Meteor.call('getXml',assetUrl, function(error,xmlString){
+            if(error){
+                error.userMessage = 'Could not get XML to check for figures and supps';
+                fut.throw(error);
+            }else if(xmlString){
+                Meteor.xmlPmc.supplementaryMaterials(xmlString,function(supps){
+                    if(supps){
+                        Meteor.call('updateArticleDbSupps',articleMongoId, supps, function(error,result){
+                            if(error){
+                                error.userMessage = 'Could not update article in the database with supplementary materials.';
+                                fut.throw(error);
+                            }else if(result){
+
+                            }
+                        });
+                    }
+                });
             }
         });
         try {

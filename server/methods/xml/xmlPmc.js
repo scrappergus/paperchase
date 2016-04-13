@@ -26,6 +26,7 @@ Meteor.methods({
         // console.log('..articleToSchema',articleJson);
         // Process JSON for meteor templating and mongo db
         // xml is a string. articleJson is parsed XML to JSON. but not in the schema we need.
+
         var journalMeta = articleJson[0]['front'][0]['journal-meta'][0];
         var article = articleJson[0]['front'][0]['article-meta'][0];
 
@@ -204,6 +205,7 @@ Meteor.methods({
 });
 
 // below are used by processPmcXml()
+// except supplementaryMaterials() which is used after the XML is uploaded, because this info won't be shown in the article form
 Meteor.xmlPmc = {
     abstract: function(xml,cb){
         // uses XML string to get abstract
@@ -251,7 +253,12 @@ Meteor.xmlPmc = {
     authorsAffiliations: function(affiliations,cb){
         var affiliationsResult = [];
         for(var aff=0 ; aff < affiliations.length ; aff++){
-            affiliationsResult.push(affiliations[aff]._.trim());
+            if(affiliations[aff]._){
+                affiliationsResult.push(affiliations[aff]._.trim());
+            }else{
+                console.log(affiliations[aff]);
+            }
+
         }
         cb(affiliationsResult);
     },
@@ -306,8 +313,6 @@ Meteor.xmlPmc = {
                     }
                 }
 
-
-
                 if(correspondence.text == ''){
                     delete correspondence.text; //after all the replacing, check if there is actually text
                 }
@@ -335,6 +340,13 @@ Meteor.xmlPmc = {
             }
         }
         cb(datesResult)
+    },
+    getAttributeId: function(node,cb){
+        for(var attr = 0 ; attr < node.attributes.length ; attr++){
+            if(node.attributes[attr].localName === 'id'){
+                cb(node.attributes[attr].nodeValue);
+            }
+        }
     },
     history: function(history,cb){
         var historyResult = {};
@@ -392,6 +404,60 @@ Meteor.xmlPmc = {
         }
         cb(publisher);
     },
+    supplementary: function(node,cb){
+        var supp = {};
+        if(node.attributes){
+            Meteor.xmlPmc.getAttributeId(node,function(id){
+                if(id){
+                    supp.id = id;
+                }
+            });
+        }
+
+
+        // get the label, title, caption
+        //------------------
+        if(node.childNodes){
+            for(var child=0 ; child < node.childNodes.length ; child++){
+                var nod = node.childNodes[child];
+
+                if(nod.childNodes){
+                    for(var c = 0 ; c < nod.childNodes.length ; c++){
+                        var n = nod.childNodes[c];
+                        // label
+                        // ------------
+                        if(nod.localName == 'label'){
+                            supp.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+                        }
+                        // title
+                        // ------------
+                        if(n.localName == 'title'){
+                            supp.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
+                        }
+                        // caption
+                        // ------------
+                        if(n.localName == 'p'){
+                            supp.caption = Meteor.fullText.convertContent(n);
+                        }
+                    }
+                }
+            }
+        }
+        cb(supp);
+    },
+    supplementaryMaterials: function(xml,cb){
+        var supplementaryMaterials = [];
+        doc = new dom().parseFromString(xml);
+        supps = xpath.select('//supplementary-material', doc);
+        supps.forEach(function(s){
+            Meteor.xmlPmc.supplementary(s,function(result){
+                if(result){
+                    supplementaryMaterials.push(result);
+                }
+            });
+        });
+        cb(supplementaryMaterials);
+    },
     title: function(xml,cb){
         // title is from XML string
         var titleTitle;
@@ -407,4 +473,3 @@ Meteor.xmlPmc = {
         cb(titleTitle);
     }
 }
-

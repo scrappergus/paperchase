@@ -706,15 +706,17 @@ Meteor.articleFiles = {
         reader.readAsText(file);
     },
     uploadArticleFile: function(articleMongoId,s3Folder,files){
+        // console.log('uploadArticleFile',s3Folder);
         var file = files[0];
         var fileNameId = file.name.replace('.xml','').replace('.pdf','');
+        var messageForXml = '';
         Meteor.s3.upload(files,s3Folder,function(error,res){
             if(error){
                 console.error('Upload File Error', error);
                 Meteor.formActions.errorMessage('File not uploaded');
             }else if(res){
                 // TODO: only rename if filename not MongoID
-                Meteor.call('renameArticleAsset', s3Folder, res.file.name, articleMongoId, function(error,newFileName){
+                Meteor.call('renameArticleAsset', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
                     if(error){
 
                     }else if(newFileName){
@@ -722,21 +724,36 @@ Meteor.articleFiles = {
                         updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
                         Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
                             if(result){
+                                // console.log('result',result);
                                 // clear files
                                 S3.collection.remove({});
 
-                                // update template data
-                                Meteor.call('articleAssests', articleMongoId, function(error, result) {
-                                    if(result){
-                                        // console.log('articleAssests',result);
-                                        // Session.set('article-files',result);
-                                        article = articles.findOne({_id : articleMongoId});
-                                        Session.set('article',article)
-                                    }
-                                });
+                                // // update template data
+                                // Meteor.call('articleAssests', articleMongoId, function(error, result) {
+                                //     if(result){
+                                //         console.log('articleAssests',result);
+                                //         // Session.set('article-files',result);
+                                //         article = articles.findOne({_id : articleMongoId});
+                                //         Session.set('article',article)
+                                //     }
+                                // });
+
+                                if(s3Folder === 'xml'){
+                                    // check for figures and supplementary files after upload. This will not be in the article form because users cannot update this in the database, must match the XML
+                                    Meteor.call('afterUploadXmlFilesCheck',articleMongoId , newFileName, function(error,result){
+                                        if(error){
+                                            console.error('xmlCheckFiguresAndSupps',error);
+                                        }else if(result){
+
+                                        }
+                                    });
+                                }
 
                                 // notify user
-                                Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName);
+                                if(s3Folder === 'xml'){
+                                    messageForXml = '<br><b>Save form to update the article record in the database.</b>';
+                                }
+                                Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName + messageForXml);
                                 // Session.set('xml-verify',null); // still want the form visible so that they can update the database.
 
                                 // delete uploaded file, if not equal to MongoID
