@@ -69,7 +69,7 @@ Meteor.methods({
         return fut.wait();
     },
     renameArticleAsset: function(articleMongoId, folder, originalFileName){
-        console.log('renameArticleAsset',articleMongoId);
+        // console.log('renameArticleAsset',articleMongoId);
         var fut = new future();
         var newFileName = articleMongoId + '.' + folder;
         var source = folder + '/' + originalFileName;
@@ -220,7 +220,7 @@ Meteor.methods({
         var assetUrl = assetBaseUrl + fileName;
         Meteor.call('getXml',assetUrl, function(error,xmlString){
             if(error){
-                error.userMessage = 'Could not get XML to check for figures and supps';
+                error.userMessage = 'Could not get XML to check for supps';
                 fut.throw(error);
             }else if(xmlString){
                 Meteor.xmlPmc.supplementaryMaterials(xmlString,function(supps){
@@ -230,7 +230,7 @@ Meteor.methods({
                                 error.userMessage = 'Could not update article in the database with supplementary materials.';
                                 fut.throw(error);
                             }else if(result){
-
+                                fut.return(true);
                             }
                         });
                     }

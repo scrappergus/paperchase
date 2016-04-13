@@ -413,6 +413,16 @@ Template.AdminBatch.events({
                 console.log(result);
             }
         });
+    },
+    'click #batch-supp': function(e){
+        e.preventDefault();
+        Meteor.call('batchUpdateSuppViaXml', function(error,result){
+            if(error){
+                console.error('batchUpdateSuppViaXml',error);
+            }else{
+                console.log(result);
+            }
+        });
     }
 });
 Template.AdminCrawl.events({

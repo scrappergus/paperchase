@@ -114,11 +114,12 @@ Meteor.methods({
         var journalInfo = journalConfig.findOne();
         var journalShortName = journalInfo.journal.short_name;
         var articlesList = articles.find({'files.xml' : {'$exists' : true}}).fetch();
-
-        var assetBaseUrl = 'http://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/';
-        // for(var i = 0 ; i < articlesList.length; i++){
-        for(var i = 0 ; i < 100; i++){
+        // console.log('articlesList',articlesList.length);
+        var assetBaseUrl = journalInfo.assets + 'xml/';
+        for(var i = 0 ; i < articlesList.length; i++){
+        // for(var i = 0 ; i < 100; i++){
             var articleMongoId = articlesList[i]._id;
+            // console.log(i,articleMongoId);
             var assetUrl = assetBaseUrl + articleMongoId + '.xml';
             Meteor.call('getXml',assetUrl,function(error,xmlString){
                 if(xmlString){
@@ -143,6 +144,35 @@ Meteor.methods({
                 }
             });
 
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
+    batchUpdateSuppViaXml: function(){
+        // console.log('..batchUpdateSuppViaXml');
+        var fut = new future();
+        var journalInfo = journalConfig.findOne();
+        var journalShortName = journalInfo.journal.short_name;
+        var articlesList = articles.find({'files.xml' : {'$exists' : true}}).fetch();
+        var assetBaseUrl = journalInfo.assets + 'xml/';
+        for(var i = 0 ; i < articlesList.length; i++){
+            var articleMongoId = articlesList[i]._id;
+            console.log(i,articleMongoId);
+            var assetUrl = assetBaseUrl + articleMongoId + '.xml';
+            Meteor.call('getXml',assetUrl,function(error,xmlString){
+                if(xmlString){
+                    Meteor.xmlPmc.supplementaryMaterials(xmlString, function(supps){
+                        if(supps && supps.length >0){
+                            Meteor.call('updateArticleDbSupps', articleMongoId, supps);
+                        }
+                    });
+                }
+            });
         }
 
         try {
