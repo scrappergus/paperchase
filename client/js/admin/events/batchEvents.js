@@ -60,7 +60,7 @@ Template.AdminBatch.events({
         var search;
         search = $('#search-for').val();
         if(search){
-            Meteor.call('batcharticlesWith', search, function(e,r){
+            Meteor.call('batchArticlesWith', search, function(e,r){
                 if(e){
                     Meteor.formActions.errorMessage(e);
                     console.error(e);
@@ -403,6 +403,16 @@ Template.AdminBatch.events({
     },
     'click #type-fix': function(e){
         Meteor.call('updateAllArticlesTypes');
+    },
+    'click #batch-corresponding': function(e){
+        e.preventDefault();
+        Meteor.call('batchUpdateCorrespViaXml', function(error,result){
+            if(error){
+                console.error('batchUpdateCorrespViaXml',error);
+            }else{
+                console.log(result);
+            }
+        });
     }
 });
 Template.AdminCrawl.events({
