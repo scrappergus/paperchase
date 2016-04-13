@@ -263,6 +263,7 @@ footer {
 /*================ Navigation | Base Styles ================*/
 $navbar-height: 70px;
 $sub-navbar-height: 64px;
+$sub-navbar-padding: 10px;
 
 .navigation {
   position: fixed;
@@ -323,10 +324,11 @@ $sub-navbar-height: 64px;
 /*================ Navigation | Sub-Nav Modules ================*/
 .sub-nav {
   position: fixed;
-  height: 64px;
+  height: $sub-navbar-height + $sub-navbar-padding;
   width: 80%;
   background-color: $faintgray;
   @include padding-vertical(25px);
+  border-bottom: $sub-navbar-padding solid #fff;
 }
 
 .sub-nav .breadcrumbs {
@@ -518,7 +520,9 @@ $sub-navbar-height: 64px;
     padding: 12px 20px; // 25 - 5
     width: 100%;
     border-left: 5px solid rgba(0,0,0,0);
-    @include transition(background 0.25s ease-out, color 0.25s ease-out, border-color 0.25s ease-out);
+    @include transition(background 0.25s ease-out, 
+      color 0.25s ease-out, 
+      border-color 0.25s ease-out);
 
     &:hover {
       background: $lightgray;
@@ -543,7 +547,7 @@ $sub-navbar-height: 64px;
   top: 0; 
   &.fixed-active {
     position: fixed;
-    top: calc($navbar-height + 25px);
+    top: 150px;
   }
 }
 
@@ -635,7 +639,7 @@ $sub-navbar-height: 64px;
   }
 }
 
-/*================ Main Article Content | Article-Level Modules ================*/
+/*================ Articles | Article-Level Modules ================*/
 h5.article-header {
   position: relative;
   @extend .uppercase-titles;
@@ -701,12 +705,19 @@ h2.authors {
 .article-text {
   margin-top: 3rem;
 
-  h3 {
+  h3.article-header-1 {
     @extend .uppercase-titles;
     color: $electric;
-    border-bottom: 2px solid rgba(119, 130, 142, .2);
-    margin-bottom: 0;
-    padding-bottom: 8px;
+    margin: 120px 0 0;
+
+    &#abstract {
+      margin-top: 20px;
+    }
+    
+    &.bordered {
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(119, 130, 142, .2);
+    }
   }
 
   p {
@@ -717,9 +728,15 @@ h2.authors {
   // Abstract-Specific Styles
   &.abstract {
     background: $faintgray;
-    padding: 20px 40px 30px;
+    padding: 30px 40px;
   }
 }
+
+/*================ Full Text | Article-Level Modules ================*/
+// .section-container {
+//   padding-top: 50px;
+// }
+
 
 /*================ Sidebar Article Content | Article-Level Modules ================*/
 

@@ -8,9 +8,7 @@
    <div class="card sidebar-card fixed-scroll-card">
         <h6 class="card-title">{{title}}</h6>
         <ul class="scrollspy toc">
-            {{#each items}}
-                <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
-            {{/each}}
+            {{> scrollspyItems}}
         </ul>
     </div>
 </template>
@@ -19,9 +17,15 @@
    <div class="card sidebar-card">
         <h6 class="card-title">{{title}}</h6>
         <ul class="scrollspy toc">
-            {{#each items}}
-                <a class="anchor" href="#section-{{@index}}"><li>{{{title}}}</li></a>
-            {{/each}}
+            {{> scrollspyItems}}
         </ul>
     </div>
+</template>
+
+<template name="scrollspyItems">
+    {{#each items}}
+        {{#if topSection headerLevel}}
+            <a class="anchor" href="#{{titleCase title}}"><li>{{titleCase title}}</li></a>
+        {{/if}}
+    {{/each}}
 </template>

@@ -18,42 +18,44 @@
 		{{/if}}
 
 		{{#with fullText}}
-			{{>ArticleFullText}}
+			<div class="article-text">
+				{{>ArticleFullText}}
 
-			{{#if references}}
-				<h3 id="references">References</h3>
-				<ul>
-					{{#each references}}
-						<li id="R{{number}}">
-							<b>{{number}}.</b>
+				{{#if references}}
+					<h3 id="references">References</h3>
+					<ul>
+						{{#each references}}
+							<li id="R{{number}}">
+								<b>{{number}}.</b>
 
-							{{#if equals type 'journal'}}
-							{{#if authors}}<span> {{authors}}.</span>{{/if}}
-							{{#if title}}<span> {{title}}.</span>{{/if}}
-							{{#if source}}<span> {{source}}.</span>{{/if}}
-							{{#if year}}<span> {{year}};</span>{{/if}}
-							{{#if volume}}<span> {{volume}}:</span>{{/if}}
-							{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
-							{{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{else}}{{getPmid .}}{{/if}}
-							{{/if}}
+								{{#if equals type 'journal'}}
+								{{#if authors}}<span> {{authors}}.</span>{{/if}}
+								{{#if title}}<span> {{title}}.</span>{{/if}}
+								{{#if source}}<span> {{source}}.</span>{{/if}}
+								{{#if year}}<span> {{year}};</span>{{/if}}
+								{{#if volume}}<span> {{volume}}:</span>{{/if}}
+								{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+								{{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{else}}{{getPmid .}}{{/if}}
+								{{/if}}
 
-							{{#if equals type 'book'}}
-							{{#if authors}}<span> {{authors}}.</span>{{/if}}
-							{{#if year}}<span> {{year}}.</span>{{/if}}
-							{{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
-							{{#if volume}}<span> {{volume}}:</span>{{/if}}
-							{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
-							<span>(</span>
-							{{#if source}}<span>{{{source}}}</span>{{/if}}
-							{{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
-							{{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
-							<span>)</span>
-							<span>.</span>
-							{{/if}}
-						</li>
-					{{/each}}
-				</ul>
-			{{/if}}
+								{{#if equals type 'book'}}
+								{{#if authors}}<span> {{authors}}.</span>{{/if}}
+								{{#if year}}<span> {{year}}.</span>{{/if}}
+								{{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
+								{{#if volume}}<span> {{volume}}:</span>{{/if}}
+								{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
+								<span>(</span>
+								{{#if source}}<span>{{{source}}}</span>{{/if}}
+								{{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
+								{{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
+								<span>)</span>
+								<span>.</span>
+								{{/if}}
+							</li>
+						{{/each}}
+					</ul>
+				{{/if}}
+			</div>
 		{{/with}}
 	</div>
 
@@ -85,43 +87,36 @@
 			</div>
 		{{/if}} {{/with}}
 
-		<div class="card sidebar-card fixed-scroll-card">
-			<h6 class="card-title">Table of Contents</h6>
-			<ul class="scrollspy toc">
-				<a href="#"><li>Abstract</li></a>
-				<a href="#"><li class="active">Introduction</li></a>
-				<a href="#"><li>Materials and Methods</li></a>
-				<a href="#"><li>References</li></a>
-			</ul>
-		</div>
+		{{> scrollspyCard title="Table of Contents" items=sections}}
 	</div>
 </template>
 
 <template name="ArticleFullText">
-	<h3 id="main-text">Main Text</h3>
 	{{#each sections}}
-		<div class="section-container" id="{{sectionId}}">
-			<div class="article-header-{{headerLevel}}">{{#if label}}{{{label}}} {{/if}}{{{title}}}</div>
+		<div class="section-container" id="{{titleCase title}}">
+			<h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}} {{/if}} {{{title}}}</h3>
 			{{#each content}}
 				{{#if equals contentType 'p'}}
 				<p>{{{content}}}</p>
 				{{/if}}
 
+				<!-- Figure -->
 				{{#if equals contentType 'figure'}}
-				{{#with content}}
-				<div class="full-text-image-container box border-gray center-align" id="{{id}}">
-					{{#if label}}<label>{{{label}}}</label>{{/if}}
-					{{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
-					{{#if title}}<h4>{{{title}}}</h4>{{/if}}
-					{{#if caption}}<p>{{{caption}}}</p>{{/if}}
-				</div>
-				{{/with}}
+					{{#with content}}
+					<div class="full-text-image-container box border-gray center-align" id="{{id}}">
+						{{#if label}}<label>{{{label}}}</label>{{/if}}
+						{{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
+						{{#if title}}<h4>{{{title}}}</h4>{{/if}}
+						{{#if caption}}<p>{{{caption}}}</p>{{/if}}
+					</div>
+					{{/with}}
 				{{/if}}
 
+				<!-- Table -->
 				{{#if equals contentType 'table'}}
-				<div class="article-table">
-					{{{content}}}
-				</div>
+					<div class="article-table">
+						{{{content}}}
+					</div>
 				{{/if}}
 			{{/each}}
 		</div>

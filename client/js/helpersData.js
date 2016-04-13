@@ -61,6 +61,7 @@ Template.SubscribeModal.helpers({
 		return Session.get('articleData');
 	}
 });
+
 // Navigation
 // -------------
 Template.LeftNav.helpers({
@@ -84,6 +85,11 @@ Template.MobileMenu.helpers({
 		var sectionsList = sections.find().fetch();
 		return sectionsList;
 	}
+});
+Template.scrollspyItems.helpers({
+    topSection: function() {
+        return this.headerLevel == 1;
+    }
 });
 
 // Contact
@@ -120,6 +126,13 @@ Template.ArticleText.helpers({
 	fullText: function(){
 		// console.log(Session.get('article-text'));
 		return Session.get('article-text');
+	},
+	sections: function() {
+		// var 
+
+		// todo: return articles' sections
+		var array = Session.get('article-text').sections;
+		return Session.get('article-text').sections;
 	}
 });
 Template.ArticleSections.helpers({

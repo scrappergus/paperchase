@@ -42,7 +42,7 @@
 
 	{{#if abstract}}
 		<div class="abstract article-text">
-			<h3 id="abstract">Abstract</h3>
+			<h3 class="bordered article-header-1" id="abstract">Abstract</h3>
 			<p>{{{abstract}}}</p>
 		</div>
 	{{/if}}
@@ -138,15 +138,19 @@
 	</div>
 </template>
 
+
+<!-- todo: refactor this using new fixed navigation -->
 <template name="ArticleSections">
 	{{#if fullText}}
-	{{#with fullText}}
-	<ul class="section-nav">
-	{{>ArticleSectionsList}}
-	</ul>
-	{{/with}}
+		{{#with fullText}}
+		<ul class="section-nav">
+		{{>ArticleSectionsList}}
+		</ul>
+		{{/with}}
 	{{/if}}
 </template>
+
+<!-- todo: refactor this using new fixed navigation -->
 <template name="ArticleSectionsList">
 	{{#if abstract}}
 	<li class="row">

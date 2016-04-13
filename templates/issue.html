@@ -8,10 +8,10 @@
 				<div class="page-title">
 					<span class="page-desc">Table of Contents</span>
 					<h1>Volume {{volume}}, Issue {{issue}}</h1>
-					<span class="issue-date">January 2016</span>
+					{{#if pub_date}}
+					<span class="issue-date">{{formatIssueDate pub_date date_settings}}</span>
+					{{/if}}
 				</div>
-				
-				{{#if pub_date}}<span class="h2">{{formatIssueDate pub_date date_settings}}</span>{{/if}}
 			</div>
 
 			<!-- Main -->

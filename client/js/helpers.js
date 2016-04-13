@@ -159,6 +159,7 @@ if (Meteor.isClient) {
 		}
 		return;
 	});
+
 	// Equals
 	// -------
 	Template.registerHelper('equals', function (a, b) {
@@ -216,6 +217,14 @@ if (Meteor.isClient) {
 	
 	Template.registerHelper('stripTitle', function(title) {
 		return title.substr(title.indexOf("|") + 1);
+	});
+
+
+	// todo: expand upon this method
+	Template.registerHelper('titleCase', function(str) {
+			return str.replace(/\w\S*/g, function(txt){
+				return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+			});
 	});
 
 	UI.registerHelper('truncate', function(str, limit) {

@@ -83,13 +83,13 @@ Template.scrollspyCard.onRendered(function() {
 
     if (sticky.length > 0) {
         var stickyHeight = sticky.height();
-        var sidebarTop = parseInt(sticky.offset().top - 105) ;
+        var sidebarTop = parseInt(sticky.offset().top - 10) ;
     }
 
     // on scroll affix the sidebar
     $(window).scroll(function () {
         if (sticky.length > 0) {
-            var scrollTop = $(window).scrollTop();
+            var scrollTop = $(window).scrollTop() + 150;
 
             if (sidebarTop < scrollTop) {
                 sticky.addClass('fixed-active');
