@@ -83,7 +83,7 @@ Template.scrollspyCard.onRendered(function() {
 
     if (sticky.length > 0) {
         var stickyHeight = sticky.height();
-        var sidebarTop = parseInt(sticky.offset().top - 25) ;
+        var sidebarTop = parseInt(sticky.offset().top - 105) ;
     }
 
     // on scroll affix the sidebar

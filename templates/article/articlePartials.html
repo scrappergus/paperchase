@@ -59,16 +59,16 @@
 <template name="AuthorsRefList">
 	<h2 class="authors">
 		{{#each authors}}
-			<span>
+			<span class="author">
 				{{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
 				{{#if affiliations_numbers}}
 					<sup class="author-affiliations">
 						{{#each affiliations_numbers}}
-							<span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,&nbsp;</span></span>
+							<span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
 						{{/each}}
 					</sup>
 				{{/if}}
-				<span class="comma">, </span>
+				<span class="comma">,</span>
 			</span>
 		{{/each}}
 	</h2>
