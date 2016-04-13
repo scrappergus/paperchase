@@ -194,7 +194,7 @@ Meteor.fullText = {
                     var nodeAnchor = '',
                         nValue = '';
                     // console.log('cc = ' + cc );
-                    if(childNode.localName != null){
+                    if(childNode.localName != null && childNode.localName != 'xref' ){
                         content += '<' + childNode.localName + '>';
                     }
 
@@ -214,10 +214,9 @@ Meteor.fullText = {
                         content += Meteor.fullText.convertContent(childNode);
                     }
 
-                    if(childNode.localName != null){
+                    if(childNode.localName != null && childNode.localName != 'xref' ){
                         content += '</' + childNode.localName + '>';
                     }
-                    // console.log(content);
                 }
             }
         }
@@ -225,6 +224,7 @@ Meteor.fullText = {
         return content;
     },
     linkXref: function(xrefNode){
+        // console.log('linkXref',xrefNode);
         // Determine - Reference or Figure or table-fn?
         var content = '';
         if(xrefNode.childNodes[0]){
