@@ -120,7 +120,7 @@ Meteor.methods({
         articleProcessed.correspondence = []; //can have multiple corresp elements, for ex: pmid 26678252
         if(article['author-notes'] && article['author-notes'][0].corresp){
             Meteor.xmlPmc.authorsCorresponding(article['author-notes'][0].corresp,function(correspondence){
-                if(correspondence && correspondence.length > 1){
+                if(correspondence && correspondence.length > 0){
                     articleProcessed.correspondence = correspondence;
                 }
             });
