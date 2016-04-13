@@ -724,47 +724,32 @@ Meteor.articleFiles = {
                         updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
                         Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
                             if(result){
-                                // console.log('result',result);
                                 // clear files
                                 S3.collection.remove({});
 
-                                // // update template data
-                                // Meteor.call('articleAssests', articleMongoId, function(error, result) {
-                                //     if(result){
-                                //         console.log('articleAssests',result);
-                                //         // Session.set('article-files',result);
-                                //         article = articles.findOne({_id : articleMongoId});
-                                //         Session.set('article',article)
-                                //     }
-                                // });
-
-                                if(s3Folder === 'xml'){
-                                    // check for figures and supplementary files after upload. This will not be in the article form because users cannot update this in the database, must match the XML
-                                    Meteor.call('afterUploadXmlFilesCheck',articleMongoId , newFileName, function(error,result){
-                                        if(error){
-                                            console.error('xmlCheckFiguresAndSupps',error);
-                                        }else if(result){
-
-                                        }
-                                    });
-                                }
 
                                 // notify user
                                 if(s3Folder === 'xml'){
                                     messageForXml = '<br><b>Save form to update the article record in the database.</b>';
                                 }
                                 Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName + messageForXml);
-                                // Session.set('xml-verify',null); // still want the form visible so that they can update the database.
+                                // Session.set('xml-verify',null); // do not clear form, still want the form visible so that they can update the database.
 
+                                // the user probably does not need to be notified about below functions
                                 // delete uploaded file, if not equal to MongoID
                                 if(articleMongoId != fileNameId){
                                     S3.delete(s3Folder + '/' + file.name,function(error,result){
                                         if(error){
                                             console.error('Could not delete original file: ' + file.name);
                                         }
-                                        // if(result){
-                                            // console.log('Deleted original file: ' + file.name);
-                                        // }
+                                    });
+                                }
+                                if(s3Folder === 'xml'){
+                                    // check for figures and supplementary files after upload. This will not be in the article form because users cannot update this in the database, must match the XML
+                                    Meteor.call('afterUploadXmlFilesCheck',articleMongoId , newFileName, function(error,result){
+                                        if(error){
+                                            console.error('xmlCheckFiguresAndSupps',error);
+                                        }
                                     });
                                 }
                             }
