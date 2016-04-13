@@ -260,15 +260,29 @@ Meteor.xmlPmc = {
         var allCorrespondence = [];
         for(var i=0 ; i < corresp.length ; i++){
             var correspondence = {};
-            correspondence.text = '';
             for(var k in corresp[i]){
                 if(k != 'email' && typeof corresp[i][k] == 'string' && corresp[i][k] != '; '){
+                    if(!correspondence.text){
+                        correspondence.text = '';
+                    }
                     correspondence.text += corresp[i][k];
                 }else if(k != 'email' && k != '$' && typeof corresp[i][k] == 'object'){
+                    if(!correspondence.text){
+                        correspondence.text = '';
+                    }
                     correspondence.text += Meteor.xmlParse.traverseJson(corresp[i][k]);
                 }else if(k == 'email'){
                     correspondence.email = corresp[i][k][0];
                 }
+            }
+            if(correspondence.text){
+                // remove all line breaks and extra spaces
+                correspondence.text = correspondence.text.replace(/(\r\n|\n|\r)/gm,'');
+                correspondence.text = correspondence.text.replace(/  +/g, ' ');
+                // remove all the text we do not want to use for templating
+                correspondence.text = correspondence.text.replace('Correspondence:','');
+                correspondence.text = correspondence.text.replace('Correspondence to ','');
+                correspondence.text = correspondence.text.replace('at,','');
             }
             allCorrespondence.push(correspondence);
         }
