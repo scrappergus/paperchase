@@ -219,16 +219,6 @@ Template.AdminArticle.helpers({
         }
     }
 });
-Template.AdminArticleAdd.helpers({
-    articleProcessed: function(){
-        // session default for article is null. If new article, empty object.
-        if(Session.get('article-form') === null){
-            return false;
-        }else{
-            return true;
-        }
-    }
-});
 Template.AdminArticleForm.helpers({
     article : function(){
         return Session.get('article-form');
@@ -336,6 +326,20 @@ Template.AdminAop.helpers({
                     }
                 }
             ]
+        }
+    }
+});
+
+
+// New Article
+// ---------------
+Template.AdminArticleAdd.helpers({
+    articleProcessed: function(){
+        // session default for article is null. If new article, empty object.
+        if(Session.get('article-form') === null){
+            return false;
+        }else{
+            return true;
         }
     }
 });
