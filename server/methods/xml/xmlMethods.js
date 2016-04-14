@@ -79,6 +79,7 @@ Meteor.methods({
 // Methods to compare XML with DB
 // -------------
 var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display'];
+var ignoreConflictsViaXml = ['figures','supplementary']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
 
 Meteor.methods({
     compareObjectsXmlWithDb: function(parentKey, xmlValue, dbValue){
@@ -202,64 +203,72 @@ Meteor.methods({
         // Note: Merged data will be from the XML if there is a conflict
 
         var merged = {};
-            merged['conflicts'] = [];
-
+            merged.conflicts = [];
 
         // since DB has more info than XML loop through its data to compare. Later double check nothing missing from merge by looping through XML data
         for(var keyDb in dbArticle){
-            if(dbArticle[keyDb] != '' && xmlArticle[keyDb]){
-                //XML will not have empty value, but DB might because of removing an article from something (ie, removing from a section)
-                merged[keyDb] = xmlArticle[keyDb]; // both versions have data for key. if there are conflicts, then form will default to XML version
-                // now check if there are conflicts between versions
-                Meteor.call('compareValuesXmlWithDb', keyDb, xmlArticle[keyDb], dbArticle[keyDb], function(error,conflict){
-                    if(conflict){
-                        merged['conflicts'].push(conflict);
-                    }
-                });
-            }else if(dbArticle[keyDb] == '' && xmlArticle[keyDb]){
-                merged['conflicts'].push({
-                    'what' : keyDb,
-                    'conflict' : 'In XML, NOT in database'
-                });
-            }else if(dbArticle[keyDb] != '' && !xmlArticle[keyDb] && ignoreConflicts.indexOf(keyDb) == -1){
-                if(typeof dbArticle[keyDb] === 'object' && Object.keys(dbArticle[keyDb]).length === 0){
-                    // ignore empty objects in DB if there is nothing in the XML. There is no conflict
-                }else{
-                    // If in DB but not in XML
-                    // skip mongo ID, issue mongo ID, db doc_updates etc for comparing
-                    // stringify database info in case type is object
-                    merged[keyDb] = dbArticle[keyDb];
+            if(ignoreConflicts.indexOf(keyDb) == -1 && ignoreConflictsViaXml.indexOf(keyDb) == -1 ){
+                if(dbArticle[keyDb] != '' && xmlArticle[keyDb]){
+                    //XML will not have empty value, but DB might because of removing an article from something (ie, removing from a section)
+                    merged[keyDb] = xmlArticle[keyDb]; // both versions have data for key. if there are conflicts, then form will default to XML version
+                    // now check if there are conflicts between versions
+                    Meteor.call('compareValuesXmlWithDb', keyDb, xmlArticle[keyDb], dbArticle[keyDb], function(error,conflict){
+                        if(conflict){
+                            merged['conflicts'].push(conflict);
+                        }
+                    });
+                }else if(dbArticle[keyDb] == '' && xmlArticle[keyDb]){
                     merged['conflicts'].push({
                         'what' : keyDb,
-                        'conflict' : 'In database, NOT in XML<div class="clearfix"></div>' + JSON.stringify(dbArticle[keyDb])
+                        'conflict' : 'In XML, NOT in database'
                     });
+                }else if(dbArticle[keyDb] != '' && !xmlArticle[keyDb]){
+                    if(typeof dbArticle[keyDb] === 'object' && Object.keys(dbArticle[keyDb]).length === 0){
+                        // ignore empty objects in DB if there is nothing in the XML. There is no conflict
+                    }else{
+                        // If in DB but not in XML
+                        // skip mongo ID, issue mongo ID, db doc_updates etc for comparing
+                        // stringify database info in case type is object
+                        merged[keyDb] = dbArticle[keyDb];
+                        merged['conflicts'].push({
+                            'what' : keyDb,
+                            'conflict' : 'In database, NOT in XML<div class="clearfix"></div>' + JSON.stringify(dbArticle[keyDb])
+                        });
+                    }
+                }else if(keyDb == '_id'){
+                    merged[keyDb] = dbArticle[keyDb];
+                }else if(keyDb == 'issue_id'){
+                    if(xmlArticle.issue_id && xmlArticle.issue_id != dbArticle[keyDb]){
+                        merged.conflicts.push({
+                            'what' : 'Issue Changed',
+                            'conflict' : '<div class="clearfix"></div><b>XML != Database</b><div class="clearfix"></div>' + xmlArticle.issue_id + '<div class="clearfix"></div>!=<div class="clearfix"></div>' + dbArticle[keyDb]
+                        });
+                    }
+                    merged[keyDb] = dbArticle[keyDb]; // add DB issue_id value to merged,
+                }else{
+                    // console.log('..else');
+                    // the database value is empty and the XML does not have this
                 }
-            }else if(keyDb == '_id'){
-                merged[keyDb] = dbArticle[keyDb];
-            }else if(keyDb == 'issue_id'){
-                if(xmlArticle.issue_id && xmlArticle.issue_id != dbArticle[keyDb]){
-                    merged['conflicts'].push({
-                        'what' : 'Issue Changed',
-                        'conflict' : '<div class="clearfix"></div><b>XML != Database</b><div class="clearfix"></div>' + xmlArticle.issue_id + '<div class="clearfix"></div>!=<div class="clearfix"></div>' + dbArticle[keyDb]
-                    });
-                }
-                merged[keyDb] = dbArticle[keyDb]; // add DB issue_id value to merged,
             }else{
-                // console.log('..else');
-                // the database value is empty and the XML does not have this
+                merged[keyDb] = dbArticle[keyDb];
             }
+
         }
         // console.log('merged',merged);
         // Now make sure there isn't anything missing from XML
         for(var keyXml in xmlArticle){
-            if(!merged[keyXml]){
-                merged[keyXml] = xmlArticle[keyXml];
-                if(keyXml != 'issue_id'){
-                    merged['conflicts'].push({
-                        'what' : keyXml,
-                        'conflict' : 'In XML, NOT in database: ' + xmlArticle[keyXml]
-                    });
+            if(ignoreConflicts.indexOf(keyXml) == -1 && ignoreConflictsViaXml.indexOf(keyXml) == -1 ){
+                if(!merged[keyXml]){
+                    merged[keyXml] = xmlArticle[keyXml];
+                    if(keyXml != 'issue_id'){
+                        merged.conflicts.push({
+                            'what' : keyXml,
+                            'conflict' : 'In XML, NOT in database: ' + xmlArticle[keyXml]
+                        });
+                    }
                 }
+            }else if(ignoreConflictsViaXml.indexOf(keyXml) != -1 ){
+                merged[keyXml] = xmlArticle[keyXml]; // for figures and supps from XML. DB will ALWAYS reflect what is in the XML.
             }
         }
 

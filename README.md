@@ -129,6 +129,8 @@ Article Files Uploader
  - Issue handling: if volume and issue in XML, but no record in the issues collection, then insert. This happens on processing, so before the article form gets saved. The reason is because issues can be deleted/hidden easily (still a todo).
  - Duplicate article checked on processing. User is notified above article form.
 
+ After uploading XML, the file is checked for supplementary materials and if found the article doc in the DB is updated. afterUploadXmlFilesCheck() is called from the client.
+
 ----------
 
 
@@ -154,11 +156,11 @@ PDF files are versioned, so consistent naming is essential. In the Paperchase DB
 
 Before rendering the template, AdminArticleFigures, if the article has XML uploaded, then it's parsed for figure nodes. The ID, label, title and caption are listed below the figure uploader/editor. The data for the XML figures is stored in the session variable `xml-figures`.
 
-Deleting: Uses template AdminArticleFigures. After clicking the edit button next to the figure, a delete button is displayed. Delete happens via client. DB updating happens on server using afterDeleteArticleFigure()
+Deleting: Uses template AdminArticleFigures. After clicking the edit button next to the figure, a delete button is displayed. Delete happens via client. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
 
-Uploading: Uses template s3FigureUpload. First the file is uploaded to the paper_figures folder on S3, which must happen on the client. Then on the server, using afterUploadArticleFig(), the uploaded figure is renamed to standard convention (articlemongoid_figureid). The original file is copied and named using articlemongoid_figureid, then the article doc in the DB is updated. After updating the DB, the original file is deleted, via the client. See articleEvents.js.
+Uploading: Uses template s3FigureUpload. First the file is uploaded to the paper_figures folder on S3, which must happen on the client. Then on the server, using afterUploadArticleFig(), the uploaded figure is renamed to standard convention (articlemongoid_figureid). The original file is copied and named using articlemongoid_figureid. The original file is deleted, via the client. See articleEvents.js. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
 
-Updating/Adding New Figure: Both actions use same template event from s3FigureUpload, which will also verify that the figure ID is unique. They also use the server method afterUploadArticleFig(), which has flag in the function, `figFound`, to determine if new or existing figure updated.
+Updating/Adding New Figure: Both actions use same template event from s3FigureUpload, which will also verify that the figure ID is unique. They also use the server method afterUploadArticleFig(). This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
 
 
 Issue Form

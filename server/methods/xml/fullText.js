@@ -250,51 +250,21 @@ Meteor.fullText = {
     convertFigure: function(node,figures,mongoId){
         // console.log('..convertFigure',figures);
         var figureAssetsUrl = journalConfig.findOne().assets;
-        var figObj = {};
-        // get the figure ID
-        for(var figAttr = 0 ; figAttr < node.attributes.length ; figAttr++){
-            if(node.attributes[figAttr].localName === 'id'){
-                figObj.id = node.attributes[figAttr].nodeValue;
-                var figId = figObj.id.replace('F','');
+        var figObj;
+
+        // get the figure id, label, title, caption
+        //------------------
+        Meteor.xmlPmc.figure(node,function(figInfo){
+            if(figInfo){
+                figObj = figInfo;
+                // match to db file info
                 for(var f = 0 ; f < figures.length ; f++){
-                    if(figures[f].id.replace('f','') === figId){
+                    if(figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
                         figObj.url = figureAssetsUrl + 'paper_figures/' + figures[f].file;
                     }
                 }
             }
-        }
-
-        // get the figure label, title, caption
-        //------------------
-        if(node.childNodes){
-
-            for(var figChild=0 ; figChild < node.childNodes.length ; figChild++){
-                var nod = node.childNodes[figChild];
-                // label
-                    if(nod.localName == 'label'){
-                        figObj.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
-                    }
-                //------------------
-                // title and caption
-                //------------------
-                if(nod.childNodes){
-                    for(var c = 0 ; c < nod.childNodes.length ; c++){
-                        var n = nod.childNodes[c];
-                        // console.log(n.localName);
-                        // figure title
-                        // ------------
-                        if(n.localName == 'title'){
-                            figObj.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
-                        }
-                        // figure caption
-                        // ------------
-                        if(n.localName == 'p'){
-                            figObj.caption = Meteor.fullText.convertContent(n);
-                        }
-                    }
-                }
-            }
-        }
+        });
 
         return figObj;
     },

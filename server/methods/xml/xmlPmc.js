@@ -161,7 +161,23 @@ Meteor.methods({
             });
         }
 
-        // console.log('articleProcessed',articleProcessed);
+        // SUPPLEMENTAL
+        // -----------
+        Meteor.xmlPmc.figures(xml,function(figures){
+            if(figures){
+                articleProcessed.figures = figures;
+            }
+        });
+
+        // FIGURES
+        // -----------
+        Meteor.xmlPmc.supplementaryMaterials(xml,function(supps){
+            if(supps){
+                articleProcessed.supplementary = supps;
+            }
+        });
+
+        // console.log('articleProcessed',articleProcessed.supplementary,articleProcessed.figures);
         return articleProcessed;
     },
     pmcFiguresInXml: function(articleMongoId){
@@ -341,6 +357,60 @@ Meteor.xmlPmc = {
         }
         cb(datesResult)
     },
+    figure: function(node,cb){
+        var figObj = {};
+
+        Meteor.xmlPmc.getAttributeId(node, function(figId){
+            if(figId){
+                figObj.id = figId;
+            }
+        });
+
+        if(node.childNodes){
+
+            for(var figChild=0 ; figChild < node.childNodes.length ; figChild++){
+                var nod = node.childNodes[figChild];
+                // label
+                    if(nod.localName == 'label'){
+                        figObj.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+                    }
+                //------------------
+                // title and caption
+                //------------------
+                if(nod.childNodes){
+                    for(var c = 0 ; c < nod.childNodes.length ; c++){
+                        var n = nod.childNodes[c];
+                        // console.log(n.localName);
+                        // figure title
+                        // ------------
+                        if(n.localName == 'title'){
+                            figObj.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
+                        }
+                        // figure caption
+                        // ------------
+                        if(n.localName == 'p'){
+                            figObj.caption = Meteor.fullText.convertContent(n);
+                        }
+                    }
+                }
+            }
+        }
+
+        cb(figObj);
+    },
+    figures: function(xml,cb){
+        var figuresResult = [];
+        doc = new dom().parseFromString(xml);
+        xmlFigures = xpath.select('//fig', doc);
+        xmlFigures.forEach(function(f){
+            Meteor.xmlPmc.figure(f,function(fig){
+                if(fig){
+                    figuresResult.push(fig);
+                }
+            })
+        });
+        cb(figuresResult);
+    },
     getAttributeId: function(node,cb){
         for(var attr = 0 ; attr < node.attributes.length ; attr++){
             if(node.attributes[attr].localName === 'id'){
@@ -413,7 +483,6 @@ Meteor.xmlPmc = {
                 }
             });
         }
-
 
         // get the label, title, caption
         //------------------

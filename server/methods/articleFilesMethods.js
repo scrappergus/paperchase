@@ -194,55 +194,62 @@ Meteor.methods({
             throw new Meteor.Error(err.userMessage);
         }
     },
-    afterDeleteArticleFigure: function(articleMongoId,articleFigures){
-        var fut = new future();
-        Meteor.call('updateArticleDbFigures', articleMongoId, articleFigures, function(error,result){
-            if(error){
-                error.userMessage = 'Figure deleted but could not update the database. Contact IT and request DB update.';
-                fut.throw(error);
-            }else if(result){
-                fut.return('Figure deleted and database updated ');
-            }
-        });
-        try {
-            return fut.wait();
-        }
-        catch(err) {
-            throw new Meteor.Error(err.userMessage);
-        }
-    },
     afterUploadXmlFilesCheck:function(articleMongoId, fileName){
         // console.log('..afterUploadXmlFilesCheck',articleMongoId, fileName);
-        var fut = new future();
-        // Supps
+        // not notifying user of these DB updates
         var journalInfo = journalConfig.findOne();
         var journalShortName = journalInfo.journal.short_name;
         var assetBaseUrl = journalInfo.assets + 'xml/';
         var assetUrl = assetBaseUrl + fileName;
+        var articleInfo = articles.findOne({_id : articleMongoId});
+
         Meteor.call('getXml',assetUrl, function(error,xmlString){
             if(error){
                 error.userMessage = 'Could not get XML to check for supps';
                 fut.throw(error);
             }else if(xmlString){
+                // SUPPLEMENTAL MATERIAL
                 Meteor.xmlPmc.supplementaryMaterials(xmlString,function(supps){
                     if(supps){
-                        Meteor.call('updateArticleDbSupps',articleMongoId, supps, function(error,result){
-                            if(error){
-                                error.userMessage = 'Could not update article in the database with supplementary materials.';
-                                fut.throw(error);
-                            }else if(result){
-                                fut.return(true);
-                            }
-                        });
+                        if(articleInfo.files.supplementary){
+                            // maintain filename, match via ID
+                            Meteor.articleFiles.maintainFilenameViaId(supps, articleInfo.files.supplementary,function(suppRes){
+                                if(suppRes){
+                                    Meteor.call('updateArticleDbSupps',articleMongoId, suppRes, function(error,result){
+                                        if(error){
+                                            error.userMessage = 'Could not update article in the database with supplementary materials.';
+                                            fut.throw(error);
+                                        }else if(result){
+                                            // fut.return(true);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+                // FIGURES
+                Meteor.xmlPmc.figures(xmlString,function(figures){
+                    if(supps){
+                        if(articleInfo.files.figures){
+                            // maintain filename, match via ID
+                            Meteor.articleFiles.maintainFilenameViaId(figures, articleInfo.files.figures,function(figRes){
+                                if(figRes){
+                                    Meteor.call('updateArticleDbFigures',articleMongoId, figRes, function(error,result){
+                                        if(error){
+                                            error.userMessage = 'Could not update article in the database with figures.';
+                                            fut.throw(error);
+                                        }else if(result){
+                                            // fut.return(true);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
                     }
                 });
             }
         });
-        try {
-            return fut.wait();
-        }
-        catch(err) {
-            throw new Meteor.Error(err.userMessage);
-        }
     }
 });

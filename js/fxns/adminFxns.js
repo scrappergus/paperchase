@@ -760,6 +760,7 @@ Meteor.articleFiles = {
         });
     },
     figuresById: function(figures){
+        // TODO:remove this and use filesById
         var figsById = {};
 
         figures.forEach(function(fig){
@@ -767,6 +768,15 @@ Meteor.articleFiles = {
         });
 
         return figsById;
+    },
+    filesById: function(files){
+        var filesById = {};
+
+        files.forEach(function(file){
+            filesById[file.id.toLowerCase()] = file;
+        });
+
+        return filesById;
     },
     verifyFigure: function(originalFigId, newFigId){
         // if new figure, originalFigId = new
@@ -777,6 +787,21 @@ Meteor.articleFiles = {
         }else{
             return true;
         }
+    },
+    maintainFilenameViaId: function(filesXml,filesDb,cb){
+        // console.log('maintainFilenameViaId');
+        // for maintaining the filename of the file
+        var result = [];
+        var filesDbById = Meteor.articleFiles.filesById(filesDb);
+        filesXml.forEach(function(file){
+            var joined = file;
+            var fileId = file.id.toLowerCase();
+            if(filesDbById[fileId] && filesDbById[fileId].file){
+                joined.file = filesDbById[fileId].file;
+            }
+            result.push(joined);
+        });
+        cb(result);
     }
 }
 

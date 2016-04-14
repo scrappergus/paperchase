@@ -576,13 +576,6 @@ Template.AdminArticleFigures.events({
                     console.error('Could not delete figure file: ' + figToDelete);
                 }else{
                     Meteor.formActions.successMessage(result);
-                    // Meteor.call('afterDeleteArticleFigure', articleMongoId, newFigures, function(error,result){
-                    //     if(error){
-                    //         Meteor.formActions.errorMessage(error);
-                    //     }else if(result){
-                    //         Meteor.formActions.successMessage(result);
-                    //     }
-                    // });
                 }
             });
         }
