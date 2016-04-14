@@ -17,7 +17,7 @@
 
 <template name="s3FigureUpload">
     <div class="row"><div class="col s12 center-align">
-        {{>FileUploader}}
+        {{>FileUploader id=figId}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
         {{#each files}}
@@ -36,7 +36,7 @@
     <div class="file-field input-field">
         <div class="btn">
             <span>File</span>
-            <input class="file_bag" type="file">
+            <input class="file_bag" type="file" data-id={{id}}>
         </div>
         <div class="file-path-wrapper">
             <input class="file-path" type="text">
