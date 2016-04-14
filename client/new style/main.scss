@@ -514,7 +514,10 @@ $sub-navbar-padding: 10px;
 .card ul {
   margin: 0 -25px; // card padding compensation
 
-  li a { color: $kashmir; }
+  li a {
+    color: $kashmir;
+    display: block;
+  }
 
   li {
     padding: 12px 20px; // 25 - 5
