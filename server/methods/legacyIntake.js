@@ -290,13 +290,13 @@ Meteor.methods({
 
         // TODO: Pub Status. Query PubMed.
 
-        return articleUpdate;
-    },
-    ojsGetAdvanceArticles: function(){
-        var fut = new future();
-        var requestURL = 'http://impactjournals.com//ojs-api/?v=5&i=0';
-        var res;
-        res = Meteor.http.get(requestURL);
+		return articleUpdate;
+	},
+	ojsGetAdvanceArticles: function(){
+		var fut = new future();
+		var requestURL = 'http://www.impactjournals.com//ojs-api/?v=5&i=0';
+		var res;
+		res = Meteor.http.get(requestURL);
 
         if(res){
             fut['return'](res.data.articles);

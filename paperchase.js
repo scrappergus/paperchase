@@ -133,6 +133,34 @@ Router.route('/admin/add-legacy-platform-article/',{
     }
 });
 
+//cache crossref doi query responses
+Router.route('/admin/add-crossref-record/',{
+        name: 'AddCrossRefRecord',
+        where: 'server'
+    }).post(function (a,b,c) {
+            console.log('we posting');       
+            console.log(a,b,c);
+
+            var response = this.response;
+            var request = this.request;
+            var aricleDoi = this.request.body;
+
+            console.log(articleDoi);
+
+//            Meteor.call('crossrefRecordIntake', this.params, function(err, res) {
+//                    console.log(this.params);
+//                    if(err) {
+//                        response.setHeader('Content-Type', 'application/json');
+//                        response.end(JSON.stringify({'success':false}));
+//                    } else {
+//                        response.setHeader('Content-Type', 'application/json');
+//                        response.end(JSON.stringify({'success':true}));
+//                    }
+//                });
+
+        });
+
+
 // OUTTAKE ROUTES
 Router.route('/get-advance-articles/',{
     where: 'server',

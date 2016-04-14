@@ -161,6 +161,13 @@ Template.AdminArticlesDashboard.helpers({
     }
 });
 
+Template.AdminArticlesDashboard.helpers({
+    MissingDoiList : function(){
+        return articles.find({'ids.doi' : {$exists : false}}, {fields: {ids: 1}}).fetch();
+    }
+});
+
+
 // Article
 // ---------------
 Template.AdminArticleOverview.helpers({
