@@ -1,315 +1,207 @@
 <template name="AdminArticlesDashboard">
-	{{>AdminHeader header="Article Dashboard"}}
-	{{>StatusModal}}
-	<div class="row">
-		<div class="col s4">
-			<ul class="collection card">
-				<li class="collection-item"><a href="{{pathFor 'AdminArticleAdd'}}">Add Article</a></li>
-				<li class="collection-item"><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
-				<li class="collection-item"><a href="{{pathFor 'AdminAdvanceArticles'}}">Advance Articles</a></li>
-			</ul>
-			{{#with journal}}
-			{{#if equals short_name 'oncotarget'}}
-			<br><br>
-			<button id="ojs-batch-update" class="blue-grey darken-1 waves-effect waves-light btn">Batch Update Via OJS</button>
-			{{/if}}
-			{{/with}}
-		</div>
-		<div class="col s4">
-			<div class="card">
-				<div class="card-content">
-					<h4>DOI</h4>
-					<h5>{{MissingDoiCount}} Papers Without DOI Saved</h5>
-					<button id="doi-register-check" class="btn">DOI Registered Check</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m4">
-			<div class="card">
-				<div class="card-content">
-					<h5>Feature Articles</h5>
-					<div class="row">
-						<div class="col s12">
-							<ul class="collection">
-							{{#each feature}}
-								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
-							{{/each}}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col s4">
-			<div class="card">
-				<div class="card-content">
-					<h5>Advance Articles</h5>
-					<div class="row">
-						<div class="col s12">
-							<ul class="collection">
-							{{#each advance}}
-								<li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
-							{{/each}}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    {{>AdminHeader header="Article Dashboard"}}
+    {{>StatusModal}}
+    <div class="row">
+        <div class="col s4">
+            <ul class="collection card">
+                <li class="collection-item"><a href="{{pathFor 'AdminArticleAdd'}}">Add Article</a></li>
+                <li class="collection-item"><a href="{{pathFor 'AdminArticlesList'}}">Articles List</a></li>
+                <li class="collection-item"><a href="{{pathFor 'AdminAdvanceArticles'}}">Advance Articles</a></li>
+            </ul>
+            {{#with journal}}
+            {{#if equals short_name 'oncotarget'}}
+            <br><br>
+            <button id="ojs-batch-update" class="blue-grey darken-1 waves-effect waves-light btn">Batch Update Via OJS</button>
+            {{/if}}
+            {{/with}}
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content">
+                    <h4>DOI</h4>
+                    <h5>{{MissingDoiCount}} Papers Without DOI Saved</h5>
+                    <button id="doi-register-check" class="btn">DOI Registered Check</button>
+                    <ul>
+                    {{#each MissingDoiList}}
+                    <li><a href="/admin/article/{{_id}}">{{ids.pii}},</a></li>
+                    {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content">
+                    <h5>Feature Articles</h5>
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="collection">
+                            {{#each feature}}
+                                <li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <!--
+            <div class="card">
+                <div class="card-content">
+                    <h5>Advance Articles</h5>
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="collection">
+                            {{#each advance}}
+                                <li class="collection-item"><h6>{{{title}}}</h6><p><a href="{{pathFor 'AdminArticle'}}">View</a></p></li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            //-->
+        </div>
+    </div>
 </template>
 
 <template name="AdminArticlesList">
-	{{>AdminHeader header="Articles"}}
-	<div class="row">
-		<div class="col s12">
-			{{> reactiveTable collection=articles settings=settings}}
-		</div>
-	</div>
+    {{>AdminHeader header="Articles"}}
+    <div class="row">
+        <div class="col s12">
+            {{> reactiveTable collection=articles settings=settings}}
+        </div>
+    </div>
 </template>
 
 <template name="AdminAop">
-	{{>AdminHeader header="AOP"}}
-	<div class="row">
-		<div class="col s12">
-			{{> reactiveTable collection=articles settings=settings}}
-		</div>
-	</div>
+    {{>AdminHeader header="AOP"}}
+    <div class="row">
+        <div class="col s12">
+            {{> reactiveTable collection=articles settings=settings}}
+        </div>
+    </div>
 </template>
 
 <!-- individual article below, multiple articles above -->
 
 <template name="AdminArticleButtons">
-	<div class="row">
-		<div class="col s12">
-			<a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
-			<a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
-			<a href="{{pathFor 'AdminArticleAssets'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleAssets'}}">PDF and XML</a>
-			<a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col s12">
+            <a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
+            <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
+            <a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">PDF &amp; XML Settings</a>
+            <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">PDF &amp; XML Uploader</a>
+            <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
+        </div>
+    </div>
 </template>
 
 <template name="AdminArticleOverview">
-	{{>AdminHeader header="Article Overview"}}
-	{{>StatusModal}}
-	{{#with article}}
+    {{>AdminHeader header="Article Overview"}}
+    {{>StatusModal}}
+    {{#with article}}
 
-	{{>AdminArticleHeader}}
+    {{>AdminArticleHeader}}
 
-	{{#if countKeys dates}}
-	<div class="row">
-		<div class="col s12">
-			<h5>Dates:</h5>
-			{{#each arrayify dates}}
-				{{#if equals name 'collection'}}
-					<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
-					{{else}}
-					<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-				{{/if}}
-			{{/each}}
-		</div>
-	</div>
-	{{/if}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    {{#if countKeys dates}}
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>Dates:</h5>
+                            {{#each arrayify dates}}
+                                {{#if equals name 'collection'}}
+                                    <h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+                                    {{else}}
+                                    <h6><label>{{name}}:</label> {{articleDate value}}</h6>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
 
-	{{#if countKeys history}}
-	<div class="row">
-		<div class="col s12">
-			<h5>History:</h5>
-			{{#each arrayify history}}
-			<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-			{{/each}}
-		</div>
-	</div>
-	{{/if}}
+                    {{#if countKeys history}}
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>History:</h5>
+                            {{#each arrayify history}}
+                            <h6><label>{{name}}:</label> {{articleDate value}}</h6>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
 
-	{{#if keywords}}
-	<div class="row">
-		<div class="col s12">
-			<h5>Keywords:</h5>
-			<ul>
-				{{#each keywords}}
-				<li><h6>{{.}}</h6></li>
-				{{/each}}
-			</ul>
-		</div>
-	</div>
-	{{/if}}
-	{{/with}}
-</template>
+                    {{#if keywords}}
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>Keywords:</h5>
+                            <ul>
+                                {{#each keywords}}
+                                <li><h6>{{{.}}}</h6></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
 
-<template name="AdminArticleAssets">
-	{{>AdminHeader header="Article PDF and XML"}}
-	{{>StatusModal}}
-	{{#with article}}
-	{{>AdminArticleHeader}}
-	{{/with}}
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<form id="assets-form">
-						<span class="card-title">Assets</span>
-						<div class="row">
-							<div class="col s12 m6">
-								<div class="card z-depth-0 blue-grey lighten-5">
-									<div class="card-content">
-										<div class="card-title">XML</div>
-										{{#with assets}}
-										{{#with xml}}
-										{{#if url}}
-											<div class="row">
-												<div class="col s12 m6">
-													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
-												</div>
-												<div class="col s12 m6">
-													<input type="checkbox" id="display-xml" checked="{{checked settings.display}}"/>
-													<label for="display-xml">Display XML</label>
-												</div>
-											</div>
-										{{else}}
-										<h5>No XML</h5>
-										{{/if}}
-										{{/with}}
-										{{/with}}
-									</div>
-								</div>
-							</div>
-							<div class="col s12 m6">
-								<div class="card z-depth-0 blue-grey lighten-5">
-									<div class="card-content">
-										<div class="card-title">PDF</div>
-										{{#with assets}}
-										{{#with pdf}}
-										{{#if url}}
-											<div class="row">
-												<div class="col s12 m6">
-													<a class="btn" href="{{url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
-												</div>
-												<div class="col s12 m6">
-													<input type="checkbox" id="display-pdf" checked="{{checked settings.display}}"/>
-													<label for="display-pdf">Display PDF</label>
-												</div>
-											</div>
-										{{else}}
-										<h5>No PDF</h5>
-										{{/if}}
-										{{/with}}
-										{{/with}}
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col s12 center-align">
-							{{>SaveBtn what="PDF and XML Settings"}}
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					{{#with article}}
-						<div class="row">
-							<div class="col s12 offset-m4 m4">
-								<div class="card z-depth-0 blue-grey lighten-5">
-									<div class="card-content">
-										<div class="card-title">XML &amp; PDF Uploader</div>
-										{{>s3Upload}}
-									</div>
-								</div>
-							</div>
-						</div>
-					{{/with}}
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
+    <div class="row"><div class="col s12">
+        <div class="card z-depth-0">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s12">
+                        <h3>Data Submissions</h3>
+                        {{#if submissions}}
+                        <ul>
+                        {{#each submissions}}
+                            <li>{{pubStatusAbbrev pub_status}}: {{formatDate created_date}}</li>
+                        {{/each}}
+                        </ul>
+                        {{else}}
+                        <h4>No Records Found</h4>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></div>
 
-<template name="AdminArticleFigures">
-	{{>AdminHeader header="Article Figures"}}
-	{{>StatusModal}}
-	{{#with article}}
-	{{>AdminArticleHeader}}
-	{{/with}}
-	{{#with assets}}
-	<div class="row">
-		<div class="col s12">
-			<div class="card blue-grey lighten-4 z-depth-0">
-				<div class="card-content">
-					<span class="card-title">Figures</span>
-					{{#if figures}}
-					{{#each figures}}
-					{{#if editing}}
-					<div class="row">
-						<div class="col s12">
-							<div class="card z-depth-0 blue-grey lighten-5">
-								<div class="card-content">
-									<div class="row">
-										<div class="col s2 m4 right-align">
-											<input type="text" value="{{id}}" id="fig-input-{{id}}"/>
-											<label for="fig-input-{{id}}">Figure ID</label>
-										</div>
-										<div class="col s8 m4">
-											{{>s3FigureUpload figId=id}}
-										</div>
-										<div class="col s2 m4">
-											<button class="btn btn-cancel btn-floating article-figure-cancel" data-id="{{id}}"><i class="material-icons">&#xE15D;</i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					{{else}}
-					<div class="row">
-						<div class="col s2 m4 right-align">
-							<h4>Fig. {{id}}</h4>
-						</div>
-						<div class="col s8 m4">
-							<img src="{{url}}" class="materialboxed admin-figure" alt="{{id}}">
-						</div>
-						<div class="col s2 m4">
-							<button class="btn btn-edit btn-floating article-figure-edit" data-id="{{id}}"><i class="material-icons">&#xE150;</i></button>
-						</div>
-					</div>
-					{{/if}}
-					{{/each}}
-					{{else}}
-					<h4>No Figures</h4>
-					{{/if}}
-				</div>
-			</div>
-		</div>
-	</div>
-	{{/with}}
+    {{/with}}
 </template>
 
 <template name="AdminArticleHeader">
-	{{>AdminArticleButtons}}
-	{{>ArticleHeaderTitle}}
-	<input type="hidden" id="article-mongo-id" value="{{_id}}"/>
-	{{#if countKeys ids}}
-	<div class="row">
-		<div class="col s12">
-			<h5>IDs:</h5>
-			{{#each arrayify ids}}
-				{{#if equals name 'doi'}}
-				<div class="col s4"><h6><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></h6></div>
-				{{else}}
-				<div class="col s4"><h6><label>{{name}}:</label> {{value}}</h6></div>
-				{{/if}}
-			{{/each}}
-		</div>
-	</div>
-	{{/if}}
+    {{>AdminArticleButtons}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-5 z-depth-0">
+                <div class="card-content">
+                    {{>ArticleHeaderTitle}}
+                    <input type="hidden" id="article-mongo-id" value="{{_id}}"/>
+                    {{#if countKeys ids}}
+                    <div class="row no-margin">
+                        <div class="col s12">
+                            {{#each arrayify ids}}
+                                {{#if equals name 'doi'}}
+                                <div class="admin-id"><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></div>
+                                {{else}}
+                                <div class="admin-id"><label>{{name}}:</label> {{value}}</div>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

@@ -36,7 +36,7 @@
 	</div>
 	<div class="row">
 		<div class="col s12">
-			{{>ArticleButtons}}
+			{{>ArticleButtons _id=_id abstract=abstract files=files}}
 		</div>
 	</div>
 	{{#if abstract}}
@@ -107,37 +107,40 @@
 <template name="ArticleButtons">
 	<span class="article-btns">
 		{{#if abstract}}<a class="blue-grey waves-effect waves-light btn {{isActiveRoute 'Article'}} {{#if isActiveRoute 'Article'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
-
 		{{#if isSubscribed}}
+			{{#with files}}
 
-		{{#if pdf.url}}
-		{{#if pdf.settings.display}}
-		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pdf.url}}">PDF</a>
-		{{/if}}
-		{{/if}}
+				{{#if pdf.url}}
+				{{#if pdf.display}}
+				<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="{{pdf.url}}">PDF</a>
+				{{/if}}
+				{{/if}}
 
-		{{#if xml.url}}
-		{{#if xml.settings.display}}
-		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
-		<a data-id="{{_id}}" class="blue-grey waves-effect waves-light btn {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
-		{{/if}}
-		{{/if}}
+				{{#if xml.url}}
+				{{#if xml.display}}
+				<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
+				<a data-id="{{_id}}" class="blue-grey waves-effect waves-light btn {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+				{{/if}}
+				{{/if}}
 
+			{{/with}}
 		{{else}}
+			{{#with files}}
 
-		{{#if pdf.url}}
-		{{#if pdf.settings.display}}
-		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
-		{{/if}}
-		{{/if}}
+			{{#if pdf.file}}
+			{{#if pdf.display}}
+			<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">PDF</a>
+			{{/if}}
+			{{/if}}
 
-		{{#if xml.url}}
-		{{#if xml.settings.display}}
-		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
-		<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
-		{{/if}}
-		{{/if}}
+			{{#if xml.file}}
+			{{#if xml.display}}
+			<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+			<a data-id="{{_id}}" class="blue-grey darken-1 waves-effect waves-light btn modal-trigger disabled" href="#subscribe-modal">Full-Text</a>
+			{{/if}}
+			{{/if}}
 
+			{{/with}}
 		{{/if}}
 	</span>
 </template>

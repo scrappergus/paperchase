@@ -45,11 +45,11 @@
 			<h5>{{>AuthorsList}}</h5>
            	{{#with ids}}{{#if doi}}DOI: <a href="{{doi}}">{{prettyDoi doi}}</a>{{/if}}{{/with}}
 			{{#if page_start}}<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>{{/if}}
-			{{>ArticleButtons}}
+			{{>ArticleButtons _id=_id abstract=abstract files=files}}
 		</li>
 		{{/each}}
 	</ul>
 	{{else}}
-	{{>Loading}}
+	No papers yet. Please check back!
 	{{/if}}
 </template>

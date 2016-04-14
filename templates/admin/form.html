@@ -1,31 +1,31 @@
 <template name="afArrayField_institutionIps">
-	<p>{{afFieldLabelText name=this.atts.name}}</p>
+    <p>{{afFieldLabelText name=this.atts.name}}</p>
 
     {{#if afFieldIsInvalid name=this.atts.name}}
-		<span class="red-text">{{{afFieldMessage name=this.atts.name}}}</span>
+        <span class="red-text">{{{afFieldMessage name=this.atts.name}}}</span>
     {{/if}}
     <ul class="collection">
-	    {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
-		<li class="collection-item">
-			<div class="row">
-				<div class="col s10">
-					{{> afQuickField name=this.name label=false options=afOptionsFromSchema template='institutionIpObj'}}
-				</div>
-				<div class="col s2">
-					{{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount maxCount=../atts.maxCount}}
-					<button type="button" class="btn autoform-remove-item red right">
-						<i class="material-icons">&#xE14C;</i>
-					</button>
-					{{/if}}
-				</div>
-			</div>
-		</li>
-	    {{/afEachArrayItem}}
-   	</ul>
-	{{#if afArrayFieldHasLessThanMaximum name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
-	<button type="button" class="btn autoform-add-item" data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}" data-autoform-maxCount="{{this.atts.maxCount}}">
-		<i class="material-icons">&#xE147;</i>
-	</button>
+        {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
+        <li class="collection-item">
+            <div class="row">
+                <div class="col s10">
+                    {{> afQuickField name=this.name label=false options=afOptionsFromSchema template='institutionIpObj'}}
+                </div>
+                <div class="col s2">
+                    {{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount maxCount=../atts.maxCount}}
+                    <button type="button" class="btn autoform-remove-item red right">
+                        <i class="material-icons">&#xE14C;</i>
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+        </li>
+        {{/afEachArrayItem}}
+    </ul>
+    {{#if afArrayFieldHasLessThanMaximum name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
+    <button type="button" class="btn autoform-add-item" data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}" data-autoform-maxCount="{{this.atts.maxCount}}">
+        <i class="material-icons">&#xE147;</i>
+    </button>
     {{/if}}
 </template>
 <template name="afObjectField_institutionIpObj">

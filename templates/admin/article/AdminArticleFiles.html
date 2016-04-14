@@ -1,0 +1,131 @@
+<template name="AdminArticleFiles">
+    {{>AdminHeader header="Article PDF and XML"}}
+    {{>StatusModal}}
+    {{#with article}}
+    {{>AdminArticleHeader}}
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Files</span>
+                    {{#with files}}
+                    <div class="row">
+                        <div class="col s12">
+                            {{#if xml}}
+                            <a class="btn" href="{{xml.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
+                            {{/if}}
+                            {{#if pdf}}
+                            <a class="btn" href="{{pdf.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <form id="files-form">
+                        <span class="card-title">File Settings</span>
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <fieldset>
+                                    <legend>XML</legend>
+                                    {{#with files}}
+                                    {{#with xml}}
+                                    {{#if url}}
+                                    <input type="checkbox" id="display-xml" checked="{{checked display}}"/>
+                                    <label for="display-xml">Display XML</label>
+                                    {{else}}
+                                    <h5>No XML</h5>
+                                    {{/if}}
+                                    {{/with}}
+                                    {{else}}
+                                    <h5>No XML</h5>
+                                    {{/with}}
+                                </fieldset>
+                            </div>
+                            <div class="col s12 m6">
+                                <fieldset>
+                                    <legend>PDF</legend>
+                                    {{#with files}}
+                                    {{#with pdf}}
+                                    {{#if url}}
+                                    <input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
+                                    <label for="display-pdf">Display PDF</label>
+                                    {{else}}
+                                    <h5>No PDF</h5>
+                                    {{/if}}
+                                    {{/with}}
+                                    {{else}}
+                                    <h5>No PDF</h5>
+                                    {{/with}}
+                                </fieldset>
+                            </div>
+                        </div>
+                        {{#with files}}
+                        {{#if showFilesButton xml pdf}}
+                        <div class="row">
+                            <div class="col s12 center-align">
+                            {{>SaveBtn what="Settings"}}
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{/with}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
+</template>
+<template name="AdminArticleFilesUploader">
+    {{>AdminHeader header="Article PDF and XML"}}
+    {{>StatusModal}}
+    {{#with article}}
+    {{>AdminArticleHeader}}
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">XML &amp; PDF Uploader</div>
+                    {{>s3Upload}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
+    <div id="xml-verify"></div>
+    {{#if verify}}
+    {{>AdminArticleXmlVerify}}
+    {{/if}}
+</template>
+<template name="AdminArticleXmlVerify">
+    {{#if article.aop}}
+    <div class="row">
+        <div class="col s12">
+            <h4>Verify AOP XML information below before saving to the database.</h4>
+            <p>AOP files are not stored, they are only used to update the database.</p>
+        </div>
+    </div>
+    {{else}}
+    <div class="row">
+        <div class="col s12">
+            <h4>Please verify information from the XML before uploading.</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <button id="xml-verified" class="btn btn-primary upload"><i class="material-icons">&#xE2C6;</i> I have verified the XML and it is ready to upload {{file.name}}</button>
+        </div>
+    </div>
+    {{/if}}
+
+    {{>AdminArticleForm}}
+</template>

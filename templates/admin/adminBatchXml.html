@@ -41,19 +41,19 @@
         <div class="col s12">
             <div class="card orange lighten-5">
                 <div class="card-content">
-                    <h2>Article Assets</h2>
+                    <h2>Article Files</h2>
                     <h3>Asset S3 Existence Check</h3>
                     <div class="row">
                         <div class="col s12">
                             <h4>PDF asset check</h4>
-                            <p>Will take all articles Mongo IDs for articles without and PDF saved in the DB and check on S3 if file exists. If so, PDF collection gets updated</p>
+                            <p>Will take all articles Mongo IDs for articles without PDF saved in the DB and check on S3 if file exists. If so, article doc gets updated</p>
                             <button id="check-all-pdf" class="btn waves-effect waves-light red lighten-3">Check PDF</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col s12">
                             <h4>XML asset check</h4>
-                            <p>Will take all articles Mongo IDs for articles without and XML saved in the DB and check on S3 if file exists. If so, XML collection gets updated</p>
+                            <p>Will take all articles Mongo IDs for articles without XML saved in the DB and check on S3 if file exists. If so, article doc gets updated</p>
                             <button id="check-all-xml" class="btn waves-effect waves-light red lighten-3">Check XML</button>
                         </div>
                     </div>
@@ -65,12 +65,12 @@
                         </div>
                     </div> -->
                     <hr/>
-                    <h3>Get and Save Assets</h3>
+                    <h3>Get and Save Files</h3>
                     <div class="row">
                         <div class="col s12">
-                            <h4>Get Missing Assets via PMC</h4>
+                            <h4>Get Missing Files via PMC</h4>
                             <p>Takes all articles Mongo IDs for articles without and XML or PDF and sends a request to crawler to get and save them on S3. If succesful, XML and PDF collections are updated.</p>
-                            <button id="get-missing-assets" class="btn waves-effect waves-light red lighten-3">Get Missing Assets</button>
+                            <button id="get-missing-files" class="btn waves-effect waves-light red lighten-3">Get Missing Files</button>
                         </div>
                     </div>
                     <hr/>

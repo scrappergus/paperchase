@@ -1,28 +1,28 @@
 <template name="AdminDoiStatus">
-	{{>AdminHeader header="DOI Status"}}
-	<div class="row">
-		<div class="col s12">
-			<a id="download-doi-status-csv" href="{{pathFor 'doiStatusCsv'}}" class="btn">Download CSV</a>
-		</div>
-	</div>
+    {{>AdminHeader header="DOI Status"}}
+    <div class="row">
+        <div class="col s12">
+            <a id="download-doi-status-csv" href="{{pathFor 'doiStatusCsv'}}" class="btn">Download CSV</a>
+        </div>
+    </div>
 
-	{{#if articlesList}}
-		<div class="row">
-			<div class="col s12 m3 box grey lighten-5">
-				{{>piiFilter}}
-			</div>
-		</div>
-		{{> reactiveTable class="table table-bordered table-hover" collection=articlesList settings=settings}}
-	{{else}}
-		{{>ProcessingNotHidden}}
-	{{/if}}
+    {{#if articlesList}}
+        <div class="row">
+            <div class="col s12 m3 box grey lighten-5">
+                {{>piiFilter}}
+            </div>
+        </div>
+        {{> reactiveTable class="table table-bordered table-hover" collection=articlesList settings=settings}}
+    {{else}}
+        {{>ProcessingNotHidden}}
+    {{/if}}
 </template>
 
 <template name="piiFilter">
-	<div class="input-group">
-		<span class="input-group-addon">
-			<span>PII</span>
-		</span>
-		<input class="form-control pii-filter-input" id="piiFilter" type="text"/>
-	</div>
+    <div class="input-group">
+        <span class="input-group-addon">
+            <span>PII</span>
+        </span>
+        <input class="form-control pii-filter-input" id="piiFilter" type="text"/>
+    </div>
 </template>

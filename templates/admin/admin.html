@@ -3,15 +3,11 @@
 <header>
     {{>AdminNav}}
 </header>
-<main>
+<main class="admin">
     <div class="admin-container">
         <div class="row">
             <div class="col s12">
-                <div class="card">
-                    <div class="card-content admin-content-area">
-                        {{>yield}}
-                    </div>
-                </div>
+                {{>yield}}
             </div>
         </div>
     </div>
@@ -39,8 +35,7 @@
 
 <template name="AdminNav">
     <nav class="journal-nav" role="navigation" style="background-color:rgba({{mainColor}},0.9);">
-        <div class="nav-wrapper container">
-            <!-- <a id="logo-container" href="/" class="brand-logo"><img src="{{bannerLogo}}"></a> -->
+        <div class="nav-wrapper">
             <ul class="right hide-on-med-and-down">
                 {{>AdminNavLinks}}
             </ul>
@@ -53,7 +48,7 @@
         </div>
     </nav>
     <ul class="side-nav fixed admin-side-nav journal-nav admin-nav" style="background-color:rgba({{mainColor}},0.9);">
-        <li class="logo"><a id="logo-container" href="/admin" class="brand-logo"><img src="{{bannerLogo}}"></a></li>
+        <li class="logo"><a id="logo-container" href="/admin"><img class="responsive-img" src="{{bannerLogo}}"></a></li>
         {{>AdminNavLinksCollapse}}
     </ul>
 </template>
