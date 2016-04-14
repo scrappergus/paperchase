@@ -1,5 +1,6 @@
 volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
+issuesDeleted = new Mongo.Collection('issues_deleted');
 about = new Mongo.Collection('about');
 articles = new Mongo.Collection('articles');
 institutions = new Mongo.Collection("institutions");
@@ -202,6 +203,20 @@ issues.allow({
         if (Roles.userIsInRole(u, ['admin'])) {
             return true;
         }
+    }
+});
+issuesDeleted.allow({
+    insert: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['admin'])) {
+            return true;
+        }
+    },
+    update: function (userId, doc, fields, modifier) {
+        return false;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return false;
     }
 });
 volumes.allow({

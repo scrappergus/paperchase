@@ -552,6 +552,11 @@ Template.AdminIssue.helpers({
         return Session.get('issue');
     }
 });
+Template.AdminIssueDeleted.helpers({
+    articles: function(){
+        return Session.get('articles-updated');
+    }
+});
 
 // General
 // ---------------

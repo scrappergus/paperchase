@@ -83,6 +83,11 @@ Template.IssueCoverUploader.onRendered(function () {
 Template.AdminIssueForm.onRendered(function () {
     Meteor.dates.initiateDatesInput();
 });
+Template.AdminIssueDeleted.onRendered(function (){
+    if(Session.get('articles-updated')){
+        Meteor.formActions.successMessage('Issue Deleted');
+    }
+});
 
 
 // News

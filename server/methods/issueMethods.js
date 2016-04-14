@@ -299,5 +299,57 @@ Meteor.methods({
         });
 
         return fut.wait();
+    },
+    deleteIssueDatabase: function(issueMongoId){
+        var fut = new future();
+
+        issueDoc = issues.findOne({_id : issueMongoId});
+        issueDoc.date_delete = new Date();
+        var copied = issuesDeleted.insert(issueDoc);
+        var deleted = issues.remove({_id : issueMongoId});
+        if(copied && deleted){
+            fut.return(true);
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(errorMessage);
+        }
+    },
+    deleteIssue: function(issueMongoId, userInput){
+        var fut = new future();
+        var errorMessage;
+        var issueDoc;
+
+        if(userInput === 'DELETE'){
+            Meteor.call('deleteIssueDatabase', issueMongoId, function(error,result){
+                if(error){
+                    fut.throw(error);
+                    console.error('deleteIssueDatabase',error);
+                }else if(result){
+                    Meteor.call('removeArticlesFromIssue', issueMongoId, function(error,articlesUpdated){
+                        if(error){
+                            fut.throw(error);
+                            console.error('removeArticlesFromIssue',error);
+                        }else if(articlesUpdated){
+                            fut.return(articlesUpdated);
+                        }
+                    });
+                }
+            });
+        }else{
+            // user did not input correcty
+            errorMessage = 'Type DELETE in all caps to confirm issue deletion';
+            fut.throw(errorMessage);
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(errorMessage);
+        }
     }
 });

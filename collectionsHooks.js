@@ -25,7 +25,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     // }
 
     // for when we want to skip things in the hook
-    if(modifier['$set']['batch']){
+    if(modifier['$set'] && modifier['$set']['batch']){
         delete modifier['$set']['batch'];
     }
 
@@ -51,7 +51,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-    if(modifier['$set']['volume'] && modifier['$set']['issue']){
+    if(modifier['$set'] && modifier['$set']['volume'] && modifier['$set']['issue']){
         volume = modifier['$set']['volume'];
         issue = modifier['$set']['issue'];
         modifier['$set']['issue_id'] = Meteor.call('articleIssueVolume',volume,issue);

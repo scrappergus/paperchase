@@ -108,6 +108,80 @@ Meteor.methods({
         });
         return fut.wait();
     },
+    batchUpdateCorrespViaXml: function(){
+        // console.log('..batchUpdateCorrespViaXml');
+        var fut = new future();
+        var journalInfo = journalConfig.findOne();
+        var journalShortName = journalInfo.journal.short_name;
+        var articlesList = articles.find({'files.xml' : {'$exists' : true}}).fetch();
+        // console.log('articlesList',articlesList.length);
+        var assetBaseUrl = journalInfo.assets + 'xml/';
+        for(var i = 0 ; i < articlesList.length; i++){
+        // for(var i = 0 ; i < 100; i++){
+            var articleMongoId = articlesList[i]._id;
+            // console.log(i,articleMongoId);
+            var assetUrl = assetBaseUrl + articleMongoId + '.xml';
+            Meteor.call('getXml',assetUrl,function(error,xmlString){
+                if(xmlString){
+                    Meteor.call('parseXmltoJson',xmlString, function(error,articleJson){
+                        if(articleJson){
+                            var article = articleJson['pmc-articleset'].article[0].front[0]['article-meta'][0];
+
+                            if(article['author-notes'] && article['author-notes'][0].corresp){
+                                Meteor.xmlPmc.authorsCorresponding(article['author-notes'][0].corresp,function(correspondence){
+                                    if(correspondence && correspondence.length > 0){
+                                        if(article['article-id'][0]['$']['pub-id-type'] === 'pmid'){
+                                            Meteor.call('updateArticleByPmid',article['article-id'][0]._ , {correspondence : correspondence});
+                                        }else{
+                                            console.log('cannot update',article['article-id'][0]['$']['pub-id-type'] + ' : ' + article['article-id'][0]._);
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
+    batchUpdateSuppViaXml: function(){
+        // console.log('..batchUpdateSuppViaXml');
+        var fut = new future();
+        var journalInfo = journalConfig.findOne();
+        var journalShortName = journalInfo.journal.short_name;
+        var articlesList = articles.find({'files.xml' : {'$exists' : true}}).fetch();
+        var assetBaseUrl = journalInfo.assets + 'xml/';
+        for(var i = 0 ; i < articlesList.length; i++){
+            var articleMongoId = articlesList[i]._id;
+            console.log(i,articleMongoId);
+            var assetUrl = assetBaseUrl + articleMongoId + '.xml';
+            Meteor.call('getXml',assetUrl,function(error,xmlString){
+                if(xmlString){
+                    Meteor.xmlPmc.supplementaryMaterials(xmlString, function(supps){
+                        if(supps && supps.length >0){
+                            Meteor.call('updateArticleDbSupps', articleMongoId, supps);
+                        }
+                    });
+                }
+            });
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
     checkAllArticlesFiles: function(assetType){
         console.log('..checkAllArticlesFiles : ' + assetType);
         // only for those without asset in article doc
@@ -229,8 +303,8 @@ Meteor.methods({
         }
         return fut.wait();
     },
-    batcharticlesWith: function(searchFor){
-        // console.log('..batcharticlesWith : ' + searchFor);
+    batchArticlesWith: function(searchFor){
+        console.log('..batcharticlesWith : ' + searchFor);
         var fut = new future();
         var journalInfo = journalConfig.findOne();
         var journalShortName = journalInfo.journal.short_name;
@@ -241,7 +315,7 @@ Meteor.methods({
         // for(var i = 0 ; i < 10; i++){
             var articleMongoId = articlesList[i]._id;
             var assetUrl = assetBaseUrl + articleMongoId + '.xml';
-            console.log(i, articlesList[i]._id,assetUrl);
+            // console.log(i, articlesList[i]._id,assetUrl);
             Meteor.call('articlesWith',assetUrl,searchFor,function(error,result){
                 if(result){
                     // console.log('yes');
@@ -250,7 +324,7 @@ Meteor.methods({
             });
             if(i == parseInt(articlesList.length - 1)){
                 // console.log('found',found);
-                fut['return'](found);
+                fut.return(found);
             }
 
         }

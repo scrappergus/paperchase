@@ -1,3 +1,4 @@
+// methods used to create full text HTML from XML
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         // console.log('... getFilesForFullText: ' + mongoId);
@@ -193,7 +194,7 @@ Meteor.fullText = {
                     var nodeAnchor = '',
                         nValue = '';
                     // console.log('cc = ' + cc );
-                    if(childNode.localName != null){
+                    if(childNode.localName != null && childNode.localName != 'xref' ){
                         content += '<' + childNode.localName + '>';
                     }
 
@@ -213,10 +214,9 @@ Meteor.fullText = {
                         content += Meteor.fullText.convertContent(childNode);
                     }
 
-                    if(childNode.localName != null){
+                    if(childNode.localName != null && childNode.localName != 'xref' ){
                         content += '</' + childNode.localName + '>';
                     }
-                    // console.log(content);
                 }
             }
         }
@@ -224,6 +224,7 @@ Meteor.fullText = {
         return content;
     },
     linkXref: function(xrefNode){
+        // console.log('linkXref',xrefNode);
         // Determine - Reference or Figure or table-fn?
         var content = '';
         if(xrefNode.childNodes[0]){
@@ -519,8 +520,6 @@ Meteor.fullText = {
         return string;
     },
     traverseNode: function(node){
-        // console.log('..traverseNode');
-        // console.log(node.childNodes.length);
         var string = '';
         if(node.childNodes){
             for(var c = 0 ; c < node.childNodes.length ; c++){
