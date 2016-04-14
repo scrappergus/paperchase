@@ -1,72 +1,72 @@
 <template name="Issue">
-	{{> SubscribeModal}}
+    {{> SubscribeModal}}
 
-	{{#if issueData}}
-		{{#with issueData}}
-			<div class="page-content wide">
-				<!-- Title Information -->
-				<div class="page-title">
-					<span class="page-desc">Table of Contents</span>
-					<h1>Volume {{volume}}, Issue {{issue}}</h1>
-					{{#if pub_date}}
-					<span class="issue-date">{{formatIssueDate pub_date date_settings}}</span>
-					{{/if}}
-				</div>
-			</div>
+    {{#if issueData}}
+        {{#with issueData}}
+            <div class="page-content wide">
+                <!-- Title Information -->
+                <div class="page-title">
+                    <span class="page-desc">Table of Contents</span>
+                    <h1>Volume {{volume}}, Issue {{issue}}</h1>
+                    {{#if pub_date}}
+                    <span class="issue-date">{{formatIssueDate pub_date date_settings}}</span>
+                    {{/if}}
+                </div>
+            </div>
 
-			<!-- Main -->
-			<div class="page-content">
-					{{>ArticlesList}}
-			</div>
+            <!-- Main -->
+            <div class="page-content">
+                    {{>ArticlesList}}
+            </div>
 
-			<!-- Sidebar -->
-			<div class="page-sidebar">
-				<div class="issue-scroller">
-					<span class="prev"><a href="#"><span class="icon icon-angle-left"></span> Prev</a></span>
-					<span class="current">Volume {{volume}}, Issue {{issue}}</span>
-					<span class="next"><a href="#">Next <span class="icon icon-angle-right"></span></a></span>
-				</div>
-				{{> scrollspyCard title="Explore This Issue" items=items}}
-			</div>
-		{{/with}}
-	{{else}}
-		{{>Loading}}
-	{{/if}}
+            <!-- Sidebar -->
+            <div class="page-sidebar">
+                <div class="issue-scroller">
+                    <span class="prev"><a href="#"><span class="icon icon-angle-left"></span> Prev</a></span>
+                    <span class="current">Volume {{volume}}, Issue {{issue}}</span>
+                    <span class="next"><a href="#">Next <span class="icon icon-angle-right"></span></a></span>
+                </div>
+                {{> scrollspyCard title="Explore This Issue" items=items}}
+            </div>
+        {{/with}}
+    {{else}}
+        {{>Loading}}
+    {{/if}}
 </template>
 
 
 <template name="ArticlesList">
-	{{#if articles}}
-	<!-- <ul>
-		{{#each articles}}
-			{{#if start_group}}
-				{{#if article_type}}
-				{{! make sure to check for if no article type}}
-				<li style="margin: 10px 10px 0 0; display:inline-block;"><a class="anchor waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.name}}</a></li>
-				{{/if}}
-			{{/if}}
-		{{/each}}
-	</ul> -->
-		{{#each articles}}
-			<!-- Section Heading -->
-			{{#if start_group}}
-				<h4 id="{{article_type.short_name}}" class="blue-divider">{{article_type.name}}</h4>
-			{{/if}}
+    {{#if articles}}
+    <!-- <ul>
+        {{#each articles}}
+            {{#if start_group}}
+                {{#if article_type}}
+                {{! make sure to check for if no article type}}
+                <li style="margin: 10px 10px 0 0; display:inline-block;"><a class="anchor waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.name}}</a></li>
+                {{/if}}
+            {{/if}}
+        {{/each}}
+    </ul> -->
+        {{#each articles}}
+            <!-- Section Heading -->
+            {{#if start_group}}
+                <h4 id="{{article_type.short_name}}" class="blue-divider">{{article_type.name}}</h4>
+            {{/if}}
 
-			<div class="toc-info">
-				<h2 class="title">{{{title}}}</h2>
-				<h6 class="desc">{{>AuthorsList}}</h6>
+            <div class="toc-info">
+                <h2 class="title">{{{title}}}</h2>
+                <h6 class="desc">{{>AuthorsList}}</h6>
 
-				<!-- Desc Info -->
-	      {{#with ids}}{{#if doi}}<span class="meta"><a href="{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
-				{{#if page_start}}<span class="meta">pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</span>{{/if}}
-				
-				<!-- Links -->
-				<br />
-				{{>ArticleButtons _id=_id abstract=abstract files=files}}
-			</div>
-		{{/each}}
-	{{else}}
-		{{>Loading}}
-	{{/if}}
+                <!-- Desc Info -->
+                {{#with ids}}{{#if doi}}<span class="meta"><a href="{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
+                {{#if page_start}}<span class="meta">pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</span>{{/if}}
+
+                <!-- Links -->
+                <br />
+                {{>ArticleButtons _id=_id abstract=abstract files=files}}
+            </div>
+        {{/each}}
+    {{else}}
+        {{>Loading}}
+    {{/if}}
 </template>

@@ -47,7 +47,7 @@ html, body {
   font-family: $futura;
   line-height: 1.35;
   letter-spacing: 0.15px;
-  
+
   //  ???? not working, something is overriding rem
   // font-size: 17px;
   // font-size: 1rem;
@@ -66,14 +66,14 @@ html, body {
 
 // === Headings | Font Sizes, Etc.
 h1, .h1 { font-size: 38px; }
-h2, .h2 { font-size: 24px; 
+h2, .h2 { font-size: 24px;
           color: $kashmir; }
 h3, .h3 { font-size: 19px; }
 h4, .h4 { font-size: 17px; }
 
 h5, .h5, h6, .h6,
-span.meta { 
-  font-size: 14px; 
+span.meta {
+  font-size: 14px;
 }
 
 h1, .h1 {
@@ -202,11 +202,11 @@ button.button {
     background: $faintgray;
   }
 
-  &:first-child { 
-    float: left; 
+  &:first-child {
+    float: left;
   }
-  &:last-child { 
-    float: right; 
+  &:last-child {
+    float: right;
   }
 
   span {
@@ -233,7 +233,7 @@ button.button {
   @include at-query($min, $medium) {
     width: 260px;
   }
-  
+
   @include at-query($min, $large) {
     width: 310px;
   }
@@ -306,7 +306,7 @@ $sub-navbar-padding: 10px;
     font-size: 14px;
     @extend .uppercase-titles;
     border-left: 2px solid rgba(119, 130, 142, .2);
-    
+
     a { color: #fff; }
     &:first-child { border: none; }
     &.has-icon { padding-left: 30px; }
@@ -335,9 +335,9 @@ $sub-navbar-padding: 10px;
   @include push(1 of 16);
   @include span(12);
   font-size: 15px;
-  
+
   a { color: $midgray; }
-  
+
   ul {
     margin: 0;
     padding: 0;
@@ -354,19 +354,19 @@ $sub-navbar-padding: 10px;
       letter-spacing: 0.25px;
     }
 
-    &:last-child { 
-      font-weight: 700; 
+    &:last-child {
+      font-weight: 700;
       a { color: darken($midgray, 7%); }
     }
-    &:last-child:after { 
-      content: ""; 
+    &:last-child:after {
+      content: "";
     }
   }
 }
 
 .sub-nav .issn {
   @include span(4);
-  
+
   span.meta {
     float: right;
     color: rgba(162, 169, 176, .75);
@@ -376,7 +376,7 @@ $sub-navbar-padding: 10px;
 
 
 /*================ Main Container | Base Modules ================*/
-.main { 
+.main {
   padding-top: $navbar-height;
   min-height: calc(100vh - $navbar-height);
 }
@@ -428,7 +428,7 @@ $sub-navbar-padding: 10px;
     padding: 21px 0 18px 40px;
     margin: 0;
     color: $water;
-    @include transition(background .25s ease-out, 
+    @include transition(background .25s ease-out,
                         color .25s ease-out);
   }
 
@@ -441,7 +441,7 @@ $sub-navbar-padding: 10px;
     font-size: 1.765rem;
     color: lighten(#2E4057, 10%);
     opacity: 0;
-    @include transition(opacity .25s ease-out, 
+    @include transition(opacity .25s ease-out,
                         right .25s ease-out);
   }
 
@@ -514,14 +514,14 @@ $sub-navbar-padding: 10px;
 .card ul {
   margin: 0 -25px; // card padding compensation
 
-  a li { color: $kashmir; }
+  li a { color: $kashmir; }
 
   li {
     padding: 12px 20px; // 25 - 5
     width: 100%;
     border-left: 5px solid rgba(0,0,0,0);
-    @include transition(background 0.25s ease-out, 
-      color 0.25s ease-out, 
+    @include transition(background 0.25s ease-out,
+      color 0.25s ease-out,
       border-color 0.25s ease-out);
 
     &:hover {
@@ -532,7 +532,7 @@ $sub-navbar-padding: 10px;
     &.active {
       background: $accent;
       border-color: $darkaccent;
-      color: #fff;
+      a { color: #fff; }
       font-weight: 500;
     }
 
@@ -544,7 +544,7 @@ $sub-navbar-padding: 10px;
 
 .fixed-scroll-card {
   position: relative;
-  top: 0; 
+  top: 0;
   &.fixed-active {
     position: fixed;
     top: 150px;
@@ -567,7 +567,7 @@ $sub-navbar-padding: 10px;
       padding: 0;
     }
   }
-  
+
   span.issue-date {
     @extend h2;
     display: inline-block;
@@ -576,7 +576,7 @@ $sub-navbar-padding: 10px;
 }
 
 
-// Table(s) of Contents 
+// Table(s) of Contents
 .toc-info {
   margin: 30px 0;
 
@@ -596,8 +596,8 @@ $sub-navbar-padding: 10px;
     color: $cello;
   }
 
-  h6.desc { 
-    margin: 0; 
+  h6.desc {
+    margin: 0;
     padding: 0;
   }
 
@@ -672,7 +672,7 @@ h2.authors {
       right: 2px;
     }
   }
-  
+
   // superscript
   sup.author-affiliations a {
     font-size: 13px;
@@ -708,16 +708,21 @@ h2.authors {
   h3.article-header-1 {
     @extend .uppercase-titles;
     color: $electric;
-    margin: 120px 0 0;
+    margin: 80px 0 0;
 
     &#abstract {
       margin-top: 20px;
     }
-    
+
     &.bordered {
       padding-bottom: 8px;
       border-bottom: 2px solid rgba(119, 130, 142, .2);
     }
+  }
+
+  h3.article-header-2,
+  h3#references {
+    font-weight: 700;
   }
 
   p {
@@ -733,17 +738,23 @@ h2.authors {
 }
 
 /*================ Full Text | Article-Level Modules ================*/
-// .section-container {
-//   padding-top: 50px;
-// }
+.full-text-image-container {
+  label {
+    font-size: 15px;
+  }
+}
 
+h3#references + ul li {
+  margin-bottom: 15px;
+  font-size: 15px;
+}
 
 /*================ Sidebar Article Content | Article-Level Modules ================*/
 
-// 
-// 
-// 
-// 
+//
+//
+//
+//
 
 
 /*================ Modals ================*/

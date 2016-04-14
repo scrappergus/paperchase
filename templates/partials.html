@@ -1,5 +1,5 @@
 <template name="PersonName">
-	{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
+    {{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
 </template>
 
 
@@ -23,9 +23,23 @@
 </template>
 
 <template name="scrollspyItems">
+    {{#if abstract}}
+        <a class="anchor" href="#abstract"><li>Abstract</li></a>
+    {{/if}}
+
     {{#each items}}
-        {{#if topSection headerLevel}}
-            <a class="anchor" href="#{{titleCase title}}"><li>{{titleCase title}}</li></a>
+        {{#if headerLevel}}
+            <!-- for article pages -->
+            {{#if equals headerLevel 1}}
+            <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
+            {{/if}}
+        {{else}}
+            <!-- for non-article pages -->
+            <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
         {{/if}}
     {{/each}}
+
+    {{#if references}}
+        <a class="anchor" href="#references"><li>References</li></a>
+    {{/if}}
 </template>

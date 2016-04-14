@@ -1,53 +1,53 @@
 <template name="Home">
-		<div class="page-content wide">
-			{{#if news}}
-				<h1>News</h1>
-				<ul class="collection">
-					{{#each news}}
-					<li class="collection-item">
-						<h5>{{formatDate date}}</h5>
-						<h4>{{title}}</h4>
-						<p>{{{content}}}</p>
-						{{#if youTube}}
-							<div class="news-video"><iframe width="560" height="315" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe></div>
-						{{/if}}
-					</li>
-					{{/each}}
-				</ul>
-			{{/if}}
-		</div>
+        <div class="page-content wide">
+            {{#if news}}
+                <h1>News</h1>
+                <ul class="collection">
+                    {{#each news}}
+                    <li class="collection-item">
+                        <h5>{{formatDate date}}</h5>
+                        <h4>{{title}}</h4>
+                        <p>{{{content}}}</p>
+                        {{#if youTube}}
+                            <div class="news-video"><iframe width="560" height="315" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe></div>
+                        {{/if}}
+                    </li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+        </div>
 
-		<div class="page-content wide">
-			{{>HomePageEditorList}}
-		</div>
+        <div class="page-content wide">
+            {{>HomePageEditorList}}
+        </div>
 </template>
 
 <template name="HomePageEditorList">
-	<div class="section-half">
-		<h3>Editorial Board</h3>
-		<h4>Editors-in-Chief</h4>
-		<ul class="home-page-editors-list">
-			{{#each eic}}
-			<li class="">
-				<p class="edboard-name"><strong>{{>PersonName}}</strong><br> {{{address}}}</p>
-				<p class="edboard-bio">{{{bio}}}</p>
-			</li>
-			{{/each}}
-		</ul>
-	</div>
+    <div class="section-half">
+        <h3>Editorial Board</h3>
+        <h4>Editors-in-Chief</h4>
+        <ul class="home-page-editors-list">
+            {{#each eic}}
+            <li class="">
+                <p class="edboard-name"><strong>{{>PersonName}}</strong><br> {{{address}}}</p>
+                <p class="edboard-bio">{{{bio}}}</p>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
 
-	<div class="section-half">
-		<h4>Founding Editorial Board</h4>
-		<ul class="home-page-editors-list">
-			{{#each eb}}
-			<li class="">
-				<p class="edboard-name"><strong>{{>PersonName}}</strong><br>{{{address}}}</p>
-				<p class="edboard-bio">{{{bio}}}</p>
-			</li>
-			{{/each}}
-		</ul>
+    <div class="section-half">
+        <h4>Founding Editorial Board</h4>
+        <ul class="home-page-editors-list">
+            {{#each eb}}
+            <li class="">
+                <p class="edboard-name"><strong>{{>PersonName}}</strong><br>{{{address}}}</p>
+                <p class="edboard-bio">{{{bio}}}</p>
+            </li>
+            {{/each}}
+        </ul>
 
-		<a href="{{pathFor 'EdBoard'}}" class="blue-grey-text darken-3-text">See full editor's list</a>
-	</div>
-	<br>
+        <a href="{{pathFor 'EdBoard'}}" class="blue-grey-text darken-3-text">See full editor's list</a>
+    </div>
+    <br>
 </template>

@@ -6,7 +6,7 @@
    <div class="page-content">
       <ul class="sectioned-list">
           {{#each sections}}
-          <li id="section-{{@index}}">
+          <li id="{{convertToID title}}">
               <h2 class="heavy accented">{{{title}}}</h2>
               <p>{{{content}}}</p>
           </li>

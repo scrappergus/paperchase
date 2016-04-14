@@ -1,39 +1,20 @@
 <template name="Article">
-	{{> SubscribeModal}}
+    {{> SubscribeModal}}
 
-	<div class="page-content">
-		{{#with article}}
-			{{>ArticleHeader}}
-		{{/with}}
+    <div class="page-content">
+        {{#with article}}
+            {{>ArticleHeader}}
+        {{/with}}
 
-		{{#if isSubscribed}}
-			{{#if files.figures}}
-				<h3>Figures</h3>
-				{{>ArticleFigures figures=files.figures}}
-			{{/if}}
-		{{/if}}
-	</div>
+        {{#if isSubscribed}}
+            {{#if files.figures}}
+                <h3>Figures</h3>
+                {{>ArticleFigures figures=files.figures}}
+            {{/if}}
+        {{/if}}
+    </div>
 
-	<div class="page-sidebar">
-		<a href="#" class="full-width end-cap primary button">
-			<span class="icon icon-file"></span> View Full Text
-		</a>
-
-		<div class="card sidebar-card">
-			<h6 class="card-title">Corresponding Author</h6>
-			<p>Laura E. Niklason, MD, PhD<br />
-			<a href="#">emailaddress@email.com</a></p>
-		</div>
-
-		{{#with article}} {{#if keywords}}
-			<div class="card sidebar-card">
-				<h6 class="card-title">Related Keywords</h6>
-					<div class="tags">
-						{{#each keywords}}
-							<a class="keyword tag">{{{.}}}</a>
-						{{/each}}
-					</div>
-			</div>
-		{{/if}} {{/with}}
-	</div>
+    {{#with article}}
+        {{> ArticleSidebar}}
+    {{/with}}
 </template>

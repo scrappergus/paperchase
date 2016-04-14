@@ -1,32 +1,32 @@
 <template name="Archive">
-	<div class="page-content wide">
-		<h1>Archive</h1>
-	</div>
-	
-	<div class="page-content">
-		{{#each volumes}}
-			<h2 class="heavy">Volume {{volume}}</h2>
-			
-			<div class="clearfix">
-				<ul class="">
-					{{#each issues_data}}
-					<li class="archive-issue">
-					<div class="clearfix">
-						<a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{cover}}"></a>
-						<h5><a href="/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}}</a></h5>
-						{{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
-					</div>
-					</li>
-					{{/each}}
-				</ul>
-			</div>
-			<div class="divider"></div>
-		{{/each}}
-	</div>
+    <div class="page-content wide">
+        <h1>Archive</h1>
+    </div>
 
-	<div class="page-sidebar">
-		{{> scrollspyCard title="Table of Contents" items=volumes}}
-	</div>
+    <div class="page-content">
+        {{#each volumes}}
+            <h2 class="heavy">Volume {{volume}}</h2>
+
+            <div class="clearfix">
+                <ul class="">
+                    {{#each issues_data}}
+                    <li class="archive-issue">
+                    <div class="clearfix">
+                        <a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{cover}}"></a>
+                        <h5><a href="/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}}</a></h5>
+                        {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
+                    </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="divider"></div>
+        {{/each}}
+    </div>
+
+    <div class="page-sidebar">
+        {{> scrollspyCard title="Table of Contents" items=volumes}}
+    </div>
 </template>
 
 <!-- TODO: add check for pagination -->

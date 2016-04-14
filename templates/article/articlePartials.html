@@ -1,199 +1,190 @@
 <template name="ArticleHeaderTitle">
-	<h5 class="article-header">
-		{{#if article_type.name}} 
-			<span class="article-type">{{article_type.name}}</span>
-		{{/if}}
-		{{#if issue_id}}
-			<span>Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</span>
-		{{/if}}
+    <h5 class="article-header">
+        {{#if article_type.name}}
+            <span class="article-type">{{article_type.name}}</span>
+        {{/if}}
+        {{#if issue_id}}
+            <span>Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</span>
+        {{/if}}
 
-		{{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
-		
-		{{#if dates}} {{>ArticleDates}} {{/if}}
-	</h5>
+        {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
 
-	<h1 id="article-title">{{{title}}}</h1>
+        {{#if dates}} {{>ArticleDates}} {{/if}}
+    </h5>
+
+    <h1 id="article-title">{{{title}}}</h1>
 </template>
 
 <template name="ArticleHeader">
-	{{>ArticleHeaderTitle}}
-	{{>AuthorsRefList}}
+    {{>ArticleHeaderTitle}}
+    {{>AuthorsRefList}}
 
-	<!-- todo: implement featured photo -->
-	<!-- {{#if featuredPhoto}} -->
-	<div class="featured-photo">
-		<img src="/example-fig.png" class="photo">
-		<span class="dark tag">From <strong>Figure 2</strong></span>
-	</div>
-	<!-- {{/if}} -->
-
-
-
-	<!-- {{#each arrayify ids}}
-		{{#if equals name 'doi'}}
-			<label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a>
-		{{else}}
-			<label>{{name}}:</label> {{value}}
-		{{/if}}
-	{{/each}} -->
+    <!-- todo: implement featured photo -->
+    <!-- {{#if featuredPhoto}} -->
+    <div class="featured-photo">
+        <img src="/example-fig.png" class="photo">
+        <span class="dark tag">From <strong>Figure 2</strong></span>
+    </div>
+    <!-- {{/if}} -->
 
 
-	<!-- {{>ArticleButtons _id=_id abstract=abstract files=files}} -->
 
-	{{#if abstract}}
-		<div class="abstract article-text">
-			<h3 class="bordered article-header-1" id="abstract">Abstract</h3>
-			<p>{{{abstract}}}</p>
-		</div>
-	{{/if}}
+    <!-- {{#each arrayify ids}}
+        {{#if equals name 'doi'}}
+            <label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a>
+        {{else}}
+            <label>{{name}}:</label> {{value}}
+        {{/if}}
+    {{/each}} -->
+
+
+    <!-- {{>ArticleButtons _id=_id abstract=abstract files=files}} -->
+
+    {{#if abstract}}
+        <div class="abstract article-text">
+            <h3 class="bordered article-header-1" id="abstract">Abstract</h3>
+            <p>{{{abstract}}}</p>
+        </div>
+    {{/if}}
 </template>
 
 <template name="AuthorsList">
-	<span class="authors">
-		{{#each authors}}
-			<span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span></span>
-		{{/each}}
-	</span>
+    <span class="authors">
+        {{#each authors}}
+            <span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span></span>
+        {{/each}}
+    </span>
 </template>
 
 <template name="AuthorsRefList">
-	<h2 class="authors">
-		{{#each authors}}
-			<span class="author">
-				{{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
-				{{#if affiliations_numbers}}
-					<sup class="author-affiliations">
-						{{#each affiliations_numbers}}
-							<span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
-						{{/each}}
-					</sup>
-				{{/if}}
-				<span class="comma">,</span>
-			</span>
-		{{/each}}
-	</h2>
+    <h2 class="authors">
+        {{#each authors}}
+            <span class="author">
+                {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
+                {{#if affiliations_numbers}}
+                    <sup class="author-affiliations">
+                        {{#each affiliations_numbers}}
+                            <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
+                        {{/each}}
+                    </sup>
+                {{/if}}
+                <span class="comma">,</span>
+            </span>
+        {{/each}}
+    </h2>
 </template>
 
 <!-- Todo: make sure deleting this label isn't messing anything up -->
 <template name="ArticleDates">
-	{{#each arrayify dates}}
-		{{#if equals name 'collection'}}
-			<span><!-- {{name}}:  -->{{collectionDate value}}</span>
-			{{else}}
-			<span><!-- {{name}}:  -->{{articleDate value}}</span>
-		{{/if}}
-	{{/each}}
+    {{#each arrayify dates}}
+        {{#if equals name 'collection'}}
+            <span><!-- {{name}}:  -->{{collectionDate value}}</span>
+            {{else}}
+            <span><!-- {{name}}:  -->{{articleDate value}}</span>
+        {{/if}}
+    {{/each}}
+</template>
+
+<template name="ArticleSidebar">
+    <div class="page-sidebar">
+        {{#if fullText}}
+            <a href="#" class="full-width end-cap primary button">
+                <span class="icon icon-download"></span> Download PDF
+            </a>
+        {{else}}
+            <a href="#" class="full-width end-cap primary button">
+                <span class="icon icon-file"></span> View Full Text
+            </a>
+        {{/if}}
+
+        {{> ArticleCorrespondence}}
+
+        {{#if keywords}}
+            {{> ArticleKeywords}}
+        {{/if}}
+
+        {{#if fullText}}
+            {{> scrollspyCard title="Table of Contents" items=sections abstract=abstract references=references}}
+        {{/if}}
+    </div>
+</template>
+
+<template name="ArticleCorrespondence">
+    <div class="card sidebar-card">
+        <h6 class="card-title">Corresponding Author</h6>
+        <p>{{correspondence.[0].text}}<br />
+        <a href="mailto:{{correspondence.[0].email}}">{{correspondence.[0].email}}</a></p>
+    </div>
+</template>
+
+<template name="ArticleKeywords">
+    <div class="card sidebar-card">
+        <h6 class="card-title">Related Keywords</h6>
+        <div class="tags">
+            {{#each keywords}}
+                <a class="keyword tag">{{{.}}}</a>
+            {{/each}}
+        </div>
+    </div>
 </template>
 
 <template name="ArticleFigures">
-	<div class="owl-carousel">
-	{{#each figures}}
-		<div>
-			<h4 class="center-align">{{{figureTitle}}}</h4>
-			{{#each imgURLs}}<a href="/figure/?article={{articleId .}}&img={{.}}" target="_blank"><img src="{{.}}" width="100%;"></a>{{/each}}
-			<!-- <p>{{{figureText}}}</p> -->
-		</div>
-	{{/each}}
-	</div>
+    <div class="owl-carousel">
+    {{#each figures}}
+        <div>
+            <h4 class="center-align">{{{figureTitle}}}</h4>
+            {{#each imgURLs}}<a href="/figure/?article={{articleId .}}&img={{.}}" target="_blank"><img src="{{.}}" width="100%;"></a>{{/each}}
+            <!-- <p>{{{figureText}}}</p> -->
+        </div>
+    {{/each}}
+    </div>
 </template>
 
 <template name="ArticleButtons">
-	<div class="article-links">
-		{{#if abstract}}<a class="small secondary button {{isActiveRoute 'Article'}} {{#if isActiveRoute 'Article'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
-		{{#if isSubscribed}}
-			{{#with files}}
+    <div class="article-links">
+        {{#if abstract}}<a class="small secondary button {{isActiveRoute 'Article'}} {{#if isActiveRoute 'Article'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
+        {{#if isSubscribed}}
+            {{#with files}}
 
-				{{#if pdf.url}}
-				{{#if pdf.display}}
-				<a data-id="{{_id}}" class="small button" href="{{pdf.url}}">PDF</a>
-				{{/if}}
-				{{/if}}
+                {{#if pdf.url}}
+                {{#if pdf.display}}
+                <a data-id="{{_id}}" class="small button" href="{{pdf.url}}">PDF</a>
+                {{/if}}
+                {{/if}}
 
-				{{#if xml.url}}
-				{{#if xml.display}}
-				<a data-id="{{_id}}" class="small button" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
-				<a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
-				{{/if}}
-				{{/if}}
+                {{#if xml.url}}
+                {{#if xml.display}}
+                <a data-id="{{_id}}" class="small button" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
+                <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+                {{/if}}
+                {{/if}}
 
-			{{/with}}
-		{{else}}
-			{{#with files}}
+            {{/with}}
+        {{else}}
+            {{#with files}}
 
-			{{#if pdf.file}}
-				{{#if pdf.display}}
-				<a data-id="{{_id}}" class="small button modal-trigger disabled" href="#subscribe-modal">PDF</a>
-				{{/if}}
-			{{/if}}
+            {{#if pdf.file}}
+                {{#if pdf.display}}
+                <a data-id="{{_id}}" class="small button modal-trigger disabled" href="#subscribe-modal">PDF</a>
+                {{/if}}
+            {{/if}}
 
-			{{#if xml.file}}
-				{{#if xml.display}}
-				<a data-id="{{_id}}" class="small button disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
-				<a data-id="{{_id}}" class="small button disabled" href="#subscribe-modal">Full-Text</a>
-				{{/if}}
-			{{/if}}
+            {{#if xml.file}}
+                {{#if xml.display}}
+                <a data-id="{{_id}}" class="small button disabled" href="#subscribe-modal">Lens Full-Text Viewer</a>
+                <a data-id="{{_id}}" class="small button disabled" href="#subscribe-modal">Full-Text</a>
+                {{/if}}
+            {{/if}}
 
-			{{/with}}
-		{{/if}}
-	</div>
-</template>
-
-
-<!-- todo: refactor this using new fixed navigation -->
-<template name="ArticleSections">
-	{{#if fullText}}
-		{{#with fullText}}
-		<ul class="section-nav">
-		{{>ArticleSectionsList}}
-		</ul>
-		{{/with}}
-	{{/if}}
-</template>
-
-<!-- todo: refactor this using new fixed navigation -->
-<template name="ArticleSectionsList">
-	{{#if abstract}}
-	<li class="row">
-		<div class="col s12"><a class="article-header-0 anchor" href="#abstract">Abstract</a></div>
-	</li>
-	{{/if}}
-	<li class="row">
-		<div class="col s12"><a class="article-header-0 anchor" href="#main-text">Main Text</a></div>
-	</li>
-	{{#each sections}}
-	{{#if title}}
-		<li class="row">
-			{{#if equals headerLevel 1}}
-			<div class="col s12">
-				<a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">
-				{{#if label}}{{label}}&nbsp;{{/if}}{{{title}}}
-				</a>
-			</div>
-			{{else}}
-			<div class="col s1">
-				<a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">
-				{{#if label}}{{label}}{{else}}&nbsp;{{/if}}
-				</a>
-			</div>
-			<div class="col s10">
-				<a class="article-header-{{headerLevel}} anchor" href="#{{sectionId}}">
-				{{{title}}}
-				</a>
-			</div>
-			{{/if}}
-		</li>
-	{{/if}}
-	{{/each}}
-	{{#if references}}
-	<li><a class="article-header-1 anchor" href="#references">References</a></li>
-	{{/if}}
+            {{/with}}
+        {{/if}}
+    </div>
 </template>
 
 <!--admin partials-->
-
 <template name="addArticleBtn">
-	<button class="add-article btn waves-effect waves-light btn-add" type="submit" name="action" alt="Add Article"><i class="material-icons">&#xE147;</i> Add</button>
+    <button class="add-article btn waves-effect waves-light btn-add" type="submit" name="action" alt="Add Article"><i class="material-icons">&#xE147;</i> Add</button>
 </template>
 <template name="updateArticleBtn">
-	<button data-mongoid="{{_id}}" class="update-article btn waves-effect waves-light btn-update" type="submit" name="action" alt="Update Article"><i class="material-icons">&#xE254;</i> Update</button>
+    <button data-mongoid="{{_id}}" class="update-article btn waves-effect waves-light btn-update" type="submit" name="action" alt="Update Article"><i class="material-icons">&#xE254;</i> Update</button>
 </template>
