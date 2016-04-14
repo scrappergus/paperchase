@@ -81,24 +81,32 @@ Meteor.methods({
 var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display'];
 
 Meteor.methods({
-    compareObjectsXmlWithDb: function(xmlValue, dbValue){
-        // console.log('..compareObjectsXmlWithDb');
+    compareObjectsXmlWithDb: function(parentKey, xmlValue, dbValue){
+        // console.log('..compareObjectsXmlWithDb',parentKey);
         // console.log(JSON.stringify(xmlValue));console.log(JSON.stringify(dbValue));
         var fut = new future();
         var conflict = '';
         var keyCount = 0;
+        var xmlVal,
+            dbVal;
         //TODO: add check for matching object lengths
         if(Object.keys(dbValue).length != 0){
             for(var valueKey in dbValue){
-                // console.log('  ' + valueKey);
                 // DB will have more keys because middle name, affiliations, etc all will be empty if they do not exist. whereas from the XML, the key will not exist
                 // make sure XML has this key too
                 if(xmlValue[valueKey]){
-                    var c = Meteor.call('compareValuesXmlWithDb', valueKey, xmlValue[valueKey], dbValue[valueKey]);
-                    if(c){
-                        // append to other conflicts in this object
-                        conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: ' + c.conflict + ' ';
+                    xmlVal = xmlValue[valueKey];
+                    dbVal = dbValue[valueKey];
+                    if(parentKey === 'dates' || parentKey === 'history'){
+                       xmlVal = Meteor.dates.article(xmlVal);
+                       dbVal = Meteor.dates.article(dbVal);
                     }
+                    Meteor.call('compareValuesXmlWithDb', valueKey, xmlVal, dbVal,function(error,c){
+                        if(c){
+                            // append to other conflicts in this object
+                            conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: ' + c.conflict + ' ';
+                        }
+                    });
                 }else if(dbValue[valueKey] != '' && Object.keys(dbValue[valueKey]).length != 0){
                     conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in XML. In database: ';
                     if(valueKey == 'affiliations_numbers'){
@@ -146,7 +154,7 @@ Meteor.methods({
                 conflict.conflict = '<div class="clearfix"></div><b>XML != Database</b><div class="clearfix"></div>' + xmlValue + '<div class="clearfix"></div>!=<div class="clearfix"></div>' + dbValue;
             }
         }else if(typeof xmlValue == 'object' && !Array.isArray(xmlValue)){
-            Meteor.call('compareObjectsXmlWithDb', xmlValue, dbValue, function(error,result){
+            Meteor.call('compareObjectsXmlWithDb', key, xmlValue, dbValue, function(error,result){
                 if(result){
                     conflict.conflict = result;
                 }
@@ -160,7 +168,7 @@ Meteor.methods({
             }
             for(var arrIdx=0 ; arrIdx<xmlValue.length ; arrIdx++){
                 if(typeof xmlValue[arrIdx] == 'object'){
-                    Meteor.call('compareObjectsXmlWithDb', xmlValue[arrIdx], dbValue[arrIdx],function(err,res){
+                    Meteor.call('compareObjectsXmlWithDb', key, xmlValue[arrIdx], dbValue[arrIdx],function(err,res){
                         if(err){
                             console.error(err);
                         }
