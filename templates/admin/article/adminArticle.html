@@ -187,21 +187,25 @@
                 <div class="card-content">
                     {{>ArticleHeaderTitle}}
                     <input type="hidden" id="article-mongo-id" value="{{_id}}"/>
-                    {{#if countKeys ids}}
-                    <div class="row no-margin">
-                        <div class="col s12">
-                            {{#each arrayify ids}}
-                                {{#if equals name 'doi'}}
-                                <div class="admin-id"><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></div>
-                                {{else}}
-                                <div class="admin-id"><label>{{name}}:</label> {{value}}</div>
-                                {{/if}}
-                            {{/each}}
-                        </div>
-                    </div>
-                    {{/if}}
+                    {{>AdminArticleIds}}
                 </div>
             </div>
         </div>
     </div>
+</template>
+
+<template name="AdminArticleIds">
+    {{#if countKeys ids}}
+    <div class="row no-margin">
+        <div class="col s12">
+            {{#each arrayify ids}}
+            {{#if equals name 'doi'}}
+            <div class="admin-id"><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></div>
+            {{else}}
+            <div class="admin-id"><label>{{name}}:</label> {{value}}</div>
+            {{/if}}
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
 </template>

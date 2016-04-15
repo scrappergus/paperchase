@@ -126,6 +126,7 @@ if (Meteor.isClient) {
     Session.setDefault('xml-file',null);
     Session.setDefault('xml-figures',null);
     Session.setDefault('article-form',null);
+    Session.setDefault('new-article',null); // only for when uploading XML, this is the data parsed out
     Session.setDefault('articles-updated',null); //right now just for when deleting an issue, removing issue info from docs
 
 
@@ -683,6 +684,17 @@ if (Meteor.isClient) {
                 }
             });
             this.next();
+        },
+    });
+    Router.route('/admin/upload_xml/',{
+        name: 'AdminUploadArticleXml',
+        layoutTemplate: 'Admin',
+        title: function() {
+            var pageTitle = 'Admin | Upload Article XML ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
         },
     });
 

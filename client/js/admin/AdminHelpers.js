@@ -343,6 +343,11 @@ Template.AdminArticleAdd.helpers({
         }
     }
 });
+Template.AdminUploadArticleXml.helpers({
+    article: function(){
+        return Session.get('new-article');
+    }
+});
 
 // Data Submission
 // ---------------

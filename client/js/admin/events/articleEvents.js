@@ -475,6 +475,30 @@ Template.s3Upload.events({
         }
     }
 });
+Template.s3UploadNewArticle.events({
+    'click button.upload': function(e){
+        // console.log('click');
+        e.preventDefault();
+        Meteor.formActions.saving();
+        var article,
+            xmlUrl,
+            s3Folder,
+            articleIds;
+        var files = $('input.file_bag')[0].files;
+        var file = files[0];
+        // Uploader only allows 1 file at a time.
+        // Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
+        if(files){
+            if(file['type'] == 'text/xml'){
+                Meteor.articleFiles.verifyNewXml(files);
+            }else{
+                Meteor.formActions.errorMessage('Uploader is only for XML');
+            }
+        }else{
+            Meteor.formActions.errorMessage('Please select XML file to upload.');
+        }
+    }
+});
 Template.AdminArticleFiles.events({
     'submit #files-form': function(e){
         e.preventDefault();
@@ -634,5 +658,25 @@ Template.s3FigureUpload.events({
         }else{
             Meteor.formActions.errorMessage('Figure ID already assigned to another figure.');
         }
+    }
+});
+
+// Upload New Article XML
+Template.AdminUploadArticleXml.events({
+    'click #add-article': function(e){
+        e.preventDefault();
+        Meteor.formActions.processing();
+        Meteor.call('addArticle',Session.get('new-article'),function(error,result){
+            if(error){
+                Meteor.formActions.errorMessage('Could not add article');
+            }else if(result){
+                Router.go('AdminArticleOverview',{_id : result});
+                // Meteor.formActions.successMessage();
+            }
+        });
+    },
+    'click #add-article-cancel': function(e){
+        e.preventDefault();
+        Session.set('new-article',null);
     }
 });

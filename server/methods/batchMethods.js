@@ -166,7 +166,7 @@ Meteor.methods({
             var assetUrl = assetBaseUrl + articleMongoId + '.xml';
             Meteor.call('getXml',assetUrl,function(error,xmlString){
                 if(xmlString){
-                    Meteor.xmlPmc.supplementaryMaterials(xmlString, function(supps){
+                    Meteor.xmlPmc.supplementalMaterials(xmlString, function(supps){
                         if(supps && supps.length >0){
                             Meteor.call('updateArticleDbSupps', articleMongoId, supps);
                         }

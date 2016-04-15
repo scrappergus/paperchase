@@ -163,6 +163,10 @@ Uploading: Uses template s3FigureUpload. First the file is uploaded to the paper
 Updating/Adding New Figure: Both actions use same template event from s3FigureUpload, which will also verify that the figure ID is unique. They also use the server method afterUploadArticleFig(). This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
 
 
+New Article via XML
+----------------
+Uses template AdminUploadArticleXml. Duplicates artilces are checked via articleExistenceCheck(), if found then modal links to found article. Works with AOP PubMed XML and PMC Full Text XML. Uses the session variable new-article to display the processed article data for the user to verify. When this variable is null, the uploader is shown. Otherwise, article verification is shown.
+
 Issue Form
 -------------
 **Validation and Duplicate Check**

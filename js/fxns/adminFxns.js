@@ -674,7 +674,7 @@ Meteor.adminSections = {
 
 Meteor.articleFiles = {
     verifyXml: function(articleMongoId,files){
-        // console.log('..verifyXml');
+        // console.log('..verifyXml',articleMongoId,files);
         var s3Folder = 'xml';
         var file = files[0];
         var reader = new FileReader;
@@ -698,6 +698,34 @@ Meteor.articleFiles = {
                         if(result){
                             Session.set('xml-verify',true);
                             Session.set('article-form',result);
+                        }
+                    });
+                }
+            });
+        }
+        reader.readAsText(file);
+    },
+    verifyNewXml: function(files){
+        var s3Folder = 'xml';
+        var file = files[0];
+        var reader = new FileReader;
+        var xmlString;
+
+        reader.onload = function(e) {
+            xmlString = e.target.result;
+
+            Meteor.call('processXmlString',xmlString, function(error,processedXml){
+                if(error){
+                    console.error('process XML for DB', error);
+                    Meteor.formActions.errorMessage('Could not process XML for verification');
+                }else if(processedXml){
+                    // check for duplicates
+                    Meteor.call('articleExistenceCheck',null,processedXml,function(error,result){
+                        if(result){
+                            Meteor.formActions.errorMessage('Article Already Exists. Please upload XML via the article page.<br><a href="/admin/article/' + result._id + '">' + result.title + '</a>');
+                        }else{
+                            Meteor.formActions.closeModal();
+                            Session.set('new-article',processedXml);
                         }
                     });
                 }
