@@ -79,7 +79,7 @@ Meteor.methods({
 // Methods to compare XML with DB
 // -------------
 var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display'];
-var ignoreConflictsViaXml = ['figures','supplementary']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
+var ignoreConflictsViaXml = ['files']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
 
 Meteor.methods({
     compareObjectsXmlWithDb: function(parentKey, xmlValue, dbValue){
