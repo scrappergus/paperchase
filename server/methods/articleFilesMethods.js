@@ -209,15 +209,15 @@ Meteor.methods({
                 fut.throw(error);
             }else if(xmlString){
                 // SUPPLEMENTAL MATERIAL
-                Meteor.xmlPmc.supplementaryMaterials(xmlString,function(supps){
+                Meteor.xmlPmc.supplementalMaterials(xmlString,function(supps){
                     if(supps){
-                        if(articleInfo.files.supplementary){
+                        if(articleInfo.files.supplemental){
                             // maintain filename, match via ID
-                            Meteor.articleFiles.maintainFilenameViaId(supps, articleInfo.files.supplementary,function(suppRes){
+                            Meteor.articleFiles.maintainFilenameViaId(supps, articleInfo.files.supplemental,function(suppRes){
                                 if(suppRes){
                                     Meteor.call('updateArticleDbSupps',articleMongoId, suppRes, function(error,result){
                                         if(error){
-                                            error.userMessage = 'Could not update article in the database with supplementary materials.';
+                                            error.userMessage = 'Could not update article in the database with supplemental materials.';
                                             fut.throw(error);
                                         }else if(result){
                                             // fut.return(true);
