@@ -214,13 +214,15 @@ Meteor.methods({
                     // now check if there are conflicts between versions
                     Meteor.call('compareValuesXmlWithDb', keyDb, xmlArticle[keyDb], dbArticle[keyDb], function(error,conflict){
                         if(conflict){
-                            merged['conflicts'].push(conflict);
+                            merged.conflicts.push(conflict);
                         }
                     });
                 }else if(dbArticle[keyDb] == '' && xmlArticle[keyDb]){
-                    merged['conflicts'].push({
+                    // console.log(dbArticle[keyDb],xmlArticle[keyDb]);
+                    merged[keyDb] = xmlArticle[keyDb];
+                    merged.conflicts.push({
                         'what' : keyDb,
-                        'conflict' : 'In XML, NOT in database'
+                        'conflict' : 'In XML, NOT in database: ' + xmlArticle[keyXml]
                     });
                 }else if(dbArticle[keyDb] != '' && !xmlArticle[keyDb]){
                     if(typeof dbArticle[keyDb] === 'object' && Object.keys(dbArticle[keyDb]).length === 0){
@@ -230,7 +232,7 @@ Meteor.methods({
                         // skip mongo ID, issue mongo ID, db doc_updates etc for comparing
                         // stringify database info in case type is object
                         merged[keyDb] = dbArticle[keyDb];
-                        merged['conflicts'].push({
+                        merged.conflicts.push({
                             'what' : keyDb,
                             'conflict' : 'In database, NOT in XML<div class="clearfix"></div>' + JSON.stringify(dbArticle[keyDb])
                         });
