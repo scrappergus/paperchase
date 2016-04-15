@@ -273,9 +273,9 @@ Meteor.xmlPmc = {
             if(affiliations[aff]._){
                 affiliationsResult.push(affiliations[aff]._.trim());
             }else{
-                console.log(affiliations[aff]);
+                // console.log(affiliations[aff]);
+                affiliationsResult.push(affiliations[aff].trim());
             }
-
         }
         cb(affiliationsResult);
     },
