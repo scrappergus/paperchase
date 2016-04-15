@@ -163,21 +163,22 @@ Meteor.methods({
 
         // SUPPLEMENTAL
         // -----------
+        articleProcessed.files = {};
         Meteor.xmlPmc.figures(xml,function(figures){
             if(figures){
-                articleProcessed.figures = figures;
+                articleProcessed.files.figures = figures;
             }
         });
 
         // FIGURES
         // -----------
-        Meteor.xmlPmc.supplementaryMaterials(xml,function(supps){
+        Meteor.xmlPmc.supplementalMaterials(xml,function(supps){
             if(supps){
-                articleProcessed.supplementary = supps;
+                articleProcessed.files.supplemental = supps;
             }
         });
 
-        // console.log('articleProcessed',articleProcessed.supplementary,articleProcessed.figures);
+        // console.log('articleProcessed',articleProcessed.supplemental,articleProcessed.figures);
         return articleProcessed;
     },
     pmcFiguresInXml: function(articleMongoId){
@@ -474,7 +475,7 @@ Meteor.xmlPmc = {
         }
         cb(publisher);
     },
-    supplementary: function(node,cb){
+    supplemental: function(node,cb){
         var supp = {};
         if(node.attributes){
             Meteor.xmlPmc.getAttributeId(node,function(id){
@@ -514,18 +515,18 @@ Meteor.xmlPmc = {
         }
         cb(supp);
     },
-    supplementaryMaterials: function(xml,cb){
-        var supplementaryMaterials = [];
+    supplementalMaterials: function(xml,cb){
+        var suppMaterials = [];
         doc = new dom().parseFromString(xml);
         supps = xpath.select('//supplementary-material', doc);
         supps.forEach(function(s){
-            Meteor.xmlPmc.supplementary(s,function(result){
+            Meteor.xmlPmc.supplemental(s,function(result){
                 if(result){
-                    supplementaryMaterials.push(result);
+                    suppMaterials.push(result);
                 }
             });
         });
-        cb(supplementaryMaterials);
+        cb(suppMaterials);
     },
     title: function(xml,cb){
         // title is from XML string

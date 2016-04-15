@@ -131,7 +131,7 @@ Meteor.methods({
     },
     updateArticleDbSupps: function(articleMongoId, suppMaterials){
         var fut = new future();
-        Meteor.call('updateArticle', articleMongoId, {'files.supplementary' : suppMaterials}, function(error,result){
+        Meteor.call('updateArticle', articleMongoId, {'files.supplemental' : suppMaterials}, function(error,result){
             if(error){
                 fut.throw(error);
             }else if(result){
