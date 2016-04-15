@@ -324,6 +324,34 @@
                 {{/if}}
             </fieldset>
 
+            <fieldset id="figures">
+                <legend>Figures</legend>
+                <div class="row">
+                    <div class="col s12">
+                        {{#if files.figures}}
+                        {{>AdminArticleFigOrSuppTable files=files.figures}}
+                        {{else}}
+                        N/A
+                        {{/if}}
+                        <p class="font-sm">The only way to update figures in the database is by uploading XML. There are no inputs to update this on the admin site.</p>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset id="supplemental">
+                <legend>Supplemental Material</legend>
+                <div class="row">
+                    <div class="col s12">
+                        {{#if files.supplemental}}
+                        {{>AdminArticleFigOrSuppTable files=files.supplemental}}
+                        {{else}}
+                        N/A
+                        {{/if}}
+                        <p class="font-sm">The only way to update supplemental materials in the database is by uploading XML. There are no inputs to update this on the admin site.</p>
+                    </div>
+                </div>
+            </fieldset>
+
             <div class="row">
                 <div class="col s12 center-align">
                     {{>SaveBtn}}

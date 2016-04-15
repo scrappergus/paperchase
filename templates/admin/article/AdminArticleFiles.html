@@ -225,26 +225,7 @@
                         <div class="col s2 right-align"><label>Figures:</label></div>
                         <div class="col s10">
                         {{#if files.figures}}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Label</th>
-                                    <th>Title</th>
-                                    <th>Caption</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each files.figures}}
-                                <tr>
-                                    <td>{{#if id}}{{id}}{{else}}&nbsp;{{/if}}</td>
-                                    <td>{{#if label}}{{label}}{{else}}&nbsp;{{/if}}</td>
-                                    <td>{{#if title}}{{{title}}}{{else}}&nbsp;{{/if}}</td>
-                                    <td>{{#if caption}}{{{caption}}}{{else}}&nbsp;{{/if}}</td>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
+                        {{>AdminArticleFigOrSuppTable files=files.figures}}
                         {{else}}
                         N/A
                         {{/if}}
@@ -254,26 +235,7 @@
                         <div class="col s2 right-align"><label>Supplemental Material:</label></div>
                         <div class="col s10">
                         {{#if files.supplemental}}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Label</th>
-                                    <th>Title</th>
-                                    <th>Caption</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each files.supplemental}}
-                                <tr>
-                                    <td>{{#if id}}{{id}}{{else}}&nbsp;{{/if}}</td>
-                                    <td>{{#if label}}{{label}}{{else}}&nbsp;{{/if}}</td>
-                                    <td>{{#if title}}{{{title}}}{{else}}&nbsp;{{/if}}</td>
-                                    <td>{{#if caption}}{{{caption}}}{{else}}&nbsp;{{/if}}</td>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
+                        {{>AdminArticleFigOrSuppTable files=files.supplemental}}
                         {{else}}
                         N/A
                         {{/if}}
@@ -304,4 +266,29 @@
         </div>
     </div>
     {{/if}}
+</template>
+
+
+
+<template name="AdminArticleFigOrSuppTable">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Label</th>
+                <th>Title</th>
+                <th>Caption</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each files}}
+            <tr>
+                <td>{{#if id}}{{id}}{{else}}&nbsp;{{/if}}</td>
+                <td>{{#if label}}{{label}}{{else}}&nbsp;{{/if}}</td>
+                <td>{{#if title}}{{{title}}}{{else}}&nbsp;{{/if}}</td>
+                <td>{{#if caption}}{{{caption}}}{{else}}&nbsp;{{/if}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </template>
