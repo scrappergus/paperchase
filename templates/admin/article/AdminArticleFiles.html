@@ -207,7 +207,30 @@
                     </div>
                     <div class="row">
                         <div class="col s2 right-align"><label>Authors:</label></div>
-                        <div class="col s10">{{#if authors}}{{>AuthorsRefList}}{{else}}N/A{{/if}}</div>
+                        <div class="col s10">
+                        {{#if authors}}
+                        <div class="authors">
+                            {{#each authors}}
+                                <span class="author">
+                                    {{name_first}}
+                                    {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
+                                    {{#if affiliations_numbers}}
+                                        <sup class="author-affiliations">{{#each affiliations_numbers}}<span>{{affiliationNumber .}}<span class="comma">,&nbsp;</span></span>{{/each}}</sup>
+                                    {{/if}}
+                                    <span class="comma">, </span>
+                                </span>
+                            {{/each}}
+                        </div>
+                        {{#if affiliations}}
+                        {{#each arrayify affiliations}}
+                            <div class="clearfix"></div>
+                            <span class="affiliations">
+                                {{affiliationNumber name}}. {{value}}
+                            </span>
+                        {{/each}}
+                        {{/if}}
+                        {{else}}N/A{{/if}}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col s2 right-align"><label>Correspondence:</label></div>
