@@ -670,6 +670,7 @@ Template.AdminUploadArticleXml.events({
             if(error){
                 Meteor.formActions.errorMessage('Could not add article');
             }else if(result){
+                Session.set('new-article',null);
                 Router.go('AdminArticleOverview',{_id : result});
                 // Meteor.formActions.successMessage();
             }
