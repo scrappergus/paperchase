@@ -239,7 +239,8 @@ Meteor.methods({
                 if(authorsList[authorIdx].AffiliationInfo){
                     var authorAffiliations = authorsList[authorIdx].AffiliationInfo[0].Affiliation;
                     for(var aff=0 ; aff < authorAffiliations.length ; aff++){
-                        author.affiliations_numbers.push(articleProcessed.affiliations.indexOf(authorAffiliations[aff]));
+                        var authorAffIndex = articleProcessed.affiliations.indexOf(Meteor.general.cleanString(authorAffiliations[aff]));
+                        author.affiliations_numbers.push(authorAffIndex);
                     }
                 }
                 articleProcessed.authors.push(author);
