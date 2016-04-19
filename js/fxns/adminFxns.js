@@ -488,6 +488,24 @@ Meteor.adminArticle = {
     }
 }
 
+Meteor.adminIssue = {
+    readyIssueForm: function(){
+        Meteor.dates.initiateDatesInput();
+        // caption
+        // ------
+        $('.issue-caption').materialnote({
+            onPaste: function(e){
+                Meteor.formActions.removePastedStyle(e);
+            },
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['undo', ['undo', 'redo', 'help']],
+                ['misc', ['codeview']]
+            ]
+        });
+    }
+}
+
 Meteor.adminShared = {
     formGetData: function (e) {
         var forDb = {}

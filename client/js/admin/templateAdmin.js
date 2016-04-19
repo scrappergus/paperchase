@@ -81,7 +81,7 @@ Template.IssueCoverUploader.onRendered(function () {
     $('.materialboxed').materialbox();
 });
 Template.AdminIssueForm.onRendered(function () {
-    Meteor.dates.initiateDatesInput();
+    Meteor.adminIssue.readyIssueForm();
 });
 Template.AdminIssueDeleted.onRendered(function (){
     if(Session.get('articles-updated')){

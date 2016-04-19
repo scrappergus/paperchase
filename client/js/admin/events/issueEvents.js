@@ -40,12 +40,14 @@ Template.AdminIssueForm.events({
         };
 
         // Date
+        // -------
         if(pubDate){
             pubDate = new Date(pubDate);
             issueData.pub_date = pubDate;
         }
 
         // Date settings
+        // -------
         $('.date-setting').each(function(){
             var type = $(this).attr('id').replace('display-','');
             issueData.date_settings[type] = false;
@@ -55,6 +57,7 @@ Template.AdminIssueForm.events({
         });
 
         // Volume/Issue
+        // -------
         if($('#issue-volume').val()){
             issueData.volume = parseInt($('#issue-volume').val());
         }
@@ -63,9 +66,16 @@ Template.AdminIssueForm.events({
         }
 
         // Display Issue
+        // -------
         if($('#display-issue').prop('checked')){
             issueData.display = true;
         }
+
+        // Cover Caption
+        // -------
+        caption = $('.issue-caption').code();
+        caption = Meteor.formActions.cleanWysiwyg(caption);
+        issueData.caption = caption;
 
         Meteor.call('validateIssue', mongoId, issueData, function(error, result){
             if(error){

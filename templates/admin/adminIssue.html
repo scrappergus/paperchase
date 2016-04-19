@@ -129,47 +129,50 @@
 
                         {{>StatusModal what='Issue'}}
 
-                        <fieldset id="volume-and-issue">
-                            <legend>{{>RequiredSymbol}} Volume/Issue</legend>
+                        <fieldset id="issue-settings">
+                            <legend>{{>RequiredSymbol}}</legend>
                             <div class="row">
-                                <div class="input-field col s12 m6">
+                                <div class="input-field col s12 m4">
                                     <input type="number" id="issue-volume" value="{{volume}}">
                                     <label for="issue-volume" class="{{#if volume}}active{{/if}}">Volume</label>
                                 </div>
-                                <div class="input-field col s12 m6">
+                                <div class="input-field col s12 m4">
                                     <input type="text" id="issue-issue" value="{{issue}}">
                                     <label for="issue-issue" class="{{#if issue}}active{{/if}}">Issue</label>
                                 </div>
-                            </div>
-                        </fieldset>
-
-                        <fieldset id="issue-date">
-                            <legend>{{>RequiredSymbol}} Date</legend>
-                            <div class="row">
-                                <div class="input-field col s12">
+                                <div class="input-field col s12 m4">
                                     <input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
                                 </div>
                             </div>
                         </fieldset>
 
-                        <fieldset id="issue-date-setting">
-                            <legend>Issue Display Settings</legend>
+
+                        <fieldset id="issue-settings">
+                            <legend>Cover Caption</legend>
+                            <div class="row">
+                                    <div class="input-field col s12">
+                                        <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                                            <div class="issue-caption">{{{title}}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </fieldset>
+
+                        <fieldset id="issue-display-setting">
+                            <legend>Display Settings</legend>
                             <div class="row">
                                 <div class="input-field col s12">
                                     <input type="checkbox" id="display-issue" checked="{{checked display}}"/>
-                                    <label for="display-issue">display</label>
+                                    <label for="display-issue">display issue</label>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="input-field col s12">
                                     <p class="font-sm">* Hiding/displaying an issue will also hide/display all articles in the issue.</p>
                                 </div>
                             </div>
-                        </fieldset>
-
-                        <fieldset id="issue-date-setting">
-                            <legend>Date Display Settings</legend>
                             <div class="row">
+                                <div class="input-field col s12">
+                                    <p><b>Date</b></p>
+                                </div>
                                 <div class="input-field col s12 m4">
                                     <input class="date-setting" type="checkbox" id="display-day" checked="{{checked date_settings.day}}"/>
                                     <label for="display-day">Day</label>
