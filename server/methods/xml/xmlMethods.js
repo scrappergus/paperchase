@@ -84,17 +84,18 @@ var ignoreConflictsViaXml = ['files']; // want this separate because we actually
 Meteor.methods({
     compareObjectsXmlWithDb: function(parentKey, xmlValue, dbValue){
         // console.log('..compareObjectsXmlWithDb',parentKey);
-        // console.log(JSON.stringify(xmlValue));console.log(JSON.stringify(dbValue));
+        // console.log('==XML',JSON.stringify(xmlValue));console.log('===DB',JSON.stringify(dbValue));
         var fut = new future();
-        var conflict = '';
+        var resObj = {};
+        resObj.conflict = '';
+        resObj.merged = xmlValue;
         var keyCount = 0;
         var xmlVal,
             dbVal;
         //TODO: add check for matching object lengths
         if(Object.keys(dbValue).length != 0){
             for(var valueKey in dbValue){
-                // DB will have more keys because middle name, affiliations, etc all will be empty if they do not exist. whereas from the XML, the key will not exist
-                // make sure XML has this key too
+                // DB can have an empty value for key, but XML will not
                 if(xmlValue[valueKey]){
                     xmlVal = xmlValue[valueKey];
                     dbVal = dbValue[valueKey];
@@ -105,25 +106,26 @@ Meteor.methods({
                     Meteor.call('compareValuesXmlWithDb', valueKey, xmlVal, dbVal,function(error,c){
                         if(c){
                             // append to other conflicts in this object
-                            conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: ' + c.conflict + ' ';
+                            resObj.conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: ' + c.conflict + ' ';
                         }
                     });
                 }else if(dbValue[valueKey] != '' && Object.keys(dbValue[valueKey]).length != 0){
-                    conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in XML. In database: ';
+                    resObj.conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in XML. In database: ';
                     if(valueKey == 'affiliations_numbers'){
                         for(var aff in dbValue[valueKey]){
-                            conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
+                            resObj.conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
                         }
                     }else{
-                        conflict += JSON.stringify(dbValue[valueKey]) + ' ';
+                        resObj.conflict += JSON.stringify(dbValue[valueKey]) + ' ';
+                        if(!resObj.merged[valueKey]){
+                            resObj.merged[valueKey] = dbValue[valueKey];
+                        }
                     }
 
                 }
                 keyCount++;
-                // console.log(keyCount);
                 if(keyCount == Object.keys(dbValue).length){
-                    // console.log('CONFLICT = ');console.log(conflict);
-                    fut.return(conflict);
+                    fut.return(resObj);
                 }
             }
         }else{
@@ -131,10 +133,8 @@ Meteor.methods({
             for(var valueKey in xmlValue){
                 conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in database. In XML.';
                 keyCount++;
-                // console.log(keyCount);
                 if(keyCount == Object.keys(xmlValue).length){
-                    // console.log('CONFLICT = ');console.log(conflict);
-                    fut.return(conflict);
+                    fut.return(resObj);
                 }
             }
         }
@@ -146,7 +146,9 @@ Meteor.methods({
         // console.log('  ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
         var conflict = {};
             conflict.what = key,
-            conflict.conflict = ''; //make empty so that later when looping through object the first iteration is not undefined.
+            conflict.merged = xmlValue,
+            conflict.conflicts = [],
+            conflict.conflict = '';
         var arraysConflict = false;
         if(typeof xmlValue == 'string' || typeof xmlValue == 'boolean' || typeof xmlValue == 'number' || typeof xmlValue.getMonth === 'function'){ //treat dates as strings for comparisson
             if(xmlValue == dbValue){
@@ -155,11 +157,27 @@ Meteor.methods({
                 conflict.conflict = '<div class="clearfix"></div><b>XML != Database</b><div class="clearfix"></div>' + xmlValue + '<div class="clearfix"></div>!=<div class="clearfix"></div>' + dbValue;
             }
         }else if(typeof xmlValue == 'object' && !Array.isArray(xmlValue)){
+
+
             Meteor.call('compareObjectsXmlWithDb', key, xmlValue, dbValue, function(error,result){
-                if(result){
-                    conflict.conflict = result;
+                if(error){
+                    console.error('compareObjectsXmlWithDb',error);
+                }else if(result){
+                    if(result.conflict != ''){
+                        // console.log(result.conflict);
+                        // ALL conflicts in object will be listed here
+                        conflict.conflict = result.conflict;
+                    }
+                    if(result.merged){
+                        conflict.merged = result.merged;
+                    }
                 }
             });
+
+            // Length of key
+            if(Object.keys(xmlValue).length != Object.keys(dbValue).length){
+                conflict.conflict += '<div class="clearfix"></div><b>Number of ' + key + '</b>: ' + Object.keys(xmlValue).length + ' in the XML. ' + Object.keys(dbValue).length + ' in the DB.';
+            }
         }else if(typeof xmlValue == 'object' && Array.isArray(xmlValue)){
             // Make sure it is not an array of objects. arraysDiffer cannot handle objects.
             // if an array of objects (for ex, authors), then the order of objects in the array is important
@@ -167,29 +185,44 @@ Meteor.methods({
             if(key === 'authors'){
                 idxIs = 'Author ';
             }
+
             for(var arrIdx=0 ; arrIdx<xmlValue.length ; arrIdx++){
                 if(typeof xmlValue[arrIdx] == 'object'){
-                    Meteor.call('compareObjectsXmlWithDb', key, xmlValue[arrIdx], dbValue[arrIdx],function(err,res){
-                        if(err){
-                            console.error(err);
-                        }
-                        if(res){
-                            conflict.conflict += '<div class="clearfix"></div><b>' + idxIs +  '#' + parseInt(arrIdx+1) + '</b>' + res;
+                    Meteor.call('compareObjectsXmlWithDb', key, xmlValue[arrIdx], dbValue[arrIdx],function(error,result){
+                        if(error){
+                            console.error('compareObjectsXmlWithDb',error);
+                        }else if(result){
+                            // console.log(arrIdx,result);
+                            if(result.conflict != ''){
+                                // this is just the conflict for the object within the array, not the entire array
+                                conflict.conflict += '<div class="clearfix"></div><b>' + idxIs +  '#' + parseInt(arrIdx+1) + '</b>' + result.conflict;
+                            }
+                            if(result.merged){
+                                // one of the objects does not match the DB in the array. Update this 1 object in the array.
+                                conflict.merged.splice(arrIdx, 1);
+                                conflict.merged.splice(arrIdx, 0, result.merged);
+                            }
                         }
                     });
                 }else{
                     Meteor.call('compareValuesXmlWithDb', '', xmlValue[arrIdx], dbValue[arrIdx],function(e,r){
                         if(r){
+                            // this is just the conflict for the value within the array, not the entire array
                             conflict.conflict += r.conflict;
                         }
                     });
                 }
             }
+
+            // Length of key
+            if(xmlValue.length != dbValue.length){
+                conflict.conflict += '<div class="clearfix"></div><b>Number of ' + key + '</b>: ' + xmlValue.length + ' in the XML. ' + dbValue.length + ' in the DB.';
+            }
         }else{
             //TODO add checks for missing
         }
 
-        if(conflict.conflict){
+        if(conflict.conflict != ''){
             return conflict;
         }else{
             return false; // they match, no conflicts.
@@ -197,10 +230,6 @@ Meteor.methods({
     },
     compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
         // console.log('..compareProcessedXmlWithDb');
-        // Take the XML data and compare with the data from the DB
-        // this is for the article form and after XML is uploaded
-        // Note: There are things in dbArticle that are not in the XML. For example, if an article is advance or feature
-        // Note: Merged data will be from the XML if there is a conflict
 
         var merged = {};
             merged.conflicts = [];
@@ -210,11 +239,18 @@ Meteor.methods({
             if(ignoreConflicts.indexOf(keyDb) == -1 && ignoreConflictsViaXml.indexOf(keyDb) == -1 ){
                 if(dbArticle[keyDb] != '' && xmlArticle[keyDb]){
                     //XML will not have empty value, but DB might because of removing an article from something (ie, removing from a section)
-                    merged[keyDb] = xmlArticle[keyDb]; // both versions have data for key. if there are conflicts, then form will default to XML version
+                    merged[keyDb] = xmlArticle[keyDb]; // both versions have data for key. if there are conflicts, then form will default to XML version. If XML does not have, then defaults to DB (checked in compareValuesXmlWithDb->compareObjectsXmlWithDb)
                     // now check if there are conflicts between versions
                     Meteor.call('compareValuesXmlWithDb', keyDb, xmlArticle[keyDb], dbArticle[keyDb], function(error,conflict){
                         if(conflict){
                             merged.conflicts.push(conflict);
+                            if(conflict.merged){
+                                // merged objects. for ex, when DB has DOI but XML does not
+                                // console.log('mreged',conflict.merged);
+                                // console.log('XML',merged[keyDb]);
+                                // console.log('--------------');
+                                merged[keyDb] = conflict.merged;
+                            }
                         }
                     });
                 }else if(dbArticle[keyDb] == '' && xmlArticle[keyDb]){
@@ -228,9 +264,7 @@ Meteor.methods({
                     if(typeof dbArticle[keyDb] === 'object' && Object.keys(dbArticle[keyDb]).length === 0){
                         // ignore empty objects in DB if there is nothing in the XML. There is no conflict
                     }else{
-                        // If in DB but not in XML
-                        // skip mongo ID, issue mongo ID, db doc_updates etc for comparing
-                        // stringify database info in case type is object
+                        // If in DB but not in XML. stringify database info in case type is object
                         merged[keyDb] = dbArticle[keyDb];
                         merged.conflicts.push({
                             'what' : keyDb,

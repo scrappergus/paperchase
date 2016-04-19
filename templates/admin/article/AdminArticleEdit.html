@@ -72,15 +72,15 @@
     {{/if}}
 
     <div class="row page-anchors"><div class="col s12">
-        <a class="btn btn-sm anchor" href="#article-title">Title</a>
-        <a class="btn btn-sm anchor" href="#meta">IDs</a>
-        <a class="btn btn-sm anchor" href="#abstract">Abstract</a>
-        <a class="btn btn-sm anchor" href="#site">Site</a>
-        <a class="btn btn-sm anchor" href="#meta">Meta</a>
-        <a class="btn btn-sm anchor" href="#authors">Authors</a>
-        <a class="btn btn-sm anchor" href="#dates">Dates</a>
-        <a class="btn btn-sm anchor" href="#history">History</a>
-        <a class="btn btn-sm anchor" href="#keywords">Keywords</a>
+        <a class="btn btn-sm anchor" href="#article-title">{{>AdminTitleIcon}} Title</a>
+        <a class="btn btn-sm anchor" href="#meta">{{>AdminIdsIcon}} IDs</a>
+        <a class="btn btn-sm anchor" href="#abstract">{{>AdminAbstractIcon}} Abstract</a>
+        <a class="btn btn-sm anchor" href="#site">{{>AdminSiteIcon}} Site</a>
+        <a class="btn btn-sm anchor" href="#meta">{{>AdminMetaIcon}} Meta</a>
+        <a class="btn btn-sm anchor" href="#authors">{{>AdminAuthorsIcon}} Authors</a>
+        <a class="btn btn-sm anchor" href="#dates">{{>AdminDatesIcon}} Dates</a>
+        <a class="btn btn-sm anchor" href="#history">{{>AdminDatesIcon}} History</a>
+        <a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a>
     </div></div>
 
     <div class="row"><div class="col s12"><div class="card z-depth-0">
@@ -93,32 +93,37 @@
                 <legend>{{>RequiredSymbol}} Title</legend>
                 <div class="row">
                     <div class="input-field col s12">
-                        <div class="article-title">{{{title}}}</div>
+                        <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                            <div class="article-title">{{{title}}}</div>
+                        </div>
                     </div>
                 </div>
             </fieldset>
 
             <fieldset id="ids">
-                <legend>IDs</legend>
+                <legend>
+                    IDs
+                    <button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID">{{>AdminAddIcon}}</button>
+                </legend>
                 <div class="row">
                     <div class="col s12">
-                        <button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID"><i class="material-icons">&#xE147;</i></button>
+
                     </div>
                 </div>
                 {{>AddArticleId}}
                 {{#if ids}}
                 <div class="row">
                     {{#each arrayify ids}}
-                    <div class="col s9 m4">
-                        <div class="row grey lighten-5">
-                            <div class="input-field col s10">
-                                <input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
+                    <div class="col s11 m3">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
                                 <label for="article-id-{{name}}" class="active">{{name}}</label>
-                            </div>
-                            <div class="col s2 right-align">
-                                <i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
+                                <input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
                             </div>
                         </div>
+                    </div>
+                    <div class="col s1 no-padding">
+                        <i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
                     </div>
                     {{/each}}
                 </div>
@@ -129,7 +134,9 @@
                 <legend>Abstract</legend>
                 <div class="row">
                     <div class="input-field col s12">
-                        <div class="article-abstract">{{{abstract}}}</div>
+                        <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                            <div class="article-abstract">{{{abstract}}}</div>
+                        </div>
                     </div>
                 </div>
             </fieldset>
@@ -210,58 +217,45 @@
             </fieldset>
 
             <fieldset id="authors">
-                <legend>Authors</legend>
-                <div class="row">
-                    <div class="col s12">
-                        <button id="add-author" class="btn btn-floating waves-effect waves-light" alt="Add Author"><i class="material-icons">&#xE147;</i></button>
-                    </div>
-                </div>
+                <legend>
+                    Authors
+                    <button id="add-author" class="btn btn-floating waves-effect waves-light" alt="Add Author">{{>AdminAddIcon}}</button>
+                </legend>
                 {{#if authors}}
-                <div class="row">
-                    <div class="col s12 m1">&nbsp;</div>
-                    <div class="col s12 m3"><b>First Name</b></div>
-                    <div class="col s12 m3"><b>Middle Name</b></div>
-                    <div class="col s12 m3"><b>Last Name</b></div>
-                    <div class="col s12 m2"><b>Affiliations</b></div>
-                </div>
                 {{>AdminArticleFormAuthors}}
                 {{/if}}
             </fieldset>
 
             <fieldset id="affiliations">
-                <legend>Affiliations</legend>
-                <div class="row">
-                    <div class="col s12">
-                        <button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation"><i class="material-icons">&#xE147;</i></button>
-                    </div>
-                </div>
+                <legend>
+                    Affiliations
+                    <button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation">{{>AdminAddIcon}}</button>
+                </legend>
                 {{#if affiliations}}
                 {{>AdminArticleFormAffiliations}}
                 {{/if}}
             </fieldset>
 
             <fieldset id="dates">
-                <legend>Dates</legend>
-                <div class="row">
-                    <div class="col s12">
-                        <button id="add-dates" class="btn btn-floating waves-effect waves-light" alt="Add Date"><i class="material-icons">&#xE147;</i></button>
-                    </div>
-                </div>
+                <legend>
+                    Dates
+                    <button id="add-dates" class="btn btn-floating waves-effect waves-light" alt="Add Date">{{>AdminAddIcon}}</button>
+                </legend>
                 {{>AddArticleDate}}
                 {{#if dates}}
                 <div class="row">
                     {{! Separating out collection, because this is the only date that we are allowing mm-yyyy format on}}
                     {{#each arrayify dates}}
-                    <div class="col s9 m4">
-                        <div class="row grey lighten-5">
-                            <div class="col s10">
-                                {{>AdminDateInput}}
+                    <div class="col s11 m3">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
                                 <label for="{{name}}" class="active">{{name}}</label>
-                            </div>
-                            <div class="col s2 right-align">
-                                <i id="remove-{{name}}" class="prefix remove-dates material-icons red-type close-icon">&#xE15C;</i>
+                                {{>AdminDateInput}}
                             </div>
                         </div>
+                    </div>
+                    <div class="col s1 no-padding">
+                        {{>AdminRemoveIcon name=name what="dates"}}
                     </div>
                     {{/each}}
                 </div>
@@ -269,26 +263,23 @@
             </fieldset>
 
             <fieldset id="history">
-                <legend>History</legend>
-                <div class="row">
-                    <div class="col s12">
-                        <button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History"><i class="material-icons">&#xE147;</i></button>
-                    </div>
-                </div>
+                <legend>
+                    History
+                    <button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History">{{>AdminAddIcon}}</button>
+                </legend>
                 {{>AddArticleHistory}}
                 {{#if history}}
                 <div class="row">
                     {{#each arrayify history}}
-                        <div class="col s9 m4">
-                            <div class="row grey lighten-5">
-                                <div class="col s10">
+                        <div class="col s11 m4">
+                            <div class="card blue-grey lighten-5 z-depth-0">
+                                <div class="card-content">
                                     {{>AdminHistoryInput}}
-                                    <label>{{name}}</label>
-                                </div>
-                                <div class="col s2 right-align">
-                                    <i id="remove-{{name}}" class="prefix remove-history material-icons red-type close-icon">&#xE15C;</i>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col s1 no-padding">
+                            {{>AdminRemoveIcon name=@index nameAdditional="kw" what="kw"}}
                         </div>
                     {{/each}}
                 </div>
@@ -296,30 +287,24 @@
             </fieldset>
 
             <fieldset id="keywords">
-                <legend>Keywords</legend>
-                <div class="row">
-                    <div class="col s12">
-                        <button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword"><i class="material-icons">&#xE147;</i></button>
-                    </div>
-                </div>
+                <legend>
+                    Keywords
+                    <button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword">{{>AdminAddIcon}}</button>
+                </legend>
                 {{#if keywords}}
                 <div class="row">
-                    <div class="col s12">
-                        <ul>
-                            {{#each keywords}}
-                                <li class="kw-li grey lighten-5">
-                                    <div class="row">
-                                        <div class="col s11">
-                                            <input type="text" value="{{.}}" class="kw" />
-                                        </div>
-                                        <div class="col s1">
-                                            <i class="prefix remove-kw material-icons red-type close-icon right">&#xE15C;</i>
-                                        </div>
-                                    </div>
-                                </li>
-                            {{/each}}
-                        </ul>
+                    {{#each keywords}}
+                    <div class="col s11 m4">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
+                                <input type="text" value="{{.}}" class="kw" />
+                            </div>
+                        </div>
                     </div>
+                    <div class="col s1 no-padding">
+                        {{>AdminRemoveIcon name=@index nameAdditional="kw" what="kw"}}
+                    </div>
+                    {{/each}}
                 </div>
                 {{/if}}
             </fieldset>
@@ -378,36 +363,47 @@
     <div class="row">
         <div class="col s12">
             <ul class="authors-list">
-                {{! Do not use input-field for authors, margin looks bad}}
                 {{#each authors}}
-                <li class="author-row author-li row grey lighten-4 valign-wrapper">
-                    <div class="col s12 m1 center-align">
-                        <i class="material-icons pointer">&#xE8D5;</i>
+                <li class="author-li row author-row">
+                    <div class="col s11">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
+                                <div class="row">
+                                    <div class="col s12 m1 center-align">
+                                        <i class="material-icons pointer">&#xE8D5;</i>
+                                    </div>
+                                    <div class="col s12 m3">
+                                        <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first_{{@index}}">
+                                        <label for="name_first_{{@index}}">First Name</label>
+                                    </div>
+                                    <div class="col s12 m3">
+                                        <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle_{{@index}}">
+                                        <label for="name_middle_{{@index}}">Middle Name</label>
+                                    </div>
+                                    <div class="col s12 m3">
+                                        <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
+                                        <label for="name_last_{{@index}}">Last Name</label>
+                                    </div>
+                                    <div class="col s12 m1">
+                                        <label>Affiliations</label>
+                                        {{#each affiliations_list}}
+                                        <p class="pad-md">
+                                            <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
+                                            <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
+                                        </p>
+                                        {{/each}}
+                                    </div>
+                                    <div class="hide">
+                                        {{#each arrayify ids}}
+                                        <input class="author-id" type="hide" name="{{name}}" value="{{value}}">
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col s12 m3">
-                        <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first">
-                    </div>
-                    <div class="col s12 m3">
-                        <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle">
-                    </div>
-                    <div class="col s12 m3">
-                        <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last">
-                    </div>
-                    <div class="col s12 m1">
-                        {{#each affiliations_list}}
-                        <p class="pad-md">
-                            <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
-                            <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-                        </p>
-                        {{/each}}
-                    </div>
-                    <div class="col s12 m1">
-                        <i class="prefix remove-author material-icons red-type close-icon right">&#xE15C;</i>
-                    </div>
-                    <div class="hide">
-                        {{#each arrayify ids}}
-                        <input class="author-id" type="hide" name="{{name}}" value="{{value}}">
-                        {{/each}}
+                    <div class="col s1">
+                        {{>AdminRemoveIcon what="author"}}
                     </div>
                 </li>
                 {{/each}}

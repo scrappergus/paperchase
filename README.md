@@ -129,7 +129,11 @@ Article Files Uploader
  - Issue handling: if volume and issue in XML, but no record in the issues collection, then insert. This happens on processing, so before the article form gets saved. The reason is because issues can be deleted/hidden easily (still a todo).
  - Duplicate article checked on processing. User is notified above article form.
 
- After uploading XML, the file is checked for supplementary materials and if found the article doc in the DB is updated. afterUploadXmlFilesCheck() is called from the client.
+Uploading XML
+
+Using compareProcessedXmlWithDb(). Take the XML data and compare with the data from the DB for the article form and before XML is uploaded. There are things in DB that are not in the XML. For example, if an article is advance or feature. Merged data will be from the XML if there is a conflict. If XML is missing the data, then merged will be from the database.
+
+After uploading XML, the file is checked for supplementary materials and if found the article doc in the DB is updated. afterUploadXmlFilesCheck() is called from the client.
 
 ----------
 

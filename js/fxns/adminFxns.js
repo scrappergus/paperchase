@@ -485,6 +485,10 @@ Meteor.adminArticle = {
         }else{
             Session.set('article',articleExistsExists);
         }
+    },
+    cleanTitle: function(title){
+        // for cleaning title input
+        return string.replace(/<p>|<br>/g,'').replace(/<\/p>/g,'').trim();
     }
 }
 

@@ -629,7 +629,7 @@ Meteor.general = {
         }
     },
     cleanString: function(string){
-        string = string.replace('<italic>','<i>').replace('</italic>','</i>');
+        string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
         string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
         string = string.replace(/\s+/g,' '); // remove extra spaces
         if(string.charAt(string.length - 1) === '.'){
