@@ -37,16 +37,18 @@
                                 <fieldset>
                                     <legend>XML</legend>
                                     {{#with files}}
+                                    {{#if xml}}
                                     {{#with xml}}
                                     {{#if url}}
                                     <input type="checkbox" id="display-xml" checked="{{checked display}}"/>
                                     <label for="display-xml">Display XML</label>
                                     {{else}}
-                                    <h5>No XML</h5>
+                                    <p>No XML</p>
                                     {{/if}}
                                     {{/with}}
                                     {{else}}
-                                    <h5>No XML</h5>
+                                    <p>No XML</p>
+                                    {{/if}}
                                     {{/with}}
                                 </fieldset>
                             </div>
@@ -54,16 +56,18 @@
                                 <fieldset>
                                     <legend>PDF</legend>
                                     {{#with files}}
+                                    {{#if pdf}}
                                     {{#with pdf}}
                                     {{#if url}}
                                     <input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
                                     <label for="display-pdf">Display PDF</label>
                                     {{else}}
-                                    <h5>No PDF</h5>
+                                    <p>No PDF</p>
                                     {{/if}}
                                     {{/with}}
                                     {{else}}
-                                    <h5>No PDF</h5>
+                                    <p>No PDF</p>
+                                    {{/if}}
                                     {{/with}}
                                 </fieldset>
                             </div>
