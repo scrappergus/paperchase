@@ -239,6 +239,16 @@ Template.AddArticleId.helpers({
         return Meteor.adminArticle.articleListOptions('ids');
     }
 });
+// Article Legacy Intake
+
+Template.AdminArticleLegacyIntake.helpers({
+    article : function(){
+        return Session.get('article-legacy');
+    }
+});
+
+// Articles
+//
 Template.AdminArticlesList.helpers({
     settings: function(){
         return {

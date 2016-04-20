@@ -121,6 +121,12 @@
     .admin-header{
         margin: 0px;
     }
+    .admin-true{
+        color: $green;
+    }
+    .admin-false{
+        color: $red;
+    }
 
 /* Misc ------------------------*/
     .xml-upload{

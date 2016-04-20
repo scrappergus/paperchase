@@ -1,7 +1,7 @@
 Meteor.methods({
     sorterAddItem: function(listName,mongoId){
         var fut = new future();
-        // console.log('sorterAddItem',mongoId);
+        // console.log('sorterAddItem',listName,mongoId);
         // not always used for articles. for ex, use this for about and for authors sections.
         // TODO add to the beginning of set
 
@@ -13,21 +13,27 @@ Meteor.methods({
                 advanceOrder = sorters.findOne({name: 'advance'});
                 if(advanceOrder.order.indexOf(mongoId) == -1){
                     Meteor.call('advanceAddArticleToSection',mongoId, article.section_id, function(error,result){
-                        if(result){
-                            fut['return'](true);
-                        }else{
-                            fut['return'](false);
+                        if(error){
+                            fut.throw(error);
+                        }else if(result){
+                            fut.return(true);
                         }
                     });
+                }else{
+                    fut.return(true);
                 }
             }
         } else {
             var res = sorters.update({name : listName}, {$addToSet : {'order' : mongoId}},{upsert: true});
-            fut['return'](res);
+            fut.return(res);
         }
 
-        return fut.wait();
-        // return res;
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     sorterRemoveItem: function(listName,mongoId){
         var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});

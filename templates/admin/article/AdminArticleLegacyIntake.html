@@ -1,0 +1,39 @@
+<template name="AdminArticleLegacyIntake">
+    {{>AdminHeader header="OJS Intake"}}
+    {{>StatusModal}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    {{#if article}}
+                    {{#with article}}
+
+                    {{#if _id}}
+                    <span class="card-title"><a href="{{pathFor 'AdminArticleOverview' _id=_id}}" target="_BLANK">Updating Article</a></span>
+                    {{else}}
+                    <span class="card-title">Adding Article</span>
+                    {{/if}}
+
+                    <div class="row">
+                        <div class="col s12">
+                            <p>The data below will be updated in the Paperchase Database.</p>
+                        </div>
+                    </div>
+
+                    {{>AdminArticleOverviewData}}
+
+                    {{#if _id}}
+                    <button class="btn submit" id="legacy-update">Update Article</button>
+                    {{else}}
+                    <button class="btn submit" id="legacy-update">Add Article</button>
+                    {{/if}}
+
+                    {{/with}}
+                    {{else}}
+                    {{>Loading}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

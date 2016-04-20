@@ -146,108 +146,7 @@
             <div class="card z-depth-0">
                 <div class="card-content">
                     <div class="card-title">Verify Data</div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Title:</label></div>
-                        <div class="col s10">{{{title}}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Article Type:</label></div>
-                        <div class="col s10">{{#if article_type}}{{article_type.name}}{{else}}N/A{{/if}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Volume:</label></div>
-                        <div class="col s10">{{#if volume}}{{volume}}{{else}}N/A{{/if}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Issue:</label></div>
-                        <div class="col s10">{{#if issue}}{{issue}}{{else}}N/A{{/if}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Pages:</label></div>
-                        <div class="col s10">{{#if page_start}}{{page_start}}{{#if page_end}}-{{page_end}}{{/if}}{{else}}N/A{{/if}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>IDs:</label></div>
-                        <div class="col s10">
-                            {{#if ids}}
-                            {{#each arrayify ids}}
-                            {{#if equals name 'doi'}}
-                            {{name}}: <a href="{{value}}">{{prettyDoi value}}</a>
-                            {{else}}
-                            <label>{{name}}:</label> {{value}}
-                            {{/if}}
-                            <div class="clearfix"></div>
-                            {{/each}}
-                            {{else}}
-                            N/A
-                            {{/if}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Dates:</label></div>
-                        <div class="col s10">
-                            {{#if dates}}
-                            {{#each arrayify dates}}
-                            <label>{{name}}:</label> {{articleDate value}}
-                            <div class="clearfix"></div>
-                            {{/each}}
-                            {{else}}
-                            N/A
-                            {{/if}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>History:</label></div>
-                        <div class="col s10">
-                            {{#if history}}
-                            {{#each arrayify history}}
-                            <label>{{name}}:</label> {{articleDate value}}
-                            <div class="clearfix"></div>
-                            {{/each}}
-                            {{else}}
-                            N/A
-                            {{/if}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Authors:</label></div>
-                        <div class="col s10">
-                        {{#if authors}}
-                        <div class="authors">
-                            {{#each authors}}
-                                <span class="author">
-                                    {{name_first}}
-                                    {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
-                                    {{#if affiliations_numbers}}
-                                        <sup class="author-affiliations">{{#each affiliations_numbers}}<span>{{affiliationNumber .}}<span class="comma">,&nbsp;</span></span>{{/each}}</sup>
-                                    {{/if}}
-                                    <span class="comma">, </span>
-                                </span>
-                            {{/each}}
-                        </div>
-                        {{#if affiliations}}
-                        {{#each arrayify affiliations}}
-                            <div class="clearfix"></div>
-                            <span class="affiliations">
-                                {{affiliationNumber name}}. {{value}}
-                            </span>
-                        {{/each}}
-                        {{/if}}
-                        {{else}}N/A{{/if}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Correspondence:</label></div>
-                        <div class="col s10">{{#if correspondence}}{{#each correspondence}}{{{text}}}{{#if email}}<br><a href="{{email}}">{{email}}</a>{{/if}}{{/each}}{{else}}N/A{{/if}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Abstract:</label></div>
-                        <div class="col s10">{{#if abstract}}{{{abstract}}}{{else}}N/A{{/if}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col s2 right-align"><label>Keywords:</label></div>
-                        <div class="col s10">{{#if keywords}}{{#each keywords}}{{{.}}}<div class="clearfix"></div>{{/each}}{{else}}N/A{{/if}}</div>
-                    </div>
+                    {{>AdminArticleOverviewData}}
                     <div class="row">
                         <div class="col s2 right-align"><label>Figures:</label></div>
                         <div class="col s10">
@@ -294,8 +193,6 @@
     </div>
     {{/if}}
 </template>
-
-
 
 <template name="AdminArticleFigOrSuppTable">
     <table>

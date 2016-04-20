@@ -45,19 +45,24 @@ Meteor.methods({
             // Add new article
             Meteor.call('addArticle', articleData, function(error,result){
                 if(error){
-                    throw new Meteor.Error('ERROR: Article - ', error);
+                    fut.throw(error);
                 }else if(result){
-                    // return result;
-                    fut['return'](result);
+                    fut.return(result);
                 }
             });
         }else if(mongoId){
             // Update existing
             articleData.batch = batch;
             var updated = articles.update({'_id' : mongoId}, {$set: articleData});
-            fut['return'](mongoId);
+            fut.return(mongoId);
         }
-        return fut.wait();
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     updateArticleBy: function(where, what){
         return articles.update(where, {$set: what});
@@ -97,7 +102,7 @@ Meteor.methods({
         return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});
     },
     articleIssueVolume: function(volume,issue){
-        // console.log('....articleIssueVolume v = ' + volume + ', i = ' + issue );
+        // console.log('....articleIssueVolume v = ' + volume + ', i = ' + typeof issue );
         // if article in issue:
         // 1. check if issue exists in issues collection. If not add. If issue exists or added, issue Mongo ID returned
         // 2. include issue Mongo id in article doc
@@ -105,15 +110,16 @@ Meteor.methods({
             issueId;
         if(volume && issue){
             // Does issue exist?
+            issue = String(issue);
             issueInfo = Meteor.call('findIssueByVolIssue', volume, issue);
             if(issueInfo){
-                issueId = issueInfo['_id'];
+                issueId = issueInfo._id;
             }else{
                 // This also checks volume collection and inserts if needed.
                 issueId = Meteor.call('addIssue',{
                     'volume': volume,
                     'issue': issue,
-                    'issue_linkable' : Meteor.fxns.linkeableIssue(issue) // remove any slashed to avoid URL linking problems
+                    'issue_linkable' : Meteor.issue.linkeableIssue(issue) // remove any slashed to avoid URL linking problems
                 });
             }
         }
@@ -128,17 +134,23 @@ Meteor.methods({
         var fut = new future();
         var art = articles.findOne({_id : mongoId}, {ids:1});
         if(art.ids.pii){
-            fut['return'](art.ids.pii);
+            fut.return(art.ids.pii);
         }else{
             Meteor.call('getNewPii',function(error,pii){
                 if(error){
                     console.error('getNewPii',error);
                 }else if(pii){
-                    fut['return'](pii);
+                    fut.return(pii);
                 }
             });
         }
-        return fut.wait();
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     getNewPii: function(){
         // pii a string, so sorting is failing. below temp solution for this.
