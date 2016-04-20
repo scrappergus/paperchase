@@ -705,6 +705,9 @@ Meteor.issue = {
     },
     linkeableIssue: function(issue){
         return issue.replace(/\//g,'_');
+    },
+    createIssueParam: function(volume,issue){
+        return 'v' + volume + 'i' + issue;
     }
 }
 

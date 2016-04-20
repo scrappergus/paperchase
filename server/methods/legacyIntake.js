@@ -254,6 +254,10 @@ Meteor.methods({
             articleUpdate.issue = parseInt(article.issue);
         }
 
+        if(articleUpdate.volume && articleUpdate.issue){
+            articleUpdate.volume_and_issue  = Meteor.issue.createIssueParam(articleUpdate.volume,articleUpdate.issue);
+        }
+
         if(article.pages && article.pages != null){
             pagePieces = article.pages.split('-');
             articleUpdate.page_start = pagePieces[0];

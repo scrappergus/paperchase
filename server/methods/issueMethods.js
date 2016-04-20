@@ -101,6 +101,9 @@ Meteor.methods({
             return issues.update({'_id':mongoId},{$set:update});
         }
     },
+    findIssue: function(where){
+        return issues.findOne(where);
+    },
     addVolume: function(volume,issue){
         var insertObj = {'volume':volume};
         if(issue){

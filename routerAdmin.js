@@ -558,6 +558,9 @@ if (Meteor.isClient) {
                         article.volume = issueInfo.volume;
                         article.issue = issueInfo.issue;
                     }
+                    if(article.volume && article.issue){
+                        article.volume_and_issue = Meteor.issue.createIssueParam(article.volume,article.issue);
+                    }
                     Session.set('article',article);
                 }
             }
@@ -1022,18 +1025,20 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         onBeforeAction: function(){
             Session.set('issue',null);
-            var pieces = Meteor.issue.urlPieces(this.params.vi);
-
-            Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, true, function(error,result){
-                if(error){
-                    console.error('ERROR - getIssueAndFiles',error);
+            if(this.params.vi){
+                var pieces = Meteor.issue.urlPieces(this.params.vi);
+                if(pieces && pieces.volume && pieces.issue){
+                    Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, true, function(error,result){
+                        if(error){
+                            console.error('ERROR - getIssueAndFiles',error);
+                        }else if(result){
+                            Session.set('issue',result);
+                        }else{
+                            Router.go('AdminAddIssue');
+                        }
+                    });
                 }
-                if(result){
-                    Session.set('issue',result);
-                }else{
-                    Router.go('AdminAddIssue');
-                }
-            });
+            }
 
             this.next();
         },
