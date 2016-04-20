@@ -128,6 +128,7 @@ if (Meteor.isClient) {
     Session.setDefault('article-form',null);
     Session.setDefault('new-article',null); // only for when uploading XML, this is the data parsed out
     Session.setDefault('articles-updated',null); //right now just for when deleting an issue, removing issue info from docs
+    Session.setDefault('article-legacy',null); // for legacy ojs intake
 
 
     Router.route('/admin', {
@@ -492,6 +493,41 @@ if (Meteor.isClient) {
     });
 
     // Single Article
+    Router.route('/admin/article_intake/',{
+        name: 'AdminArticleLegacyIntake',
+        layoutTemplate: 'Admin',
+        title: function() {
+            var pageTitle = 'Admin | Article Intake ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        onBeforeAction: function(){
+            Meteor.call('legacyArticleReadyForIntake', this.params.query, function(error, result) {
+                if(error){
+                    console.error('preProcessArticle',error);
+                }else if(result){
+                    Session.set('article-legacy',result);
+                }
+            });
+            this.next();
+        },
+        data: function(){
+            // if(this.ready()){
+            //     var article = articles.findOne();
+            //     if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
+            //         if(!article.volume && article.issue_id){
+            //             // for display purposes
+            //             var issueInfo = issues.findOne();
+            //             article.volume = issueInfo.volume;
+            //             article.issue = issueInfo.issue;
+            //         }
+            //         Session.set('article',article);
+            //     }
+            // }
+        }
+    });
     Router.route('/admin/article/:_id',{
         name: 'AdminArticleOverview',
         layoutTemplate: 'Admin',
@@ -642,10 +678,8 @@ if (Meteor.isClient) {
 
             Meteor.call('preProcessArticle',this.params._id,function(error,result){
                 if(error){
-                    console.log('ERROR - preProcessArticle');
-                    console.log(error);
-                }
-                if(result){
+                    console.error('preProcessArticle',error);
+                }else if(result){
                     Session.set('article-form',result);
                 }
             });
