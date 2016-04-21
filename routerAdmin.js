@@ -129,6 +129,8 @@ if (Meteor.isClient) {
     Session.setDefault('new-article',null); // only for when uploading XML, this is the data parsed out
     Session.setDefault('articles-updated',null); //right now just for when deleting an issue, removing issue info from docs
     Session.setDefault('article-legacy',null); // for legacy ojs intake
+    // User
+    Session.setDefault('admin-user',null);
 
 
     Router.route('/admin', {
@@ -1120,6 +1122,7 @@ if (Meteor.isClient) {
             }
         }
     });
+    // User
     Router.route('/admin/user/:_id', {
         name: 'AdminUser',
         title: function() {
@@ -1132,31 +1135,45 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('userData',this.params._id)
+                Meteor.subscribe('userData',this.params._id)
             ]
-        }
-        ,data: function(){
+        },
+        data: function(){
             if(this.ready()){
-                var id = this.params._id;
-                var u = Meteor.users.findOne({'_id':id});
-                //user permissions
-                u['adminRole'] = '';
-                u['superRole'] = '';
-                u['articlesRole'] = '';
-                var r = u.roles;
-                var rL = r.length;
-                for(var i = 0 ; i < rL ; i++){
-                    u[r[i]+'Role'] = 'checked';
-                }
-
-                if(u.subscribed) {
-                    u['subbed'] = 'checked';
-                }
-
-                return {
-                    u: u
-                };
+                var u = Meteor.users.findOne({'_id':this.params._id});
+                Session.set('admin-user',u);
             }
+        }
+    });
+    Router.route('/admin/user/:_id/edit', {
+        name: 'AdminUserEdit',
+        title: function() {
+            var pageTitle = 'Admin | Edit User ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin',
+        onBeforeAction: function(){
+            Session.set('admin-user',null);
+
+            Meteor.call('readyUserFormData', this.params._id, function(error,result){
+                if(error){
+                    console.error('readyUserFormData',error);
+                }else if(result){
+                    Session.set('admin-user',result);
+                }else{
+                    Router.go('AdminAddUser');
+                }
+            });
+
+            this.next();
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('userData',this.params._id)
+            ]
         }
     });
     Router.route('/admin/user/:_id/subs', {
@@ -1205,7 +1222,22 @@ if (Meteor.isClient) {
             }
             return pageTitle;
         },
-        layoutTemplate: 'Admin'
+        layoutTemplate: 'Admin',
+        onBeforeAction: function(){
+            Session.set('admin-user',null);
+
+            Meteor.call('readyUserFormData', null, function(error,result){
+                if(error){
+                    console.error('readyUserFormData',error);
+                }else if(result){
+                    Session.set('admin-user',result);
+                }else{
+                    Router.go('AdminAddUser');
+                }
+            });
+
+            this.next();
+        },
     });
 
     // Authors

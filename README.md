@@ -101,6 +101,11 @@ Can also hide sections from this page (but cannot display)
 **Assign Section to Article**
 On article form, in meta section
 
+Users
+----
+When editing a user profile, the form data comes from session variable admin-user. Only users with the role 'super' can edit other users' roles. User name (first, middle, last) are stored in the user doc within name object. No empty strings are stored for name parts. (name.first, name.middle, name.last).
+
+
 Article Form
 ----------------
 

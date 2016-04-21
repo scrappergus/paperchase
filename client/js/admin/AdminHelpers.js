@@ -542,6 +542,21 @@ Template.AdminNewsForm.helpers({
 
 // Users
 // ---------------
+Template.AdminUser.helpers({
+    user: function(){
+        return Session.get('admin-user');
+    }
+});
+Template.AdminUserEdit.helpers({
+    user: function(){
+        return Session.get('admin-user');
+    }
+});
+Template.AdminUserForm.helpers({
+    user: function(){
+        return Session.get('admin-user');
+    }
+});
 Template.AdminUserSubs.helpers({
     volumes: function(){
         return Session.get('archive');

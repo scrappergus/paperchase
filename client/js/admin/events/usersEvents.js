@@ -1,39 +1,40 @@
-
 // Users
 // ----------------
-Template.AdminUser.events({
-    'click .edit-user': function(e){
-        e.preventDefault();
-        $('.user-overview').addClass('hide');
-        $('.user-edit').removeClass('hide');
-    },
-    'click .role-cb': function(e){
-        Meteor.adminUser.clickedRole(e);
-    },
-    'click .cancel-user-edit': function(e){
-        $('.overview').removeClass('hide');
-        $('.edit').addClass('hide');
-    },
+Template.AdminUserForm.events({
     'submit form': function(e){
         e.preventDefault();
+        Meteor.formActions.saving();
         $('input').removeClass('invalid');
         //gather info
-        var userId = $('#user-id').val();
-        var user = Meteor.adminUser.getFormUpdate();
-
-        //TODO: additional validate email
-        // var emailValid = Meteor.validate.email(user.emails[0]);
-        // if(!emailValid){
-        //  $('#email').addClass('invalid');
-        // }else{
-            Meteor.users.update({'_id':userId},{$set:user}, function (error) {
-                if(error){
-                    alert('Error '+error);
-                }else{
-                    alert('Saved');
-                }
-            });
-        // }
+        var user = Meteor.adminUser.getFormData();
+        // console.log('user',user);
+        Meteor.call('validateUserData',user,function(error,result){
+            if(error){
+                Meteor.formActions.errorMessage('Could not update the database');
+            }else if(result && result.invalid.length > 0){
+                Meteor.formActions.invalid(result.invalid);
+            }else if(result && user._id){
+                Meteor.call('updateUser',user,function(error,result){
+                    if(error){
+                        console.error(error);
+                        Meteor.formActions.errorMessage('Could not update user.<br>' + error.reason);
+                    }else if(result){
+                        Meteor.formActions.successMessage('User updated');
+                    }
+                });
+            }else if(result){
+                Meteor.call('addUser',user,function(error,result){
+                    if(error){
+                        console.error(error);
+                        Meteor.formActions.errorMessage('Could not add user.<br>' + error.reason);
+                    }else if(result){
+                        Meteor.formActions.closeModal();
+                        Router.go('AdminUser',{_id: result});
+                        // Meteor.formActions.successMessage('User added');
+                    }
+                });
+            }
+        });
     }
 });
 Template.AdminUserSubs.events({
@@ -69,25 +70,4 @@ Template.AdminUserSubs.events({
                 });
 
         }
-});
-Template.AdminAddUser.events({
-    'click .role-cb': function(e){
-        Meteor.adminUser.clickedRole(e);
-    },
-    'submit form': function(e){
-        e.preventDefault();
-        $('input').removeClass('invalid');
-        //gather info
-        var user = Meteor.adminUser.getFormAdd();
-        user.password = 'AgingPassword';
-
-        //TODO: additional validate email
-        Meteor.call('addUser', user, function( error, result ){
-            if( error ){
-                alert('ERROR! ' + error );
-            }else{
-                alert('User was created!');
-            }
-        })
-    }
 });

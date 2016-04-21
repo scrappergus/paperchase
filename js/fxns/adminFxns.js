@@ -858,36 +858,38 @@ Meteor.articleFiles = {
 Meteor.adminUser = {
     getFormCheckBoxes: function(){
         var roles = [];
-        $('.role-cb').each(function(){
+        $('.role-checkbox').each(function(){
             if($(this).is(':checked')){
-                roles.push($(this).val());
+                roles.push($(this).attr('data-role'));
             }
         });
         return roles;
     },
-    clickedRole: function(e){
-        var role = $(e.target).attr('id');
-        if($(e.target).is(':checked') && role === 'super-role'){
-            $('#admin-role').prop('checked',true);
-            $('#articles-role').prop('checked',true);
-        }else if($(e.target).is(':checked') && role === 'admin-role'){
-            $('#articles-role').prop('checked',true);
-        }
-    },
-    getFormUpdate: function(){
+    getFormData: function(){
         var user = {};
-        user.emails = [];
-        user.emails[0] = {};
-        user.emails[0].address = $('#email').val();
-        user.roles =  Meteor.adminUser.getFormCheckBoxes();
-        user.subscribed = $('.sub-cb').is(':checked');
 
-        return user;
-    },
-    getFormAdd: function(){
-        var user = {};
+        // Email
         user.email = $('#email').val();
+
+        // Roles
         user.roles =  Meteor.adminUser.getFormCheckBoxes();
+
+        // Name
+        user.name = {};
+        user.name.first = Meteor.general.cleanString($('#name_first').val());
+        user.name.middle = Meteor.general.cleanString($('#name_middle').val());
+        user.name.last = Meteor.general.cleanString($('#name_last').val());
+        for(var name_part in user.name){
+            if(user.name[name_part] === ''){
+                delete user.name[name_part];
+            }
+        }
+
+        // Update or Insert
+        if(Session.get('admin-user')._id){
+            user._id = Session.get('admin-user')._id;
+        }
+
         return user;
     }
 }
@@ -963,5 +965,14 @@ Meteor.dataSubmissions = {
                 window.open('/xml-cite-set/' + result);
             }
         });
+    }
+}
+
+// TODO? Move this to server only
+Meteor.validate = {
+    email: function(email){
+        //http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
     }
 }

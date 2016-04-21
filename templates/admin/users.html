@@ -37,76 +37,189 @@
     </div>
 </template>
 
-<template name="AdminUser">
-<!-- TODO: Emails, will users have more than 1 email, if so then update user-edit to allow for multiple emails. Also, need to update the update script if keeping track of verifying emails -->
-    {{#with u}}
-    {{>AdminHeader header="User Profile"}}
+<template name="AdminUserHeader">
+    {{>AdminUserNav}}
     <div class="row">
         <div class="col s12">
-            <a class="edit-btn waves-effect waves-light btn" href="#">Edit Profile</a>
-            <a class=" waves-effect waves-light btn" href="/admin/user/{{_id}}/subs/">Edit Subscriptions</a>
+            <div class="card blue-grey lighten-5 z-depth-0">
+                <div class="card-content">
+                    {{#with name}}
+                    {{#if first}}{{first}}{{/if}}
+                    {{#if middle}}{{#if first}}&nbsp;{{/if}}{{middle}}{{/if}}
+                    {{#if last}}{{#if last}},{{/if}}{{last}}{{/if}}
+                    {{/with}}
+                    <p>{{#each emails}}{{address}}{{/each}}</p>
+                </div>
+            </div>
         </div>
     </div>
+</template>
+
+<template name="AdminUserNav">
+    <div class="row">
+        <div class="col s12">
+            <a class="btn {{isActiveRoute 'AdminUser'}}" href="{{pathFor 'AdminUser' _id=_id}}">User Overview</a>
+            <a class="btn {{isActiveRoute 'AdminUserEdit'}}" href="{{pathFor 'AdminUserEdit' _id=_id}}">Edit Profile</a>
+            <a class="btn {{isActiveRoute 'AdminUserSubs'}}" href="{{pathFor 'AdminUserSubs' _id=_id}}">Edit Subscriptions</a>
+        </div>
+    </div>
+</template>
+
+<template name="AdminUser">
+    <!-- TODO: Emails, will users have more than 1 email, if so then update user-edit to allow for multiple emails. Also, need to update the update script if keeping track of verifying emails -->
+    {{#with user}}
+    {{>AdminHeader header="User Overview"}}
+    {{>AdminUserHeader}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <div class="overview">
-                        <div class="row">
-                            <div class="col s12">
-                                <h4>Email</h4>
-                                <p>{{#each emails}}{{address}}{{/each}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <h4>Permissions</h4>
-                                <ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
-                            </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <h4>Email</h4>
+                            <p>{{#each emails}}{{address}}{{/each}}</p>
                         </div>
                     </div>
-                    <div class="edit hide">
-                        <div class="row">
-                            <form class="col s12">
-                                <input type="hidden" id="user-id" value="{{_id}}"/>
+                    <div class="row">
+                        <div class="col s12">
+                            <h4>Permissions</h4>
+                            <ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
+</template>
+
+<template name="AdminUserEdit">
+    {{>StatusModal}}
+    {{#with user}}
+    {{>AdminHeader header="Edit User"}}
+    {{>AdminUserHeader}}
+    {{/with}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="row">
+                        {{>AdminUserForm}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="AdminAddUser">
+    {{>AdminHeader header="Add User"}}
+    {{>StatusModal}}
+    <div class="card">
+        <div class="card-content user-edit">
+            <div class="row">
+                <div class="col s12">
+                    {{>AdminUserForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="AdminUserForm">
+    {{#with user}}
+    <form id="user-form">
+        <fieldset id="user-email">
+            <legend>{{>RequiredSymbol}} Email</legend>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate" value="{{#each emails}}{{address}}{{/each}}">
+                    <label for="email" class="{{#if emails}}active{{/if}}">Email</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="user-email">
+            <legend>Name</legend>
+            {{#with name}}
+            <div class="row">
+                <div class="input-field col s12 m4">
+                    <input id="name_first" type="text" value="{{first}}">
+                    <label for="name_first" class="{{#if first}}active{{/if}}">First Name</label>
+                </div>
+                <div class="input-field col s12 m4">
+                    <input id="name_middle" type="text" value="{{middle}}">
+                    <label for="name_middle" class="{{#if middle}}active{{/if}}">Middle Name</label>
+                </div>
+                <div class="input-field col s12 m4">
+                    <input id="name_last" type="text" value="{{last}}">
+                    <label for="name_last" class="{{#if last}}active{{/if}}">Last name</label>
+                </div>
+            </div>
+            {{/with}}
+        </fieldset>
+
+        {{#if isInRole 'super'}}
+        <fieldset id="user-roles">
+            <legend>Permissions</legend>
+            {{#each all_roles}}
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="checkbox" class="filled-in role-checkbox" id="role-{{role}}" data-role="{{role}}" checked="{{checked has_role}}" />
+                    <label for="role-{{role}}">{{role}}</label>
+                </div>
+            </div>
+            {{/each}}
+        </fieldset>
+        {{/if}}
+
+        <div class="row">
+            <div class="input-field col s12">
+                <button class="submit btn waves-effect waves-light light-blue accent-4" type="submit" name="action" alt="Add User">Save</button>
+            </div>
+        </div>
+    </form>
+    {{/with}}
+</template>
+
+<template name="AdminUserSubs">
+    <!-- TODO: Emails, will users have more than 1 email, if so then update user-edit to allow for multiple emails. Also, need to update the update script if keeping track of verifying emails -->
+    {{#with u}}
+    {{>AdminHeader header="User Profile"}}
+    {{>AdminUserHeader}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            {{#with u}}
+                            <h2>Subscriptions</h2>
+                            {{/with}}
+                            <form class="">
+                                {{#each volumes}}
+
                                 <div class="row">
-                                    <div class="input-field col s12">
-                                        <h4>Email</h4>
-                                        <input id="email" type="email" class="validate" value="{{#each emails}}{{address}}{{/each}}">
+                                    <div class="col s12">
+                                        <h4>Volume {{volume}}</h4>
+                                        <div class="clearfix">
+                                            {{#each issues_data}}
+                                            <div class="input-field" style="float:left; margin:0px 20px 0px 0px;">
+                                                <input type="checkbox" name="issue-{{volume}}-{{issue}}" data-volume="{{volume}}" data-issue="{{issue}}" class="sub-cb filled-in" id="issue-{{volume}}-{{issue}}-sub-check" value="subscribed"/>
+                                                <label for="issue-{{volume}}-{{issue}}-sub-check">{{issue}}</label>
+                                            </div>
+                                            {{/each}}
+                                        </div>
                                     </div>
                                 </div>
 
+                                <div class="divider"></div>
+
+                                {{/each}}
+
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <h4>Subscription</h4>
-                                        <input type="checkbox" class="sub-cb filled-in" id="user-sub" value="subscribed" {{subbed}}/>
-                                        <label for="user-sub">Subscribed to aging</label>
-                                    </div>
-                                </div>
-
-
-                                {{#if isInRole 'super'}}
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <h4>Permissions</h4>
-                                        <div class="clearfix"></div>
-                                        <input type="checkbox" class="role-cb filled-in" id="admin-role" value="admin" {{adminRole}}/>
-                                        <label for="admin-role">admin</label>
-
-                                        <div class="clearfix"></div>
-                                        <input type="checkbox" class="role-cb filled-in" id="super-role" value="super" {{superRole}}/>
-                                        <label for="super-role">super admin</label>
-
-                                        <div class="clearfix"></div>
-                                        <input type="checkbox" class="role-cb filled-in" id="articles-role" value="articles" {{articlesRole}}/>
-                                        <label for="articles-role">article</label>
-                                    </div>
-                                </div>
-                                {{/if}}
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Save User Profile">Save</button>
-                                        <button class="cancel-user-edit btn waves-effect waves-light red" type="button" name="action" alt="Cancel">Cancel</button>
+                                        <button class="save-subs btn waves-effect waves-light green accent-4" type="submit" name="action" alt="Save subscriptions">Save subscriptions</button>
                                     </div>
                                 </div>
                             </form>
@@ -117,86 +230,4 @@
         </div>
     </div>
     {{/with}}
-</template>
-
-<template name="AdminAddUser">
-    {{>AdminHeader header="Add User"}}
-    <div class="card">
-        <div class="card-content user-edit">
-            <div class="row">
-                <form class="col s12">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <h4>Email</h4>
-                            <input id="email" type="email" class="validate" >
-                        </div>
-                    </div>
-                    {{#if isInRole 'super'}}
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <h4>Permissions</h4>
-                            <div class="clearfix"></div>
-                            <input type="checkbox" class="role-cb filled-in" id="admin-role" value="admin"/>
-                            <label for="admin-role">admin</label>
-
-                            <div class="clearfix"></div>
-                            <input type="checkbox" class="role-cb filled-in" id="super-role" value="super"/>
-                            <label for="super-role">super admin</label>
-
-                            <div class="clearfix"></div>
-                            <input type="checkbox" class="role-cb filled-in" id="articles-role" value="articles"/>
-                            <label for="articles-role">article</label>
-                        </div>
-                    </div>
-                    {{/if}}
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <button class="submit btn waves-effect waves-light light-blue accent-4" type="submit" name="action" alt="Add User">Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template name="AdminUserSubs">
-<!-- TODO: Emails, will users have more than 1 email, if so then update user-edit to allow for multiple emails. Also, need to update the update script if keeping track of verifying emails -->
-{{#with u}}
-{{>AdminHeader header="User Profile"}}
-{{/with}}
-<div class="row white z-depth-2">
-    <div class="col s12">
-        {{#with u}}
-        <h2>Subscriptions</h2>
-        {{/with}}
-        <form class="">
-            {{#each volumes}}
-
-            <div class="row">
-                <div class="col s12">
-                    <h4>Volume {{volume}}</h4>
-                    <div class="clearfix">
-                        {{#each issues_data}}
-                        <div class="input-field" style="float:left; margin:0px 20px 0px 0px;">
-                            <input type="checkbox" name="issue-{{volume}}-{{issue}}" data-volume="{{volume}}" data-issue="{{issue}}" class="sub-cb filled-in" id="issue-{{volume}}-{{issue}}-sub-check" value="subscribed"/>
-                            <label for="issue-{{volume}}-{{issue}}-sub-check">{{issue}}</label>
-                        </div>
-                        {{/each}}
-                    </div>
-                </div>
-            </div>
-
-            <div class="divider"></div>
-
-            {{/each}}
-
-            <div class="row">
-                <div class="input-field col s12">
-                    <button class="save-subs btn waves-effect waves-light green accent-4" type="submit" name="action" alt="Save subscriptions">Save subscriptions</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 </template>
