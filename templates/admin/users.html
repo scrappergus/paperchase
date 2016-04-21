@@ -44,9 +44,7 @@
             <div class="card blue-grey lighten-5 z-depth-0">
                 <div class="card-content">
                     {{#with name}}
-                    {{#if first}}{{first}}{{/if}}
-                    {{#if middle}}{{#if first}}&nbsp;{{/if}}{{middle}}{{/if}}
-                    {{#if last}}{{#if last}},{{/if}}{{last}}{{/if}}
+                    {{first}}{{#if middle}} {{middle}}{{/if}}{{#if last}} {{last}}{{/if}}
                     {{/with}}
                     <p>{{#each emails}}{{address}}{{/each}}</p>
                 </div>
