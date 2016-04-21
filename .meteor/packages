@@ -11,7 +11,6 @@ mizzao:user-status
 matb33:collection-hooks
 service-configuration
 accounts-ui
-alanning:roles
 fourseven:scss
 gandev:server-eval
 momentjs:moment
@@ -49,3 +48,4 @@ meteorhacks:picker
 meteorhacks:npm
 npm-container
 http
+alanning:roles
