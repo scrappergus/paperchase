@@ -83,7 +83,7 @@ Meteor.users.allow({
         }
         // admin can modify any
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -91,19 +91,19 @@ Meteor.users.allow({
 journalConfig.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -111,19 +111,19 @@ journalConfig.allow({
 about.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -131,19 +131,19 @@ about.allow({
 articles.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin','edit'],'article')) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin','edit'],'article')) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin','edit'],'article')) {
             return true;
         }
     }
@@ -151,19 +151,19 @@ articles.allow({
 articleTypes.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -174,13 +174,13 @@ recommendations.allow({
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -188,19 +188,19 @@ recommendations.allow({
 issues.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -208,7 +208,7 @@ issues.allow({
 issuesDeleted.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
@@ -222,19 +222,19 @@ issuesDeleted.allow({
 volumes.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     }
@@ -242,19 +242,19 @@ volumes.allow({
 edboard.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -262,19 +262,19 @@ edboard.allow({
 forAuthors.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     }
@@ -282,19 +282,19 @@ forAuthors.allow({
 newsList.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     }
@@ -302,19 +302,19 @@ newsList.allow({
 authors.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
           return true;
         }
     }
@@ -322,19 +322,19 @@ authors.allow({
 institutions.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -342,19 +342,19 @@ institutions.allow({
 ipranges.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -362,19 +362,19 @@ ipranges.allow({
 sections.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -382,19 +382,19 @@ sections.allow({
 submissions.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     update: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     },
     remove: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['admin'])) {
+        if (Roles.userIsInRole(u, ['super-admin'])) {
             return true;
         }
     }
@@ -418,6 +418,10 @@ if (Meteor.isServer) {
     Meteor.publish(null, function() {
         return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
     });
+    Meteor.publish(null, function (){
+        return Meteor.roles.find({})
+    });
+
 
     Meteor.publish('subs', function () {
         return subs.find({});
@@ -530,7 +534,7 @@ if (Meteor.isServer) {
     // Users
     // ----------------
     Meteor.publish('allUsers', function(){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return Meteor.users.find();
         }else{
             this.stop();
@@ -538,15 +542,15 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('adminUsers', function(){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
-            return Meteor.users.find({'roles': {'$in': ['admin']}},{'name_first':1,'name_last':1});
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
+            return Meteor.users.find({'roles': {'$in': ['super-admin']}},{'name_first':1,'name_last':1});
         }else{
             this.stop();
             return;
         }
     });
     Meteor.publish('userData', function(id){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return Meteor.users.find({'_id':id});
         }else{
             this.stop();
@@ -561,13 +565,13 @@ if (Meteor.isServer) {
         }});
     });
     Meteor.publish('users',function(){
-        return Meteor.users.find();
+        return Meteor.users.find({},{services:0});
     });
 
     // Institutions
     // ----------------
     Meteor.publish('institutions', function(){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return institutions.find();
         }else{
             this.stop();
@@ -575,7 +579,7 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('institution', function(id){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return institutions.find({"_id":id});
         }else{
             this.stop();
@@ -630,7 +634,7 @@ if (Meteor.isServer) {
     // Authors
     // ----------------
     Meteor.publish('authorsList', function(){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return authors.find();
         }else{
             this.stop();
@@ -638,7 +642,7 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('authorData', function(mongoId){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return  authors.find({'_id':mongoId})
         }else{
             this.stop();
@@ -652,7 +656,7 @@ if (Meteor.isServer) {
         return recommendations.find({});
     });
     Meteor.publish('recommendationData',function(mongoId){
-        if (Roles.userIsInRole(this.userId, ['admin'])) {
+        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return  recommendations.find({'_id':mongoId})
         }else{
             this.stop();

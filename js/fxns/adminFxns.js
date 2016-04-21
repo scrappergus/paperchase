@@ -857,10 +857,13 @@ Meteor.articleFiles = {
 
 Meteor.adminUser = {
     getFormCheckBoxes: function(){
-        var roles = [];
+        var roles = {};
         $('.role-checkbox').each(function(){
+            if(!roles[$(this).attr('data-role-type')]){
+                roles[$(this).attr('data-role-type')] = [];
+            }
             if($(this).is(':checked')){
-                roles.push($(this).attr('data-role'));
+                roles[$(this).attr('data-role-type')].push($(this).attr('data-role'));
             }
         });
         return roles;

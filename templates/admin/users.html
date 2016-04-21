@@ -25,7 +25,17 @@
                                 <td>{{#each emails}}{{address}}{{/each}}</td>
                                 <td>{{name_first}}</td>
                                 <td>{{name_last}}</td>
-                                <td>{{#each roles}}{{.}} {{/each}}</td>
+                                <td>{{#each arrayify roles}}
+                                    {{#if equals name '__global_roles__' }}
+                                    <label>admin</label>
+                                    {{else}}
+                                    <label>{{name}}</label>
+                                    {{/if}}
+                                    {{#each value}}
+                                    {{.}}
+                                    {{/each}}
+                                    {{/each}}
+                                </td>
                                 <td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminUser'}}">Profile</a></td>
                             </tr>
                             {{/each}}
@@ -137,37 +147,45 @@
             </div>
         </fieldset>
 
-        <fieldset id="user-email">
+        <fieldset id="user-name">
             <legend>Name</legend>
-            {{#with name}}
             <div class="row">
                 <div class="input-field col s12 m4">
-                    <input id="name_first" type="text" value="{{first}}">
-                    <label for="name_first" class="{{#if first}}active{{/if}}">First Name</label>
+                    <input id="name_first" type="text" value="{{name.first}}">
+                    <label for="name_first" class="{{#if name.first}}active{{/if}}">First Name</label>
                 </div>
                 <div class="input-field col s12 m4">
-                    <input id="name_middle" type="text" value="{{middle}}">
-                    <label for="name_middle" class="{{#if middle}}active{{/if}}">Middle Name</label>
+                    <input id="name_middle" type="text" value="{{name.middle}}">
+                    <label for="name_middle" class="{{#if name.middle}}active{{/if}}">Middle Name</label>
                 </div>
                 <div class="input-field col s12 m4">
-                    <input id="name_last" type="text" value="{{last}}">
-                    <label for="name_last" class="{{#if last}}active{{/if}}">Last name</label>
+                    <input id="name_last" type="text" value="{{name.last}}">
+                    <label for="name_last" class="{{#if name.last}}active{{/if}}">Last name</label>
                 </div>
             </div>
-            {{/with}}
         </fieldset>
 
-        {{#if isInRole 'super'}}
+        {{#if isInRole 'super-admin'}}
         <fieldset id="user-roles">
             <legend>Permissions</legend>
-            {{#each all_roles}}
+            {{#each arrayify all_roles}}
             <div class="row">
-                <div class="input-field col s12">
-                    <input type="checkbox" class="filled-in role-checkbox" id="role-{{role}}" data-role="{{role}}" checked="{{checked has_role}}" />
-                    <label for="role-{{role}}">{{role}}</label>
+                <div class="col s12"><b>{{name}}</b></div>
+                {{#each value}}
+                <div class="col s4">
+                    <input type="checkbox" class="filled-in role-checkbox" id="role-{{../name}}-{{role}}" data-role-type="{{../name}}" data-role="{{role}}" checked="{{checked has_role}}" />
+                    <label for="role-{{../name}}-{{role}}">{{role}}</label>
                 </div>
+                {{/each}}
             </div>
             {{/each}}
+            <div class="row">
+                <div class="col s12">
+                    <p><b>admin:</b> can only view</p>
+                    <p><b>super-admin:</b> can do everything</p>
+                    <p><b>article/edit:</b> can edit article information or create new articles</p>
+                </div>
+            </div>
         </fieldset>
         {{/if}}
 

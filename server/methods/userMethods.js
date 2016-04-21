@@ -11,17 +11,33 @@ Meteor.methods({
       return id;
     },
     updateUser: function(user){
+        console.log('updateUser',user);
         var fut = new future();
         var userEmail = user.email;
+        var userRoles = user.roles;
+        var userGlobalRoles = user.roles.admin;
         delete user.email;
+        delete user.roles;
+        delete userRoles.admin;
 
-
+        // Email
         var userInfo = Meteor.users.findOne({_id : user._id});
         if(userInfo.emails && userInfo.emails[0].address != userEmail){
             user.emails = [];
             user.emails.push({'address':userEmail,'verified': false});
         }
-        console.log(user);
+
+        // Roles
+        // Groups
+        for(var group in userRoles){
+            userRoles[group].forEach(function(role){
+                Roles.addUsersToRoles(user._id, role, group);
+            });
+        }
+        // Global
+        Roles.addUsersToRoles(user._id, userGlobalRoles, Roles.GLOBAL_GROUP);
+
+
         Meteor.users.update({'_id':user._id},{$set:user}, function (error) {
             if(error){
                 fut.throw(error);
@@ -38,12 +54,16 @@ Meteor.methods({
         }
     },
     getAllPossibleRoles: function(){
-        // TODO: use roles collection for this. The roles package should create this, but it might be out of date
-        return [
-            'admin',
-            'super',
-            'articles'
-        ]
+        // TODO: use roles collection for this. Looks like the collection does not retain group information though, which we need to determine different kinds of edit
+        return {
+            admin: ['admin','super-admin'],
+            article: ['edit'],
+            // user: ['edit'],
+            // issue: ['edit'],
+            // volume: ['edit'],
+            // site: ['edit'],
+            // institution: ['edit']
+        }
     },
     readyUserFormData: function(userId){
         // console.log('readyUserFormData',userId);
@@ -52,7 +72,7 @@ Meteor.methods({
         var userInfo = {};
         var userFound = Meteor.users.findOne({_id : userId});
 
-        var all_roles = [];
+        var all_roles = {};
 
         if(userFound){
             userInfo = userFound;
@@ -63,14 +83,19 @@ Meteor.methods({
             if(error){
                 console.error('getAllPossibleRoles',error);
             }else if(roles){
-                roles.forEach(function(role){
-                    var roleObj = {role: role}
-
-                    if(userInfo.roles && userInfo.roles.indexOf(role) != -1){
-                        roleObj.has_role = true;
+                for(var group in roles){
+                    if(!all_roles[group]){
+                        all_roles[group] = [];
                     }
-                    all_roles.push(roleObj);
-                });
+                    roles[group].forEach(function(role){
+                        var roleObj = {role: role}
+                        if(Roles.userIsInRole(userInfo, role, group)){
+                            roleObj.has_role = true;
+                        }
+                        all_roles[group].push(roleObj);
+                    });
+
+                }
                 userInfo.all_roles = all_roles;
                 fut.return(userInfo);
             }
@@ -101,6 +126,7 @@ Meteor.methods({
                 'message' : clear + 'Email is not valid'
             });
         }
+
         result.invalid = invalid;
         return result;
     }

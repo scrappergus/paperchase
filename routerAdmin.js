@@ -134,7 +134,7 @@ if (Meteor.isClient) {
 
 
     Router.route('/admin', {
-        name: 'admin.dashboard',
+        name: 'AdminDashboard',
         layoutTemplate: 'Admin',
         title: function() {
             var pageTitle = 'Admin | Home ';
@@ -448,7 +448,7 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-            Meteor.subscribe('articles')
+                Meteor.subscribe('articles')
             ]
         },
         data: function(){
@@ -579,15 +579,19 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFigures');
-            Meteor.call('pmcFiguresInXml',this.params._id,function(error,result){
-                if(error){
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminArticleOverview', {_id : this.params._id});
+            }else{
+                Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFigures');
+                Meteor.call('pmcFiguresInXml',this.params._id,function(error,result){
+                    if(error){
 
-                }else if(result){
-                    Session.set('xml-figures',result);
-                }
-            });
-            this.next();
+                    }else if(result){
+                        Session.set('xml-figures',result);
+                    }
+                });
+                this.next();
+            }
         },
         waitOn: function(){
             return[
@@ -617,8 +621,12 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFiles');
-            this.next();
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminArticleOverview', {_id : this.params._id});
+            }else{
+                Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFiles');
+                this.next();
+            }
         },
         waitOn: function(){
             return[
@@ -648,8 +656,12 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFilesUploader');
-            this.next();
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminArticleOverview', {_id : this.params._id});
+            }else{
+                Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFilesUploader');
+                this.next();
+            }
         },
         waitOn: function(){
             return[
@@ -679,16 +691,20 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticle');
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminArticleOverview', {_id : this.params._id});
+            }else{
+                Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticle');
 
-            Meteor.call('preProcessArticle',this.params._id,function(error,result){
-                if(error){
-                    console.error('preProcessArticle',error);
-                }else if(result){
-                    Session.set('article-form',result);
-                }
-            });
-            this.next();
+                Meteor.call('preProcessArticle',this.params._id,function(error,result){
+                    if(error){
+                        console.error('preProcessArticle',error);
+                    }else if(result){
+                        Session.set('article-form',result);
+                    }
+                });
+                this.next();
+            }
         },
         waitOn: function(){
             return[
@@ -712,17 +728,21 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Session.set('article',null);
-            Meteor.call('preProcessArticle',function(error,result){
-                if(error){
-                    console.log('ERROR - preProcessArticle');
-                    console.log(error);
-                }
-                if(result){
-                    Session.set('article-form',result);
-                }
-            });
-            this.next();
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminArticleOverview', {_id : this.params._id});
+            }else{
+                Session.set('article',null);
+                Meteor.call('preProcessArticle',function(error,result){
+                    if(error){
+                        console.log('ERROR - preProcessArticle');
+                        console.log(error);
+                    }
+                    if(result){
+                        Session.set('article-form',result);
+                    }
+                });
+                this.next();
+            }
         },
     });
     Router.route('/admin/upload_xml/',{
@@ -734,6 +754,13 @@ if (Meteor.isClient) {
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
             return pageTitle;
+        },
+        onBeforeAction: function(){
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
         },
     });
 

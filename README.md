@@ -41,6 +41,12 @@ In nav.html, the main side nav and the mobile collapsible nav will list only sec
 Admin Site
 ==========
 
+Admin permissions are tested on the admin parent template.
+
+`<template name="Admin">
+{{#if isInRole 'admin'}}
+</template>`
+
 Site Control
 ------------
 /admin/site-control
@@ -104,6 +110,16 @@ On article form, in meta section
 Users
 ----
 When editing a user profile, the form data comes from session variable admin-user. Only users with the role 'super' can edit other users' roles. User name (first, middle, last) are stored in the user doc within name object. No empty strings are stored for name parts. (name.first, name.middle, name.last).
+
+
+User Roles
+----
+Roles are set and tested using the package alanning:roles, https://atmospherejs.com/alanning/roles
+
+
+There are currently 2 groups: __global_roles__, article. __global_roles__ contains the roles 'super-admin' and 'admin'. 'admin' users can only view admin site. 'super-admin' can do everything. In the group 'article', if the user has the role 'edit' then that user can edit or create article docs.
+
+If a user as 'edit' role in the 'article' group, then the edit/upload buttons are shown in the article nav, otherwise hidden. Also, onBeforeAction will check the restricted routes before loading to see if user has permissions.
 
 
 Article Form
