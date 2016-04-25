@@ -506,14 +506,18 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Meteor.call('legacyArticleReadyForIntake', this.params.query, function(error, result) {
-                if(error){
-                    console.error('preProcessArticle',error);
-                }else if(result){
-                    Session.set('article-legacy',result);
-                }
-            });
-            this.next();
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminDashboard');
+            }else{
+                Meteor.call('legacyArticleReadyForIntake', this.params.query, function(error, result) {
+                    if(error){
+                        console.error('preProcessArticle',error);
+                    }else if(result){
+                        Session.set('article-legacy',result);
+                    }
+                });
+                this.next();
+            }
         },
         data: function(){
             // if(this.ready()){
