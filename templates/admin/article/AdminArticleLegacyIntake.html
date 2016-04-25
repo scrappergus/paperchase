@@ -30,7 +30,11 @@
 
                     {{/with}}
                     {{else}}
+                    {{#if error}}
+                    <h3>ERROR</h3>
+                    {{else}}
                     {{>Loading}}
+                    {{/if}}
                     {{/if}}
                 </div>
             </div>

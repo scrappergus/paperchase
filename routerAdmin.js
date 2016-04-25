@@ -129,6 +129,7 @@ if (Meteor.isClient) {
     Session.setDefault('new-article',null); // only for when uploading XML, this is the data parsed out
     Session.setDefault('articles-updated',null); //right now just for when deleting an issue, removing issue info from docs
     Session.setDefault('article-legacy',null); // for legacy ojs intake
+    Session.setDefault('article-legacy-error',null); // for legacy ojs intake
     // User
     Session.setDefault('admin-user',null);
 
@@ -512,6 +513,11 @@ if (Meteor.isClient) {
                 Meteor.call('legacyArticleReadyForIntake', this.params.query, function(error, result) {
                     if(error){
                         console.error('preProcessArticle',error);
+                        $('#status-modal').openModal({
+                            dismissible: true
+                        });
+                        Session.set('article-legacy-error',true);
+                        Meteor.formActions.errorMessage(error.error);
                     }else if(result){
                         Session.set('article-legacy',result);
                     }

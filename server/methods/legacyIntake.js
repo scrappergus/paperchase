@@ -130,51 +130,55 @@ Meteor.methods({
                 Meteor.call('ojsGetArticlesJson', idType, idValue, journal, legacyPlatformApi, function(error,articleJson){
                     if(articleJson){
                         articleJson = JSON.parse(articleJson);
-                        articleJson = articleJson['articles'][0];
-                        // Process article info for Paperchase DB
-                        Meteor.call('ojsProcessArticleJson', articleJson, function(error,processedArticleJson){
-                            if(processedArticleJson){
-                                if(advance){
-                                    processedArticleJson.advance = true;
+                        if(articleJson.articles && articleJson.articles.length > 0){
+                            articleJson = articleJson.articles[0];
+                            // Process article info for Paperchase DB
+                            Meteor.call('ojsProcessArticleJson', articleJson, function(error,processedArticleJson){
+                                if(error){
+                                    console.error(error);
+                                    fut.throw(error);
+                                } else if(processedArticleJson){
+                                    if(advance){
+                                        processedArticleJson.advance = true;
+                                    }
+                                    if(article){
+                                        processedArticleJson._id = article._id;
+                                        if(article.section_id == 0){
+                                            processedArticleJson.section_id = 0; // Keep in Recent Research Papers
+                                        }
+                                        if(article.issue_id){
+                                            processedArticleJson.issue_id = article.issue_id;
+                                        }
+                                        // Now compare with the DB
+                                        // TODO: need to adjust this for OJS data, right now it is setup for XML comparission
+                                        // Meteor.call('compareProcessedXmlWithDb',processedArticleJson,article,function(error,result){
+                                        //     if(result){
+                                        //         console.log('result',result.conflicts);
+                                        //     }else{
+                                        //         console.log('..no');
+                                        //     }
+                                        // });
+                                    }else{
+                                        processedArticleJson.doc_updates = {} ;
+                                        processedArticleJson.doc_updates.created_by = 'OJS Intake';
+                                        if(processedArticleJson.article_type.type == 'Research Papers'){
+                                            processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
+                                        }
+                                    }
+
+                                    fut.return(processedArticleJson);
+                                } else {
+                                    fut.throw('Article ('+idType+': '+ idValue +') was not added to Paperchase.');
                                 }
-                                if(article){
-                                    processedArticleJson._id = article._id;
-                                    if(article.section_id == 0){
-                                        processedArticleJson.section_id = 0; // Keep in Recent Research Papers
-                                    }
-                                    if(article.issue_id){
-                                        processedArticleJson.issue_id = article.issue_id;
-                                    }
-                                    // Now compare with the DB
-                                    // TODO: need to adjust this for OJS data, right now it is setup for XML comparission
-                                    // Meteor.call('compareProcessedXmlWithDb',processedArticleJson,article,function(error,result){
-                                    //     if(result){
-                                    //         console.log('result',result.conflicts);
-                                    //     }else{
-                                    //         console.log('..no');
-                                    //     }
-                                    // });
-                                }else{
-                                    processedArticleJson.doc_updates = {} ;
-                                    processedArticleJson.doc_updates.created_by = 'OJS Intake';
-                                    if(processedArticleJson.article_type.type == 'Research Papers'){
-                                        processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
-                                    }
-                                }
-
-
-
-                                fut.return(processedArticleJson);
-                            } else {
-                                fut.throw('Article ('+idType+': '+ idValue +') was not added to Paperchase.');
-                            }
-                        });
+                            });
+                        }else{
+                            fut.throw('Article ('+idType+': '+ idValue +') was not added to Paperchase. Could not find article in OJS database.');
+                        }
+                    }else {
+                        fut.throw('Article ('+idType+': '+ idValue +') was not added to Paperchase.');
                     }
                 });
             }
-
-
-
         }
         else {
             return false;
@@ -183,8 +187,8 @@ Meteor.methods({
         try {
             return fut.wait();
         }
-        catch(err) {
-            throw new Meteor.Error(error);
+        catch(error) {
+            throw new Meteor.Error(error.message);
         }
     }
 });

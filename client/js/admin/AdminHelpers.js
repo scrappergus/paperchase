@@ -244,6 +244,9 @@ Template.AddArticleId.helpers({
 Template.AdminArticleLegacyIntake.helpers({
     article : function(){
         return Session.get('article-legacy');
+    },
+    error : function(){
+        return Session.get('article-legacy-error');
     }
 });
 
