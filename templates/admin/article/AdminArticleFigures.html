@@ -6,7 +6,7 @@
     {{/with}}
 
     {{#with article}}
-    {{#with files}}
+
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
@@ -20,7 +20,7 @@
                     <div class="row hide" id="article-figure-uploader">
                         {{>AdminArticleFigureUploader uploadType='New' id='new'}}
                     </div>
-                    {{#if figures}}
+                    {{#if files.figures}}
                     {{#each figures}}
                     {{#if editing}}
                     <div class="row">
@@ -47,8 +47,6 @@
             </div>
         </div>
     </div>
-
-    {{/with}}
     {{/with}}
     {{#if xmlFigures}}
     {{>AdminArticleFiguresXml}}

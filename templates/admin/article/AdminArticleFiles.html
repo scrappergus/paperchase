@@ -9,18 +9,20 @@
             <div class="card z-depth-0">
                 <div class="card-content">
                     <span class="card-title">Files</span>
-                    {{#with files}}
                     <div class="row">
                         <div class="col s12">
-                            {{#if xml}}
-                            <a class="btn" href="{{xml.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>
+                            {{#if files.xml}}
+                            {{#with files}}<a class="btn" href="{{xml.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>{{/with}}
+                            {{else}}
+                            No XML
                             {{/if}}
-                            {{#if pdf}}
-                            <a class="btn" href="{{pdf.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>
+                            {{#if pfiles.df}}
+                            {{#with files}}<a class="btn" href="{{pdf.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>{{/with}}
+                            {{else}}
+                            No PDF
                             {{/if}}
                         </div>
                     </div>
-                    {{/with}}
                 </div>
             </div>
         </div>
@@ -36,8 +38,9 @@
                             <div class="col s12 m6">
                                 <fieldset>
                                     <legend>XML</legend>
+
+                                    {{#if files.xml}}
                                     {{#with files}}
-                                    {{#if xml}}
                                     {{#with xml}}
                                     {{#if url}}
                                     <input type="checkbox" id="display-xml" checked="{{checked display}}"/>
@@ -46,17 +49,17 @@
                                     <p>No XML</p>
                                     {{/if}}
                                     {{/with}}
+                                    {{/with}}
                                     {{else}}
                                     <p>No XML</p>
                                     {{/if}}
-                                    {{/with}}
                                 </fieldset>
                             </div>
                             <div class="col s12 m6">
                                 <fieldset>
                                     <legend>PDF</legend>
+                                    {{#if files.pdf}}
                                     {{#with files}}
-                                    {{#if pdf}}
                                     {{#with pdf}}
                                     {{#if url}}
                                     <input type="checkbox" id="display-pdf" checked="{{checked display}}"/>
@@ -65,10 +68,10 @@
                                     <p>No PDF</p>
                                     {{/if}}
                                     {{/with}}
+                                    {{/with}}
                                     {{else}}
                                     <p>No PDF</p>
                                     {{/if}}
-                                    {{/with}}
                                 </fieldset>
                             </div>
                         </div>
