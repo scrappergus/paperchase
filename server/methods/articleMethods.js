@@ -1,6 +1,16 @@
+//Meteor.authorizeCheck.article is temporary. The collections.js file should handle allow/deny but callback is failing to deny access
+Meteor.authorizeCheck = {
+    articles: function(){
+        var loggedInUser = Meteor.user();
+        if (!loggedInUser || !Roles.userIsInRole(loggedInUser,['super-admin','edit'],'article')) {
+            throw new Meteor.Error(403, 'Access denied')
+        }
+    }
+}
 // All of these methods are for admin article
 Meteor.methods({
     addArticle: function(articleData){
+        Meteor.authorizeCheck.articles();
         if(articleData['authors']){
             var authorsList = articleData['authors'];
             for(var author = 0 ; author < authorsList.length; author++){
@@ -36,6 +46,7 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
+        Meteor.authorizeCheck.articles();
         var fut = new future();
         // console.log('--updateArticle',mongoId,articleData);
 
@@ -65,9 +76,11 @@ Meteor.methods({
         }
     },
     updateArticleBy: function(where, what){
+        Meteor.authorizeCheck.articles();
         return articles.update(where, {$set: what});
     },
     unsetArticles: function(where, what){
+        Meteor.authorizeCheck.articles();
         var articlesToUpdate = articles.find(where).fetch()
         var updated = articles.update(where, {$unset: what},{ multi: true });
         if(updated){
@@ -75,6 +88,7 @@ Meteor.methods({
         }
     },
     pushArticle: function(mongoId, field, articleData){
+        Meteor.authorizeCheck.articles();
         var updateObj = {};
         updateObj[field] = articleData;
         return articles.update({'_id' : mongoId}, {$push: updateObj});
@@ -94,10 +108,12 @@ Meteor.methods({
         return articles.update({'ids.pmid' : pmid}, {$set: articleData});
     },
     addToArticleAffiliationsByPmid: function(pmid, affiliation){
+        Meteor.authorizeCheck.articles();
         // console.log('--addToArticleAffiliationsByPmid | pmid = ' + pmid  + ' / affiliation = ' + affiliation);
         return  articles.update({'ids.pmid' : pmid}, {$addToSet: {'affiliations' : affiliation}});
     },
     pushPiiArticle: function(mongoId, ids){
+        Meteor.authorizeCheck.articles();
         //used for batch processing of XML from PMC
         return articles.update({'_id' : mongoId}, {$set: {'ids' : ids}});
     },

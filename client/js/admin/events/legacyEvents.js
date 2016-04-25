@@ -12,7 +12,7 @@ Template.AdminArticleLegacyIntake.events({
 		Meteor.call('updateArticle', articleMongoId, article, function(error,updatedMongoId){
 			if(error){
 				console.error(error);
-				Meteor.formActions.errorMessage('Could not update the database');
+				Meteor.formActions.errorMessage('Could not update the database.<br>' + error.reason);
 			}else if(updatedMongoId){
 				Meteor.call('sorterAddItem','advance',updatedMongoId,function(error,sorterUpdated){
 					if(error){
