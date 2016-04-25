@@ -39,7 +39,7 @@ Template.AdminArticleForm.events({
         if($(e.target).prop('checked')){
             checked = true;
         }
-        article.authors[authorIndex]['affiliations_list'][affIndex]['checked'] = checked;
+        article.authors[authorIndex].affiliations_list[affIndex].checked = checked;
 
         Session.set('article-form',article);
     },
@@ -55,7 +55,7 @@ Template.AdminArticleForm.events({
         }
         // need this random number for uniqueness of checkboxes. for authors in the db, it is the mongo id
         var temp_id = Math.random().toString(36).substring(7);
-        newAuthor['ids']['mongo_id'] = temp_id;
+        newAuthor.ids.mongo_id = temp_id;
         if(article.affiliations){
             for(var i = 0; i < article.affiliations.length ; i++){
                 newAuthor.affiliations_list.push({
@@ -96,20 +96,20 @@ Template.AdminArticleForm.events({
         e.preventDefault();
         var article = Session.get('article-form');
         // first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
-        article['affiliations'] = Meteor.adminArticle.getAffiliations();
-        if(!article['affiliations']){
-            article['affiliations'] = [];
+        article.affiliations = Meteor.adminArticle.getAffiliations();
+        if(!article.affiliations){
+            article.affiliations = [];
         }
-        article['affiliations'].push('NEW AFFILIATION');
+        article.affiliations.push('NEW AFFILIATION');
 
         // add new affiliation object to all author affiliations list array
-        if(article['authors']){
-            for(var i = 0 ; i < article['authors'].length ; i++){
-                var author_mongo_id = article['authors'][i]['ids']['mongo_id'];
-                if(!article['authors'][i]['affiliations_list']){
-                    article['authors'][i]['affiliations_list'] = [];
+        if(article.authors){
+            for(var i = 0 ; i < article.authors.length ; i++){
+                var author_mongo_id = article.authors[i].ids.mongo_id;
+                if(!article.authors[i].affiliations_list){
+                    article.authors[i].affiliations_list = [];
                 }
-                article['authors'][i]['affiliations_list'].push({'checked':false,'author_mongo_id':author_mongo_id});
+                article.authors[i].affiliations_list.push({'checked':false,'author_mongo_id':author_mongo_id});
             }
         }
 
@@ -136,18 +136,18 @@ Template.AdminArticleForm.events({
         // console.log('remove = '+affiliationIndex);
         for(var i = 0 ; i < article.authors.length ; i++){
             var authorAffiliationsStrings = [];
-            var authorAffList = article['authors'][i]['affiliations_list'];
+            var authorAffList = article.authors[i].affiliations_list;
 
             for(var a = 0 ; a < authorAffList.length ; a++){
-                var newAuthAffiliations = article['affiliations'].splice(affiliationIndex, 1);
+                var newAuthAffiliations = article.affiliations.splice(affiliationIndex, 1);
                 //save checked
-                if(authorAffList[a]['checked']){
-                    authorAffiliationsStrings.push(article['affiliations'][a]);
+                if(authorAffList[a].checked){
+                    authorAffiliationsStrings.push(article.affiliations[a]);
                 }
 
                 //resets
-                authorAffList[a]['index'] = a;
-                authorAffList[a]['checked'] = false;
+                authorAffList[a].index = a;
+                authorAffList[a].checked = false;
 
                 //remove if this is the one we are looking for
                 if(a === parseInt(affiliationIndex)){
@@ -155,20 +155,20 @@ Template.AdminArticleForm.events({
                 }
 
                 //update data object
-                article.authors[i]['affiliations_list'] = authorAffList;
+                article.authors[i].affiliations_list = authorAffList;
             }
 
             // add checked back in
             for(var s = 0 ; s < authorAffiliationsStrings.length ; s++){
                 var affString = authorAffiliationsStrings[s];
-                var affIndex = article['affiliations'].indexOf(affString);
-                if(affIndex != affiliationIndex && article['authors'][i]['affiliations_list'][affIndex]){
-                    article['authors'][i]['affiliations_list'][affIndex]['checked'] = true;
+                var affIndex = article.affiliations.indexOf(affString);
+                if(affIndex != affiliationIndex && article.authors[i].affiliations_list[affIndex]){
+                    article.authors[i].affiliations_list[affIndex].checked = true;
                     //else, this was the affiliation that was removed
                 }
             }
         }
-        article['affiliations'].splice(affiliationIndex, 1);
+        article.affiliations.splice(affiliationIndex, 1);
         Session.set('article-form',article);
     },
     // Keywords
@@ -337,7 +337,7 @@ Template.AdminArticleForm.events({
         // -------
         articleAbstract = $('.article-abstract').code();
         articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
-        articleUpdateObj['abstract'] = articleAbstract;
+        articleUpdateObj.abstract = articleAbstract;
 
         // meta
         // -------
@@ -393,7 +393,7 @@ Template.AdminArticleForm.events({
                 'affiliations_numbers' : []
             };
             var authorIds = $(this).find('.author-id').each(function(i,o){
-                author['ids'][$(o).attr('name')] = $(o).val();
+                author.ids[$(o).attr('name')] = $(o).val();
             });
             $(this).find('.author-affiliation').each(function(i,o){
                 if($(o).prop('checked')){
@@ -463,9 +463,9 @@ Template.s3Upload.events({
         // Uploader only allows 1 file at a time.
         // Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
         if(files){
-            if(file['type'] == 'text/xml'){
+            if(file.type == 'text/xml'){
                 Meteor.articleFiles.verifyXml(articleMongoId,files);
-            }else if(file['type'] == 'application/pdf'){
+            }else if(file.type == 'application/pdf'){
                 Meteor.articleFiles.uploadArticleFile(articleMongoId,'pdf',files);
             }else{
                 Meteor.formActions.errorMessage('Uploader is only for PDF or XML');
@@ -489,7 +489,7 @@ Template.s3UploadNewArticle.events({
         // Uploader only allows 1 file at a time.
         // Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
         if(files){
-            if(file['type'] == 'text/xml'){
+            if(file.type == 'text/xml'){
                 Meteor.articleFiles.verifyNewXml(files);
             }else{
                 Meteor.formActions.errorMessage('Uploader is only for XML');
