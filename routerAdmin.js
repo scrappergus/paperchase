@@ -729,7 +729,7 @@ if (Meteor.isClient) {
         },
         onBeforeAction: function(){
             if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
-                Router.go('AdminArticleOverview', {_id : this.params._id});
+                Router.go('AdminDashboard');
             }else{
                 Session.set('article',null);
                 Meteor.call('preProcessArticle',function(error,result){
