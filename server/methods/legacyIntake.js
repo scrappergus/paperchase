@@ -130,6 +130,7 @@ Meteor.methods({
                 Meteor.call('ojsGetArticlesJson', idType, idValue, journal, legacyPlatformApi, function(error,articleJson){
                     if(articleJson){
                         articleJson = JSON.parse(articleJson);
+                        // console.log(articleJson.articles.length);
                         if(articleJson.articles && articleJson.articles.length > 0){
                             articleJson = articleJson.articles[0];
                             // Process article info for Paperchase DB
@@ -291,7 +292,7 @@ Meteor.methods({
                     // console.log(dateKwType);
                     if(dateKwType == 'Keywords'){
                         var kwList = datesAndKw[dd].match(/<\/span>(.*?)<\/p>/g);
-                        kwList = kwList[0].replace('<\/span>: ','').replace('<\/p>','').replace(/^\s+|\s+$/g, '');
+                        kwList = kwList[0].replace(/<\/span>: /g,'').replace(/<\/span>/g,'').replace(/<\/p>/g,'').replace(/^\s+|\s+$/g, '');
                         kwList = kwList.split(', '); // leave space when splitting to trim whitespace
                         articleUpdate.keywords = kwList
                     }else{
