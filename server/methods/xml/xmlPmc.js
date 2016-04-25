@@ -280,6 +280,7 @@ Meteor.xmlPmc = {
         cb(affiliationsResult);
     },
     authorsCorresponding: function(corresp,cb){
+        // console.log('authorsCorresponding');
         // corresp is JSON from XML to get all correspondence elements
         var allCorrespondence = [];
         for(var i=0 ; i < corresp.length ; i++){
@@ -306,14 +307,14 @@ Meteor.xmlPmc = {
                 }
             }
             if(correspondence.text){
-                // console.log('correspondence 1-' + correspondence.text + '-');
+                // console.log('correspondence.text',correspondence.text);
                 // remove all line breaks and extra spaces
                 correspondence.text = correspondence.text.replace(/(\r\n|\n|\r)/gm,'');
                 correspondence.text = correspondence.text.replace(/  +/g, ' ');
                 // remove all the text we do not want to use for templating
                 correspondence.text = correspondence.text.replace('Correspondence:','');
                 correspondence.text = correspondence.text.replace('Correspondence :','');
-                correspondence.text = correspondence.text.replace('Correspondence to ','');
+                correspondence.text = correspondence.text.replace('Correspondence to','');
                 correspondence.text = correspondence.text.replace('at,','');
 
                 // Trim and Replace
@@ -322,12 +323,14 @@ Meteor.xmlPmc = {
                     if( correspondence.text.charAt(0) === ',' || correspondence.text.charAt(0) === ':'){
                         correspondence.text = correspondence.text.slice(1, correspondence.text.length);
                     }
-                }
-                while(correspondence.text.charAt(0) === ' ' || correspondence.text.slice(-1) === ';' || correspondence.text.slice(-1) === ','){
                     correspondence.text = correspondence.text.trim();
-                    if(correspondence.text.slice(-1) === ';' || correspondence.text.slice(-1) === ','){
+                }
+                while(correspondence.text.charAt(0) === ' ' || correspondence.text.slice(-1) === ';' || correspondence.text.slice(-1) === ',' || correspondence.text.slice(-1) === ':'){
+                    correspondence.text = correspondence.text.trim();
+                    if(correspondence.text.slice(-1) === ';' || correspondence.text.slice(-1) === ',' || correspondence.text.slice(-1) === ':'){
                         correspondence.text = correspondence.text.slice(0, -1);
                     }
+                    correspondence.text = correspondence.text.trim();
                 }
 
                 if(correspondence.text == ''){

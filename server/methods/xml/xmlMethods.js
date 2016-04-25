@@ -78,7 +78,7 @@ Meteor.methods({
 
 // Methods to compare XML with DB
 // -------------
-var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display'];
+var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display','mongo_id','advance'];
 var ignoreConflictsViaXml = ['files']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
 
 Meteor.methods({
@@ -110,18 +110,19 @@ Meteor.methods({
                         }
                     });
                 }else if(dbValue[valueKey] != '' && Object.keys(dbValue[valueKey]).length != 0){
-                    resObj.conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in XML. In database: ';
-                    if(valueKey == 'affiliations_numbers'){
-                        for(var aff in dbValue[valueKey]){
-                            resObj.conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
-                        }
-                    }else{
-                        resObj.conflict += JSON.stringify(dbValue[valueKey]) + ' ';
-                        if(!resObj.merged[valueKey]){
-                            resObj.merged[valueKey] = dbValue[valueKey];
+                    if(parentKey != 'authors' && valueKey != 'ids'){// ignore mongo_id of author in the article doc record of the db
+                        resObj.conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in XML. In database: ';
+                        if(valueKey == 'affiliations_numbers'){
+                            for(var aff in dbValue[valueKey]){
+                                resObj.conflict += parseInt(dbValue[valueKey][aff] + 1) + ' ';// in database, the affiliation numbers are 0 based. Make this easier for the user to get
+                            }
+                        }else{
+                            resObj.conflict += JSON.stringify(dbValue[valueKey]) + ' ';
+                            if(!resObj.merged[valueKey]){
+                                resObj.merged[valueKey] = dbValue[valueKey];
+                            }
                         }
                     }
-
                 }
                 keyCount++;
                 if(keyCount == Object.keys(dbValue).length){
@@ -142,7 +143,7 @@ Meteor.methods({
         return fut.wait();
     },
     compareValuesXmlWithDb: function(key, xmlValue, dbValue){
-        // console.log('..compareValuesXmlWithDb');
+        // console.log('..compareValuesXmlWithDb',key);
         // console.log('  ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
         var conflict = {};
             conflict.what = key,
@@ -297,9 +298,24 @@ Meteor.methods({
                 if(!merged[keyXml]){
                     merged[keyXml] = xmlArticle[keyXml];
                     if(keyXml != 'issue_id'){
+                        var conflictInXml = '';
+                        if(typeof xmlArticle[keyXml] === 'object' && Object.keys(dbArticle[keyDb]).length === 0){
+                            conflictInXml = Meteor.xmlDbConflicts.missingObject(xmlArticle[keyXml]);
+                        }else if(typeof xmlArticle[keyXml] === 'object' && Object.keys(dbArticle[keyDb]).length > 0 ){
+                            xmlArticle[keyXml].forEach(function(xmlObjPieceNotInDb){
+                                if(typeof xmlObjPieceNotInDb === 'object'){
+                                    conflictInXml += Meteor.xmlDbConflicts.missingObject(xmlObjPieceNotInDb);
+                                }else{
+                                    conflictInXml += xmlObjPieceNotInDb + '<div class="clearfix"></div>';
+                                }
+                            });
+                        }else{
+                            conflictInXml = xmlArticle[keyXml];
+                        }
+                        // make conflict pretty
                         merged.conflicts.push({
                             'what' : keyXml,
-                            'conflict' : 'In XML, NOT in database: ' + xmlArticle[keyXml]
+                            'conflict' : 'In XML, NOT in database: ' + conflictInXml
                         });
                     }
                 }
@@ -307,7 +323,6 @@ Meteor.methods({
                 merged[keyXml] = xmlArticle[keyXml]; // for figures and supps from XML. DB will ALWAYS reflect what is in the XML.
             }
         }
-
         return merged;
     },
     arraysDiffer: function(xmlKw, dbKw){
@@ -346,5 +361,15 @@ Meteor.xmlParse = {
             }
         }
         return string;
+    }
+}
+
+Meteor.xmlDbConflicts = {
+    missingObject: function(object){
+        var conflict = '';
+        for(var conflictKey in object){
+            conflict += '<div class="clearfix"></div><u>'+conflictKey+'</u>: ' + object[conflictKey];
+        }
+        return conflict;
     }
 }
