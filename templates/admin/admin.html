@@ -65,8 +65,10 @@
                         <ul>
                             <li><a href="{{pathFor 'AdminArticlesDashboard'}}"><i class="material-icons">&#xE871;</i> Dashboard</a></li>
                             <li><a href="{{pathFor 'AdminArticlesList'}}"><i class="material-icons">&#xE8EF;</i> All</a></li>
+                            {{#if isInRole 'edit,super-admin' 'article'}}
                             <li><a href="{{pathFor 'AdminUploadArticleXml'}}"><i class="material-icons">&#xE2C6;</i> Upload AOP XML</a></li>
                             <li><a href="{{pathFor 'AdminArticleAdd'}}"><i class="material-icons">&#xE147;</i> Add Article</a></li>
+                            {{/if}}
                             <li><a href="{{pathFor 'AdminAop'}}"><i class="material-icons">&#xE885;</i> AOP</a></li>
                             <li><a href="{{pathFor 'AdminAdvanceArticles'}}"><i class="material-icons">&#xE031;</i> Advance (OJS)</a></li>
                             <li><a href="{{pathFor 'AdminArticlesAudit'}}"><i class="material-icons">&#xE14D;</i> Audit</a></li>
