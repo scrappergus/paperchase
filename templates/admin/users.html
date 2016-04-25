@@ -91,7 +91,16 @@
                     <div class="row">
                         <div class="col s12">
                             <h4>Permissions</h4>
-                            <ul>{{#each roles}}<li>{{.}}</li>{{/each}}</ul>
+                            {{#each arrayify roles}}
+                                {{#if equals name '__global_roles__' }}
+                                <label>admin</label>
+                                {{else}}
+                                <label>{{name}}</label>
+                                {{/if}}
+                                {{#each value}}
+                                {{.}}
+                                {{/each}}
+                            {{/each}}
                         </div>
                     </div>
                 </div>
