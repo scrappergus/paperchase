@@ -533,6 +533,11 @@ Template.AdminNews.helpers({
         return newsList.find({},{sort:{date:-1}});
     }
 });
+Template.AdminNewsEdit.helpers({
+    news: function() {
+        return Session.get('newsData');
+    }
+});
 Template.AdminNewsForm.helpers({
     news: function() {
         var news = {}; // if undefined, the template form will not load. So we need an empty object.

@@ -2,7 +2,7 @@
     {{>AdminHeader header="News"}}
     <div class="row">
         <div class="col s12">
-            <a class="edit-user waves-effect waves-light btn btn-add" href="{{pathFor 'AdminNewsAdd'}}">Add News</a>
+            <a class="edit-user waves-effect waves-light btn btn-add" href="{{pathFor 'AdminNewsAdd'}}">{{>AdminAddIcon}} Add News</a>
         </div>
     </div>
     <div class="row">
@@ -45,12 +45,22 @@
 </template>
 
 <template name="AdminNewsEdit">
+    {{#if news}}
     {{>AdminHeader header="Edit News"}}
     <div class="row">
         <div class="col s12">
-            {{>AdminNewsForm}}
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            {{>AdminNewsForm}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    {{/if}}
 </template>
 
 <template name="AdminNewsForm">
