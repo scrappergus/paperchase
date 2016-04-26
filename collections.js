@@ -634,16 +634,17 @@ if (Meteor.isServer) {
     // Authors
     // ----------------
     Meteor.publish('authorsList', function(){
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
+        if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
             return authors.find();
         }else{
             this.stop();
             return;
         }
+
     });
     Meteor.publish('authorData', function(mongoId){
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return  authors.find({'_id':mongoId})
+        if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
+            return authors.find({'_id':mongoId})
         }else{
             this.stop();
             return;
@@ -656,7 +657,7 @@ if (Meteor.isServer) {
         return recommendations.find({});
     });
     Meteor.publish('recommendationData',function(mongoId){
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
+        if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
             return  recommendations.find({'_id':mongoId})
         }else{
             this.stop();
@@ -693,6 +694,9 @@ if (Meteor.isServer) {
     Meteor.publish('sectionPapers', function(sectionMongoId){
         // For admin pages
         return articles.find({'section' : sectionMongoId});
+    });
+    Meteor.publish('sectionById', function(mongoId){
+        return sections.findOne({_id : mongoId})
     });
     Meteor.publish('sectionPapersByDashName', function(dashName){
         // console.log('..sectionPapersByDashName' +  dashName);
