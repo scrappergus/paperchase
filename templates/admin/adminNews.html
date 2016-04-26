@@ -2,31 +2,35 @@
     {{>AdminHeader header="News"}}
     <div class="row">
         <div class="col s12">
-            <a class="edit-user waves-effect waves-light btn light-blue accent-4" href="{{pathFor 'AdminNewsAdd'}}">Add News</a>
+            <a class="edit-user waves-effect waves-light btn btn-add" href="{{pathFor 'AdminNewsAdd'}}">Add News</a>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-            <table>
-                <thead>
-                    <tr>
-                        <th data-field="title">Title</th>
-                        <th data-field="date">Date</th>
-                        <th data-field="display">Display</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each news}}
-                    <tr>
-                        <td>{{title}}</td>
-                        <td>{{formatDate date}}</td>
-                        <td>{{#if display}}Yes{{else}}No{{/if}}</td>
-                        <td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminNewsEdit'}}">Edit</a></td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-field="title">Title</th>
+                                <th data-field="date">Date</th>
+                                <th data-field="display">Display</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each news}}
+                            <tr>
+                                <td>{{title}}</td>
+                                <td>{{formatDate date}}</td>
+                                <td>{{#if display}}Yes{{else}}No{{/if}}</td>
+                                <td><a class="waves-effect waves-light btn btn-edit" href="{{pathFor 'AdminNewsEdit'}}">Edit</a></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
