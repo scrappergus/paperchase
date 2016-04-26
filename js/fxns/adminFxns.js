@@ -227,24 +227,33 @@ Meteor.adminNews = {
 
 Meteor.adminEdBoard = {
     formPrepareData: function(mongoId){
-        var member = {};
+        var member = {},
+            journalInfo,
+            edboardRoles;
         if(mongoId){
             member = edboard.findOne({_id : mongoId});
         }
-        var edboardRoles = journalConfig.findOne().edboard_roles;
-        var edboardRolesTemp = [];
-        for(var r=0 ; r<edboardRoles.length ; r++){
-            var roleObj = {
-                name: edboardRoles[r]
+        journalInfo = journalConfig.findOne();
+        if(journalInfo){
+            edboardRoles = journalInfo.edboard_roles;
+            if(edboardRoles){
+                var edboardRolesTemp = [];
+                for(var r=0 ; r<edboardRoles.length ; r++){
+                    var roleObj = {
+                        name: edboardRoles[r]
+                    }
+                    if(member.role && $.inArray(roleObj.name, member.role) > -1){
+                        roleObj['selected'] = true;
+                    }
+                    edboardRolesTemp.push(roleObj);
+                }
+                member.roles = edboardRolesTemp.reverse(); // Reversed so that lowest ranked role is listed first in the select option in template
+                // console.log(member);
+                return member;
             }
-            if(member.role && $.inArray(roleObj.name, member.role) > -1){
-                roleObj['selected'] = true;
-            }
-            edboardRolesTemp.push(roleObj);
         }
-        member.roles = edboardRolesTemp.reverse(); // Reversed so that lowest ranked role is listed first in the select option in template
-        // console.log(member);
-        return member;
+
+        return;
     },
     formGetData: function(e){
         // console.log('..edboard formGetData');
@@ -480,7 +489,8 @@ Meteor.adminArticle = {
             if(articleByPii){
                 Router.go(articleRoute, {_id: articleByPii._id});
             }else{
-                Router.go('AdminArticleAdd');
+                Session.set('admin-not-found',true);
+                // Router.go('AdminArticleAdd');
             }
         }else{
             Session.set('article',articleExistsExists);

@@ -1,14 +1,24 @@
 <template name="AdminArticle">
     {{>AdminHeader header="Article Edit"}}
 
-    {{#with article}}
-    {{>AdminArticleHeader}}
-    {{/with}}
+    {{#if article}}
+
+    {{#with article}}{{>AdminArticleHeader}}{{/with}}
 
     {{#if articleProcessed}}
+
     {{>AdminArticleForm}}
+
     {{else}}
+
     {{>Loading}}
+
+    {{/if}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Article"}}{{/if}}
+
     {{/if}}
 </template>
 

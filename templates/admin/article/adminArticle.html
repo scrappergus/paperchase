@@ -112,6 +112,9 @@
 
 <template name="AdminArticleOverview">
     {{>AdminHeader header="Article Overview"}}
+
+    {{#if article}}
+
     {{>StatusModal}}
     {{#with article}}
 
@@ -150,6 +153,12 @@
     </div></div>
 
     {{/with}}
+
+    {{else}}
+    {{#if adminNotFound}}
+    {{>Admin404 what="Article"}}
+    {{/if}}
+    {{/if}}
 </template>
 
 <template name="AdminArticleOverviewData">

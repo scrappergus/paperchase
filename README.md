@@ -49,7 +49,7 @@ Admin permissions are tested on the admin parent template.
 
 
 404 and Loading
-Cannot use the same template variable to determine to show 404 message or loading. There is a global variable, admin-not-found, which gets set in the router and is used to determine whether to show 404 message. Loading template is shown when template variable with page data is null.
+Cannot use the same template variable to determine to show 404 message or loading. There is a global variable, admin-not-found, which gets set in the router (the article routes use Meteor.adminArticle.urlViaPiiOrMongo()) and is used to determine whether to show 404 message. Loading template is shown when template variable with page data is null.
 
 
 Site Control

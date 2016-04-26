@@ -91,8 +91,7 @@ Router.route('/admin/doi_status_csv/',{
 if (Meteor.isClient) {
     // Variables
     // ----------
-    Session.setDefault('article',null); // Article Form
-
+    Session.setDefault('admin-not-found',false);
     // For Authors
     Session.setDefault('showForm',false);
     Session.setDefault('sectionId',null);
@@ -122,6 +121,7 @@ if (Meteor.isClient) {
     Session.setDefault('statusModalAction',null);
     Session.setDefault('statusModalDetails',null);
     // Article
+    Session.setDefault('article',null);
     Session.setDefault('xml-verify',null);
     Session.setDefault('xml-file',null);
     Session.setDefault('xml-figures',null);
@@ -132,6 +132,8 @@ if (Meteor.isClient) {
     Session.setDefault('article-legacy-error',null); // for legacy ojs intake
     // User
     Session.setDefault('admin-user',null);
+    // Institutions
+    Session.setDefault('recommendation',null);
 
 
     Router.route('/admin', {
@@ -262,10 +264,6 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         layoutTemplate: 'Admin',
-        // onBeforeAction: function(){
-        //  // Session.set('newsId',this.params._id);
-        //  this.next();
-        // },
         waitOn: function(){
             return [
                 Meteor.subscribe('newsItem', this.params._id)
@@ -273,7 +271,12 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                Session.set('newsData',newsList.findOne({_id : this.params._id}));
+                var newsFound = newsList.findOne({_id : this.params._id});
+                if(newsFound){
+                    Session.set('newsData',newsFound);
+                }else{
+                    Session.set('admin-not-found',true);
+                }
             }
         }
     });
@@ -319,8 +322,11 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                return{
-                    recommendation: recommendations.findOne({'_id':this.params._id})
+                var recommendationFound = recommendations.findOne({'_id':this.params._id});
+                if(recommendationFound){
+                    Session.set('recommendation',recommendationFound);
+                }else{
+                    Session.set('admin-not-found',true);
                 }
             }
         }
@@ -1017,13 +1023,9 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         layoutTemplate: 'Admin',
-        onBeforeAction: function(){
-            Session.set('paperSectionId',this.params._id);
-            this.next();
-        },
         waitOn: function(){
             return [
-                Meteor.subscribe('sectionItem', this.params._id)
+                Meteor.subscribe('sectionById', this.params._id)
             ]
         }
     });
@@ -1073,14 +1075,18 @@ if (Meteor.isClient) {
                         }else if(result){
                             Session.set('issue',result);
                         }else{
-                            Router.go('AdminAddIssue');
+                            Session.set('admin-not-found',true);
                         }
                     });
+                }else{
+                    Session.set('admin-not-found',true);
                 }
+            }else{
+                Session.set('admin-not-found',true);
             }
 
             this.next();
-        },
+        }
     });
     Router.route('/admin/issue_deleted', {
         name: 'AdminIssueDeleted',
@@ -1118,20 +1124,24 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         onBeforeAction: function(){
             Session.set('volume',null);
-            // TODO: add redirect if no volume
-
-            Meteor.call('getVolume', this.params.v, function(error,result){
-                if(error){
-                    console.log('ERROR - getVolume');
-                    console.log(error);
-                }
-                if(result){
-                    Session.set('volume',result);
-                }
-            });
+            console.log( this.params.v);
+            if(parseInt( this.params.v ) !=  this.params.v){
+                Session.set('admin-not-found',true);
+            }else{
+                Meteor.call('getVolume', this.params.v, function(error,result){
+                    if(error){
+                        console.log('ERROR - getVolume');
+                        console.log(error);
+                    }else if(result){
+                        Session.set('volume',result);
+                    }else{
+                        Session.set('admin-not-found',true);
+                    }
+                });
+            }
 
             this.next();
-        },
+        }
     });
 
     // Users
@@ -1177,8 +1187,12 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                var u = Meteor.users.findOne({'_id':this.params._id});
-                Session.set('admin-user',u);
+                var userFound = Meteor.users.findOne({'_id':this.params._id});
+                if(userFound){
+                    Session.set('admin-user',userFound);
+                }else{
+                    Session.set('admin-not-found',true);
+                }
             }
         }
     });
@@ -1201,7 +1215,7 @@ if (Meteor.isClient) {
                 }else if(result){
                     Session.set('admin-user',result);
                 }else{
-                    Router.go('AdminAddUser');
+                   Session.set('admin-not-found',true);
                 }
             });
 
@@ -1242,11 +1256,11 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var id = this.params._id;
                 var u = Meteor.users.findOne({'_id':id});
-                return {
-                    u: u
-                    //,volumes:volumes
-                    //,issues:issues
-                };
+                if(u){
+                    Session.set('admin-user',u);
+                }else{
+                    Session.set('admin-not-found',true);
+                }
             }
         }
     });
@@ -1290,7 +1304,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('authorsList'),
+                Meteor.subscribe('authorsList'),
             ]
         },
         data: function(){
@@ -1322,11 +1336,17 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var mongoId = this.params._id;
                 var authorsData = authors.findOne({'_id':mongoId});
-                var authorArticlesList = articles.find({ 'authors' : { '$elemMatch' : { 'ids.mongo_id' :  mongoId } } });
-                return {
-                    author : authorsData,
-                    articles: authorArticlesList
-                };
+                if(authorsData){
+                    var authorArticlesList = articles.find({ 'authors' : { '$elemMatch' : { 'ids.mongo_id' :  mongoId } } });
+                    if(authorArticlesList){
+                        authorsData.articles = authorArticlesList;
+                    }
+                    return {
+                        author : authorsData
+                    };
+                }else{
+                    Session.set('admin-not-found',true);
+                }
             }
         }
     });
@@ -1397,9 +1417,14 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                return {
-                    member : Meteor.adminEdBoard.formPrepareData(this.params._id)
-                };
+                var found = edboard.findOne({_id : this.params._id});
+                if(found){
+                    return {
+                        member : Meteor.adminEdBoard.formPrepareData(this.params._id)
+                    };
+                }else{
+                    Session.set('admin-not-found',true);
+                }
             }
         }
     });

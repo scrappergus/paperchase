@@ -476,6 +476,45 @@ Template.AdminInstitutionForm.helpers({
         return Template.instance().showIPFields.get();
     }
 });
+// Recommendation
+Template.AdminRecommendationUpdate.helpers({
+    'recommendation' : function(){
+        return Session.get('recommendation');
+    }
+});
+
+// Authors
+Template.AdminAuthors.helpers({
+    settings: function () {
+        return {
+            collection: authors.find().fetch(),
+            rowsPerPage: 10,
+            showFilter: false,
+            fields: [
+                {
+                    key: 'name_first',
+                    label: 'First Name'
+                },
+                {
+                    key: 'name_middle',
+                    label: 'Middle Name'
+                },
+                {
+                    key: 'name_last',
+                    label: 'Last Name'
+                },
+                {
+                    key: '_id',
+                    label: '',
+                    sortable: false,
+                    fn: function(value){
+                        return new Spacebars.SafeString('<a class="btn" href="/admin/author/' + value + '">Profile</a>');
+                    }
+                }
+            ]
+        };
+    }
+});
 
 // For Authors
 // ---------------
@@ -566,6 +605,9 @@ Template.AdminUserForm.helpers({
     }
 });
 Template.AdminUserSubs.helpers({
+    user: function(){
+        return Session.get('admin-user');
+    },
     volumes: function(){
         return Session.get('archive');
     }

@@ -66,7 +66,8 @@ Meteor.methods({
         }
     },
     readyUserFormData: function(userId){
-        // console.log('readyUserFormData',userId);
+        // for both adding and editing user. If adding user then userId will be null.
+
         var fut = new future();
         var userRoles;
         var userInfo = {};
@@ -76,6 +77,8 @@ Meteor.methods({
 
         if(userFound){
             userInfo = userFound;
+        }else if(userId != null){
+            fut.return(false);
         }
         // console.log('userInfo',userInfo);
 

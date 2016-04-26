@@ -1,4 +1,10 @@
 if (Meteor.isClient) {
+  // General
+  // -------
+  Template.registerHelper('adminNotFound', function(bool) {
+    return Session.get('admin-not-found');
+  });
+
   // Forms
   // -------
   Template.registerHelper('checked', function(bool) {

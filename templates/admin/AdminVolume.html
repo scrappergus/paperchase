@@ -1,8 +1,12 @@
 <template name="AdminVolume">
-    {{#if volume}}
     {{>AdminHeader header="Volume" header_extra=volume.volume}}
+
+    {{#if volume}}
+
     {{>saving}}
+
     {{>Error}}
+
     {{>successMessage what="Volume"}}
 
     <div class="row">
@@ -24,6 +28,10 @@
             </div>
         </div>
     </div>
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Volume"}}{{/if}}
 
     {{/if}}
 </template>

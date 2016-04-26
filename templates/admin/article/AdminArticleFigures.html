@@ -1,12 +1,13 @@
 <template name="AdminArticleFigures">
     {{>AdminHeader header="Article Figures"}}
+
+    {{#if article}}
+
     {{>StatusModal}}
-    {{#with article}}
-    {{>AdminArticleHeader}}
-    {{/with}}
+
+    {{#with article}}{{>AdminArticleHeader}}{{/with}}
 
     {{#with article}}
-
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
@@ -48,8 +49,13 @@
         </div>
     </div>
     {{/with}}
-    {{#if xmlFigures}}
-    {{>AdminArticleFiguresXml}}
+
+    {{#if xmlFigures}}{{>AdminArticleFiguresXml}}{{/if}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Article"}}{{/if}}
+
     {{/if}}
 </template>
 

@@ -42,13 +42,16 @@ Meteor.methods({
     getVolume: function(volume){
         // will return all issues and issue data. No articles.
         var vol = volumes.findOne({volume : parseInt(volume)});
-        vol.issues_data = [];
-        var issueIds = vol.issues;
-        for(var i=0 ; i<issueIds.length ; i++){
-            var issue = issues.findOne({_id : issueIds[i]});
-            vol.issues_data.push(issue);
+        if(vol){
+            vol.issues_data = [];
+            var issueIds = vol.issues;
+            for(var i=0 ; i<issueIds.length ; i++){
+                var issue = issues.findOne({_id : issueIds[i]});
+                vol.issues_data.push(issue);
+            }
+            return vol;
         }
-        return vol;
+        return;
     },
     updateVolume: function(volumeId, updateObj){
         return volumes.update({_id :volumeId },updateObj);

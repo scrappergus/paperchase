@@ -1,12 +1,17 @@
 <template name="AdminAuthor">
     {{>AdminHeader header="Author Profile"}}
+
+    {{#if author}}
+
+    {{#with author}}
+
     <div class="row">
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
-                            {{#with author}}<h3>{{name_first}} {{name_last}}</h3>{{/with}}
+                            <h3>{{name_first}} {{name_last}}</h3>
                         </div>
                     </div>
                     {{#if affiliations}}
@@ -35,4 +40,12 @@
             </div>
         </div>
     </div>
+
+    {{/with}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Author"}}{{/if}}
+
+    {{/if}}
 </template>

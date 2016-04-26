@@ -1,6 +1,10 @@
 <template name="AdminArticleFiles">
     {{>AdminHeader header="Article PDF and XML"}}
+
+    {{#if article}}
+
     {{>StatusModal}}
+
     {{#with article}}
     {{>AdminArticleHeader}}
 
@@ -90,12 +94,23 @@
         </div>
     </div>
     {{/with}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Article"}}{{/if}}
+
+    {{/if}}
 </template>
 
 <template name="AdminArticleFilesUploader">
     {{>AdminHeader header="Article PDF and XML"}}
+
+    {{#if article}}
+
     {{>StatusModal}}
+
     {{#with article}}
+
     {{>AdminArticleHeader}}
 
     <div class="row">
@@ -109,9 +124,15 @@
         </div>
     </div>
     {{/with}}
+
     <div id="xml-verify"></div>
-    {{#if verify}}
-    {{>AdminArticleXmlVerify}}
+
+    {{#if verify}}{{>AdminArticleXmlVerify}}{{/if}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Article"}}{{/if}}
+
     {{/if}}
 </template>
 

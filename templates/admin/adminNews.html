@@ -45,8 +45,8 @@
 </template>
 
 <template name="AdminNewsEdit">
-    {{#if news}}
     {{>AdminHeader header="Edit News"}}
+    {{#if news}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
@@ -60,6 +60,10 @@
             </div>
         </div>
     </div>
+    {{else}}
+    {{#if adminNotFound}}
+    {{>Admin404 what="News"}}
+    {{/if}}
     {{/if}}
 </template>
 

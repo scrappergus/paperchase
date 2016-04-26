@@ -697,8 +697,11 @@ Meteor.dates = {
 Meteor.issue = {
     urlPieces: function(vi){
         var pieces = vi.match('v([0-9]+)i(.*)');
-        var res = {volume : pieces[1], issue : pieces[2]};
-        return res;
+        if(pieces){
+            var res = {volume : pieces[1], issue : pieces[2]};
+            return res;
+        }
+        return;
     },
     coverPath : function(assetUrl,fileName){
         return assetUrl + 'covers/' + fileName;
