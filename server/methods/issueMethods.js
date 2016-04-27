@@ -268,11 +268,11 @@ Meteor.methods({
 
         Meteor.call('checkIssueInputs', issueData, function(error,issueInvalid){
             if(error){
-                fut['throw'](error);
+                fut.throw(error);
             }else if(issueInvalid && issueInvalid.length > 0){
                 result.invalid = true;
                 result.invalid_list = issueInvalid;
-                fut['return'](result);
+                fut.return(result);
             }else{
                 Meteor.call('findIssueByVolIssue',issueData.volume, issueData.issue, function(error,issueExists){
                     if(error){
