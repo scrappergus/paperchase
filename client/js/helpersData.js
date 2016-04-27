@@ -89,7 +89,10 @@ Template.MobileMenu.helpers({
 Template.scrollspyItems.helpers({
     topSection: function() {
         return this.headerLevel == 1;
-    }
+    },
+    // headerLevel: function() {
+    //     return this.headerLevel;
+    // }
 });
 
 // Contact

@@ -29,12 +29,12 @@
 
     {{#each items}}
         {{#if headerLevel}}
-            <!-- for article pages -->
             {{#if equals headerLevel 1}}
-            <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
+                <!-- for article pages | top level headers only -->
+                <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
             {{/if}}
         {{else}}
-            <!-- for non-article pages -->
+            <!-- for non-article pages | all section titles -->
             <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
         {{/if}}
     {{/each}}
@@ -43,3 +43,5 @@
         <li><a class="anchor" href="#references">References</a></li>
     {{/if}}
 </template>
+
+<!-- it's saying -->

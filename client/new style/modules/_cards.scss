@@ -1,0 +1,88 @@
+/**
+ * Sidebar Cards
+ *
+ * Scrolling cards and other
+ * sidebar information
+ */
+
+
+/** Base Card
+ ---------------------------------------------------------*/
+.card {
+    box-shadow: none;
+    @include border-radius(2px);
+    @extend .faint-shadow;
+    padding: 25px;
+
+    p {
+        margin-bottom: 0;
+    }
+
+    h6.card-title {
+        font-size: 14px;
+        @extend .uppercase-titles;
+        font-weight: 700;
+        color: $kashmir;
+        position: relative;
+        display: block;
+        padding-bottom: 10px;
+
+        // short horizontal rule
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 20%;
+            border-top: 2px solid rgba(119, 130, 142, .2);
+            margin-bottom: 12px;
+        }
+    }
+}
+
+.card ul {
+    margin: 0 -25px; // card padding compensation
+
+    li a {
+        color: $kashmir;
+        display: block;
+    }
+
+    li {
+        padding: 12px 20px; // 25 - 5
+        width: 100%;
+        border-left: 5px solid rgba(0,0,0,0);
+        @include transition(background 0.25s ease-out,
+            color 0.25s ease-out,
+            border-color 0.25s ease-out);
+
+        &:hover {
+            background: $lightgray;
+            border-color: darken($lightgray, 3%);
+        }
+
+        &.active {
+            background: $accent;
+            border-color: $darkaccent;
+            a { color: #fff; }
+            font-weight: 500;
+        }
+
+        &.active:hover {
+            background: $accent;
+        }
+    }
+}
+
+/** Fixed Scroll Card
+ ---------------------------------------------------------*/
+.fixed-scroll-card {
+    position: relative;
+    top: 0;
+
+    &.fixed-active {
+        position: fixed;
+        top: 190px;
+    }
+}

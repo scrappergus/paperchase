@@ -1,0 +1,38 @@
+/**
+ * SCSS Variables
+ *
+ * To be used in other files
+ * all here for ease of use.
+ */
+
+
+/** Colors
+ ---------------------------------------------------------*/
+// Primary (blues)
+$blackpearl: #091523;
+$midnight: #0C1D31;
+$midnightblue: #033369;
+$electric: #00479B;
+$link: #005AC2;
+
+// Accents (Berry)
+$accent: #A11B57;
+$darkaccent: #90134B;
+
+// Text
+$water: #C5CDD6; // left-sidebar links
+$cello: #2E4057; // body text
+$kashmir: #546B87; // right sidebar links & author text
+
+// Whites, backgrounds, etc.
+$faintgray: #F6F7F9; // main background
+$lightgray: #E6E8EB; // keywords bg, affiliation
+$midgray: #7C8187;
+$deepgray: #2E4057; // fig descrip background
+
+
+/** Typography
+ ---------------------------------------------------------*/
+$futura: "futura-pt", Helvetica, Arial, sans-serif;
+$base-font-size:   17px;
+$base-line-height: 1.35;

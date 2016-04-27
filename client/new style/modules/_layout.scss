@@ -1,0 +1,338 @@
+/**
+ * Layout
+ *
+ * Navigation, sidebar and other
+ * repeating page elements.
+ */
+
+
+/** Base Layout
+ ---------------------------------------------------------*/
+$sidebar-medium-width: 260px;
+$sidebar-wide-width: 310px;
+
+// Default Grid
+.nav-sidebar,
+.sidebar {
+    width: 100%;
+    height: 100%;
+    display: none;
+
+    @include at-query($min, $medium) {
+        display: block;
+        width: $sidebar-medium-width;
+    }
+
+    @include at-query($min, $large) {
+        width: $sidebar-wide-width;
+    }
+}
+
+.nav-content,
+.content {
+    @include layout($susy);
+    @include container(100%);
+    @include clearfix;
+
+    @include at-query($min, $medium) {
+        margin-left: $sidebar-medium-width;
+    }
+    @include at-query($min, $large) {
+        margin-left: $sidebar-wide-width;
+    }
+}
+
+footer {
+    padding: 40px 0 50px;
+
+    span {
+        opacity: .5;
+        font-size: 14px;
+    }
+}
+
+/** Navigation | Base
+ ---------------------------------------------------------*/
+$navbar-height: 70px;
+$sub-navbar-height: 64px;
+$sub-navbar-padding: 10px;
+
+.navigation {
+    position: fixed;
+    height: $navbar-height;
+    background-color: $midnightblue;
+    width: 100%;
+}
+
+.sidebar { z-index: 3; }
+.navigation { z-index: 2; }
+.sub-nav { z-index: 1; }
+
+
+/** Navigation | Top Nav
+ ---------------------------------------------------------*/
+.nav-sidebar {
+    float: left;
+    padding: 15px 0 0 20px;
+    background: #012855;
+
+    .logo { height: 48px; }
+}
+
+.nav-content {
+    height: $navbar-height;
+    background-color: $midnightblue;
+    padding: 15px 20px 0 20px;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        float: right;
+        list-style-type: none;
+    }
+
+    ul li {
+        position: relative;
+        display: inline-block;
+        padding: 5px 20px;
+        margin: 8px 0;
+        font-size: 14px;
+        @extend .uppercase-titles;
+        border-left: 2px solid rgba(119, 130, 142, .2);
+
+        a { color: #fff; }
+        &:first-child { border: none; }
+        &.has-icon { padding-left: 30px; }
+
+        span.icon {
+            position: absolute;
+            display: inline-block;
+            font-size: 20px;
+            left: 0;
+            top: 1px;
+        }
+    }
+}
+
+/** Navigation | Sub Nav
+ ---------------------------------------------------------*/
+.sub-nav {
+    position: fixed;
+    left: $sidebar-wide-width;
+    right: 0;
+    height: $sub-navbar-height + $sub-navbar-padding;
+    @include padding-vertical(30px);
+    @include padding-horiz(30px);
+    border-bottom: $sub-navbar-padding solid #fff;
+    @extend .faint-shadow;
+
+    @include at-query($min, $medium) {
+        left: $sidebar-medium-width;
+    }
+
+    @include at-query($min, $large) {
+        left: $sidebar-wide-width;
+    }
+}
+
+.sub-nav .breadcrumbs {
+    @include span(12);
+    font-size: 15px;
+
+    a { color: $midgray; }
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul li {
+        display: inline;
+
+        &:after {
+            content: "\f105"; // fa-angle-right
+            font-family: FontAwesome;
+            margin: 0 10px 0 13px;
+            opacity: .35;
+            letter-spacing: 0.25px;
+        }
+
+        &:last-child {
+            font-weight: 700;
+            a { color: darken($midgray, 7%); }
+        }
+        &:last-child:after {
+            content: "";
+        }
+    }
+}
+
+.sub-nav .issn {
+    @include span(4);
+
+    span.meta {
+        float: right;
+        color: rgba(162, 169, 176, .75);
+        @extend .uppercase-titles;
+    }
+}
+
+/** Navigation | Sub Nav w/ Transparent Background
+ ---------------------------------------------------------*/
+.sub-nav.dark-bg {
+    box-shadow: none;
+    background: transparent;
+    border: none;
+}
+
+
+/** Main Container
+ ---------------------------------------------------------*/
+$container-padding: 60px;
+
+/**
+ * Basic grid for when you need
+ * to override .content-yield.
+ */
+
+.grid {
+    @include clearfix;
+    padding: 0 $container-padding;
+    z-index: -1;
+}
+
+/**
+ * Default page setup
+ */
+
+.main {
+    padding-top: $navbar-height;
+    min-height: calc(100vh - $navbar-height);
+}
+
+.main .sidebar {
+    position: fixed;
+    background-color: $blackpearl;
+    font-size: 17px;
+}
+
+.main .content {
+    min-height: calc(100vh - $navbar-height);
+}
+
+.main .content-yield {
+    @include clearfix;
+    padding-top: $navbar-height + $sub-navbar-height;
+    padding-left: $container-padding;
+    padding-right: $container-padding;
+    z-index: -1;
+
+    &.home-featured-news { padding: 0; }
+}
+
+/**
+ * Page Content & Sidebar
+ */
+
+.page-content {
+    @include span(16);
+}
+
+.page-sidebar {
+    @include span(16);
+}
+
+@include at-query($min, $medium) {
+    .page-content {
+        @include span(10);
+        padding-right: 30px;
+    }
+
+    .page-sidebar {
+        @include span(6);
+    }
+
+    &.wide {
+        @include span(16);
+    }
+}
+
+@include at-query($min, $large) {
+    .page-content { @include span(11); }
+    .page-sidebar { @include span(5); }
+}
+
+@include at-query($min, $wide) {
+    .page-content { @include span(12); }
+    .page-sidebar { @include span(4); }
+}
+
+/** Left Sidebar / Navigation
+ ---------------------------------------------------------*/
+.main .sidebar .search-box {
+    position: relative;
+    padding: 15px 70px 0 40px;
+
+    span.icon {
+        position: absolute;
+        top: 30px;
+    }
+
+    input {
+        padding-left: 30px;
+        font-size: 17px;
+        border-bottom: 2px solid #213245;
+        color: #fff;
+    }
+
+    /**
+     * Placeholders ----
+     * These have to be separate because css
+     * parser is broken for placeholder rules.
+     */
+    input::placeholder { color: #5B6C80 }
+    input::-webkit-input-placeholder { color: #5B6C80 }
+    input::-moz-placeholder { color: #5B6C80 }
+}
+
+.main .sidebar ul.nav-links {
+    padding-top: 0;
+    margin-top: 0;
+    a li {
+        position: relative;
+        padding: 21px 0 18px 40px;
+        margin: 0;
+        color: $water;
+        @include transition(background .25s ease-out,
+                            color .25s ease-out);
+    }
+
+    a li:after {
+        content: "\f105"; // fa-angle-right
+        font-family: FontAwesome;
+        position: absolute;
+        top: 13px;
+        right: 13px;
+        font-size: 1.765rem;
+        color: lighten(#2E4057, 10%);
+        opacity: 0;
+        @include transition(opacity .25s ease-out,
+                            right .25s ease-out);
+    }
+
+    a:hover li {
+        background: $midnight;
+        color: #fff;
+    }
+
+    a:hover li:after {
+        opacity: 1;
+        right: 18px;
+    }
+}
+
+/** Simple Grids
+ ---------------------------------------------------------*/
+.section-half {
+    @include span(8);
+}

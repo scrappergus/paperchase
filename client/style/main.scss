@@ -92,44 +92,6 @@ html,body{
 		border: 1px solid $gray-2;
 	}
 
-// /* Footer ------------------------*/
-// 	.footer{
-// 		padding: 0 0;
-// 		.container{
-// 			min-height: 100px;
-// 		}
-// 		.row{
-// 			margin-top: 0;
-// 			margin-bottom: 0;
-// 		}
-// 		ul{
-// 			list-style: none;
-// 			text-align: center;
-// 			li{
-// 				display: inline-block;
-// 				margin: 0 auto;
-// 			}
-// 		}
-// 	}
-
-/* Home ------------------------*/
-	.edboard-name {
-	  cursor: pointer;
-	}
-	.edboard-bio {
-	   display: none;
-	}
-	.home-left-nav {
-		li {
-			margin: 8px 0px;
-			a {
-				color: $black-1;
-				font-weight:bold;
-				font-size:1.1em;
-				line-height:1em;
-			}
-		}
-	}
 
 /* Article ------------------------*/
 	// #article-title{

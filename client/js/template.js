@@ -16,6 +16,17 @@ Template.Home.onRendered(function () {
 	$('.collapsible').collapsible({
 		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 	});
+
+
+  /* TODO: Set these up to respond to Session.
+  This is just temporary for static rendering. */
+  $('.content-yield').addClass('home-featured-news');
+  $('.sub-nav').addClass('hide');
+});
+
+Template.Home.onDestroyed(function() {
+  $('.content-yield').removeClass('home-featured-news');
+  $('.sub-nav').removeClass('hide');
 });
 
 Template.scrollspyCard.onRendered(function() {
@@ -24,6 +35,7 @@ Template.scrollspyCard.onRendered(function() {
 	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
 }).resize();
 });
+
 
 // Issue
 // ------
@@ -84,7 +96,7 @@ Template.scrollspyCard.onRendered(function() {
     // on scroll affix the sidebar
     $(window).scroll(function () {
         if (sticky.length > 0) {
-            var scrollTop = $(window).scrollTop() + 150;
+            var scrollTop = $(window).scrollTop() + 190;
 
             if (sidebarTop < scrollTop) {
                 sticky.addClass('fixed-active');
@@ -126,7 +138,7 @@ Template.scrollspyCard.onRendered(function() {
     // so we can get a fancy scroll animation
     menuItems.click(function(e){
       var href = $(this).attr("href"),
-          offsetTop = href === "#" ? 0 : $(href).offset().top-navHeight+1;
+          offsetTop = href === "#" ? 0 : $(href).offset().top-navHeight + 1;
       $('html, body').stop().animate({
           scrollTop: offsetTop
       }, 300);

@@ -1,755 +1,228 @@
-@import "/{meta:susy}/susy";
-@import '../style/mixins';
+@import '/{meta:susy}/susy',
+        '../style/mixins',
 
-$susy: (
-  columns: 18,
-  gutters: 5/9,
-  gutter-position: after,
-  math: fluid,
-  output: float
-);
+        'partials/variables',
+        'partials/mixins',
+        'partials/grid',
+        'partials/overrides',
 
-/*================ Colors | Base Colors ================*/
-// Primary (blues)
-$blackpearl: #091523;
-$midnight: #0C1D31;
-$midnightblue: #033369;
-$electric: #00479B;
-$link: #005AC2;
+        'modules/type',
+        'modules/layout',
+        'modules/cards',
+        'modules/home';
 
-// Accents (Berry)
-$accent: #A11B57;
-$darkaccent: #90134B;
 
-// Text
-$water: #C5CDD6; // left-sidebar links
-$cello: #2E4057; // body text
-$kashmir: #546B87; // right sidebar links & author text
+/**
+ * Issues, Articles, News
+ *
+ * Issue archive, table of contents,
+ * news, and article pages.
+ */
 
-// Whites, backgrounds, etc.
-$faintgray: #F6F7F9; // sidebar backgrounds
-$lightgray: #E6E8EB; // keywords bg, affiliation
-$midgray: #7C8187;
-$deepgray: #2E4057; // fig descrip background
 
-
-/*================ Typography | Base Styles ================*/
-$futura: "futura-pt", Helvetica, Arial, sans-serif;
-// $base-font-size:   17px;
-$base-line-height: 1.35;
-
-// Document-Level
-body {
-  color: $cello;
-}
-
-html, body {
-  font-family: $futura;
-  line-height: 1.35;
-  letter-spacing: 0.15px;
-
-  //  ???? not working, something is overriding rem
-  // font-size: 17px;
-  // font-size: 1rem;
-}
-
-// === Headings | General
- h1,h2,h3,h4,h5,h6,
-.h1,.h2,.h3,.h4,.h5,.h6 {
-  color: $cello;
-
-  &.accented { color: $accent; }
-  &.blue { color: $electric; }
-  &.heavy { font-weight: 700; }
-  &.caps { @extend .uppercase-titles; }
-}
-
-// === Headings | Font Sizes, Etc.
-h1, .h1 { font-size: 38px; }
-h2, .h2 { font-size: 24px;
-          color: $kashmir; }
-h3, .h3 { font-size: 19px; }
-h4, .h4 { font-size: 17px; }
-
-h5, .h5, h6, .h6,
-span.meta {
-  font-size: 14px;
-}
-
-h1, .h1 {
-  color: $midnight;
-  line-height: 1.1;
-  font-weight: 700;
-}
-
-h4 {
-  @extend .uppercase-titles;
-
-  &.blue-divider {
-    color: $electric;
-    padding: 0 0 10px;
-    margin: 40px 0 20px;
-    border-bottom: 3px solid $electric;
-  }
-}
-
-h5, .h5, span.meta {
-  color: $kashmir;
-  &.reg { font-weight: 500; }
-}
-
-a {
-  color: $link;
-  @include transition(color 0.25s ease-out);
-
-  &:hover { color: lighten($link, 10%); }
-}
-
-// Paragraph(s)
-p {
-  font-size: 17px;
-  line-height: 1.4;
-}
-
-// buttons
-a.button,
-button.button {
-  position: relative;
-  display: inline-block;
-  padding: 20px 38px 19px;
-  @include border-radius(2px);
-  margin-bottom: 20px;
-  color: #fff;
-  text-align: center;
-  font-size: 15px;
-  @extend .uppercase-titles;
-  letter-spacing: 0.58px;
-  @include transition(background 0.25s ease-out);
-  @include get-bg-hover($deepgray, 10%);
-
-  &.full-width {
-    display: block;
-    width: 100%;
-  }
-
-  &:active {
-    top: 1px;
-  }
-
-  &.primary {
-    @include get-bg-hover($accent, 3%);
-  }
-
-  &.secondary {
-    @include get-bg-hover($electric, 7%);
-  }
-
-  &.small {
-    text-transform: none;
-    font-weight: 500;
-    margin: 0 5px 10px 0;
-    padding: 7px 10px;
-  }
-
-  &.end-cap {
-    padding: 20px 28px 19px 68px;
-
-    span.icon {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: $darkaccent;
-      @include transition(background 0.25s ease-out)
-      padding: 15px 16px;
-      border-top-left-radius: 2px;
-    }
-
-    // todo: make icon bounce slightly on hover
-    &:hover span.icon {
-      background: lighten($darkaccent, 2%);
-    }
-  }
-
-  span.icon { font-size: 25px; }
-}
-
-// button toggles
-.button-toggle {
-  border: 2px solid $faintgray;
-  @include border-radius(2px);
-  position: relative;
-  margin-bottom: 20px;
-  @include clearfix;
-}
-
-.button-toggle .button {
-  @include border-radius(0);
-  padding: 18px 15px 17px;
-  margin-bottom: 0;
-  width: 49.2%;
-  display: inline-block;
-  text-transform: capitalize;
-  font-weight: 500;
-  background: $faintgray;
-  color: $kashmir;
-
-  &.active {
-    font-weight: 700;
-    background: transparent;
-  }
-
-  &:hover {
-    background: $faintgray;
-  }
-
-  &:first-child {
-    float: left;
-  }
-  &:last-child {
-    float: right;
-  }
-
-  span {
-    display: inline-block;
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    top: 15px;
-  }
-}
-
-/*================ Layout | Base Modules ================*/
-
-// Default Grid
-.nav-sidebar,
-.sidebar {
-  float: left;
-  width: 100%;
-  height: 100%;
-
-  // todo: mobile styles
-  @include at-query($min, $medium) {
-    width: 260px;
-  }
-
-  @include at-query($min, $large) {
-    width: 310px;
-  }
-}
-
-.nav-content,
-.content {
-  float: right;
-  width: 100%;
-  @include at-query($min, $medium) {
-    width: calc(100% - 260px);
-  }
-  @include at-query($min, $large) {
-    width: calc(100% - 310px);
-  }
-}
-
-footer {
-  padding: 40px 0 50px;
-
-  span {
-    opacity: .5;
-    font-size: 14px;
-  }
-}
-
-/*================ Navigation | Base Styles ================*/
-$navbar-height: 70px;
-$sub-navbar-height: 64px;
-$sub-navbar-padding: 10px;
-
-.navigation {
-  position: fixed;
-  height: $navbar-height;
-  background-color: $midnightblue;
-  width: 100%;
-}
-
-.navigation,
-.sub-nav {
-  z-index: 2; // so scrolling content scrolls under
-}
-
-/*================ Navigation | Top-Nav Modules ================*/
-
-.nav-sidebar {
-  padding: 15px 0 0 20px;
-  background: #012855;
-
-  .logo { height: 48px; }
-}
-
-.nav-content {
-  height: $navbar-height;
-  background-color: $midnightblue;
-  padding: 15px 20px 0 20px;
-
-  ul {
-    margin: 0;
-    padding: 0;
-    float: right;
-    list-style-type: none;
-  }
-
-  ul li {
-    position: relative;
-    display: inline-block;
-    padding: 5px 20px;
-    margin: 8px 0;
-    font-size: 14px;
-    @extend .uppercase-titles;
-    border-left: 2px solid rgba(119, 130, 142, .2);
-
-    a { color: #fff; }
-    &:first-child { border: none; }
-    &.has-icon { padding-left: 30px; }
-
-    span.icon {
-      position: absolute;
-      display: inline-block;
-      font-size: 20px;
-      left: 0;
-      top: 1px;
-    }
-  }
-}
-
-/*================ Navigation | Sub-Nav Modules ================*/
-.sub-nav {
-  position: fixed;
-  height: $sub-navbar-height + $sub-navbar-padding;
-  width: 80%;
-  background-color: $faintgray;
-  @include padding-vertical(25px);
-  border-bottom: $sub-navbar-padding solid #fff;
-}
-
-.sub-nav .breadcrumbs {
-  @include push(1 of 16);
-  @include span(12);
-  font-size: 15px;
-
-  a { color: $midgray; }
-
-  ul {
-    margin: 0;
-    padding: 0;
-  }
-
-  ul li {
-    display: inline;
-
-    &:after {
-      content: "\f105"; // fa-angle-right
-      font-family: FontAwesome;
-      margin: 0 10px 0 13px;
-      opacity: .35;
-      letter-spacing: 0.25px;
-    }
-
-    &:last-child {
-      font-weight: 700;
-      a { color: darken($midgray, 7%); }
-    }
-    &:last-child:after {
-      content: "";
-    }
-  }
-}
-
-.sub-nav .issn {
-  @include span(4);
-
-  span.meta {
-    float: right;
-    color: rgba(162, 169, 176, .75);
-    @extend .uppercase-titles;
-  }
-}
-
-
-/*================ Main Container | Base Modules ================*/
-.main {
-  padding-top: $navbar-height;
-  min-height: calc(100vh - $navbar-height);
-}
-
-.main .sidebar {
-  position: fixed;
-  background-color: $blackpearl;
-  font-size: 17px;
-}
-
-.main .content {
-  min-height: calc(100vh - $navbar-height);
-}
-
-.main .content-yield {
-  @include clearfix;
-  margin-top: $navbar-height + $sub-navbar-height - 15;
-  z-index: -1;
-}
-
-/*================ Left Navigation | Base Modules ================*/
-.main .sidebar .search-box {
-  position: relative;
-  padding: 15px 70px 0 40px;
-
-  span.icon {
-    position: absolute;
-    top: 30px;
-  }
-
-  input {
-    padding-left: 30px;
-    font-size: 17px;
-    border-bottom: 2px solid #213245;
-    color: #fff;
-  }
-
-  /* these have to be separate because css parser is broken for placeholder rules lol */
-  input::placeholder { color: #5B6C80 }
-  input::-webkit-input-placeholder { color: #5B6C80 }
-  input::-moz-placeholder { color: #5B6C80 }
-}
-
-.main .sidebar ul.nav-links {
-  padding-top: 0;
-  margin-top: 0;
-  a li {
-    position: relative;
-    padding: 21px 0 18px 40px;
-    margin: 0;
-    color: $water;
-    @include transition(background .25s ease-out,
-                        color .25s ease-out);
-  }
-
-  a li:after {
-    content: "\f105"; // fa-angle-right
-    font-family: FontAwesome;
-    position: absolute;
-    top: 13px;
-    right: 13px;
-    font-size: 1.765rem;
-    color: lighten(#2E4057, 10%);
-    opacity: 0;
-    @include transition(opacity .25s ease-out,
-                        right .25s ease-out);
-  }
-
-  a:hover li {
-    background: $midnight;
-    color: #fff;
-  }
-
-  a:hover li:after {
-    opacity: 1;
-    right: 18px;
-  }
-}
-
-/*================ Simple Grids | Page-Level Modules ================*/
-.section-half {
-  @include span(8);
-}
-
-/*================ Page Content | Page-Level Modules ================*/
-.page-content {
-  @include push(1 of 16);
-  @include span(10);
-
-  &.wide {
-    @include span(16);
-    padding-right: 30px; // todo: fix this hacky
-  }
-}
-
-.page-sidebar {
-  padding-left: 20px;
-  @include span(5);
-}
-
-// Sidebar Cards
-.card {
-  box-shadow: none;
-  @include border-radius(2px);
-  background-color: $faintgray;
-  padding: 25px;
-
-  p {
-    margin-bottom: 0;
-  }
-
-  h6.card-title {
-    font-size: 14px;
-    @extend .uppercase-titles;
-    font-weight: 700;
-    color: $kashmir;
-    position: relative;
-    display: block;
-    padding-bottom: 10px;
-
-    // short horizontal rule
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      width: 20%;
-      border-top: 2px solid rgba(119, 130, 142, .2);
-      margin-bottom: 12px;
-    }
-  }
-}
-
-.card ul {
-  margin: 0 -25px; // card padding compensation
-
-  li a {
-    color: $kashmir;
-    display: block;
-  }
-
-  li {
-    padding: 12px 20px; // 25 - 5
-    width: 100%;
-    border-left: 5px solid rgba(0,0,0,0);
-    @include transition(background 0.25s ease-out,
-      color 0.25s ease-out,
-      border-color 0.25s ease-out);
-
-    &:hover {
-      background: $lightgray;
-      border-color: darken($lightgray, 3%);
-    }
-
-    &.active {
-      background: $accent;
-      border-color: $darkaccent;
-      a { color: #fff; }
-      font-weight: 500;
-    }
-
-    &.active:hover {
-      background: $accent;
-    }
-  }
-}
-
-.fixed-scroll-card {
-  position: relative;
-  top: 0;
-  &.fixed-active {
-    position: fixed;
-    top: 150px;
-  }
-}
-
-// Page Titles
+/** Page Titles
+ ---------------------------------------------------------*/
 .page-title {
-  span.page-desc {
-    display: block;
-    font-size: 14px;
-    margin: 12px 0 20px;
-    @extend .uppercase-titles;
-    color: rgba(162, 169, 176, .75);
+    span.page-desc {
+        display: block;
+        font-size: 14px;
+        margin: 12px 0 20px;
+        @extend .uppercase-titles;
+        color: rgba(162, 169, 176, .75);
 
-    &.accented { color: $accent; }
+        &.accented {
+            color: $accent;
+        }
 
-    + h1 {
-      margin: 0;
-      padding: 0;
+        + h1 {
+            margin: 0;
+            padding: 0;
+        }
     }
-  }
 
-  span.issue-date {
-    @extend h2;
-    display: inline-block;
-    margin: 10px 0 10px;
-  }
+    span.issue-date {
+        @extend h2;
+        display: inline-block;
+        margin: 10px 0 10px;
+    }
 }
 
 
-// Table(s) of Contents
+/** Table of Contents Page
+ ---------------------------------------------------------*/
 .toc-info {
-  margin: 30px 0;
+    margin: 30px 0;
 
-  h2.title, h6.desc {
-    line-height: 1.3;
-  }
+    h2.title, h6.desc {
+        line-height: 1.3;
+    }
 
-  h6.desc, span.meta {
-    font-size: 15px;
-    color: darken($kashmir, 10%);
-  }
+    h6.desc, span.meta {
+        font-size: 15px;
+        color: darken($kashmir, 10%);
+    }
 
-  h2.title {
-    font-size: 17px;
-    margin: 0 0 5px 0;
-    font-weight: 700;
-    color: $cello;
-  }
+    h2.title {
+        font-size: 17px;
+        margin: 0 0 5px 0;
+        font-weight: 700;
+        color: $cello;
+    }
 
-  h6.desc {
-    margin: 0;
-    padding: 0;
-  }
+    h6.desc {
+        margin: 0;
+        padding: 0;
+    }
 
-  span.meta {
-    margin: 10px 23px 0 0;
-    display: inline-block;
-  }
+    span.meta {
+        margin: 10px 23px 0 0;
+        display: inline-block;
+    }
 }
 
 .article-links {
-  margin: 20px 0 50px;
+    margin: 20px 0 50px;
 }
 
-/*================ Issue Content | Issue-Level Modules ================*/
+/** Issue Scroller (Prev / Next)
+ ---------------------------------------------------------*/
 .issue-scroller {
-  display: flex;
-  justify-content: space-between;
-  border-top: 2px solid #F0F0F0;
-  border-bottom: 2px solid #F0F0F0;
-  @include padding-vertical(14px);
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #F0F0F0;
+    border-bottom: 2px solid #F0F0F0;
+    @include padding-vertical(14px);
+    margin-bottom: 20px;
 
-  span {
-    display: inline-block;
-    @extend .uppercase-titles;
-    font-size: 14px;
+    span {
+        display: inline-block;
+        @extend .uppercase-titles;
+        font-size: 14px;
 
-    &.prev a,
-    &.next a {
-      color: $kashmir;
+        &.prev a,
+        &.next a {
+            color: $kashmir;
+        }
+
+        span.icon {
+            font-size: 11px;
+
+            &.icon-angle-right { margin-left: 3px; }
+            &.icon-angle-left { margin-right: 3px; }
+        }
     }
-
-    span.icon {
-      font-size: 11px;
-
-      &.icon-angle-right { margin-left: 3px; }
-      &.icon-angle-left { margin-right: 3px; }
-    }
-  }
 }
 
-/*================ Articles | Article-Level Modules ================*/
+/** Article Pages
+ ---------------------------------------------------------*/
 h5.article-header {
-  position: relative;
-  @extend .uppercase-titles;
-  left: 1px;
+    position: relative;
+    @extend .uppercase-titles;
+    left: 1px;
 
-  span {
-    margin-right: 10px;
-    padding-right: 15px;
-    border-right: 2px solid rgba(119, 130, 142, .2);
-    font-weight: 500;
-    &:last-child { border: 0 none; }
-  }
+    span {
+        margin-right: 10px;
+        padding-right: 15px;
+        border-right: 2px solid rgba(119, 130, 142, .2);
+        font-weight: 500;
+        &:last-child { border: 0 none; }
+    }
 
-  span.article-type {
-    color: $accent;
-    font-weight: 700;
-  }
+    span.article-type {
+        color: $accent;
+        font-weight: 700;
+    }
 }
 
 h2.authors {
-  line-height: 1.6;
-  font-size: 17px;
+    line-height: 1.6;
+    font-size: 17px;
 
-  span.author {
-    white-space: nowrap;
+    span.author {
+        white-space: nowrap;
 
-    // fix trailing comma whitespace
-    > span.comma {
-      position: relative;
-      right: 2px;
+        // fix trailing comma whitespace
+        > span.comma {
+            position: relative;
+            right: 2px;
+        }
     }
-  }
 
-  // superscript
-  sup.author-affiliations a {
-    font-size: 13px;
-    color: $kashmir;
-    font-weight: 500;
-    margin: 0;
-    padding: 0 !important;
+    // superscript
+    sup.author-affiliations a {
+        font-size: 13px;
+        color: $kashmir;
+        font-weight: 500;
+        margin: 0;
+        padding: 0 !important;
 
-    &:hover { color: $accent; }
-  }
+        &:hover { color: $accent; }
+    }
 }
 
 .featured-photo {
-  width: 100%;
-  position: relative;
-  margin: 35px 0;
-
-  .photo {
     width: 100%;
-    max-width: 100%;
-  }
+    position: relative;
+    margin: 35px 0;
 
-  .tag {
-    position: absolute;
-    bottom: -15px;
-    right: 20px;
-  }
+    .photo {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .tag {
+        position: absolute;
+        bottom: -15px;
+        right: 20px;
+    }
 }
 
 .article-text {
-  margin-top: 3rem;
+    margin-top: 3rem;
 
-  h3.article-header-1 {
-    @extend .uppercase-titles;
-    color: $electric;
-    margin: 80px 0 0;
+    h3.article-header-1 {
+        @extend .uppercase-titles;
+        color: $electric;
+        margin: 80px 0 0;
 
-    &#abstract {
-      margin-top: 20px;
+        &#abstract {
+            margin-top: 20px;
+        }
+
+        &.bordered {
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(119, 130, 142, .2);
+        }
     }
 
-    &.bordered {
-      padding-bottom: 8px;
-      border-bottom: 2px solid rgba(119, 130, 142, .2);
+    h3.article-header-2,
+    h3#references {
+        font-weight: 700;
     }
-  }
 
-  h3.article-header-2,
-  h3#references {
-    font-weight: 700;
-  }
+    p {
+        text-align: justify;
+        line-height: 1.5;
+    }
 
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-
-  // Abstract-Specific Styles
-  &.abstract {
-    background: $faintgray;
-    padding: 30px 40px;
-  }
+    // Abstract-Specific Styles
+    &.abstract {
+        background: $faintgray;
+        padding: 30px 40px;
+    }
 }
 
-/*================ Full Text | Article-Level Modules ================*/
+/** Full Text Article
+ ---------------------------------------------------------*/
 .full-text-image-container {
-  label {
-    font-size: 15px;
-  }
+    label {
+        font-size: 15px;
+    }
 }
 
 h3#references + ul li {
-  margin-bottom: 15px;
-  font-size: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
 }
 
 /*================ Sidebar Article Content | Article-Level Modules ================*/
@@ -760,246 +233,190 @@ h3#references + ul li {
 //
 
 
-/*================ Modals ================*/
+/** Modals
+ ---------------------------------------------------------*/
 .lean-modal {
-  display: none;
-  width: 95%;
-  background: #fff;
-  position: absolute !important;
+    display: none;
+    width: 95%;
+    background: #fff;
+    position: absolute !important;
 
-  div.modal-body {
-    padding: 0 34px 34px;
-  }
-
-  .modal-top {
-    height: 38px;
-    position: relative;
-
-    span.icon-close {
-      position: absolute;
-      top: 9px;
-      right: 11px;
-      cursor: pointer;
-    }
-  }
-
-  @include at-query ($min, $medium) {
-    width: 635px;
     div.modal-body {
-      padding: 0 34px 34px;
+        padding: 0 34px 34px;
     }
-  }
+
+    .modal-top {
+        height: 38px;
+        position: relative;
+
+        span.icon-close {
+            position: absolute;
+            top: 9px;
+            right: 11px;
+            cursor: pointer;
+        }
+    }
+
+    @include at-query ($min, $medium) {
+        width: 635px;
+        div.modal-body {
+            padding: 0 34px 34px;
+        }
+    }
 }
 
 #lean_overlay {
-  position: fixed;
-  z-index:100;
-  top: 0px;
-  left: 0px;
-  height:100%;
-  width:100%;
-  background: #192028;
-  display: none;
+    position: fixed;
+    z-index:100;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width:100%;
+    background: #192028;
+    display: none;
 }
 
-/*================ Accounts UI | Overrides ================*/
-#login-buttons {
-  #login-sign-in-link,
-  #login-name-link {
-    text-decoration: none;
-  }
-}
-#login-dropdown-list {
-  box-shadow: none;
-  @include border-radius(2px);
 
-  a {
-    color: $kashmir;
-    text-decoration: none;
-    text-transform: capitalize;
-    font-size: 11px;
-    font-weight: 500;
-    margin: 5px 0 0;
-  }
-
-  a.login-close-text {
-    text-transform: uppercase;
-    font-weight: 700;
-    color: $electric;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
-  #login-buttons-password,
-  #login-buttons-forgot-password,
-  #login-buttons-open-change-password,
-  #login-buttons-logout,
-  #login-buttons-do-change-password {
-    background: $electric;
-    text-transform: capitalize;
-    @include border-radius(2px);
-    @include padding-vertical(9px);
-    font-size: 14px;
-  }
-
-  #login-email-label-and-input,
-  #login-password-label-and-input,
-  #login-old-password-label-and-input {
-    margin: 0;
-    padding: 0;
-
-    #login-email,
-    #login-password,
-    #login-old-password {
-      margin-bottom: 5px;
-    }
-
-    #login-email-label,
-    #login-password-label,
-    #login-old-password-label {
-      text-transform: capitalize;
-    }
-  }
-}
-
-#forgot-password-email {
-  margin-bottom: 5px;
-}
-
-/*================ Etc. | Misc Modules ================*/
+/** Miscellaneous Modules
+ ---------------------------------------------------------*/
 .full-width {
-  width: 100%;
-  display: block;
+    width: 100%;
+    display: block;
 }
 
 // tooltips
 $cubic: cubic-bezier(.64,.09,.08,1);
 
 [class^="tooltip"] {
-  position: relative;
-  &:after {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    content: attr(data-tooltip);
-    padding: 12px 15px;
-    width: 450px;
-    bottom: 1.8em;
-    left: 50%;
-    transform: translateX(-50%) translateY(-2px);
-    background: $lightgray;
-    color: $cello;
-    white-space: normal;
-    display: inline-block;
-    line-height: 1.3;
-    z-index: 2;
-    border-radius: 2px;
-    transition: opacity 0.2s $cubic, transform 0.2s $cubic;
-  }
-  &:hover {
+    position: relative;
     &:after {
-      display: block;
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        content: attr(data-tooltip);
+        padding: 12px 15px;
+        width: 450px;
+        bottom: 1.8em;
+        left: 50%;
+        transform: translateX(-50%) translateY(-2px);
+        background: $lightgray;
+        color: $cello;
+        white-space: normal;
+        display: inline-block;
+        line-height: 1.3;
+        z-index: 2;
+        border-radius: 2px;
+        transition: opacity 0.2s $cubic, transform 0.2s $cubic;
     }
-  }
+    &:hover {
+        &:after {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+    }
 }
 
 .tooltip--triangle {
-  &:before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: solid 7px transparent;
-    border-right: solid 7px transparent;
-    border-top: solid 6px $lightgray;
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    transform: translateX(-50%) translateY(-2px);
-    bottom: 1.45em;
-    left: 50%;
-    transition: opacity 0.2s $cubic, transform 0.2s $cubic;
-    z-index: 3;
-  }
-  &:hover {
     &:before {
-      display: block;
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: solid 7px transparent;
+        border-right: solid 7px transparent;
+        border-top: solid 6px $lightgray;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        transform: translateX(-50%) translateY(-2px);
+        bottom: 1.45em;
+        left: 50%;
+        transition: opacity 0.2s $cubic, transform 0.2s $cubic;
+        z-index: 3;
     }
-  }
+    &:hover {
+        &:before {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+    }
 }
 
 // tags
 .tags {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .tag {
-  display: inline-block;
-  font-size: 15px;
-  margin: 0 5px 10px 0;
-  padding: 4px 10px;
-  background: $lightgray;
-  color: $kashmir;
-  @include border-radius(2px);
+    display: inline-block;
+    font-size: 15px;
+    margin: 0 5px 10px 0;
+    padding: 4px 10px;
+    background: $lightgray;
+    color: $kashmir;
+    @include border-radius(2px);
 
-  &.dark {
-    background-color: $deepgray;
-    color: #fff;
-  }
+    &.dark {
+        background-color: $deepgray;
+        color: #fff;
+    }
 }
 
 a.tag {
-  cursor: pointer; // todo: get rid of later
-  @include transition(background 0.25s ease-out,
-                      color 0.25s ease-out);
-  &:hover {
-    background: $accent;
-    color: #fff;
-  }
+    cursor: pointer; // todo: get rid of later
+    @include transition(background 0.25s ease-out,
+                                            color 0.25s ease-out);
+    &:hover {
+        background: $accent;
+        color: #fff;
+    }
 }
 
 // lists
 ol {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 ul.sectioned-list {
-  li {
-    margin-bottom: 50px;
+    li {
+        margin-bottom: 50px;
 
-    h2 {
-      margin: 0 0 10px 0;
-      padding: 0;
+        h2 {
+            margin: 0 0 10px 0;
+            padding: 0;
+        }
     }
-  }
 }
 
 
 .sp {
-  width: 32px;
-  height: 32px;
-  clear: both;
-  margin: 20px auto;
+    width: 32px;
+    height: 32px;
+    clear: both;
+    margin: 20px auto;
 }
 
 .sp-circle {
-  border: 4px rgba($kashmir, 0.25) solid;
-  border-top: 4px rgba($kashmir, 1) solid;
-  border-radius: 50%;
-  -webkit-animation: spCircRot 1.5s infinite linear;
-  animation: spCircRot 1.5s infinite linear;
+    border: 4px rgba($kashmir, 0.25) solid;
+    border-top: 4px rgba($kashmir, 1) solid;
+    border-radius: 50%;
+    -webkit-animation: spCircRot 1.5s infinite linear;
+    animation: spCircRot 1.5s infinite linear;
 }
 @-webkit-keyframes spCircRot {
-  from { -webkit-transform: rotate(0deg); }
-  to { -webkit-transform: rotate(359deg); }
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(359deg); }
 }
 @keyframes spCircRot {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(359deg); }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(359deg); }
+}
+
+.faint-shadow {
+    background: #fff;
+    box-shadow: 0px 2px 14px rgba(235, 237, 242, 1);
 }
