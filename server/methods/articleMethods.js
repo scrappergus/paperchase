@@ -430,7 +430,7 @@ Meteor.methods({
         return result;
     },
     articleExistenceCheck: function(mongoId, articleData){
-        // console.log('--articleExistenceCheck');
+        // console.log('--articleExistenceCheck',mongoId);
         // before inserting/updating article, check if doc already exists
         // will return duplicate article doc, if found
         var query =  [
@@ -456,6 +456,7 @@ Meteor.methods({
         }
         // console.log('query',query);
         var exists = articles.findOne({ $or: query });
+
         if(exists && exists._id != mongoId){
             return exists;
         }else{
@@ -479,6 +480,7 @@ Meteor.methods({
         return invalid;
     },
     validateArticle: function(mongoId, articleData){
+        // console.log('--validateArticle',mongoId);
         var fut = new future();
         var invalid = [];
         var result = {};

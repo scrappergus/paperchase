@@ -729,6 +729,7 @@ Meteor.articleFiles = {
                         }
                         if(result){
                             Session.set('xml-verify',true);
+                            result._id = articleMongoId;
                             Session.set('article-form',result);
                         }
                     });
