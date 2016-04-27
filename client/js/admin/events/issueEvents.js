@@ -89,7 +89,15 @@ Template.AdminIssueForm.events({
                     mongoId = result.article_id;
                 }
                 Meteor.formActions.successMessage('Issue Updated');
-                // Router.go('AdminIssue',{volume : issueData.volume, issue: issueData.issue});
+                Meteor.call('getIssueAndFiles', issueData.volume, issueData.issue, true, function(error,result){
+                    if(error){
+                        console.error('ERROR - getIssueAndFiles',error);
+                    }else if(result){
+                        Session.set('issue',result);
+                    }else{
+                        Session.set('admin-not-found',true);
+                    }
+                });
             }
         });
     }
