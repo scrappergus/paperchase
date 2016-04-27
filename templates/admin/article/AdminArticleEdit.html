@@ -28,25 +28,35 @@
     {{>StatusModal}}
     {{#if conflicts}}
     <div class="row"><div class="col s12">
-        <div class="card red z-depth-0 lighten-4">
+        <div class="card red lighten-3 z-depth-0">
             <div class="card-content">
                 <div class="card-title">
-                    <div class="row">
-                        <div class="col s12">
-                            <h2 class="valign-wrapper" style="margin-top:0px;"><i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span></h2>
-                            <h3>Save the form below to update the database</h3>
-                            <p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
-                        </div>
-                    </div>
+                    <i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span>
                 </div>
-                {{#each conflicts}}
-                <div class="row">
-                    <h4>{{what}}</h4>
-                    <div class="col s12">
-                        {{{conflict}}}
-                    </div>
-                </div>
-                {{/each}}
+
+                <table class="bordered card z-depth-0 grey lighten-4">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Conflict</th>
+                            <th>XML</th>
+                            <th>Database</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each conflicts}}
+                        <tr>
+                            <td>{{what}}</td>
+                            <td>{{{conflict}}}</td>
+                            <td>{{{xml}}}</td>
+                            <td>{{{db}}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <h4>Save the form below to update the database</h4>
+                <p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
             </div>
         </div>
     </div></div>
