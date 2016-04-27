@@ -63,9 +63,9 @@
                                 <div class="col s12">
                                     {{#each arrayify dates}}
                                         {{#if equals name 'collection'}}
-                                            <h6><label>{{name}}:</label> {{collectionDate value}}</h6>
+                                            <label>{{name}}:</label> {{collectionDate value}}
                                             {{else}}
-                                            <h6><label>{{name}}:</label> {{articleDate value}}</h6>
+                                            <label>{{name}}:</label> {{articleDate value}}
                                         {{/if}}
                                     {{/each}}
                                 </div>
