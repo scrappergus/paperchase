@@ -12,7 +12,16 @@
                 {{>piiFilter}}
             </div>
         </div>
-        {{> reactiveTable class="table table-bordered table-hover" collection=articlesList settings=settings}}
+
+        <div class="row">
+            <div class="col s12">
+                <div class="card z-depth-0">
+                    <div class="card-content">
+                        {{> reactiveTable class="table table-bordered table-hover" collection=articlesList settings=settings}}
+                    </div>
+                </div>
+            </div>
+        </div>
     {{else}}
         {{>ProcessingNotHidden}}
     {{/if}}
