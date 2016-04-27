@@ -258,7 +258,6 @@
                     <div class="col s11 m3">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <label for="{{name}}" class="active">{{name}}</label>
                                 {{>AdminDateInput}}
                             </div>
                         </div>
@@ -363,9 +362,11 @@
 
 <!--Form Partials-->
 <template name="AdminDateInput">
+    <label for="{{name}}" class="active">{{name}}</label>
     <input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
 </template>
 <template name="AdminHistoryInput">
+    <label for="{{name}}" class="active">{{name}}</label>
     <input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
 </template>
 <template name="AdminArticleFormAuthors">
