@@ -77,7 +77,7 @@ Meteor.methods({
     },
     updateArticleBy: function(where, what){
         Meteor.authorizeCheck.articles();
-        return articles.update(where, {$set: what});
+        return articles.update(where, {$set: what},{multi:true});
     },
     unsetArticles: function(where, what){
         Meteor.authorizeCheck.articles();
