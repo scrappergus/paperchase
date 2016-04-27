@@ -132,7 +132,7 @@ Meteor.methods({
         }else{
             // Object is empty in DB.
             for(var valueKey in xmlValue){
-                conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in database. In XML.';
+                resObj.conflict += '<div class="clearfix"></div><b>' + valueKey + '</b>: Missing in database. In XML.';
                 keyCount++;
                 if(keyCount == Object.keys(xmlValue).length){
                     fut.return(resObj);
