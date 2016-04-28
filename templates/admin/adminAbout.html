@@ -9,12 +9,16 @@
     {{#if sections}}
     <div class="row">
         <div class="col s12">
-            <h2>About Order</h2>
-            <ol class="roman-list sections-list">
-            {{#each sections}}
-                <li id="section-title-{{_id}}">{{{title}}}</li>
-            {{/each}}
-            </ol>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">About Order</div>
+                    <ol class="roman-list sections-list">
+                    {{#each sections}}
+                        <li id="section-title-{{_id}}">{{{title}}}</li>
+                    {{/each}}
+                    </ol>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -22,40 +26,49 @@
             <button id="save-about-section-order" class="waves-effect waves-light btn btn-update right">Save About Order</button>
         </div>
     </div>
-    <div class="divider"></div>
 
-    <h2>About Sections</h2>
-    <ol class="roman-list">
-        {{#each sections}}
-        <li>
-        {{#if editingAboutSection _id}}
-        <div class="row">
-            <div class="col s12 card grey lighten-5">
-                <div id="add-section-container">
-                    <h2>Edit About Section</h2>
-                    {{>AdminAboutForm}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">About Sections</div>
+                    <ol class="roman-list">
+                        {{#each sections}}
+                        <li>
+                        {{#if editingAboutSection _id}}
+                        <div class="row">
+                            <div class="col s12 card grey lighten-5">
+                                <div id="add-section-container">
+                                    <h2>Edit About Section</h2>
+                                    {{>AdminAboutForm}}
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        <h3 id="section-{{@index}}">
+                            {{{title}}}
+                            <button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
+                        </h3>
+                        {{{content}}}
+                        {{/if}}
+                        </li>
+                        {{/each}}
+                    </ol>
                 </div>
             </div>
         </div>
-        {{else}}
-        <h3 id="section-{{@index}}">
-            {{{title}}}
-            <button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
-        </h3>
-        {{{content}}}
-        {{/if}}
-        </li>
-        {{/each}}
-    </ol>
+    </div>
     {{/if}}
 
     <div id="add-about-section-container">
     {{#if showAboutForm}}
     <div class="divider"></div>
     <div class="row">
-        <div class="col s12 card grey lighten-5">
-            <h2>New About Section</h2>
-            {{>AdminAboutForm}}
+        <div class="col s12 card z-depth-0">
+            <div class="card-content">
+                <div class="card-title">New About Section</div>
+                {{>AdminAboutForm}}
+            </div>
         </div>
     </div>
     {{/if}}
