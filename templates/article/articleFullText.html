@@ -76,7 +76,7 @@
                 <!-- Figure -->
                 {{#if equals contentType 'figure'}}
                     {{#with content}}
-                    <div class="full-text-image-container box border-gray" id="{{id}}">
+                    <div class="full-text-image-container" id="{{id}}">
                         {{#if label}}<label>{{{label}}}</label>{{/if}}
                         {{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
                         {{#if title}}<h4>{{{title}}}</h4>{{/if}}

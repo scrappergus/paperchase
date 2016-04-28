@@ -47,6 +47,7 @@
     li a {
         color: $kashmir;
         display: block;
+        &.accent { color: $accent; }
     }
 
     li {

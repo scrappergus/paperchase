@@ -272,7 +272,7 @@ Meteor.formActions = {
                 }
                 // console.log('scrollToEl = ', scrollToEl);
                 $('html, body').animate({
-                    scrollTop: $(scrollToEl).position().top
+                    scrollTop: $(scrollToEl).position().top - 50
                 }, 500);
             }
         }
@@ -573,7 +573,7 @@ Meteor.general = {
     scrollTo: function(anchorId){
         var navTop = Meteor.general.navHeight();
         $('html, body').animate({
-            scrollTop: $('#' + anchorId).position().top - navTop
+            scrollTop: $('#' + anchorId).position().top - navTop - 25
         }, 500);
     },
     isStringEmpty: function(string){

@@ -26,6 +26,7 @@ Template.Visitor.helpers({
         }
     }
 });
+
 Template.Footer.helpers({
     publisher : function(){
         var journalSettings = journalConfig.findOne();
@@ -110,6 +111,20 @@ Template.Contact.helpers({
 Template.Archive.helpers({
     volumes: function(){
         return Session.get('archive');
+    },
+    items: function(){
+        // Todo: update this static helper
+        var volumes = [
+            { title: 'Volume 8' },
+            { title: 'Volume 7' },
+            { title: 'Volume 6' },
+            { title: 'Volume 5' },
+            { title: 'Volume 4' },
+            { title: 'Volume 3' },
+            { title: 'Volume 2' },
+            { title: 'Volume 1' },
+        ];
+        return volumes;
     }
 });
 // Editorial Board

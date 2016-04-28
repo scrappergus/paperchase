@@ -86,8 +86,13 @@ Template.ArticleFullText.onDestroyed(function () {
 // Scrollspy
 // --------
 Template.scrollspyCard.onRendered(function() {
-    var sticky = $('.fixed-scroll-card');
 
+    /*
+     * Sticky Sidebars
+     *
+     */
+
+    var sticky = $('.fixed-scroll-card');
     if (sticky.length > 0) {
         var stickyHeight = sticky.height();
         var sidebarTop = parseInt(sticky.offset().top - 10) ;
@@ -115,10 +120,9 @@ Template.scrollspyCard.onRendered(function() {
 
 
     /*
-
-    Minimalistic Scrollspy | https://jsfiddle.net/mekwall/up4nu/
-
-    */
+     * Minimalistic Scrollspy | https://jsfiddle.net/mekwall/up4nu/
+     *
+     */
 
     // Cache selectors
     var lastId,
@@ -134,21 +138,10 @@ Template.scrollspyCard.onRendered(function() {
           if (item.length) { return item; }
         });
 
-    // Bind click handler to menu items
-    // so we can get a fancy scroll animation
-    menuItems.click(function(e){
-      var href = $(this).attr("href"),
-          offsetTop = href === "#" ? 0 : $(href).offset().top-navHeight + 1;
-      $('html, body').stop().animate({
-          scrollTop: offsetTop
-      }, 300);
-      e.preventDefault();
-    });
-
     // Bind to scroll
     $(window).scroll(function(){
        // Get container scroll position
-       var fromTop = $(this).scrollTop()+navHeight;
+       var fromTop = $(this).scrollTop() + navHeight;
 
        // Get id of current scroll item
        var cur = scrollItems.map(function(){

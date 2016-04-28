@@ -49,3 +49,4 @@ meta:susy@2.3.3
 materialize:materialize
 monbro:iron-router-breadcrumb
 accounts-ui
+okgrow:router-autoscroll

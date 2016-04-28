@@ -7,14 +7,11 @@
             <h3 class="section-heading">More News</h3>
             <ul class="divided-list">
                 {{#each news}}
-                <li class="collection-item">
-                    <h5>{{formatDate date}}</h5>
-                    <h4>{{title}}</h4>
-                    <p>{{{content}}}</p>
-                    {{#if youTube}}
-                        <div class="news-video"><iframe width="560" height="315" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe></div>
-                    {{/if}}
-                </li>
+                    <li class="item">
+                        <h4 class="title">{{title}}</h4>
+                        <h5 class="meta">{{formatDate date}}</h5>
+                        <p>{{{content}}}</p>
+                    </li>
                 {{/each}}
             </ul>
         {{/if}}
@@ -33,6 +30,7 @@
             {{#each eic}}
             <li class="no-link"><strong>{{>PersonName}}</strong><br /> {{{address}}}</li>
             {{/each}}
+            <li><a href="{{pathFor 'EdBoard'}}" class="accent">See All Editors</a></li>
         </ul>
     </div>
 </template>

@@ -117,6 +117,7 @@
  ---------------------------------------------------------*/
 h5.article-header {
     position: relative;
+    margin-bottom: 20px;
     @extend .uppercase-titles;
     left: 1px;
 
@@ -168,6 +169,8 @@ h2.authors {
     .photo {
         width: 100%;
         max-width: 100%;
+        @extend .faint-shadow;
+        @include border-radius(2px);
     }
 
     .tag {
@@ -207,7 +210,7 @@ h2.authors {
 
     // Abstract-Specific Styles
     &.abstract {
-        background: $faintgray;
+        @extend .faint-shadow;
         padding: 30px 40px;
     }
 }
@@ -215,8 +218,20 @@ h2.authors {
 /** Full Text Article
  ---------------------------------------------------------*/
 .full-text-image-container {
-    label {
-        font-size: 15px;
+    label { font-size: 15px; }
+    width: 100%;
+    margin: 50px auto;
+    padding: 30px 40px;
+    @extend .faint-shadow;
+
+    h4 {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .full-text-image {
+        width: 100%;
+        margin: 25px 0;
     }
 }
 
@@ -276,6 +291,32 @@ h3#references + ul li {
     display: none;
 }
 
+/** Lists
+ ---------------------------------------------------------*/
+ul.divided-list {
+    li.item {
+        padding: 40px 0;
+        border-bottom: 3px solid #EAECF0;
+        &:first-child { padding-top: 0; }
+        &:last-child { border: none; }
+    }
+
+    h4.title {
+      text-transform: none;
+      font-size: 21px;
+      margin: 0;
+      padding: 0;
+    }
+
+    h5.meta {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #8A97A5;
+    }
+
+    p { padding: 0; margin: 0; }
+}
 
 /** Miscellaneous Modules
  ---------------------------------------------------------*/
@@ -289,6 +330,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
 
 [class^="tooltip"] {
     position: relative;
+    z-index: 101;
     &:after {
         opacity: 0;
         visibility: hidden;
@@ -392,6 +434,10 @@ ul.sectioned-list {
     }
 }
 
+.divider {
+  height: 3px;
+  background: #EAECF0;
+}
 
 .sp {
     width: 32px;

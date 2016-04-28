@@ -83,8 +83,8 @@ a {
 ---------------------------------------------------------*/
 h3.section-heading {
     font-size: 17px;
-    margin: 0;
     padding: 0 0 10px;
+    margin: 0 0 30px;
     text-transform: uppercase;
     font-weight: 700;
     position: relative;
@@ -98,8 +98,10 @@ h3.section-heading {
         bottom: -12px;
         left: 0;
         width: 72px;
-        border-top: $accent;
+        background: $accent;
+        height: 3px;
         margin-bottom: 12px;
+        margin-top: 12px;
     }
 }
 
