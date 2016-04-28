@@ -150,9 +150,10 @@ $sub-navbar-padding: 10px;
         display: inline;
 
         &:after {
-            content: "\f105"; // fa-angle-right
-            font-family: FontAwesome;
-            margin: 0 10px 0 13px;
+            content: "\e902";
+            font-family: 'icomoon';
+            font-size: 0.65rem;
+            margin: 0 10px 0 14px;
             opacity: .35;
             letter-spacing: 0.25px;
         }
@@ -308,12 +309,12 @@ $container-padding: 60px;
     }
 
     a li:after {
-        content: "\f105"; // fa-angle-right
-        font-family: FontAwesome;
+        content: "\e902";
+        font-family: 'icomoon';
         position: absolute;
-        top: 13px;
-        right: 13px;
-        font-size: 1.765rem;
+        top: 21px;
+        right: 15px;
+        font-size: 1.075rem;
         color: lighten(#2E4057, 10%);
         opacity: 0;
         @include transition(opacity .25s ease-out,
@@ -327,7 +328,7 @@ $container-padding: 60px;
 
     a:hover li:after {
         opacity: 1;
-        right: 18px;
+        right: 20px;
     }
 }
 

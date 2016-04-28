@@ -558,7 +558,7 @@ if (Meteor.isClient) {
         title: function() {
             var pageTitle = '';
             var pieces = {};
-            if(this.data && this.data().article && this.data().article.volume && this.data().article){
+            if(this.data && this.data().article && this.data().article.volume){
                 // for article breadcrumbs, which will try to use the issue mongo ID as the param, but we use vol/issue
                 pieces.volume = this.data().article.volume;
                 pieces.issue = this.data().article.issue;
@@ -593,7 +593,7 @@ if (Meteor.isClient) {
     // -------
     Router.route('/article/:_id', {
         name: 'Article',
-        parent: 'Issue', // todo: implement real issue/volume nums
+        parent: 'Issue',
         layoutTemplate: 'Visitor',
         title: function() {
             var pageTitle = '';
@@ -635,7 +635,7 @@ if (Meteor.isClient) {
 
     Router.route('/article/:_id/text', {
         name: 'ArticleText',
-        parent: 'Issue', // todo: implement real issue/volume nums
+        parent: 'Issue',
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             // check if article exists
