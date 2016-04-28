@@ -42,6 +42,7 @@ Meteor.methods({
                     if(error){
                         console.error('processPmcXml',error);
                     }else if(result){
+                        // console.log('processXmlString',result.dates);
                         fut.return(result);
                     }
                 });
@@ -50,6 +51,7 @@ Meteor.methods({
                     if(error){
                         console.error('processAopXml',error);
                     }else if(result){
+                        // console.log('processXmlString',result.dates);
                         fut.return(result);
                     }
                 });
@@ -78,13 +80,14 @@ Meteor.methods({
 
 // Methods to compare XML with DB
 // -------------
-var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display','mongo_id','advance','feature'];
-var ignoreConflictsViaXml = ['files']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
+var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display','mongo_id','advance','feature','publisher'];
+var ignoreConflictsViaXml = ['files','publisher','issue_id']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
 
 Meteor.methods({
     compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
 
         dbArticle = Meteor.generalClean.pruneEmpty(dbArticle);
+        xmlArticle = Meteor.generalClean.pruneEmpty(xmlArticle);
 
 
         var result = {};
@@ -224,7 +227,6 @@ Meteor.xmlDbConflicts = {
                 console.log('ELSE',key);
             }
         }
-
         cb(result);
     },
     compareObject: function(parentKey,xmlObj,dbObj,cb){
@@ -307,13 +309,18 @@ Meteor.xmlDbConflicts = {
     },
     prettyValue: function(value){
         var result = '';
+
         if(typeof value === 'object'&& !Array.isArray(value)){
             for(var key in value){
-                result += '<div class="clearfix"></div><label>' + key + '</label> ' +  value[key];
+                var v = value[key];
+                if(typeof v.getMonth === 'function'){
+                    v =  Meteor.dates.article(v);
+                }
+                result += '<div class="clearfix"></div><label>' + key + '</label> ' +  v;
             }
         }else if(typeof value === 'object' && Array.isArray(value)){
             for(var i=0 ; i < value.length ; i++){
-               result +=  Meteor.xmlDbConflicts.prettyValue(value[i]);
+               result +=  '<div class="clearfix"></div>' + Meteor.xmlDbConflicts.prettyValue(value[i]);
             }
         }else{
             result = value;
