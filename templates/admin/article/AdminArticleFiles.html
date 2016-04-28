@@ -113,6 +113,11 @@
 
     {{>AdminArticleHeader}}
 
+    {{/with}}
+
+    {{#if verify}}
+    {{else}}
+    {{#with article}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
@@ -124,8 +129,7 @@
         </div>
     </div>
     {{/with}}
-
-    <div id="xml-verify"></div>
+    {{/if}}
 
     {{#if verify}}{{>AdminArticleXmlVerify}}{{/if}}
 
@@ -145,14 +149,29 @@
         </div>
     </div>
     {{else}}
-    <div class="row">
+    <div class="row" id="xml-verify">
         <div class="col s12">
-            <h4>Please verify information from the XML before uploading.</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <button id="xml-verified" class="btn btn-primary upload"><i class="material-icons">&#xE2C6;</i> I have verified the XML and it is ready to upload {{file.name}}</button>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h4>Please verify the information below</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <button id="xml-verified" class="btn btn-primary upload"><i class="material-icons">&#xE2C6;</i></button> I have verified the XML. Upload the XML.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <p>To update the database, save the form below.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     {{/if}}
