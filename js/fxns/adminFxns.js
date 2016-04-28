@@ -722,6 +722,7 @@ Meteor.articleFiles = {
                 }else if(result){
                     Meteor.formActions.closeModal();
                     Meteor.general.scrollTo('xml-verify');
+
                     Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
                         if(error){
                             console.log('ERROR - preProcessArticle');
@@ -731,6 +732,7 @@ Meteor.articleFiles = {
                             Session.set('xml-verify',true);
                             result._id = articleMongoId;
                             Session.set('article-form',result);
+                            Meteor.formActions.closeModal();
                         }
                     });
                 }
