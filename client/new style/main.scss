@@ -330,7 +330,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
 
 [class^="tooltip"] {
     position: relative;
-    z-index: 101;
+    z-index: 5;
     &:after {
         opacity: 0;
         visibility: hidden;

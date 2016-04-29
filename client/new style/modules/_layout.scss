@@ -64,8 +64,9 @@ $sub-navbar-padding: 10px;
     width: 100%;
 }
 
+
 .sidebar { z-index: 3; }
-.navigation { z-index: 2; }
+.navigation { z-index: 6; }
 .sub-nav { z-index: 1; }
 
 
@@ -75,7 +76,6 @@ $sub-navbar-padding: 10px;
     float: left;
     padding: 15px 0 0 20px;
     background: #012855;
-
     .logo { height: 48px; }
 }
 
