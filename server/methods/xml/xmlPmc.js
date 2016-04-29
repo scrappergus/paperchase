@@ -349,12 +349,14 @@ Meteor.xmlPmc = {
             if(dateType != 'collection'){
                 var d = '';
                 if(dates[i].month && dates[i].day && dates[i].year){
-                    d += dates[i].month[0] + ' ';
-                    d += dates[i].day[0] + ' ';
-                    d += dates[i].year[0] + ' ';
-                    d += ' 00:00:00.0000';
-                    var dd = new Date(d);
-                    // console.log(dateType + ' = ' + dd);
+                    var month,
+                        day,
+                        year;
+                    month = Meteor.dates.zeroBasedMonth(dates[i].month[0]);
+                    day = dates[i].day[0];
+                    year = dates[i].year[0];
+                    var utcDate = Date.UTC(year,month,day,0,0,0);
+                    var dd = new Date(utcDate).toUTCString();
                    datesResult[dateType] = dd;
                 }
             }

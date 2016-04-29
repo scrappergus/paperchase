@@ -94,7 +94,7 @@ if (Meteor.isClient) {
   });
   Template.registerHelper('inputDate', function(date) {
     if (date) {
-      return moment(date).format('YYYY/MM/DD');
+      return Meteor.dates.inputForm(date);
     } else {
       return;
     }

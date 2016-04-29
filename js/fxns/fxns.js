@@ -663,7 +663,14 @@ Meteor.sorter = {
 
 Meteor.dates = {
     article: function(date){
-        return moment(date).tz('America/New_York').format('MMMM D, YYYY');
+        // console.log('Article Date:', typeof date, date);
+        var date = new Date(date);
+        // console.log(date);
+        // console.log(moment(utcDate,'ddd, DD MMM YYYY HH:mm:ss ZZ'));
+        return moment(date).utc().format('MMMM D, YYYY');
+    },
+    inputForm: function(date){
+      return moment(date).utc().format('YYYY/MM/DD');
     },
     wordDate: function(date){
         return moment(date).tz('America/New_York').format('MMMM D, YYYY');
@@ -684,7 +691,6 @@ Meteor.dates = {
         return d;
     },
     initiateDatesInput: function(){
-        // console.log('-- initiateDatesInput');
         $('.datepicker').each(function(i){
             var datePlaceholderFormat = 'mmmm d, yyyy';
             var placeholder = $(this).attr('placeholder');
@@ -695,6 +701,9 @@ Meteor.dates = {
             picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
         });
     },
+    zeroBasedMonth: function(month){
+        return parseInt(month - 1);
+    }
 }
 
 Meteor.issue = {

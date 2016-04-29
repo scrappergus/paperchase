@@ -721,7 +721,7 @@ Meteor.articleFiles = {
                     Meteor.formActions.errorMessage('Could not process XML for verification');
                 }else if(result){
                     Meteor.formActions.closeModal();
-                    Meteor.general.scrollTo('xml-verify');
+                    // Meteor.general.scrollTo('xml-verify');
 
                     Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
                         if(error){
