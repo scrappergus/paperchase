@@ -222,6 +222,9 @@ if (Meteor.isClient) {
         }
         return count;
     });
+
+    // Title
+    // ----------------------
     Template.registerHelper('stripTitle', function(title) {
         return title.substr(title.indexOf("|") + 1);
     });
@@ -246,6 +249,22 @@ if (Meteor.isClient) {
         }
         return str;
     });
+    Template.registerHelper('issueLinkViaTitle', function(issueTitle) {
+        // TODO: instead customize package to return more data in the breadcrumb object
+        var journalName = '';
+        if(journalConfig.findOne()){
+            journalName = journalConfig.findOne().journal.name;
+        }
+        issueTitle = issueTitle.replace(journalName + ' | ','');
+        issueTitle = issueTitle.replace(',','');
+        issueTitle = issueTitle.replace('Volume','v');
+        issueTitle = issueTitle.replace('Issue','i');
+        issueTitle = issueTitle.replace(/\s+/g,'');
+        return issueTitle;
+    });
+
+
+
 
     // Subscribers
     // -------

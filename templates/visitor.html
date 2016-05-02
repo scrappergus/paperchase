@@ -59,7 +59,13 @@
         <ul>
             <li><a href="/">Home</a></li>
             {{#each Breadcrumb}}
-                <li>{{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}</li>
+                <li class="test">
+                    {{#if equals path 'Issue'}}
+                    {{#if showLink}}<a href="/issue/{{issueLinkViaTitle title}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}
+                    {{else}}
+                    {{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}
+                    {{/if}}
+                </li>
             {{/each}}
         </ul>
     </div>

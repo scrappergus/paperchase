@@ -624,7 +624,7 @@ if (Meteor.isClient) {
 
 
             this.next();
-        },
+        }
     });
 
     // Article
