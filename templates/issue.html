@@ -37,20 +37,14 @@
 
 <template name="ArticlesList">
     {{#if articles}}
-    <!-- <ul>
-        {{#each articles}}
-            {{#if start_group}}
-                {{#if article_type}}
-                {{! make sure to check for if no article type}}
-                <li style="margin: 10px 10px 0 0; display:inline-block;"><a class="anchor waves-effect waves-light btn light-blue accent-4" href="#{{article_type.short_name}}">{{article_type.name}}</a></li>
-                {{/if}}
-            {{/if}}
-        {{/each}}
-    </ul> -->
         {{#each articles}}
             <!-- Section Heading -->
             {{#if start_group}}
-                <h4 id="{{article_type.short_name}}" class="blue-divider">{{article_type.name}}</h4>
+                {{#if article_type.name}}
+                    <h4 id="{{convertToID article_type.name}}s" class="blue-divider">{{article_type.name}}s</h4>
+                {{else}}
+                    <h4 id="defaultsectiontitle" class="blue-divider">Default Section Title</h4>
+                {{/if}}
             {{/if}}
 
             <div class="toc-info">
