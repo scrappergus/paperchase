@@ -95,6 +95,7 @@ Meteor.methods({
                 articleProcessed.page_end = parseInt(article.LastPage[0]);
             }
         }
+        // console.log('article',articleProcessed);
 
         // KEYWORDS
         // -----------
@@ -124,8 +125,11 @@ Meteor.methods({
                                 keyword = Meteor.fullText.fixTags(keyword);
                             }
                         }
-                        articleProcessed.keywords.push(keyword);
-                    }else{
+                        if(keyword){
+                          articleProcessed.keywords.push(keyword);
+                        }
+
+                    }else if(keywords[kw]['Param'][0]._){
                         articleProcessed.keywords.push(keywords[kw]['Param'][0]._);
                     }
                 }
@@ -247,6 +251,8 @@ Meteor.methods({
             }
         }
 
+        // console.log('articleProcessed',articleProcessed);
+
         // PUB DATES
         // -----------
         // only aheadofprint provided in AOP sample files, this is not stored in the DB
@@ -256,6 +262,7 @@ Meteor.methods({
         // -----------
         // None provided in AOP sample file. Does contain aheadofprint but we do not store this
         // console.log(articleProcessed.issue_id);
+        // console.log('articleProcessed',articleProcessed);
         return articleProcessed;
     }
 });
