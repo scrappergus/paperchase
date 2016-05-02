@@ -87,14 +87,36 @@
 
 <template name="ArticleSidebar">
     <div class="page-sidebar">
-        {{#if fullText}}
-            <a href="#" class="full-width end-cap primary button">
-                <span class="icon icon-download"></span> Download PDF
-            </a>
+        {{#if isSubscribed}}
+            <!-- for subscribed users -->
+            {{#if fullText}}
+                {{#with files}}
+                {{#if pdf.url}}
+                    <a href="{{pdf.url}}" class="full-width end-cap primary button">
+                        <span class="icon icon-download"></span> Download PDF
+                    </a>
+                {{/if}}
+                {{/with}}
+            {{else}}
+                <a href="{{pathFor 'ArticleText'}}" class="full-width end-cap primary button">
+                    <span class="icon icon-file"></span> View Full Text
+                </a>
+            {{/if}}
         {{else}}
-            <a href="/text" class="full-width end-cap primary button">
-                <span class="icon icon-file"></span> View Full Text
-            </a>
+            <!-- not subscribed -->
+            {{#if fullText}}
+                {{#with files}}
+                {{#if pdf.url}}
+                    <a href="{{pdf.url}}" class="full-width end-cap primary button">
+                        <span class="icon icon-download"></span> Download PDF
+                    </a>
+                {{/if}}
+                {{/with}}
+            {{else}}
+                <a href="{{pathFor 'ArticleText'}}" class="full-width end-cap primary button">
+                    <span class="icon icon-file"></span> View Full Text
+                </a>
+            {{/if}}
         {{/if}}
 
         {{> ArticleCorrespondence}}
@@ -104,7 +126,7 @@
         {{/if}}
 
         {{#if fullText}}
-            {{> scrollspyCard title="Table of Contents" items=sections abstract=abstract references=references}}
+            {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
         {{/if}}
     </div>
 </template>

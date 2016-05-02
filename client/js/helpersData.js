@@ -155,9 +155,17 @@ Template.ArticleSidebar.helpers({
     fullText: function(){
         return Session.get('article-text');
     },
-    sections: function() {
-        var array = Session.get('article-text').sections;
-        return Session.get('article-text').sections;
+    items: function() {
+        var articleHeaders = Session.get('article-text').sections;
+        var sections = [];
+
+        for ( i = 0; i < articleHeaders.length; i++ ) {
+            if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
+                sections.push( { title: articleHeaders[i].title } );
+            }
+        }
+
+        return sections;
     }
 });
 Template.AuthorsRefList.helpers({
@@ -174,6 +182,18 @@ Template.AuthorsRefList.helpers({
 Template.Issue.helpers({
     issueData: function(){
         return Session.get('issue');
+    },
+    items: function() {
+        var articles = Session.get('issue').articles;
+        var sections = [];
+
+        for ( i = 0; i < articles.length; i++ ) {
+            if ( articles[i].start_group && articles[i].article_type.name ) {
+                sections.push( { title: articles[i].article_type.name + 's' } );
+            }
+        }
+
+        return sections;
     }
 });
 
