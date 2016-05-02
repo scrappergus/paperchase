@@ -29,17 +29,7 @@
 
     {{#each items}}
         {{#if title}}
-        {{#if headerLevel}}
-            {{#if equals headerLevel 1}}
-                <!-- for article pages | top level headers only -->
-                <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
-            {{else}}
-                <!-- nothing -->
-            {{/if}}
-        {{else}}
-            <!-- for non-article pages | all section titles -->
             <li><a class="anchor" href="#{{convertToID title}}">{{titleCase title}}</a></li>
-        {{/if}}
         {{/if}}
     {{/each}}
 
