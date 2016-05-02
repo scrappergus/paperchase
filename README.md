@@ -11,6 +11,11 @@ App Structure
  - **/templates:** client and admin templates
  - **/public:** static assets. (journal images, not article images)
 
+
+Template Data
+============
+When possible, use helper files to pass data to template: `AdminHelpers.js` and `helpersData.js`
+
 Deploy
 ============
  - change favicon to journal deploying (all journal favicons located in /public)
@@ -35,6 +40,17 @@ In nav.html, the main side nav and the mobile collapsible nav will list only sec
 
 Admin Site
 ==========
+
+Admin permissions are tested on the admin parent template.
+
+`<template name="Admin">
+{{#if isInRole 'admin'}}
+</template>`
+
+
+404 and Loading
+Cannot use the same template variable to determine to show 404 message or loading. There is a global variable, admin-not-found, which gets set in the router (the article routes use Meteor.adminArticle.urlViaPiiOrMongo()) and is used to determine whether to show 404 message. Loading template is shown when template variable with page data is null.
+
 
 Site Control
 ------------
@@ -96,6 +112,21 @@ Can also hide sections from this page (but cannot display)
 **Assign Section to Article**
 On article form, in meta section
 
+Users
+----
+When editing a user profile, the form data comes from session variable admin-user. Only users with the role 'super' can edit other users' roles. User name (first, middle, last) are stored in the user doc within name object. No empty strings are stored for name parts. (name.first, name.middle, name.last).
+
+
+User Roles
+----
+Roles are set and tested using the package alanning:roles, https://atmospherejs.com/alanning/roles
+
+
+There are currently 2 groups: __global_roles__, article. __global_roles__ contains the roles 'super-admin' and 'admin'. 'admin' users can only view admin site. 'super-admin' can do everything. In the group 'article', if the user has the role 'edit' then that user can edit or create article docs.
+
+If a user as 'edit' role in the 'article' group, then the edit/upload buttons are shown in the article nav, otherwise hidden. Also, onBeforeAction will check the restricted routes before loading to see if user has permissions.
+
+
 Article Form
 ----------------
 
@@ -124,6 +155,12 @@ Article Files Uploader
  - Issue handling: if volume and issue in XML, but no record in the issues collection, then insert. This happens on processing, so before the article form gets saved. The reason is because issues can be deleted/hidden easily (still a todo).
  - Duplicate article checked on processing. User is notified above article form.
 
+Uploading XML
+
+Using compareProcessedXmlWithDb(). Take the XML data and compare with the data from the DB for the article form and before XML is uploaded. There are things in DB that are not in the XML. For example, if an article is advance or feature. Merged data will be from the XML if there is a conflict. If XML is missing the data, then merged will be from the database. Dates are treated as strings for comparisson.
+
+After uploading XML, the file is checked for supplementary materials and if found the article doc in the DB is updated. afterUploadXmlFilesCheck() is called from the client.
+
 ----------
 
 
@@ -146,6 +183,32 @@ PDF files are versioned, so consistent naming is essential. In the Paperchase DB
 **Figures**
  - File naming: articleMongId_figureId.xml
  - File storage: on AWS S3 in journal bucket (paperchase-journalshortname) in the paper_figures folder
+
+Before rendering the template, AdminArticleFigures, if the article has XML uploaded, then it's parsed for figure nodes. The ID, label, title and caption are listed below the figure uploader/editor. The data for the XML figures is stored in the session variable `xml-figures`.
+
+Deleting: Uses template AdminArticleFigures. After clicking the edit button next to the figure, a delete button is displayed. Delete happens via client. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
+
+Uploading: Uses template s3FigureUpload. First the file is uploaded to the paper_figures folder on S3, which must happen on the client. Then on the server, using afterUploadArticleFig(), the uploaded figure is renamed to standard convention (articlemongoid_figureid). The original file is copied and named using articlemongoid_figureid. The original file is deleted, via the client. See articleEvents.js. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
+
+Updating/Adding New Figure: Both actions use same template event from s3FigureUpload, which will also verify that the figure ID is unique. They also use the server method afterUploadArticleFig(). This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
+
+
+New Article via XML
+----------------
+Uses template AdminUploadArticleXml. Duplicates artilces are checked via articleExistenceCheck(), if found then modal links to found article. Works with AOP PubMed XML and PMC Full Text XML. Uses the session variable new-article to display the processed article data for the user to verify. When this variable is null, the uploader is shown. Otherwise, article verification is shown.
+
+Issue Form
+-------------
+**Validation and Duplicate Check**
+Submit form event uses method ‘validateIssue()‘ to check all required inputs and make sure there are no duplicate issues (via Volume and Issue search).
+
+Issue Deletion
+-------------
+Deleting an issue will delete all issue information from the database and remove all issue information for its articles. User input to confirm deletion is sent to deleteIssue(), which makes sure that the input === 'DELETE'. If so then, the issue doc is copied to the issues_deleted collection via deleteIssueDatabase() and the original doc is removed from the issues collection. Then all articles in the issue are updated (just issue information removed from article docs). TODO: Cover deleting on S3.
+
+Issue Cover
+-------------
+The cover is uploaded using the template ‘IssueCoverUploader‘. The upload event is on the client, using the template events. Covers cannot be added when adding an issue. Covers can only be added to existing issues.
 
 
 App Packages

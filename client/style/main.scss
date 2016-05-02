@@ -235,7 +235,7 @@ html,body{
 	.btn.active{
 		background: $gray-2;
 	}
-	.btn-sm{
+	.btn-sm, .btn-sm i{
 		font-size: $font-sm;
 	}
 	.btn-group{
@@ -333,6 +333,9 @@ html,body{
 	}
 	.no-margin{
 		margin: 0px;
+	}
+	.no-padding{
+		padding: 0px;
 	}
 	.ip-alert{
 		padding: $pad-md 0;

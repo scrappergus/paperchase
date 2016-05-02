@@ -1,15 +1,21 @@
 if (Meteor.isClient) {
+    // General
+    // -------
+    Template.registerHelper('adminNotFound', function(bool) {
+      return Session.get('admin-not-found');
+    });
+
     // Forms
     // -------
     Template.registerHelper('checked', function(bool) {
-        if(bool){
-            return 'checked';
-        }
+      if (bool) {
+        return 'checked';
+      }
     });
     // Article
     // -------
-    Template.registerHelper('articleId', function(){
-        return Session.get('article-id');
+    Template.registerHelper('articleId', function() {
+      return Session.get('article-id');
     })
     Template.registerHelper('getPmid', function(article) {
         // console.log('..getPmid');
@@ -40,79 +46,77 @@ if (Meteor.isClient) {
         }
     });
     Template.registerHelper('affiliationNumber', function(affiliation) {
-        return parseInt(parseInt(affiliation) + 1);
+      return parseInt(parseInt(affiliation) + 1);
     });
-    Template.registerHelper('pubStatusAbbrev', function (number) {
-        if(pubStatusTranslate[parseInt(number - 1)]){
-            return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
-        }
+    Template.registerHelper('pubStatusAbbrev', function(number) {
+      if (pubStatusTranslate[parseInt(number - 1)]) {
+        return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+      }
     });
     Template.registerHelper('prettyDoi', function(doi) {
-        return doi.replace('http://dx.doi.org/','');
+      return doi.replace('http://dx.doi.org/', '');
     });
-    Template.registerHelper('showFilesButton', function(xml,pdf) {
-        if(xml || pdf){
-            return true;
-        }else{
-            return false;
-        }
+    Template.registerHelper('showFilesButton', function(xml, pdf) {
+      if (xml || pdf) {
+        return true;
+      } else {
+        return false;
+      }
     });
     // Dates
     // -----
     Template.registerHelper('timestamp', function(date) {
-        date = new Date(date);
-        return date.getTime();
+      date = new Date(date);
+      return date.getTime();
     });
-    Template.registerHelper('dateDayExists',function(date){
-        //if the date object should have a day value associated with it
-        if(moment(date).format('HH') == 00){
-            return true;
-        }else{
-            return false;
-        }
+    Template.registerHelper('dateDayExists', function(date) {
+      //if the date object should have a day value associated with it
+      if (moment(date).format('HH') == 0) {
+        return true;
+      } else {
+        return false;
+      }
     });
-    Template.registerHelper('placeholderDate',function(date){
-        return moment(date).format('M D, YYYY');
+    Template.registerHelper('placeholderDate', function(date) {
+      return moment(date).format('M D, YYYY');
     });
     Template.registerHelper('getMonthWord', function(month) {
-        var d = new Date(month);
-        var month = new Array();
-        month[0] = 'January';
-        month[1] = 'February';
-        month[2] = 'March';
-        month[3] = 'April';
-        month[4] = 'May';
-        month[5] = 'June';
-        month[6] = 'July';
-        month[7] = 'August';
-        month[8] = 'September';
-        month[9] = 'October';
-        month[10] = 'November';
-        month[11] = 'December';
-        return month[d.getMonth()];
+      var d = new Date(month);
+      var month = new Array();
+      month[0] = 'January';
+      month[1] = 'February';
+      month[2] = 'March';
+      month[3] = 'April';
+      month[4] = 'May';
+      month[5] = 'June';
+      month[6] = 'July';
+      month[7] = 'August';
+      month[8] = 'September';
+      month[9] = 'October';
+      month[10] = 'November';
+      month[11] = 'December';
+      return month[d.getMonth()];
     });
     Template.registerHelper('inputDate', function(date) {
-        if(date){
-            return moment(date).format('YYYY/MM/DD');
-        }else{
+        if (date) {
+            return Meteor.dates.inputForm(date);
+        } else {
             return;
         }
-
     });
     Template.registerHelper('formatDate', function(date) {
-        if(date){
-
+        if (date) {
             return Meteor.dates.wordDate(date);
         }
         return;
     });
-    Template.registerHelper('formatDateNumber', function(date) {
-        if(date){
+    Template.registerHelper('formatDateNumber',function(date) {
+        if (date) {
             return moment(date).format('MM/D/YYYY');
         }
         return;
     });
-    Template.registerHelper('formatIssueDate', function(date,settings) {
+    Template.registerHelper('formatIssueDate',function(date,settings) {
         if(date){
             if(settings.day && settings.month && settings.year){
                 return moment(date).format('d MMMM, YYYY');
@@ -128,7 +132,7 @@ if (Meteor.isClient) {
         }
         return;
     });
-    Template.registerHelper('articleDate', function(date) {
+    Template.registerHelper('articleDate',function(date) {
         if(date){
             return Meteor.dates.article(date);
         }
@@ -164,7 +168,6 @@ if (Meteor.isClient) {
         }
         return;
     });
-
     // Equals
     // -------
     Template.registerHelper('equals', function (a, b) {
@@ -219,7 +222,6 @@ if (Meteor.isClient) {
         }
         return count;
     });
-
     Template.registerHelper('stripTitle', function(title) {
         return title.substr(title.indexOf("|") + 1);
     });
@@ -245,85 +247,93 @@ if (Meteor.isClient) {
         return str;
     });
 
-
     // Subscribers
     // -------
     Template.registerHelper('clientIP', function() {
         return headers.getClientIP();
     });
     Template.registerHelper('isSubscribed', function() {
-            ip = Meteor.ip.dot2num(headers.getClientIP());
+        ip = Meteor.ip.dot2num(headers.getClientIP());
 
-            var match = ipranges.findOne( {
-                    startNum: {$lte: ip}
-                    ,endNum: {$gte: ip}
-                }
-            );
-
-            if(match === undefined) {
-                userId = Meteor.userId();
-                // console.log(Meteor.users.findOne({'_id':userId, subscribed:true}));
-                match = Meteor.users.findOne({'_id':userId, subscribed:true});
+        var match = ipranges.findOne({
+            startNum: {
+                $lte: ip
+            },
+            endNum: {
+                $gte: ip
             }
+        }
+        );
 
-            return match !== undefined;
+        if (match === undefined) {
+            userId = Meteor.userId();
+            match = Meteor.users.findOne({
+                '_id': userId,
+                subscribed: true
+            });
+        }
+
+        return match !== undefined;
     });
     Template.registerHelper('isSubscribedUser', function() {
-            userId = Meteor.userId();
-            match = Meteor.users.findOne({'_id':userId, subscribed:true});
-            return match !== undefined;
+        userId = Meteor.userId();
+        match = Meteor.users.findOne({
+            '_id': userId,
+            subscribed: true
+        });
+        return match !== undefined;
     });
     Template.registerHelper('isSubscribedIP', function() {
-            ip = Meteor.ipdot2num(headers.getClientIP());
+        ip = Meteor.ipdot2num(headers.getClientIP());
 
-            var match = ipranges.findOne( {
-                    startNum: {$lte: ip}
-                    ,endNum: {$gte: ip}
-                }
-            );
+        var match = ipranges.findOne({
+            startNum: {
+                $lte: ip
+            },
+            endNum: {
+                $gte: ip
+            }
+        }
+        );
 
-            return match !== undefined;
+        return match !== undefined;
     });
     Template.registerHelper('getInstitutionByIP', function() {
-            ip = Meteor.ip.dot2num(headers.getClientIP());
+        ip = Meteor.ip.dot2num(headers.getClientIP());
 
-            var match = ipranges.findOne( {
-                    startNum: {$lte: ip}
-                    ,endNum: {$gte: ip}
-                }
-            );
-
-            if(match) {
-                inst_match = institutions.findOne({
-                        "_id": match.institutionID
-                    });
+        var match = ipranges.findOne({
+            startNum: {
+                $lte: ip
+            },
+            endNum: {
+                $gte: ip
             }
+        }
+        );
 
+        if (match) {
+            inst_match = institutions.findOne({
+                "_id": match.institutionID
+            });
+        }
 
-            return inst_match || false;
+        return inst_match || false;
     });
+
+    // Misc
+    // ---------
     Template.registerHelper('actionSaving', function(action){
         if(action){
-            if( action.toLowerCase() == 'saving' || action.toLowerCase() == 'searching'  ){
-                return true;
-            }
+              if( action.toLowerCase() == 'saving' || action.toLowerCase() == 'searching'  ){
+                  return true;
+              }
         }
     });
 
 
-    Template.registerHelper('searchResults', function(action){
-            Meteor.subscribe("search", Session.get("searchValue"));
-            var searchVal = Session.get("searchValue");
-            if (searchVal != '' && searchVal !== undefined) {
-                return res = articles.find({}, { sort: [["score", "desc"]] });
-            }
-            else {
-                res = [];
-            }
-        });
-
-    Template.registerHelper('searchValue', function(){
-            return Session.get("searchValue");
-        });
-
+    // Search
+    // ---------
+    Template.registerHelper('searchResults', function() {
+        return Session.get("queryResults");
+    });
 }

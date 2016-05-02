@@ -1,114 +1,234 @@
 <template name="AdminAddIssue">
-	{{>AdminHeader header="Add Issue"}}
+    {{>AdminHeader header="Add Issue"}}
 
-	{{>AdminIssueForm}}
+    {{>AdminIssueForm}}
 </template>
 <template name="AdminIssue">
-	{{>AdminHeader header="Issue"}}
-	{{#with issueData}}
-	<div class="row">
-		<div class="col s12">
-			<h3>Volume {{volume}}, Issue {{issue}}</h3>
-			{{#if pub_date}}<h5>{{formatDate pub_date}}</h5>{{/if}}
-		</div>
-	</div>
+    {{>AdminHeader header="Issue"}}
 
-	{{>AdminIssueForm}}
+    {{#if issueData}}
 
-	<div class="row">
-		<div class="col s12">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title"><h4>Issue Contents</h4></span>
-					<ul class="collection with-header">
-						{{#each articles}}
-						{{#if start_group}}
-						<li class="collection-header"><h4 id="{{article_type.nlm_type}}">{{article_type.name}}</h4></li>
-						{{/if}}
-						<li class="collection-item">
-							<h5>{{{title}}}</h5>
-							<p>{{>AuthorsList}}</p>
-							<p>pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</p>
-							{{#if countKeys dates}}
-							<div class="row">
-									<div class="col s12">
-										<h5>Dates:</h5>
-										{{#each arrayify dates}}
-											{{#if equals name 'collection'}}
-												<h6><label>{{name}}:</label> {{collectionDate value}}</h6>
-												{{else}}
-												<h6><label>{{name}}:</label> {{articleDate value}}</h6>
-											{{/if}}
-										{{/each}}
-									</div>
-							</div>
-							{{/if}}
-							<a class="waves-effect waves-light btn" href="{{pathFor 'AdminArticle'}}">View</a>
-						</li>
-						{{/each}}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	{{/with}}
+    {{#with issueData}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card blue-grey lighten-5 z-depth-0">
+                <div class="card-content">
+                    <h2 class="no-margin">Volume {{volume}}, Issue {{issue}}</h2>
+                    <div class="admin-id"><label>Mongo ID:</label> {{_id}}</div>
+                    {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row page-anchors">
+        <div class="col s12">
+            <a class="btn btn-sm anchor" href="#issue-settings">Settings</a>
+            <a class="btn btn-sm anchor" href="#issue-cover">Cover</a>
+            <a class="btn btn-sm anchor" href="#issue-contents">Contents</a>
+        </div>
+    </div>
+
+    {{>AdminIssueForm}}
+
+    <div class="row" id="issue-cover">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Issue Cover</span>
+                    {{>IssueCoverUploader}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="issue-contents">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Issue Contents</span>
+                    <ul class="collection with-header">
+                        {{#each articles}}
+                        {{#if start_group}}
+                        <li class="collection-header"><h4 id="{{article_type.nlm_type}}">{{article_type.name}}</h4></li>
+                        {{/if}}
+                        <li class="collection-item {{#if display}}{{else}}disabled{{/if}}">
+                            {{#if display}}{{else}}<h4>Hidden to Visitors</h4>{{/if}}
+                            <h5><a href="{{pathFor 'AdminArticleOverview'}}">{{{title}}}</a></h5>
+                            <p>{{>AuthorsList}}</p>
+                            <p>{{#if page_start}}pp {{page_start}}{{/if}}{{#if page_end}}-{{page_end}}{{/if}}</p>
+                            {{>AdminArticleIds}}
+                            {{#if countKeys dates}}
+                            <div class="row">
+                                <div class="col s12">
+                                    {{#each arrayify dates}}
+                                        {{#if equals name 'collection'}}
+                                            <label>{{name}}:</label> {{collectionDate value}}
+                                            {{else}}
+                                            <label>{{name}}:</label> {{articleDate value}}
+                                        {{/if}}
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Delete Issue</span>
+                    <div id="delete-request">
+                        <div class="row">
+                            <div class="col s12">
+                                <a class="btn btn-sm btn-delete" id="delete-issue">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hide" id="delete-verify">
+                        <div class="row">
+                            <div class="col s12">
+                                <a class="btn btn-sm btn-cancel" id="delete-cancel">Cancel</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <p>Deleting an issue will delete the issue cover, delete all issue information from the database, and remove all articles from the issue.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="text" id="issue-delete-input">
+                                <label for="issue-delete-input" class="{{#if volume}}active{{/if}}">Type 'DELETE' confirm issue deletion</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <a class="btn btn-sm btn-delete" id="delete-confirmation">Confirm Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{/with}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Issue"}}{{/if}}
+
+    {{/if}}
 </template>
 
 <template name="AdminIssueForm">
-	<div class="row">
-		<div class="col s12">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title"><h4>Issue Settings</h4></span>
-					<form>
-						<div data-id="{{_id}}" id="mongo-id"></div>
+    <div class="row" id="issue-settings">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Issue Settings</span>
+                    <form>
+                        <div data-id="{{_id}}" id="mongo-id"></div>
 
-						{{>StatusModal what='Issue'}}
+                        {{>StatusModal what='Issue'}}
 
-						<fieldset>
-							<legend>{{>RequiredSymbol}} Date</legend>
-							<div class="row">
-								<div class="input-field col s12">
-									<input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
-								</div>
-							</div>
-							<div class="row">
-								<div class="input-field col s12 m6">
-									<input type="number" id="issue-volume" value="{{volume}}">
-									<label for="issue-volume" class="{{#if volume}}active{{/if}}">Volume</label>
-								</div>
-								<div class="input-field col s12 m6">
-									<input type="text" id="issue-issue" value="{{issue}}">
-									<label for="issue-issue" class="{{#if issue}}active{{/if}}">Issue</label>
-								</div>
-							</div>
-							<h4>Display:</h4>
-							<div class="row">
-								<div class="input-field col s12 m4">
-									<input class="date-setting" type="checkbox" id="display-day" checked="{{checked date_settings.day}}"/>
-									<label for="display-day">Day</label>
-								</div>
-								<div class="input-field col s12 m4">
-									<input class="date-setting" type="checkbox" id="display-month" checked="{{checked date_settings.month}}"/>
-									<label for="display-month">Month</label>
-								</div>
-								<div class="input-field col s12 m4">
-									<input class="date-setting" type="checkbox" id="display-year" checked="{{checked date_settings.year}}"/>
-									<label for="display-year">Year</label>
-								</div>
-							</div>
-						</fieldset>
+                        <fieldset id="issue-settings">
+                            <legend>{{>RequiredSymbol}}</legend>
+                            <div class="row">
+                                <div class="input-field col s12 m4">
+                                    <input type="number" id="issue-volume" value="{{volume}}">
+                                    <label for="issue-volume" class="{{#if volume}}active{{/if}}">Volume</label>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <input type="text" id="issue-issue" value="{{issue}}">
+                                    <label for="issue-issue" class="{{#if issue}}active{{/if}}">Issue</label>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <input type="date" class="datepicker" id="issue-date" value="{{inputDate pub_date}}" data-value="{{inputDate pub_date}}">
+                                    <label for="issue-date" class="{{#if pub_date}}active{{/if}}">Date</label>
+                                </div>
+                            </div>
+                        </fieldset>
 
-						<div class="row">
-							<div class="col s12 center-align">
-								{{>SaveBtn}}
-							</div>
-						</div>
 
-						{{>RequiredSymbolRowMessage}}
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+                        <fieldset id="issue-settings">
+                            <legend>Cover Caption</legend>
+                            <div class="row">
+                                    <div class="input-field col s12">
+                                        <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                                            <div class="issue-caption">{{{title}}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </fieldset>
+
+                        <fieldset id="issue-display-setting">
+                            <legend>Display Settings</legend>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="checkbox" id="display-issue" checked="{{checked display}}"/>
+                                    <label for="display-issue">display issue</label>
+                                </div>
+                                <div class="input-field col s12">
+                                    <p class="font-sm">* Hiding/displaying an issue will also hide/display all articles in the issue.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <p><b>Date</b></p>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <input class="date-setting" type="checkbox" id="display-day" checked="{{checked date_settings.day}}"/>
+                                    <label for="display-day">Day</label>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <input class="date-setting" type="checkbox" id="display-month" checked="{{checked date_settings.month}}"/>
+                                    <label for="display-month">Month</label>
+                                </div>
+                                <div class="input-field col s12 m4">
+                                    <input class="date-setting" type="checkbox" id="display-year" checked="{{checked date_settings.year}}"/>
+                                    <label for="display-year">Year</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="row">
+                            <div class="col s12 center-align">
+                                {{>SaveBtn}}
+                            </div>
+                        </div>
+
+                        {{>RequiredSymbolRowMessage}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="AdminIssueDeleted">
+    {{>AdminHeader header="Issue Deleted"}}
+    {{>StatusModal what='Issue'}}
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Articles Removed From Deleted Issue</span>
+                    <ul class="collection">
+                        {{#each articles}}
+                        <li class="collection-item"><a href="{{pathFor 'AdminArticleOverview'}}">{{{title}}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

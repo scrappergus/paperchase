@@ -1,21 +1,21 @@
 // Visitor
 // -------
 Template.Visitor.onRendered(function () {
-	$('.button-collapse').sideNav();
+    $('.button-collapse').sideNav();
 });
 
 Template.Subscribe.onRendered(function () {
-	$('select').material_select();
+    $('select').material_select();
 });
 
 Template.Home.onRendered(function () {
-	$('.edboard-name').click(function() {
-		$(this).next().toggle();
-	});
+  $('.edboard-name').click(function() {
+    $(this).next().toggle();
+  });
 
-	$('.collapsible').collapsible({
-		accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-	});
+  $('.collapsible').collapsible({
+    accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+  });
 
 
   /* TODO: Set these up to respond to Session.
@@ -30,9 +30,9 @@ Template.Home.onDestroyed(function() {
 });
 
 Template.scrollspyCard.onRendered(function() {
-	// hacky width workaround for fixed element
-	$( window ).resize(function() {
-	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
+  // hacky width workaround for fixed element
+  $( window ).resize(function() {
+    $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
 }).resize();
 });
 
@@ -40,13 +40,13 @@ Template.scrollspyCard.onRendered(function() {
 // Issue
 // ------
 Template.Issue.onDestroyed(function () {
-	Session.set('issue',null)
+    Session.set('issue',null)
 });
 
 // Section Papers
 // ------
 Template.SectionPapers.onRendered(function () {
-	Session.set('article-list',null)
+    Session.set('article-list',null)
 });
 
 // Article
@@ -63,15 +63,15 @@ Template.ArticleFigures.onRendered(function() {
 });
 
 Template.ArticleFigureViewer.onRendered(function() {
-	$('.figure img, .table img').wrap('<div class="container"></div>');
-	var $panzoom = $('.figure img, .table img').panzoom({
-					$zoomIn: $('.zoom-in'),
-					$zoomOut: $('.zoom-out'),
-					$zoomRange: $('.zoom-range'),
-					$reset: $(".reset"),
-					maxScale: 3,
-					increment: 0.1
-				}).panzoom('zoom', true);
+    $('.figure img, .table img').wrap('<div class="container"></div>');
+    var $panzoom = $('.figure img, .table img').panzoom({
+                    $zoomIn: $('.zoom-in'),
+                    $zoomOut: $('.zoom-out'),
+                    $zoomRange: $('.zoom-range'),
+                    $reset: $(".reset"),
+                    maxScale: 3,
+                    increment: 0.1
+                }).panzoom('zoom', true);
 });
 Template.ArticleText.onRendered(function() {
     // $('.materialboxed').materialbox();

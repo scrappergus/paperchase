@@ -10,7 +10,6 @@ gadicohen:headers
 mizzao:user-status
 matb33:collection-hooks
 service-configuration
-alanning:roles
 fourseven:scss
 gandev:server-eval
 momentjs:moment
@@ -42,6 +41,8 @@ ostrio:iron-router-title
 lepozepo:s3
 meteorhacks:aggregate
 risul:moment-timezone
+mvrx:bluebird
+meteorhacks:picker
 meteorhacks:npm
 npm-container
 http
@@ -50,3 +51,4 @@ materialize:materialize
 monbro:iron-router-breadcrumb
 accounts-ui
 okgrow:router-autoscroll
+alanning:roles

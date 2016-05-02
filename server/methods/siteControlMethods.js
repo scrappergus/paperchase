@@ -1,5 +1,5 @@
 Meteor.methods({
-	siteControlUpdate: function(updateObj){
+    siteControlUpdate: function(updateObj){
         var mainSideNavigationDone,
             sectionSideNavigationDone,
             sortersDone;
@@ -37,7 +37,7 @@ Meteor.methods({
             return true;
         }
         return fut.wait();
-	},
+    },
     updatePaperSectionsOrder: function(updateArray){
         // console.log('..updatePaperSectionsOrder');
         // console.log(updateArray);

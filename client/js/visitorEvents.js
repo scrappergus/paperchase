@@ -63,17 +63,16 @@ Template.Subscribe.events({
     }
 });
 
-
 // Issue
 // -------
 Template.Issue.events({
-    'click .modal-trigger': function(e){
+    'click .modal-trigger': function(e) {
         Meteor.article.subscribeModal(e);
     },
-    'click .download-pdf' : function(e){
+    'click .download-pdf': function(e) {
         Meteor.article.downloadPdf(e);
     },
-    'click .anchor': function(e){
+    'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
     }
 });
@@ -82,7 +81,7 @@ Template.Issue.events({
 // Section
 // -------
 Template.SectionPapers.events({
-    'click .anchor': function(e){
+    'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
     }
 });
@@ -91,15 +90,15 @@ Template.SectionPapers.events({
 // Article
 // -------
 Template.Article.events({
-    'click .modal-trigger': function(e){
+    'click .modal-trigger': function(e) {
         Meteor.article.subscribeModal(e);
     },
-    'click .download-pdf' : function(e){
+    'click .download-pdf': function(e) {
         Meteor.article.downloadPdf(e);
     }
 });
 Template.ArticleFullText.events({
-    'click .anchor': function(e){
+    'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
     }
 });
@@ -108,10 +107,10 @@ Template.ArticleFullText.events({
 // Advance
 // -------
 Template.Advance.events({
-    'click .modal-trigger': function(e){
+    'click .modal-trigger': function(e) {
         Meteor.article.subscribeModal(e);
     },
-    'click .download-pdf' : function(e){
+    'click .download-pdf': function(e) {
         Meteor.article.downloadPdf(e);
     }
 });
@@ -120,7 +119,7 @@ Template.Advance.events({
 // For Authors
 // -------
 Template.ForAuthors.events({
-    'click .anchor': function(e){
+    'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
     }
 });
@@ -128,9 +127,17 @@ Template.ForAuthors.events({
 // Search
 // ------
 Template.Search.events({
-  'change .search-terms': function(e) {
-      Session.set('searchValue', $('.search-terms').val()); //reactive template variable for ErrorMessages will loop through these
-  }
+    'submit #search-terms': function(e) {
+        e.preventDefault();
+        Meteor.call('search', {
+            authors: e.target.authors && e.target.authors.value,
+            abstract: e.target.abstract && e.target.abstract.value,
+            title: e.target.title && e.target.title.value
+        }, function(err, data) {
+            console.log('>>> args in browser', err, data);
+            Session.set('queryResults', err ? [] : data);
+        });
+    }
 });
 
 // Scrollspy

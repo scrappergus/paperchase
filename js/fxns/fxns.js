@@ -163,6 +163,55 @@ Meteor.formActions = {
         $('input').removeClass('valid');
         $('textarea').removeClass('valid');
     },
+    processing: function(message){
+        Session.set('statusModalAction','Processing');
+        Session.set('statusModalDetails',message);
+
+        // inline messages
+        $('.save-btn').addClass('hide');
+        $('.saving').removeClass('hide');
+        $('.success').addClass('hide');
+        $('.error').addClass('hide');
+        //sending and saving forms have shared class names
+
+        // invalid notification
+        $('fieldset').removeClass('invalid');
+
+
+        //fixed saved button
+        if($('#fixed-save-btn').length){
+            $('#fixed-save-btn').find('.show-save').addClass('hide');
+            $('#fixed-save-btn').find('.show-wait').removeClass('hide');
+        }
+        // saved button
+        if($('#save-btn').length){
+            $('#save-btn').find('.show-save').addClass('hide');
+            $('#save-btn').find('.show-wait').removeClass('hide');
+        }
+
+
+        if($('#status-modal').length){
+            $('#status-modal').openModal({
+                complete: function() {
+                    $('.lean-overlay').remove();
+                }
+            });
+        }
+        //TODO: use 1 modal for all actions - StatusModal
+        if($('#saving-modal').length){
+            $('#saving-modal').openModal({
+                dismissible: false
+            });
+        }
+
+
+        //reset
+        Session.set('errorMessages',null);
+        $('input').removeClass('invalid');
+        $('textarea').removeClass('invalid');
+        $('input').removeClass('valid');
+        $('textarea').removeClass('valid');
+    },
     updating: function(message){
         Session.set('statusModalAction','Updated');
         Session.set('statusModalDetails',message);
@@ -586,9 +635,15 @@ Meteor.general = {
         }
     },
     cleanString: function(string){
-        string = string.replace('<italic>','<i>').replace('</italic>','</i>');
-        string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
-        string = string.replace(/\s+/g,' '); // remove extra spaces
+        if(string){
+            string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
+            string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
+            string = string.replace(/\s+/g,' '); // remove extra spaces
+            if(string.charAt(string.length - 1) === '.'){
+                string = string.substring(0, string.length-1);
+            }
+        }
+
         return string;
     }
 }
@@ -614,7 +669,14 @@ Meteor.sorter = {
 
 Meteor.dates = {
     article: function(date){
-        return moment(date).tz('America/New_York').format('MMMM D, YYYY');
+        // console.log('Article Date:', typeof date, date);
+        var date = new Date(date);
+        // console.log(date);
+        // console.log(moment(utcDate,'ddd, DD MMM YYYY HH:mm:ss ZZ'));
+        return moment(date).utc().format('MMMM D, YYYY');
+    },
+    inputForm: function(date){
+      return moment(date).utc().format('YYYY/MM/DD');
     },
     wordDate: function(date){
         return moment(date).tz('America/New_York').format('MMMM D, YYYY');
@@ -635,7 +697,6 @@ Meteor.dates = {
         return d;
     },
     initiateDatesInput: function(){
-        // console.log('-- initiateDatesInput');
         $('.datepicker').each(function(i){
             var datePlaceholderFormat = 'mmmm d, yyyy';
             var placeholder = $(this).attr('placeholder');
@@ -646,30 +707,28 @@ Meteor.dates = {
             picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
         });
     },
+    zeroBasedMonth: function(month){
+        return parseInt(month - 1);
+    }
 }
 
 Meteor.issue = {
     urlPieces: function(vi){
-        var res;
-
-        if(vi){
-            var pieces = vi.match('v([0-9]+)i(.*)');
-            res = {volume : pieces[1], issue : pieces[2]};
+        var pieces = vi.match('v([0-9]+)i(.*)');
+        if(pieces){
+            var res = {volume : pieces[1], issue : pieces[2]};
+            return res;
         }
-
-        return res;
+        return;
     },
-    coverPath : function(volume,issue){
-        if(journalConfig){
-            var journal =  journalConfig.findOne().journal.short_name;
-            var assetUrl =  journalConfig.findOne().assets;
-            var fileType = '.png';
-            var fileName = issues.findOne({volume: parseInt(volume), issue: String(issue)})._id;
-            return assetUrl + 'covers/' + fileName + fileType;
-        }
+    coverPath : function(assetUrl,fileName){
+        return assetUrl + 'covers/' + fileName;
     },
     linkeableIssue: function(issue){
         return issue.replace(/\//g,'_');
+    },
+    createIssueParam: function(volume,issue){
+        return 'v' + volume + 'i' + issue;
     }
 }
 

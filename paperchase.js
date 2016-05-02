@@ -134,6 +134,34 @@ Router.route('/admin/add-legacy-platform-article/',{
     }
 });
 
+//cache crossref doi query responses
+Router.route('/admin/add-crossref-record/',{
+        name: 'AddCrossRefRecord',
+        where: 'server'
+    }).post(function (a,b,c) {
+            console.log('we posting');
+            console.log(a,b,c);
+
+            var response = this.response;
+            var request = this.request;
+            var aricleDoi = this.request.body;
+
+            console.log(articleDoi);
+
+//            Meteor.call('crossrefRecordIntake', this.params, function(err, res) {
+//                    console.log(this.params);
+//                    if(err) {
+//                        response.setHeader('Content-Type', 'application/json');
+//                        response.end(JSON.stringify({'success':false}));
+//                    } else {
+//                        response.setHeader('Content-Type', 'application/json');
+//                        response.end(JSON.stringify({'success':true}));
+//                    }
+//                });
+
+        });
+
+
 // OUTTAKE ROUTES
 Router.route('/get-advance-articles/',{
     where: 'server',
@@ -306,7 +334,9 @@ Router.route('/get-interviews/',{
         var htmlString = '<html><head><meta name="robots" content="noindex"></head><body>';
         for(var i=0; i< interviews.length; i++){
             var interview = interviews[i];
-            htmlString+= '<div>';
+
+            htmlString+= '<div style="float:left;">';
+
             if(interview.title){
                 htmlString+= '<h3>' + interview.title + '</h3>';
             }
@@ -559,13 +589,15 @@ if (Meteor.isClient) {
             var pageTitle = '';
             var pieces = {};
 
-            if(this.data && this.data() && this.data().article && this.data().article.volume){
+            if(this.data && this.data().article && this.data().article.volume && this.data().article){
+
                 // for article breadcrumbs, which will try to use the issue mongo ID as the param, but we use vol/issue
                 pieces.volume = this.data().article.volume;
                 pieces.issue = this.data().article.issue;
             }else{
                 pieces = Meteor.issue.urlPieces(this.params.vi);
             }
+
 
 
             if(Session.get('journal')){
@@ -579,15 +611,17 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+            // console.log('before');
+            // console.log('..before');
             Session.set('issue',null);
             var pieces = Meteor.issue.urlPieces(this.params.vi);
             // TODO: add redirect if no issue
-            Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, function(error,result){
+            // console.log('pieces',pieces);
+            Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
                 if(error){
                     console.log('ERROR - getIssueAndFiles');
                     console.log(error);
-                }
-                if(result){
+                }else if(result){
                     Session.set('issue',result);
                 }
             });

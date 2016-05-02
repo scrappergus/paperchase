@@ -1,69 +1,84 @@
 <template name="AdminForAuthors">
-	{{>AdminHeader header="For Authors"}}
-	<div class="row">
-		<div class="col s12">
-			<button id="add-section" class="waves-effect waves-light btn btn-add right"><i class="material-icons">&#xE147;</i> Section</button>
-		</div>
-	</div>
-	{{>SuccessModal what='Section Order'}}
-	<div class="row">
-		<div class="col s12">
-			<h2>Section Order</h2>
-			<ol class="roman-list sections-list">
-			{{#each sections}}
-				<li id="section-title-{{_id}}">{{{title}}}</li>
-			{{/each}}
-			</ol>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12">
-			<button id="save-section-order" class="waves-effect waves-light btn btn-update right">Save Section Order</button>
-		</div>
-	</div>
-	<div class="divider"></div>
+    {{>AdminHeader header="For Authors"}}
+    <div class="row">
+        <div class="col s12">
+            <button id="add-section" class="waves-effect waves-light btn btn-add right"><i class="material-icons">&#xE147;</i> Section</button>
+        </div>
+    </div>
+    {{>SuccessModal what='Section Order'}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">Section Order</div>
+                    <ol class="roman-list sections-list">
+                    {{#each sections}}
+                        <li id="section-title-{{_id}}">{{{title}}}</li>
+                    {{/each}}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <button id="save-section-order" class="waves-effect waves-light btn btn-update right">Save Section Order</button>
+        </div>
+    </div>
+    <div class="divider"></div>
 
-	<h2>Sections</h2>
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">Sections</div>
+                    <ol class="roman-list">
+                            {{#each sections}}
+                            <li>
+                            {{#if editingSection _id}}
+                            <div class="row">
+                                <div class="col s12 card grey lighten-5">
+                                    <div id="add-section-container" class="">
+                                        <h2>Edit Section</h2>
+                                        {{>AdminForAuthorsForm}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{else}}
+                            <h3 id="section-{{@index}}">
+                                {{{title}}}
+                                <button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
+                            </h3>
+                            {{{content}}}
+                            {{/if}}
+                            </li>
+                            {{/each}}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<ol class="roman-list">
-		{{#each sections}}
-		<li>
-		{{#if editingSection _id}}
-		<div class="row">
-			<div class="col s12 card grey lighten-5">
-				<div id="add-section-container" class="">
-					<h2>Edit Section</h2>
-					{{>AdminForAuthorsForm}}
-				</div>
-			</div>
-		</div>
-		{{else}}
-		<h3 id="section-{{@index}}">
-			{{{title}}}
-			<button id="{{_id}}" class="btn btn-floating waves-effect waves-light btn-edit edit-section right" alt="Edit Section"><i class="material-icons" id="{{_id}}">&#xE254;</i></button>
-		</h3>
-		{{{content}}}
-		{{/if}}
-		</li>
-		{{/each}}
-	</ol>
-
-	<div id="add-section-container">
-	{{#if showForm}}
-	<div class="divider"></div>
-	<div class="row">
-		<div class="col s12 card grey lighten-5">
-			<h2>New Section</h2>
-			{{>AdminForAuthorsForm}}
-		</div>
-	</div>
-	{{/if}}
-	</div>
+    <div id="add-section-container">
+    {{#if showForm}}
+    <div class="divider"></div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">New Section</div>
+                    {{>AdminForAuthorsForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    </div>
 </template>
 
 <template name="AdminForAuthorsForm">
-	{{#with section}}
-	{{>SuccessModal what='For Authors Section'}}
-	{{>SectionForm}}
-	{{/with}}
+    {{#with section}}
+    {{>SuccessModal what='For Authors Section'}}
+    {{>SectionForm}}
+    {{/with}}
 </template>
