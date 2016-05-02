@@ -589,16 +589,13 @@ if (Meteor.isClient) {
             var pageTitle = '';
             var pieces = {};
 
-            if(this.data && this.data().article && this.data().article.volume && this.data().article){
-
+            if(this.data && this.data () && this.data().article && this.data().article.volume && this.data().article){
                 // for article breadcrumbs, which will try to use the issue mongo ID as the param, but we use vol/issue
                 pieces.volume = this.data().article.volume;
                 pieces.issue = this.data().article.issue;
             }else{
                 pieces = Meteor.issue.urlPieces(this.params.vi);
             }
-
-
 
             if(Session.get('journal')){
                 pageTitle = Session.get('journal').journal.name + ' | ';
@@ -611,20 +608,20 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            // console.log('before');
-            // console.log('..before');
             Session.set('issue',null);
             var pieces = Meteor.issue.urlPieces(this.params.vi);
             // TODO: add redirect if no issue
-            // console.log('pieces',pieces);
-            Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
-                if(error){
-                    console.log('ERROR - getIssueAndFiles');
-                    console.log(error);
-                }else if(result){
-                    Session.set('issue',result);
-                }
-            });
+            if(pieces && pieces.volume){
+                Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
+                    if(error){
+                        console.log('ERROR - getIssueAndFiles');
+                        console.log(error);
+                    }else if(result){
+                        Session.set('issue',result);
+                    }
+                });
+            }
+
 
             this.next();
         },
