@@ -14,21 +14,26 @@ if (Meteor.isClient) {
     Template.registerHelper('getPmid', function(article) {
         // console.log('..getPmid');
         // for references without PMID in XML
+        var references;
         var pmid;
         if(article.title){
             // console.log(article.number + ' = ' +article.title);
             Meteor.call('getPubMedId', article, function(error, pmid){
                 if(pmid){
                     var fullText = Session.get('article-text');
-                    var references = fullText.references;
-                    // Update reference PMID key
-                    // do not rely on number of reference as index of reference in array.
-                    for(var ref=0 ; ref<references.length ; ref++){
-                        if(references[ref].number === article.number){
-                            fullText.references[ref].pmid = pmid;
-                            // Update Session variable
-                            Session.set('article-text',fullText);
+                    if(fullText){
+                      references = fullText.references;
+                      // Update reference PMID key
+                      // do not rely on number of reference as index of reference in array.
+                      if(references){
+                        for(var ref=0 ; ref<references.length ; ref++){
+                            if(references[ref].number === article.number){
+                                fullText.references[ref].pmid = pmid;
+                                // Update Session variable
+                                Session.set('article-text',fullText);
+                            }
                         }
+                      }
                     }
                 }
             });
@@ -226,7 +231,11 @@ if (Meteor.isClient) {
     });
 
     Template.registerHelper('convertToID', function(str) {
+      if(str){
         return str = str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
+      }else{
+        return;
+      }
     });
 
     UI.registerHelper('truncate', function(str, limit) {
@@ -253,6 +262,7 @@ if (Meteor.isClient) {
 
             if(match === undefined) {
                 userId = Meteor.userId();
+                // console.log(Meteor.users.findOne({'_id':userId, subscribed:true}));
                 match = Meteor.users.findOne({'_id':userId, subscribed:true});
             }
 
