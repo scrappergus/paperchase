@@ -558,7 +558,8 @@ if (Meteor.isClient) {
         title: function() {
             var pageTitle = '';
             var pieces = {};
-            if(this.data && this.data().article && this.data().article.volume){
+
+            if(this.data && this.data() && this.data().article && this.data().article.volume){
                 // for article breadcrumbs, which will try to use the issue mongo ID as the param, but we use vol/issue
                 pieces.volume = this.data().article.volume;
                 pieces.issue = this.data().article.issue;
@@ -566,10 +567,16 @@ if (Meteor.isClient) {
                 pieces = Meteor.issue.urlPieces(this.params.vi);
             }
 
+
             if(Session.get('journal')){
                 pageTitle = Session.get('journal').journal.name + ' | ';
             }
-            return pageTitle + 'Volume ' + pieces.volume + ', Issue ' + pieces.issue;
+
+            if(pieces && pieces.volume){
+                pageTitle += 'Volume ' + pieces.volume + ', Issue ' + pieces.issue;
+            }
+
+            return pageTitle;
         },
         onBeforeAction: function(){
             Session.set('issue',null);
