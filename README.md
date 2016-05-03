@@ -130,13 +130,18 @@ If a user as 'edit' role in the 'article' group, then the edit/upload buttons ar
 Article Form
 ----------------
 
-This form is used in multiple places (Add Article, Edit Article, Verify XML).
+This form is used in multiple places (Add Article, Edit Article, Verify XML). Data is prepared via `preProcessArticle()`.
+
+**preProcessArticle**
+Begins by either taking database article JSON or parsed JSON from XML. If the JSON is from XML, then `compareProcessedXmlWithDb()` checks for data conflicts with the database. Also, if the JSON is from XML, `articleExistenceCheck()` makes sure that there are no duplicate articles. 
 
 **Data**
 
 The data for the form comes from the session variable `article-form` and is not reactive.  The database data needs to be preprocessed to include all issues, all paper types etc so that the dropdown menus and buttons options (for ex, article type buttons) in the form are complete. Another session variable `article` is used to show the article nav and header. This variable is set in the router. Don't use the session variable for `article-form` because that contains extra information not needed for the nav/header, and also we can show the header while the form is still processing.
 
 When adding PII, if the article doc had a PII in the DB then that is included in the form (for when if the user had removed PII while working on the form then wanted to add it back). If the article doc didn't have a PII, then the next incremental PII is included on the form.
+
+Author affiliations are stored within the author object in the article doc. Affiliation numbers are 0 based in the database.
 
 **Saving**
 

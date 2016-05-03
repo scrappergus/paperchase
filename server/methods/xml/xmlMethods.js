@@ -89,7 +89,6 @@ Meteor.methods({
         dbArticle = Meteor.generalClean.pruneEmpty(dbArticle);
         xmlArticle = Meteor.generalClean.pruneEmpty(xmlArticle);
 
-
         var result = {};
         result.conflicts = [];
 
@@ -126,10 +125,8 @@ Meteor.methods({
                             result.conflicts.push(conflict);
                         });
                     }
-                    if(compareRes && compareRes.merged){
-                        result[keyDb] = compareRes.merged;
-                    }
                 });
+                result[keyXml] = xmlArticle[keyXml];
             }
         }
 
@@ -165,13 +162,13 @@ Meteor.xmlDbConflicts = {
         // Just DB
         // ---------
         if(!xmlValue){
-            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(dbValue)));
+            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(key,dbValue)));
         }
 
         // Just XML
         // ---------
         if(!dbValue){
-            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(xmlValue), null));
+            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(key,xmlValue), null));
         }
 
         // Both DB and XML
@@ -283,7 +280,7 @@ Meteor.xmlDbConflicts = {
                         });
                     }
                 });
-                result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database'));
+                result.merged[key] = xmlObj[key];
             }
         }
 
@@ -307,8 +304,13 @@ Meteor.xmlDbConflicts = {
             db: db
         }
     },
-    prettyValue: function(value){
+    prettyValue: function(key,value){
         var result = '';
+
+        // DB stores affiliation numbers 0 based, but to humans they are 1 based.
+        if(key === 'affiliations_numbers' && value === parseInt(value)){
+            value = parseInt(value + 1);
+        }
 
         if(typeof value === 'object'&& !Array.isArray(value)){
             for(var key in value){
@@ -320,7 +322,7 @@ Meteor.xmlDbConflicts = {
             }
         }else if(typeof value === 'object' && Array.isArray(value)){
             for(var i=0 ; i < value.length ; i++){
-               result +=  '<div class="clearfix"></div>' + Meteor.xmlDbConflicts.prettyValue(value[i]);
+               result +=  '<div class="clearfix"></div>' + Meteor.xmlDbConflicts.prettyValue(key,value[i]);
             }
         }else{
             result = value;

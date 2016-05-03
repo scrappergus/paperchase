@@ -186,19 +186,23 @@ Meteor.methods({
     },
     preProcessArticle: function(articleId,article){
         // Article Form: On - Article Form & Data Submissions
-        // article = parsed XML from S3 after upload
         // console.log('..preProcessArticle = ' + articleId);
-        // console.log(article);
         var articleByPii,
             articleFromDb;
 
-        // For when editing an article,
-        // else after uploading XML and parsed article is passed to this function
-        if(!article){
+        var affs,
+            articleType,
+            publisherArticleTypes,
+            authorsList,
+            selectedSectionId,
+            publisherArticleSections;
+
+        if(!article && articleId){
+            // when editing an article
             article = articles.findOne({'_id': articleId});
         }else{
+            // after processing XML
             // Compare XML and Database
-            // Article exists in the database and this string is from the parsed XML uploaded to S3
             articleFromDb = articles.findOne({'_id': articleId});
             Meteor.call('compareProcessedXmlWithDb',article,articleFromDb,function(error,result){
                 if(result){
@@ -214,18 +218,20 @@ Meteor.methods({
                 }
             });
         }
+        // console.log('-------',JSON.stringify(article.authors));
 
         // New or Edit article? If articleId given and PII found, then editing.
-        articleByPii = articles.findOne({'ids.pii':articleId});
+        // articleByPii = articles.findOne({'ids.pii':articleId});
         if(!articleId){
             article = {}; // For a new article
             article.ids = {};
             // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
-        }else if(!article && !articleByPii){
-            article = {}; // Article by PII not found. Then act like this is a new article
-            article.ids = {};
-            // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
         }
+        // else if(!article && !articleByPii){
+        //     article = {}; // Article by PII not found. Then act like this is a new article
+        //     article.ids = {};
+        //     // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
+        // }
 
         if(article){
             // For editing an existing article
@@ -235,27 +241,32 @@ Meteor.methods({
             // ------------
             // add ALL affiliations for article to author object,
             // needed for author affiliation checkbox input
-            var affs;
             affs = article.affiliations;
             if(article.authors){
-                var authorsList = article.authors;
+                authorsList = article.authors;
                 // Go through each author object
                 for(var i=0 ; i < authorsList.length; i++){
-                    var current = authorsList[i].affiliations_numbers;
-                    var authorAffiliationsEditable = [];
+                    var currentAuthorAffs,
+                        authorAffiliationsEditable,
+                        mongo;
+
+                    currentAuthorAffs = authorsList[i].affiliations_numbers;
+                    authorAffiliationsEditable = []; // All affiliations for paper, which current author affs checked
+
+                    // need the mongo ID for uniqueness in UI, id attribute, for checkbox
                     if(authorsList[i].ids && authorsList[i].ids.mongo_id){
-                        var mongo = authorsList[i].ids.mongo_id;
+                        mongo = authorsList[i].ids.mongo_id;
                     }else{
                         //for authors not saved in the db
-                        var mongo = Math.random().toString(36).substring(7);
+                        mongo = Math.random().toString(36).substring(7);
                     }
 
                     if(affs){
                         for(var a = 0 ; a < affs.length ; a++){
                             var authorAff = {
                                 author_mongo_id: mongo
-                            } // need the mongo ID for uniqueness, id attribute, for checkbox
-                            if(current && current.indexOf(a) != -1){
+                            }
+                            if(currentAuthorAffs && currentAuthorAffs.indexOf(a) != -1){
                                 // author already has affiliation
                                 authorAff.author_aff = 'checked';
                             }else{
@@ -275,29 +286,20 @@ Meteor.methods({
             // Pub Status
             // ----------
             article.pub_status_list = pubStatusTranslate;
-            // var statusFound = false;
-            // if(article.pub_status){
-            //  var pubStatusDisable = true;
-            // }
             for(var p = 0; p < pubStatusTranslate.length; p++){
                 if(article.pub_status_list[p].abbrev == article.pub_status){
                     article.pub_status_list[p].selected = true;
-                    // statusFound = true;
                 }
-                // if(!statusFound){
-                //  article.pub_status_list[p]['disabled'] = true;
-                // }
             }
 
             // Article Type
             // ------------
             // add ALL article types
-            var articleType;
             if(article.article_type){
                 articleType = article.article_type.name;
             }
             article.article_type_list = [];
-            var publisherArticleTypes = articleTypes.find().fetch();
+            publisherArticleTypes = articleTypes.find().fetch();
             for(var k =0 ; k < publisherArticleTypes.length ; k++){
                 var selectObj = {
                     nlm_type: publisherArticleTypes[k].nlm_type,
@@ -313,12 +315,11 @@ Meteor.methods({
             // Article Section
             // ------------
             // add ALL article sections
-            var selectedSectionId;
             if(article.section){
                 selectedSectionId = article.section;
             }
             article.article_section_list = [];
-            var publisherArticleSections = sections.find().fetch();
+            publisherArticleSections = sections.find().fetch();
             for(var s =0 ; s < publisherArticleSections.length ; s++){
                 var selectObj = {
                     _id : publisherArticleSections[s]._id,

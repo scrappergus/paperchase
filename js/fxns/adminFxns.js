@@ -1008,7 +1008,6 @@ Meteor.validate = {
 Meteor.generalClean = {
     pruneEmpty: function(obj) {
         for(var key in obj){
-            // console.log(key);
             if(!obj[key] || obj[key]  === ''){
                 // console.log('DELETE ',obj[key]);
                 delete obj[key];
@@ -1022,7 +1021,7 @@ Meteor.generalClean = {
             }else if(typeof obj[key] == 'object' && Array.isArray(obj[key])){
                 var newArray = [];
                 for(var i=0 ; i < obj[key].length ; i++){
-                    if(typeof obj[key][i] === 'string' && obj[key][i] != ''){
+                    if(typeof obj[key][i] === 'string' && obj[key][i] != '' || typeof obj[key][i] === 'number' ){
                         newArray.push(obj[key][i]);
                     }else if(typeof obj[key][i] === 'object'){
                         newArray.push(Meteor.generalClean.pruneEmpty(obj[key][i]));
