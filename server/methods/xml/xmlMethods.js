@@ -235,6 +235,7 @@ Meteor.xmlDbConflicts = {
         var xmlKeyCount = Object.keys(xmlObj).length;
         var dbKeyCount = Object.keys(dbObj).length;
 
+        // Number of items comparison
         if(xmlKeyCount != dbKeyCount && parentKey != 'authors'){
             // do not count author keys because there are additional items stored in the database and names just need to be compared with XML
             result.conflicts.push(Meteor.xmlDbConflicts.conflict(parentKey, 'XML has ' + xmlKeyCount + ' items. Database has ' + dbKeyCount + ' items.',null,null));
@@ -283,6 +284,18 @@ Meteor.xmlDbConflicts = {
                     }
                 });
                 result.merged[key] = xmlObj[key];
+            }
+        }
+
+
+        // Paper Type
+        // Check if in database
+        // AOP XML will only have the name. PMC XML will have short name and name.
+        if(parentKey === 'article_type' && xmlObj.name){
+            var articleTypeFound = articleTypes.findOne({'name' : xmlObj.name});
+            if(!articleTypeFound){
+                result.conflicts.push(Meteor.xmlDbConflicts.conflict(parentKey, 'Not found in available types. Contact IT to add new type. Form defaulting to database value.',xmlObj.name,null));
+                result.merged[parentKey] = dbObj;
             }
         }
 

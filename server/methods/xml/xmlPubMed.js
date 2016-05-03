@@ -29,7 +29,8 @@ Meteor.methods({
         // XML is a string, used for title. article is JSON parsed from xml.
 
         // console.log('article',article);
-        var articleProcessed = {};
+        var articleProcessed = {},
+            articleTypeXml;
         articleProcessed.aop = true; // need this to prevent uploading XML to S3
 
         // PUBLISHER
@@ -145,15 +146,9 @@ Meteor.methods({
         // ARTICLE TYPE
         // -----------
         if(article.PublicationType){
-            var typeXml = Meteor.general.cleanString(article.PublicationType[0]);
-            var articleType = articleTypes.findOne({'name' : typeXml});
-            if(!articleType){
-                articleProcessed.notifyArticleTypeDbMissing = typeXml;
-            }else{
-                articleProcessed.article_type = {};
-                articleProcessed.article_type.name = articleType.name;
-                articleProcessed.article_type.short_name = articleType.short_name;
-            }
+            articleTypeXml = Meteor.general.cleanString(article.PublicationType[0]);
+            articleProcessed.article_type = {};
+            articleProcessed.article_type.name = articleTypeXml;
         }
 
         // IDS
