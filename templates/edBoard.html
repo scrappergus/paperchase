@@ -1,33 +1,45 @@
 <template name="EdBoard">
-	<div class="page-content">
-		<h3>{{journalName}} Editors-in-Chief</h3>
-		<ul class="home-page-editors-list">
-			{{#each eic}}
-			<li>
-				<div><p><span class="title"><b>{{>PersonName}}</b></span><br> {{address}}</p></div>
-			</li>
-			{{/each}}
-		</ul>
+  <!-- todo: remove inline styles -->
+	<div class="wide grid" style="margin-bottom: 70px;">
+    {{>PageHeader header="Editorial Board"}}
 
-		<div class="divider"></div>
+    <h4 style="margin-top: 40px;">{{journalName}} Editors-in-Chief</h4>
+    <ul class="home-page-editors-list">
+      {{#each eic}}
+        <li class="section-half">
+            <p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> 
+            {{address}}</p>
+        </li>
+        {{#if bio}}
+          {{> bioModal bio=bio firstName=name_first lastName=name_last}}
+        {{/if}}
+      {{/each}}
+    </ul> 
+  </div>
 
+  <div class="wide grid">
 		<h4>Editorial Board</h4>
 		<ul class="home-page-editors-list">
 			{{#each fullBoard}}
-			<li>
-				<div><p><span class="title"><b>{{>PersonName}}</b></span><br> {{address}}</p></div>
-			</li>
+  			<li class="section-half">
+  				<p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> {{address}}</p>
+  			</li>
+
+        {{#if bio}}
+          {{> bioModal bio=bio firstName=name_first lastName=name_last}}
+        {{/if}}
 			{{/each}}
 		</ul>
 	</div>
+</template>
 
-	<div class="page-sidebar">
-		<div class="card sidebar-card fixed-scroll-card">
-        <h6 class="card-title">Table of Contents</h6>
-        <ul class="scrollspy toc">
-            <a class="anchor" href="#"><li>Editors-in-Chief</li></a>
-            <a class="anchor" href="#"><li>Editorial Board</li></a>
-        </ul>
+<template name="bioModal">
+  <div id="{{lastName}}{{firstName}}" class="modal">
+    <div class="modal-content">
+        <p class="bio">{{{bio}}}</p>
     </div>
-	</div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close this dialog</a>
+    </div>
+  </div>
 </template>

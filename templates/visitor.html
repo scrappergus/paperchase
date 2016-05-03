@@ -61,9 +61,9 @@
             {{#each Breadcrumb}}
                 <li class="test">
                     {{#if equals path 'Issue'}}
-                    {{#if showLink}}<a href="/issue/{{issueLinkViaTitle title}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}
+                        {{#if showLink}}<a href="/issue/{{issueLinkViaTitle title}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}
                     {{else}}
-                    {{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}
+                        {{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 50}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 50}} {{/with}} {{/if}}
                     {{/if}}
                 </li>
             {{/each}}
@@ -83,10 +83,8 @@
 </template>
 
 <template name="Footer">
-    <div class="grid">
-        <div class="page-content">
-            <footer><span>Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</span></footer>
-        </div>
+    <div class="wide grid">
+        <footer><span>Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</span></footer>
     </div>
 </template>
 

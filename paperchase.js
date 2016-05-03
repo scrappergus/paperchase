@@ -24,6 +24,8 @@ if (Meteor.isClient) {
     })();
     // var journal = journalConfig.findOne();
     // Session.setDefault('journal',journal);
+
+    $('.modal-trigger').leanModal();
 }
 
 Router.configure({

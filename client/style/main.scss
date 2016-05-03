@@ -281,14 +281,6 @@ html,body{
 	margin: $margin-xl 0;
 }
 
-/* Links --------------------------*/
-	a:not(.btn):not(.nav-links > a){
-		color: $link-text;
-		&:hover{
-			color: $link-text-hover;
-		};
-	}
-
 /* List --------------------------*/
 	.roman-list{
 		list-style: upper-roman;
