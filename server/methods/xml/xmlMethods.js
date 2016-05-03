@@ -129,6 +129,19 @@ Meteor.methods({
             }
         }
 
+        // Issue
+        // vol and issue get compared above, but issue_id does not. This is because it is only stored in the DB.
+        // User will get notified if vol in XML != vol in DB, but this is to make sure that the XML version is selected if different than DB
+        if(result.volume && result.issue){
+            var issueFound = issues.findOne({volume : result.volume, issue : result.issue});
+            if(issueFound && issueFound._id != result.issue_id){
+                result.issue_id = issueFound._id;
+            }else if(!issueFound){
+                result.conflicts.push(Meteor.xmlDbConflicts.conflict('issue', 'Issue not found in the database.'));
+                delete result.issue_id;
+            }
+        }
+
         return result;
     }
 });
