@@ -448,7 +448,7 @@ Meteor.xmlPmc = {
         for(var i = 0 ; i < idList.length ; i++){
             var type = idList[i]['$']['pub-id-type'];
             var idCharacters = idList[i]['_'];
-
+            idCharacters = idCharacters.replace('PMC','');
             ids[type] = idCharacters;
         }
         cb(ids);
