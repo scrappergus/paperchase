@@ -182,7 +182,12 @@ Meteor.methods({
 
   },
 
-  search: function(query) {
+  search: function(terms) {
+    var query = {
+      authors: terms,
+      abstract: terms,
+      title: terms,
+    };
     var mongoClient = Meteor.npmRequire('mongodb').MongoClient;
     var esClient = Meteor.npmRequire('elasticsearch').Client({
       host: Meteor.settings.elasticsearch
@@ -242,7 +247,7 @@ Meteor.methods({
           body: {
             query: {
               bool: {
-                must: must
+                should: must
               }
             }
           }

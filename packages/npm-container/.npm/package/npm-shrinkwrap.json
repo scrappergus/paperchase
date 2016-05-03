@@ -340,10 +340,10 @@
       }
     },
     "xmldom": {
-      "version": "0.1.19"
+      "version": "0.1.22"
     },
     "xpath": {
-      "version": "0.0.9"
+      "version": "0.0.22"
     }
   }
 }

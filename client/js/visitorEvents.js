@@ -135,12 +135,7 @@ Template.ForAuthors.events({
 Template.Search.events({
   'submit #search-terms': function(e) {
     e.preventDefault();
-    Meteor.call('search', {
-      authors: e.target.authors && e.target.authors.value,
-      abstract: e.target.abstract && e.target.abstract.value,
-      title: e.target.title && e.target.title.value
-    }, function(err, data) {
-      console.log('>>> args in browser', err, data);
+    Meteor.call('search', e.target.terms && e.target.terms.value, function(err, data) {
       Session.set('queryResults', err ? [] : data);
     });
   }
