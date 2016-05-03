@@ -11,25 +11,25 @@ Meteor.authorizeCheck = {
 Meteor.methods({
     addArticle: function(articleData){
         Meteor.authorizeCheck.articles();
-        if(articleData['authors']){
-            var authorsList = articleData['authors'];
+        if(articleData.authors){
+            var authorsList = articleData.authors;
             for(var author = 0 ; author < authorsList.length; author++){
                 //check if author doc exists in authors collection
                 var authorDoc;
-                authorsList[author]['ids'] = {};
-                authorDoc = authors.findOne({'name_first' : authorsList[author]['name_first'],'name_last' : authorsList[author]['name_last']});
+                authorsList[author].ids = {};
+                authorDoc = authors.findOne({'name_first' : authorsList[author].name_first,'name_last' : authorsList[author].name_last});
                 if(!authorDoc){
                     //INSERT into authors
                     Meteor.call('addAuthor',authorsList[author],function(error, mongo_id){
                         if(error){
                             console.error('ERROR',error);
                         }else{
-                            authorsList[author]['ids']['mongo_id'] = mongo_id;
+                            authorsList[author].ids.mongo_id = mongo_id;
                         }
                     });
                 }else{
                     //author doc already exists
-                    authorsList[author]['ids']['mongo_id'] = authorDoc['_id'];
+                    authorsList[author].ids.mongo_id = authorDoc._id;
                 }
             }
         }
@@ -241,10 +241,10 @@ Meteor.methods({
                 var authorsList = article.authors;
                 // Go through each author object
                 for(var i=0 ; i < authorsList.length; i++){
-                    var current = authorsList[i]['affiliations_numbers'];
+                    var current = authorsList[i].affiliations_numbers;
                     var authorAffiliationsEditable = [];
-                    if(authorsList[i]['ids'] && authorsList[i]['ids']['mongo_id']){
-                        var mongo = authorsList[i]['ids']['mongo_id'];
+                    if(authorsList[i].ids && authorsList[i].ids.mongo_id){
+                        var mongo = authorsList[i].ids.mongo_id;
                     }else{
                         //for authors not saved in the db
                         var mongo = Math.random().toString(36).substring(7);
@@ -257,13 +257,13 @@ Meteor.methods({
                             } // need the mongo ID for uniqueness, id attribute, for checkbox
                             if(current && current.indexOf(a) != -1){
                                 // author already has affiliation
-                                authorAff['author_aff'] = 'checked';
+                                authorAff.author_aff = 'checked';
                             }else{
-                                authorAff['author_aff'] = false;
+                                authorAff.author_aff = false;
                             }
                             authorAffiliationsEditable.push(authorAff);
                         }
-                        authorsList[i]['affiliations_list'] = authorAffiliationsEditable;
+                        authorsList[i].affiliations_list = authorAffiliationsEditable;
                     }
                 }
             }
@@ -274,18 +274,18 @@ Meteor.methods({
 
             // Pub Status
             // ----------
-            article['pub_status_list'] = pubStatusTranslate;
+            article.pub_status_list = pubStatusTranslate;
             // var statusFound = false;
-            // if(article['pub_status']){
+            // if(article.pub_status){
             //  var pubStatusDisable = true;
             // }
             for(var p = 0; p < pubStatusTranslate.length; p++){
-                if(article['pub_status_list'][p]['abbrev'] == article['pub_status']){
-                    article['pub_status_list'][p]['selected'] = true;
+                if(article.pub_status_list[p].abbrev == article.pub_status){
+                    article.pub_status_list[p].selected = true;
                     // statusFound = true;
                 }
                 // if(!statusFound){
-                //  article['pub_status_list'][p]['disabled'] = true;
+                //  article.pub_status_list[p]['disabled'] = true;
                 // }
             }
 
@@ -293,42 +293,42 @@ Meteor.methods({
             // ------------
             // add ALL article types
             var articleType;
-            if(article['article_type']){
-                articleType = article['article_type']['name'];
+            if(article.article_type){
+                articleType = article.article_type.name;
             }
-            article['article_type_list'] = [];
+            article.article_type_list = [];
             var publisherArticleTypes = articleTypes.find().fetch();
             for(var k =0 ; k < publisherArticleTypes.length ; k++){
                 var selectObj = {
-                    nlm_type: publisherArticleTypes[k]['nlm_type'],
-                    name: publisherArticleTypes[k]['name'],
-                    short_name: publisherArticleTypes[k]['short_name']
+                    nlm_type: publisherArticleTypes[k].nlm_type,
+                    name: publisherArticleTypes[k].name.short_name,
+                    short_name: publisherArticleTypes[k]
                 }
-                if(publisherArticleTypes[k]['name'] == articleType){
-                    selectObj['selected'] = true;
+                if(publisherArticleTypes[k].name == articleType){
+                    selectObj.selected = true;
                 }
-                article['article_type_list'].push(selectObj);
+                article.article_type_list.push(selectObj);
             }
 
             // Article Section
             // ------------
             // add ALL article sections
             var selectedSectionId;
-            if(article['section']){
-                selectedSectionId = article['section'];
+            if(article.section){
+                selectedSectionId = article.section;
             }
-            article['article_section_list'] = [];
+            article.article_section_list = [];
             var publisherArticleSections = sections.find().fetch();
             for(var s =0 ; s < publisherArticleSections.length ; s++){
                 var selectObj = {
-                    _id : publisherArticleSections[s]['_id'],
-                    name: publisherArticleSections[s]['name'],
-                    short_name: publisherArticleSections[s]['short_name']
+                    _id : publisherArticleSections[s]._id,
+                    name: publisherArticleSections[s].name,
+                    short_name: publisherArticleSections[s].short_name
                 }
-                if(publisherArticleSections[s]['_id'] == selectedSectionId){
-                    selectObj['selected'] = true;
+                if(publisherArticleSections[s]._id == selectedSectionId){
+                    selectObj.selected = true;
                 }
-                article['article_section_list'].push(selectObj);
+                article.article_section_list.push(selectObj);
             }
 
             // console.log('--------------------article');
@@ -490,28 +490,28 @@ Meteor.methods({
         // first check for duplicates
         Meteor.call('articleExistenceCheck',mongoId, articleData, function(error,duplicateExists){
             if(error){
-                fut['throw'](error);
+                fut.throw(error);
             }else if(duplicateExists){
                 result = duplicateExists;
                 result.duplicate = true;
-                fut['return'](duplicateExists);
+                fut.return(duplicateExists);
             }else{
                 Meteor.call('checkArticleInputs',articleData, function(error,articleInvalid){
                     if(error){
-                        fut['throw'](error);
+                        fut.throw(error);
                     }else if(articleInvalid && articleInvalid.length > 0){
                         result.invalid = true;
                         result.invalid_list = articleInvalid;
-                        fut['return'](result);
+                        fut.return(result);
                     }else{
                         // no duplicates and all valid. Now update/insert
                         Meteor.call('updateArticle',mongoId, articleData, function(error,articleSaved){
                             if(error){
-                                fut['throw'](error);
+                                fut.throw(error);
                             }else if(articleSaved){
                                 result.article_id = articleSaved;
                                 result.saved = true;
-                                fut['return'](result);
+                                fut.return(result);
                             }
                         });
                     }
