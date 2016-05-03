@@ -622,6 +622,14 @@ if (Meteor.isClient) {
                 });
             }
 
+            Meteor.call('archive',function(error,result){
+                if(error){
+                    console.error('Archive Error', error);
+                }else if(result){
+                    Session.set('archive',result);
+                }
+            });
+
 
             this.next();
         }

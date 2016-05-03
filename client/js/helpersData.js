@@ -194,6 +194,33 @@ Template.Issue.helpers({
         }
 
         return sections;
+    },
+    prevIssue: function() {
+        // var volumes = Session.get('archive');
+        var issue = parseInt(Session.get('issue').issue_linkable);
+        var volume = Session.get('issue').volume;
+
+        if (issue === 1) { 
+            return '/issue/v' + (volume - 1) + 'i12';
+        } else if (issue === 1 && volume === 1) {
+            return null;
+        } else {
+            return '/issue/v' + volume + 'i' + (issue - 1);
+        }
+    },
+    nextIssue: function() {
+        var issue = parseInt(Session.get('issue').issue_linkable);
+        var volume = Session.get('issue').volume;
+        var lastVolume = 8;
+        var lastIssue = 3;
+
+        if (issue === 12) { 
+            return '/issue/v' + (volume + 1) + 'i1';
+        } else if (issue === lastIssue && volume === lastVolume) {
+            return null;
+        } else {
+            return '/issue/v' + volume + 'i' + (issue + 1);
+        }
     }
 });
 
