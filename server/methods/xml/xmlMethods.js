@@ -151,8 +151,9 @@ Meteor.xmlParse = {
 
 Meteor.xmlDbConflicts = {
     compare: function(key,xmlValue,dbValue,cb){
-        // console.log('   compare',key);
-        // console.log('  ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
+        // console.log('   compare');
+        // console.log('? ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
+
         var result = {};
         result.conflicts = [];
         result.merged;
@@ -161,13 +162,13 @@ Meteor.xmlDbConflicts = {
 
         // Just DB
         // ---------
-        if(!xmlValue){
+        if(!Meteor.xmlDbConflicts.valueExists(xmlValue)){
             result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(key,dbValue)));
         }
 
         // Just XML
         // ---------
-        if(!dbValue){
+        if(!Meteor.xmlDbConflicts.valueExists(dbValue)){
             result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(key,xmlValue), null));
         }
 
@@ -253,6 +254,7 @@ Meteor.xmlDbConflicts = {
                 result.merged[key] = dbVal; // although the number of keys matches, the DB has a key that the XML does not.
             }
 
+            // Date handling
             if(parentKey === 'dates' || parentKey === 'history'){
                 if(xmlVal){
                     xmlVal = Meteor.dates.article(xmlVal);
@@ -328,5 +330,11 @@ Meteor.xmlDbConflicts = {
             result = value;
         }
         return result;
+    },
+    valueExists: function(value){
+        if(!value && value != 0){
+            return false;
+        }
+        return true;
     }
 }
