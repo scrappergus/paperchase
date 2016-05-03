@@ -68,7 +68,7 @@ Meteor.methods({
         // KEYWORDS
         // -----------
         if(article['kwd-group']){
-            Meteor.xmlPmc.keywords(article['kwd-group'][0]['kwd'], function(keywords){
+            Meteor.xmlPmc.keywords(article['kwd-group'][0].kwd, function(keywords){
                 if(keywords && keywords.length > 0){
                     articleProcessed.keywords = keywords;
                 }
@@ -88,7 +88,6 @@ Meteor.methods({
         // ARTICLE TYPE
         // -----------
         //TODO: These are nlm type, possible that publisher has its own type of articles
-        //TODO: Update article type collection if this type not present
         if(article['article-categories']){
             Meteor.xmlPmc.articleType(articleJson, function(articleType){
                 if(articleType){
@@ -133,7 +132,7 @@ Meteor.methods({
         // ALL AFFILIATIONS
         // -----------
         articleProcessed.affiliations = [];
-        if(article['aff']){
+        if(article.aff){
             Meteor.xmlPmc.authorsAffiliations(article.aff, function(affiliations){
                 if(affiliations && affiliations.length > 0){
                     articleProcessed.affiliations = affiliations;
@@ -238,6 +237,9 @@ Meteor.xmlPmc = {
         var article = articleJson[0]['front'][0]['article-meta'][0];
         article_type.name = article['article-categories'][0]['subj-group'][0]['subject'][0];
         article_type.short_name =  articleJson[0]['$']['article-type'];
+        if(article_type.short_name){
+            article_type.short_name = article_type.short_name.replace('-','_');
+        }
         cb(article_type);
     },
     authors: function(authorsList,cb){

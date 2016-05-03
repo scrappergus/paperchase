@@ -300,13 +300,13 @@ Meteor.methods({
             }
             article.article_type_list = [];
             publisherArticleTypes = articleTypes.find().fetch();
-            for(var k =0 ; k < publisherArticleTypes.length ; k++){
+            for(var typeIdx =0 ; typeIdx < publisherArticleTypes.length ; typeIdx++){
                 var selectObj = {
-                    nlm_type: publisherArticleTypes[k].nlm_type,
-                    name: publisherArticleTypes[k].name.short_name,
-                    short_name: publisherArticleTypes[k]
+                    nlm_type: publisherArticleTypes[typeIdx].nlm_type,
+                    name: publisherArticleTypes[typeIdx].name,
+                    short_name: publisherArticleTypes[typeIdx].short_name
                 }
-                if(publisherArticleTypes[k].name == articleType){
+                if(publisherArticleTypes[typeIdx].name == articleType){
                     selectObj.selected = true;
                 }
                 article.article_type_list.push(selectObj);
