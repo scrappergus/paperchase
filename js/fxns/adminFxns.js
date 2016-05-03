@@ -1,11 +1,17 @@
 Meteor.admin = {
     titleInTable: function(title){
-        var txt = document.createElement('textarea');
-        txt.innerHTML = title.substring(0,40);
-        if(title.length > 40){
-            txt.innerHTML += '...';
+        var result = '';
+        if(title){
+            var txt = document.createElement('textarea');
+            txt.innerHTML = title.substring(0,40);
+            if(title.length > 40){
+                txt.innerHTML += '...';
+
+            }
+            result = txt.value;
         }
-        return txt.value;
+
+        return result;
     },
 }
 
@@ -933,10 +939,12 @@ Meteor.s3 = {
 
 Meteor.processXml = {
     cleanAbstract: function(abstract){
-        abstract = abstract.replace(/<\/p>/g,'');
-        abstract = abstract.replace(/<p>/g,'');
-        abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
-        abstract = Meteor.general.cleanString(abstract);
+        if(abstract){
+            abstract = abstract.replace(/<\/p>/g,'');
+            abstract = abstract.replace(/<p>/g,'');
+            abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
+            abstract = Meteor.general.cleanString(abstract);
+        }
         return abstract;
     }
 }
@@ -988,8 +996,12 @@ Meteor.dataSubmissions = {
 Meteor.validate = {
     email: function(email){
         //http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
+        if(email){
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        }else{
+            return;
+        }
     }
 }
 
