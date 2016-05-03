@@ -539,6 +539,11 @@ Template.AdminArticleXmlVerify.events({
         var articleMongoId = Session.get('article')._id;
         var files = $('input.file_bag')[0].files;
         Meteor.articleFiles.uploadArticleFile(articleMongoId,'xml',files);
+    },
+    'click .btn-cancel': function(e){
+        e.preventDefault();
+        Session.set('article-form',null);
+        Session.set('xml-verify',false);
     }
 });
 Template.AdminArticleFigures.events({
