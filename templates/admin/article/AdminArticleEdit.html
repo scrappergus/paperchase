@@ -26,6 +26,24 @@
     {{#with article}}
 
     {{>StatusModal}}
+
+    {{#if duplicate}}
+    <div class="row"><div class="col s12">
+        <div class="card red z-depth-0 lighten-4">
+            <div class="card-content">
+                <div class="row no-margin">
+                    <div class="col s12">
+                        <h2>Duplicate Article Found</h2>
+                        {{#with duplicate}}
+                        <h3><a href="{{pathFor 'AdminArticleOverview' _id=_id}}">{{{title}}}</a></h3>
+                        {{/with}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+    {{/if}}
+
     {{#if conflicts}}
     <div class="row"><div class="col s12">
         <div class="card red lighten-3 z-depth-0">
@@ -46,7 +64,7 @@
                     <tbody>
                         {{#each conflicts}}
                         <tr>
-                            <td>{{what}}</td>
+                            <td>{{#if parent}}{{parent}} | {{/if}}{{what}}</td>
                             <td>{{{conflict}}}</td>
                             <td>{{{xml}}}</td>
                             <td>{{{db}}}</td>
@@ -57,23 +75,6 @@
 
                 <h4>Save the form below to update the database</h4>
                 <p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
-            </div>
-        </div>
-    </div></div>
-    {{/if}}
-
-    {{#if duplicate}}
-    <div class="row"><div class="col s12">
-        <div class="card red z-depth-0 lighten-4">
-            <div class="card-content">
-                <div class="row no-margin">
-                    <div class="col s12">
-                        <h2>Duplicate Article Found</h2>
-                        {{#with duplicate}}
-                        <h3><a href="{{pathFor 'AdminArticleOverview' _id=_id}}">{{{title}}}</a></h3>
-                        {{/with}}
-                    </div>
-                </div>
             </div>
         </div>
     </div></div>

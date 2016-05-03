@@ -85,7 +85,6 @@ var ignoreConflictsViaXml = ['files','publisher','issue_id']; // want this separ
 
 Meteor.methods({
     compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
-
         dbArticle = Meteor.generalClean.pruneEmpty(dbArticle);
         xmlArticle = Meteor.generalClean.pruneEmpty(xmlArticle);
 
@@ -303,6 +302,16 @@ Meteor.xmlDbConflicts = {
             }
         }
 
+        // Include parent key for conflict clarification to user
+        if(result.conflicts.length > 0){
+            result.conflicts.forEach(function(conflicto){
+                if(parentKey != conflicto.what){
+                    // parentKey === conflicto.what when number of items is different (Number of items comparison above). Or when article type not found in DB
+                    conflicto.parent = parentKey.replace('_',' ');
+                }
+            });
+        }
+
         cb(result);
     },
     conflict: function(key,conflict,xml,db){
@@ -317,7 +326,7 @@ Meteor.xmlDbConflicts = {
         }
 
         return {
-            what: key,
+            what: key.replace('_',' '),
             conflict: conflict,
             xml: xml,
             db: db
