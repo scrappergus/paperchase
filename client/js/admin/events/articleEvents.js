@@ -96,7 +96,7 @@ Template.AdminArticleForm.events({
         e.preventDefault();
         var article = Session.get('article-form');
         // first update the data (in case user edited input), then add empty string as placeholder for all article affiliations
-        article.affiliations = Meteor.adminArticle.getAffiliations();
+        article.affiliations = Meteor.adminArticleFormGet.affiliations();
         if(!article.affiliations){
             article.affiliations = [];
         }
@@ -278,158 +278,20 @@ Template.AdminArticleForm.events({
     'submit form': function(e,t){
         e.preventDefault();
         Meteor.formActions.saving();
-        var mongoId,
-            article,
-            articleUpdateObj = {};
-
-        var articleTitle,
-            articleAbstract,
-            affiliations,
-            dates = {},
-            history = {},
-            authors = [],
-            keywords = [],
-            ids = {};
-
-        var invalid = [];
+        var article,
+            articleUpdateObj,
+            invalid = [];
 
         article = Session.get('article-form');
         mongoId = article._id;
 
-        articleUpdateObj.page_start; // integer
-        articleUpdateObj.page_end; // integer
-        articleUpdateObj.article_type = {}; // Object of name, short name, nlm type
-        articleUpdateObj.section = ''; // Mongo ID
-        articleUpdateObj.pub_status = ''; // NLM status
-
-        // title
-        // -------
-        articleTitle = $('.article-title').code();
-        articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
-        articleUpdateObj.title = articleTitle;
-
-        // feature
-        // -------
-        if($('#feature-checkbox').prop('checked')){
-            articleUpdateObj.feature = true;
-        }else{
-            articleUpdateObj.feature = false;
-        }
-
-        // advance
-        // -------
-        if($('#advance-checkbox').prop('checked')){
-            articleUpdateObj.advance = true;
-        }else{
-            articleUpdateObj.advance = false;
-        }
-
-
-        // display
-        // -------
-        if($('#display-checkbox').prop('checked')){
-            articleUpdateObj.display = true;
-        }else{
-            articleUpdateObj.display = false;
-        }
-
-        // abstract
-        // -------
-        articleAbstract = $('.article-abstract').code();
-        articleAbstract = Meteor.formActions.cleanWysiwyg(articleAbstract);
-        articleUpdateObj.abstract = articleAbstract;
-
-        // meta
-        // -------
-        // pages
-        if($('#page_start').val()){
-            articleUpdateObj.page_start = parseInt($('#page_start').val());
-        }
-        if($('#page_end').val()){
-            articleUpdateObj.page_end = parseInt($('#page_end').val());
-        }
-        // select options
-        // Issue
-        if($('#article-issue').val() != ''){
-            articleUpdateObj.issue_id = $('#article-issue').val();
-        }
-        // Article type
-        if($('#article-type').val() != ''){
-            articleUpdateObj.article_type.short_name = $('#article-type').val();
-            articleUpdateObj.article_type.nlm_type = $('#article-type').attr('data-nlm');
-            articleUpdateObj.article_type.name = $('#article-type option:selected').text();
-        }
-        // Article section
-        if($('#article-section').val() != ''){
-            articleUpdateObj.section = $('#article-section').val();
-        }
-        // Article status
-        if($('#article-pub-status').val() != ''){
-            articleUpdateObj.pub_status = $('#article-pub-status').val();
-        }
-
-        // ids
-        // -------
-        $('.article-id').each(function(i) {
-            var k = $(this).attr('id'); //of the form, article-id-key
-            k = k.split('-');
-            k = k[2];
-            ids[k] = $(this).val();
-        });
-        articleUpdateObj.ids = ids;
-
-        // All affiliations
-        // -------
-        affiliations = Meteor.adminArticle.getAffiliations();
-
-        // Authors
-        // -------
-        $('.author-row').each(function(idx,obj){
-            var author = {
-                'name_first' : $(this).find('input[name="name_first"]').val(),
-                'name_middle' : $(this).find('input[name="name_middle"]').val(),
-                'name_last' : $(this).find('input[name="name_last"]').val(),
-                'ids' : {},
-                'affiliations_numbers' : []
-            };
-            var authorIds = $(this).find('.author-id').each(function(i,o){
-                author.ids[$(o).attr('name')] = $(o).val();
-            });
-            $(this).find('.author-affiliation').each(function(i,o){
-                if($(o).prop('checked')){
-                    author.affiliations_numbers.push(parseInt(i));
-                }
-            });
-            authors.push(author);
-        });
-        articleUpdateObj.authors = authors;
-        articleUpdateObj.affiliations = affiliations;
-
-
-        // Dates and History
-        // -------
-        $('.datepicker').each(function(i){
-            var key = $(this).attr('id');
-            if($(this).hasClass('date')){
-                dates[key] = new Date($(this).val());
-            }else if($(this).hasClass('history')){
-                history[key] = new Date($(this).val());
-            }
-        });
-        articleUpdateObj.dates = dates;
-        articleUpdateObj.history = history;
-
-        // Keywords
-        // -------
-        $('.kw').each(function(i){
-            keywords.push($(this).val());
-        });
-        articleUpdateObj.keywords = keywords;
+        articleUpdateObj = Meteor.adminArticleFormGet.all()
 
         // VALIDATION and SAVE
         // -------
         // result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
         // console.log('articleUpdateObj',articleUpdateObj);
+        if(articleUpdateObj)
         Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
             if(error){
                 console.error('validateArticle',error);

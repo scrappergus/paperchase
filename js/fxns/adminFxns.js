@@ -345,13 +345,6 @@ Meteor.adminEdBoard = {
 }
 
 Meteor.adminArticle = {
-    getAffiliations: function(){
-        var affiliations = [];
-        $('.article-affiliation').each(function(idx,obj){
-            affiliations.push($(this).val());
-        });
-        return affiliations;
-    },
     updateAffiliationsOrder: function(newIndex){
         var originalIndex = Session.get('affIndex');
         var article = Session.get('article-form');
@@ -505,6 +498,175 @@ Meteor.adminArticle = {
     cleanTitle: function(title){
         // for cleaning title input
         return string.replace(/<p>|<br>/g,'').replace(/<\/p>/g,'').trim();
+    }
+}
+
+Meteor.adminArticleFormGet = {
+    abstract: function(){
+        var abstract = $('.article-abstract').code();
+        abstract = Meteor.formActions.cleanWysiwyg(abstract);
+        return abstract;
+    },
+    advance: function(){
+        if($('#advance-checkbox').prop('checked')){
+            return true;
+        }else{
+            return false;
+        }
+    },
+    affiliations: function(){
+        var affiliations = [];
+        $('.article-affiliation').each(function(idx,obj){
+            affiliations.push($(this).val());
+        });
+        return affiliations;
+    },
+    articleType: function(){
+        var article_type = {};
+        if($('#article-type').val() != ''){
+            article_type.short_name = $('#article-type').val();
+            article_type.nlm_type = $('#article-type').attr('data-nlm');
+            article_type.name = $('#article-type option:selected').text();
+        }
+        return article_type;
+    },
+    authors: function(){
+        var authors = [];
+        $('.author-row').each(function(idx,obj){
+            var author = {
+                'name_first' : $(this).find('input[name="name_first"]').val(),
+                'name_middle' : $(this).find('input[name="name_middle"]').val(),
+                'name_last' : $(this).find('input[name="name_last"]').val(),
+                'ids' : {},
+                'affiliations_numbers' : []
+            };
+            var authorIds = $(this).find('.author-id').each(function(i,o){
+                author.ids[$(o).attr('name')] = $(o).val();
+            });
+            $(this).find('.author-affiliation').each(function(i,o){
+                if($(o).prop('checked')){
+                    author.affiliations_numbers.push(parseInt(i));
+                }
+            });
+            authors.push(author);
+        });
+        return authors;
+    },
+    dates: function(type){
+        var dates = {};
+        $('.datepicker.' + type).each(function(i){
+            var key = $(this).attr('id');
+            dates[key] = new Date($(this).val());
+        });
+        return dates;
+    },
+    display: function(){
+        if($('#display-checkbox').prop('checked')){
+            return true;
+        }else{
+            return false;
+        }
+    },
+    feature: function(){
+        if($('#feature-checkbox').prop('checked')){
+            return true;
+        }else{
+            return false;
+        }
+    },
+    ids: function(){
+        var ids = {};
+        $('.article-id').each(function(i) {
+            var k = $(this).attr('id'); //of the form, article-id-key
+            k = k.split('-');
+            k = k[2];
+            ids[k] = $(this).val();
+        });
+        return ids;
+    },
+    issueId: function(){
+        if($('#article-issue').val() != ''){
+            return $('#article-issue').val();
+        }
+    },
+    keywords: function(){
+        var keywords = [];
+        $('.kw').each(function(i){
+            keywords.push($(this).val());
+        });
+        return keywords;
+    },
+    pageEnd: function(){
+        if($('#page_end').val()){
+            return parseInt($('#page_end').val());
+        }
+    },
+    pageStart: function(){
+        if($('#page_start').val()){
+            return parseInt($('#page_start').val());
+        }
+    },
+    section: function(){
+        if($('#article-section').val() != ''){
+            return $('#article-section').val();
+        }
+    },
+    status: function(){
+        if($('#article-pub-status').val() != ''){
+            return $('#article-pub-status').val();
+        }
+    },
+    title: function(){
+        var articleTitle = $('.article-title').code();
+        articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
+        return articleTitle;
+    },
+    all: function(){
+        var articleUpdateObj = {};
+
+        // articleUpdateObj.page_start; // integer
+        // articleUpdateObj.page_end; // integer
+        // articleUpdateObj.article_type = {}; // Object of name, short name, nlm type
+        // articleUpdateObj.section = ''; // Mongo ID
+        // articleUpdateObj.pub_status = ''; // NLM status
+
+
+        // site
+        // -------
+        articleUpdateObj.feature = Meteor.adminArticleFormGet.feature();
+        articleUpdateObj.advance = Meteor.adminArticleFormGet.advance();
+        articleUpdateObj.display = Meteor.adminArticleFormGet.display();
+
+        // meta
+        // -------
+        articleUpdateObj.title = Meteor.adminArticleFormGet.title();
+        articleUpdateObj.page_start = Meteor.adminArticleFormGet.pageStart();
+        articleUpdateObj.page_end = Meteor.adminArticleFormGet.pageEnd();
+        articleUpdateObj.ids = Meteor.adminArticleFormGet.ids();
+        articleUpdateObj.abstract = Meteor.adminArticleFormGet.abstract();
+
+        // select options
+        articleUpdateObj.issue_id = Meteor.adminArticleFormGet.issueId();
+        articleUpdateObj.article_type = Meteor.adminArticleFormGet.articleType();
+        articleUpdateObj.section = Meteor.adminArticleFormGet.section();
+        articleUpdateObj.status = Meteor.adminArticleFormGet.status();
+
+        // authors and affiliations
+        articleUpdateObj.affiliations = Meteor.adminArticleFormGet.affiliations();
+        articleUpdateObj.authors =  Meteor.adminArticleFormGet.authors();
+
+        // Dates and History
+        // -------
+        articleUpdateObj.dates =  Meteor.adminArticleFormGet.dates('dates');
+
+        articleUpdateObj.history =  Meteor.adminArticleFormGet.dates('history');
+
+
+        // Keywords
+        // -------
+        articleUpdateObj.keywords = Meteor.adminArticleFormGet.keywords();
+
+        return articleUpdateObj;
     }
 }
 
