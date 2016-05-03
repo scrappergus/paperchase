@@ -16,14 +16,15 @@
                     <div class="row">
                         <div class="col s12">
                             {{#if files.xml}}
-                            {{#with files}}<a class="btn" href="{{xml.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> XML</a>{{/with}}
+                            {{#with files}}<a class="btn" href="{{xml.url}}" target="_BLANK">{{>AdminDownloadIcon}} XML</a>{{/with}}
                             {{else}}
-                            No XML
+                            <a class="btn disabled">No XML</a>
                             {{/if}}
                             {{#if pfiles.df}}
-                            {{#with files}}<a class="btn" href="{{pdf.url}}" target="_BLANK"><i class="material-icons">&#xE2C4;</i> PDF</a>{{/with}}
+                            {{#with files}}<a class="btn" href="{{pdf.url}}" target="_BLANK">{{>AdminDownloadIcon}} PDF</a>{{/with}}
                             {{else}}
-                            No PDF
+
+                            <a class="btn disabled">No PDF</a>
                             {{/if}}
                         </div>
                     </div>
