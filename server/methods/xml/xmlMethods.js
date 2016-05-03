@@ -243,33 +243,37 @@ Meteor.xmlDbConflicts = {
 
         // Database
         for(var key in dbObj){
-            var dbVal = null;
-            var xmlVal = null;
 
-            dbVal = dbObj[key];
-
-            if(xmlObj[key]){
-                xmlVal = xmlObj[key];
-                result.merged[key] = xmlVal; // default is always XML
+            if(parentKey === 'authors' && key === 'ids'){
             }else{
-                result.merged[key] = dbVal; // although the number of keys matches, the DB has a key that the XML does not.
-            }
+                var dbVal = null;
+                var xmlVal = null;
 
-            // Date handling
-            if(parentKey === 'dates' || parentKey === 'history'){
-                if(xmlVal){
-                    xmlVal = Meteor.dates.article(xmlVal);
-                }
-                dbVal = Meteor.dates.article(dbVal);
-            }
+                dbVal = dbObj[key];
 
-            Meteor.xmlDbConflicts.compare(key, xmlVal, dbVal, function(objCompared){
-                if(objCompared && objCompared.conflicts && objCompared.conflicts.length>0){
-                    objCompared.conflicts.forEach(function(conflict){
-                        result.conflicts.push(conflict);
-                    });
+                if(xmlObj[key]){
+                    xmlVal = xmlObj[key];
+                    result.merged[key] = xmlVal; // default is always XML
+                }else{
+                    result.merged[key] = dbVal; // although the number of keys matches, the DB has a key that the XML does not.
                 }
-            });
+
+                // Date handling
+                if(parentKey === 'dates' || parentKey === 'history'){
+                    if(xmlVal){
+                        xmlVal = Meteor.dates.article(xmlVal);
+                    }
+                    dbVal = Meteor.dates.article(dbVal);
+                }
+
+                Meteor.xmlDbConflicts.compare(key, xmlVal, dbVal, function(objCompared){
+                    if(objCompared && objCompared.conflicts && objCompared.conflicts.length>0){
+                        objCompared.conflicts.forEach(function(conflict){
+                            result.conflicts.push(conflict);
+                        });
+                    }
+                });
+            }
         }
 
         // XML
