@@ -1,9 +1,10 @@
 <template name="Archive">
-    <div class="page-content wide">
-        <h1>Archive</h1>
-    </div>
+    <!-- <div class="page-content wide">
+        <h1>Issue Archive</h1>
+    </div> -->
 
     <div class="page-content">
+        <h1>Issue Archive</h1>
         {{#each volumes}}
             <h2 id="volume{{volume}}" class="heavy">Volume {{volume}}</h2>
 
@@ -11,11 +12,11 @@
                 <ul class="">
                     {{#each issues_data}}
                     <li class="archive-issue">
-                    <div class="clearfix">
                         <a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{coverPath}}"></a>
-                        <h5><a href="/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}}</a></h5>
-                        {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}}
-                    </div>
+                        <div class="issue-info"> 
+                            <a href="/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}}</a>
+                            <!-- {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}} -->
+                        </div>
                     </li>
                     {{/each}}
                 </ul>

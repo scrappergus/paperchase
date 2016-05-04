@@ -1,0 +1,21 @@
+/* Archive ------------------------*/
+.archive-issue{
+    @extend clearfix;
+    float:left;
+    display:block;
+    width: 16%;
+    margin: 0 0 25px 0;
+    padding-right: 10px;
+    img {
+    width: 100%;
+    }
+    h5 { margin-top: 10px; }
+    &:nth-child(6n+1) { clear: both; };
+
+    .issue-info {
+        width: 100%;
+        background: $electric;
+        a { color: #fff; }
+        padding: 3px 10px;
+    }
+}
