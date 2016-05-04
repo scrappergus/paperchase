@@ -69,13 +69,7 @@ Template.AdminArticleForm.events({
         }
         article.authors.push(newAuthor);
 
-        // scroll to new affiliation <li>
-        // if no .author-li:last-child, just added first author. The dom isn't updated yet, so technically last-child is not the one just added
-        if($('.author-li:last-child').length != 0){
-            $('html, body').animate({
-                scrollTop: $('.author-li:last-child').find('input').position().top
-            }, 500);
-        }
+        Meteor.general.scrollTo('affiliations');
 
         if($('.author-li').length > 0){
             Meteor.adminArticle.initiateAuthorsSortable();
@@ -115,13 +109,7 @@ Template.AdminArticleForm.events({
 
         Session.set('article-form',article);
 
-        // scroll to new affiliation <li>
-        // if no .affiliation-li:last-child, just added first affiliation. The dom isn't updated yet, so technically last-child is not the one just added
-        if($('.affiliation-li:last-child').length != 0){
-            $('html, body').animate({
-                scrollTop: $('.affiliation-li:last-child').find('input').position().top
-            }, 500);
-        }
+        Meteor.general.scrollTo('dates');
     },
     'click .remove-affiliation': function(e,t){
         // console.log('------------------------- remove-affiliation');
