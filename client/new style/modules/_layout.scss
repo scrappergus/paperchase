@@ -42,8 +42,10 @@ $sidebar-wide-width: 310px;
     }
 }
 
+.footer { @include clearfix; }
 footer {
     padding: 40px 0 50px;
+    @include clearfix;
 
     span {
         opacity: .5;
@@ -220,7 +222,7 @@ $container-padding: 60px;
 .main .sidebar {
     position: fixed;
     background-color: $blackpearl;
-    background-color: $midnight;
+    // background-color: $midnight;
     font-size: 17px;
 
     &.secondary {
@@ -410,9 +412,9 @@ ul .section-half {
 
         li.title { width: 16%; }
         li.pubmed { width: 17%; }
-        li.pmc { width: 22%; }
+        li.pmc { width: 24%; }
         li.thomson { width: 32%; }
-        li.scopus { width: 13%; }
+        li.scopus { width: 11%; }
 
         li.title {
             font-size: 16px;

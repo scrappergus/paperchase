@@ -222,7 +222,14 @@ h2.authors {
     // Abstract-Specific Styles
     &.abstract {
         @extend .faint-shadow;
+        position: relative;
         padding: 30px 40px;
+
+        #fulltext { 
+            background-image: url("about:blank");
+            position: absolute; 
+            bottom: 138px; 
+        }
     }
 }
 
