@@ -96,6 +96,15 @@ Template.scrollspyItems.helpers({
     // }
 });
 
+// Home
+// -------------
+Template.Home.helpers({
+    latestIssue: function() {
+        console.log(issues.findOne());
+        return issues.findOne();
+    }
+});
+
 // Contact
 // -------------
 Template.Contact.helpers({
@@ -143,20 +152,16 @@ Template.EdBoard.helpers({
 Template.ArticleText.helpers({
     fullText: function(){
         return Session.get('article-text');
-    },
-    // sections: function() {
-    //     var array = Session.get('article-text').sections;
-    //     return Session.get('article-text').sections;
-    // }
+    }
 });
 
-// Todo: this is slow
 Template.ArticleSidebar.helpers({
     fullText: function(){
         return Session.get('article-text');
     },
     items: function() {
         var articleHeaders = Session.get('article-text').sections;
+        var references = Session.get('article-text').references;
         var sections = [];
 
         for ( i = 0; i < articleHeaders.length; i++ ) {
@@ -165,9 +170,14 @@ Template.ArticleSidebar.helpers({
             }
         }
 
+        if ( references ) {
+            sections.push( { title: 'References'} );
+        }
+
         return sections;
     }
 });
+
 Template.AuthorsRefList.helpers({
     tooltipAffiliation: function() {
         var articleData = Template.parentData(2);

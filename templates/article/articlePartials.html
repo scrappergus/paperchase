@@ -22,7 +22,7 @@
     <!-- todo: implement featured photo -->
     <!-- {{#if featuredPhoto}} -->
     <div class="featured-photo">
-        <img src="/example-fig2.png" class="photo">
+        <img src="/images/example-fig2.png" class="photo">
         <span class="dark tag">From <strong>Figure 2</strong></span>
     </div>
     <!-- {{/if}} -->
@@ -119,7 +119,9 @@
             {{/if}}
         {{/if}}
 
-        {{> ArticleCorrespondence}}
+        {{#if correspondence}}
+            {{> ArticleCorrespondence}}
+        {{/if}}
 
         {{#if keywords}}
             {{> ArticleKeywords}}

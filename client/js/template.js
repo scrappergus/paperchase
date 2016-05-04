@@ -9,24 +9,23 @@ Template.Subscribe.onRendered(function () {
 });
 
 Template.Home.onRendered(function () {
-  $('.edboard-name').click(function() {
-    $(this).next().toggle();
-  });
+  $('.modal-trigger').leanModal(); // bio modals
 
   $('.collapsible').collapsible({
     accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
   });
 
-
-  /* TODO: Set these up to respond to Session.
-  This is just temporary for static rendering. */
-  $('.content-yield').addClass('home-featured-news');
+  $('.content-yield').addClass('no-breadcrumbs');
   $('.sub-nav').addClass('hide');
 });
 
 Template.Home.onDestroyed(function() {
-  $('.content-yield').removeClass('home-featured-news');
+  $('.content-yield').removeClass('no-breadcrumbs');
   $('.sub-nav').removeClass('hide');
+});
+
+Template.EdBoard.onRendered(function() {
+  $('.modal-trigger').leanModal(); // bio modals
 });
 
 Template.scrollspyCard.onRendered(function() {

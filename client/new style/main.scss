@@ -348,7 +348,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
         position: absolute;
         content: attr(data-tooltip);
         padding: 12px 15px;
-        width: 450px;
+        width: 350px;
         bottom: 1.8em;
         left: 50%;
         transform: translateX(-50%) translateY(-2px);
@@ -367,6 +367,16 @@ $cubic: cubic-bezier(.64,.09,.08,1);
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
+        }
+    }
+
+    &.small {
+        &:after { 
+            max-width: 165px;
+            padding: 7px;
+            background: $electric;
+            color: #fff;
+            bottom: 3.55em;
         }
     }
 }
@@ -395,6 +405,18 @@ $cubic: cubic-bezier(.64,.09,.08,1);
             visibility: visible;
             transform: translateX(-50%) translateY(0);
         }
+    }
+
+    &.small {
+        &:before { 
+            border-top: solid 6px $electric; 
+            bottom: 3.2em;
+        }
+    }
+
+    &.pubmed {
+        &:after { bottom: 3.85em; }
+        &:before { bottom: 3.5em; }
     }
 }
 
@@ -426,6 +448,17 @@ a.tag {
         background: $accent;
         color: #fff;
     }
+}
+
+// inline tags
+p > .tag {
+    cursor: default;
+    font-size: 17px;
+    margin: 0;
+    padding: 1px 4px;
+
+    // background: $electric;
+    color: $electric;
 }
 
 // lists

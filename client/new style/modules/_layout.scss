@@ -8,7 +8,7 @@
 
 /** Base Layout
  ---------------------------------------------------------*/
-$sidebar-medium-width: 260px;
+$sidebar-medium-width: 270px;
 $sidebar-wide-width: 310px;
 
 // Default Grid
@@ -56,11 +56,12 @@ footer {
 $navbar-height: 70px;
 $sub-navbar-height: 64px;
 $sub-navbar-padding: 10px;
+$nav-color: $electric;
 
 .navigation {
     position: fixed;
     height: $navbar-height;
-    background-color: $midnightblue;
+    background-color: $nav-color;
     width: 100%;
 }
 
@@ -75,13 +76,13 @@ $sub-navbar-padding: 10px;
 .nav-sidebar {
     float: left;
     padding: 15px 0 0 20px;
-    background: #012855;
+    // background: darken($nav-color, 4%);
     .logo { height: 48px; }
 }
 
 .nav-content {
     height: $navbar-height;
-    background-color: $midnightblue;
+    background-color: $nav-color;
     padding: 15px 20px 0 20px;
 
     ul {
@@ -94,11 +95,13 @@ $sub-navbar-padding: 10px;
     ul li {
         position: relative;
         display: inline-block;
-        padding: 5px 20px;
-        margin: 8px 0;
-        font-size: 14px;
-        @extend .uppercase-titles;
+        padding: 5px 20px 6px;
+        margin: 4px 0;
+        font-size: 16px;
+        // font-size: 14px;
+        // @extend .uppercase-titles;
         border-left: 2px solid rgba(119, 130, 142, .2);
+        color: #fff;
 
         a { color: #fff; }
         &:first-child { border: none; }
@@ -160,7 +163,7 @@ $sub-navbar-padding: 10px;
 
         &:last-child {
             font-weight: 700;
-            a { color: darken($midgray, 7%); }
+            a { color: $electric; }
         }
         &:last-child:after {
             content: "";
@@ -200,6 +203,9 @@ $container-padding: 60px;
     @include clearfix;
     padding: 0 $container-padding;
     z-index: -1;
+
+    &.wide { padding: 0; }
+    &.push { margin-top: 50px; }
 }
 
 /**
@@ -214,7 +220,12 @@ $container-padding: 60px;
 .main .sidebar {
     position: fixed;
     background-color: $blackpearl;
+    background-color: $midnight;
     font-size: 17px;
+
+    &.secondary {
+        background-color: $lightgray;
+    }
 }
 
 .main .content {
@@ -228,7 +239,7 @@ $container-padding: 60px;
     padding-right: $container-padding;
     z-index: -1;
 
-    &.home-featured-news { padding: 0; }
+    &.no-breadcrumbs { padding: 0; }
 }
 
 /**
@@ -247,14 +258,15 @@ $container-padding: 60px;
     .page-content {
         @include span(10);
         padding-right: 30px;
+
+        &.wide { 
+            @include span(16); 
+            padding: 0; 
+        }
     }
 
     .page-sidebar {
         @include span(6);
-    }
-
-    &.wide {
-        @include span(16);
     }
 }
 
@@ -332,8 +344,81 @@ $container-padding: 60px;
     }
 }
 
-/** Simple Grids
+.main .sidebar.secondary ul.nav-links {
+    a li { color: $cello; }
+    a:hover li {
+        background: $electric;
+        color: #fff;
+    }
+    a:hover li:after {
+        color: #fff;
+    }
+}
+
+/** Simple Grid Helpers
  ---------------------------------------------------------*/
 .section-half {
     @include span(8);
 }
+
+ul .section-half {
+    margin-left: 0;
+    margin-right: 20px;
+    &:last-child { margin-right: 0; }
+}
+
+/** Content Bars
+ ---------------------------------------------------------*/
+.bar {
+    width: 100%;
+    padding: 5px 45px 2px;
+    @include clearfix;
+
+    &.flex {
+        ul { display: flex; }
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &.gray-bar { background: #eee; }
+    &.white-bar { @extend .faint-shadow; }
+}
+
+.bar {
+    ul li {  display: inline; }
+    ul li img { width: 100%; max-width: 100%; }
+
+    // flex defaults
+    &.flex {
+        h6 { display: block; }
+        ul li { width: 24%; }
+    }
+
+    ul.indexed-by {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 12px;
+
+        li { 
+            padding-right: 55px; 
+            text-align: center;
+            &.title { text-align: left; }
+            &:last-child { padding-right: 0; }
+        }
+
+        li.title { width: 16%; }
+        li.pubmed { width: 17%; }
+        li.pmc { width: 22%; }
+        li.thomson { width: 32%; }
+        li.scopus { width: 13%; }
+
+        li.title {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    }
+}
+

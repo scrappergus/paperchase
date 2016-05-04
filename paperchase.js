@@ -24,8 +24,6 @@ if (Meteor.isClient) {
     })();
     // var journal = journalConfig.findOne();
     // Session.setDefault('journal',journal);
-
-    $('.modal-trigger').leanModal();
 }
 
 Router.configure({
@@ -401,7 +399,8 @@ if (Meteor.isClient) {
                 Meteor.subscribe('feature'),
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('eb'),
-                Meteor.subscribe('newsListDisplay')
+                Meteor.subscribe('newsListDisplay'),
+                Meteor.subscribe('currentIssue')
             ]
         },
         data: function(){

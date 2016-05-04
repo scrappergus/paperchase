@@ -1,0 +1,38 @@
+<template name="News">
+    {{> featuredNewsItem}}
+
+    <div class="grid">
+        <div class="page-content">
+        {{#if news}}
+            <h3 class="section-heading">More News</h3>
+            <ul class="divided-list">
+                {{#each news}}
+                    <li class="item">
+                        <h4 class="title">{{title}}</h4>
+                        <h5 class="meta">{{formatDate date}}</h5>
+                        <p>{{{content}}}</p>
+                    </li>
+                {{/each}}
+            </ul>
+        {{/if}}
+        </div>
+
+        <div class="page-sidebar">
+            {{>HomePageEditorList}}
+        </div>
+    </div>
+</template>
+
+<template name="featuredNewsItem">
+    <div class="featured-news-item">
+        <div class="grid">
+            <div class="news-text">
+                <h1 class="head">2016 Conference: Biomedical Innovation in Healthy Longevity</h1>
+                <h2 class="subhead">Lorem ipsum dolor sit amet draco dormiens nunquam titillandus lorem ipsum dolor sit amet draco dormiens nunquam titillandus.</h2>
+            </div>
+            <div class="news-info">
+                <a href="#" class="minimal large button">Read More <span class="icon icon-angle-right"></span></a>
+            </div>
+        </div>
+    </div>
+</template>
