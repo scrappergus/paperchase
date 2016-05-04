@@ -137,9 +137,13 @@ Meteor.methods({
             if(issueFound && issueFound._id != result.issue_id){
                 result.issue_id = issueFound._id;
             }else if(!issueFound){
-                result.conflicts.push(Meteor.xmlDbConflicts.conflict('issue', 'Issue not found in the database.'));
+                result.conflicts.push(Meteor.xmlDbConflicts.conflict('volume / issue', 'Issue not found in the database.'));
                 delete result.issue_id;
             }
+        }
+
+        if(result.conflicts.length > 0){
+            result.conflicts = Meteor.xmlDbConflicts.alphabetizeConflicts(result.conflicts);
         }
 
         return result;
@@ -233,8 +237,6 @@ Meteor.xmlDbConflicts = {
                     result.merged = mergedArray;
                 }
 
-            }else{
-                console.log('ELSE',key);
             }
         }
         cb(result);
@@ -338,6 +340,8 @@ Meteor.xmlDbConflicts = {
             key = 'author last name';
         }
 
+        // when an object has a conflict it will also have the key 'parent', which is added in compareObject()
+
         return {
             what: key.replace('_',' '),
             conflict: conflict,
@@ -346,6 +350,7 @@ Meteor.xmlDbConflicts = {
         }
     },
     prettyValue: function(key,value){
+        // console.log('prettyValue',key,value);
         var result = '';
 
         // DB stores affiliation numbers 0 based, but to humans they are 1 based.
@@ -375,5 +380,29 @@ Meteor.xmlDbConflicts = {
             return false;
         }
         return true;
+    },
+    alphabetizeConflicts: function(conflicts){
+        var keys = [],
+            conflictsByKey = {},
+            sorted = [];
+
+        for(var i=0 ; i<conflicts.length ; i++){
+            if(conflicts[i].parent && conflicts[i].hasOwnProperty('parent') && conflicts[i].what && conflicts[i].hasOwnProperty('what')){
+                // keep object conflicts together. For ex, article ids
+                conflictsByKey[conflicts[i].parent + conflicts[i].what] = conflicts[i];
+                keys.push(conflicts[i].parent + conflicts[i].what);
+            }else if(conflicts[i].what && conflicts[i].hasOwnProperty('what')){
+                conflictsByKey[conflicts[i].what] = conflicts[i];
+                keys.push(conflicts[i].what);
+           }
+        }
+
+        keys.sort();
+
+        for (var k = 0; k < keys.length; k++) {
+            sorted.push(conflictsByKey[keys[k]]);
+        }
+
+        return sorted;
     }
 }
