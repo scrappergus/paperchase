@@ -414,7 +414,13 @@ html,body{
 		margin-right: $margin-md;
 	}
 	.margin-top-md{
-		margin-right: $margin-md;
+		margin-top: $margin-md;
+	}
+	.margin-right-lg{
+		margin-right: $margin-lg;
+	}
+	.margin-top-lg{
+		margin-top: $margin-lg;
 	}
 	.no-padding{
 		padding: 0px;
