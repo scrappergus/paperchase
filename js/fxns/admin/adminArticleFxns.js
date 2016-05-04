@@ -152,6 +152,11 @@ Meteor.adminArticle = {
     cleanTitle: function(title){
         // for cleaning title input
         return string.replace(/<p>|<br>/g,'').replace(/<\/p>/g,'').trim();
+    },
+    authorAffiliationIndexToWords: function(authorAffiliations,allAffiliations){
+        return authorAffiliations.map(function(affIdx){
+            return allAffiliations[affIdx];
+        });
     }
 }
 

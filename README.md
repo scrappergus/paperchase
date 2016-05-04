@@ -202,6 +202,10 @@ New Article via XML
 ----------------
 Uses template AdminUploadArticleXml. Duplicates artilces are checked via articleExistenceCheck(), if found then modal links to found article. Works with AOP PubMed XML and PMC Full Text XML. Uses the session variable new-article to display the processed article data for the user to verify. When this variable is null, the uploader is shown. Otherwise, article verification is shown.
 
+Authors
+----------------
+There is a collection for authors, authors. This is updated after saving the article form. Author affiliations are stored as objects in an array in the author doc `[{affiliation: “Harvard”}]`, so that we can add attributes if current or other data about the known affiliations. 
+
 Issue Form
 -------------
 **Validation and Duplicate Check**

@@ -13,6 +13,15 @@ Meteor.admin = {
 
         return result;
     },
+    clone: function(obj) {
+        //http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
+        if (null == obj || 'object' != typeof obj) return obj;
+        var copy = obj.constructor();
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) copy[key] = obj[key];
+        }
+        return copy;
+    }
 }
 
 Meteor.adminSite = {
