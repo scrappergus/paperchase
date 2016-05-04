@@ -175,6 +175,17 @@ Meteor.adminArticleFormGet = {
         });
         return affiliations;
     },
+    correspondence: function(){
+        var correspondence = [];
+        $('.correspondence-row').each(function(idx,obj){
+            var corresp = {
+                'text' : $(this).find('input.correspondence-text').val(),
+                'email' : $(this).find('input.correspondence-email').val()
+            };
+            correspondence.push(corresp);
+        });
+        return correspondence;
+    },
     articleType: function(){
         var article_type = {};
         if($('#article-type').val() != ''){
@@ -308,6 +319,7 @@ Meteor.adminArticleFormGet = {
         // authors and affiliations
         articleUpdateObj.affiliations = Meteor.adminArticleFormGet.affiliations();
         articleUpdateObj.authors =  Meteor.adminArticleFormGet.authors();
+        articleUpdateObj.correspondence =  Meteor.adminArticleFormGet.correspondence();
 
         // Dates and History
         // -------

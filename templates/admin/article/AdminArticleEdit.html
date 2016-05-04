@@ -87,6 +87,7 @@
         <a class="btn btn-sm anchor" href="#site">{{>AdminSiteIcon}} Site</a>
         <a class="btn btn-sm anchor" href="#meta">{{>AdminMetaIcon}} Meta</a>
         <a class="btn btn-sm anchor" href="#authors">{{>AdminAuthorsIcon}} Authors</a>
+        <a class="btn btn-sm anchor" href="#correspondence">{{>AdminMailIcon}} Correspondence</a>
         <a class="btn btn-sm anchor" href="#dates">{{>AdminDatesIcon}} Dates</a>
         <a class="btn btn-sm anchor" href="#history">{{>AdminDatesIcon}} History</a>
         <a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a>
@@ -226,6 +227,39 @@
                 </legend>
                 {{#if authors}}
                 {{>AdminArticleFormAuthors}}
+                {{/if}}
+            </fieldset>
+
+            <fieldset id="correspondence">
+                <legend>
+                    Correspondence
+                    <button id="add-correspondence" class="btn btn-floating waves-effect waves-light" alt="Add Author">{{>AdminAddIcon}}</button>
+                </legend>
+                {{#if correspondence}}
+                {{#each correspondence}}
+                <div class="row no-margin">
+                    <div class="col s11">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
+                                <div class="row no-margin correspondence-row">
+                                    <div class="col s6 input-field">
+                                        <input name="correspondence_text_{{@index}}" type="text" value="{{text}}" class="correspondence-text" />
+                                        <label for="correspondence_text_{{@index}}" class="{{#if text}}active{{/if}}">Text</label>
+                                    </div>
+                                    <div class="col s6 input-field">
+                                        <input name="correspondence_email_{{@index}}"  type="email" value="{{email}}" class="correspondence-email" />
+                                        <label for="correspondence_email_{{@index}}" class="{{#if email}}active{{/if}}">Email</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s1 no-padding">
+                        {{>AdminRemoveIcon index=@index name=@index nameAdditional="correspondence" what="correspondence"}}
+                    </div>
+                </div>
+                {{/each}}
                 {{/if}}
             </fieldset>
 
@@ -389,14 +423,14 @@
                                         <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
                                     </div>
                                     <div class="col s12 m2">
+                                        <label>Affiliations</label>
+                                        <div class="clearfix"></div>
                                         {{#each affiliations_list}}
-                                        <span class="margin-right-md margin-top-md">
+                                        <div class="margin-right-lg margin-top-lg">
                                             <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
                                             <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-                                        </span>
+                                        </div>
                                         {{/each}}
-                                        <div class="clearfix"></div>
-                                        <label>Affiliations</label>
                                     </div>
                                     <div class="hide">
                                         {{#each arrayify ids}}
@@ -408,7 +442,7 @@
                         </div>
                     </div>
                     <div class="col s1">
-                        {{>AdminRemoveIcon what="author"}}
+                        {{>AdminRemoveIcon what="author" name="author-{{@index}}"}}
                     </div>
                 </li>
                 {{/each}}
@@ -438,7 +472,7 @@
                             </div>
                         </div>
                         <div class="col s1">
-                            {{>AdminRemoveIcon what="affiliation"}}
+                            {{>AdminRemoveIcon what="affiliation" index=@index name=@index  nameAdditional="affiliation"}}
                         </div>
                     </div>
                 </li>

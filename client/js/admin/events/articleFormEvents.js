@@ -58,6 +58,31 @@ Template.AdminArticleForm.events({
         article.authors.splice(authorIndex,1);
         Session.set('article-form',article);
     },
+    // Correspondence
+    'click #add-correspondence': function(e,t){
+        e.preventDefault();
+        var article = Session.get('article-form');
+        article.correspondence = Meteor.adminArticleFormGet.correspondence();
+        if(!article.correspondence){
+            article.correspondence = [];
+        }
+        article.correspondence.push({});
+
+        Session.set('article-form',article);
+
+        Meteor.general.scrollTo('affiliations');
+    },
+    'click .remove-correspondence': function(e,t){
+        console.log('------------------------- remove-correspondence');
+        e.preventDefault();
+        var article = Session.get('article-form');
+        var correspondenceIndex = $(e.target).attr('data-index');
+        console.log('correspondenceIndex',correspondenceIndex);
+
+        article.correspondence.splice(correspondenceIndex, 1);
+        Session.set('article-form',article);
+    },
+    // -------
     // Affiliations
     // -------
     'click #add-affiliation': function(e,t){
@@ -68,7 +93,7 @@ Template.AdminArticleForm.events({
         if(!article.affiliations){
             article.affiliations = [];
         }
-        article.affiliations.push('NEW AFFILIATION');
+        article.affiliations.push(' ');
 
         // add new affiliation object to all author affiliations list array
         if(article.authors){
