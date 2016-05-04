@@ -373,7 +373,7 @@
         <div class="col s12">
             <ul class="authors-list">
                 {{#each authors}}
-                <li class="author-li row author-row">
+                <li class="author-li row author-row no-magin">
                     <div class="col s11">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
@@ -393,14 +393,15 @@
                                         <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
                                         <label for="name_last_{{@index}}">Last Name</label>
                                     </div>
-                                    <div class="col s12 m1">
-                                        <label>Affiliations</label>
+                                    <div class="col s12 m2">
                                         {{#each affiliations_list}}
-                                        <p class="pad-md">
+                                        <span class="margin-right-md margin-top-md">
                                             <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
                                             <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-                                        </p>
+                                        </span>
                                         {{/each}}
+                                        <div class="clearfix"></div>
+                                        <label>Affiliations</label>
                                     </div>
                                     <div class="hide">
                                         {{#each arrayify ids}}
@@ -426,7 +427,7 @@
             <ol class="affiliations-list">
                 {{#each arrayify affiliations}}
                 <li id="affiliation-li-{{@index}}" class="affiliation-li">
-                    <div class="row">
+                    <div class="row no-margin">
                         <div class="col s11">
                             <div class="card blue-grey lighten-5 z-depth-0">
                                 <div class="card-content">
