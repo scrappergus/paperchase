@@ -113,11 +113,6 @@
                     IDs
                     <button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID">{{>AdminAddIcon}}</button>
                 </legend>
-                <div class="row">
-                    <div class="col s12">
-
-                    </div>
-                </div>
                 {{>AddArticleId}}
                 {{#if ids}}
                 <div class="row">
@@ -125,8 +120,8 @@
                     <div class="col s11 m3">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <label for="article-id-{{name}}" class="active">{{name}}</label>
                                 <input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
+                                <label for="article-id-{{name}}" class="active">{{name}}</label>
                             </div>
                         </div>
                     </div>
@@ -377,25 +372,25 @@
                     <div class="col s11">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <div class="row">
+                                <div class="row no-margin valign-wrapper">
                                     <div class="col s12 m1 center-align">
                                         <i class="material-icons pointer">&#xE8D5;</i>
                                     </div>
-                                    <div class="col s12 m3">
+                                    <div class="input-field col s12 m3">
                                         <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first_{{@index}}">
-                                        <label for="name_first_{{@index}}">First Name</label>
+                                        <label for="name_first_{{@index}}" class="{{#if name_first}}active{{/if}}">First Name</label>
                                     </div>
-                                    <div class="col s12 m3">
+                                    <div class="input-field col s12 m3">
                                         <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle_{{@index}}">
-                                        <label for="name_middle_{{@index}}">Middle Name</label>
+                                        <label for="name_middle_{{@index}}" class="{{#if name_middle}}active{{/if}}">Middle Name</label>
                                     </div>
-                                    <div class="col s12 m3">
+                                    <div class="input-field col s12 m3">
                                         <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
-                                        <label for="name_last_{{@index}}">Last Name</label>
+                                        <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
                                     </div>
                                     <div class="col s12 m2">
                                         {{#each affiliations_list}}
-                                        <span class="margin-right-md margin-top-md">
+                                        <span class="input-field margin-right-md margin-top-md">
                                             <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
                                             <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
                                         </span>
@@ -431,11 +426,11 @@
                         <div class="col s11">
                             <div class="card blue-grey lighten-5 z-depth-0">
                                 <div class="card-content">
-                                    <div class="row no-margin">
+                                    <div class="row no-margin valign-wrapper">
                                         <div class="col s12 m1 center-align">
                                             <i class="material-icons pointer">&#xE8D5;</i>
                                         </div>
-                                        <div class="col s10">
+                                        <div class="col s12 m11">
                                             <input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
                                         </div>
                                     </div>
