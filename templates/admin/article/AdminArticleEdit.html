@@ -425,16 +425,24 @@
         <div class="col s12">
             <ol class="affiliations-list">
                 {{#each arrayify affiliations}}
-                <li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4">
-                    <div class="valign-wrapper" style="width:100%">
-                        <div class="col s1 center-align ">
-                            <i class="material-icons pointer">&#xE8D5;</i>
-                        </div>
-                        <div class="col s10">
-                            <input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+                <li id="affiliation-li-{{@index}}" class="affiliation-li">
+                    <div class="row">
+                        <div class="col s11">
+                            <div class="card blue-grey lighten-5 z-depth-0">
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col s12 m1 center-align">
+                                            <i class="material-icons pointer">&#xE8D5;</i>
+                                        </div>
+                                        <div class="col s10">
+                                            <input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col s1">
-                            <i class="prefix remove-affiliation material-icons red-type close-icon right">&#xE15C;</i>
+                            {{>AdminRemoveIcon what="affiliation"}}
                         </div>
                     </div>
                 </li>
