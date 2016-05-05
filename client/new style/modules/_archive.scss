@@ -6,16 +6,28 @@
     width: 16%;
     margin: 0 0 25px 0;
     padding-right: 10px;
-    img {
-    width: 100%;
+    img { 
+        width: 100%; 
+        margin: 0; 
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
     }
-    h5 { margin-top: 10px; }
+    h5 { margin: 0; }
     &:nth-child(6n+1) { clear: both; };
 
-    .issue-info {
+    a.issue-info {
+        display: block;
+        position: relative;
+        top: -5px;
         width: 100%;
         background: $electric;
-        a { color: #fff; }
-        padding: 3px 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        color: #fff;
+        padding: 4px 10px;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
     }
 }

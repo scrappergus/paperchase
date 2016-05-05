@@ -464,8 +464,25 @@ if (Meteor.isServer) {
         return articles.find({issue_id : issueinfo['_id']});
     });
     Meteor.publish('currentIssue',function(){
-        return issues.find({},{sort : {volume:-1,issue:-1}});
+        return issues.find({}, {sort: {pub_date: -1, limit: 1}});
     });
+
+    /**
+     * Need Help
+     *
+     * I'd like to get one document for each of these,
+     * and I need them to count correctly (previous 
+     * issue for Volume 7, Issue 1 would be Volume 6,
+     * Issue 12). 
+     */
+     
+    Meteor.publish('prevIssue',function(volume, issue){
+        return issues.find({'issue': {$lt: issue}}, { sort: {volume:1,issue:1 }, limit:1});
+    });
+    Meteor.publish('nextIssue',function(volume, issue){
+        return issues.find({'issue': {$gt: issue}}, { sort: {volume:1,issue:1 }, limit:1});
+    });
+
     Meteor.publish('articleIssue',function(articleMongoId){
         // console.log('articleMongoId', articleMongoId);
         var articleInfo = articles.findOne({_id : articleMongoId});

@@ -43,9 +43,7 @@
             <!-- Section Heading -->
             {{#if start_group}}
                 {{#if article_type.name}}
-                    <h4 id="{{convertToID article_type.name}}s" class="blue-divider">{{article_type.name}}s</h4>
-                {{else}}
-                    <h4 id="defaultsectiontitle" class="blue-divider">Default Section Title</h4>
+                    <h4 id="{{#with pluralize article_type.name}}{{convertToID this}}{{/with}}" class="blue-divider">{{pluralize article_type.name}}</h4>
                 {{/if}}
             {{/if}}
 

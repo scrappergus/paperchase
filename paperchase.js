@@ -582,8 +582,12 @@ if (Meteor.isClient) {
         parent: 'Archive',
         layoutTemplate: 'Visitor',
         waitOn: function(){
-            return[
-                Meteor.subscribe('journalConfig')
+            var volume = this.params.vi.substr(1,1);
+            var issue = this.params.vi.substr(3,1);
+            return [
+                Meteor.subscribe('journalConfig'),
+                Meteor.subscribe('prevIssue', volume, issue),
+                Meteor.subscribe('nextIssue', volume, issue)
             ]
         },
         title: function() {
@@ -630,7 +634,6 @@ if (Meteor.isClient) {
                     Session.set('archive',result);
                 }
             });
-
 
             this.next();
         }
