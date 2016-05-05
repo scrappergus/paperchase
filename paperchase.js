@@ -582,12 +582,10 @@ if (Meteor.isClient) {
         parent: 'Archive',
         layoutTemplate: 'Visitor',
         waitOn: function(){
-            var volume = this.params.vi.substr(1,1);
-            var issue = this.params.vi.substr(3,1);
             return [
                 Meteor.subscribe('journalConfig'),
-                Meteor.subscribe('prevIssue', volume, issue),
-                Meteor.subscribe('nextIssue', volume, issue)
+                Meteor.subscribe('prevIssue', this.params.vi),
+                Meteor.subscribe('nextIssue', this.params.vi)
             ]
         },
         title: function() {
@@ -627,13 +625,13 @@ if (Meteor.isClient) {
                 });
             }
 
-            Meteor.call('archive',function(error,result){
-                if(error){
-                    console.error('Archive Error', error);
-                }else if(result){
-                    Session.set('archive',result);
-                }
-            });
+            // Meteor.call('archive',function(error,result){
+            //     if(error){
+            //         console.error('Archive Error', error);
+            //     }else if(result){
+            //         Session.set('archive',result);
+            //     }
+            // });
 
             this.next();
         }
