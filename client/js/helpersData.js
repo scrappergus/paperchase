@@ -96,6 +96,15 @@ Template.scrollspyItems.helpers({
     // }
 });
 
+// Home
+// -------------
+Template.Home.helpers({
+    latestIssue: function() {
+        console.log(issues.findOne());
+        return issues.findOne();
+    }
+});
+
 // Contact
 // -------------
 Template.Contact.helpers({
@@ -143,20 +152,16 @@ Template.EdBoard.helpers({
 Template.ArticleText.helpers({
     fullText: function(){
         return Session.get('article-text');
-    },
-    // sections: function() {
-    //     var array = Session.get('article-text').sections;
-    //     return Session.get('article-text').sections;
-    // }
+    }
 });
 
-// Todo: this is slow
 Template.ArticleSidebar.helpers({
     fullText: function(){
         return Session.get('article-text');
     },
     items: function() {
         var articleHeaders = Session.get('article-text').sections;
+        var references = Session.get('article-text').references;
         var sections = [];
 
         for ( i = 0; i < articleHeaders.length; i++ ) {
@@ -165,9 +170,14 @@ Template.ArticleSidebar.helpers({
             }
         }
 
+        if ( references ) {
+            sections.push( { title: 'References'} );
+        }
+
         return sections;
     }
 });
+
 Template.AuthorsRefList.helpers({
     tooltipAffiliation: function() {
         var articleData = Template.parentData(2);
@@ -186,41 +196,22 @@ Template.Issue.helpers({
     items: function() {
         var articles = Session.get('issue').articles;
         var sections = [];
+        var sectionName;
 
         for ( i = 0; i < articles.length; i++ ) {
-            if ( articles[i].start_group && articles[i].article_type.name ) {
-                sections.push( { title: articles[i].article_type.name + 's' } );
+            console.log('Article Type: ' + Meteor.general.pluralize(articles[i].article_type.name));
+            if ( articles[i].start_group && articles[i].article_type.name) {
+                sections.push( { title: Meteor.general.pluralize(articles[i].article_type.name) } );
             }
         }
 
         return sections;
     },
     prevIssue: function() {
-        // var volumes = Session.get('archive');
-        var issue = parseInt(Session.get('issue').issue_linkable);
-        var volume = Session.get('issue').volume;
-
-        if (issue === 1) { 
-            return '/issue/v' + (volume - 1) + 'i12';
-        } else if (issue === 1 && volume === 1) {
-            return null;
-        } else {
-            return '/issue/v' + volume + 'i' + (issue - 1);
-        }
+        return 'previous';
     },
     nextIssue: function() {
-        var issue = parseInt(Session.get('issue').issue_linkable);
-        var volume = Session.get('issue').volume;
-        var lastVolume = 8;
-        var lastIssue = 3;
-
-        if (issue === 12) { 
-            return '/issue/v' + (volume + 1) + 'i1';
-        } else if (issue === lastIssue && volume === lastVolume) {
-            return null;
-        } else {
-            return '/issue/v' + volume + 'i' + (issue + 1);
-        }
+        return 'next';
     }
 });
 

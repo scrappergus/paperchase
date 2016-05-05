@@ -212,22 +212,6 @@ html,body{
 		}
 	}
 
-/* Archive ------------------------*/
-	.archive-issue{
-		float:left;
-		display:block;
-		width: 25%;
-		margin: 0 0 25px 0;
-		padding-right: 10px;
-		img {
-			width: 100%;
-		}
-		h5 { margin-top: 10px; }
-		&:nth-child(4n+1){
-			clear: both;
-		};
-	}
-
 /* Buttons ------------------------*/
 	.btn{
 		@extend .serif;

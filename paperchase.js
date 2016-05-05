@@ -24,8 +24,6 @@ if (Meteor.isClient) {
     })();
     // var journal = journalConfig.findOne();
     // Session.setDefault('journal',journal);
-
-    $('.modal-trigger').leanModal();
 }
 
 Router.configure({
@@ -401,7 +399,8 @@ if (Meteor.isClient) {
                 Meteor.subscribe('feature'),
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('eb'),
-                Meteor.subscribe('newsListDisplay')
+                Meteor.subscribe('newsListDisplay'),
+                Meteor.subscribe('currentIssue')
             ]
         },
         data: function(){
@@ -583,8 +582,12 @@ if (Meteor.isClient) {
         parent: 'Archive',
         layoutTemplate: 'Visitor',
         waitOn: function(){
-            return[
-                Meteor.subscribe('journalConfig')
+            var volume = this.params.vi.substr(1,1);
+            var issue = this.params.vi.substr(3,1);
+            return [
+                Meteor.subscribe('journalConfig'),
+                Meteor.subscribe('prevIssue', volume, issue),
+                Meteor.subscribe('nextIssue', volume, issue)
             ]
         },
         title: function() {
@@ -631,7 +634,6 @@ if (Meteor.isClient) {
                     Session.set('archive',result);
                 }
             });
-
 
             this.next();
         }

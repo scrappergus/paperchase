@@ -56,6 +56,7 @@
 
 <template name="breadcrumbs">
     <div class="breadcrumbs">
+        <span id="sidebar-toggle" class="icon icon-angle-left"></span>
         <ul>
             <li><a href="/">Home</a></li>
             {{#each Breadcrumb}}
@@ -83,7 +84,7 @@
 </template>
 
 <template name="Footer">
-    <div class="wide grid">
+    <div class="footer page-content">
         <footer><span>Copyright © 2015 {{publisher}} • Online ISSN: {{issn}}</span></footer>
     </div>
 </template>

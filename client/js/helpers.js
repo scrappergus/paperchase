@@ -210,6 +210,11 @@ if (Meteor.isClient) {
         for (var key in obj) result.push({name:key,value:obj[key]});
         return result;
     });
+
+    Template.registerHelper('pluralize', function(str){
+        return Meteor.general.pluralize(str);
+    });
+
     // Count
     // --------
     Template.registerHelper('countItems', function(items) {
@@ -230,15 +235,15 @@ if (Meteor.isClient) {
     });
 
     Template.registerHelper('titleCase', function(str) {
-            return str.replace(/\w\S*/g, function(txt){
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
+        return str.replace(/\w\S*/g, function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
     });
 
     Template.registerHelper('convertToID', function(str) {
-      if(str){
+      if(str) {
         return str = str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
-      }else{
+      } else {
         return;
       }
     });

@@ -1,24 +1,40 @@
 <template name="Home">
-    {{> featuredNewsItem}}
+    
+    <div class="home-hero">
+        <div class="grid">
+            <div class="hero-text">
+                <h1 class="head"><span>The ongoing revolution in aging research calls for a high-impact, open-access journal.</span></h1>
+                <h2 class="subhead">Aging has an impact factor of <strong>6.432</strong>&mdash;the highest impact factor in the field.</h2>
+            </div>
+        </div>
+    </div>
 
-    <div class="grid">
+    <div class="white-bar flex bar">
+        {{> IndexedBy}}
+    </div>
+
+    <div class="grid push">
         <div class="page-content">
-        {{#if news}}
-            <h3 class="section-heading">More News</h3>
-            <ul class="divided-list">
-                {{#each news}}
-                    <li class="item">
-                        <h4 class="title">{{title}}</h4>
-                        <h5 class="meta">{{formatDate date}}</h5>
-                        <p>{{{content}}}</p>
-                    </li>
-                {{/each}}
-            </ul>
-        {{/if}}
+            <h3 class="section-heading">About the Journal</h3>
+            <p><strong>AGING</strong> primarily publishes papers of outstanding significance, exceptional novelty, and ground-breaking discoveries in all disciplines from yeast to humans and from evolution to medicine.</p> 
+
+            <p>The journal welcomes scientists in all disciplines, not only those in traditional gerontology. The journal covers (in addition to traditional topics on aging) many other topics including <span class="tag">cellular and molecular biology</span> (regulation of translation, cell growth, death and autophagy, mitochondria, DNA damage and repair, microRNAs, stem cells), <span class="tag">human age-related diseases</span>, <span class="tag">pathology in model organisms</span>, <span class="tag">cancer</span> and first of all <span class="tag">signal transduction pathways</span> (p53, sirtuins, PI-3K/AKT/mTOR and so on) and approaches to modulate these signaling pathways.</p>
+
+            <p>Revolutionary publishing allows us to publish overnight with the highest exposure.</p>
+
+            {{#if news}}
+                {{> LatestNews}}
+            {{/if}}
         </div>
 
         <div class="page-sidebar">
-            {{>HomePageEditorList}}
+            {{#with latestIssue}}
+                {{> HomePageLatestIssue}}
+            {{/with}}
+
+            <!-- <h2 style="padding-bottom: 30px;">Revolutionary publishing allows us to publish overnight with the highest exposure.</h2> -->
+
+            {{> HomePageEditorList}}
         </div>
     </div>
 </template>
@@ -28,23 +44,78 @@
         <h6 class="card-title">Editors-in-Chief</h6>
         <ul class="editors">
             {{#each eic}}
-            <li class="no-link"><strong>{{>PersonName}}</strong><br /> {{{address}}}</li>
+            <li><a href="#{{name_last}}{{name_first}}" class="modal-trigger"><strong>{{>PersonName}}</strong><br /> {{{address}}}</a></li>
+            {{#if bio}}
+              {{> bioModal bio=bio firstName=name_first lastName=name_last}}
+            {{/if}}
             {{/each}}
             <li><a href="{{pathFor 'EdBoard'}}" class="accent">See All Editors</a></li>
         </ul>
     </div>
 </template>
 
-<template name="featuredNewsItem">
-    <div class="featured-news-item">
-        <div class="grid">
-            <div class="news-text">
-                <h1 class="head">2016 Conference: Biomedical Innovation in Healthy Longevity</h1>
-                <h2 class="subhead">Lorem ipsum dolor sit amet draco dormiens nunquam titillandus lorem ipsum dolor sit amet draco dormiens nunquam titillandus.</h2>
-            </div>
-            <div class="news-info">
-                <a href="#" class="minimal large button">Read More <span class="icon icon-angle-right"></span></a>
-            </div>
-        </div>
+<template name="HomePageLatestIssue">
+    <div class="issue-highlight clean card">
+        <a href="/issue/v{{volume}}i{{issue}}"><img src="https://s3-us-west-1.amazonaws.com/paperchase-aging/covers/{{cover}}" class="cover"></a>
+        
+        <ul class="button-list">
+            <li class="title">Latest Issue</li>
+            <li class="subtitle">Volume {{volume}}, Issue {{issue}}</li>
+            <li><a href="/issue/v{{volume}}i{{issue}}">Table of Contents</a></li>
+            <li><a href="{{pathFor 'Archive'}}">Full Archive</a></li>
+        </ul>
+    </div>
+</template>
+
+<template name="IndexedBy">
+    <ul class="indexed-by">
+        <li class="title">Indexed By</li>
+        <li class="pubmed">
+            <a href="http://www.ncbi.nlm.nih.gov/pubmed?term=%22aging%20(albany%20ny)%22%20%5Bta%5D" class="tooltip--triangle pubmed small" data-tooltip="Indexed as: Aging (Albany NY)" target="_blank">
+            <img src="/images/pubmed.png"> <!-- PubMed / Medline --></a>
+        </li>
+
+        <li class="pmc">
+            <a href="http://www.ncbi.nlm.nih.gov/pmc/journals/1105/" class="tooltip--triangle small" data-tooltip="Indexed as: Aging (Albany NY)" target="_blank">
+            <img src="/images/pmc4.png"> <!-- PubMed Central  --></a>
+        </li>
+
+        <li class="thomson">
+            <a href="http://isiwebofknowledge.com/" class="tooltip--triangle small" data-tooltip="Indexed as: Aging-US" target="_blank">
+            <img src="/images/thomson.png"> <!-- ISI/Thomson --></a>
+        </li>
+
+        <li class="scopus">
+            <a href="http://www.info.sciverse.com/scopus/" class="tooltip--triangle small" data-tooltip="Indexed as: Aging" target="_blank">
+            <img src="/images/scopus3.png"> <!-- Scopus --></a>
+        </li>
+    </ul>
+    <!-- <span class="meta">AGING is abbreviated by indexes: by PubMed - Aging (Albany NY); by ISI/Thomson - Aging-US; by Scopus - Aging.</span> -->
+</template>
+
+<template name="LatestNews">
+    <h3 class="section-heading new-section">Latest News</h3>
+    <ul class="divided-list">
+        {{#each news}}
+            <li class="item">
+                <h4 class="title">{{title}}</h4>
+                <h5 class="meta">{{formatDate date}}</h5>
+                <p>{{{content}}}</p>
+            </li>
+        {{/each}}
+    </ul>
+</template>
+
+<template name="LatestNewsSidebar">
+    <div class="card sidebar-card">
+        <h6 class="card-title">Latest News</h6>
+        <ul class="news-items">
+            {{#each news}}
+            <li>
+                <span class="title">2016 Conference: Biomedical Innovation in Healthy Longevity</span>
+                <span class="date">December 3, 2015</span>
+            </li>
+            {{/each}}
+        </ul>
     </div>
 </template>
