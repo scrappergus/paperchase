@@ -218,7 +218,7 @@ Meteor.methods({
                 prevVolume = parseInt(volume) - 1;
                 prevVolumeData = volumes.findOne({volume : prevVolume });
                 if(prevVolumeData && prevVolumeData.issues && prevVolumeData.issues.length > 0){
-                    prevIssueId = prevVolume.issues[prevVolumeData.issues.length - 1]
+                    prevIssueId = prevVolumeData.issues[prevVolumeData.issues.length - 1]
                 }
             }
 
