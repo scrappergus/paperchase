@@ -68,7 +68,7 @@ Meteor.methods({
         // KEYWORDS
         // -----------
         if(article['kwd-group']){
-            Meteor.xmlPmc.keywords(article['kwd-group'][0]['kwd'], function(keywords){
+            Meteor.xmlPmc.keywords(article['kwd-group'][0].kwd, function(keywords){
                 if(keywords && keywords.length > 0){
                     articleProcessed.keywords = keywords;
                 }
@@ -88,7 +88,6 @@ Meteor.methods({
         // ARTICLE TYPE
         // -----------
         //TODO: These are nlm type, possible that publisher has its own type of articles
-        //TODO: Update article type collection if this type not present
         if(article['article-categories']){
             Meteor.xmlPmc.articleType(articleJson, function(articleType){
                 if(articleType){
@@ -133,7 +132,7 @@ Meteor.methods({
         // ALL AFFILIATIONS
         // -----------
         articleProcessed.affiliations = [];
-        if(article['aff']){
+        if(article.aff){
             Meteor.xmlPmc.authorsAffiliations(article.aff, function(affiliations){
                 if(affiliations && affiliations.length > 0){
                     articleProcessed.affiliations = affiliations;
@@ -238,6 +237,9 @@ Meteor.xmlPmc = {
         var article = articleJson[0]['front'][0]['article-meta'][0];
         article_type.name = article['article-categories'][0]['subj-group'][0]['subject'][0];
         article_type.short_name =  articleJson[0]['$']['article-type'];
+        if(article_type.short_name){
+            article_type.short_name = article_type.short_name.replace('-','_');
+        }
         cb(article_type);
     },
     authors: function(authorsList,cb){
@@ -446,27 +448,46 @@ Meteor.xmlPmc = {
         for(var i = 0 ; i < idList.length ; i++){
             var type = idList[i]['$']['pub-id-type'];
             var idCharacters = idList[i]['_'];
-
+            idCharacters = idCharacters.replace('PMC','');
             ids[type] = idCharacters;
         }
         cb(ids);
+    },
+    keyword: function(keyword){
+        var result = '';
+        if(typeof keyword == 'object'){
+
+            for(var kwKey in  keyword){
+                if(kwKey === '_'){
+                    // should be just a normal string
+                    if(typeof keyword[kwKey] === 'string'){
+                        result += keyword[kwKey];
+                    }
+                }else{
+                    result += Meteor.xmlPmc.keywordStyled(kwKey,keyword[kwKey]);
+                }
+            }
+        }else if(typeof keyword == 'string'){
+            result = keyword;
+        }
+        return result;
+    },
+    keywordStyled: function(key,keyword){
+        var styled = '';
+        styled += '<' + key + '>';
+        if(keyword === 'string'){
+            styled += keyword[key];
+        }else if(typeof keyword === 'object' && Array.isArray(keyword)){
+            styled += keyword.join(' ');
+        }
+        styled += '</' + key + '>';
+        return styled;
     },
     keywords: function(keywords,cb){
         // keywords is JSON from XML to get keywords
         var result = [];
         for(var kw=0 ; kw<keywords.length ; kw++){
-            if(typeof  keywords[kw] == 'object'){
-                var kwStyled = '',
-                    kwStyeType = '';
-                for(var kwKey in  keywords[kw]){
-                    kwStyeType += kwKey;
-                }
-                kwStyled = '<' + kwStyeType + '>' + keywords[kw][kwStyeType] + '<' + kwStyeType + '/>';
-                result.push(kwStyled);
-
-            }else{
-                result.push(keywords[kw]);
-            }
+            result.push(Meteor.xmlPmc.keyword(keywords[kw]));
         }
         cb(result);
     },

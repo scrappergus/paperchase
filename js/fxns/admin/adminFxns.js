@@ -1,12 +1,27 @@
 Meteor.admin = {
     titleInTable: function(title){
-        var txt = document.createElement('textarea');
-        txt.innerHTML = title.substring(0,40);
-        if(title.length > 40){
-            txt.innerHTML += '...';
+        var result = '';
+        if(title){
+            var txt = document.createElement('textarea');
+            txt.innerHTML = title.substring(0,40);
+            if(title.length > 40){
+                txt.innerHTML += '...';
+
+            }
+            result = txt.value;
         }
-        return txt.value;
+
+        return result;
     },
+    clone: function(obj) {
+        //http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
+        if (null == obj || 'object' != typeof obj) return obj;
+        var copy = obj.constructor();
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) copy[key] = obj[key];
+        }
+        return copy;
+    }
 }
 
 Meteor.adminSite = {
@@ -338,170 +353,6 @@ Meteor.adminEdBoard = {
     }
 }
 
-Meteor.adminArticle = {
-    getAffiliations: function(){
-        var affiliations = [];
-        $('.article-affiliation').each(function(idx,obj){
-            affiliations.push($(this).val());
-        });
-        return affiliations;
-    },
-    updateAffiliationsOrder: function(newIndex){
-        var originalIndex = Session.get('affIndex');
-        var article = Session.get('article-form');
-
-        // update the order of affiliations in the author objects
-        for(var a = 0; a < article.authors.length ; a++){
-            var affs = article['authors'][a]['affiliations_list'];
-            var movedAff = affs[originalIndex];
-            affs.splice(originalIndex,1);
-            affs.splice(newIndex, 0, movedAff);
-            article['authors'][a]['affiliations_list'] = affs;
-        }
-
-        Session.set('article-form',article);
-    },
-    addDateOrHistory: function(dateType,e){
-        e.preventDefault();
-        var article = Session.get('article-form');
-        var type = $(e.target).attr('id').replace('add-','');
-        if(!article[dateType]){
-            article[dateType] = {};
-        }
-        article[dateType][type] = new Date();
-        article[dateType][type].setHours(0,0,0,0);
-        Session.set('article-form',article);
-
-        $('#add-article-' + dateType).closeModal();
-        $('.lean-overlay').remove();
-    },
-    removeKeyFromArticleObject: function(articleKey,e){
-        e.preventDefault();
-        var article = Session.get('article-form');
-        var objectKey = $(e.target).attr('id').replace('remove-',''); //the key of the object in the article doc
-        delete article[articleKey][objectKey]; //the key in the object of the article doc
-        Session.set('article-form',article);
-    },
-    articleListOptions: function(articleKey){
-        // console.log('..articleListOptions');
-        var allListOptions;
-        var addListOptions = {};
-        if(articleKey === 'history'){
-            allListOptions = dateTypeDateList
-        }else if(articleKey === 'dates'){
-            allListOptions = pubTypeDateList;
-        }else if(articleKey === 'ids'){
-            allListOptions = pubIdTypeList;
-        }
-
-        if(Session.get('article-form') && articleKey){
-            var article = Session.get('article-form');
-            var current = article[articleKey]; // what the article has saved
-            for(var d in allListOptions){
-                if(!current || current[d] === undefined){ // do not test for empty string, adding a new ID type will add empty string to articles session variable
-                    addListOptions[d] = allListOptions[d]; // add the other available options
-                }
-            }
-            return addListOptions;
-        }
-    },
-    articleListButton: function(type){
-        // console.log('..articleListButton = ' + type);
-        if($('.add-article-' + type).hasClass('hide')){
-            // console.log('SHOW');
-            $('.add-article-' + type).removeClass('hide');
-            $('#add-' + type).html('<i class="material-icons">&#xE15C;</i>');
-        }else{
-            // console.log('HIDE');
-            $('.add-article-' + type).addClass('hide');
-            $('#add-' + type).html('<i class="material-icons">&#xE147;</i>');
-            $('#add-' + type).removeClass('expanded');
-        }
-    },
-    readyArticleForm: function(){
-        // console.log('..readyArticleForm');
-
-        // title
-        // ------
-        $('.article-title').materialnote({
-            onPaste: function(e){
-                Meteor.formActions.removePastedStyle(e);
-            },
-            toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['undo', ['undo', 'redo', 'help']],
-                ['misc', ['codeview']]
-            ]
-        });
-
-        // abstract
-        // ------
-        $('.article-abstract').materialnote({
-            onPaste: function(e){
-                Meteor.formActions.removePastedStyle(e);
-            },
-            toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['undo', ['undo', 'redo', 'help']],
-                ['misc', ['codeview']]
-            ]
-        });
-
-        // dates
-        // ------
-        // Initiated on partial template rendering, templateAdmin.js
-
-        // issue, article type
-        // ------
-        // selects
-        $('#article-issue').material_select();
-        $('#article-type').material_select();;
-        $('#article-section').material_select();;
-        $('#article-pub-status').material_select();
-
-        // modals
-        // ------
-        $('#success-modal').leanModal();
-    },
-    initiateAuthorsSortable: function(){
-        $('.authors-list').sortable();
-    },
-    initiateAffiliationsSortable: function(){
-        $('.affiliations-list').sortable({
-            start: function( event, ui ) {
-                Session.set('affIndex',ui.item.index());
-            },
-            update: function( event, ui ) {
-                var newIndex = ui.item.index();
-                Meteor.adminArticle.updateAffiliationsOrder(newIndex);
-            },
-        });
-    },
-    urlViaPiiOrMongo: function(articleId,articleRoute){
-        Session.set('article',null);
-        // determine ID type used in the URL of article pages
-        var articleExistsExists = articles.findOne({'_id': articleId});
-        if(!articleExistsExists){
-            // if the mongo id search found nothing, search by pii
-            var articlePii = String(articleId);
-            var articleByPii = articles.findOne({'ids.pii': articlePii});
-            // check if :_id is a pii and not Mongo ID
-            if(articleByPii){
-                Router.go(articleRoute, {_id: articleByPii._id});
-            }else{
-                Session.set('admin-not-found',true);
-                // Router.go('AdminArticleAdd');
-            }
-        }else{
-            Session.set('article',articleExistsExists);
-        }
-    },
-    cleanTitle: function(title){
-        // for cleaning title input
-        return string.replace(/<p>|<br>/g,'').replace(/<\/p>/g,'').trim();
-    }
-}
-
 Meteor.adminIssue = {
     readyIssueForm: function(){
         Meteor.dates.initiateDatesInput();
@@ -517,35 +368,6 @@ Meteor.adminIssue = {
                 ['misc', ['codeview']]
             ]
         });
-    }
-}
-
-Meteor.adminShared = {
-    formGetData: function (e) {
-        var forDb = {}
-
-        // Section title
-        // ---------------
-        var title = $('.section-title').code();
-        // console.log(title);
-        title = Meteor.formActions.cleanWysiwyg(title);
-        if(title != ''){
-            forDb.title = title;
-        }
-
-        // Section content
-        // ---------------
-        var section = $('.section-content').code();
-        // section = Meteor.formActions.cleanWysiwyg(section);
-        if(section != ''){
-            forDb.content = section;
-        }
-
-        // Display
-        // ---------------
-        forDb.display = $('#section-display').is(':checked');
-
-        return forDb;
     }
 }
 
@@ -704,170 +526,6 @@ Meteor.adminSections = {
     }
 }
 
-Meteor.articleFiles = {
-    verifyXml: function(articleMongoId,files){
-        // console.log('..verifyXml',articleMongoId,files);
-        var s3Folder = 'xml';
-        var file = files[0];
-        var reader = new FileReader;
-        var xmlString;
-
-        reader.onload = function(e) {
-            xmlString = e.target.result;
-
-            Meteor.call('processXmlString',xmlString, function(error,result){
-                if(error){
-                    console.error('process XML for DB', error);
-                    Meteor.formActions.errorMessage('Could not process XML for verification');
-                }else if(result){
-                    Meteor.formActions.closeModal();
-                    // Meteor.general.scrollTo('xml-verify');
-
-                    Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
-                        if(error){
-                            console.log('ERROR - preProcessArticle');
-                            console.log(error);
-                        }
-                        if(result){
-                            Session.set('xml-verify',true);
-                            result._id = articleMongoId;
-                            Session.set('article-form',result);
-                            Meteor.formActions.closeModal();
-                        }
-                    });
-                }
-            });
-        }
-        reader.readAsText(file);
-    },
-    verifyNewXml: function(files){
-        var s3Folder = 'xml';
-        var file = files[0];
-        var reader = new FileReader;
-        var xmlString;
-
-        reader.onload = function(e) {
-            xmlString = e.target.result;
-
-            Meteor.call('processXmlString',xmlString, function(error,processedXml){
-                if(error){
-                    console.error('process XML for DB', error);
-                    Meteor.formActions.errorMessage('Could not process XML for verification');
-                }else if(processedXml){
-                    // check for duplicates
-                    Meteor.call('articleExistenceCheck',null,processedXml,function(error,result){
-                        if(result){
-                            Meteor.formActions.errorMessage('Article Already Exists. Please upload XML via the article page.<br><a href="/admin/article/' + result._id + '">' + result.title + '</a>');
-                        }else{
-                            Meteor.formActions.closeModal();
-                            Session.set('new-article',processedXml);
-                        }
-                    });
-                }
-            });
-        }
-        reader.readAsText(file);
-    },
-    uploadArticleFile: function(articleMongoId,s3Folder,files){
-        // console.log('uploadArticleFile',s3Folder);
-        var file = files[0];
-        var fileNameId = file.name.replace('.xml','').replace('.pdf','');
-        var messageForXml = '';
-        Meteor.s3.upload(files,s3Folder,function(error,res){
-            if(error){
-                console.error('Upload File Error', error);
-                Meteor.formActions.errorMessage('File not uploaded');
-            }else if(res){
-                // TODO: only rename if filename not MongoID
-                Meteor.call('renameArticleAsset', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
-                    if(error){
-
-                    }else if(newFileName){
-                        var updateAssetObj = {}
-                        updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
-                        Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
-                            if(result){
-                                // clear files
-                                S3.collection.remove({});
-
-
-                                // notify user
-                                if(s3Folder === 'xml'){
-                                    messageForXml = '<br><b>Save form to update the article record in the database.</b>';
-                                }
-                                Meteor.formActions.successMessage(result + ' uploaded. Saved as ' + newFileName + messageForXml);
-                                // Session.set('xml-verify',null); // do not clear form, still want the form visible so that they can update the database.
-
-                                // the user probably does not need to be notified about below functions
-                                // delete uploaded file, if not equal to MongoID
-                                if(articleMongoId != fileNameId){
-                                    S3.delete(s3Folder + '/' + file.name,function(error,result){
-                                        if(error){
-                                            console.error('Could not delete original file: ' + file.name);
-                                        }
-                                    });
-                                }
-                                if(s3Folder === 'xml'){
-                                    // check for figures and supplementary files after upload. This will not be in the article form because users cannot update this in the database, must match the XML
-                                    Meteor.call('afterUploadXmlFilesCheck',articleMongoId , newFileName, function(error,result){
-                                        if(error){
-                                            console.error('xmlCheckFiguresAndSupps',error);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    },
-    figuresById: function(figures){
-        // TODO:remove this and use filesById
-        var figsById = {};
-
-        figures.forEach(function(fig){
-            figsById[fig.id] = fig;
-        });
-
-        return figsById;
-    },
-    filesById: function(files){
-        var filesById = {};
-
-        files.forEach(function(file){
-            filesById[file.id.toLowerCase()] = file;
-        });
-
-        return filesById;
-    },
-    verifyFigure: function(originalFigId, newFigId){
-        // if new figure, originalFigId = new
-        var figures = Session.get('article').files.figures;
-        var figsById = Meteor.articleFiles.figuresById(figures);
-        if(originalFigId != newFigId && figsById[newFigId]){
-            return false; // figure ID already exists for another figure
-        }else{
-            return true;
-        }
-    },
-    maintainFilenameViaId: function(filesXml,filesDb,cb){
-        // console.log('maintainFilenameViaId');
-        // for maintaining the filename of the file
-        var result = [];
-        var filesDbById = Meteor.articleFiles.filesById(filesDb);
-        filesXml.forEach(function(file){
-            var joined = file;
-            var fileId = file.id.toLowerCase();
-            if(filesDbById[fileId] && filesDbById[fileId].file){
-                joined.file = filesDbById[fileId].file;
-            }
-            result.push(joined);
-        });
-        cb(result);
-    }
-}
-
 Meteor.adminUser = {
     getFormCheckBoxes: function(){
         var roles = {};
@@ -907,37 +565,6 @@ Meteor.adminUser = {
         }
 
         return user;
-    }
-}
-
-Meteor.s3 = {
-    upload: function(files,folder,cb){
-        var journalShortName = journalConfig.findOne().journal.short_name;
-        var journalBucket = 'paperchase-' + journalShortName;
-
-        S3.upload({
-            Bucket: journalBucket,
-            files: files,
-            path: folder,
-            unique_name: false
-        },function(err,res){
-            if(err){
-                console.error('S3 upload error',err);
-                cb(err);
-            }else if(res){
-                cb(null, res);
-            }
-        });
-    }
-}
-
-Meteor.processXml = {
-    cleanAbstract: function(abstract){
-        abstract = abstract.replace(/<\/p>/g,'');
-        abstract = abstract.replace(/<p>/g,'');
-        abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
-        abstract = Meteor.general.cleanString(abstract);
-        return abstract;
     }
 }
 
@@ -988,15 +615,18 @@ Meteor.dataSubmissions = {
 Meteor.validate = {
     email: function(email){
         //http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
+        if(email){
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        }else{
+            return;
+        }
     }
 }
 
 Meteor.generalClean = {
     pruneEmpty: function(obj) {
         for(var key in obj){
-            // console.log(key);
             if(!obj[key] || obj[key]  === ''){
                 // console.log('DELETE ',obj[key]);
                 delete obj[key];
@@ -1010,7 +640,7 @@ Meteor.generalClean = {
             }else if(typeof obj[key] == 'object' && Array.isArray(obj[key])){
                 var newArray = [];
                 for(var i=0 ; i < obj[key].length ; i++){
-                    if(typeof obj[key][i] === 'string' && obj[key][i] != ''){
+                    if(typeof obj[key][i] === 'string' && obj[key][i] != '' || typeof obj[key][i] === 'number' ){
                         newArray.push(obj[key][i]);
                     }else if(typeof obj[key][i] === 'object'){
                         newArray.push(Meteor.generalClean.pruneEmpty(obj[key][i]));

@@ -310,6 +310,21 @@ html,body{
 	.no-margin{
 		margin: 0px;
 	}
+	.margin-right-sm{
+		margin-right: $margin-sm;
+	}
+	.margin-right-md{
+		margin-right: $margin-md;
+	}
+	.margin-top-md{
+		margin-top: $margin-md;
+	}
+	.margin-right-lg{
+		margin-right: $margin-lg;
+	}
+	.margin-top-lg{
+		margin-top: $margin-lg;
+	}
 	.no-padding{
 		padding: 0px;
 	}

@@ -85,10 +85,8 @@ var ignoreConflictsViaXml = ['files','publisher','issue_id']; // want this separ
 
 Meteor.methods({
     compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
-
         dbArticle = Meteor.generalClean.pruneEmpty(dbArticle);
         xmlArticle = Meteor.generalClean.pruneEmpty(xmlArticle);
-
 
         var result = {};
         result.conflicts = [];
@@ -126,11 +124,26 @@ Meteor.methods({
                             result.conflicts.push(conflict);
                         });
                     }
-                    if(compareRes && compareRes.merged){
-                        result[keyDb] = compareRes.merged;
-                    }
                 });
+                result[keyXml] = xmlArticle[keyXml];
             }
+        }
+
+        // Issue
+        // vol and issue get compared above, but issue_id does not. This is because it is only stored in the DB.
+        // User will get notified if vol in XML != vol in DB, but this is to make sure that the XML version is selected if different than DB
+        if(result.volume && result.issue){
+            var issueFound = issues.findOne({volume : result.volume, issue : result.issue});
+            if(issueFound && issueFound._id != result.issue_id){
+                result.issue_id = issueFound._id;
+            }else if(!issueFound){
+                result.conflicts.push(Meteor.xmlDbConflicts.conflict('volume / issue', 'Issue not found in the database.'));
+                delete result.issue_id;
+            }
+        }
+
+        if(result.conflicts.length > 0){
+            result.conflicts = Meteor.xmlDbConflicts.alphabetizeConflicts(result.conflicts);
         }
 
         return result;
@@ -154,8 +167,9 @@ Meteor.xmlParse = {
 
 Meteor.xmlDbConflicts = {
     compare: function(key,xmlValue,dbValue,cb){
-        // console.log('   compare',key);
-        // console.log('  ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
+        // console.log('   compare');
+        // console.log('? ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
+
         var result = {};
         result.conflicts = [];
         result.merged;
@@ -164,14 +178,14 @@ Meteor.xmlDbConflicts = {
 
         // Just DB
         // ---------
-        if(!xmlValue){
-            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(dbValue)));
+        if(!Meteor.xmlDbConflicts.valueExists(xmlValue)){
+            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(key,dbValue)));
         }
 
         // Just XML
         // ---------
-        if(!dbValue){
-            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(xmlValue), null));
+        if(!Meteor.xmlDbConflicts.valueExists(dbValue)){
+            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(key,xmlValue), null));
         }
 
         // Both DB and XML
@@ -223,8 +237,6 @@ Meteor.xmlDbConflicts = {
                     result.merged = mergedArray;
                 }
 
-            }else{
-                console.log('ELSE',key);
             }
         }
         cb(result);
@@ -237,6 +249,7 @@ Meteor.xmlDbConflicts = {
         var xmlKeyCount = Object.keys(xmlObj).length;
         var dbKeyCount = Object.keys(dbObj).length;
 
+        // Number of items comparison
         if(xmlKeyCount != dbKeyCount && parentKey != 'authors'){
             // do not count author keys because there are additional items stored in the database and names just need to be compared with XML
             result.conflicts.push(Meteor.xmlDbConflicts.conflict(parentKey, 'XML has ' + xmlKeyCount + ' items. Database has ' + dbKeyCount + ' items.',null,null));
@@ -244,32 +257,37 @@ Meteor.xmlDbConflicts = {
 
         // Database
         for(var key in dbObj){
-            var dbVal = null;
-            var xmlVal = null;
 
-            dbVal = dbObj[key];
-
-            if(xmlObj[key]){
-                xmlVal = xmlObj[key];
-                result.merged[key] = xmlVal; // default is always XML
+            if(parentKey === 'authors' && key === 'ids'){
             }else{
-                result.merged[key] = dbVal; // although the number of keys matches, the DB has a key that the XML does not.
-            }
+                var dbVal = null;
+                var xmlVal = null;
 
-            if(parentKey === 'dates' || parentKey === 'history'){
-                if(xmlVal){
-                    xmlVal = Meteor.dates.article(xmlVal);
-                }
-                dbVal = Meteor.dates.article(dbVal);
-            }
+                dbVal = dbObj[key];
 
-            Meteor.xmlDbConflicts.compare(key, xmlVal, dbVal, function(objCompared){
-                if(objCompared && objCompared.conflicts && objCompared.conflicts.length>0){
-                    objCompared.conflicts.forEach(function(conflict){
-                        result.conflicts.push(conflict);
-                    });
+                if(xmlObj[key]){
+                    xmlVal = xmlObj[key];
+                    result.merged[key] = xmlVal; // default is always XML
+                }else{
+                    result.merged[key] = dbVal; // although the number of keys matches, the DB has a key that the XML does not.
                 }
-            });
+
+                // Date handling
+                if(parentKey === 'dates' || parentKey === 'history'){
+                    if(xmlVal){
+                        xmlVal = Meteor.dates.article(xmlVal);
+                    }
+                    dbVal = Meteor.dates.article(dbVal);
+                }
+
+                Meteor.xmlDbConflicts.compare(key, xmlVal, dbVal, function(objCompared){
+                    if(objCompared && objCompared.conflicts && objCompared.conflicts.length>0){
+                        objCompared.conflicts.forEach(function(conflict){
+                            result.conflicts.push(conflict);
+                        });
+                    }
+                });
+            }
         }
 
         // XML
@@ -283,8 +301,30 @@ Meteor.xmlDbConflicts = {
                         });
                     }
                 });
-                result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database'));
+                result.merged[key] = xmlObj[key];
             }
+        }
+
+
+        // Paper Type
+        // Check if in database
+        // AOP XML will only have the name. PMC XML will have short name and name.
+        if(parentKey === 'article_type' && xmlObj.name){
+            var articleTypeFound = articleTypes.findOne({'name' : xmlObj.name});
+            if(!articleTypeFound){
+                result.conflicts.push(Meteor.xmlDbConflicts.conflict(parentKey, 'Not found in available types. Contact IT to add new type. Form defaulting to database value.',xmlObj.name,null));
+                result.merged[parentKey] = dbObj;
+            }
+        }
+
+        // Include parent key for conflict clarification to user
+        if(result.conflicts.length > 0){
+            result.conflicts.forEach(function(conflicto){
+                if(parentKey != conflicto.what){
+                    // parentKey === conflicto.what when number of items is different (Number of items comparison above). Or when article type not found in DB
+                    conflicto.parent = parentKey.replace('_',' ');
+                }
+            });
         }
 
         cb(result);
@@ -300,15 +340,23 @@ Meteor.xmlDbConflicts = {
             key = 'author last name';
         }
 
+        // when an object has a conflict it will also have the key 'parent', which is added in compareObject()
+
         return {
-            what: key,
+            what: key.replace('_',' '),
             conflict: conflict,
             xml: xml,
             db: db
         }
     },
-    prettyValue: function(value){
+    prettyValue: function(key,value){
+        // console.log('prettyValue',key,value);
         var result = '';
+
+        // DB stores affiliation numbers 0 based, but to humans they are 1 based.
+        if(key === 'affiliations_numbers' && value === parseInt(value)){
+            value = parseInt(value + 1);
+        }
 
         if(typeof value === 'object'&& !Array.isArray(value)){
             for(var key in value){
@@ -320,11 +368,41 @@ Meteor.xmlDbConflicts = {
             }
         }else if(typeof value === 'object' && Array.isArray(value)){
             for(var i=0 ; i < value.length ; i++){
-               result +=  '<div class="clearfix"></div>' + Meteor.xmlDbConflicts.prettyValue(value[i]);
+               result +=  '<div class="clearfix"></div>' + Meteor.xmlDbConflicts.prettyValue(key,value[i]);
             }
         }else{
             result = value;
         }
         return result;
+    },
+    valueExists: function(value){
+        if(!value && value != 0){
+            return false;
+        }
+        return true;
+    },
+    alphabetizeConflicts: function(conflicts){
+        var keys = [],
+            conflictsByKey = {},
+            sorted = [];
+
+        for(var i=0 ; i<conflicts.length ; i++){
+            if(conflicts[i].parent && conflicts[i].hasOwnProperty('parent') && conflicts[i].what && conflicts[i].hasOwnProperty('what')){
+                // keep object conflicts together. For ex, article ids
+                conflictsByKey[conflicts[i].parent + conflicts[i].what] = conflicts[i];
+                keys.push(conflicts[i].parent + conflicts[i].what);
+            }else if(conflicts[i].what && conflicts[i].hasOwnProperty('what')){
+                conflictsByKey[conflicts[i].what] = conflicts[i];
+                keys.push(conflicts[i].what);
+           }
+        }
+
+        keys.sort();
+
+        for (var k = 0; k < keys.length; k++) {
+            sorted.push(conflictsByKey[keys[k]]);
+        }
+
+        return sorted;
     }
 }

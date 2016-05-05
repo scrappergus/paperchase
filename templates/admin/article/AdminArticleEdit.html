@@ -26,6 +26,24 @@
     {{#with article}}
 
     {{>StatusModal}}
+
+    {{#if duplicate}}
+    <div class="row"><div class="col s12">
+        <div class="card red z-depth-0 lighten-4">
+            <div class="card-content">
+                <div class="row no-margin">
+                    <div class="col s12">
+                        <h2>Duplicate Article Found</h2>
+                        {{#with duplicate}}
+                        <h3><a href="{{pathFor 'AdminArticleOverview' _id=_id}}">{{{title}}}</a></h3>
+                        {{/with}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+    {{/if}}
+
     {{#if conflicts}}
     <div class="row"><div class="col s12">
         <div class="card red lighten-3 z-depth-0">
@@ -46,7 +64,7 @@
                     <tbody>
                         {{#each conflicts}}
                         <tr>
-                            <td>{{what}}</td>
+                            <td>{{#if parent}}{{parent}} | {{/if}}{{what}}</td>
                             <td>{{{conflict}}}</td>
                             <td>{{{xml}}}</td>
                             <td>{{{db}}}</td>
@@ -61,35 +79,6 @@
         </div>
     </div></div>
     {{/if}}
-    {{#if notifyArticleTypeDbMissing}}
-    <div class="row"><div class="col s12">
-        <div class="card red z-depth-0 lighten-4">
-            <div class="card-content">
-                <div class="row no-margin">
-                    <div class="col s12">
-                        <h4>Article type <i>{{notifyArticleTypeDbMissing}}</i> was found in the XML, however it was not matched with database records. Please contact IT to add new article type.</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div></div>
-    {{/if}}
-    {{#if duplicate}}
-    <div class="row"><div class="col s12">
-        <div class="card red z-depth-0 lighten-4">
-            <div class="card-content">
-                <div class="row no-margin">
-                    <div class="col s12">
-                        <h2>Duplicate Article Found</h2>
-                        {{#with duplicate}}
-                        <h3><a href="{{pathFor 'AdminArticleOverview' _id=_id}}">{{{title}}}</a></h3>
-                        {{/with}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div></div>
-    {{/if}}
 
     <div class="row page-anchors"><div class="col s12">
         <a class="btn btn-sm anchor" href="#article-title">{{>AdminTitleIcon}} Title</a>
@@ -98,6 +87,7 @@
         <a class="btn btn-sm anchor" href="#site">{{>AdminSiteIcon}} Site</a>
         <a class="btn btn-sm anchor" href="#meta">{{>AdminMetaIcon}} Meta</a>
         <a class="btn btn-sm anchor" href="#authors">{{>AdminAuthorsIcon}} Authors</a>
+        <a class="btn btn-sm anchor" href="#correspondence">{{>AdminMailIcon}} Correspondence</a>
         <a class="btn btn-sm anchor" href="#dates">{{>AdminDatesIcon}} Dates</a>
         <a class="btn btn-sm anchor" href="#history">{{>AdminDatesIcon}} History</a>
         <a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a>
@@ -124,11 +114,6 @@
                     IDs
                     <button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID">{{>AdminAddIcon}}</button>
                 </legend>
-                <div class="row">
-                    <div class="col s12">
-
-                    </div>
-                </div>
                 {{>AddArticleId}}
                 {{#if ids}}
                 <div class="row">
@@ -136,8 +121,8 @@
                     <div class="col s11 m3">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <label for="article-id-{{name}}" class="active">{{name}}</label>
                                 <input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
+                                <label for="article-id-{{name}}" class="active">{{name}}</label>
                             </div>
                         </div>
                     </div>
@@ -245,6 +230,39 @@
                 {{/if}}
             </fieldset>
 
+            <fieldset id="correspondence">
+                <legend>
+                    Correspondence
+                    <button id="add-correspondence" class="btn btn-floating waves-effect waves-light" alt="Add Author">{{>AdminAddIcon}}</button>
+                </legend>
+                {{#if correspondence}}
+                {{#each correspondence}}
+                <div class="row no-margin">
+                    <div class="col s11">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
+                                <div class="row no-margin correspondence-row">
+                                    <div class="col s6 input-field">
+                                        <input name="correspondence_text_{{@index}}" type="text" value="{{text}}" class="correspondence-text" />
+                                        <label for="correspondence_text_{{@index}}" class="{{#if text}}active{{/if}}">Text</label>
+                                    </div>
+                                    <div class="col s6 input-field">
+                                        <input name="correspondence_email_{{@index}}"  type="email" value="{{email}}" class="correspondence-email" />
+                                        <label for="correspondence_email_{{@index}}" class="{{#if email}}active{{/if}}">Email</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s1 no-padding">
+                        {{>AdminRemoveIcon index=@index name=@index nameAdditional="correspondence" what="correspondence"}}
+                    </div>
+                </div>
+                {{/each}}
+                {{/if}}
+            </fieldset>
+
             <fieldset id="affiliations">
                 <legend>
                     Affiliations
@@ -265,7 +283,7 @@
                 <div class="row">
                     {{! Separating out collection, because this is the only date that we are allowing mm-yyyy format on}}
                     {{#each arrayify dates}}
-                    <div class="col s11 m3">
+                    <div class="col s11 m2">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
                                 {{>AdminDateInput}}
@@ -289,7 +307,7 @@
                 {{#if history}}
                 <div class="row">
                     {{#each arrayify history}}
-                        <div class="col s11 m4">
+                        <div class="col s11 m2">
                             <div class="card blue-grey lighten-5 z-depth-0">
                                 <div class="card-content">
                                     {{>AdminHistoryInput}}
@@ -372,45 +390,46 @@
 
 <!--Form Partials-->
 <template name="AdminDateInput">
+    <input id="{{name}}" type="date" class="datepicker dates" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
     <label for="{{name}}" class="active">{{name}}</label>
-    <input id="{{name}}" type="date" class="datepicker date" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
 </template>
 <template name="AdminHistoryInput">
-    <label for="{{name}}" class="active">{{name}}</label>
     <input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
+    <label for="{{name}}" class="active">{{name}}</label>
 </template>
 <template name="AdminArticleFormAuthors">
     <div class="row">
         <div class="col s12">
             <ul class="authors-list">
                 {{#each authors}}
-                <li class="author-li row author-row">
+                <li class="author-li row author-row no-margin">
                     <div class="col s11">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <div class="row">
+                                <div class="row no-margin valign-wrapper">
                                     <div class="col s12 m1 center-align">
-                                        <i class="material-icons pointer">&#xE8D5;</i>
+                                        {{>AdminDragIcon}}
                                     </div>
-                                    <div class="col s12 m3">
+                                    <div class="input-field col s12 m3">
                                         <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first_{{@index}}">
-                                        <label for="name_first_{{@index}}">First Name</label>
+                                        <label for="name_first_{{@index}}" class="{{#if name_first}}active{{/if}}">First Name</label>
                                     </div>
-                                    <div class="col s12 m3">
+                                    <div class="input-field col s12 m3">
                                         <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle_{{@index}}">
-                                        <label for="name_middle_{{@index}}">Middle Name</label>
+                                        <label for="name_middle_{{@index}}" class="{{#if name_middle}}active{{/if}}">Middle Name</label>
                                     </div>
-                                    <div class="col s12 m3">
+                                    <div class="input-field col s12 m3">
                                         <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
-                                        <label for="name_last_{{@index}}">Last Name</label>
+                                        <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
                                     </div>
-                                    <div class="col s12 m1">
+                                    <div class="col s12 m2">
                                         <label>Affiliations</label>
+                                        <div class="clearfix"></div>
                                         {{#each affiliations_list}}
-                                        <p class="pad-md">
+                                        <div class="margin-right-lg margin-top-md">
                                             <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
                                             <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
-                                        </p>
+                                        </div>
                                         {{/each}}
                                     </div>
                                     <div class="hide">
@@ -423,7 +442,7 @@
                         </div>
                     </div>
                     <div class="col s1">
-                        {{>AdminRemoveIcon what="author"}}
+                        {{>AdminRemoveIcon what="author" name="author-{{@index}}"}}
                     </div>
                 </li>
                 {{/each}}
@@ -436,16 +455,24 @@
         <div class="col s12">
             <ol class="affiliations-list">
                 {{#each arrayify affiliations}}
-                <li id="affiliation-li-{{@index}}" class="affiliation-li row grey lighten-4">
-                    <div class="valign-wrapper" style="width:100%">
-                        <div class="col s1 center-align ">
-                            <i class="material-icons pointer">&#xE8D5;</i>
-                        </div>
-                        <div class="col s10">
-                            <input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+                <li id="affiliation-li-{{@index}}" class="affiliation-li">
+                    <div class="row no-margin">
+                        <div class="col s11">
+                            <div class="card blue-grey lighten-5 z-depth-0">
+                                <div class="card-content">
+                                    <div class="row no-margin valign-wrapper">
+                                        <div class="col s12 m1 center-align">
+                                            {{>AdminDragIcon}}
+                                        </div>
+                                        <div class="col s12 m11">
+                                            <input id="article-affiliation-{{@index}}" class="article-affiliation" type="text" value="{{value}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col s1">
-                            <i class="prefix remove-affiliation material-icons red-type close-icon right">&#xE15C;</i>
+                            {{>AdminRemoveIcon what="affiliation" index=@index name=@index  nameAdditional="affiliation"}}
                         </div>
                     </div>
                 </li>

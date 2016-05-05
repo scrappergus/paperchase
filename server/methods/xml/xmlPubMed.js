@@ -29,7 +29,8 @@ Meteor.methods({
         // XML is a string, used for title. article is JSON parsed from xml.
 
         // console.log('article',article);
-        var articleProcessed = {};
+        var articleProcessed = {},
+            articleTypeXml;
         articleProcessed.aop = true; // need this to prevent uploading XML to S3
 
         // PUBLISHER
@@ -95,6 +96,7 @@ Meteor.methods({
                 articleProcessed.page_end = parseInt(article.LastPage[0]);
             }
         }
+        // console.log('article',articleProcessed);
 
         // KEYWORDS
         // -----------
@@ -124,8 +126,11 @@ Meteor.methods({
                                 keyword = Meteor.fullText.fixTags(keyword);
                             }
                         }
-                        articleProcessed.keywords.push(keyword);
-                    }else{
+                        if(keyword){
+                          articleProcessed.keywords.push(keyword);
+                        }
+
+                    }else if(keywords[kw]['Param'][0]._){
                         articleProcessed.keywords.push(keywords[kw]['Param'][0]._);
                     }
                 }
@@ -141,15 +146,9 @@ Meteor.methods({
         // ARTICLE TYPE
         // -----------
         if(article.PublicationType){
-            var typeXml = Meteor.general.cleanString(article.PublicationType[0]);
-            var articleType = articleTypes.findOne({'name' : typeXml});
-            if(!articleType){
-                articleProcessed.notifyArticleTypeDbMissing = typeXml;
-            }else{
-                articleProcessed.article_type = {};
-                articleProcessed.article_type.name = articleType.name;
-                articleProcessed.article_type.short_name = articleType.short_name;
-            }
+            articleTypeXml = Meteor.general.cleanString(article.PublicationType[0]);
+            articleProcessed.article_type = {};
+            articleProcessed.article_type.name = articleTypeXml;
         }
 
         // IDS
@@ -247,6 +246,8 @@ Meteor.methods({
             }
         }
 
+        // console.log('articleProcessed',articleProcessed);
+
         // PUB DATES
         // -----------
         // only aheadofprint provided in AOP sample files, this is not stored in the DB
@@ -256,6 +257,7 @@ Meteor.methods({
         // -----------
         // None provided in AOP sample file. Does contain aheadofprint but we do not store this
         // console.log(articleProcessed.issue_id);
+        // console.log('articleProcessed',articleProcessed);
         return articleProcessed;
     }
 });
