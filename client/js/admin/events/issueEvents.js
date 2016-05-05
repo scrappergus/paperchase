@@ -36,7 +36,8 @@ Template.AdminIssueForm.events({
             issue: null,
             pub_date: null,
             date_settings: {},
-            display: false
+            display: false,
+            current: false
         };
 
         // Date
@@ -69,6 +70,12 @@ Template.AdminIssueForm.events({
         // -------
         if($('#display-issue').prop('checked')){
             issueData.display = true;
+        }
+
+        // Current Issue
+        // -------
+        if($('#current-issue').prop('checked')){
+            issueData.current = true;
         }
 
         // Cover Caption

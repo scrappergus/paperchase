@@ -211,6 +211,8 @@ Issue Form
 **Validation and Duplicate Check**
 Submit form event uses method ‘validateIssue()‘ to check all required inputs and make sure there are no duplicate issues (via Volume and Issue search).
 
+Makes sure display is also checked if current is. Before updating, if another issue was set to current then unset. If issue is set to current, can’t be unchecked. So that there is always a current issue. The only way to change current issue is by setting another issue to current.
+
 Issue Deletion
 -------------
 Deleting an issue will delete all issue information from the database and remove all issue information for its articles. User input to confirm deletion is sent to deleteIssue(), which makes sure that the input === 'DELETE'. If so then, the issue doc is copied to the issues_deleted collection via deleteIssueDatabase() and the original doc is removed from the issues collection. Then all articles in the issue are updated (just issue information removed from article docs). TODO: Cover deleting on S3.

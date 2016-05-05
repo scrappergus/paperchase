@@ -168,10 +168,12 @@ Meteor.methods({
                             fut.throw(error);
                         }else if(result){
                             if(result.prev){
-                               issueData.prevIssue = result.prev;
+                                result.prev.param = 'v' + result.prev.volume + 'i' + result.prev.issue;
+                                issueData.prevIssue = result.prev;
                             }
                             if(result.next){
-                               issueData.nextIssue = result.next;
+                                result.next.param = 'v' + result.next.volume + 'i' + result.next.issue;
+                                issueData.nextIssue = result.next;
                             }
                             fut.return(issueData);
                         }
@@ -277,6 +279,15 @@ Meteor.methods({
                 'message' : clear + 'Date is required'
             });
         }
+
+        // Current/Display
+        if(issueData.current && !issueData.display){
+            invalid.push({
+                'fieldset_id' : 'issue-display-setting',
+                'message' : clear + 'Current issue must be set to display'
+            });
+        }
+
         // console.log('invalid',invalid);
         return invalid;
     },
