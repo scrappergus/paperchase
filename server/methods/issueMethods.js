@@ -198,7 +198,9 @@ Meteor.methods({
             nextIssueId,
             nextIssueData,
             prevVolume,
-            nextVolume;
+            prevVolumeData,
+            nextVolume,
+            nextVolumeData;
 
         if(volume && issue){
             volumeData = volumes.findOne({volume : parseInt(volume)});
@@ -213,17 +215,19 @@ Meteor.methods({
 
             if(!prevIssueId){
                 // check previous volume
-                prevVolume = volumes.findOne({volume : parseInt(volume - 1)});
-                if(prevVolume && prevVolume.issues && prevVolume.issues.length > 0){
-                    prevIssueId = prevVolume.issues[prevVolume.issues.length - 1]
+                prevVolume = parseInt(volume) - 1;
+                prevVolumeData = volumes.findOne({volume : prevVolume });
+                if(prevVolumeData && prevVolumeData.issues && prevVolumeData.issues.length > 0){
+                    prevIssueId = prevVolume.issues[prevVolumeData.issues.length - 1]
                 }
             }
 
             if(!nextIssueId){
                 // check next volume
-                nextVolume = volumes.findOne({volume : parseInt(volume + 1)});
-                if(nextVolume && nextVolume.issues && nextVolume.issues.length > 0){
-                    nextIssueId = nextVolume.issues[0]
+                nextVolume = parseInt(volume) + 1;
+                nextVolumeData = volumes.findOne({volume : nextVolume});
+                if(nextVolumeData && nextVolumeData.issues && nextVolumeData.issues.length > 0){
+                    nextIssueId = nextVolumeData.issues[0]
                 }
             }
         }
