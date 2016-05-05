@@ -100,8 +100,7 @@ Template.scrollspyItems.helpers({
 // -------------
 Template.Home.helpers({
     latestIssue: function() {
-        console.log(issues.findOne());
-        return issues.findOne();
+        return issues.findOne({current:true});
     }
 });
 
