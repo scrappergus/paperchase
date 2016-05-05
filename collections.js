@@ -464,7 +464,7 @@ if (Meteor.isServer) {
         return articles.find({issue_id : issueinfo['_id']});
     });
     Meteor.publish('currentIssue',function(){
-        return issues.find({},{sort : {volume:-1,issue:-1}});
+        return issues.find({current: true});
     });
     Meteor.publish('articleIssue',function(articleMongoId){
         // console.log('articleMongoId', articleMongoId);
