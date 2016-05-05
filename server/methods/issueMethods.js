@@ -277,6 +277,15 @@ Meteor.methods({
                 'message' : clear + 'Date is required'
             });
         }
+
+        // Current/Display
+        if(issueData.current && !issueData.display){
+            invalid.push({
+                'fieldset_id' : 'issue-display-setting',
+                'message' : clear + 'Current issue must be set to display'
+            });
+        }
+
         // console.log('invalid',invalid);
         return invalid;
     },

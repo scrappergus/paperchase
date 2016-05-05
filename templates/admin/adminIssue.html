@@ -182,6 +182,15 @@
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
+                                    <input type="checkbox" id="current-issue" checked="{{checked current}}" disabled="{{#if current}}disabled{{/if}}" />
+                                    <label for="current-issue">current issue</label>
+                                </div>
+                                <div class="input-field col s12">
+                                    {{#if current}}<p class="font-sm">* Can only change current issue by making another issue current</p>{{/if}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
                                     <p><b>Date</b></p>
                                 </div>
                                 <div class="input-field col s12 m4">

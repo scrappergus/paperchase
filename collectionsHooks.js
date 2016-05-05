@@ -67,6 +67,19 @@ issues.after.insert(function (userId, doc) {
     issueData['doc_updates']['created_date'] = new Date();
     issueData['doc_updates']['created_by'] = userId;
 });
+issues.before.update(function (userId, doc, fieldNames, modifier, options) {
+
+    if(modifier.$set && modifier.$set.current){
+        var previouslyCurrent = issues.findOne({current: true});
+        if(previouslyCurrent && previouslyCurrent._id != doc._id){
+            Meteor.call('updateIssue',previouslyCurrent._id, {current:false}, function(error,result){
+                if(error){
+                    console.error('changing current issue', error);
+                }
+            });
+        }
+    }
+});
 
 
 // News
