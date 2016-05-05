@@ -453,22 +453,41 @@ Meteor.xmlPmc = {
         }
         cb(ids);
     },
+    keyword: function(keyword){
+        var result = '';
+        if(typeof keyword == 'object'){
+
+            for(var kwKey in  keyword){
+                if(kwKey === '_'){
+                    // should be just a normal string
+                    if(typeof keyword[kwKey] === 'string'){
+                        result += keyword[kwKey];
+                    }
+                }else{
+                    result += Meteor.xmlPmc.keywordStyled(kwKey,keyword[kwKey]);
+                }
+            }
+        }else if(typeof keyword == 'string'){
+            result = keyword;
+        }
+        return result;
+    },
+    keywordStyled: function(key,keyword){
+        var styled = '';
+        styled += '<' + key + '>';
+        if(keyword === 'string'){
+            styled += keyword[key];
+        }else if(typeof keyword === 'object' && Array.isArray(keyword)){
+            styled += keyword.join(' ');
+        }
+        styled += '</' + key + '>';
+        return styled;
+    },
     keywords: function(keywords,cb){
         // keywords is JSON from XML to get keywords
         var result = [];
         for(var kw=0 ; kw<keywords.length ; kw++){
-            if(typeof  keywords[kw] == 'object'){
-                var kwStyled = '',
-                    kwStyeType = '';
-                for(var kwKey in  keywords[kw]){
-                    kwStyeType += kwKey;
-                }
-                kwStyled = '<' + kwStyeType + '>' + keywords[kw][kwStyeType] + '<' + kwStyeType + '/>';
-                result.push(kwStyled);
-
-            }else{
-                result.push(keywords[kw]);
-            }
+            result.push(Meteor.xmlPmc.keyword(keywords[kw]));
         }
         cb(result);
     },
