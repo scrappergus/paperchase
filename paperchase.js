@@ -581,13 +581,6 @@ if (Meteor.isClient) {
         name: 'Issue',
         parent: 'Archive',
         layoutTemplate: 'Visitor',
-        waitOn: function(){
-            return [
-                Meteor.subscribe('journalConfig'),
-                Meteor.subscribe('prevIssue', this.params.vi),
-                Meteor.subscribe('nextIssue', this.params.vi)
-            ]
-        },
         title: function() {
             var pageTitle = '';
             var pieces = {};
