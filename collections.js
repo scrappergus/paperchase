@@ -466,64 +466,6 @@ if (Meteor.isServer) {
     Meteor.publish('currentIssue',function(){
         return issues.find({},{sort : {volume:-1,issue:-1}});
     });
-    Meteor.publish('prevIssue',function(volumeAndIssue){
-        var pieces,
-            volumeData,
-            issueData,
-            issueIndex,
-            prevIssueId;
-
-        if(volumeAndIssue){
-            pieces = Meteor.issue.urlPieces(volumeAndIssue);
-            if(pieces && pieces.volume){
-                volumeData = volumes.findOne({volume : parseInt(pieces.volume)});
-                if(pieces.issue){
-                    issueData = issues.findOne({volume : parseInt(pieces.volume), issue: pieces.issue});
-                }
-            }
-        }
-
-        if(volumeData && issueData){
-            issueIndex = volumeData.issues.indexOf(issueData._id);
-            if(issueIndex === 0){
-                return []; // publish can only return cursor or an array of cursors
-            }else{
-                prevIssueId = volumeData.issues[parseInt(issueIndex - 1)];
-                return issues.find({_id : prevIssueId});
-            }
-        }else{
-            return [];
-        }
-    });
-    Meteor.publish('nextIssue',function(volumeAndIssue){
-        var pieces,
-            volumeData,
-            issueData,
-            issueIndex,
-            nextIssueId;
-
-        if(volumeAndIssue){
-            pieces = Meteor.issue.urlPieces(volumeAndIssue);
-            if(pieces && pieces.volume){
-                volumeData = volumes.findOne({volume : parseInt(pieces.volume)});
-                if(pieces.issue){
-                    issueData = issues.findOne({volume : parseInt(pieces.volume), issue: pieces.issue});
-                }
-            }
-        }
-
-        if(volumeData && issueData){
-            issueIndex = volumeData.issues.indexOf(issueData._id);
-            if(issueIndex === 0){
-                return []; // publish can only return cursor or an array of cursors
-            }else{
-                nextIssueId = volumeData.issues[parseInt(issueIndex + 1)];
-                return issues.find({_id : nextIssueId});
-            }
-        }else{
-            return [];
-        }
-    });
     Meteor.publish('articleIssue',function(articleMongoId){
         // console.log('articleMongoId', articleMongoId);
         var articleInfo = articles.findOne({_id : articleMongoId});

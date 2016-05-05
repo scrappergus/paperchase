@@ -161,7 +161,21 @@ Meteor.methods({
                         }
                     }
                     issueData.articles = issueArticles;
-                    fut.return(issueData);
+
+                    Meteor.call('getPrevAndNextIssue', volume, issue, articlesToGet, function(error, result){
+                        if(error){
+                            console.error(error);
+                            fut.throw(error);
+                        }else if(result){
+                            if(result.prev){
+                               issueData.prev_issue = result.prev;
+                            }
+                            if(result.next){
+                               issueData.next_issue = result.next;
+                            }
+                            fut.return(issueData);
+                        }
+                    });
                 }
             });
 
@@ -170,6 +184,63 @@ Meteor.methods({
         }
 
         return fut.wait();
+    },
+    getPrevAndNextIssue: function(volume,issue,articlesToGet){
+        var result = {},
+            pieces,
+            volumeData,
+            issueData,
+            issueIndex,
+            prevIssueId,
+            prevIssueData,
+            nextIssueId,
+            nextIssueData,
+            prevVolume,
+            nextVolume;
+
+        if(volume && issue){
+            volumeData = volumes.findOne({volume : parseInt(volume)});
+            issueData = issues.findOne({volume : parseInt(volume), issue: issue});
+        }
+
+        if(volumeData && issueData){
+            issueIndex = volumeData.issues.indexOf(issueData._id);
+
+            prevIssueId = volumeData.issues[parseInt(issueIndex - 1)];
+            nextIssueId = volumeData.issues[parseInt(issueIndex + 1)];
+
+            if(!prevIssueId){
+                // check previous volume
+                prevVolume = volumes.findOne({volume : parseInt(volume - 1)});
+                if(prevVolume && prevVolume.issues && prevVolume.issues.length > 0){
+                    prevIssueId = prevVolume.issues[prevVolume.issues.length - 1]
+                }
+            }
+
+            if(!nextIssueId){
+                // check next volume
+                nextVolume = volumes.findOne({volume : parseInt(volume + 1)});
+                if(nextVolume && nextVolume.issues && nextVolume.issues.length > 0){
+                    nextIssueId = nextVolume.issues[0]
+                }
+            }
+        }
+
+        // make sure issues should be displayed and get issue data
+        if(prevIssueId){
+            prevIssueData = issues.findOne({_id : prevIssueId});
+            if(prevIssueData && prevIssueData.display === true){
+                result.prev = prevIssueData;
+            }
+        }
+        if(nextIssueId){
+            nextIssueData = issues.findOne({_id : nextIssueId});
+            if(nextIssueData && nextIssueData.display === true){
+                result.next = nextIssueData;
+            }
+        }
+
+        return result;
     },
     getAllIssues: function(){
         return issues.find().fetch();
