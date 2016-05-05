@@ -168,11 +168,11 @@ Meteor.methods({
                             fut.throw(error);
                         }else if(result){
                             if(result.prev){
-                                result.prev.param = 'v' + result.prev.volume + 'i' + result.prev.issue;
+                                result.prev.vi = 'v' + result.prev.volume + 'i' + result.prev.issue;
                                 issueData.prevIssue = result.prev;
                             }
                             if(result.next){
-                                result.next.param = 'v' + result.next.volume + 'i' + result.next.issue;
+                                result.next.vi = 'v' + result.next.volume + 'i' + result.next.issue;
                                 issueData.nextIssue = result.next;
                             }
                             fut.return(issueData);
