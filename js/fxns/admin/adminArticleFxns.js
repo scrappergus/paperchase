@@ -195,7 +195,9 @@ Meteor.adminArticleFormGet = {
         var article_type = {};
         if($('#article-type').val() != ''){
             article_type.short_name = $('#article-type').val();
-            article_type.nlm_type = $('#article-type').attr('data-nlm');
+            article_type.nlm_type = $('#article-type option:selected')[0].dataset.nlm;
+            article_type.plural = $('#article-type option:selected')[0].dataset.plural;
+            article_type.id = $('#article-type option:selected')[0].dataset.id;
             article_type.name = $('#article-type option:selected').text();
         }
         return article_type;

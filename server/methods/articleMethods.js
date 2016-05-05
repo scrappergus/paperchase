@@ -296,19 +296,13 @@ Meteor.methods({
             if(article.article_type){
                 articleType = article.article_type.name;
             }
-            article.article_type_list = [];
-            publisherArticleTypes = articleTypes.find().fetch();
-            for(var typeIdx =0 ; typeIdx < publisherArticleTypes.length ; typeIdx++){
-                var selectObj = {
-                    nlm_type: publisherArticleTypes[typeIdx].nlm_type,
-                    name: publisherArticleTypes[typeIdx].name,
-                    short_name: publisherArticleTypes[typeIdx].short_name
+            publisherArticleTypes = articleTypes.find({},{sort: {name:1}}).fetch();
+            article.article_type_list = publisherArticleTypes.map(function(typeOption){
+                if(typeOption.name == articleType){
+                    typeOption.selected = true;
                 }
-                if(publisherArticleTypes[typeIdx].name == articleType){
-                    selectObj.selected = true;
-                }
-                article.article_type_list.push(selectObj);
-            }
+                return typeOption;
+            });
 
             // Article Section
             // ------------

@@ -192,7 +192,7 @@
                         <select id="article-type">
                             <option value="">&mdash; Select &mdash;</option>
                             {{#each article_type_list}}
-                            <option value="{{short_name}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
+                            <option value="{{short_name}}" data-id="{{_id}}" data-plural="{{plural}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
                             {{/each}}
                         </select>
                         <label for="article-type">Article Type</label>
