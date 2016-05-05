@@ -24,9 +24,9 @@
             <!-- Sidebar -->
             <div class="page-sidebar">
                 <div class="issue-scroller">
-                    {{#if prevIssue}} <span class="prev"><a href="{{prevIssue}}"><span class="icon icon-angle-left"></span> Prev</a></span> {{/if}}
+                    {{#if prevIssue}}{{#with prevIssue}} <span class="prev"><a href="{{pathFor 'issue' v=volume i=issue_linkable}}"><span class="icon icon-angle-left"></span> Prev</a></span> {{/with}}{{/if}}
                     <span class="current">Volume {{volume}}, Issue {{issue}}</span>
-                    {{#if nextIssue}} <span class="next"><a href="{{nextIssue}}">Next <span class="icon icon-angle-right"></span></a></span> {{/if}}
+                    {{#if nextIssue}}{{#with nextIssue}}  <span class="next"><a href="{{pathFor 'issue' v=volume i=issue_linkable}}">Next <span class="icon icon-angle-right"></span></a></span> {{/with}}{{/if}}
                 </div>
                 {{> scrollspyCard title="Explore This Issue" items=items}}
             </div>

@@ -206,12 +206,6 @@ Template.Issue.helpers({
         }
 
         return sections;
-    },
-    prevIssue: function() {
-        return 'previous';
-    },
-    nextIssue: function() {
-        return 'next';
     }
 });
 
