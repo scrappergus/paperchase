@@ -168,10 +168,10 @@ Meteor.methods({
                             fut.throw(error);
                         }else if(result){
                             if(result.prev){
-                               issueData.prev_issue = result.prev;
+                               issueData.prevIssue = result.prev;
                             }
                             if(result.next){
-                               issueData.next_issue = result.next;
+                               issueData.nextIssue = result.next;
                             }
                             fut.return(issueData);
                         }
