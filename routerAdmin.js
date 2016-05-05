@@ -780,6 +780,31 @@ if (Meteor.isClient) {
         },
     });
 
+    // Article Types
+    Router.route('/admin/article_types',{
+        name: 'AdminArticleTypes',
+        layoutTemplate: 'Admin',
+        title: function() {
+            var pageTitle = 'Admin | Article Types';
+            if(Session.get('journal')){
+                pageTitle += ' : ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articleTypes')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                return {
+                    types : articleTypes.find({},{sort:{name:1}}).fetch()
+                }
+            }
+        }
+    });
+
     // DOI
     Router.route('/admin/doi_status', {
         name: 'AdminDoiStatus',
