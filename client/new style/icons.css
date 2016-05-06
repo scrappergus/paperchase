@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'icomoon';
-    src:    url('fonts/icomoon.eot?cltszq');
-    src:    url('fonts/icomoon.eot?cltszq#iefix') format('embedded-opentype'),
-        url('fonts/icomoon.ttf?cltszq') format('truetype'),
-        url('fonts/icomoon.woff?cltszq') format('woff'),
-        url('fonts/icomoon.svg?cltszq#icomoon') format('svg');
+    src:    url('fonts/icomoon.eot?2x049a');
+    src:    url('fonts/icomoon.eot?2x049a#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.ttf?2x049a') format('truetype'),
+        url('fonts/icomoon.woff?2x049a') format('woff'),
+        url('fonts/icomoon.svg?2x049a#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -24,11 +24,17 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-search:before {
-    content: "\e904";
+.icon-menu:before {
+    content: "\e900";
 }
-.icon-angle-left:before {
-    content: "\e903";
+.icon-align-left:before {
+    content: "\e899";
+}
+.icon-close:before {
+    content: "\e909";
+}
+.icon-download:before {
+    content: "\e906";
 }
 .icon-file:before {
     content: "\e901";
@@ -36,7 +42,9 @@
 .icon-angle-right:before {
     content: "\e902";
 }
-.icon-download:before {
-    content: "\e900";
+.icon-angle-left:before {
+    content: "\e903";
 }
-
+.icon-search:before {
+    content: "\e904";
+}

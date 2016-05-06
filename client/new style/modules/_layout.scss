@@ -196,6 +196,14 @@ $sidebar-color: darken(#00387A, 1%);
         bottom: 4px;
         left: 8px;
 
+        &.icon-menu {
+            font-size: 24px;
+            bottom: 8px;
+            &:before { 
+                content: "\e900";
+            }
+        }
+
         // border-right: 2px solid #eee;
     }
 }
