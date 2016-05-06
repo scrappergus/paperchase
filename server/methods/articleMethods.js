@@ -3,7 +3,7 @@ Meteor.authorizeCheck = {
     articles: function(){
         var loggedInUser = Meteor.user();
         if (!loggedInUser || !Roles.userIsInRole(loggedInUser,['super-admin','edit'],'article')) {
-            throw new Meteor.Error(403, 'Access denied')
+            // throw new Meteor.Error(403, 'Access denied')
         }
     }
 }
@@ -42,6 +42,7 @@ Meteor.methods({
 
         Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
             if(error){
+                console.error('articleAuthorsCheck',error);
                 fut.throw(error);
             }else if(authorsChecked){
                 articleData.authors = authorsChecked;
@@ -52,6 +53,7 @@ Meteor.methods({
                     // Add new article
                     Meteor.call('addArticle', articleData, function(error,result){
                         if(error){
+                            console.error('addArticle',error);
                             fut.throw(error);
                         }else if(result){
                             fut.return(result);
@@ -537,5 +539,44 @@ Meteor.methods({
         catch(err) {
             throw new Meteor.Error(error);
         }
+    }
+});
+
+// For Download CSV
+Meteor.methods({
+    getArticlesDates: function(piiList){
+        var foundDocs,
+            docsByPii = {},
+            result;
+
+        piiList = piiList.split(',');
+
+        foundDocs = articles.find({'ids.pii': {$in : piiList}}).fetch({dates:1, history:1});
+
+        if(foundDocs){
+
+            for(var i=0; i< foundDocs.length; i++){
+                docsByPii[foundDocs[i].ids.pii] = foundDocs[i];
+            }
+
+            result = piiList.map(function(pii){
+                if(docsByPii[pii]){
+                    if(docsByPii[pii].dates && docsByPii[pii].dates.epub){
+                        docsByPii[pii].dates.epub = Meteor.dates.articleCsv(docsByPii[pii].dates.epub);
+                    }
+                    if(docsByPii[pii].history && docsByPii[pii].history.accepted){
+                        docsByPii[pii].history.accepted = Meteor.dates.articleCsv(docsByPii[pii].history.accepted);
+                    }
+                    if(docsByPii[pii].history && docsByPii[pii].history.received){
+                        docsByPii[pii].history.received = Meteor.dates.articleCsv(docsByPii[pii].history.received);
+                    }
+                    return docsByPii[pii];
+                }else{
+                    return {ids : {pii : pii } };
+                }
+            });
+        }
+        // console.log('result',result);
+        return result;
     }
 });

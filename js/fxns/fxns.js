@@ -668,6 +668,10 @@ Meteor.dates = {
         // console.log(moment(utcDate,'ddd, DD MMM YYYY HH:mm:ss ZZ'));
         return moment(date).utc().format('MMMM D, YYYY');
     },
+    articleCsv: function(date){
+        var date = new Date(date);
+        return moment(date).utc().format('MM-D-YYYY'); // cannot use commas for csv date. they will be considered as new columns.
+    },
     inputForm: function(date){
       return moment(date).utc().format('YYYY/MM/DD');
     },

@@ -6,6 +6,38 @@ Template.Admin.events({
     }
 });
 
+// Dashboard
+// ---------------
+Template.AdminDashboard.events({
+    'submit form': function(e){
+        e.preventDefault();
+        Meteor.formActions.processing();
+
+        var piiList,
+            cleanedPii;
+
+        piiList = $('#articles-pii').val();
+        piiList = piiList.split(',');
+
+        if(piiList && piiList.length > 0){
+            cleanedPii = piiList.map(function(pii){
+                return Meteor.general.cleanString(pii);
+            });
+
+            Session.set('processing-pii',cleanedPii);
+
+            Router.go('csvArticleDates', {pii : cleanedPii});
+
+            Meteor.formActions.closeModal();
+
+            Session.set('processing-pii',null);
+
+        }else{
+            Meteor.formActions.errorMessage('Please enter comma separted list of PII');
+        }
+    }
+});
+
 // Site Control
 // ----------------
 Template.AdminSiteControl.events({

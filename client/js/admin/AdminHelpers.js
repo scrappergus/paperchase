@@ -1,5 +1,11 @@
 // ADMIN HELPERS
 
+Template.AdminDashboard.helpers({
+    processingPii: function(){
+        return Session.get('processing-pii');
+    }
+});
+
 Template.AdminNav.helpers({
     mainColor: function(){
         var journalSettings = journalConfig.findOne();

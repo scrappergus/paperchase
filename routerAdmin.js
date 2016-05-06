@@ -70,6 +70,55 @@ Router.route('/admin/doi_status_csv/',{
         this.response.end();
     }
 });
+
+Router.route('/admin/article_dates_csv/:pii',{
+    name: 'csvArticleDates',
+    where: 'server',
+    action: function(){
+        var piiList = this.params.pii;
+
+        var filename = journalConfig.findOne().journal.short_name + '_article_dates.csv';
+        var csvData = 'PII, Submitted, Accepted, EPub ' + '\n'; // received = submitted
+
+        Meteor.call('getArticlesDates', piiList, function(error,articlesList){
+            if(error){
+                console.error(error);
+                throw new Meteor.Error('getArticlesDates', error);
+            }else if(articlesList){
+                for(var i=0; i< articlesList.length; i++){
+                    var pii = '',
+                        epub = '',
+                        received = '',
+                        accepted = '';
+
+                    if(articlesList[i].ids && articlesList[i].ids.pii){
+                        pii = articlesList[i].ids.pii
+                    }
+
+                    if(articlesList[i].history && articlesList[i].history.received){
+                        received = articlesList[i].history.received
+                    }
+
+                    if(articlesList[i].history && articlesList[i].history.accepted){
+                        accepted = articlesList[i].history.accepted
+                    }
+
+                    if(articlesList[i].dates && articlesList[i].dates.epub){
+                        epub = articlesList[i].dates.epub
+                    }
+
+                    csvData += pii + ',' + received + ',' + accepted + ',' + epub + '\n';
+                }
+            }
+        });
+        this.response.writeHead(200, {
+          'Content-Type': 'text/csv',
+          'Content-Disposition': 'attachment; filename=' + filename
+        });
+        this.response.write(csvData);
+        this.response.end();
+    }
+});
 // Router.route('/admin/xml_audit/',{
 //  name: 'xmlAudit',
 //  where: 'server',
@@ -92,6 +141,8 @@ if (Meteor.isClient) {
     // Variables
     // ----------
     Session.setDefault('admin-not-found',false);
+    // Dashboard
+    Session.setDefault('processing-pii',null);
     // For Authors
     Session.setDefault('showForm',false);
     Session.setDefault('sectionId',null);
