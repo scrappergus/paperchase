@@ -497,6 +497,9 @@ if (Meteor.isServer) {
           return [];
         }
     });
+    Meteor.publish('articlesWithoutDates', function(){
+        return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
+    });
     Meteor.publish('submission-set', function (queryType, queryParams) {
         var articlesList;
         if(queryType === 'issue'){
