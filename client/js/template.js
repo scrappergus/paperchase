@@ -17,13 +17,13 @@ Template.Home.onRendered(function () {
 
   $('footer').wrap('<div class="grid"></div>');
   $('.content-yield').addClass('no-breadcrumbs');
-  $('.sub-nav').addClass('hide');
+  $('.sub-nav').addClass('transparent');
 });
 
 Template.Home.onDestroyed(function() {
   $('footer').unwrap();
   $('.content-yield').removeClass('no-breadcrumbs');
-  $('.sub-nav').removeClass('hide');
+  $('.sub-nav').removeClass('transparent');
 });
 
 Template.EdBoard.onRendered(function() {

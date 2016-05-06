@@ -247,10 +247,21 @@ $sidebar-color: darken(#00387A, 1%);
 
 /** Navigation | Sub Nav w/ Transparent Background
  ---------------------------------------------------------*/
-.sub-nav.dark-bg {
+.sub-nav.transparent {
+    position: absolute;
     box-shadow: none;
     background: transparent;
     border: none;
+    padding-left: 0;
+
+    #sidebar-toggle { 
+        color: #fff;
+        background: transparent; 
+        margin-right: 15px;
+    }
+
+    .breadcrumbs ul { display: none; }
+    .issn span.meta { color: rgba(255,255,255,.7); }
 }
 
 
