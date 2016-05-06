@@ -467,15 +467,6 @@ if (Meteor.isServer) {
         return issues.find({}, {sort: {pub_date: -1, limit: 1}});
     });
 
-    /**
-     * Need Help
-     *
-     * I'd like to get one document for each of these,
-     * and I need them to count correctly (previous
-     * issue for Volume 7, Issue 1 would be Volume 6,
-     * Issue 12).
-     */
-
     Meteor.publish('prevIssue',function(volumeAndIssue){
         var pieces,
             volumeData,

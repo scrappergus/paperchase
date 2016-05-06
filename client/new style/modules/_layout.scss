@@ -19,7 +19,7 @@ $full-container-padding: 12%;
     width: 100%;
     height: 100%;
     display: none;
-    @include transition(width .25s ease-out);
+    @include transition(0.25s ease-out);
 
     @include at-query($min, $medium) {
         display: block;
@@ -35,6 +35,7 @@ $full-container-padding: 12%;
  * Hidden Sidebar
  */
 .sidebar.hidden {
+    left: -$sidebar-wide-width;
     width: 0;
     overflow: hidden;
 }
@@ -81,18 +82,33 @@ footer {
     @include clearfix; 
 }
 
-/** Navigation | Base
+/** Navigation and Sidebar | Base
  ---------------------------------------------------------*/
 $navbar-height: 70px;
-$sub-navbar-height: 64px;
-$sub-navbar-padding: 10px;
+$sub-navbar-height: 56px;
+$sub-navbar-padding: 8px;
 $nav-color: $electric;
+// $sidebar-color: #001D40;
+$sidebar-color: darken(#00387A, 1%);
 
 .navigation {
     position: fixed;
     height: $navbar-height;
     background-color: $nav-color;
     width: 100%;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    // background-color: $blackpearl;
+    // border-top: 1px solid darken($sidebar-color, 3%);
+    background-color: $sidebar-color;
+    font-size: 17px;
+
+    &.secondary {
+        background-color: $lightgray;
+    }
 }
 
 
@@ -128,8 +144,6 @@ $nav-color: $electric;
         padding: 5px 20px 6px;
         margin: 4px 0;
         font-size: 16px;
-        // font-size: 14px;
-        // @extend .uppercase-titles;
         border-left: 2px solid rgba(119, 130, 142, .2);
         color: #fff;
 
@@ -142,7 +156,7 @@ $nav-color: $electric;
             display: inline-block;
             font-size: 20px;
             left: 0;
-            top: 1px;
+            top: 4px;
         }
     }
 }
@@ -154,7 +168,7 @@ $nav-color: $electric;
     left: $sidebar-wide-width;
     right: 0;
     height: $sub-navbar-height + $sub-navbar-padding;
-    @include padding-vertical(30px);
+    @include padding-vertical(24px);
     @include padding-horiz(30px);
     padding-left: 0;
     border-bottom: $sub-navbar-padding solid #fff;
@@ -171,20 +185,24 @@ $nav-color: $electric;
 
     #sidebar-toggle {
         float: left;
-        background: $blackpearl;
-        color: #fff;
-        padding: 9px 11px 9px 8px;
+        background: #fff;
+        color: $electric;
+        padding: 6px 15px 6px 11px;
         margin-right: 30px;
         @include border-right-radius(2px);
+        cursor:pointer;
 
         position: relative;
-        bottom: 7px;
+        bottom: 4px;
+        left: 8px;
+
+        // border-right: 2px solid #eee;
     }
 }
 
 .sub-nav .breadcrumbs {
     @include span(12);
-    margin-left: 0;
+    margin-left: 5px;
     font-size: 15px;
 
     a { color: $midgray; }
@@ -218,9 +236,10 @@ $nav-color: $electric;
 
 .sub-nav .issn {
     @include span(4);
-
     span.meta {
         float: right;
+        position: relative;
+        top: 1px;
         color: rgba(162, 169, 176, .75);
         @extend .uppercase-titles;
     }
@@ -260,17 +279,6 @@ $nav-color: $electric;
     min-height: calc(100vh - $navbar-height);
 }
 
-.main .sidebar {
-    position: fixed;
-    background-color: $blackpearl;
-    // background-color: $midnight;
-    font-size: 17px;
-
-    &.secondary {
-        background-color: $lightgray;
-    }
-}
-
 .main .content {
     min-height: calc(100vh - $navbar-height);
 }
@@ -279,7 +287,7 @@ $nav-color: $electric;
     @include clearfix;
     padding-top: $navbar-height + $sub-navbar-height;
     @include padding-horiz($container-padding);
-    @include transition(padding .25s ease-out);
+    // @include transition(padding-left .25s ease-out, padding-right .25s ease-out);
     z-index: -1;
 
     &.no-breadcrumbs { padding: 0; }
@@ -332,12 +340,14 @@ $nav-color: $electric;
     span.icon {
         position: absolute;
         top: 30px;
+        color: #5C7DA2;
     }
 
     input {
         padding-left: 30px;
         font-size: 17px;
-        border-bottom: 2px solid #213245;
+        // border-bottom: 2px solid #213245;
+        border-bottom: 2px solid #5C7DA2;
         color: #fff;
     }
 
@@ -346,9 +356,10 @@ $nav-color: $electric;
      * These have to be separate because css
      * parser is broken for placeholder rules.
      */
-    input::placeholder { color: #5B6C80 }
-    input::-webkit-input-placeholder { color: #5B6C80 }
-    input::-moz-placeholder { color: #5B6C80 }
+    $placeholder-color: #3366A0;
+    input::placeholder { color: $placeholder-color }
+    input::-webkit-input-placeholder { color: $placeholder-color }
+    input::-moz-placeholder { color: $placeholder-color }
 }
 
 .main .sidebar ul.nav-links {
@@ -358,9 +369,8 @@ $nav-color: $electric;
         position: relative;
         padding: 21px 0 18px 40px;
         margin: 0;
-        color: $water;
-        @include transition(background .25s ease-out,
-                            color .25s ease-out);
+        color: #fff;
+        @include transition(background .25s ease-out);
     }
 
     a li:after {
@@ -370,14 +380,15 @@ $nav-color: $electric;
         top: 21px;
         right: 15px;
         font-size: 1.075rem;
-        color: lighten(#2E4057, 10%);
+        // color: lighten(#2E4057, 10%);
+        color: $water;
         opacity: 0;
         @include transition(opacity .25s ease-out,
                             right .25s ease-out);
     }
 
     a:hover li {
-        background: $midnight;
+        background: lighten($sidebar-color, 3%);
         color: #fff;
     }
 

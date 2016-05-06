@@ -31,10 +31,9 @@ Template.EdBoard.onRendered(function() {
 });
 
 Template.scrollspyCard.onRendered(function() {
-  // hacky width workaround for fixed element
-  $( window ).resize(function() {
+  new ResizeSensor($('.main'), function(){ 
     $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
-  }).resize();
+  });
 });
 
 

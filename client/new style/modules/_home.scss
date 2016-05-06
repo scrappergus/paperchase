@@ -10,10 +10,11 @@
  ---------------------------------------------------------*/
 .home-hero {
     @include clearfix;
-    background-color: rgba(4, 13, 23,1);
-    background-image: url('/images/bg2.jpg');
+    background-image: url('/images/bg-base.jpg');
     background-size: cover;
-    box-shadow: inset 0 0 0 1000px rgba(4, 13, 23, .51);
+    // box-shadow: inset 0 0 0 1000px rgba(0, 102, 163, .82);
+    box-shadow: inset 0 0 0 1000px rgba(0, 148, 206, .82);
+    // box-shadow: inset 0 0 0 1000px rgba(0, 156, 159, .82);
     padding: 70px 0;
 
     /**
