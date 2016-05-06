@@ -199,14 +199,17 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-                Meteor.subscribe('articlesRecentFive')
+                Meteor.subscribe('articlesRecentFive'),
+                Meteor.subscribe('articlesWithoutDates'),
             ]
         },
         data: function(){
             if(this.ready()){
-                var articlesList = articles.find({}).fetch();
+                var articlesListRecent = articles.find({},{sort:{'_id':1},limit : 5}).fetch();
+                var articlesListAll = articles.find().fetch();
                 return {
-                    articles: articlesList
+                    articles: articlesListRecent,
+                    withoutDates: articlesListAll.length - 5
                 };
             }
         }
