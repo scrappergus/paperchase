@@ -1,0 +1,365 @@
+/**
+ * Navigation
+ *
+ * Top bar navigation, sub-navigation,
+ * breadcrumbs, and left navigation. Fixed
+ * elements and secondary color schemes.
+ */
+
+
+/** Navigation and Sidebar | Base
+ ---------------------------------------------------------*/
+
+.navigation {
+    position: fixed;
+    height: $navbar-height;
+    background-color: $nav-color;
+    width: 100%;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    background-color: $sidebar-color;
+    font-size: 17px;
+
+    &.secondary {
+        background-color: $lightgray;
+    }
+}
+
+/**
+ * Z-Indexes for Interacting Elements
+ */
+
+.sidebar { z-index: 7; }
+.navigation { z-index: 8; }
+.sub-nav { z-index: 6; }
+
+
+/** Navigation | Sub Nav w/ Transparent Background
+ ---------------------------------------------------------*/
+.sub-nav.transparent {
+    position: absolute;
+    box-shadow: none;
+    background: transparent;
+    border: none;
+    padding-left: 0;
+
+    #sidebar-toggle { 
+        color: #fff;
+        background: transparent; 
+        margin-right: 15px;
+    }
+
+    .breadcrumbs ul { display: none; }
+    .issn span.meta { color: rgba(255,255,255,.7); }
+}
+
+/** Navigation | Top Nav
+ ---------------------------------------------------------*/
+.nav-sidebar {
+    float: left;
+    padding: 15px 0 0 35px;
+    .logo { height: 48px; }
+
+    h3 { 
+        color: #fff;
+        font-size: 14px;
+        line-height: 1;
+        position: relative;
+        bottom: 13px;
+        display: inline-block;
+        padding: 0;
+        margin: 0 0 0 10px;
+    }
+
+    @include at-query($min, $medium) {
+        width: 50%;
+    }
+}
+
+.nav-content {
+    height: $navbar-height;
+    background-color: $nav-color;
+    padding: 15px 20px 0 20px;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        float: right;
+        list-style-type: none;
+    }
+
+    ul li {
+        position: relative;
+        display: inline-block;
+        padding: 5px 20px 6px;
+        margin: 5px 0;
+        font-size: 16px;
+        border-left: 2px solid rgba(119, 130, 142, .2);
+        color: #fff;
+
+        a { color: #fff; }
+        &:first-child { border: none; }
+        &.has-icon { padding-left: 30px; }
+
+        span.icon {
+            position: absolute;
+            display: inline-block;
+            font-size: 20px;
+            left: 0;
+            top: 4px;
+        }
+    }
+}
+
+/** Navigation | Sub Nav
+ ---------------------------------------------------------*/
+.sub-nav {
+    position: fixed;
+    right: 0;
+    left: $sidebar-wide-width;
+    height: $sub-navbar-height + $sub-navbar-padding;
+    @include padding-vertical(24px);
+    @include padding-horiz(30px);
+    padding-left: 0;
+    border-bottom: $sub-navbar-padding solid #fff;
+    @extend .faint-shadow;
+    background: #fff;
+    @include transition(left .25s ease-out);
+
+    @include at-query($min, $medium) {
+        left: $sidebar-medium-width;
+    }
+
+    @include at-query($min, $large) {
+        left: $sidebar-wide-width;
+    }
+
+    #sidebar-toggle {
+        display: block;
+        opacity: 1;
+        @include transition(opacity .25s ease-out);
+        float: left;
+        color: $electric;
+        padding: 6px 15px 6px 11px;
+        margin-right: 30px;
+        cursor:pointer;
+
+        position: relative;
+        bottom: 4px;
+        left: 8px;
+
+        &.icon-menu {
+            font-size: 24px;
+            bottom: 8px;
+            &:before { 
+                content: "\e900";
+            }
+        }
+    }
+
+    /**
+     * Open Sidebar
+     */
+    &.sidebar-open { 
+        #sidebar-toggle { 
+            display: none; 
+            opacity: 0;
+        }
+    }
+}
+
+.sub-nav .breadcrumbs {
+    @include span(12);
+    font-size: 15px;
+
+    a { color: $midgray; }
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul li {
+        display: inline;
+
+        &:after {
+            content: "\e902";
+            font-family: 'icomoon';
+            font-size: 0.65rem;
+            margin: 0 10px 0 14px;
+            opacity: .35;
+            letter-spacing: 0.25px;
+        }
+
+        &:last-child {
+            font-weight: 700;
+            a { color: $electric; }
+        }
+        &:last-child:after {
+            content: "";
+        }
+    }
+}
+
+.sub-nav .issn {
+    @include span(4);
+    span.meta {
+        float: right;
+        position: relative;
+        top: 1px;
+        color: rgba(162, 169, 176, .75);
+        @extend .uppercase-titles;
+    }
+}
+
+
+/** Left Sidebar / Navigation
+ ---------------------------------------------------------*/
+.main .sidebar .search-box {
+    position: relative;
+    padding: 15px 70px 0 40px;
+
+    span.icon {
+        position: absolute;
+        top: 30px;
+        color: #5C7DA2;
+    }
+
+    input {
+        padding-left: 30px;
+        font-size: 17px;
+        // border-bottom: 2px solid #213245;
+        border-bottom: 2px solid #5C7DA2;
+        color: #fff;
+
+        &:focus { border-color: $teal; }
+    }
+
+    /**
+     * Placeholders ----
+     * These have to be separate because css
+     * parser is broken for placeholder rules.
+     */
+    $placeholder-color: #3366A0;
+    input::placeholder { color: $placeholder-color }
+    input::-webkit-input-placeholder { color: $placeholder-color }
+    input::-moz-placeholder { color: $placeholder-color }
+}
+
+.main .sidebar ul.nav-links {
+    padding-top: 0;
+    margin-top: 0;
+
+    li.title {
+        font-size: 15px;
+        text-transform: uppercase;
+        padding: 21px 0 18px 0;
+        margin: 10px 40px 5px 40px;
+        font-weight: 700;
+        border-bottom: 1px solid #eee;
+        position: relative;
+    }
+
+    #sidebar-toggle {
+        cursor: pointer;
+        color: $electric;
+        position: absolute;
+        right: 0;
+        font-size: 18px;
+        @include transition(color .25s ease-out);
+        &:hover { color: $accent; }
+    }
+
+    a li {
+        position: relative;
+        padding: 21px 0 18px 40px;
+        margin: 0;
+        color: #fff;
+        @include transition(background .25s ease-out);
+    }
+
+    a li:after {
+        content: "\e902";
+        font-family: 'icomoon';
+        position: absolute;
+        top: 22px;
+        right: 15px;
+        font-size: 0.9rem;
+        color: $water;
+        opacity: 0;
+        @include transition(opacity .25s ease-out,
+                            right .25s ease-out);
+    }
+
+    a:hover li {
+        background: lighten($sidebar-color, 3%);
+        color: #fff;
+    }
+
+    a:hover li:after {
+        opacity: 1;
+        right: 20px;
+    }
+}
+
+
+/** Left Sidebar / Secondary Colors
+ ---------------------------------------------------------*/
+$secondary-subnav-color: darken(#00387A, 1%);
+.main .sidebar.secondary {
+    background: #fff;
+    ul.nav-links {
+        a li { color: $cello; }
+        a:hover li {
+            background: $electric;
+            color: #fff;
+        }
+        a:hover li:after {
+            color: #fff;
+        }
+    }
+
+    .search-box {
+        padding: 11px 70px 0 36px;
+        height: $sub-navbar-height + 8;
+        background: $secondary-subnav-color;
+
+        span.icon-search {
+            top: 26px;
+        }
+    }
+
+    .search-box input {
+        margin: 0;
+        border: none;
+        color: #fff;
+        &::placeholder { color: #3366A0 }
+        &::-webkit-&-placeholder { color: #3366A0 }
+        input::-moz-placeholder { color: #3366A0 }
+        &:focus { border-color: $teal; }
+    }
+}
+
+.sub-nav.secondary {
+    border-color: $secondary-subnav-color;
+    background: $secondary-subnav-color;
+    box-shadow: none;
+
+    #sidebar-toggle { color: #fff; }
+
+    ul li {
+        display: inline;
+        a { color: $water; }
+
+        &:after {
+            color: $water;
+        }
+
+        &:last-child {
+            a { color: #fff; }
+        }
+    }
+}

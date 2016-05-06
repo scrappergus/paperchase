@@ -38,3 +38,17 @@ $deepgray: #2E4057; // fig descrip background
 $futura: "futura-pt", Helvetica, Arial, sans-serif;
 $base-font-size:   17px;
 $base-line-height: 1.35;
+
+
+/** Layout
+ ---------------------------------------------------------*/
+$sidebar-medium-width: 270px;
+$sidebar-wide-width: 310px;
+$container-padding: 60px;
+$full-container-padding: 12%;
+
+$navbar-height: 70px;
+$sub-navbar-height: 56px;
+$sub-navbar-padding: 8px;
+$nav-color: $electric;
+$sidebar-color: darken(#00387A, 1%);

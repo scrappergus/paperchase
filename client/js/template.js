@@ -16,14 +16,14 @@ Template.Home.onRendered(function () {
   });
 
   $('footer').wrap('<div class="grid"></div>');
-  $('.content-yield').addClass('no-breadcrumbs');
-  $('.sub-nav').addClass('transparent');
+  $('.content-yield').addClass('home');
+  // $('.sub-nav').addClass('transparent');
 });
 
 Template.Home.onDestroyed(function() {
   $('footer').unwrap();
-  $('.content-yield').removeClass('no-breadcrumbs');
-  $('.sub-nav').removeClass('transparent');
+  $('.content-yield').removeClass('home');
+  // $('.sub-nav').removeClass('transparent');
 });
 
 Template.EdBoard.onRendered(function() {

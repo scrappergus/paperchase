@@ -1,16 +1,18 @@
 @import '/{meta:susy}/susy',
         '../style/mixins',
 
-        'partials/variables',
+        'partials/variables',           // colors & fonts
         'partials/mixins',
-        'partials/grid',
+        'partials/grid',                // susy
         'partials/overrides',
 
-        'modules/type',
-        'modules/layout',
-        'modules/cards',
-        'modules/home',
-        'modules/archive';
+        'modules/type',                 // base typography
+        'modules/navs',                 // main nav, subnav, and sidebar
+        'modules/layout',               // page-content and page-sidebar
+        'modules/cards',                // sidebar cards & fixed scrolling cards
+
+        'modules/home',                 // home-specific styles
+        'modules/archive';              // archive-specific styles
 
 
 /**
@@ -152,6 +154,7 @@ h2.authors {
     font-size: 17px;
 
     span.author {
+        display: inline-block;
         white-space: nowrap;
 
         // fix trailing comma whitespace

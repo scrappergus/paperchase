@@ -1,18 +1,14 @@
 <template name="LeftNav">
 	<ul class="nav-links">
+		<li class="title">
+			Navigate
+			<span id="sidebar-toggle" class="icon icon-close"></span>
+		</li>
 		{{#each links}}
 			{{#if display}}
 			<a href="{{pathFor route_name}}"><li>{{name}}</li></a>
 			{{/if}}
 		{{/each}}
-
-		<!-- {{#if sectionsLinks}}
-			<li><h4>Sections</h4></li>
-			{{#each sectionsLinks}}
-			<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
-			<div class="divider"></div>
-			{{/each}}
-		{{/if}} -->
 	</ul>
 </template>
 
