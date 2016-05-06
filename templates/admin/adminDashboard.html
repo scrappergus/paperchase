@@ -1,5 +1,8 @@
 <template name="AdminDashboard">
     {{>AdminHeader header="Dashboard"}}
+
+    {{>StatusModal}}
+
     <div class="row">
         <div class="col s4">
             <div class="card z-depth-0">
@@ -17,6 +20,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col s4">
             <div class="card z-depth-0">
                 <div class="card-content">
@@ -38,9 +42,8 @@
                         </div>
                     </div>
 
-                    {{>processing}}
-
-                    {{#if processingPii}}
+                    {{#with processingPii}}
+                    {{#if equals short_name 'oncotarget'}}
                     <div class="row">
                         <div class="col s12">
                             <h4>Processing</h4>
@@ -48,8 +51,22 @@
                         </div>
                     </div>
                     {{/if}}
+                    {{/with}}
                 </div>
             </div>
         </div>
+
+        {{#if isInRole 'dev'}}
+        {{#if journal}}
+        <div class="col s4">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">OJS Batch Update</span>
+                    {{>OncotargetOjsBatch}}
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        {{/if}}
     </div>
 </template>

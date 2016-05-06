@@ -12,13 +12,31 @@ Template.AdminArticlesDashboard.events({
                 Meteor.formActions.successMessage(result);
             }
         });
-    },
+    }
+});
+
+Template.OncotargetOjsBatch.events({
     'click #ojs-batch-update': function(e){
         e.preventDefault();
-        // just for Oncotarget
-        // TODO: move to server. problem with method within a method. if this click was to call a method that then uses the update method.
-        // TODO: include a paperchase owns flag, and skip that article in the batch update. for when an article was edited via paperchase.
-        Meteor.call('batchUpdate');
+        Meteor.formActions.saving();
+        Meteor.call('batchUpdate',function(error,result){
+            if(error){
+
+            }else if(result){
+
+            }
+        });
+    },
+    'click #ojs-batch-update-dates': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        Meteor.call('batchUpdateWithoutDates',function(error,result){
+            if(error){
+
+            }else if(result){
+
+            }
+        });
     }
 });
 

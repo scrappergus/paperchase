@@ -3,6 +3,9 @@
 Template.AdminDashboard.helpers({
     processingPii: function(){
         return Session.get('processing-pii');
+    },
+    journal: function(){
+        return Session.get('journal');
     }
 });
 

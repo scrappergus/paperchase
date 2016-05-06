@@ -1,0 +1,13 @@
+<template name="OncotargetOjsBatch">
+    <div class="clearfix"></div>
+    <button id="ojs-batch-update" class="blue-grey darken-1 waves-effect waves-light btn">Update <u>ALL</u> Via OJS</button>
+    <br><br>
+    <p class="font-sm">Will update ALL records in Paperchase to match OJS.</p>
+    <br><br><br><br>
+    {{#if withoutDates}}
+    <h4>{{withoutDates}} articles without dates</h4>
+    {{/if}}
+    <button id="ojs-batch-update-dates" class="blue-grey darken-1 waves-effect waves-light btn">Update only <u>without dates</u> Via OJS</button>
+    <br><br>
+    <p class="font-sm">Will update ALL records in Paperchase WIHTOUT an epub, submitted, or accepted date. These article records in Paperchase will then match OJS.</p>
+</template>

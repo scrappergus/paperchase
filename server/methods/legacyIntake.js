@@ -2,20 +2,89 @@
 Meteor.methods({
     batchUpdate:function(){
         // console.log('..batchUpdate');
+        var fut = new future();
         var journalInfo = journalConfig.findOne();
         var journalShortName = journalInfo.journal.short_name;
         var articlesList = articles.find().fetch();
-        for(var a=0 ; a < articlesList.length ; a++){
-            var article = articlesList[a];
+
+        var notUpdated = 0,
+            updated = 0;
+
+        async.each(articlesList, function (article, cb) {
             if(article.ids.pii){
-                // console.log(article.ids.pii);
+
                 var params = {};
                     params.id_type = 'pii',
                     params.id = article.ids.pii,
                     params.journal = journalShortName,
                     params.batch = true;
-                Meteor.call('legacyArticleIntake',params);
+
+                Meteor.call('legacyArticleIntake',params, function(error,result){
+                    if(error){
+                        console.error('legacyArticleIntake',error);
+                        notUpdated++;
+                    }else if(result){
+                        updated++;
+                        cb();
+                    }
+                });
             }
+
+        }, function (err) {
+            if (err) { throw err; }
+            fut.return();
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
+    batchUpdateWithoutDates: function(){
+        var fut = new future();
+        var journalInfo = journalConfig.findOne();
+        var journalShortName = journalInfo.journal.short_name;
+        var query = { $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] }
+        var articlesList = articles.find(query).fetch();
+
+        var notUpdated = 0,
+            updated = 0;
+
+        async.each(articlesList, function (article, cb) {
+            // console.log(articlesList.indexOf(article), article._id);
+            if(article.ids.pii){
+
+                var params = {};
+                    params.id_type = 'pii',
+                    params.id = article.ids.pii,
+                    params.journal = journalShortName,
+                    params.batch = true;
+
+                Meteor.call('legacyArticleIntake',params, function(error,result){
+                    if(error){
+                        console.error('legacyArticleIntake',error);
+                        notUpdated++;
+                    }else if(result){
+                        updated++;
+                        cb();
+                    }
+                });
+            }
+
+        }, function (err) {
+            if (err) { throw err; }
+            var done = new Date();
+            var done_time = done.getHours() + ':' + done.getMinutes() ;
+            fut.return();
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
         }
     },
     legacyArticleIntake: function(articleParams){
