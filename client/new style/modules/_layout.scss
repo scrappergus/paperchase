@@ -88,7 +88,6 @@ $navbar-height: 70px;
 $sub-navbar-height: 56px;
 $sub-navbar-padding: 8px;
 $nav-color: $electric;
-// $sidebar-color: #001D40;
 $sidebar-color: darken(#00387A, 1%);
 
 .navigation {
@@ -101,8 +100,6 @@ $sidebar-color: darken(#00387A, 1%);
 .sidebar {
     position: fixed;
     left: 0;
-    // background-color: $blackpearl;
-    // border-top: 1px solid darken($sidebar-color, 3%);
     background-color: $sidebar-color;
     font-size: 17px;
 
@@ -173,6 +170,7 @@ $sidebar-color: darken(#00387A, 1%);
     padding-left: 0;
     border-bottom: $sub-navbar-padding solid #fff;
     @extend .faint-shadow;
+    background: #fff;
     @include transition(left .25s ease-out);
 
     @include at-query($min, $medium) {
@@ -185,7 +183,6 @@ $sidebar-color: darken(#00387A, 1%);
 
     #sidebar-toggle {
         float: left;
-        background: #fff;
         color: $electric;
         padding: 6px 15px 6px 11px;
         margin-right: 30px;
@@ -368,6 +365,8 @@ $sidebar-color: darken(#00387A, 1%);
         // border-bottom: 2px solid #213245;
         border-bottom: 2px solid #5C7DA2;
         color: #fff;
+
+        &:focus { border-color: $teal; }
     }
 
     /**
@@ -399,7 +398,6 @@ $sidebar-color: darken(#00387A, 1%);
         top: 21px;
         right: 15px;
         font-size: 1.075rem;
-        // color: lighten(#2E4057, 10%);
         color: $water;
         opacity: 0;
         @include transition(opacity .25s ease-out,
@@ -417,14 +415,47 @@ $sidebar-color: darken(#00387A, 1%);
     }
 }
 
-.main .sidebar.secondary ul.nav-links {
-    a li { color: $cello; }
-    a:hover li {
-        background: $electric;
-        color: #fff;
+.main .sidebar.secondary {
+    background: #fff;
+    ul.nav-links {
+        a li { color: $cello; }
+        a:hover li {
+            background: $electric;
+            color: #fff;
+        }
+        a:hover li:after {
+            color: #fff;
+        }
     }
-    a:hover li:after {
-        color: #fff;
+
+    .search-box input {
+        border-color: $water;
+        color: $electric;
+        &::placeholder { color: #3366A0 }
+        &::-webkit-&-placeholder { color: #3366A0 }
+        input::-moz-placeholder { color: #3366A0 }
+        &:focus { border-color: $teal; }
+    }
+}
+
+.sub-nav.secondary {
+    border-color: darken(#00387A, 1%);
+    background: darken(#00387A, 1%);
+    box-shadow: none;
+
+    #sidebar-toggle { color: #fff; }
+
+    ul li {
+        display: inline;
+        a { color: $water; }
+
+        &:after {
+            color: $water;
+        }
+
+        &:last-child {
+            a { color: #fff; }
+        }
     }
 }
 
