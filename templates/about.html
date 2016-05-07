@@ -1,15 +1,17 @@
 <template name="About">
-	<div class="page-content">
-    {{>PageHeader header="About the Journal"}}
+    <div class="row">
+        <div class="page-content col s12 m8 l8">
+            {{>PageHeader header="About the Journal"}}
 
-    <!-- todo: fix paragraph spacing in first section?? -->
-    <ul class="sectioned-list">
-      {{#each sections}}
-        <li>
-          <h2 class="heavy accented">{{{title}}}</h2>
-          <p>{{{content}}}</p>
-        </li>
-      {{/each}} 
-    </ul>
-  </div>
+            <!-- todo: fix paragraph spacing in first section?? -->
+            <ul class="sectioned-list">
+                {{#each sections}}
+                <li>
+                <h2 class="heavy accented">{{{title}}}</h2>
+                <p>{{{content}}}</p>
+                </li>
+                {{/each}} 
+            </ul>
+        </div>
+    </div>
 </template>

@@ -1,67 +1,66 @@
 <template name="ArticleText">
-    <div class="page-content">
-        {{#with article}}
-            {{>ArticleHeader}}
+    <div class="row">
+        <div class="page-content col s12 m8">
+            {{#with article}}
+                {{>ArticleHeader}}
 
-            {{#if ids.pii}}
-            {{else}}
-
-                <div class="center-align"><h4>Full Text Unavailable.</h4></div>
-
-            {{/if}}
-        {{/with}}
-
-        {{#if fullText}}
-        {{else}}
-            <!-- Todo: Add better handling here. Loading is confusing. -->
-            {{>Loading}}
-        {{/if}}
-
-        {{#with fullText}}
-            <div class="article-text">
-                {{>ArticleFullText}}
-
-                {{#if references}}
-                    <h3 id="references">References</h3>
-                    <ul>
-                        {{#each references}}
-                            <li id="R{{number}}">
-                                <b>{{number}}.</b>
-
-                                {{#if equals type 'journal'}}
-                                {{#if authors}}<span> {{authors}}.</span>{{/if}}
-                                {{#if title}}<span> {{title}}.</span>{{/if}}
-                                {{#if source}}<span> {{source}}.</span>{{/if}}
-                                {{#if year}}<span> {{year}};</span>{{/if}}
-                                {{#if volume}}<span> {{volume}}:</span>{{/if}}
-                                {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
-                                {{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{else}}{{getPmid .}}{{/if}}
-                                {{/if}}
-
-                                {{#if equals type 'book'}}
-                                {{#if authors}}<span> {{authors}}.</span>{{/if}}
-                                {{#if year}}<span> {{year}}.</span>{{/if}}
-                                {{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
-                                {{#if volume}}<span> {{volume}}:</span>{{/if}}
-                                {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
-                                <span>(</span>
-                                {{#if source}}<span>{{{source}}}</span>{{/if}}
-                                {{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
-                                {{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
-                                <span>)</span>
-                                <span>.</span>
-                                {{/if}}
-                            </li>
-                        {{/each}}
-                    </ul>
+                {{#if ids.pii}}
+                {{else}}
+                    <div class="center-align"><h4>Full Text Unavailable.</h4></div>
                 {{/if}}
-            </div>
+            {{/with}}
+
+            {{#if fullText}}
+            {{else}}
+                {{>Loading}}
+            {{/if}}
+
+            {{#with fullText}}
+                <div class="article-text">
+                    {{>ArticleFullText}}
+
+                    {{#if references}}
+                        <h3 id="references">References</h3>
+                        <ul>
+                            {{#each references}}
+                                <li id="R{{number}}">
+                                    <b>{{number}}.</b>
+
+                                    {{#if equals type 'journal'}}
+                                    {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                    {{#if title}}<span> {{title}}.</span>{{/if}}
+                                    {{#if source}}<span> {{source}}.</span>{{/if}}
+                                    {{#if year}}<span> {{year}};</span>{{/if}}
+                                    {{#if volume}}<span> {{volume}}:</span>{{/if}}
+                                    {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+                                    {{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{else}}{{getPmid .}}{{/if}}
+                                    {{/if}}
+
+                                    {{#if equals type 'book'}}
+                                    {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                    {{#if year}}<span> {{year}}.</span>{{/if}}
+                                    {{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
+                                    {{#if volume}}<span> {{volume}}:</span>{{/if}}
+                                    {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
+                                    <span>(</span>
+                                    {{#if source}}<span>{{{source}}}</span>{{/if}}
+                                    {{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
+                                    {{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
+                                    <span>)</span>
+                                    <span>.</span>
+                                    {{/if}}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            {{/with}}
+        </div>
+
+        {{#with article}}
+            {{> ArticleSidebar}}
         {{/with}}
     </div>
-
-    {{#with article}}
-        {{> ArticleSidebar}}
-    {{/with}}
 </template>
 
 <template name="ArticleFullText">

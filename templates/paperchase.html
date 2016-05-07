@@ -1,40 +1,27 @@
 <template name="Home">
-    
-    <div class="home-hero">
-        <div class="grid">
-            <div class="hero-text">
-                <h1 class="head"><span>The ongoing revolution in aging research calls for a high-impact, open-access journal.</span></h1>
-                <h2 class="subhead">Aging has an impact factor of <strong>6.432</strong>&mdash;the highest impact factor in the field.</h2>
-            </div>
-        </div>
-    </div>
+    <div class="row">
+        <div class="page-content col s12 m8 l8">
+            <p>In 2008 the Ongoing Revolution in aging research has called for a High-Impact Journal. By now Aging journal has become one of the leading journals in the field.</p>
 
-    <div class="white-bar flex bar">
-        {{> IndexedBy}}
-    </div>
+            <p><strong>Aging</strong> primarily publishes papers of outstanding significance, exceptional novelty, and ground-breaking discoveries from yeast to humans and from evolution to medicine. <strong>Aging</strong> covers (in addition to traditional topics on aging) others topics including cellular and molecular biology, human age-related diseases, signal transduction pathways (p53, sirtuins, PI-3K/AKT/mTOR and so on) and approaches to modulate these signaling pathways.</p> 
 
-    <div class="grid push">
-        <div class="page-content">
-            <h3 class="section-heading">About the Journal</h3>
-            <p><strong>AGING</strong> primarily publishes papers of outstanding significance, exceptional novelty, and ground-breaking discoveries in all disciplines from yeast to humans and from evolution to medicine.</p> 
+            <p><strong>Aging</strong> is indexed by <a href="http://www.ncbi.nlm.nih.gov/pubmed?term=%22aging%20(albany%20ny)%22%20%5Bta%5D" target="_blank">PubMed/Medline</a>, <a href="http://www.ncbi.nlm.nih.gov/pmc/journals/1105/" target="_blank">PubMed Central</a>, <a href="http://isiwebofknowledge.com/" target="_blank">ISI/Thomson</a> and <a href="http://www.info.sciverse.com/scopus/" target="_blank">Scopus</a>.</p>
 
-            <p>The journal welcomes scientists in all disciplines, not only those in traditional gerontology. The journal covers (in addition to traditional topics on aging) many other topics including <span class="tag">cellular and molecular biology</span> (regulation of translation, cell growth, death and autophagy, mitochondria, DNA damage and repair, microRNAs, stem cells), <span class="tag">human age-related diseases</span>, <span class="tag">pathology in model organisms</span>, <span class="tag">cancer</span> and first of all <span class="tag">signal transduction pathways</span> (p53, sirtuins, PI-3K/AKT/mTOR and so on) and approaches to modulate these signaling pathways.</p>
-
-            <p>Revolutionary publishing allows us to publish overnight with the highest exposure.</p>
+            <p><strong>Aging</strong> is abbreviated by indexes: by PubMed – Aging (Albany NY); by ISI/Thomson – Aging-US; by Scopus – Aging.</p>
 
             {{#if news}}
                 {{> LatestNews}}
             {{/if}}
         </div>
 
-        <div class="page-sidebar">
+        <div class="page-sidebar col s12 m4 l4">
             {{#with latestIssue}}
                 {{> HomePageLatestIssue}}
             {{/with}}
 
-            <!-- <h2 style="padding-bottom: 30px;">Revolutionary publishing allows us to publish overnight with the highest exposure.</h2> -->
+            <a href="http://eepurl.com/bmC9OL" target="_blank" class="full-width primary button">Sign Up for TOC Alerts</a>
 
-            {{> HomePageEditorList}}
+            <!-- {{> HomePageEditorList}} -->
         </div>
     </div>
 </template>

@@ -14,17 +14,17 @@
 
 <template name="MobileMenu">
 	{{#each links}}
-	{{#if display}}
-	<li><a href="{{path}}" class="valign-wrapper"><span class="valign">{{name}}</span></a></li>
-	{{/if}}
+    	{{#if display}}
+    	<li><a href="{{path}}" class="valign-wrapper"><span class="valign">{{name}}</span></a></li>
+    	{{/if}}
 	{{/each}}
 	<div class="divider"></div>
 
 	{{#if sectionsLinks}}
-	<li><h4>Sections</h4></li>
-	{{#each sectionsLinks}}
-	<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
-	{{/each}}
+    	<li><h4>Sections</h4></li>
+    	{{#each sectionsLinks}}
+    	<li><a href="{{pathFor 'SectionPapers' _section_dash_name = dash_name}}">{{name}}</a></li>
+    	{{/each}}
 	{{/if}}
 
 	<div class="divider"></div>

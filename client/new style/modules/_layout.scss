@@ -50,8 +50,6 @@
 
 .nav-content,
 .content {
-    @include layout($susy);
-    @include container(100%);
     @include clearfix;
     @include transition(margin-left .25s ease-out);
 
@@ -118,56 +116,6 @@ footer {
         padding-top: $sub-navbar-height + 8;
         @include padding-horiz(0); 
     }
-}
-
-/**
- * Page Content & Sidebar
- */
-
-.page-content {
-    @include span(16);
-}
-
-.page-sidebar {
-    @include span(16);
-}
-
-@include at-query($min, $medium) {
-    .page-content {
-        @include span(10);
-        padding-right: 30px;
-
-        &.wide { 
-            @include span(16); 
-            padding: 0; 
-        }
-    }
-
-    .page-sidebar {
-        @include span(6);
-    }
-}
-
-@include at-query($min, $large) {
-    .page-content { @include span(11); }
-    .page-sidebar { @include span(5); }
-}
-
-@include at-query($min, $wide) {
-    .page-content { @include span(12); }
-    .page-sidebar { @include span(4); }
-}
-
-/** Simple Grid Helpers
- ---------------------------------------------------------*/
-.section-half {
-    @include span(8);
-}
-
-ul .section-half {
-    margin-left: 0;
-    margin-right: 20px;
-    &:last-child { margin-right: 0; }
 }
 
 /** Content Bars

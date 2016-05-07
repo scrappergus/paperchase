@@ -1,23 +1,23 @@
 <template name="ForAuthors">
-    <div class="page-content wide">
-        {{>PageHeader header="Information for Authors"}}
+    <div class="row">
+        <div class="page-content col s12 m8">
+            {{>PageHeader header="Information for Authors"}}
+
+            <ul class="sectioned-list">
+                {{#each sections}}
+                    <li id="{{convertToID title}}">
+                        <h2 class="heavy accented">{{{title}}}</h2>
+                        <p>{{{content}}}</p>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+
+
+        <div class="page-sidebar col s12 m4">
+            {{> scrollspyCard title="Table of Contents" items=sections}}
+        </div>
     </div>
-
-   <div class="page-content">
-      <ul class="sectioned-list">
-          {{#each sections}}
-          <li id="{{convertToID title}}">
-              <h2 class="heavy accented">{{{title}}}</h2>
-              <p>{{{content}}}</p>
-          </li>
-          {{/each}}
-      </ul>
-   </div>
-
-
-   <div class="page-sidebar">
-     {{> scrollspyCard title="Table of Contents" items=sections}}
-   </div>
 </template>
 
 

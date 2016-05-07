@@ -1,30 +1,28 @@
 <template name="Archive">
-    <!-- <div class="page-content wide">
-        <h1>Issue Archive</h1>
-    </div> -->
+    <div class="row">
+        <div class="page-content col s12 m8 l8">
+            <h1>Issue Archive</h1>
+            {{#each volumes}}
+                <h2 id="volume{{volume}}" class="heavy">Volume {{volume}}</h2>
 
-    <div class="page-content">
-        <h1>Issue Archive</h1>
-        {{#each volumes}}
-            <h2 id="volume{{volume}}" class="heavy">Volume {{volume}}</h2>
+                <div class="clearfix">
+                    <ul class="">
+                        {{#each issues_data}}
+                        <li class="archive-issue">
+                            <a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{coverPath}}"></a>
+                                <a class="issue-info" href="/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}} <br />
+                                <!-- {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}} --></a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="divider"></div>
+            {{/each}}
+        </div>
 
-            <div class="clearfix">
-                <ul class="">
-                    {{#each issues_data}}
-                    <li class="archive-issue">
-                        <a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{coverPath}}"></a>
-                            <a class="issue-info" href="/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}} <br />
-                            <!-- {{#if pub_date}}<h5>{{formatIssueDate pub_date}}</h5>{{/if}} --></a>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-            <div class="divider"></div>
-        {{/each}}
-    </div>
-
-    <div class="page-sidebar">
-        {{> scrollspyCard title="Table of Contents" items=items}}
+        <div class="page-sidebar col s12 m4 l4">
+            {{> scrollspyCard title="Table of Contents" items=items}}
+        </div>
     </div>
 </template>
 

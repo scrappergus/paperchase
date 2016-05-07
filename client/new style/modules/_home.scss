@@ -40,40 +40,17 @@
 
     h2.subhead { line-height: 1.3; }
 
-    /**
-     * Grid Setup
-     */
-
-    .hero-text {
-        @include span(16);
-    }
-
-    .hero-info {
-        @include span(16);
-        text-align: center;
-    }
 
     /**
      * Media Queries
      */
 
-    @include at-query($min, $medium) {
-        .hero-text { @include span(16); }
-        .hero-info { @include span(16); }
-    }
-
     @include at-query($min, $large) {
-        .hero-text { @include span(12); }
-        .hero-info { @include span(4); }
-
         h1.head { font-size: 36px; }
         h2.subhead { font-size: 18px; }
     }
 
     @include at-query($min, $wide) {
-        .hero-text { @include span(12); }
-        .hero-info { @include span(4); }
-
         h1.head { font-size: 42px; }
     }
 }
@@ -108,17 +85,7 @@
         line-height: 1.3;
     }
 
-
-    /**
-     * Grid Setup
-     */
-
-    .news-text {
-        @include span(16);
-    }
-
     .news-info {
-        @include span(16);
         text-align: center;
     }
 
@@ -138,29 +105,12 @@
      * Media Queries
      */
 
-    @include at-query($min, $medium) {
-        .news-text {
-            @include span(10);
-            padding-right: 30px;
-        }
-
-        .news-info {
-            @include span(6);
-        }
-    }
-
     @include at-query($min, $large) {
-        .news-text { @include span(11); }
-        .news-info { @include span(5); }
-
         h1.head { font-size: 42px; }
         h2.subhead { font-size: 21px; }
     }
 
     @include at-query($min, $wide) {
-        .news-text { @include span(12); }
-        .news-info { @include span(4); }
-
         h1.head { font-size: 46px; }
     }
 }

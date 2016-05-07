@@ -1,9 +1,7 @@
-@import '/{meta:susy}/susy',
-        '../style/mixins',
+@import '../style/mixins',              // old mixins (needs to move and/or consolidate)
 
         'partials/variables',           // colors & fonts
         'partials/mixins',
-        'partials/grid',                // susy
         'partials/overrides',
 
         'modules/type',                 // base typography

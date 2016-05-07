@@ -59,8 +59,8 @@ Template.Recommend.events({
 Template.Visitor.events({
     'click #sidebar-toggle': function(e){
         e.preventDefault();
-        $('.content').toggleClass('no-sidebar');
         $('.sub-nav').toggleClass('sidebar-open');
+        $('.content').toggleClass('no-sidebar');
         $('.sidebar').toggleClass('hidden');
     }
 });

@@ -70,3 +70,11 @@
 #forgot-password-email {
     margin-bottom: 5px;
 }
+
+
+/** Materialize
+ ---------------------------------------------------------*/
+.row .col {
+    @include padding-horiz(1.7rem);
+    &:first-child { margin-left: 0; }
+}

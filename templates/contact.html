@@ -1,27 +1,22 @@
 <template name="Contact">
-	<div class="page-content">
+<div class="row">
+	<div class="page-content col s12 m8">
 		<h2 class="h1">Contact Us</h2>
 
 		<p>Please submit an article: <a href="{{submitLink}}" target="_BLANK">{{submitLink}}</a> </p>
 
 		{{#with contact}}
-			<p>
-				<b>Journal Office:</b>
-				<br>
+			<p><b>Journal Office:</b><br />
 				{{#with address}}
-				{{street}}{{#if street_2}}, {{street_2}}{{/if}}
-				<br>
+				{{street}}{{#if street_2}}, {{street_2}}{{/if}}<br />
 				{{city}}, {{state}} {{zip}}
 				{{/with}}
 			</p>
 
-			<p>
-				For questions related to preparation of your article for publication, please contact:<br>
+			<p>For questions related to preparation of your article for publication, please contact:<br />
 				{{#with publication_prep}}
-				<b>{{name}}</b>
-				<br>
-				{{title}}
-				<br>
+				<b>{{name}}</b><br />
+				{{title}}<br />
 				<a href="mailto:{{email_address}}">{{email_address}}</a>
 				{{/with}}
 			</p>
@@ -39,7 +34,7 @@
 				<p>e-Fax: {{fax}}</p>
 				{{/if}}
 			{{/with}}
-
 		{{/with}}
 	</div>
+</div>
 </template>

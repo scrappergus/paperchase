@@ -1,27 +1,35 @@
 <template name="EdBoard">
-  <!-- todo: remove inline styles -->
-	<div class="wide grid" style="margin-bottom: 70px;">
-    {{>PageHeader header="Editorial Board"}}
 
-    <h4 style="margin-top: 40px;">{{journalName}} Editors-in-Chief</h4>
-    <ul class="home-page-editors-list">
-      {{#each eic}}
-        <li class="section-half">
-            <p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> 
-            {{address}}</p>
-        </li>
-        {{#if bio}}
-          {{> bioModal bio=bio firstName=name_first lastName=name_last}}
-        {{/if}}
-      {{/each}}
-    </ul> 
-  </div>
+    <div class="row">
+        <div class="col s12 m12 l12">
+            {{>PageHeader header="Editorial Board"}}
+        </div>
+    </div>
 
-  <div class="wide grid">
-		<h4>Editorial Board</h4>
+    <div class="row">
+        <ul class="home-page-editors-list">
+            <div class="col s12">
+                <h4>{{journalName}} Editors-in-Chief</h4>
+            </div>
+            {{#each eic}}
+                <li class="col s6">
+                    <p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> 
+                    {{address}}</p>
+                </li>
+                {{#if bio}}
+                    {{> bioModal bio=bio firstName=name_first lastName=name_last}}
+                {{/if}}
+            {{/each}}
+        </ul>
+    </div>
+
+    <div class="row">
 		<ul class="home-page-editors-list">
+            <div class="col s12">
+                <h4>Editorial Board</h4>
+            </div>
 			{{#each fullBoard}}
-  			<li class="section-half">
+  			<li class="col s6">
   				<p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> {{address}}</p>
   			</li>
 

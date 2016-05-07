@@ -15,14 +15,12 @@ Template.Home.onRendered(function () {
     accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
   });
 
-  $('footer').wrap('<div class="grid"></div>');
-  $('.content-yield').addClass('home');
+  // $('footer').wrap('<div class="grid"></div>');
   // $('.sub-nav').addClass('transparent');
 });
 
 Template.Home.onDestroyed(function() {
   $('footer').unwrap();
-  $('.content-yield').removeClass('home');
   // $('.sub-nav').removeClass('transparent');
 });
 

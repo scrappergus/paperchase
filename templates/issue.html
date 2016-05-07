@@ -1,10 +1,11 @@
 <template name="Issue">
     {{> SubscribeModal}}
 
+    <div class="row">
     {{#if issueData}}
         {{#with issueData}}
             <!-- Main -->
-            <div class="page-content">
+            <div class="page-content col s12 m8">
                     <div class="toc-title">
                         <div class="cover-image">
                             <img src="{{coverPath}}">
@@ -22,7 +23,7 @@
             </div>
 
             <!-- Sidebar -->
-            <div class="page-sidebar">
+            <div class="page-sidebar col s12 m4">
                 <div class="issue-scroller">
                     {{#with prevIssue}} <span class="prev"><a href="/issue/{{vi}}"><span class="icon icon-angle-left"></span> Prev {{param}}</a></span> {{/with}}
                     <span class="current">Volume {{volume}}, Issue {{issue}}</span>
@@ -34,6 +35,7 @@
     {{else}}
         {{>Loading}}
     {{/if}}
+    </div>
 </template>
 
 

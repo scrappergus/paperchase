@@ -1,20 +1,22 @@
 <template name="Article">
     {{> SubscribeModal}}
 
-    <div class="page-content">
-        {{#with article}}
-            {{>ArticleHeader}}
-        {{/with}}
+    <div class="row">
+        <div class="page-content col s12 m8 l8">
+            {{#with article}}
+                {{>ArticleHeader}}
+            {{/with}}
 
-        {{#if isSubscribed}}
-            {{#if files.figures}}
-                <h3>Figures</h3>
-                {{>ArticleFigures figures=files.figures}}
+            {{#if isSubscribed}}
+                {{#if files.figures}}
+                    <h3>Figures</h3>
+                    {{>ArticleFigures figures=files.figures}}
+                {{/if}}
             {{/if}}
-        {{/if}}
-    </div>
+        </div>
 
-    {{#with article}}
-        {{> ArticleSidebar}}
-    {{/with}}
+        {{#with article}}
+            {{> ArticleSidebar}}
+        {{/with}}
+    </div>
 </template>
