@@ -27,8 +27,13 @@
             </div>
         </div>
 
+        <div class="col s4">
+            {{>ArticleLegacyUpdateForm}}
+        </div>
+
         {{#if isInRole 'dev'}}
         {{#if journal}}
+
         <div class="col s4">
             <div class="card z-depth-0">
                 <div class="card-content">

@@ -32,7 +32,7 @@ Meteor.methods({
 
         }, function (err) {
             if (err) { throw err; }
-            fut.return();
+            fut.return(true);
         });
 
         try {
@@ -257,6 +257,47 @@ Meteor.methods({
         }
         catch(error) {
             throw new Meteor.Error(error.message);
+        }
+    },
+    updateArticlesViaLegacy: function(piiList){
+        // console.log('updateArticlesViaLegacy',piiList);
+        var fut = new future();
+        var journalInfo = journalConfig.findOne();
+        var journalShortName = journalInfo.journal.short_name;
+
+        var notUpdated = 0,
+            updated = 0;
+
+        var updatedList = [];
+
+        async.each(piiList, function (pii, cb) {
+            var params = {};
+                params.id_type = 'pii',
+                params.id =  pii,
+                params.journal = journalShortName,
+                params.batch = true;
+
+            Meteor.call('legacyArticleIntake',params, function(error,result){
+                if(error){
+                    console.error('legacyArticleIntake',error);
+                    notUpdated++;
+                }else if(result){
+                    updated++;
+                    updatedList.push(pii);
+                    cb();
+                }
+            });
+
+        }, function (err) {
+            if (err) { throw err; }
+            fut.return(updatedList);
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
         }
     }
 });

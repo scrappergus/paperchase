@@ -297,7 +297,7 @@ if (Meteor.isClient) {
 
   Template.registerHelper('actionSaving', function(action) {
     if (action) {
-      if (action.toLowerCase() == 'saving' || action.toLowerCase() == 'searching') {
+      if (action.toLowerCase() == 'saving' || action.toLowerCase() == 'searching' || action.toLowerCase() == 'processing') {
         return true;
       }
     }
