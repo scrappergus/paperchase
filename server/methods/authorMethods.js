@@ -89,7 +89,7 @@ Meteor.methods({
                 return authorUpdateObj;
             });
         }else{
-            return;
+            return true;
         }
     }
 });
