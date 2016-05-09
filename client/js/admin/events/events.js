@@ -8,7 +8,7 @@ Template.Admin.events({
 
 // Dashboard
 // ---------------
-Template.AdminDashboard.events({
+Template.ArticleDatesCsvForm.events({
     'submit form': function(e){
         e.preventDefault();
         Meteor.formActions.processing();
