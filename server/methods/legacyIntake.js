@@ -75,8 +75,6 @@ Meteor.methods({
 
         }, function (err) {
             if (err) { throw err; }
-            var done = new Date();
-            var done_time = done.getHours() + ':' + done.getMinutes() ;
             fut.return();
         });
 
