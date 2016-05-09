@@ -22,7 +22,7 @@ Meteor.methods({
         return fut.wait();
     },
     batchProcessXml: function(){
-        console.log('..batchProcessXml');
+        // console.log('..batchProcessXml');
         var journalInfo = journalConfig.findOne();
         var journalShortName = journalInfo.journal.short_name;
         var articlesList = articles.find({}).fetch();
@@ -562,5 +562,53 @@ Meteor.methods({
                 });
             }
         }
+    },
+    batchAllArticleTypes: function(){
+        // update all article docs using the article types collection information. Needed because we added data to article types collection and want to update all article docs
+        var articlesList = articles.find().fetch();
+
+        var typesList = articleTypes.find().fetch();
+        var typesByShortName = {};
+
+        typesList.forEach(function(type){
+            typesByShortName[type.short_name] = type;
+        });
+
+        // console.log('typesByShortName',typesByShortName);
+
+        articlesList.forEach(function(article){
+            if(article.article_type && !article.article_type._id)
+            // remove !article.article_type._id below if wanting to update entire collection.
+            if(article.article_type && !article.article_type._id && article.article_type.name && article.article_type.short_name && typesByShortName[article.article_type.short_name]){
+                // console.log(article.article_type.short_name);
+                // console.log(article.article_type.short_name, typesByShortName[article.article_type.short_name]._id);
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName[article.article_type.short_name]});
+            }else if(article.article_type && !article.article_type._id && article.article_type.name && article.article_type.short_name && typesByShortName[article.article_type.short_name.replace('-','_')]){
+                // console.log(article.article_type.short_name, typesByShortName[article.article_type.short_name.replace('-','_')]._id);
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName[article.article_type.short_name.replace('-','_')]});
+            }else if(article.article_type && article.article_type.short_name === 'review-article'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['review-article']});
+            }else if(article.article_type && article.article_type.short_name === 'article-commentary'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['commentary']});
+            }else if(article.article_type && article.article_type.short_name === 'correction'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['erratum']});
+            }else if(article.article_type && article.article_type.name === 'Commentary'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['commentary']});
+            }else if(article.article_type && article.article_type.name === 'Essays'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['essays']});
+            }else if(article.article_type && article.article_type.name === 'Review'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['review']});
+            }else if(article.article_type && article.article_type.name === 'Essays and Commentaries'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['essays_and_commentaries']});
+            }else if(article.article_type && article.article_type.name === 'Hypothesis'){
+                Meteor.call('updateArticle',article._id, {article_type : typesByShortName['hypothesis']});
+            }else if(article.article_type && Object.keys(article.article_type).length > 0){
+                // console.log('---',article._id);
+                // has type but could not match
+            }else{
+                // not type
+                // console.log('-- no type',article._id);
+            }
+        });
     }
 });
