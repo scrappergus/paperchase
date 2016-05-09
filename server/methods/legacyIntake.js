@@ -131,7 +131,7 @@ Meteor.methods({
                                     }
 
                                     Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){
-                                        if(result){
+                                        if(result && processedArticleJson.advance === true){
                                             Meteor.call('sorterAddItem','advance',articleMongoId);
                                         }
                                     });
