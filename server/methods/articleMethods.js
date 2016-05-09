@@ -28,7 +28,6 @@ Meteor.methods({
 
         Meteor.authorizeCheck.articles();
         var fut = new future();
-        // console.log('--updateArticle',mongoId,articleData);
 
         var articleAuthors,
             articleAffiliations;
