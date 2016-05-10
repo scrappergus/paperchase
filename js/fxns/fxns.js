@@ -600,7 +600,6 @@ Meteor.clean = {
         if(string){
             string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
             string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
-            string = string.replace(/\s+/g,''); // remove extra spaces
             if(string.charAt(string.length - 1) === '.'){
                 string = string.substring(0, string.length-1);
             }
@@ -608,7 +607,10 @@ Meteor.clean = {
         return string;
     },
     cleanWysiwyg: function(input){
-        return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
+        return input.replace(/&nbsp;/g,' ').replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'').trim();
+    },
+    removeSpaces: function(string){
+        return string.replace(/\s+/g,'');
     }
 }
 

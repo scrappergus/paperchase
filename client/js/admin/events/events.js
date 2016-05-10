@@ -21,7 +21,7 @@ Template.ArticleDatesCsvForm.events({
 
         if(piiList && piiList.length > 0){
             cleanedPii = piiList.map(function(pii){
-                return Meteor.clean.cleanString(pii);
+                return Meteor.clean.removeSpaces(pii);
             });
 
             Session.set('processing-pii',cleanedPii);
@@ -50,7 +50,7 @@ Template.ArticleLegacyUpdateForm.events({
 
         if(piiList && piiList.length > 0){
             cleanedPii = piiList.map(function(pii){
-                return Meteor.clean.cleanString(pii);
+                return Meteor.clean.removeSpaces(pii);
             });
 
             Meteor.call('updateArticlesViaLegacy',cleanedPii,function(error,result){
