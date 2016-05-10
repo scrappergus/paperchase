@@ -86,7 +86,7 @@ Meteor.methods({
         }
     },
     legacyArticleIntake: function(articleParams){
-        // console.log('...legacyArticleIntake');
+        console.log('...legacyArticleIntake');
         // console.log(articleParams);
         // only using for batch update now
         var idType = articleParams.id_type,
@@ -155,6 +155,7 @@ Meteor.methods({
             }
 
             if(articleMongoId){
+                console.log('updated',articleMongoId);
                 return true; // DO we need a response to Legacy platform?
             }
             else {
@@ -271,6 +272,7 @@ Meteor.methods({
         var updatedList = [];
 
         async.each(piiList, function (pii, cb) {
+            console.log(pii);
             var params = {};
                 params.id_type = 'pii',
                 params.id =  pii,
@@ -283,8 +285,11 @@ Meteor.methods({
                     notUpdated++;
                 }else if(result){
                     updated++;
+                    console.log('updated count = ',updated);
                     updatedList.push(pii);
                     cb();
+                }else{
+                    console.error('legacyArticleIntake no response');
                 }
             });
 
