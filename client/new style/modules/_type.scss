@@ -41,7 +41,7 @@ html, body {
 h1, .h1 { font-size: 38px; }
 h2, .h2 { font-size: 24px;
           color: $kashmir; }
-h3, .h3 { font-size: 19px; }
+h3, .h3 { font-size: 20px; }
 h4, .h4 { font-size: 17px; }
 
 h5, .h5, h6, .h6,
@@ -54,6 +54,14 @@ h1, .h1 {
   line-height: 1.1;
   font-weight: 700;
   margin-top: 0;
+}
+
+h3 {
+  color: lighten($cello, 5%);
+  font-weight: 700;
+  margin-bottom: 0;
+
+  + p { margin: 5px 0 33px; }
 }
 
 h4 {
@@ -107,6 +115,23 @@ h3.section-heading {
     &.new-section {
       margin-top: 60px;
     }
+}
+
+h3.blue-background {
+  @extend .uppercase-titles;
+  background: $electric;
+  color: #fff;
+  font-size: 17px;
+  padding: 8px 10px;
+  @include border-radius(2px);
+  margin: 40px 0 0;
+  &:first-child { margin-top: 10px; }
+}
+
+h3.gray-background {
+  @extend h3.blue-background;
+  background: $lightgray;
+  color: $electric;
 }
 
 /** Paragraphs

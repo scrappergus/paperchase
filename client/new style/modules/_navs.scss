@@ -71,7 +71,7 @@
 .nav-content {
     height: $navbar-height;
     background-color: $nav-color;
-    padding: 15px 20px 0 20px;
+    padding: 11px 20px 0 20px;
 
     ul {
         margin: 0;
@@ -83,23 +83,52 @@
     ul li {
         position: relative;
         display: inline-block;
-        padding: 5px 20px 6px;
-        margin: 5px 0;
+        padding: 0 10px 5px;
+        margin: 0;
         font-size: 16px;
-        border-left: 2px solid rgba(119, 130, 142, .2);
+        // border-left: 2px solid rgba(119, 130, 142, .3);
         color: #fff;
 
         a { color: #fff; }
         &:first-child { border: none; }
-        &.has-icon { padding-left: 30px; }
+    }
+
+    ul li.button {
+        &.has-icon { padding: 11px 19px 11px 15px; }
+
+        a {
+            background: #fff;
+            color: $accent;
+            padding: 11px 19px;
+            @include border-radius(2px);
+            @include transition(background 0.25s ease-out, color 0.25s ease-out);
+        }
 
         span.icon {
-            position: absolute;
-            display: inline-block;
             font-size: 20px;
-            left: 0;
-            top: 4px;
+            position: relative;
+            color: inherit; 
+            right: 3px;
+            top: 3px;
         }
+
+        a:hover {
+            background: darken($electric, 15%);
+            color: #fff;
+        }
+
+        a:active {
+            position: relative;
+            top: 1px;
+        }
+    }
+
+    .issn {
+        font-size: 13px;
+        position: absolute;
+        top: 10px;
+        right: 35px;
+        color: #fff;
     }
 }
 
@@ -111,7 +140,7 @@
     left: $sidebar-wide-width;
     height: $sub-navbar-height + $sub-navbar-padding;
     @include padding-vertical(24px);
-    @include padding-horiz(30px);
+    @include padding-horiz(20px);
     padding-left: 0;
     border-bottom: $sub-navbar-padding solid #fff;
     @extend .faint-shadow;
@@ -132,7 +161,7 @@
         @include transition(opacity .25s ease-out);
         float: left;
         color: $electric;
-        padding: 6px 15px 6px 11px;
+        padding: 6px 15px 6px 0;
         margin-right: 30px;
         cursor:pointer;
 
@@ -147,12 +176,14 @@
                 content: "\e900";
             }
         }
+        &:hover { opacity: .5; }
     }
 
     /**
      * Open Sidebar
      */
     &.sidebar-open { 
+        padding-left: 25px;
         #sidebar-toggle { 
             display: none; 
             opacity: 0;
@@ -197,11 +228,10 @@
         float: right;
         position: relative;
         top: 1px;
-        color: rgba(162, 169, 176, .75);
+        color: lighten(#5C7DA2, 5%);
         @extend .uppercase-titles;
     }
 }
-
 
 /** Left Sidebar / Navigation
  ---------------------------------------------------------*/
@@ -230,7 +260,7 @@
      * These have to be separate because css
      * parser is broken for placeholder rules.
      */
-    $placeholder-color: #3366A0;
+    $placeholder-color: lighten(#3366A0, 5%);
     input::placeholder { color: $placeholder-color }
     input::-webkit-input-placeholder { color: $placeholder-color }
     input::-moz-placeholder { color: $placeholder-color }
@@ -349,4 +379,15 @@ $secondary-subnav-color: darken(#00387A, 1%);
             a { color: #fff; }
         }
     }
+}
+
+.sub-nav-shim {
+    position: fixed;
+    right: 0;
+    left: 0;
+    height: $sub-navbar-height + $sub-navbar-padding;
+    border-bottom: $sub-navbar-padding solid #fff;
+    background: $secondary-subnav-color;
+    border-color: $secondary-subnav-color;
+    z-index: -5; // behind everything
 }

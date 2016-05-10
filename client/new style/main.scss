@@ -198,13 +198,8 @@ h2.authors {
 
     h3.article-header-1,
     h3#references {
-        @extend .uppercase-titles;
-        background: $electric;
-        color: #fff;
-        font-size: 17px;
-        padding: 8px 10px;
-        @include border-radius(2px);
-        margin: 70px 0 0;
+        @extend h3.blue-background;
+        margin: 60px 0 0;
 
         &#abstract {
             margin-top: 20px;

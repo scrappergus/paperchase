@@ -21,10 +21,10 @@
 
     <!-- todo: implement featured photo -->
     <!-- {{#if featuredPhoto}} -->
-    <div class="featured-photo">
+    <!-- <div class="featured-photo">
         <img src="/images/example-fig2.png" class="photo">
         <span class="dark tag">From <strong>Figure 2</strong></span>
-    </div>
+    </div> -->
     <!-- {{/if}} -->
 
 
@@ -137,7 +137,7 @@
 <template name="ArticleCorrespondence">
     <div class="card sidebar-card">
         <h6 class="card-title">Corresponding Author</h6>
-        <p>{{correspondence.[0].text}}<br />
+        <p>{{#if correspondence.[0].text}} {{correspondence.[0].text}}<br /> {{/if}}
         <a href="mailto:{{correspondence.[0].email}}">{{correspondence.[0].email}}</a></p>
     </div>
 </template>

@@ -12,6 +12,8 @@
             {{#if news}}
                 {{> LatestNews}}
             {{/if}}
+
+            <!-- {{> FeaturedNobelArticles}} -->
         </div>
 
         <div class="page-sidebar col s12 m4 l4">
@@ -22,6 +24,7 @@
             <a href="http://eepurl.com/bmC9OL" target="_blank" class="full-width primary button">Sign Up for TOC Alerts</a>
 
             <!-- {{> HomePageEditorList}} -->
+            {{> FeaturedNobelArticlesSidebar}}
         </div>
     </div>
 </template>
@@ -48,8 +51,7 @@
         <ul class="button-list">
             <li class="title">Latest Issue</li>
             <li class="subtitle">Volume {{volume}}, Issue {{issue}}</li>
-            <li><a href="/issue/v{{volume}}i{{issue}}">Table of Contents</a></li>
-            <li><a href="{{pathFor 'Archive'}}">Full Archive</a></li>
+            <li><a href="/issue/v{{volume}}i{{issue}}">Table of Contents <span class="icon icon-angle-right"></span></a></li>
         </ul>
     </div>
 </template>
@@ -91,6 +93,34 @@
             </li>
         {{/each}}
     </ul>
+</template>
+
+<!-- <template name="FeaturedNobelArticles">
+    <h3 class="section-heading new-section">Featured Nobel Articles</h3>
+    <ul class="divided-list">
+        <li class="item">
+            <p>Andrew V. Schally, Nobel Prize Laureate, published his paper in Aging.</p>
+        </li>
+
+        <li class="item">
+            <p>Elizabeth Blackburn, a member of the Editorial Board of AGING, won the Nobel Prize in Physiology or Medicine 2009. Elizabeth Blackburn co-authored a paper published in the first (inaugural) issue of AGING.</p>
+        </li>
+
+        <li class="item">
+            <p>Shinya Yamanaka won the Nobel Prize in Physiology and Medicine 2012. Shinya Yamanaka co-authored paper published in AGING.</p>
+        </li>
+    </ul>
+</template> -->
+
+<template name="FeaturedNobelArticlesSidebar">
+    <div class="card sidebar-card featured-nobel">
+        <h6 class="card-title">Featured Nobel Articles</h6>
+        <ul class="featured-items">
+            <li>Andrew V. Schally, <a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/1977/schally-autobio.html" target="_blank">Nobel Prize Laureate</a>, published <a href="/article/CanAfy9i6mBCfbE4H">his paper</a> in Aging.</li>
+            <li>Elizabeth Blackburn, a member of the Editorial Board of AGING, won the <a href="http://nobelprize.org/nobel_prizes/medicine/laureates/2009/" target="_blank">Nobel Prize in Physiology or Medicine 2009</a>. Elizabeth Blackburn co-authored a <a href="article/ECefxfZbM6tNyeqRh">paper</a> published in the first (inaugural) issue of AGING.</li>
+            <li><a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/2012/yamanaka.html" target="_blank">Shinya Yamanaka</a> won the Nobel Prize in Physiology and Medicine 2012. Shinya Yamanaka co-authored a <a href="article/djTrvzxXyJB8pzPfj">paper</a> published in AGING.</li>
+        </ul>
+    </div>
 </template>
 
 <template name="LatestNewsSidebar">

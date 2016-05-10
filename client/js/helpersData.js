@@ -7,6 +7,12 @@ Template.Visitor.helpers({
             return journalSettings['journal']['logo']['banner'];
         }
     },
+    issn : function(){
+        var journalSettings = journalConfig.findOne();
+        if(journalSettings){
+            return journalSettings['journal']['issn'];
+        }
+    },
     submitLink : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){

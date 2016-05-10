@@ -172,5 +172,29 @@
             background: none;
             border: none;
         }
+
+        li span.icon {
+            font-size: 10px;
+            margin-left: 2px;
+        }
+    }
+}
+
+/** Featured Nobel Articles
+---------------------------------------------------------*/
+.featured-nobel {
+    margin-top: 40px; 
+    ul.featured-items {
+        li:hover { 
+            background: none; 
+            border-color: #fff;
+        }
+
+        li a { 
+            color: $link;
+            display: inline;
+            @include transition(color 0.25s ease-out);
+            &:hover { color: lighten($link, 10%); }
+        }
     }
 }

@@ -1,39 +1,48 @@
 <template name="Contact">
 <div class="row">
-	<div class="page-content col s12 m8">
+	<div class="page-content col s12 m12">
 		<h2 class="h1">Contact Us</h2>
 
-		<p>Please submit an article: <a href="{{submitLink}}" target="_BLANK">{{submitLink}}</a> </p>
+		<h3>Journal Office</h3>
 
 		{{#with contact}}
-			<p><b>Journal Office:</b><br />
+				<p>
 				{{#with address}}
-				{{street}}{{#if street_2}}, {{street_2}}{{/if}}<br />
-				{{city}}, {{state}} {{zip}}
+					{{street}}{{#if street_2}}, {{street_2}}{{/if}}<br />
+					{{city}}, {{state}} {{zip}}<br />
 				{{/with}}
-			</p>
-
-			<p>For questions related to preparation of your article for publication, please contact:<br />
-				{{#with publication_prep}}
-				<b>{{name}}</b><br />
-				{{title}}<br />
-				<a href="mailto:{{email_address}}">{{email_address}}</a>
+				{{#with general}}
+					{{#if phone}}Phone: {{phone}}<br />{{/if}}
+					{{#if fax}}Fax: 716-508-8254<br />{{/if}}
 				{{/with}}
-			</p>
+				</p>
 
-			{{#with general}}
-				{{#if email_address}}
-				<p>For general inquiries, email: <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
-				{{/if}}
+				<!-- todo: need to add a separate helper for e-fax -->
+				<p>Email: <a href="mailto:editors@impactaging.com">editors@impactaging.com</a><br />
+					 E-Fax: {{general.fax}}</p>
 
-				{{#if phone}}
-				<p>Tel: {{phone}}</p>
-				{{/if}}
+				<p>FYI: Editorial Office staff are unable to assist with production, billing and payment queries.</p>
+				<p>Please direct such queries to the appropriate Office as listed below.</p>
+				<p>Please indicate manuscript number on all related correspondence for a quick and efficient response.</p>
 
-				{{#if fax}}
-				<p>e-Fax: {{fax}}</p>
-				{{/if}}
+
+			<h3>Support</h3>
+			{{#with publication_prep}}
+				<p>For questions related to preparation of your article for publication, please contact {{name}}, <!-- {{title}} -->Production Director, <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
 			{{/with}}
+
+			<h3>Production</h3>
+			<p>For questions related to preparation of your article for publication, please email krasnova@impactaging.com.</p>
+
+			<h3>Indexes</h3>
+			<p>If you have a question about the status of your paper, email <a href="mailto:kurenova@impactaging.com">kurenova@impactaging.com</a>.</p>
+
+			<h3>Billing and Invoices</h3>
+			<p>If you have a question about an invoice or have a payment query, please contact the Payment Office:<br />
+			<a href="#">payment@impactaging.com</a><br />
+			Phone: {{general.phone}} (option 3)
+			</p>
+
 		{{/with}}
 	</div>
 </div>
