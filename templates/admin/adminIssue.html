@@ -13,9 +13,17 @@
         <div class="col s12">
             <div class="card blue-grey lighten-5 z-depth-0">
                 <div class="card-content">
-                    <h2 class="no-margin">Volume {{volume}}, Issue {{issue}}</h2>
-                    <div class="admin-id"><label>Mongo ID:</label> {{_id}}</div>
-                    {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
+                    <div class="row">
+                        <div class="col s12 m9">
+                            <h2 class="no-margin">Volume {{volume}}, Issue {{issue}}</h2>
+                            <div class="admin-id"><label>Mongo ID:</label> {{_id}}</div>
+                            {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
+                        </div>
+                        <div class="col s12 m3 right-align">
+                            {{#with prevIssue}}<a class="btn btn-sm" href="/admin/issue/{{vi}}">{{>AdminPreviousIcon}} Prev</a>{{/with}}
+                            {{#with nextIssue}}<a class="btn btn-sm" href="/admin/issue/{{vi}}">Next {{>AdminNextIcon}}</a>{{/with}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -138,6 +138,7 @@ Meteor.methods({
             assetUrl,
             issueData;
         var articlesToGet = 'getDisplayArticlesByIssueId';
+
         if(admin){
             articlesToGet = 'getAllArticlesByIssueId';
         }
@@ -162,7 +163,7 @@ Meteor.methods({
                     }
                     issueData.articles = issueArticles;
 
-                    Meteor.call('getPrevAndNextIssue', volume, issue, articlesToGet, function(error, result){
+                    Meteor.call('getPrevAndNextIssue', volume, issue, admin, function(error, result){
                         if(error){
                             console.error(error);
                             fut.throw(error);
@@ -187,7 +188,7 @@ Meteor.methods({
 
         return fut.wait();
     },
-    getPrevAndNextIssue: function(volume,issue,articlesToGet){
+    getPrevAndNextIssue: function(volume,issue,admin){
         var result = {},
             pieces,
             volumeData,
@@ -235,13 +236,17 @@ Meteor.methods({
         // make sure issues should be displayed and get issue data
         if(prevIssueId){
             prevIssueData = issues.findOne({_id : prevIssueId});
-            if(prevIssueData && prevIssueData.display === true){
+            if(!admin && prevIssueData && prevIssueData.display === true){
+                result.prev = prevIssueData;
+            }else if(prevIssueData){
                 result.prev = prevIssueData;
             }
         }
         if(nextIssueId){
             nextIssueData = issues.findOne({_id : nextIssueId});
-            if(nextIssueData && nextIssueData.display === true){
+            if(!admin && nextIssueData && nextIssueData.display === true){
+                result.next = nextIssueData;
+            }else if(nextIssueData){
                 result.next = nextIssueData;
             }
         }
