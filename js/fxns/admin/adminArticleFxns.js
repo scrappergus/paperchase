@@ -176,16 +176,26 @@ Meteor.adminArticleFormGet = {
     affiliations: function(){
         var affiliations = [];
         $('.article-affiliation').each(function(idx,obj){
-            affiliations.push($(this).val());
+            var aff;
+            aff = $(this).val();
+            aff = Meteor.clean.cleanString(aff);
+            affiliations.push(aff);
         });
         return affiliations;
     },
     correspondence: function(){
         var correspondence = [];
         $('.correspondence-row').each(function(idx,obj){
+            var correspText,
+                correspEmail;
+
+            correspText = $(this).find('input.correspondence-text').val();
+            correspEmail = $(this).find('input.correspondence-email').val();
+
+            correspText = Meteor.clean.cleanString(correspText);
             var corresp = {
-                'text' : $(this).find('input.correspondence-text').val(),
-                'email' : $(this).find('input.correspondence-email').val()
+                'text' : correspText,
+                'email' : correspEmail
             };
             correspondence.push(corresp);
         });
@@ -205,13 +215,26 @@ Meteor.adminArticleFormGet = {
     authors: function(){
         var authors = [];
         $('.author-row').each(function(idx,obj){
+            var nameFirst,
+                nameMiddle,
+                nameLast;
+
+            nameFirst = $(this).find('input[name="name_first"]').val();
+            nameMiddle = $(this).find('input[name="name_middle"]').val();
+            nameLast = $(this).find('input[name="name_last"]').val();
+
+            nameFirst = Meteor.clean.cleanString(nameFirst);
+            nameMiddle = Meteor.clean.cleanString(nameMiddle);
+            nameLast = Meteor.clean.cleanString(nameLast);
+
             var author = {
-                'name_first' : $(this).find('input[name="name_first"]').val(),
-                'name_middle' : $(this).find('input[name="name_middle"]').val(),
-                'name_last' : $(this).find('input[name="name_last"]').val(),
+                'name_first' : nameFirst,
+                'name_middle' : nameMiddle,
+                'name_last' : nameLast,
                 'ids' : {},
                 'affiliations_numbers' : []
             };
+
             var authorIds = $(this).find('.author-id').each(function(i,o){
                 author.ids[$(o).attr('name')] = $(o).val();
             });
@@ -249,10 +272,16 @@ Meteor.adminArticleFormGet = {
     ids: function(){
         var ids = {};
         $('.article-id').each(function(i) {
-            var k = $(this).attr('id'); //of the form, article-id-key
-            k = k.split('-');
-            k = k[2];
-            ids[k] = $(this).val();
+            var idType,
+                idVal;
+
+            idVal = $(this).val()
+            idVal = Meteor.clean.cleanString(idVal);
+
+            idType = $(this).attr('id'); //of the form, article-id-key
+            idType = idType.split('-');
+            idType = idType[2];
+            ids[idType] = idVal;
         });
         return ids;
     },
@@ -264,7 +293,12 @@ Meteor.adminArticleFormGet = {
     keywords: function(){
         var keywords = [];
         $('.kw').each(function(i){
-            keywords.push($(this).val());
+            var keyword;
+            keyword = $(this).val();
+            if(keyword){
+                keyword = Meteor.clean.cleanString(keyword);
+                keywords.push(keyword);
+            }
         });
         return keywords;
     },
