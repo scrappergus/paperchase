@@ -73,11 +73,11 @@ Template.AdminArticleForm.events({
         Meteor.general.scrollTo('affiliations');
     },
     'click .remove-correspondence': function(e,t){
-        console.log('------------------------- remove-correspondence');
+        // console.log('------------------------- remove-correspondence');
         e.preventDefault();
         var article = Session.get('article-form');
         var correspondenceIndex = $(e.target).attr('data-index');
-        console.log('correspondenceIndex',correspondenceIndex);
+        // console.log('correspondenceIndex',correspondenceIndex);
 
         article.correspondence.splice(correspondenceIndex, 1);
         Session.set('article-form',article);
@@ -278,20 +278,24 @@ Template.AdminArticleForm.events({
         // -------
         // result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
         // console.log('articleUpdateObj',articleUpdateObj);
-        if(articleUpdateObj)
-        Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
-            if(error){
-                console.error('validateArticle',error);
-            }else if(result && result.duplicate){
-                Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
-            }else if(result && result.invalid_list){
-                Meteor.formActions.invalid(result.invalid_list);
-            }else if(result && result.saved){
-                if(!mongoId){
-                    mongoId = result.article_id;
+        if(articleUpdateObj){
+            // console.log('articleUpdateObj',articleUpdateObj);
+            Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
+                if(error){
+                    console.error('validateArticle',error);
+                }else if(result && result.duplicate){
+                    Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
+                }else if(result && result.invalid_list){
+                    Meteor.formActions.invalid(result.invalid_list);
+                }else if(result && result.saved){
+                    if(!mongoId){
+                        mongoId = result.article_id;
+                    }
+                    Router.go('AdminArticleOverview',{_id : mongoId});
                 }
-                Router.go('AdminArticleOverview',{_id : mongoId});
-            }
-        });
+            });
+        }else{
+             Meteor.formActions.errorMessage('Unable to save form');
+        }
     }
 });
