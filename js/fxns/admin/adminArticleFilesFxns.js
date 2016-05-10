@@ -168,7 +168,7 @@ Meteor.processXml = {
             abstract = abstract.replace(/<\/p>/g,'');
             abstract = abstract.replace(/<p>/g,'');
             abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
-            abstract = Meteor.general.cleanString(abstract);
+            abstract = Meteor.clean.cleanString(abstract);
         }
         return abstract;
     }

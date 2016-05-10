@@ -563,7 +563,7 @@ Meteor.xmlPmc = {
         titleTitle = titleGroup.substring(titleGroup.lastIndexOf('<article-title>')+1,titleGroup.lastIndexOf('</article-title>'));
         titleTitle = titleTitle.replace('article-title>','');
         if(titleTitle){
-            titleTitle = Meteor.general.cleanString(titleTitle);
+            titleTitle = Meteor.clean.cleanString(titleTitle);
         }
 
         cb(titleTitle);

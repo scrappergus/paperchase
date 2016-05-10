@@ -550,9 +550,9 @@ Meteor.adminUser = {
 
         // Name
         user.name = {};
-        user.name.first = Meteor.general.cleanString($('#name_first').val());
-        user.name.middle = Meteor.general.cleanString($('#name_middle').val());
-        user.name.last = Meteor.general.cleanString($('#name_last').val());
+        user.name.first = Meteor.clean.cleanString($('#name_first').val());
+        user.name.middle = Meteor.clean.cleanString($('#name_middle').val());
+        user.name.last = Meteor.clean.cleanString($('#name_last').val());
         for(var name_part in user.name){
             if(user.name[name_part] === ''){
                 delete user.name[name_part];
