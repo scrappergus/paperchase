@@ -58,7 +58,7 @@ Template.ArticleLegacyUpdateForm.events({
                     console.error('updateDatesViaLegacy',error);
                     Meteor.formActions.errorMessage('Could not update articles');
                 }else if(result){
-                    Meteor.formActions.successMessage('Articles Updated: ' + result.toString());
+                    Meteor.formActions.successMessage('Articles Updated:<br>' + result.length + ' Articles <br>PII: '+ result.toString());
                 }
             });
 
