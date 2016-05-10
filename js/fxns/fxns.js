@@ -565,9 +565,6 @@ Meteor.formActions = {
         var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
         document.execCommand('insertText', false, bufferText);
     },
-    cleanWysiwyg: function(input){
-        return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
-    },
     closeModal: function(){
         $('.save-btn').removeClass('hide');
         $('.saving').addClass('hide');
@@ -607,9 +604,11 @@ Meteor.clean = {
             if(string.charAt(string.length - 1) === '.'){
                 string = string.substring(0, string.length-1);
             }
-            string = string.trim();
         }
         return string;
+    },
+    cleanWysiwyg: function(input){
+        return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
     }
 }
 

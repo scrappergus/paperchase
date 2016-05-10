@@ -163,7 +163,7 @@ Meteor.adminArticle = {
 Meteor.adminArticleFormGet = {
     abstract: function(){
         var abstract = $('.article-abstract').code();
-        abstract = Meteor.formActions.cleanWysiwyg(abstract);
+        abstract = Meteor.clean.cleanWysiwyg(abstract);
         return abstract;
     },
     advance: function(){
@@ -290,7 +290,7 @@ Meteor.adminArticleFormGet = {
     },
     title: function(){
         var articleTitle = $('.article-title').code();
-        articleTitle = Meteor.formActions.cleanWysiwyg(articleTitle);
+        articleTitle = Meteor.clean.cleanWysiwyg(articleTitle);
         return articleTitle;
     },
     all: function(){

@@ -150,7 +150,7 @@ Meteor.adminNews = {
         // Content
         // ------
         var newsContent = $('.news-content').code();
-        newsContent = Meteor.formActions.cleanWysiwyg(newsContent);
+        newsContent = Meteor.clean.cleanWysiwyg(newsContent);
         if(newsContent != ''){
             newsObj.content = newsContent;
         }
@@ -287,7 +287,7 @@ Meteor.adminEdBoard = {
         // Address
         // ------
         var memberAddress = $('.member-address').code();
-        memberAddress = Meteor.formActions.cleanWysiwyg(memberAddress);
+        memberAddress = Meteor.clean.cleanWysiwyg(memberAddress);
         if(memberAddress != ''){
             member.address = memberAddress;
         }
@@ -295,7 +295,7 @@ Meteor.adminEdBoard = {
         // Bio
         // ------
         var memberBio = $('.member-bio').code();
-        memberBio = Meteor.formActions.cleanWysiwyg(memberBio);
+        memberBio = Meteor.clean.cleanWysiwyg(memberBio);
         if(memberBio != ''){
             member.bio = memberBio;
         }
