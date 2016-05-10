@@ -3,6 +3,7 @@
 Template.AdminArticlesDashboard.events({
     'click #doi-register-check': function(e){
         e.preventDefault();
+        Meteor.formActions.processing();
         ///article/:journalname/:pii/doi_status
         Meteor.call('batchDoiRegisteredCheck',function(error,result){
             if(error){
