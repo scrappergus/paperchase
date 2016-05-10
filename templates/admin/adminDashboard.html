@@ -27,9 +27,13 @@
             </div>
         </div>
 
+        {{#with journal}}
+        {{#if equals name 'Oncotarget'}}
         <div class="col s4">
             {{>ArticleLegacyUpdateForm}}
         </div>
+        {{/if}}
+        {{/with}}
 
         {{#if isInRole 'dev'}}
         {{#if journal}}

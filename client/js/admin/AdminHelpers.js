@@ -5,7 +5,7 @@ Template.AdminDashboard.helpers({
         return Session.get('processing-pii');
     },
     journal: function(){
-        return Session.get('journal');
+        return Session.get('journal').journal;
     }
 });
 
