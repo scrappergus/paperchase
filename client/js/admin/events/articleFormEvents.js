@@ -241,7 +241,7 @@ Template.AdminArticleForm.events({
                         article.ids[type] = savedPii;
                         Session.set('article-form',article);// need to set session also here because of timinig problem with methods on server
                     }else{
-                        article.ids[type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
+                        article.ids[type] = '';
                     }
                 });
             }
@@ -277,9 +277,8 @@ Template.AdminArticleForm.events({
         // VALIDATION and SAVE
         // -------
         // result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
-        // console.log('articleUpdateObj',articleUpdateObj);
         if(articleUpdateObj){
-            // console.log('articleUpdateObj',articleUpdateObj);
+            console.log('articleUpdateObj',articleUpdateObj);
             Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
                 if(error){
                     console.error('validateArticle',error);

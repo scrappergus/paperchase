@@ -69,7 +69,6 @@ Meteor.adminSite = {
             updateObj.section_side_nav.push(sectionSideNavOption);
         });
 
-        // TODO: validation
         // console.log(updateObj);
         Meteor.call('siteControlUpdate',updateObj,function(error,result){
             if(error){
@@ -309,15 +308,11 @@ Meteor.adminEdBoard = {
             }
         });
 
-        // TODO: add check for if name exists?
-        // TODO: validation
         // console.log(member);
         memberMongoId = $('#member-mongo-id').val();
         if(!memberMongoId){
-            // Insert
             success = edboard.insert(member);
         }else{
-            // Update
             success = edboard.update({_id : memberMongoId} , {$set: member});
         }
         if(success){
@@ -457,7 +452,6 @@ Meteor.adminAbout = {
         e.preventDefault();
         var forDb = Meteor.adminShared.formGetData();
 
-        // TODO: Validation
         // console.log(forDb);
         // Check if section exists via Mongo ID hidden input
         mongoId = $('#section-mongo-id').val();
@@ -502,25 +496,17 @@ Meteor.adminSections = {
 
             forDb.dash_name = forDb.name.toLowerCase().replace(/\s/g,'-').replace(':','');
 
-            // TODO: Check if section name already exists
-            // console.log(forDb);
             // Check if section exists via Mongo ID hidden input
             mongoId = $('#section-mongo-id').val();
-            // console.log(forDb);
-            // console.log(mongoId);
             if(!mongoId){
                 // Insert
                 success = sections.insert(forDb);
-                // Update sorters collection
-                // Meteor.call('sorterAddArticle', 'sections', success);
             }else{
                 // Update
                 success = sections.update({_id : mongoId} , {$set: forDb});
             }
             if(success){
                 Meteor.formActions.success();
-                // Session.set('showAboutForm',false);
-                // Session.set('aboutSectionId',null);
             }
         }
     }
@@ -611,7 +597,6 @@ Meteor.dataSubmissions = {
     }
 }
 
-// TODO? Move this to server only
 Meteor.validate = {
     email: function(email){
         //http://stackoverflow.com/questions/46155/validate-email-address-in-javascript

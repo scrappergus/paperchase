@@ -72,7 +72,6 @@ Meteor.articleFiles = {
                 console.error('Upload File Error', error);
                 Meteor.formActions.errorMessage('File not uploaded');
             }else if(res){
-                // TODO: only rename if filename not MongoID
                 Meteor.call('renameArticleAsset', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
                     if(error){
 
@@ -117,7 +116,6 @@ Meteor.articleFiles = {
         });
     },
     figuresById: function(figures){
-        // TODO:remove this and use filesById
         var figsById = {};
 
         figures.forEach(function(fig){

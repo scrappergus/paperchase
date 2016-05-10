@@ -142,7 +142,6 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -191,7 +190,7 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
+
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -239,7 +238,7 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
+
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -286,7 +285,7 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
+
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -304,7 +303,7 @@ Meteor.formActions = {
         var invalidString = '';
         for(var i=0 ; i < invalidData.length ; i++){
             $('#' + invalidData[i].fieldset_id).addClass('invalid');
-            // TODO: if we want to add invalid class to inputs then fix when adding to WYSIWYG, because does not work
+
             invalidString += invalidData[i].message + '    ';
             if(i === 0){
                 var scrollToEl = 'body';
@@ -380,7 +379,6 @@ Meteor.formActions = {
         }
 
         // modals
-        // TODO: use 1 modal for all actions - StatusModal
         if($('#saving-modal').length){
             $('#saving-modal').closeModal();
         }
@@ -449,7 +447,6 @@ Meteor.formActions = {
                 }
             });
         }
-        // TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
         if($('#saving-modal').length){
             $('#saving-modal').closeModal({
                 complete: function(){
@@ -495,7 +492,6 @@ Meteor.formActions = {
                 }
             });
         }
-        // TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
         if($('#saving-modal').length){
             $('#saving-modal').closeModal({
                 complete: function(){
@@ -541,7 +537,6 @@ Meteor.formActions = {
                 }
             });
         }
-        // TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
         if($('#saving-modal').length){
             $('#saving-modal').closeModal({
                 complete: function(){

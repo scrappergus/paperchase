@@ -120,7 +120,7 @@ if (Meteor.isClient) {
       } else if (settings.month && settings.year) {
         return moment(date).format('MMMM YYYY');
       } else if (settings.day && settings.year) {
-        return moment(date).format('d YYYY'); //TODO prevent day being selected if no month
+        return moment(date).format('d YYYY');
       } else if (settings.day && settings.month) {
         return moment(date).format('Do MMMM');
       } else if (settings.year) {

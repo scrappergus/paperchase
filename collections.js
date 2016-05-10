@@ -21,8 +21,6 @@ sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
     var order = f.order;
-    // console.log(order);
-    // TODO: collection name as variable?? can we consolidate this code to not use else if? we are using pretty much the same logic to order collections
     if(f.name == 'advance'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
@@ -513,7 +511,6 @@ if (Meteor.isServer) {
 
         return articlesList;
     });
-    /*TODO: RECENT define. By pub date?*/
     Meteor.publish('articlesRecentFive', function () {
         return articles.find({},{sort:{'_id':1},limit : 5});
     });
@@ -742,7 +739,6 @@ if (Meteor.isServer) {
 
 // SUBSCRIBE
 if (Meteor.isClient) {
-    //TODO: remove global subscribe to collections
     // Meteor.subscribe('volumes');
     //  Meteor.subscribe('issues');
     Meteor.subscribe('ipranges');
