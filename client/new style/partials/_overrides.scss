@@ -78,3 +78,7 @@
     @include padding-horiz(1.7rem);
     &:first-child { margin-left: 0; }
 }
+
+.row.no-margin .col {
+    &:first-child { padding: 0; }
+}

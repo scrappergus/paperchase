@@ -1,61 +1,61 @@
 <template name="Search">
 
-	<div class="form-container">
-		<div class="row">
-			<div class="card">
-				<div class="card-content">
-					<h5>Search by:</h5>
-					<form id="search-terms">
-						<input placeholder="title" type="text" name="title">
-						<input placeholder="abstract" type="text" name="abstract">
-						<input placeholder="authors" type="text" name="authors">
-						<button class="btn">Search</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<div class="row">
-		 <div class="card">
-			 <div class="card-content">
-				 <h6>Search Results</h6>
-				 <div class="divider"></div>
-				 {{#if searchResults}}
-				 <p class="lighten" style=""><i>{{searchResults.length}} results found</i></p>
-				 {{#each searchResults}}
-				 <div class="row no-margin">
-					 <div class="col s12">
-						 <div class="result-box" style="margin-bottom:40px;">
-							 <h5><a href="/article/{{_id}}">{{{title}}}</a></h5>
-							 <p>{{#if issue_id}}<a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a>{{/if}}</p>
+        <div class="search page-content col s12 m8">
 
-							 {{#each authors}}
-							 <span class="author">
-								 {{name_first}}
-								 {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
-								 <span class="comma">, </span>
-							 </span>
-							 {{/each}}
+    		{{#if searchResults}}
+            <h4 class="blue-divider">Search Results</h4>
+    	 	<p class="lighten" style=""><i>{{searchResults.length}} results found</i></p>
+    		
+            <ul class="divided-list">
+                {{#each searchResults}}
+				<li class="item">
+					<h3><a href="/article/{{_id}}">{{{title}}}</a></h3>
+					<h5 class="supporting">{{#if issue_id}}<a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a>{{/if}}</h5>
 
-							 <p>{{{abstract}}}</p>
-						 </div>
-					 </div>
-				 </div>
-				 {{/each}}
-				 {{#if queryResults}}
-				 <div class="row no-margin">
-					 <div class="col s12">
-						 <div class="result-box" style="margin-bottom:40px;">
-							 <h5>There are no results for these search terms.</h5>
-							 <p>For assistance finding a paper that was published in Aging, please contact <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a> </p>
-						 </div>
-					 </div>
-				 </div>
-				 {{/if}}
-				 {{/if}}
-			 </div>
-		 </div>
+					{{#each authors}}
+					<span class="author">
+						{{name_first}}
+						{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
+						<span class="comma">, </span>
+					</span>
+					{{/each}}
+
+					<p>{{{truncate abstract 300}}}</p>
+				</li>
+		        {{/each}}
+            </ul>
+
+    		{{#if queryResults}}
+    		<div class="row no-margin">
+    			<div class="col s12">
+    				<div class="result-box" style="margin-bottom:40px;">
+    					<h5>There are no results for these search terms.</h5>
+    					<p>For assistance finding a paper that was published in Aging, please contact <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a> </p>
+    				</div>
+    			</div>
+    		</div>
+    		{{/if}}
+            {{else}}
+                <h4 class="blue-divider">Search</h4>
+                <p>To search the journal, enter a term in the search bar. If you'd like to find specific authors, titles, or abstracts, use the advanced search to the right. </p>
+    		{{/if}}
+        </div>
+
+        <div class="page-sidebar col s12 m4">
+            <div class="form-container">
+                <div class="card sidebar-card">
+                    <h6 class="card-title">Advanced Search</h6>
+                    <form id="search-terms">
+                        <input placeholder="title" type="text" name="title">
+                        <input placeholder="abstract" type="text" name="abstract">
+                        <input placeholder="authors" type="text" name="authors">
+                        <button class="full-width teal button">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
 	 </div>
 
 </template>

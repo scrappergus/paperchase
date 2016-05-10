@@ -34,6 +34,7 @@ html, body {
   &.blue { color: $electric; }
   &.heavy { font-weight: 700; }
   &.caps { @extend .uppercase-titles; }
+  &.clean { margin-top: 0 !important; }
 }
 
 /** Headings | Font Sizes
@@ -72,6 +73,13 @@ h4 {
     padding: 0 0 10px;
     margin: 40px 0 20px;
     border-bottom: 3px solid $electric;
+  }
+
+  &.accent-divider {
+    color: $accent;
+    padding: 0 0 10px;
+    margin: 30px 0 20px;
+    border-bottom: 3px solid $accent;
   }
 }
 
@@ -118,20 +126,27 @@ h3.section-heading {
 }
 
 h3.blue-background {
-  @extend .uppercase-titles;
-  background: $electric;
-  color: #fff;
-  font-size: 17px;
-  padding: 8px 10px;
-  @include border-radius(2px);
-  margin: 40px 0 0;
-  &:first-child { margin-top: 10px; }
+    @extend .uppercase-titles;
+    background: $electric;
+    color: #fff;
+    font-size: 17px;
+    padding: 8px 10px;
+    @include border-radius(2px);
+    margin: 40px 0 0;
+    &:first-child { margin-top: 10px; }
 }
 
 h3.gray-background {
-  @extend h3.blue-background;
-  background: $lightgray;
-  color: $electric;
+    @extend h3.blue-background;
+    background: $lightgray;
+    color: $electric;
+}
+
+h5.supporting {
+    position: relative;
+    margin-bottom: 20px;
+    @extend .uppercase-titles;
+    left: 1px;
 }
 
 /** Paragraphs
@@ -158,6 +173,8 @@ button.button {
   @include transition(background 0.25s ease-out);
   @include get-bg-hover($deepgray, 10%);
 
+  span.icon { font-size: 25px; }
+
   &.full-width {
     display: block;
     width: 100%;
@@ -167,13 +184,12 @@ button.button {
     top: 1px;
   }
 
-  &.primary {
-    @include get-bg-hover($accent, 3%);
-  }
-
-  &.secondary {
-    @include get-bg-hover($electric, 7%);
-  }
+  /**
+   * Colors
+   */
+  &.primary { @include get-bg-hover($accent, 3%); }
+  &.secondary { @include get-bg-hover($electric, 7%); }
+  &.teal { @include get-bg-hover($teal, 7%); }
 
   &.small {
     text-transform: none;
@@ -195,13 +211,10 @@ button.button {
       border-top-left-radius: 2px;
     }
 
-    // todo: make icon bounce slightly on hover
     &:hover span.icon {
       background: lighten($darkaccent, 2%);
     }
   }
-
-  span.icon { font-size: 25px; }
 
   &.minimal {
     background: transparent;
@@ -219,6 +232,10 @@ button.button {
     span.icon-angle-right { margin-left: 6px; }
     span.icon-angle-left { margin-right: 6px; }
   }
+}
+
+button.button {
+    border: none;
 }
 
 /** Buttons | Toggles

@@ -55,6 +55,7 @@
 }
 
 @mixin get-bg-hover($value, $amt) {
+  @include transition(background 0.25s ease-out);
   background-color: $value;
   &:hover {
     background-color: lighten($value, $amt);

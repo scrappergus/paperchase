@@ -14,9 +14,9 @@
     @extend .faint-shadow;
     padding: 25px;
 
-    p {
-        margin-bottom: 0;
-    }
+    &.clean { padding: 0; }
+    p { margin-bottom: 0; }
+    .button { margin-bottom: 0; }
 
     h6.card-title {
         font-size: 14px;
@@ -38,10 +38,6 @@
             border-top: 2px solid rgba(119, 130, 142, .2);
             margin-bottom: 12px;
         }
-    }
-
-    &.clean {
-        padding: 0;
     }
 }
 

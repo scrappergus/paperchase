@@ -128,10 +128,7 @@
 /** Article Pages
  ---------------------------------------------------------*/
 h5.article-header {
-    position: relative;
-    margin-bottom: 20px;
-    @extend .uppercase-titles;
-    left: 1px;
+    @extend h5.supporting;
 
     span {
         margin-right: 10px;
@@ -238,6 +235,22 @@ h2.authors {
     }
 }
 
+/** Search Page
+ ---------------------------------------------------------*/
+.search.page-content {
+    h4.blue-divider { 
+        margin-top: 10px; 
+    }
+    h5.supporting {
+        opacity: 0.85;
+        a { color: $kashmir; }
+    }
+
+    .divided-list {
+        li.item:first-child { margin-top: 40px; }
+    }
+}
+
 /** Full Text Article
  ---------------------------------------------------------*/
 .full-text-image-container {
@@ -325,6 +338,8 @@ ul.divided-list {
         &:first-child { padding-top: 0; }
         &:last-child { border: none; }
     }
+
+    h3 { margin: 0; }
 
     h4.title {
       text-transform: none;
