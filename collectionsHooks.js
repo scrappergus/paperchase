@@ -79,7 +79,8 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }
 
     if(modifier.$set && modifier.$set.issue_id && !modifier.$set.volume){
-        if(issueData){
+        issueData = issues.findOne({_id : modifier.$set.issue_id})
+        if(issueData && issueData.volume && issueData.issue){
             modifier.$set.volume = issueData.volume;
             modifier.$set.issue = issueData.issue;
         }
