@@ -566,7 +566,7 @@ Meteor.dataSubmissions = {
     getArticles: function(queryType,queryParams){
         // console.log('... getArticles = ' + queryType + ' / ' + queryParams);
         Meteor.dataSubmissions.processing();
-        var articleSub = Meteor.subscribe('submission-set',queryType,queryParams);
+        var articleSub = Meteor.subscribe('submissionSet',queryType,queryParams);
     },
     processing: function(){
         $('.saving').removeClass('hide');
