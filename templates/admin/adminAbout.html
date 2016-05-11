@@ -1,6 +1,6 @@
 <template name="AdminAbout">
     {{>AdminHeader header="About"}}
-    {{>SuccessModal what='About Order'}}
+    {{>StatusModal}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
@@ -79,7 +79,6 @@
 
 <template name="AdminAboutForm">
     {{#with section}}
-    {{>SuccessModal what='About Section'}}
     {{>SectionForm}}
     {{/with}}
 </template>
