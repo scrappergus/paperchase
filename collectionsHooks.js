@@ -78,7 +78,12 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-    if(modifier.$set && modifier.$set.volume && modifier.$set.issue){
+    if(modifier.$set && modifier.$set.issue_id && !modifier.$set.volume){
+        if(issueData){
+            modifier.$set.volume = issueData.volume;
+            modifier.$set.issue = issueData.issue;
+        }
+    }else if(modifier.$set && modifier.$set.volume && modifier.$set.issue){
         volume = modifier.$set.volume;
         issue = modifier.$set.issue;
         modifier.$set.issue_id = Meteor.call('articleIssueVolume',volume,issue);
@@ -151,7 +156,7 @@ sorters.after.update(function (userId, doc, fieldNames, modifier, options){
         var article_id = modifier.$pull;
         article_id = article_id.order;
         if(article_id){
-            articles.direct.update({"_id":article_id}, {$set: {advance:false}});
+            articles.direct.update({_id:article_id}, {$set: {advance:false}});
         }
     }
 });
