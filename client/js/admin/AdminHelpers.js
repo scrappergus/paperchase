@@ -547,6 +547,9 @@ Template.AdminForAuthorsForm.helpers({
 // About
 // ---------------
 Template.AdminAbout.helpers({
+    'sections' : function(){
+        return Session.get('adminAboutSections');
+    },
     'showAboutForm' : function(){
         return Session.get('showAboutForm');
     }

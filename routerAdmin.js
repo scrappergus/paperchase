@@ -147,8 +147,9 @@ if (Meteor.isClient) {
     Session.setDefault('showForm',false);
     Session.setDefault('sectionId',null);
     // About
-    Session.set('showAboutForm',false);
-    Session.set('aboutSectionId', null);
+    Session.setDefault('adminAboutSections',null);
+    Session.setDefault('showAboutForm',false);
+    Session.setDefault('aboutSectionId', null);
     // News
     // Session.setDefault('newsId',null);
     Session.setDefault('newsData',null);
@@ -232,18 +233,15 @@ if (Meteor.isClient) {
                 Meteor.subscribe('sortedList','about')
             ]
         },
-        data: function(){
-            // Keep data declarations here
-            // when adding data via template helper, the array shows as an object and there is an error:
-            // {#each}} currently only accepts arrays, cursors or falsey values.
-            if(this.ready()){
-                var sorted  = sorters.findOne();
-                if(sorted){
-                    return {
-                        sections : sorted['ordered']
-                    };
+        onBeforeAction: function(){
+            Meteor.call('getListWithData', 'about', function(error,result){
+                if(error){
+                    console.error('getListWithData',error);
+                }else if(result){
+                    Session.set('adminAboutSections',result);
                 }
-            }
+            });
+            this.next();
         }
     });
 
