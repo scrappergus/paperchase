@@ -506,9 +506,9 @@ if (Meteor.isServer) {
     Meteor.publish('submissionSet', function (queryType, queryParams) {
         var articlesList;
         if(queryType === 'issue'){
-          articlesList = articles.find({'issue_id': queryParams});
+          articlesList = articles.find({issue_id: queryParams});
         }else if(queryType === 'pii'){
-          articlesList = articles.find({'_id':{'$in':queryParams}});
+          articlesList = articles.find({_id:{'$in':queryParams}});
         }
 
         // if a user wants to change the submissions list and start over,
@@ -555,14 +555,16 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('userData', function(id){
+        check(id, String);
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return Meteor.users.find({'_id':id});
+            return Meteor.users.find({_id:id});
         }else{
             this.stop();
             return;
         }
     });
     Meteor.publish('currentUser', function(id){
+        check(id, String);
         if(!this.userId) return;
         return Meteor.users.find(this.userId, {fields: {
           name_first: 1,
@@ -584,8 +586,9 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('institution', function(id){
+        check(id, String);
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return institutions.find({"_id":id});
+            return institutions.find({_id:id});
         }else{
             this.stop();
             return;
@@ -614,6 +617,7 @@ if (Meteor.isServer) {
         return edboard.find({'role': {'$in': ['Founding Editorial Board']}});
     });
     Meteor.publish('edBoardMember', function (mongoId) {
+        check(mongoId, String);
         return edboard.find({_id: mongoId});
     });
 
@@ -648,6 +652,7 @@ if (Meteor.isServer) {
 
     });
     Meteor.publish('authorData', function(mongoId){
+        check(mongoId, String);
         if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
             return authors.find({'_id':mongoId})
         }else{
@@ -662,6 +667,7 @@ if (Meteor.isServer) {
         return recommendations.find({});
     });
     Meteor.publish('recommendationData',function(mongoId){
+        check(mongoId, String);
         if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
             return  recommendations.find({'_id':mongoId})
         }else{
@@ -679,6 +685,7 @@ if (Meteor.isServer) {
         return newsList.find({display: true});
     });
     Meteor.publish('newsItem', function(mongoId){
+        check(mongoId, String);
         return newsList.find({_id:mongoId});
     });
 
@@ -697,13 +704,16 @@ if (Meteor.isServer) {
         return sections.find({display: true});
     });
     Meteor.publish('sectionPapers', function(sectionMongoId){
+        check(sectionMongoId, String);
         // For admin pages
         return articles.find({'section' : sectionMongoId});
     });
     Meteor.publish('sectionById', function(mongoId){
+        check(mongoId, String);
         return sections.findOne({_id : mongoId})
     });
     Meteor.publish('sectionPapersByDashName', function(dashName){
+        check(dashName, String);
         // console.log('..sectionPapersByDashName' +  dashName);
         var section = sections.findOne({'dash_name' : dashName})
         return articles.find({'section' : section._id});
@@ -718,7 +728,7 @@ if (Meteor.isServer) {
 
     // Search
     // ----------------
-    Meteor.publish("search", function(searchValue) {
+    Meteor.publish('search', function(searchValue) {
         if (!searchValue) {
             return articles.find({});
         }
