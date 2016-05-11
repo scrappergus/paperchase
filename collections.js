@@ -439,6 +439,7 @@ if (Meteor.isServer) {
         return sorters.find();
     });
     Meteor.publish('sortedList', function(listName) {
+        check(listName, String);
         return sorters.find({'name' : listName});
     });
     Meteor.publish('contact', function() {
@@ -454,18 +455,21 @@ if (Meteor.isServer) {
     Meteor.publish('issues', function () {
         return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
     });
-    Meteor.publish('issue', function (volume,issue) {
-        return issues.find({volume: parseInt(volume), issue_linkable: issue});
-    });
-    Meteor.publish('issueArticles', function (volume,issue) {
-        var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
-        return articles.find({issue_id : issueinfo['_id']});
-    });
+    // Meteor.publish('issue', function (volume,issue) {
+    //     check(issue, String);
+    //     return issues.find({volume: parseInt(volume), issue_linkable: issue});
+    // });
+    // Meteor.publish('issueArticles', function (volume,issue) {
+    //     var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
+    //     return articles.find({issue_id : issueinfo['_id']});
+    // });
     Meteor.publish('currentIssue',function(){
         return issues.find({current: true});
     });
     Meteor.publish('articleIssue',function(articleMongoId){
         // console.log('articleMongoId', articleMongoId);
+        // for getting issue information for article
+        check(articleMongoId, String);
         var articleInfo = articles.findOne({_id : articleMongoId});
         var issueInfo;
         if(articleInfo && articleInfo.issue_id){
@@ -485,6 +489,7 @@ if (Meteor.isServer) {
         return articles.find({},{sort : {volume:-1,issue:-1}});
     });
     Meteor.publish('articleInfo', function(id) {
+        check(id, String);
         var article = articles.findOne({'_id':id},{});
         // URL is based on Mongo ID. But a user could put PII instead, if so send PII info to redirect
         if(article){
@@ -498,7 +503,7 @@ if (Meteor.isServer) {
     Meteor.publish('articlesWithoutDates', function(){
         return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
     });
-    Meteor.publish('submission-set', function (queryType, queryParams) {
+    Meteor.publish('submissionSet', function (queryType, queryParams) {
         var articlesList;
         if(queryType === 'issue'){
           articlesList = articles.find({'issue_id': queryParams});
