@@ -9,6 +9,38 @@ Meteor.authorizeCheck = {
 }
 // All of these methods are for admin article
 Meteor.methods({
+    articleChecksBeforeDbUpdate: function(articleData){
+        var fut = new future();
+
+        var articleAuthors,
+            articleAffiliations;
+
+        if(articleData.authors){
+            articleAuthors = articleData.authors;
+        }
+        if(articleData.affiliations){
+            articleAffiliations = articleData.affiliations;
+        }
+
+        // authors handling.
+        Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
+            if(error){
+                console.error('articleAuthorsCheck',error);
+                fut.throw(error);
+            }else if(authorsChecked){
+                articleData.authors = authorsChecked;
+                fut.return(articleData);
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+
+    },
     addArticle: function(articleData){
         Meteor.authorizeCheck.articles();
 
@@ -24,33 +56,24 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
+        // console.log('updateArticle',articleData);
         // whether adding or editing an article, both will go through this method
 
         Meteor.authorizeCheck.articles();
+
         var fut = new future();
 
-        var articleAuthors,
-            articleAffiliations;
-
-        if(articleData.authors){
-            articleAuthors = articleData.authors;
-        }
-        if(articleData.affiliations){
-            articleAffiliations = articleData.affiliations;
-        }
-
-        Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
+        Meteor.call('articleChecksBeforeDbUpdate', articleData, function(error,checkedData){
             if(error){
-                console.error('articleAuthorsCheck',error);
+                console.error('articleChecksBeforeDbUpdate',error);
                 fut.throw(error);
-            }else if(authorsChecked){
-                articleData.authors = authorsChecked;
+            }else if(checkedData){
 
                 // the returned result will either be the result from updating/inserting the article doc,
                 // if inserting an article and a duplicate was found, then that is returned.
                 if(!mongoId){
                     // Add new article
-                    Meteor.call('addArticle', articleData, function(error,result){
+                    Meteor.call('addArticle', checkedData, function(error,result){
                         if(error){
                             console.error('addArticle',error);
                             fut.throw(error);
@@ -60,8 +83,8 @@ Meteor.methods({
                     });
                 }else if(mongoId){
                     // Update existing
-                    articleData.batch = batch;
-                    var updated = articles.update({'_id' : mongoId}, {$set: articleData});
+                    checkedData.batch = batch;
+                    var updated = articles.update({'_id' : mongoId}, {$set: checkedData});
                     fut.return(mongoId);
                 }
             }
