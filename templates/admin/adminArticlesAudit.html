@@ -2,11 +2,7 @@
     {{>AdminHeader header="Articles Audit"}}
     <div class="row">
         <div class="col s12">
-            <div class="card z-depth-0">
-                <div class="card-content">
-                    {{>AdminArticlesAuditContent}}
-                </div>
-            </div>
+            {{>AdminArticlesAuditContent}}
         </div>
     </div>
     <div class="row">
@@ -30,7 +26,8 @@
                               <td>&nbsp;</td>
                               <td>&nbsp;</td>
                             </tr>
-                            {{#if value}}{{#each value}}
+                            {{#if value}}
+                            {{#each value}}
                             <tr>
                               <td>{{duplicate_field}}</td>
                               <td>{{count}}</td>
@@ -56,20 +53,29 @@
 </template>
 
 <template name="AdminArticlesAuditContent">
-     {{#if paperchaseAudit}}
-          {{#with paperchaseAudit}}
-          <h3>Paperchase Database</h3>
-          <h4>{{articles}} = articles</h4>
-          <h4>{{articles_without_pmid}} = articles without PubMed ID</h4>
-          <h4>{{articles_without_pmc}} = articles without PMC ID</h4>
-          <h4>{{pdf}} = PDF</h4>
-          <h4>{{xml}} = XML</h4>
-          {{/with}}
-          <h3>PubMed Database</h3>
-          <h4>{{#if ncbiAudit}}{{ncbiAudit.pubmed}} = articles{{else}}N/A{{/if}}</h4>
-          <h3>PMC Database</h3>
-          <h4>{{#if ncbiAudit}}{{ncbiAudit.pmc}} = articles{{else}}N/A{{/if}}</h4>
-     {{else}}
-     {{>Progress}}
-     {{/if}}
+    {{#if paperchaseAudit}}
+    {{#with paperchaseAudit}}
+    <div class="card z-depth-0">
+        <div class="card-content">
+            <span class="card-title">Paperchase Database</span>
+            <h4>{{articles}} = articles</h4>
+            <h4>{{articles_without_pmid}} = articles without PubMed ID</h4>
+            <h4>{{articles_without_pmc}} = articles without PMC ID</h4>
+            <h4>{{pdf}} = PDF</h4>
+            <h4>{{xml}} = XML</h4>
+        </div>
+    </div>
+    <div class="card z-depth-0">
+        <div class="card-content">
+            <span class="card-title">NCBI Database</span>
+            <h4><u>PubMed</u></h4>
+            <h4>{{#if ncbiAudit}}{{ncbiAudit.pubmed}} = articles{{else}}N/A{{/if}}</h4>
+            <h4><u>PMC</u></h4>
+            <h4>{{#if ncbiAudit}}{{ncbiAudit.pmc}} = articles{{else}}N/A{{/if}}</h4>
+        </div>
+    </div>
+    {{/with}}
+    {{else}}
+    {{>Progress}}
+    {{/if}}
 </template>
