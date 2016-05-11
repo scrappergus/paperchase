@@ -49,13 +49,6 @@ Template.SectionPapers.onRendered(function () {
 
 // Article
 // --------
-Template.Article.onRendered(function() {
-	// hacky width workaround for fixed element
-	$( window ).resize(function() {
-	  $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
-	}).resize();
-});
-
 Template.ArticleFigures.onRendered(function() {
 	$('.owl-carousel').owlCarousel();
 });
@@ -86,4 +79,14 @@ Template.ArticleFullText.onDestroyed(function () {
 Template.scrollspyCard.onRendered(function() {
     Meteor.general.affix();
     Meteor.general.scrollspy();
+});
+
+Template.AdvancedSearch.onRendered(function() {
+    Meteor.general.affix();
+});
+
+Template.AdvancedSearch.onRendered(function() {
+  new ResizeSensor($('.main'), function(){ 
+    $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
+  });
 });

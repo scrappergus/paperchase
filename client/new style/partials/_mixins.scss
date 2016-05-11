@@ -56,10 +56,8 @@
 
 @mixin get-bg-hover($value, $amt) {
   @include transition(background 0.25s ease-out);
-  background-color: $value;
-  &:hover {
-    background-color: lighten($value, $amt);
-  }
+  background-color: $value !important;
+  &:hover { background-color: lighten($value, $amt) !important; }
 }
 
 .uppercase-titles {

@@ -189,7 +189,7 @@ button.button {
    */
   &.primary { @include get-bg-hover($accent, 3%); }
   &.secondary { @include get-bg-hover($electric, 7%); }
-  &.teal { @include get-bg-hover($teal, 7%); }
+  &.teal { @include get-bg-hover($teal, 4%); }
 
   &.small {
     text-transform: none;

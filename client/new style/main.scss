@@ -241,6 +241,10 @@ h2.authors {
     h4.blue-divider { 
         margin-top: 10px; 
     }
+
+    h3 a { 
+        color: darken($kashmir, 8%); 
+    }
     h5.supporting {
         opacity: 0.85;
         a { color: $kashmir; }
