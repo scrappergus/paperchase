@@ -519,7 +519,7 @@ Template.AdminAuthors.helpers({
                     label: '',
                     sortable: false,
                     fn: function(value){
-                        return new Spacebars.SafeString('<a class="btn" href="/admin/author/' + value + '">Profile</a>');
+                        return new Spacebars.SafeString('<a class="btn btn-sm" href="/admin/author/' + value + '">Profile</a>');
                     }
                 }
             ]
