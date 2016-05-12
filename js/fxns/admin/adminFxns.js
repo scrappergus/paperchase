@@ -257,7 +257,7 @@ Meteor.adminEdBoard = {
                         name: edboardRoles[r]
                     }
                     if(member.role && $.inArray(roleObj.name, member.role) > -1){
-                        roleObj['selected'] = true;
+                        roleObj.selected = true;
                     }
                     edboardRolesTemp.push(roleObj);
                 }
@@ -272,31 +272,43 @@ Meteor.adminEdBoard = {
     formGetData: function(e){
         // console.log('..edboard formGetData');
         e.preventDefault();
+
+        var member = {};
         var memberMongoId,
-            success;
+            memberAddress,
+            memberBio;
+
+        var formErrors = [],
+            formErrorsCount = 0,
+            formErrorsMessage = '';
+
         Meteor.formActions.saving();
         $('input').removeClass('invalid');
+
         // Name
         // ------
-        var member = {};
         member.name_first = $('#member-name-first').val();
         member.name_middle = $('#member-name-middle').val();
         member.name_last = $('#member-name-last').val();
 
         // Address
         // ------
-        var memberAddress = $('.member-address').code();
-        memberAddress = Meteor.clean.cleanWysiwyg(memberAddress);
-        if(memberAddress != ''){
-            member.address = memberAddress;
+        memberAddress = $('.member-address').code();
+        if(memberAddress){
+            memberAddress = Meteor.clean.cleanWysiwyg(memberAddress);
+            if(memberAddress != ''){
+                member.address = memberAddress;
+            }
         }
 
         // Bio
         // ------
-        var memberBio = $('.member-bio').code();
-        memberBio = Meteor.clean.cleanWysiwyg(memberBio);
-        if(memberBio != ''){
-            member.bio = memberBio;
+        memberBio = $('.member-bio').code();
+        if(memberBio){
+            memberBio = Meteor.clean.cleanWysiwyg(memberBio);
+            if(memberBio != ''){
+                member.bio = memberBio;
+            }
         }
 
         // Role
@@ -310,14 +322,34 @@ Meteor.adminEdBoard = {
 
         // console.log(member);
         memberMongoId = $('#member-mongo-id').val();
-        if(!memberMongoId){
-            success = edboard.insert(member);
-        }else{
-            success = edboard.update({_id : memberMongoId} , {$set: member});
-        }
-        if(success){
-            Meteor.formActions.success();
-        }
+
+        member = Meteor.generalClean.pruneEmpty(member);
+
+        Meteor.call('updateEdboardMember', memberMongoId, member, function(error,result){
+            if(error){
+                console.error('updateEdboardMember',error);
+            }
+            if(error && error.error == 'validation-error'){
+                error.details.forEach(function(errorDetail){
+                    formErrorsCount++;
+                    if(errorDetail.name){
+                        formErrors.push(' ' + errorDetail.name + ': <i>' + errorDetail.type + '</i>');
+                    }
+                    if(formErrorsCount > 1){
+                        // if just 1 error, it will be in error.reason. Otherwise, list all the keys here for invalid
+                        formErrorsMessage = '<br><br>' + formErrorsCount + ' total errors:<br>' + formErrors.toString();
+                    }
+                });
+                Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
+            }else if(error){
+                console.error('updateEdboardMember',error);
+                Meteor.formActions.errorMessage('Could not update editorial board.');
+            }else if(result && typeof result != 'boolean'){
+                Router.go('AdminEditorialBoardEdit', {_id : result}); // new member added
+            }else if(result && typeof result === 'boolean'){
+                Meteor.formActions.successMessage('Editorial Board Updated');
+            }
+        });
     },
     readyForm: function(){
         // Address
