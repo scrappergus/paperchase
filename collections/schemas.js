@@ -119,7 +119,7 @@ journalConfig.schema = new SimpleSchema({
 edboard.schema = new SimpleSchema({
     address: {type: String, optional: true},
     bio: {type: String, optional: true},
-    role: {type: String, optional: true},
+    role: {type: [String], optional: true},
     name_first: {type: String, optional: true},
     name_middle: {type: String, optional: true},
     name_last: {type: String, optional: false}
