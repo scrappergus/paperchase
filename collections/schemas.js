@@ -125,8 +125,31 @@ edboard.schema = new SimpleSchema({
     name_last: {type: String, optional: false, label: 'Last name'}
 });
 // for_authors
+forAuthors.schema = new SimpleSchema({
+    title: {type: String, optional: false},
+    content: {type: String, optional: true},
+    display: {type: Boolean, optional: true}
+});
 // institutions
+institutions.schema = new SimpleSchema({
+    institution: {type: String, optional: false},
+    address: {type: String, optional: true},
+    IPRanges: {type: [Object], optional: true},
+    'IPRanges.startIP': {type: String, optional: true},
+    'IPRanges.endIP': {type: String, optional: true},
+});
 // issues
+issues.schema = new SimpleSchema({
+    volume: {type: Number, optional: false},
+    issue: {type: String, optional: false},
+    pub_date: {type: Date, optional: true},
+    date_settings: {type: Object, optional: true},
+    'date_settings.day': {type: Boolean, optional: true},
+    'date_settings.month': {type: Boolean, optional: true},
+    'date_settings.year': {type: Boolean, optional: true},
+    display: {type: Boolean, optional: true},
+    cover: {type: String, optional: true}
+});
 // news
 // roles
 // sections
