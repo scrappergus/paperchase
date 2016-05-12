@@ -120,9 +120,9 @@ edboard.schema = new SimpleSchema({
     address: {type: String, optional: true},
     bio: {type: String, optional: true},
     role: {type: [String], optional: true},
-    name_first: {type: String, optional: true},
-    name_middle: {type: String, optional: true},
-    name_last: {type: String, optional: false}
+    name_first: {type: String, optional: true, label: 'First name'},
+    name_middle: {type: String, optional: true, label: 'Middle name'},
+    name_last: {type: String, optional: false, label: 'Last name'}
 });
 // for_authors
 // institutions
