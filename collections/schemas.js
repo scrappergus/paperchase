@@ -76,7 +76,7 @@ authors.schema = new SimpleSchema({
     affiliationss: {type: [String], optional: true},
 });
 // config
-config.schema = new SimpleSchema({
+journalConfig.schema = new SimpleSchema({
     journal: {type: Object, optional: false},
     'journal.name': {type: String, optional: false},
     'journal.short_name': {type: String, optional: false},
@@ -114,9 +114,16 @@ config.schema = new SimpleSchema({
     'api.crawler': {type: String, optional: false},
     'api.doi': {type: String, optional: false},
 });
-
 // contact
 // edboard
+edboard.schema = new SimpleSchema({
+    address: {type: String, optional: true},
+    bio: {type: String, optional: true},
+    role: {type: String, optional: true},
+    name_first: {type: String, optional: true},
+    name_middle: {type: String, optional: true},
+    name_last: {type: String, optional: false}
+});
 // for_authors
 // institutions
 // issues
