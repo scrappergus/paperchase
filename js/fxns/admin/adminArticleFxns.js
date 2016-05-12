@@ -76,7 +76,7 @@ Meteor.adminArticle = {
 
         // title
         // ------
-        $('.article-title').materialnote({
+        $('.form-title').materialnote({
             onPaste: function(e){
                 Meteor.formActions.removePastedStyle(e);
             },
@@ -89,7 +89,7 @@ Meteor.adminArticle = {
 
         // abstract
         // ------
-        $('.article-abstract').materialnote({
+        $('.form-abstract').materialnote({
             onPaste: function(e){
                 Meteor.formActions.removePastedStyle(e);
             },
@@ -162,7 +162,7 @@ Meteor.adminArticle = {
 
 Meteor.adminArticleFormGet = {
     abstract: function(){
-        var abstract = $('.article-abstract').code();
+        var abstract = $('.form-abstract').code();
         abstract = Meteor.clean.cleanWysiwyg(abstract);
         return abstract;
     },
@@ -181,7 +181,12 @@ Meteor.adminArticleFormGet = {
             aff = Meteor.clean.cleanString(aff);
             affiliations.push(aff);
         });
-        return affiliations;
+
+        if(affiliations.length > 0){
+           return affiliations;
+        }else{
+            return;
+        }
     },
     correspondence: function(){
         var correspondence = [];
@@ -199,7 +204,12 @@ Meteor.adminArticleFormGet = {
             };
             correspondence.push(corresp);
         });
-        return correspondence;
+
+        if(correspondence.length > 0){
+           return correspondence;
+        }else{
+            return;
+        }
     },
     articleType: function(){
         var article_type = {};
@@ -245,7 +255,12 @@ Meteor.adminArticleFormGet = {
             });
             authors.push(author);
         });
-        return authors;
+
+        if(authors.length > 0){
+           return authors;
+        }else{
+            return;
+        }
     },
     dates: function(type){
         var dates = {};
@@ -300,7 +315,12 @@ Meteor.adminArticleFormGet = {
                 keywords.push(keyword);
             }
         });
-        return keywords;
+
+        if(keywords.length > 0){
+           return keywords;
+        }else{
+            return;
+        }
     },
     pageEnd: function(){
         if($('#page_end').val()){
@@ -323,7 +343,7 @@ Meteor.adminArticleFormGet = {
         }
     },
     title: function(){
-        var articleTitle = $('.article-title').code();
+        var articleTitle = $('.form-title').code();
         articleTitle = Meteor.clean.cleanWysiwyg(articleTitle);
         return articleTitle;
     },
@@ -372,7 +392,8 @@ Meteor.adminArticleFormGet = {
         // Keywords
         // -------
         articleUpdateObj.keywords = Meteor.adminArticleFormGet.keywords();
-
+        articleUpdateObj = Meteor.generalClean.pruneEmpty(articleUpdateObj);
+        // console.log('articleUpdateObj',articleUpdateObj);
         return articleUpdateObj;
     }
 }

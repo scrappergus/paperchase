@@ -29,24 +29,32 @@ Meteor.adminAbout = {
     formGetData: function(e){
         // console.log('..formGetData forAuthors');
         e.preventDefault();
-        var forDb = Meteor.adminShared.formGetData();
 
-        // console.log(forDb);
+        var updateType = 'update',
+            mongoId,
+            forDb;
+
+        forDb = Meteor.adminShared.formGetData();
+
         // Check if section exists via Mongo ID hidden input
         mongoId = $('#section-mongo-id').val();
+
         if(!mongoId){
-            // Insert
-            success = about.insert(forDb);
-            // Update sorters collection
-            Meteor.call('sorterAddItem', 'about', success);
-        }else{
-            // Update
-            success = about.update({_id : mongoId} , {$set: forDb});
+            updateType = 'add';
         }
-        if(success){
-            // Meteor.formActions.success(); // Do not show modal. Problem when changing session variable to hide template, doesn't remove modal overlay
-            Session.set('showAboutForm',false);
-            Session.set('aboutSectionId',null);
-        }
+
+        Meteor.call('updateAbout', mongoId, forDb, function(error,result){
+            if(error){
+                console.error('updateAbout',error);
+                Meteor.formActions.errorMessage('Could not ' + updateType + ' about section.<br>' + error.reason);
+            }else if(result){
+                Meteor.formActions.successMessage('About section updated');
+                Session.set('showAboutForm',false);
+                Session.set('aboutSectionId',null);
+                // update template data
+
+            }
+        });
+        // }
     }
 }

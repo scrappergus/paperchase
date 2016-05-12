@@ -27,8 +27,7 @@ Template.AdminAbout.events({
             if(error){
                 console.log('error - updateList about');
                 console.log(error);
-            }
-            if(result){
+            }else if(result){
                 Meteor.formActions.success();
             }
         });

@@ -103,7 +103,7 @@
                 <div class="row">
                     <div class="input-field col s12">
                         <div class="card blue-grey z-depth-0 lighten-5 no-margin">
-                            <div class="article-title">{{{title}}}</div>
+                            <div class="form-title">{{{title}}}</div>
                         </div>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                     <div class="col s11 m3">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <input type="text" id="article-id-{{name}}" value="{{value}}" class="article-id" >
+                                <input class="article-id form-{{name}}" type="text" id="article-id-{{name}}" value="{{value}}"/>
                                 <label for="article-id-{{name}}" class="active">{{name}}</label>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                 <div class="row">
                     <div class="input-field col s12">
                         <div class="card blue-grey z-depth-0 lighten-5 no-margin">
-                            <div class="article-abstract">{{{abstract}}}</div>
+                            <div class="form-abstract">{{{abstract}}}</div>
                         </div>
                     </div>
                 </div>
@@ -149,14 +149,14 @@
                 <legend>Site Settings</legend>
                     <div class="row">
                         <div class="input-field col s12 m4 center-align">
-                            <input class="filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
+                            <input class="form-feature filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
                             <label for="feature-checkbox">Feature</label>
                         </div>
-                        <div class="input-field col s12 m4 center-align">
+                        <div class="form-advance input-field col s12 m4 center-align">
                             <input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{checked advance}}{{checked aop}}"/>
                             <label for="advance-checkbox">Advance</label>
                         </div>
-                        <div class="input-field col s12 m4 center-align">
+                        <div class="form-display input-field col s12 m4 center-align">
                             <input class="filled-in" name="display" type="checkbox" id="display-checkbox"  checked="{{checked display}}"/>
                             <label for="display-checkbox">Display</label>
                         </div>
@@ -167,15 +167,15 @@
                 <legend>Meta</legend>
                 <div class="row">
                     <div class="input-field col s6 m2">
-                        <input type="number" id="page_start" value="{{page_start}}">
+                        <input class="form-page_start" type="number" id="page_start" value="{{page_start}}"/>
                         <label for="page_start" class="{{#if page_start}}active{{/if}}">First Page</label>
                     </div>
                     <div class="input-field col s6 m2">
-                        <input type="number" id="page_end" value="{{page_end}}">
+                        <input class="form-page_end" type="number" id="page_end" value="{{page_end}}"/>
                         <label for="page_end" class="{{#if page_end}}active{{/if}}">Last Page</label>
                     </div>
                     <div class="input-field col s6 m4 input-field">
-                        <select id="article-issue">
+                        <select class="form-issue form-volume form-issue_id" id="article-issue">
                             <option value="">&mdash;&mdash; Select Issue &mdash;&mdash;</option>
                             {{#each volumes}}
                             <option disabled>&mdash; Volume {{volume}} &mdash;</option>
@@ -189,7 +189,7 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s6 m4">
-                        <select id="article-type">
+                        <select class="form-article-type" id="article-type">
                             <option value="">&mdash; Select &mdash;</option>
                             {{#each article_type_list}}
                             <option value="{{short_name}}" data-id="{{_id}}" data-plural="{{plural}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
@@ -198,7 +198,7 @@
                         <label for="article-type">Article Type</label>
                     </div>
                     <div class="input-field col s6 m4">
-                        <select id="article-section">
+                        <select class="form-section" id="article-section">
                             <option value="">&mdash; Select &mdash;</option>
                             {{#each article_section_list}}
                             <option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
@@ -209,7 +209,7 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s4">
-                        <select id="article-pub-status">
+                        <select class="form-status" id="article-pub-status">
                             <option value="">&mdash; Select &mdash;</option>
                             {{#each pub_status_list}}
                             <option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
@@ -241,13 +241,13 @@
                     <div class="col s11">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <div class="row no-margin correspondence-row">
+                                <div class="row no-margin correspondence-row form-correspondence">
                                     <div class="col s6 input-field">
-                                        <input name="correspondence_text_{{@index}}" type="text" value="{{text}}" class="correspondence-text" />
+                                        <input class="correspondence-text" name="correspondence_text_{{@index}}" type="text" value="{{text}}"/>
                                         <label for="correspondence_text_{{@index}}" class="{{#if text}}active{{/if}}">Text</label>
                                     </div>
                                     <div class="col s6 input-field">
-                                        <input name="correspondence_email_{{@index}}"  type="email" value="{{email}}" class="correspondence-email" />
+                                        <input class="correspondence-email" name="correspondence_email_{{@index}}"  type="email" value="{{email}}"/>
                                         <label for="correspondence_email_{{@index}}" class="{{#if email}}active{{/if}}">Email</label>
                                     </div>
                                 </div>
@@ -328,12 +328,12 @@
                     <button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword">{{>AdminAddIcon}}</button>
                 </legend>
                 {{#if keywords}}
-                <div class="row">
+                <div class="row form-keywords">
                     {{#each keywords}}
                     <div class="col s11 m4">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <input type="text" value="{{.}}" class="kw" />
+                                <input class="kw" type="text" value="{{.}}"/>
                             </div>
                         </div>
                     </div>
@@ -347,7 +347,7 @@
 
             <fieldset id="figures">
                 <legend>Figures</legend>
-                <div class="row">
+                <div class="row form-figures">
                     <div class="col s12">
                         {{#if files.figures}}
                         {{>AdminArticleFigOrSuppTable files=files.figures}}

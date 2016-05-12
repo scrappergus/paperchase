@@ -62,19 +62,19 @@
     </div>
     {{/if}}
 
-    <div id="add-about-section-container">
+    <div id="add-about-section-container"></div>
     {{#if showAboutForm}}
-    <div class="divider"></div>
     <div class="row">
-        <div class="col s12 card z-depth-0">
-            <div class="card-content">
-                <div class="card-title">New About Section</div>
-                {{>AdminAboutForm}}
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">New About Section</div>
+                    {{>AdminAboutForm}}
+                </div>
             </div>
         </div>
     </div>
     {{/if}}
-    </div>
 </template>
 
 <template name="AdminAboutForm">

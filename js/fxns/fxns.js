@@ -338,6 +338,53 @@ Meteor.formActions = {
         Session.set('statusModalAction','Invalid');
         Session.set('statusModalDetails',invalidString);
     },
+    invalidMessage: function(message, invalidList){
+        Session.set('statusModalAction','<i class="material-icons">&#xE000;</i> Error');
+        Session.set('statusModalDetails',message);
+
+        $('.save-btn').removeClass('hide');
+        $('.saving').addClass('hide');
+        $('.success').addClass('hide');
+        $('.error').removeClass('hide');
+
+        // add message to template
+        $('.error-message').html(message);
+
+        // fixed saved button
+        if($('#fixed-save-btn').length){
+            $('#fixed-save-btn').find('.show-save').removeClass('hide');
+            $('#fixed-save-btn').find('.show-wait').addClass('hide');
+        }
+        // saved button
+        if($('#save-btn').length){
+            $('#save-btn').find('.show-save').removeClass('hide');
+            $('#save-btn').find('.show-wait').addClass('hide');
+        }
+
+        // add invalid to inputs
+        invalidList.forEach(function(invalidObj){
+            var className = '',
+                keySplit;
+            if(invalidObj.name.indexOf('.') != -1){
+                // nested object is invalid
+                keySplit = invalidObj.name.split('.');
+                className = keySplit[1]; // 2nd item in array will be the nested key
+            }else{
+                className = invalidObj.name;
+            }
+            $('.form-' + className).addClass('invalid');
+        });
+
+        // modals
+        if($('#saving-modal').length){
+            $('#saving-modal').closeModal();
+        }
+        if($('#error-modal').length){
+            $('#error-modal').openModal({
+                dismissible: true
+            });
+        }
+    },
     error: function(){
         $('.save-btn').removeClass('hide');
         $('.saving').addClass('hide');
