@@ -68,7 +68,53 @@
         volume: {type: Number, optional: true, label: 'Volume'}
     });
 // authors
+    authors.schema = new SimpleSchema({
+        name_first: {type: String, optional: true},
+        name_middle: {type: String, optional: true},
+        name_last: {type: String, optional: true},
+        ids: {type: Object, optional: true},
+        affiliationss: {type: [String], optional: true},
+    });
 // config
+    journalConfig.schema = new SimpleSchema({
+        journal: {type: Object, optional: false},
+        'journal.name': {type: String, optional: false},
+        'journal.short_name': {type: String, optional: false},
+        'journal.issn': {type: String, optional: false},
+        'journal.doi': {type: String, optional: true},
+        'journal.url': {type: String, optional: false},
+        'journal.logo': {type: Object, optional: false},
+        'journal.logo.banner': {type: String, optional: false},
+        'journal.publisher': {type: Object, optional: true},
+        'journal.publisher.name': {type: String, optional: true},
+        'assets': {type: String, optional: true},
+        site: {type: Object, optional: false},
+        'site.spec': {type: Object, optional: false},
+        'site.spec.color': {type: Object, optional: false},
+        'site.spec.color.main_hex': {type: String, optional: false},
+        'site.spec.color.main_rgb': {type: String, optional: false},
+        'site.side_nav': {type: [Object], optional: false},
+        'site.side_nav.$.route_name': {type: String, optional: false},
+        'site.side_nav.$.name': {type: String, optional: false},
+        'site.side_nav.$.display': {type: Boolean, optional: false},
+        edboard_roles: {type: [Object], optional: false},
+        'email_lib_recommendation': {type: Object, optional: false},
+        'email_lib_recommendation.address': {type: String, optional: false},
+        'email_lib_recommendation.pw': {type: String, optional: false},
+        submission: {type: Object, optional: false},
+        'submission.url': {type: String, optional: false},
+        'submission.user': {type: String, optional: true},
+        'submission.pw': {type: String, optional: true},
+        impact_factor: {type: Object, optional: true},
+        legacy_platform: {type: Object, optional: true},
+        'legacy_platform.name': {type: String, optional: true},
+        'legacy_platform.short_name': {type: String, optional: true},
+        'legacy_platform.mini_api': {type: String, optional: true},
+        api: {type: Object, optional: false},
+        'api.crawler': {type: String, optional: false},
+        'api.doi': {type: String, optional: false},
+    });
+
 // contact
 // edboard
 // for_authors
