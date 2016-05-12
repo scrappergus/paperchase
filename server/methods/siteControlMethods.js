@@ -1,6 +1,6 @@
 Meteor.methods({
     siteControlUpdate: function(updateObj){
-        console.log('siteControlUpdate',updateObj);
+        // console.log('siteControlUpdate',updateObj);
 
         var configDocId;
         var fut = new future();
