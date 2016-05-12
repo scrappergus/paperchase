@@ -82,12 +82,12 @@
     }
 
     h6.desc {
-        margin: 0;
+        margin: 0 0 10px 0;
         padding: 0;
     }
 
     span.meta {
-        margin: 10px 23px 0 0;
+        margin: 0 23px 0 0;
         display: inline-block;
     }
 }
@@ -555,6 +555,14 @@ ul.sectioned-list {
         left: calc(-50vw + 50%);
     }
 }
+
+// Tablet
+@include at-query($min, $small) {
+    ul.divided-list {
+        li.item { padding: 25px 0; }
+        h4.title { font-size: 17px; }
+    }
+}
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
     h2.authors {
@@ -568,6 +576,11 @@ ul.sectioned-list {
     .article-text.abstract {
         padding: 30px 40px;
         margin-bottom: 0;
+    }
+
+    ul.divided-list {
+        li.item { padding: 40px 0; }
+        h4.title { font-size: 21px; }
     }
 }
 

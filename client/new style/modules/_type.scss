@@ -175,6 +175,16 @@ p {
   line-height: 1.4;
 }
 
+// Tablets
+@include at-query($min, $small) {
+  p { font-size: 15px; }
+}
+
+// Tablets
+@include at-query($min, $medium) {
+  p { font-size: 17px; }
+}
+
 /** Buttons
 ---------------------------------------------------------*/
 a.button,

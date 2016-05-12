@@ -5,7 +5,7 @@
     {{#if issueData}}
         {{#with issueData}}
             <!-- Main -->
-            <div class="page-content col s12 m8">
+            <div class="page-content col s12 m12 l8">
                     <div class="toc-title">
                         <div class="cover-image">
                             <img src="{{coverPath}}">
@@ -23,7 +23,7 @@
             </div>
 
             <!-- Sidebar -->
-            <div class="page-sidebar col s12 m4">
+            <div class="page-sidebar col s12 m12 l4">
                 <div class="issue-scroller">
                     {{#with prevIssue}} <span class="prev"><a href="/issue/{{vi}}"><span class="icon icon-angle-left"></span> Prev {{param}}</a></span> {{/with}}
                     <span class="current">Volume {{volume}}, Issue {{issue}}</span>
@@ -41,27 +41,29 @@
 
 <template name="ArticlesList">
     {{#if articles}}
-        {{#each articles}}
-            <!-- Section Heading -->
-            {{#if start_group}}
-                {{#if article_type.name}}
-                    <h4 id="{{#with pluralize article_type.name}}{{convertToID this}}{{/with}}" class="blue-divider">{{pluralize article_type.name}}</h4>
+        <div class="row">
+            {{#each articles}}
+                <!-- Section Heading -->
+                {{#if start_group}}
+                    {{#if article_type.name}}
+                        <h4 id="{{#with pluralize article_type.name}}{{convertToID this}}{{/with}}" class="blue-divider">{{pluralize article_type.name}}</h4>
+                    {{/if}}
                 {{/if}}
-            {{/if}}
 
-            <div class="toc-info">
-                <h2 class="title">{{{title}}}</h2>
-                <h6 class="desc">{{>AuthorsList}}</h6>
+                <div class="toc-info">
+                    <h2 class="title">{{{title}}}</h2>
+                    {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
 
-                <!-- Desc Info -->
-                {{#with ids}}{{#if doi}}<span class="meta"><a href="{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
-                {{#if page_start}}<span class="meta">pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</span>{{/if}}
+                    <!-- Desc Info -->
+                    {{#with ids}}{{#if doi}}<span class="meta"><a href="{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
+                    {{#if page_start}}<span class="meta">pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</span>{{/if}}
 
-                <!-- Links -->
-                <br />
-                {{>ArticleButtons _id=_id abstract=abstract files=files}}
-            </div>
-        {{/each}}
+                    <!-- Links -->
+                    <br />
+                    {{>ArticleButtons _id=_id abstract=abstract files=files}}
+                </div>
+            {{/each}}
+        </div>
     {{else}}
         {{>Loading}}
     {{/if}}

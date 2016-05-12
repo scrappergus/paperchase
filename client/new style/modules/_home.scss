@@ -164,7 +164,7 @@
         }
 
         li.subtitle {
-            margin-bottom: 15px;
+            margin-bottom: 0;
             font-weight: 700;
         }
 
@@ -196,5 +196,58 @@
             @include transition(color 0.25s ease-out);
             &:hover { color: lighten($link, 10%); }
         }
+    }
+}
+
+/** Media Queries
+---------------------------------------------------------*/
+// MOBILE ONLY
+@include at-query($max, $small) {
+    
+}
+
+// MOBILE + TABLET ONLY
+@include at-query($max, $medium) {
+    
+}
+
+// Tablets
+@include at-query($min, $small) {
+    .issue-highlight {
+        ul.button-list li.title { font-size: 15px; }
+        ul.button-list li.subtitle { margin-bottom: 5px; }
+    }
+    .issue-highlight img.cover {
+        height: 100px;
+    }
+}
+
+// Medium Screens (+ 970px)
+@include at-query($min, $medium) {
+    .issue-highlight {
+        ul.button-list li.subtitle { margin-bottom: 0; }
+    }
+    .issue-highlight img.cover {
+        height: 100px;
+    }
+}
+
+// Large Screens (+ 1170px)
+@include at-query($min, $large) {
+    .issue-highlight {
+        ul.button-list li.title { font-size: 17px; }
+    }
+    .issue-highlight img.cover {
+        height: 100px;
+    }
+}
+
+@include at-query($min, 1300px) {
+    .issue-highlight {
+        ul.button-list li.title { font-size: 20px; }
+        ul.button-list li.subtitle { margin-bottom: 15px; }
+    }
+    .issue-highlight img.cover {
+        height: 140px;
     }
 }

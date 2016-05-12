@@ -87,7 +87,7 @@
 </template>
 
 <template name="ArticleSidebar">
-    <div class="page-sidebar col s12 m4 l4">
+    <div class="page-sidebar col s12 m12 l4">
         {{#if isSubscribed}}
             <!-- for subscribed users -->
             {{#if fullText}}
@@ -114,7 +114,7 @@
                 {{/if}}
                 {{/with}}
             {{else}}
-                <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="full-width end-cap primary button">
+                <a href="#subscribe-modal" class="full-width end-cap primary button modal-trigger">
                     <span class="icon icon-file"></span> View Full Text
                 </a>
             {{/if}}

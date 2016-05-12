@@ -75,7 +75,7 @@ Template.Visitor.events({
     'click ul.nav-links a li': function(e){
         $('.sidebar-toggle-mobile').removeClass('icon-close');
         $('.sidebar-toggle-mobile').addClass('icon-menu');
-        $('.content').toggleClass('no-sidebar');
+        // $('.content').toggleClass('no-sidebar');
         $('.sidebar').toggleClass('mobile-show');
     }
 });

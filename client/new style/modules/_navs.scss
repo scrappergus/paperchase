@@ -399,7 +399,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
 /** Media Queries
 ---------------------------------------------------------*/
-// MOBILE ONLY
+// MOBILE + TABLET ONLY
 @include at-query($max, $medium) {
     .sub-nav-shim { display: none; }
 }
@@ -412,6 +412,11 @@ $secondary-subnav-color: darken(#00387A, 1%);
     }
     .nav-content .sidebar-toggle-mobile { display: none; }
     .nav-content ul { display: block; }
+
+    .main .sidebar ul.nav-links {
+        li.title { font-size: 15px; }
+        a li { font-size: 15px; }
+    }
 
     /*
      * Sidebar Selective Styles
@@ -438,5 +443,10 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
 // Large Screens (+ 1170px)
 @include at-query($min, $large) {
+    .main .sidebar ul.nav-links {
+        li.title { font-size: 15px; }
+        a li { font-size: 17px; }
+    }
+
     .sub-nav { left: $sidebar-wide-width; }
 }

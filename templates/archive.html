@@ -1,6 +1,6 @@
 <template name="Archive">
     <div class="row">
-        <div class="page-content col s12 m8 l8">
+        <div class="page-content col s12 m12 l8">
             <h1>Issue Archive</h1>
             {{#each volumes}}
                 <h2 id="volume{{volume}}" class="heavy">Volume {{volume}}</h2>
@@ -20,7 +20,7 @@
             {{/each}}
         </div>
 
-        <div class="page-sidebar col s12 m4 l4">
+        <div class="page-sidebar col hide-on-med-and-down l4">
             {{> scrollspyCard title="Table of Contents" items=items}}
         </div>
     </div>
