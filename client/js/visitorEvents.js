@@ -57,11 +57,26 @@ Template.Recommend.events({
 // Subscribe
 // -------
 Template.Visitor.events({
-    'click #sidebar-toggle': function(e){
+    // todo: move this into a separate function
+    'click .sidebar-toggle': function(e){
         e.preventDefault();
         $('.sub-nav').toggleClass('sidebar-open');
         $('.content').toggleClass('no-sidebar');
         $('.sidebar').toggleClass('hidden');
+    },
+    'click .sidebar-toggle-mobile': function(e){
+        e.preventDefault();
+        $(e.target).toggleClass('icon-close');
+        $(e.target).toggleClass('icon-menu');
+
+        $('.content').toggleClass('no-sidebar');
+        $('.sidebar').toggleClass('mobile-show');
+    },
+    'click ul.nav-links a li': function(e){
+        $('.sidebar-toggle-mobile').removeClass('icon-close');
+        $('.sidebar-toggle-mobile').addClass('icon-menu');
+        $('.content').toggleClass('no-sidebar');
+        $('.sidebar').toggleClass('mobile-show');
     }
 });
 
@@ -84,7 +99,7 @@ Template.Visitor.events({
     if (evt.which === 13) {
         Meteor.search.bounceTo({terms:$('.searchbox-field').val()});
     }
-  } 
+  }
 });
 
 

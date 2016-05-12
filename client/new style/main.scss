@@ -145,7 +145,7 @@ h5.article-header {
 }
 
 h2.authors {
-    line-height: 1.6;
+    line-height: 1.4;
     font-size: 17px;
 
     span.author {
@@ -217,7 +217,6 @@ h2.authors {
     }
 
     p {
-        text-align: justify;
         line-height: 1.5;
     }
 
@@ -225,12 +224,13 @@ h2.authors {
     &.abstract {
         @extend .faint-shadow;
         position: relative;
-        padding: 30px 40px;
+        padding: 10px 35px 1px;
+        margin-bottom: 30px;
 
-        #fulltext { 
+        #fulltext {
             background-image: url("about:blank");
-            position: absolute; 
-            bottom: 138px; 
+            position: absolute;
+            bottom: 138px;
         }
     }
 }
@@ -238,12 +238,12 @@ h2.authors {
 /** Search Page
  ---------------------------------------------------------*/
 .search.page-content {
-    h4.blue-divider { 
-        margin-top: 10px; 
+    h4.blue-divider {
+        margin-top: 10px;
     }
 
-    h3 a { 
-        color: darken($kashmir, 8%); 
+    h3 a {
+        color: darken($kashmir, 8%);
     }
     h5.supporting {
         opacity: 0.85;
@@ -404,7 +404,7 @@ $cubic: cubic-bezier(.64,.09,.08,1);
     }
 
     &.small {
-        &:after { 
+        &:after {
             max-width: 165px;
             padding: 7px;
             background: $electric;
@@ -441,8 +441,8 @@ $cubic: cubic-bezier(.64,.09,.08,1);
     }
 
     &.small {
-        &:before { 
-            border-top: solid 6px $electric; 
+        &:before {
+            border-top: solid 6px $electric;
             bottom: 3.2em;
         }
     }
@@ -542,4 +542,36 @@ ul.sectioned-list {
 .faint-shadow {
     background: #fff;
     box-shadow: 0px 2px 14px rgba(235, 237, 242, 1);
+}
+
+
+/** Media Queries
+---------------------------------------------------------*/
+// MOBILE ONLY
+@include at-query($max, $medium) {
+    .article-text.abstract {
+        position: relative;
+        width: 100vw;
+        left: calc(-50vw + 50%);
+    }
+}
+// Medium Screens (+ 970px)
+@include at-query($min, $medium) {
+    h2.authors {
+        line-height: 1.6;
+    }
+
+    .article-text {
+        p { text-align: justify; }
+    }
+
+    .article-text.abstract {
+        padding: 30px 40px;
+        margin-bottom: 0;
+    }
+}
+
+// Large Screens (+ 1170px)
+@include at-query($min, $large) {
+
 }

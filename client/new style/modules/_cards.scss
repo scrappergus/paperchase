@@ -83,7 +83,9 @@
     top: 0;
 
     &.fixed-active {
-        position: fixed;
-        top: 190px;
+        @include at-query($min, $medium) {
+            position: fixed;
+            top: 190px;
+        }
     }
 }

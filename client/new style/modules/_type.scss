@@ -39,8 +39,8 @@ html, body {
 
 /** Headings | Font Sizes
 ---------------------------------------------------------*/
-h1, .h1 { font-size: 38px; }
-h2, .h2 { font-size: 24px;
+h1, .h1 { font-size: 26px; }
+h2, .h2 { font-size: 22px;
           color: $kashmir; }
 h3, .h3 { font-size: 20px; }
 h4, .h4 { font-size: 17px; }
@@ -95,6 +95,24 @@ a {
   &:hover { color: lighten($link, 10%); }
 }
 
+
+// Medium Screens (+ 970px)
+@include at-query($min, $medium) {
+    h1, .h1 { font-size: 38px; }
+    h2, .h2 { font-size: 24px;
+              color: $kashmir; }
+    h3, .h3 { font-size: 20px; }
+    h4, .h4 { font-size: 17px; }
+
+    h5, .h5, h6, .h6,
+    span.meta { font-size: 14px; }
+}
+
+// Large Screens (+ 1170px)
+@include at-query($min, $large) {
+
+}
+
 /** Special Headings
 ---------------------------------------------------------*/
 h3.section-heading {
@@ -147,6 +165,7 @@ h5.supporting {
     margin-bottom: 20px;
     @extend .uppercase-titles;
     left: 1px;
+    line-height: 1.7;
 }
 
 /** Paragraphs
@@ -284,4 +303,18 @@ button.button {
     right: 0;
     top: 15px;
   }
+}
+
+/** Media Queries
+---------------------------------------------------------*/
+// Medium Screens (+ 970px)
+@include at-query($min, $medium) {
+    h5.supporting {
+        line-height: 1.4;
+    }
+}
+
+// Large Screens (+ 1170px)
+@include at-query($min, $large) {
+
 }

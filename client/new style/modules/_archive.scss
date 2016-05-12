@@ -1,17 +1,16 @@
 /* Archive ------------------------*/
-.archive-issue{
-    @extend clearfix;
-    float:left;
+.archive-issue {
     display:block;
-    width: 16%;
-    margin: 0 0 25px 0;
-    padding-right: 10px;
-    img { 
-        width: 100%; 
-        margin: 0; 
+    margin: 0 0 25px 0 !important;
+    padding: 0 10px 0 0 !important;
+
+    img {
+        width: 100%;
+        margin: 0;
         border-top-left-radius: 2px;
         border-top-right-radius: 2px;
     }
+
     h5 { margin: 0; }
     &:nth-child(6n+1) { clear: both; };
 
