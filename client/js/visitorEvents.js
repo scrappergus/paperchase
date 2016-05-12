@@ -73,6 +73,21 @@ Template.Subscribe.events({
     }
 });
 
+
+// General search field
+// -------
+Template.Visitor.events({
+    'click .searchbox-button': function(e){
+        Meteor.search.bounceTo({terms:$('.searchbox-field').val()});
+    },
+    'keypress .searchbox-field': function (evt, template) {
+    if (evt.which === 13) {
+        Meteor.search.bounceTo({terms:$('.searchbox-field').val()});
+    }
+  } 
+});
+
+
 // Issue
 // -------
 Template.Issue.events({
@@ -144,7 +159,7 @@ Template.Search.events({
             abstract: e.target.abstract && e.target.abstract.value,
             title: e.target.title && e.target.title.value
         }, function(err, data) {
-            console.log('>>> args in browser', err, data);
+//            console.log('>>> args in browser', err, data);
             Session.set('queryResults', err ? [] : data);
         });
     }

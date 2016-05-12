@@ -899,6 +899,22 @@ if (Meteor.isClient) {
             }
             return pageTitle + 'Search';
         },
+        onAfterAction: function() {
+            var terms = this.params.query.terms;
+            $(".search-abstract").val(terms);
+            Meteor.call('search', {
+                    abstract: terms
+//                    ,authors: terms
+//                    ,title: terms
+                }, function(err, data) {
+                    //            console.log('>>> args in browser', err, data);
+                    Session.set('queryResults', err ? [] : data);
+                });
+
+        },
+        data: function() {
+            return {terms:this.params.query.terms};
+        }
     });
 
 }

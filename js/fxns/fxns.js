@@ -846,3 +846,9 @@ Meteor.advance = {
         return sectionsOrder;
     }
 }
+
+Meteor.search = {
+    bounceTo: function(args) {
+        Router.go("/search/?terms="+args.terms);
+    }
+}
