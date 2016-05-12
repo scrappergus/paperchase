@@ -74,6 +74,7 @@
                             <li><a href="{{pathFor 'AdminArticlesAudit'}}"><i class="material-icons">&#xE14D;</i> Audit</a></li>
                             {{#if isInRole 'super-admin'}}
                             <li><a href="{{pathFor 'AdminArticleTypes'}}">Article Types</a></li>
+                            <li><a href="{{pathFor 'AdminAuthors'}}">{{>AdminPersonIcon}} Authors</a></li>
                             {{/if}}
                         </ul>
                     </div>
