@@ -1,8 +1,8 @@
 Meteor.methods({
     siteControlUpdate: function(updateObj){
-        var mainSideNavigationDone,
-            sectionSideNavigationDone,
-            sortersDone;
+        console.log('siteControlUpdate',updateObj);
+
+        var configDocId;
         var fut = new future();
 
         // Update 3 collections - config, sorters, sections
@@ -10,33 +10,66 @@ Meteor.methods({
         // Sorters - for setting ORDER of section side navigation (created by users)
         // Section - for setting DISPLAY of sections
 
-        var configDocId = journalConfig.findOne()._id;
+        configDocId = journalConfig.findOne()._id;
 
 
         // Main Side Navigation
         // COLLECTION: config
-        var mainSideNavigationDone = journalConfig.update({_id : configDocId} , {$set: {'site.side_nav' : updateObj.side_nav }});
-
-        // Section Side Navigation
-        // COLLECTION: sections
-        // TODO: better tracking of if updated, instead of just setting true on last item
-        // DISPLAY
-        for(var i=0 ; i<updateObj.section_side_nav.length ; i++){
-            var sectionMongoId = updateObj.section_side_nav[i]['_id'];
-            var sectionDisplay = updateObj.section_side_nav[i]['display'];
-            var sectionUpdated = sections.update({_id : sectionMongoId} , {$set: {display : sectionDisplay}});
-            if(sectionUpdated && i == parseInt(updateObj.section_side_nav.length-1)){
-                // ORDER
+        journalConfig.update({_id : configDocId} , {$set: {'site.side_nav' : updateObj.side_nav , 'site.section_side_nav' : updateObj.section_side_nav} }, function(error,result){
+            if(error){
+                throw new Meteor.Error(error);
+            }else if(result){
+                // Section Side Navigation
                 // COLLECTION: sorters
-                sectionSideNavigationDone = Meteor.call('updatePaperSectionsOrder',updateObj.section_side_nav);
+                // COLLECTION: sections
+                async.each(updateObj.section_side_nav, function (section, cb) {
+                    Meteor.call('updateSectionViaSiteControl',section, function(error,result){
+                        if(error){
+                            console.error('updateSectionViaSiteControl',error);
+                        }else if(result){
+                            cb();
+                        }
+                    });
+                }, function (err) {
+                    if (err) {
+                        throw new Meteor.Error(err);
+                    }else{
+                        Meteor.call('updatePaperSectionsOrder', updateObj.section_side_nav, function(error,result){
+                            if(error){
+                                throw new Meteor.Error(error);
+                            }else if(result){
+                                fut.return(true);
+                            }
+                        });
+                    }
+                });
             }
-        }
+        });
 
-
-        if(mainSideNavigationDone && sectionSideNavigationDone){
-            return true;
+        try {
+            return fut.wait();
         }
-        return fut.wait();
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
+    updateSectionViaSiteControl: function(section){
+        var fut = new future();
+        // console.log('updateSectionViaSiteControl',section)
+        Meteor.call('updateSection', section._id, {display: section.display}, function(error,result){
+            if(error){
+                throw new Meteor.Error(error);
+            }else if(result){
+                fut.return(true);
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     updatePaperSectionsOrder: function(updateArray){
         // console.log('..updatePaperSectionsOrder');
