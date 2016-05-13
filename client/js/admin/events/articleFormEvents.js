@@ -320,6 +320,8 @@ Template.AdminArticleForm.events({
                         mongoId = result.article_id;
                     }
                     Router.go('AdminArticleOverview',{_id : mongoId});
+                }else if(result){
+                    Meteor.formActions.successMessage('Article updated');
                 }
             });
         }else{
