@@ -70,6 +70,55 @@ Router.route('/admin/doi_status_csv/',{
         this.response.end();
     }
 });
+
+Router.route('/admin/article_dates_csv/:pii',{
+    name: 'csvArticleDates',
+    where: 'server',
+    action: function(){
+        var piiList = this.params.pii;
+
+        var filename = journalConfig.findOne().journal.short_name + '_article_dates.csv';
+        var csvData = 'PII, Submitted, Accepted, EPub ' + '\n'; // received = submitted
+
+        Meteor.call('getArticlesDates', piiList, function(error,articlesList){
+            if(error){
+                console.error(error);
+                throw new Meteor.Error('getArticlesDates', error);
+            }else if(articlesList){
+                for(var i=0; i< articlesList.length; i++){
+                    var pii = '',
+                        epub = '',
+                        received = '',
+                        accepted = '';
+
+                    if(articlesList[i].ids && articlesList[i].ids.pii){
+                        pii = articlesList[i].ids.pii
+                    }
+
+                    if(articlesList[i].history && articlesList[i].history.received){
+                        received = articlesList[i].history.received
+                    }
+
+                    if(articlesList[i].history && articlesList[i].history.accepted){
+                        accepted = articlesList[i].history.accepted
+                    }
+
+                    if(articlesList[i].dates && articlesList[i].dates.epub){
+                        epub = articlesList[i].dates.epub
+                    }
+
+                    csvData += pii + ',' + received + ',' + accepted + ',' + epub + '\n';
+                }
+            }
+        });
+        this.response.writeHead(200, {
+          'Content-Type': 'text/csv',
+          'Content-Disposition': 'attachment; filename=' + filename
+        });
+        this.response.write(csvData);
+        this.response.end();
+    }
+});
 // Router.route('/admin/xml_audit/',{
 //  name: 'xmlAudit',
 //  where: 'server',
@@ -92,12 +141,15 @@ if (Meteor.isClient) {
     // Variables
     // ----------
     Session.setDefault('admin-not-found',false);
+    // Dashboard
+    Session.setDefault('processing-pii',null);
     // For Authors
     Session.setDefault('showForm',false);
     Session.setDefault('sectionId',null);
     // About
-    Session.set('showAboutForm',false);
-    Session.set('aboutSectionId', null);
+    Session.setDefault('adminAboutSections',null);
+    Session.setDefault('showAboutForm',false);
+    Session.setDefault('aboutSectionId', null);
     // News
     // Session.setDefault('newsId',null);
     Session.setDefault('newsData',null);
@@ -148,14 +200,17 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-                Meteor.subscribe('articlesRecentFive')
+                Meteor.subscribe('articlesRecentFive'),
+                Meteor.subscribe('articlesWithoutDates'),
             ]
         },
         data: function(){
             if(this.ready()){
-                var articlesList = articles.find({}).fetch();
+                var articlesListRecent = articles.find({},{sort:{'_id':1},limit : 5}).fetch();
+                var articlesListAll = articles.find().fetch();
                 return {
-                    articles: articlesList
+                    articles: articlesListRecent,
+                    withoutDates: articlesListAll.length - 5
                 };
             }
         }
@@ -178,18 +233,15 @@ if (Meteor.isClient) {
                 Meteor.subscribe('sortedList','about')
             ]
         },
-        data: function(){
-            // Keep data declarations here
-            // when adding data via template helper, the array shows as an object and there is an error:
-            // {#each}} currently only accepts arrays, cursors or falsey values.
-            if(this.ready()){
-                var sorted  = sorters.findOne();
-                if(sorted){
-                    return {
-                        sections : sorted['ordered']
-                    };
+        onBeforeAction: function(){
+            Meteor.call('getListWithData', 'about', function(error,result){
+                if(error){
+                    console.error('getListWithData',error);
+                }else if(result){
+                    Session.set('adminAboutSections',result);
                 }
-            }
+            });
+            this.next();
         }
     });
 
@@ -778,6 +830,31 @@ if (Meteor.isClient) {
                 this.next();
             }
         },
+    });
+
+    // Article Types
+    Router.route('/admin/article_types',{
+        name: 'AdminArticleTypes',
+        layoutTemplate: 'Admin',
+        title: function() {
+            var pageTitle = 'Admin | Article Types';
+            if(Session.get('journal')){
+                pageTitle += ' : ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articleTypes')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                return {
+                    types : articleTypes.find({},{sort:{name:1}}).fetch()
+                }
+            }
+        }
     });
 
     // DOI

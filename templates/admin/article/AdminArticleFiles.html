@@ -15,16 +15,39 @@
                     <span class="card-title">Files</span>
                     <div class="row">
                         <div class="col s12">
-                            {{#if files.xml}}
-                            {{#with files}}<a class="btn" href="{{xml.url}}" target="_BLANK">{{>AdminDownloadIcon}} XML</a>{{/with}}
-                            {{else}}
-                            <a class="btn disabled">No XML</a>
-                            {{/if}}
-                            {{#if pfiles.df}}
-                            {{#with files}}<a class="btn" href="{{pdf.url}}" target="_BLANK">{{>AdminDownloadIcon}} PDF</a>{{/with}}
-                            {{else}}
 
-                            <a class="btn disabled">No PDF</a>
+                            {{#if files.xml}}
+                                {{#with files}}
+
+                                    {{#with xml}}
+                                        {{#if url}}
+                                            <a class="btn" href="{{url}}" target="_BLANK">{{>AdminDownloadIcon}} XML</a>
+                                            {{else}}
+                                            <a class="btn disabled">No XML</a>
+                                        {{/if}}
+                                    {{/with}}
+
+                                {{/with}}
+
+                                {{else}}
+                                <a class="btn disabled">No XML</a>
+                            {{/if}}
+
+                            {{#if files.pdf}}
+                                {{#with files}}
+
+                                    {{#with pdf}}
+                                        {{#if url}}
+                                            <a class="btn" href="{{url}}" target="_BLANK">{{>AdminDownloadIcon}} PDF</a>
+                                            {{else}}
+                                            <a class="btn disabled">No PDF</a>
+                                        {{/if}}
+                                    {{/with}}
+
+                                {{/with}}
+
+                                {{else}}
+                                <a class="btn disabled">No PDF</a>
                             {{/if}}
                         </div>
                     </div>
@@ -116,21 +139,19 @@
 
     {{/with}}
 
-    {{#if verify}}
-    {{else}}
+
     {{#with article}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
                     <div class="card-title">XML &amp; PDF Uploader</div>
-                    {{>s3Upload}}
+                    {{>s3ArticleFilesUpload}}
                 </div>
             </div>
         </div>
     </div>
     {{/with}}
-    {{/if}}
 
     {{#if verify}}{{>AdminArticleXmlVerify}}{{/if}}
 
@@ -142,47 +163,22 @@
 </template>
 
 <template name="AdminArticleXmlVerify">
+    {{#if article.aop}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
-                    {{#if article.aop}}
-
                     <div class="row">
                         <div class="col s12">
                             <h4>Verify AOP XML information below before saving to the database.</h4>
                             <p>AOP files are not stored, they are only used to update the database.</p>
                         </div>
                     </div>
-
-                    {{else}}
-                    <div class="row" id="xml-verify">
-                        <div class="col s12">
-                            <h4>Please verify the information below</h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <button id="xml-verified" class="btn btn-primary upload">{{>AdminUploadIcon}}</button> I have verified the XML. Upload the XML.
-                        </div>
-                    </div>
-
-                    {{/if}}
-
-                    <div class="row">
-                        <div class="col s12">
-                             <p>To update the database, save the form below.</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <button id="xml-verified" class="btn btn-cancel">{{>AdminCancelIcon}} Cancel</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+    {{/if}}
 
     {{>AdminArticleForm}}
 </template>

@@ -73,6 +73,14 @@
         &.active:hover {
             background: $accent;
         }
+
+        span.icon {
+            color: $accent;
+            font-size: 18px;
+            margin-right: 3px;
+            position: relative;
+            top: 3px;
+        }
     }
 }
 

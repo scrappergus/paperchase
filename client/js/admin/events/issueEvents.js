@@ -81,7 +81,7 @@ Template.AdminIssueForm.events({
         // Cover Caption
         // -------
         caption = $('.issue-caption').code();
-        caption = Meteor.formActions.cleanWysiwyg(caption);
+        caption = Meteor.clean.cleanWysiwyg(caption);
         issueData.caption = caption;
 
         Meteor.call('validateIssue', mongoId, issueData, function(error, result){

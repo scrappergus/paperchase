@@ -6,7 +6,7 @@ Meteor.adminShared = {
         // ---------------
         var title = $('.section-title').code();
         // console.log(title);
-        title = Meteor.formActions.cleanWysiwyg(title);
+        title = Meteor.clean.cleanWysiwyg(title);
         if(title != ''){
             forDb.title = title;
         }
@@ -14,7 +14,7 @@ Meteor.adminShared = {
         // Section content
         // ---------------
         var section = $('.section-content').code();
-        // section = Meteor.formActions.cleanWysiwyg(section);
+        // section = Meteor.clean.cleanWysiwyg(section);
         if(section != ''){
             forDb.content = section;
         }

@@ -73,11 +73,11 @@ Template.AdminArticleForm.events({
         Meteor.general.scrollTo('affiliations');
     },
     'click .remove-correspondence': function(e,t){
-        console.log('------------------------- remove-correspondence');
+        // console.log('------------------------- remove-correspondence');
         e.preventDefault();
         var article = Session.get('article-form');
         var correspondenceIndex = $(e.target).attr('data-index');
-        console.log('correspondenceIndex',correspondenceIndex);
+        // console.log('correspondenceIndex',correspondenceIndex);
 
         article.correspondence.splice(correspondenceIndex, 1);
         Session.set('article-form',article);
@@ -241,7 +241,7 @@ Template.AdminArticleForm.events({
                         article.ids[type] = savedPii;
                         Session.set('article-form',article);// need to set session also here because of timinig problem with methods on server
                     }else{
-                        article.ids[type] = ''; // TODO: if not found, then article doc exists but no pii.. add new pii via getNewPii method
+                        article.ids[type] = '';
                     }
                 });
             }
@@ -267,7 +267,11 @@ Template.AdminArticleForm.events({
         Meteor.formActions.saving();
         var article,
             articleUpdateObj,
-            invalid = [];
+            formErrorsCount = 0,
+            formErrors = [],
+            formErrorsMessage = '',
+            duplicateId,
+            duplicateTitle;
 
         article = Session.get('article-form');
         mongoId = article._id;
@@ -276,22 +280,52 @@ Template.AdminArticleForm.events({
 
         // VALIDATION and SAVE
         // -------
-        // result is used for: duplicate article found, invalid inputs found, or if saved. Use result flag to determine (duplicate, invalid, saved).
-        // console.log('articleUpdateObj',articleUpdateObj);
-        if(articleUpdateObj)
-        Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
-            if(error){
-                console.error('validateArticle',error);
-            }else if(result && result.duplicate){
-                Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + result._id + '">' + result.title + '</a>');
-            }else if(result && result.invalid_list){
-                Meteor.formActions.invalid(result.invalid_list);
-            }else if(result && result.saved){
-                if(!mongoId){
-                    mongoId = result.article_id;
+        // result is used for: duplicate article found, or if saved. Use result flag to determine (duplicate or saved).
+        if(articleUpdateObj){
+            // console.log('articleUpdateObj',articleUpdateObj);
+            Meteor.call('validateArticle', mongoId, articleUpdateObj, function(error,result){
+                if(error && error.reason != 'duplicate' && error.details){
+                    console.error('validateArticle',error);
+
+                    // TODO: move this to template data
+                    if(error.details.isArray){
+                        // Validation errors
+                        error.details.forEach(function(errorDetail){
+                            formErrorsCount++;
+                            if(errorDetail.name){
+                                formErrors.push(' ' + errorDetail.name + ': <i>' + errorDetail.type + '</i>');
+                            }
+                        });
+                        if(formErrorsCount > 1){
+                            // if just 1 error, it will be in error.reason. Otherwise, list all the keys here for invalid
+                            formErrorsMessage = '<br><br>' + formErrorsCount + ' total errors:<br>' + formErrors.toString();
+                        }
+                    }
+
+                    Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
+                }else if(error  && error.reason === 'duplicate'){
+                    console.error('validateArticle: duplicate',error);
+                    if(error.details._id){
+                        duplicateId = error.details._id;
+                    }
+                    if(error.details.title){
+                        duplicateTitle = error.details.title;
+                    }
+                    Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + duplicateId + '">' + duplicateTitle + '</a>');
+                }else if(error){
+                    console.error('validate Article',error);
+                    Meteor.formActions.errorMessage('Could not update article');
+                }else if(result && result.saved){
+                    if(!mongoId){
+                        mongoId = result.article_id;
+                    }
+                    Router.go('AdminArticleOverview',{_id : mongoId});
+                }else if(result){
+                    Meteor.formActions.successMessage('Article updated');
                 }
-                Router.go('AdminArticleOverview',{_id : mongoId});
-            }
-        });
+            });
+        }else{
+             Meteor.formActions.errorMessage('Unable to save form');
+        }
     }
 });

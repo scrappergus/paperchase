@@ -14,5 +14,8 @@ Meteor.methods({
             }
         }
         return fut.wait();
+    },
+    updateSection: function(mongoId, updateObj){
+        return sections.update({_id : mongoId} , {$set: updateObj});
     }
 });

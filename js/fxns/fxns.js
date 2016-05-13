@@ -54,11 +54,11 @@ Meteor.article = {
     },
     linkFiles:function(files,articleMongoId){
         for(var file in files){
-            if(file != 'figures'){
+            if(files[file].file){
                 files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
-            }else{
-                for(var fig in files[file]){
-                    files[file][fig].url =  journalConfig.findOne({}).assets + 'paper_figures/' + files[file][fig].file;
+            }else if(file === 'supplemental' || file === 'figures'){
+                for(var f in files[file]){
+                    files[file][f].url =  journalConfig.findOne({}).assets + 'supplemental_materials/' + files[file][f].file;
                 }
             }
         }
@@ -148,7 +148,6 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -197,7 +196,7 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
+
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -245,7 +244,7 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
+
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -292,7 +291,7 @@ Meteor.formActions = {
                 }
             });
         }
-        //TODO: use 1 modal for all actions - StatusModal
+
         if($('#saving-modal').length){
             $('#saving-modal').openModal({
                 dismissible: false
@@ -310,7 +309,7 @@ Meteor.formActions = {
         var invalidString = '';
         for(var i=0 ; i < invalidData.length ; i++){
             $('#' + invalidData[i].fieldset_id).addClass('invalid');
-            // TODO: if we want to add invalid class to inputs then fix when adding to WYSIWYG, because does not work
+
             invalidString += invalidData[i].message + '    ';
             if(i === 0){
                 var scrollToEl = 'body';
@@ -344,6 +343,53 @@ Meteor.formActions = {
 
         Session.set('statusModalAction','Invalid');
         Session.set('statusModalDetails',invalidString);
+    },
+    invalidMessage: function(message, invalidList){
+        Session.set('statusModalAction','<i class="material-icons">&#xE000;</i> Error');
+        Session.set('statusModalDetails',message);
+
+        $('.save-btn').removeClass('hide');
+        $('.saving').addClass('hide');
+        $('.success').addClass('hide');
+        $('.error').removeClass('hide');
+
+        // add message to template
+        $('.error-message').html(message);
+
+        // fixed saved button
+        if($('#fixed-save-btn').length){
+            $('#fixed-save-btn').find('.show-save').removeClass('hide');
+            $('#fixed-save-btn').find('.show-wait').addClass('hide');
+        }
+        // saved button
+        if($('#save-btn').length){
+            $('#save-btn').find('.show-save').removeClass('hide');
+            $('#save-btn').find('.show-wait').addClass('hide');
+        }
+
+        // add invalid to inputs
+        invalidList.forEach(function(invalidObj){
+            var className = '',
+                keySplit;
+            if(invalidObj.name.indexOf('.') != -1){
+                // nested object is invalid
+                keySplit = invalidObj.name.split('.');
+                className = keySplit[1]; // 2nd item in array will be the nested key
+            }else{
+                className = invalidObj.name;
+            }
+            $('.form-' + className).addClass('invalid');
+        });
+
+        // modals
+        if($('#saving-modal').length){
+            $('#saving-modal').closeModal();
+        }
+        if($('#error-modal').length){
+            $('#error-modal').openModal({
+                dismissible: true
+            });
+        }
     },
     error: function(){
         $('.save-btn').removeClass('hide');
@@ -386,7 +432,6 @@ Meteor.formActions = {
         }
 
         // modals
-        // TODO: use 1 modal for all actions - StatusModal
         if($('#saving-modal').length){
             $('#saving-modal').closeModal();
         }
@@ -455,7 +500,6 @@ Meteor.formActions = {
                 }
             });
         }
-        // TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
         if($('#saving-modal').length){
             $('#saving-modal').closeModal({
                 complete: function(){
@@ -501,7 +545,6 @@ Meteor.formActions = {
                 }
             });
         }
-        // TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
         if($('#saving-modal').length){
             $('#saving-modal').closeModal({
                 complete: function(){
@@ -547,7 +590,6 @@ Meteor.formActions = {
                 }
             });
         }
-        // TODO: use 1 modal for all actions - StatusModal. to avoid seconds when there is no modal for transitions below
         if($('#saving-modal').length){
             $('#saving-modal').closeModal({
                 complete: function(){
@@ -570,9 +612,6 @@ Meteor.formActions = {
         //remove styling. paste as plain text. avoid problems when pasting from word or with font sizes.
         var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
         document.execCommand('insertText', false, bufferText);
-    },
-    cleanWysiwyg: function(input){
-        return input.replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'');
     },
     closeModal: function(){
         $('.save-btn').removeClass('hide');
@@ -601,6 +640,26 @@ Meteor.ip = {
             d = num%256 + '.' + d;
         }
         return d;
+    }
+}
+
+Meteor.clean = {
+    cleanString: function(string){
+        if(string){
+            string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
+            string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
+            if(string.charAt(string.length - 1) === '.'){
+                string = string.substring(0, string.length-1);
+            }
+            string = string.trim();
+        }
+        return string;
+    },
+    cleanWysiwyg: function(input){
+        return input.replace(/&nbsp;/g,' ').replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'').trim();
+    },
+    removeSpaces: function(string){
+        return string.replace(/\s+/g,'');
     }
 }
 
@@ -647,9 +706,9 @@ Meteor.general = {
         return string;
     },
     pluralize: function(str) {
-        if (['Review', 
-             'Editorial', 
-             'Research Article', 
+        if (['Review',
+             'Editorial',
+             'Research Article',
              'Research Perspective',
              'Research Paper'].indexOf(str) >= 0) {
               return str + 's';
@@ -749,6 +808,10 @@ Meteor.dates = {
         // console.log(date);
         // console.log(moment(utcDate,'ddd, DD MMM YYYY HH:mm:ss ZZ'));
         return moment(date).utc().format('MMMM D, YYYY');
+    },
+    articleCsv: function(date){
+        var date = new Date(date);
+        return moment(date).utc().format('MM-D-YYYY'); // cannot use commas for csv date. they will be considered as new columns.
     },
     inputForm: function(date){
       return moment(date).utc().format('YYYY/MM/DD');

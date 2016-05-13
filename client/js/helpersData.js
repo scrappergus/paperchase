@@ -78,8 +78,7 @@ Template.LeftNav.helpers({
         }
     },
     sectionsLinks: function(){
-        var sectionsList = sections.find().fetch();
-        return sectionsList;
+        return Session.get('sectionNav');
     }
 });
 Template.MobileMenu.helpers({
@@ -89,8 +88,7 @@ Template.MobileMenu.helpers({
         }
     },
     sectionsLinks: function(){
-        var sectionsList = sections.find().fetch();
-        return sectionsList;
+        return Session.get('sectionNav');
     }
 });
 Template.scrollspyItems.helpers({

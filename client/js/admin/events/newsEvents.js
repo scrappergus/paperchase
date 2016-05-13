@@ -15,7 +15,7 @@ Template.AdminNewsForm.events({
     'click .add-to-tags': function(e){
         e.preventDefault();
         var newTag = $('.news-tag-input').code();
-        newTag = Meteor.formActions.cleanWysiwyg(newTag);
+        newTag = Meteor.clean.cleanWysiwyg(newTag);
         var newsData = Session.get('newsData');
         if(!newsData){
             newsData = {};

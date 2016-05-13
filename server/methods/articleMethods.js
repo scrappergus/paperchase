@@ -3,12 +3,49 @@ Meteor.authorizeCheck = {
     articles: function(){
         var loggedInUser = Meteor.user();
         if (!loggedInUser || !Roles.userIsInRole(loggedInUser,['super-admin','edit'],'article')) {
-            throw new Meteor.Error(403, 'Access denied')
+            // throw new Meteor.Error(403, 'Access denied')
         }
     }
 }
 // All of these methods are for admin article
 Meteor.methods({
+    articleChecksBeforeDbUpdate: function(articleData){
+        // console.log('articleChecksBeforeDbUpdate');
+        var fut = new future();
+
+        var articleAuthors,
+            articleAffiliations;
+
+        if(articleData.authors){
+            // Authors Check
+            // -------------------
+            if(articleData.authors){
+                articleAuthors = articleData.authors;
+            }
+            if(articleData.affiliations){
+                articleAffiliations = articleData.affiliations;
+            }
+
+            Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
+                if(error){
+                    console.error('articleAuthorsCheck',error);
+                    fut.throw(error);
+                }else if(authorsChecked){
+                    articleData.authors = authorsChecked;
+                    fut.return(articleData);
+                }
+            });
+        }else{
+            fut.return(articleData);
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
     addArticle: function(articleData){
         Meteor.authorizeCheck.articles();
 
@@ -24,34 +61,24 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
+        // console.log('updateArticle',mongoId,articleData);
         // whether adding or editing an article, both will go through this method
 
-        Meteor.authorizeCheck.articles();
         var fut = new future();
-        // console.log('--updateArticle',mongoId,articleData);
 
-        var articleAuthors,
-            articleAffiliations;
-
-        if(articleData.authors){
-            articleAuthors = articleData.authors;
-        }
-        if(articleData.affiliations){
-            articleAffiliations = articleData.affiliations;
-        }
-
-        Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
+        Meteor.call('articleChecksBeforeDbUpdate', articleData, function(error,checkedData){
             if(error){
+                console.error('articleChecksBeforeDbUpdate',error);
                 fut.throw(error);
-            }else if(authorsChecked){
-                articleData.authors = authorsChecked;
+            }else if(checkedData){
 
                 // the returned result will either be the result from updating/inserting the article doc,
                 // if inserting an article and a duplicate was found, then that is returned.
                 if(!mongoId){
                     // Add new article
-                    Meteor.call('addArticle', articleData, function(error,result){
+                    Meteor.call('addArticle', checkedData, function(error,result){
                         if(error){
+                            console.error('addArticle',error);
                             fut.throw(error);
                         }else if(result){
                             fut.return(result);
@@ -59,8 +86,8 @@ Meteor.methods({
                     });
                 }else if(mongoId){
                     // Update existing
-                    articleData.batch = batch;
-                    var updated = articles.update({'_id' : mongoId}, {$set: articleData});
+                    checkedData.batch = batch;
+                    var updated = articles.update({'_id' : mongoId}, {$set: checkedData});
                     fut.return(mongoId);
                 }
             }
@@ -296,19 +323,13 @@ Meteor.methods({
             if(article.article_type){
                 articleType = article.article_type.name;
             }
-            article.article_type_list = [];
-            publisherArticleTypes = articleTypes.find().fetch();
-            for(var typeIdx =0 ; typeIdx < publisherArticleTypes.length ; typeIdx++){
-                var selectObj = {
-                    nlm_type: publisherArticleTypes[typeIdx].nlm_type,
-                    name: publisherArticleTypes[typeIdx].name,
-                    short_name: publisherArticleTypes[typeIdx].short_name
+            publisherArticleTypes = articleTypes.find({},{sort: {name:1}}).fetch();
+            article.article_type_list = publisherArticleTypes.map(function(typeOption){
+                if(typeOption.name == articleType){
+                    typeOption.selected = true;
                 }
-                if(publisherArticleTypes[typeIdx].name == articleType){
-                    selectObj.selected = true;
-                }
-                article.article_type_list.push(selectObj);
-            }
+                return typeOption;
+            });
 
             // Article Section
             // ------------
@@ -429,7 +450,8 @@ Meteor.methods({
         return result;
     },
     articleExistenceCheck: function(mongoId, articleData){
-        // console.log('--articleExistenceCheck',mongoId,articleData);
+        // console.log('--articleExistenceCheck',mongoId);
+        var duplicate;
         // before inserting/updating article, check if doc already exists
         // will return duplicate article doc, if found
         if(articleData){
@@ -455,74 +477,34 @@ Meteor.methods({
                 });
             }
 
-            var exists = articles.findOne({ $or: query });
+            var exists = articles.find({ $or: query }).fetch();
 
-            if(exists && exists._id != mongoId){
-                return exists;
+            if(exists && exists.length > 1){
+                exists.forEach(function(article){
+                    if(article._id != mongoId){
+                        duplicate = article;
+                    }
+                });
+                throw new Meteor.Error(400, 'duplicate',duplicate);
             }else{
                 return;
             }
         }
         return;
     },
-    checkArticleInputs: function(articleData){
-        // will check for all required fields in form
-        // will return all invalid inputs
-        var invalid = [];
-        var clear = '<div class="clearfix"></div>';
-
-        // title
-        if(articleData.title === ''){
-            invalid.push({
-                'fieldset_id' : 'article-title',
-                'message' : clear + 'Article title is required'
-            });
-        }
-
-        return invalid;
-    },
     validateArticle: function(mongoId, articleData){
         // console.log('--validateArticle',mongoId);
-        var fut = new future();
-        var invalid = [];
+        var validated;
         var result = {};
-        // will check all required inputs are valid and check for duplicate article by PII
-        // will either return doc of duplicate article, invalid array, or boolean if article was updated
 
-        // first check for duplicates
-        Meteor.call('articleExistenceCheck',mongoId, articleData, function(error,duplicateExists){
-            if(error){
-                fut.throw(error);
-            }else if(duplicateExists){
-                result = duplicateExists;
-                result.duplicate = true;
-                fut.return(duplicateExists);
-            }else{
-                Meteor.call('checkArticleInputs',articleData, function(error,articleInvalid){
-                    if(error){
-                        fut.throw(error);
-                    }else if(articleInvalid && articleInvalid.length > 0){
-                        result.invalid = true;
-                        result.invalid_list = articleInvalid;
-                        fut.return(result);
-                    }else{
-                        // no duplicates and all valid. Now update/insert
-                        Meteor.call('updateArticle',mongoId, articleData, function(error,articleSaved){
-                            if(error){
-                                fut.throw(error);
-                            }else if(articleSaved){
-                                result.article_id = articleSaved;
-                                result.saved = true;
-                                fut.return(result);
-                            }
-                        });
-                    }
-                });
+        articles.schema.validate(articleData);
 
-            }
-        });
-
-        return fut.wait();
+        try{
+            Meteor.call('articleExistenceCheck',mongoId, articleData);
+            return Meteor.call('updateArticle',mongoId, articleData);
+        } catch(e){
+            throw new Meteor.Error(500, e.reason, e.details);
+        }
     },
     removeArticlesFromIssue: function(issueMongoId){
         var fut = new future();
@@ -543,5 +525,44 @@ Meteor.methods({
         catch(err) {
             throw new Meteor.Error(error);
         }
+    }
+});
+
+// For Download CSV
+Meteor.methods({
+    getArticlesDates: function(piiList){
+        var foundDocs,
+            docsByPii = {},
+            result;
+
+        piiList = piiList.split(',');
+
+        foundDocs = articles.find({'ids.pii': {$in : piiList}}).fetch({dates:1, history:1});
+
+        if(foundDocs){
+
+            for(var i=0; i< foundDocs.length; i++){
+                docsByPii[foundDocs[i].ids.pii] = foundDocs[i];
+            }
+
+            result = piiList.map(function(pii){
+                if(docsByPii[pii]){
+                    if(docsByPii[pii].dates && docsByPii[pii].dates.epub){
+                        docsByPii[pii].dates.epub = Meteor.dates.articleCsv(docsByPii[pii].dates.epub);
+                    }
+                    if(docsByPii[pii].history && docsByPii[pii].history.accepted){
+                        docsByPii[pii].history.accepted = Meteor.dates.articleCsv(docsByPii[pii].history.accepted);
+                    }
+                    if(docsByPii[pii].history && docsByPii[pii].history.received){
+                        docsByPii[pii].history.received = Meteor.dates.articleCsv(docsByPii[pii].history.received);
+                    }
+                    return docsByPii[pii];
+                }else{
+                    return {ids : {pii : pii } };
+                }
+            });
+        }
+        // console.log('result',result);
+        return result;
     }
 });

@@ -61,7 +61,7 @@ Meteor.methods({
         if(article.Journal && article.Journal[0].Issue){
             var isIEmpty = Meteor.general.isStringEmpty(article.Journal[0].Issue[0]);
             if(!isIEmpty){
-                articleProcessed.issue = Meteor.general.cleanString(article.Journal[0].Issue[0]);
+                articleProcessed.issue = Meteor.clean.cleanString(article.Journal[0].Issue[0]);
             }
         }
         // check if issue has changed
@@ -146,7 +146,7 @@ Meteor.methods({
         // ARTICLE TYPE
         // -----------
         if(article.PublicationType){
-            articleTypeXml = Meteor.general.cleanString(article.PublicationType[0]);
+            articleTypeXml = Meteor.clean.cleanString(article.PublicationType[0]);
             articleProcessed.article_type = {};
             articleProcessed.article_type.name = articleTypeXml;
         }
@@ -182,7 +182,7 @@ Meteor.methods({
                 if(authorsList[authorIdx].AffiliationInfo){
                     var authorAffiliations = authorsList[authorIdx].AffiliationInfo[0].Affiliation;
                     for(var aff=0 ; aff < authorAffiliations.length ; aff++){
-                        var affil = Meteor.general.cleanString(authorAffiliations[aff]);
+                        var affil = Meteor.clean.cleanString(authorAffiliations[aff]);
                         // console.log(articleProcessed.affiliations.indexOf(authorAffiliations[aff]));
                         if(articleProcessed.affiliations.indexOf(affil) == -1){
                             articleProcessed.affiliations.push(affil);
@@ -208,37 +208,37 @@ Meteor.methods({
                 // Author Name
                 if(authorsList[authorIdx].FirstName){
                     if(typeof authorsList[authorIdx].FirstName[0] == 'object'){
-                        author.name_first = Meteor.general.cleanString(authorsList[authorIdx].FirstName[0]._);
+                        author.name_first = Meteor.clean.cleanString(authorsList[authorIdx].FirstName[0]._);
                     }else if(typeof authorsList[authorIdx].FirstName[0] == 'string'){
-                        author.name_first = Meteor.general.cleanString(authorsList[authorIdx].FirstName[0]);
+                        author.name_first = Meteor.clean.cleanString(authorsList[authorIdx].FirstName[0]);
                     }
                 }
                 if(authorsList[authorIdx].MiddleName){
                     if(typeof authorsList[authorIdx].MiddleName[0] == 'object'){
-                        author.name_middle = Meteor.general.cleanString(authorsList[authorIdx].MiddleName[0]._);
+                        author.name_middle = Meteor.clean.cleanString(authorsList[authorIdx].MiddleName[0]._);
                     }else if(typeof authorsList[authorIdx].MiddleName[0] == 'string'){
-                        author.name_middle = Meteor.general.cleanString(authorsList[authorIdx].MiddleName[0]);
+                        author.name_middle = Meteor.clean.cleanString(authorsList[authorIdx].MiddleName[0]);
                     }
                 }
                 if(authorsList[authorIdx].LastName){
                     if(typeof authorsList[authorIdx].LastName[0] == 'object'){
-                        author.name_last = Meteor.general.cleanString(authorsList[authorIdx].LastName[0]._);
+                        author.name_last = Meteor.clean.cleanString(authorsList[authorIdx].LastName[0]._);
                     }else if(typeof authorsList[authorIdx].LastName[0] == 'string'){
-                        author.name_last = Meteor.general.cleanString(authorsList[authorIdx].LastName[0]);
+                        author.name_last = Meteor.clean.cleanString(authorsList[authorIdx].LastName[0]);
                     }
                 }
                 if(authorsList[authorIdx].Suffix){
                     if(typeof authorsList[authorIdx].Suffix[0] == 'object'){
-                        author.name_suffix = Meteor.general.cleanString(authorsList[authorIdx].Suffix[0]._);
+                        author.name_suffix = Meteor.clean.cleanString(authorsList[authorIdx].Suffix[0]._);
                     }else if(typeof authorsList[authorIdx].Suffix[0] == 'string'){
-                        author.name_suffix = Meteor.general.cleanString(authorsList[authorIdx].Suffix[0]);
+                        author.name_suffix = Meteor.clean.cleanString(authorsList[authorIdx].Suffix[0]);
                     }
                 }
                 // Author Affiliations - Affiliation ID for author
                 if(authorsList[authorIdx].AffiliationInfo){
                     var authorAffiliations = authorsList[authorIdx].AffiliationInfo[0].Affiliation;
                     for(var aff=0 ; aff < authorAffiliations.length ; aff++){
-                        var authorAffIndex = articleProcessed.affiliations.indexOf(Meteor.general.cleanString(authorAffiliations[aff]));
+                        var authorAffIndex = articleProcessed.affiliations.indexOf(Meteor.clean.cleanString(authorAffiliations[aff]));
                         author.affiliations_numbers.push(authorAffIndex);
                     }
                 }

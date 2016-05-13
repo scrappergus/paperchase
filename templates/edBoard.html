@@ -12,8 +12,8 @@
                 <h4>{{journalName}} Editors-in-Chief</h4>
             </div>
             {{#each eic}}
-                <li class="col s6">
-                    <p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> 
+                <li class="col s12 m6">
+                    <p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br />
                     {{address}}</p>
                 </li>
                 {{#if bio}}
@@ -29,7 +29,7 @@
                 <h4>Editorial Board</h4>
             </div>
 			{{#each fullBoard}}
-  			<li class="col s6">
+  			<li class="col s12 m6">
   				<p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> {{address}}</p>
   			</li>
 

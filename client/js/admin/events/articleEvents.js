@@ -3,6 +3,7 @@
 Template.AdminArticlesDashboard.events({
     'click #doi-register-check': function(e){
         e.preventDefault();
+        Meteor.formActions.processing();
         ///article/:journalname/:pii/doi_status
         Meteor.call('batchDoiRegisteredCheck',function(error,result){
             if(error){
@@ -12,20 +13,38 @@ Template.AdminArticlesDashboard.events({
                 Meteor.formActions.successMessage(result);
             }
         });
-    },
+    }
+});
+
+Template.OncotargetOjsBatch.events({
     'click #ojs-batch-update': function(e){
         e.preventDefault();
-        // just for Oncotarget
-        // TODO: move to server. problem with method within a method. if this click was to call a method that then uses the update method.
-        // TODO: include a paperchase owns flag, and skip that article in the batch update. for when an article was edited via paperchase.
-        Meteor.call('batchUpdate');
+        Meteor.formActions.saving();
+        Meteor.call('batchUpdate',function(error,result){
+            if(error){
+
+            }else if(result){
+
+            }
+        });
+    },
+    'click #ojs-batch-update-dates': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        Meteor.call('batchUpdateWithoutDates',function(error,result){
+            if(error){
+
+            }else if(result){
+
+            }
+        });
     }
 });
 
 // Article Files
 // ----------------
-Template.s3Upload.events({
-    'click button.upload': function(e){
+Template.s3ArticleFilesUpload.events({
+    'click #upload-request': function(e){
         e.preventDefault();
         Meteor.formActions.saving();
         var article,
@@ -48,6 +67,16 @@ Template.s3Upload.events({
         }else{
             Meteor.formActions.errorMessage('Please select a PDF or XML file to upload.');
         }
+    },
+    'click .btn-cancel': function(e){
+        e.preventDefault();
+        Session.set('article-form',null);
+        Session.set('xml-verify',false);
+    },
+    'click #xml-verified': function(e){
+        var articleMongoId = Session.get('article')._id;
+        var files = $('input.file_bag')[0].files;
+        Meteor.articleFiles.uploadArticleFile(articleMongoId,'xml',files);
     }
 });
 Template.s3UploadNewArticle.events({
@@ -107,18 +136,6 @@ Template.AdminArticleFiles.events({
 
             }
         });
-    }
-});
-Template.AdminArticleXmlVerify.events({
-    'click .upload': function(e){
-        var articleMongoId = Session.get('article')._id;
-        var files = $('input.file_bag')[0].files;
-        Meteor.articleFiles.uploadArticleFile(articleMongoId,'xml',files);
-    },
-    'click .btn-cancel': function(e){
-        e.preventDefault();
-        Session.set('article-form',null);
-        Session.set('xml-verify',false);
     }
 });
 Template.AdminArticleFigures.events({

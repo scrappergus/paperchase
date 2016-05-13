@@ -69,7 +69,6 @@ Meteor.adminSite = {
             updateObj.section_side_nav.push(sectionSideNavOption);
         });
 
-        // TODO: validation
         // console.log(updateObj);
         Meteor.call('siteControlUpdate',updateObj,function(error,result){
             if(error){
@@ -150,7 +149,7 @@ Meteor.adminNews = {
         // Content
         // ------
         var newsContent = $('.news-content').code();
-        newsContent = Meteor.formActions.cleanWysiwyg(newsContent);
+        newsContent = Meteor.clean.cleanWysiwyg(newsContent);
         if(newsContent != ''){
             newsObj.content = newsContent;
         }
@@ -258,7 +257,7 @@ Meteor.adminEdBoard = {
                         name: edboardRoles[r]
                     }
                     if(member.role && $.inArray(roleObj.name, member.role) > -1){
-                        roleObj['selected'] = true;
+                        roleObj.selected = true;
                     }
                     edboardRolesTemp.push(roleObj);
                 }
@@ -273,31 +272,43 @@ Meteor.adminEdBoard = {
     formGetData: function(e){
         // console.log('..edboard formGetData');
         e.preventDefault();
+
+        var member = {};
         var memberMongoId,
-            success;
+            memberAddress,
+            memberBio;
+
+        var formErrors = [],
+            formErrorsCount = 0,
+            formErrorsMessage = '';
+
         Meteor.formActions.saving();
         $('input').removeClass('invalid');
+
         // Name
         // ------
-        var member = {};
         member.name_first = $('#member-name-first').val();
         member.name_middle = $('#member-name-middle').val();
         member.name_last = $('#member-name-last').val();
 
         // Address
         // ------
-        var memberAddress = $('.member-address').code();
-        memberAddress = Meteor.formActions.cleanWysiwyg(memberAddress);
-        if(memberAddress != ''){
-            member.address = memberAddress;
+        memberAddress = $('.member-address').code();
+        if(memberAddress){
+            memberAddress = Meteor.clean.cleanWysiwyg(memberAddress);
+            if(memberAddress != ''){
+                member.address = memberAddress;
+            }
         }
 
         // Bio
         // ------
-        var memberBio = $('.member-bio').code();
-        memberBio = Meteor.formActions.cleanWysiwyg(memberBio);
-        if(memberBio != ''){
-            member.bio = memberBio;
+        memberBio = $('.member-bio').code();
+        if(memberBio){
+            memberBio = Meteor.clean.cleanWysiwyg(memberBio);
+            if(memberBio != ''){
+                member.bio = memberBio;
+            }
         }
 
         // Role
@@ -309,20 +320,36 @@ Meteor.adminEdBoard = {
             }
         });
 
-        // TODO: add check for if name exists?
-        // TODO: validation
         // console.log(member);
         memberMongoId = $('#member-mongo-id').val();
-        if(!memberMongoId){
-            // Insert
-            success = edboard.insert(member);
-        }else{
-            // Update
-            success = edboard.update({_id : memberMongoId} , {$set: member});
-        }
-        if(success){
-            Meteor.formActions.success();
-        }
+
+        member = Meteor.generalClean.pruneEmpty(member);
+
+        Meteor.call('updateEdboardMember', memberMongoId, member, function(error,result){
+            if(error){
+                console.error('updateEdboardMember',error);
+            }
+            if(error && error.error == 'validation-error'){
+                error.details.forEach(function(errorDetail){
+                    formErrorsCount++;
+                    if(errorDetail.name){
+                        formErrors.push(' ' + errorDetail.name + ': <i>' + errorDetail.type + '</i>');
+                    }
+                    if(formErrorsCount > 1){
+                        // if just 1 error, it will be in error.reason. Otherwise, list all the keys here for invalid
+                        formErrorsMessage = '<br><br>' + formErrorsCount + ' total errors:<br>' + formErrors.toString();
+                    }
+                });
+                Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
+            }else if(error){
+                console.error('updateEdboardMember',error);
+                Meteor.formActions.errorMessage('Could not update editorial board.');
+            }else if(result && typeof result != 'boolean'){
+                Router.go('AdminEditorialBoardEdit', {_id : result}); // new member added
+            }else if(result && typeof result === 'boolean'){
+                Meteor.formActions.successMessage('Editorial Board Updated');
+            }
+        });
     },
     readyForm: function(){
         // Address
@@ -424,59 +451,6 @@ Meteor.adminForAuthors = {
     }
 }
 
-Meteor.adminAbout = {
-    readyForm: function(){
-        // About Section title
-        // ---------------
-        $('.section-title').materialnote({
-            onPaste: function(e){
-                Meteor.formActions.removePastedStyle(e);
-            },
-            toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['undo', ['undo', 'redo', 'help']],
-                ['misc', ['codeview']]
-            ]
-        });
-        // Section content
-        // ---------------
-        $('.section-content').materialnote({
-            onPaste: function(e){
-                Meteor.formActions.removePastedStyle(e);
-            },
-            toolbar: [
-                ['style', ['style', 'bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['undo', ['undo', 'redo', 'help']],
-                ['misc', ['codeview','link']],
-                ['para', ['ul', 'ol', 'paragraph', 'leftButton', 'centerButton', 'rightButton', 'justifyButton', 'outdentButton', 'indentButton']]
-            ]
-        });
-    },
-    formGetData: function(e){
-        // console.log('..formGetData forAuthors');
-        e.preventDefault();
-        var forDb = Meteor.adminShared.formGetData();
-
-        // TODO: Validation
-        // console.log(forDb);
-        // Check if section exists via Mongo ID hidden input
-        mongoId = $('#section-mongo-id').val();
-        if(!mongoId){
-            // Insert
-            success = about.insert(forDb);
-            // Update sorters collection
-            Meteor.call('sorterAddItem', 'about', success);
-        }else{
-            // Update
-            success = about.update({_id : mongoId} , {$set: forDb});
-        }
-        if(success){
-            // Meteor.formActions.success(); // Do not show modal. Problem when changing session variable to hide template, doesn't remove modal overlay
-            Session.set('showAboutForm',false);
-            Session.set('aboutSectionId',null);
-        }
-    }
-}
 
 Meteor.adminSections = {
     formGetData: function(e){
@@ -502,25 +476,17 @@ Meteor.adminSections = {
 
             forDb.dash_name = forDb.name.toLowerCase().replace(/\s/g,'-').replace(':','');
 
-            // TODO: Check if section name already exists
-            // console.log(forDb);
             // Check if section exists via Mongo ID hidden input
             mongoId = $('#section-mongo-id').val();
-            // console.log(forDb);
-            // console.log(mongoId);
             if(!mongoId){
                 // Insert
                 success = sections.insert(forDb);
-                // Update sorters collection
-                // Meteor.call('sorterAddArticle', 'sections', success);
             }else{
                 // Update
                 success = sections.update({_id : mongoId} , {$set: forDb});
             }
             if(success){
                 Meteor.formActions.success();
-                // Session.set('showAboutForm',false);
-                // Session.set('aboutSectionId',null);
             }
         }
     }
@@ -550,9 +516,9 @@ Meteor.adminUser = {
 
         // Name
         user.name = {};
-        user.name.first = Meteor.general.cleanString($('#name_first').val());
-        user.name.middle = Meteor.general.cleanString($('#name_middle').val());
-        user.name.last = Meteor.general.cleanString($('#name_last').val());
+        user.name.first = Meteor.clean.cleanString($('#name_first').val());
+        user.name.middle = Meteor.clean.cleanString($('#name_middle').val());
+        user.name.last = Meteor.clean.cleanString($('#name_last').val());
         for(var name_part in user.name){
             if(user.name[name_part] === ''){
                 delete user.name[name_part];
@@ -580,7 +546,7 @@ Meteor.dataSubmissions = {
     getArticles: function(queryType,queryParams){
         // console.log('... getArticles = ' + queryType + ' / ' + queryParams);
         Meteor.dataSubmissions.processing();
-        var articleSub = Meteor.subscribe('submission-set',queryType,queryParams);
+        var articleSub = Meteor.subscribe('submissionSet',queryType,queryParams);
     },
     processing: function(){
         $('.saving').removeClass('hide');
@@ -611,7 +577,6 @@ Meteor.dataSubmissions = {
     }
 }
 
-// TODO? Move this to server only
 Meteor.validate = {
     email: function(email){
         //http://stackoverflow.com/questions/46155/validate-email-address-in-javascript

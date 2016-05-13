@@ -6,6 +6,68 @@ Template.Admin.events({
     }
 });
 
+// Dashboard
+// ---------------
+Template.ArticleDatesCsvForm.events({
+    'submit form': function(e){
+        e.preventDefault();
+        Meteor.formActions.processing();
+
+        var piiList,
+            cleanedPii;
+
+        piiList = $('#articles-pii').val();
+        piiList = piiList.split(',');
+
+        if(piiList && piiList.length > 0){
+            cleanedPii = piiList.map(function(pii){
+                return Meteor.clean.removeSpaces(pii);
+            });
+
+            Session.set('processing-pii',cleanedPii);
+
+            Router.go('csvArticleDates', {pii : cleanedPii});
+
+            Meteor.formActions.closeModal();
+
+            Session.set('processing-pii',null);
+
+        }else{
+            Meteor.formActions.errorMessage('Please enter comma separted list of PII');
+        }
+    }
+});
+Template.ArticleLegacyUpdateForm.events({
+    'submit form': function(e){
+        e.preventDefault();
+        Meteor.formActions.processing();
+
+        var piiList,
+            cleanedPii;
+
+        piiList = $('#articles-to-update').val();
+        piiList = piiList.split(',');
+
+        if(piiList && piiList.length > 0){
+            cleanedPii = piiList.map(function(pii){
+                return Meteor.clean.removeSpaces(pii);
+            });
+
+            Meteor.call('updateArticlesViaLegacy',cleanedPii,function(error,result){
+                if(error){
+                    console.error('updateDatesViaLegacy',error);
+                    Meteor.formActions.errorMessage('Could not update articles');
+                }else if(result){
+                    Meteor.formActions.successMessage('Articles Updated:<br>' + result.length + ' Articles <br>PII: '+ result.toString());
+                }
+            });
+
+        }else{
+            Meteor.formActions.errorMessage('Please enter comma separted list of PII');
+        }
+    }
+});
+
 // Site Control
 // ----------------
 Template.AdminSiteControl.events({

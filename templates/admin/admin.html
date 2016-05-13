@@ -31,7 +31,7 @@
 
 
 <template name="AdminHeader">
-    <div class="row card-header">
+    <div class="row">
         <div class="col s12">
             <h1 class="admin-header">{{header}}{{#if header_extra}} {{header_extra}}{{/if}}</h1>
         </div>
@@ -68,15 +68,19 @@
                     <a class="collapsible-header waves-effect waves-teal">Papers</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminArticlesDashboard'}}"><i class="material-icons">&#xE871;</i> Dashboard</a></li>
-                            <li><a href="{{pathFor 'AdminArticlesList'}}"><i class="material-icons">&#xE8EF;</i> All</a></li>
+                            <li><a href="{{pathFor 'AdminArticlesDashboard'}}">{{>AdminDashboardIcon}} Dashboard</a></li>
+                            <li><a href="{{pathFor 'AdminArticlesList'}}">{{>AdminListIcon}} All</a></li>
                             {{#if isInRole 'edit,super-admin' 'article'}}
-                            <li><a href="{{pathFor 'AdminUploadArticleXml'}}"><i class="material-icons">&#xE2C6;</i> Upload AOP XML</a></li>
-                            <li><a href="{{pathFor 'AdminArticleAdd'}}"><i class="material-icons">&#xE147;</i> Add Article</a></li>
+                            <li><a href="{{pathFor 'AdminUploadArticleXml'}}">{{>AdminUploadIcon}} Upload AOP XML</a></li>
+                            <li><a href="{{pathFor 'AdminArticleAdd'}}">{{>AdminAddIcon}} Add Article</a></li>
                             {{/if}}
                             <li><a href="{{pathFor 'AdminAop'}}"><i class="material-icons">&#xE885;</i> AOP</a></li>
                             <li><a href="{{pathFor 'AdminAdvanceArticles'}}"><i class="material-icons">&#xE031;</i> Advance (OJS)</a></li>
                             <li><a href="{{pathFor 'AdminArticlesAudit'}}"><i class="material-icons">&#xE14D;</i> Audit</a></li>
+                            {{#if isInRole 'super-admin'}}
+                            <li><a href="{{pathFor 'AdminArticleTypes'}}">Article Types</a></li>
+                            <li><a href="{{pathFor 'AdminAuthors'}}">{{>AdminPersonIcon}} Authors</a></li>
+                            {{/if}}
                         </ul>
                     </div>
                 </li>
@@ -88,8 +92,8 @@
                     <a class="collapsible-header waves-effect waves-teal">Issues</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminArchive'}}"><i class="material-icons">&#xE8EF;</i> Archive</a></li>
-                            <li><a href="{{pathFor 'AdminAddIssue'}}"><i class="material-icons">&#xE147;</i> Add Issue</a></li>
+                            <li><a href="{{pathFor 'AdminArchive'}}">{{>AdminListIcon}} Archive</a></li>
+                            <li><a href="{{pathFor 'AdminAddIssue'}}">{{>AdminAddIcon}} Add Issue</a></li>
                         </ul>
                     </div>
                 </li>
@@ -101,8 +105,8 @@
                     <a class="collapsible-header waves-effect waves-teal">Sections</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminSectionsAdd'}}"><i class="material-icons">&#xE147;</i> Add Section</a></li>
-                            <li><a href="{{pathFor 'AdminSections'}}"><i class="material-icons">&#xE8EF;</i> All</a></li>
+                            <li><a href="{{pathFor 'AdminSectionsAdd'}}">{{>AdminAddIcon}} Add Section</a></li>
+                            <li><a href="{{pathFor 'AdminSections'}}">{{>AdminListIcon}} All</a></li>
                         </ul>
                     </div>
                 </li>
@@ -144,8 +148,8 @@
                     <a class="collapsible-header waves-effect waves-teal">Users</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminUsers'}}"><i class="material-icons">&#xE8EF;</i> All</a></li>
-                            <li><a href="{{pathFor 'AdminAddUser'}}"><i class="material-icons">&#xE147;</i> Add User</a></li>
+                            <li><a href="{{pathFor 'AdminUsers'}}">{{>AdminListIcon}} All</a></li>
+                            <li><a href="{{pathFor 'AdminAddUser'}}">{{>AdminAddIcon}} Add User</a></li>
                         </ul>
                     </div>
                 </li>
@@ -157,7 +161,7 @@
                     <a class="collapsible-header waves-effect waves-teal">Institutions</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{pathFor 'AdminInstitution'}}"><i class="material-icons">&#xE8EF;</i> All</a></li>
+                            <li><a href="{{pathFor 'AdminInstitution'}}">{{>AdminListIcon}} All</a></li>
                             <li><a href="{{pathFor 'AdminRecommendations'}}"><i class="material-icons">&#xE153;</i> Recommendations</a></li>
                         </ul>
                     </div>

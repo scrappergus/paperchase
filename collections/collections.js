@@ -21,8 +21,6 @@ sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
     var order = f.order;
-    // console.log(order);
-    // TODO: collection name as variable?? can we consolidate this code to not use else if? we are using pretty much the same logic to order collections
     if(f.name == 'advance'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
@@ -441,6 +439,7 @@ if (Meteor.isServer) {
         return sorters.find();
     });
     Meteor.publish('sortedList', function(listName) {
+        check(listName, String);
         return sorters.find({'name' : listName});
     });
     Meteor.publish('contact', function() {
@@ -456,13 +455,14 @@ if (Meteor.isServer) {
     Meteor.publish('issues', function () {
         return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
     });
-    Meteor.publish('issue', function (volume,issue) {
-        return issues.find({volume: parseInt(volume), issue_linkable: issue});
-    });
-    Meteor.publish('issueArticles', function (volume,issue) {
-        var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
-        return articles.find({issue_id : issueinfo['_id']});
-    });
+    // Meteor.publish('issue', function (volume,issue) {
+    //     check(issue, String);
+    //     return issues.find({volume: parseInt(volume), issue_linkable: issue});
+    // });
+    // Meteor.publish('issueArticles', function (volume,issue) {
+    //     var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
+    //     return articles.find({issue_id : issueinfo['_id']});
+    // });
     Meteor.publish('currentIssue',function(){
         return issues.find({current: true});
     });
@@ -528,6 +528,8 @@ if (Meteor.isServer) {
 
     Meteor.publish('articleIssue',function(articleMongoId){
         // console.log('articleMongoId', articleMongoId);
+        // for getting issue information for article
+        check(articleMongoId, String);
         var articleInfo = articles.findOne({_id : articleMongoId});
         var issueInfo;
         if(articleInfo && articleInfo.issue_id){
@@ -547,6 +549,7 @@ if (Meteor.isServer) {
         return articles.find({},{sort : {volume:-1,issue:-1}});
     });
     Meteor.publish('articleInfo', function(id) {
+        check(id, String);
         var article = articles.findOne({'_id':id},{});
         // URL is based on Mongo ID. But a user could put PII instead, if so send PII info to redirect
         if(article){
@@ -557,12 +560,15 @@ if (Meteor.isServer) {
           return [];
         }
     });
-    Meteor.publish('submission-set', function (queryType, queryParams) {
+    Meteor.publish('articlesWithoutDates', function(){
+        return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
+    });
+    Meteor.publish('submissionSet', function (queryType, queryParams) {
         var articlesList;
         if(queryType === 'issue'){
-          articlesList = articles.find({'issue_id': queryParams});
+          articlesList = articles.find({issue_id: queryParams});
         }else if(queryType === 'pii'){
-          articlesList = articles.find({'_id':{'$in':queryParams}});
+          articlesList = articles.find({_id:{'$in':queryParams}});
         }
 
         // if a user wants to change the submissions list and start over,
@@ -570,7 +576,6 @@ if (Meteor.isServer) {
 
         return articlesList;
     });
-    /*TODO: RECENT define. By pub date?*/
     Meteor.publish('articlesRecentFive', function () {
         return articles.find({},{sort:{'_id':1},limit : 5});
     });
@@ -610,14 +615,16 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('userData', function(id){
+        check(id, String);
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return Meteor.users.find({'_id':id});
+            return Meteor.users.find({_id:id});
         }else{
             this.stop();
             return;
         }
     });
     Meteor.publish('currentUser', function(id){
+        check(id, String);
         if(!this.userId) return;
         return Meteor.users.find(this.userId, {fields: {
           name_first: 1,
@@ -639,8 +646,9 @@ if (Meteor.isServer) {
         }
     });
     Meteor.publish('institution', function(id){
+        check(id, String);
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return institutions.find({"_id":id});
+            return institutions.find({_id:id});
         }else{
             this.stop();
             return;
@@ -669,6 +677,7 @@ if (Meteor.isServer) {
         return edboard.find({'role': {'$in': ['Founding Editorial Board']}});
     });
     Meteor.publish('edBoardMember', function (mongoId) {
+        check(mongoId, String);
         return edboard.find({_id: mongoId});
     });
 
@@ -703,6 +712,7 @@ if (Meteor.isServer) {
 
     });
     Meteor.publish('authorData', function(mongoId){
+        check(mongoId, String);
         if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
             return authors.find({'_id':mongoId})
         }else{
@@ -717,6 +727,7 @@ if (Meteor.isServer) {
         return recommendations.find({});
     });
     Meteor.publish('recommendationData',function(mongoId){
+        check(mongoId, String);
         if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
             return  recommendations.find({'_id':mongoId})
         }else{
@@ -734,6 +745,7 @@ if (Meteor.isServer) {
         return newsList.find({display: true});
     });
     Meteor.publish('newsItem', function(mongoId){
+        check(mongoId, String);
         return newsList.find({_id:mongoId});
     });
 
@@ -752,13 +764,16 @@ if (Meteor.isServer) {
         return sections.find({display: true});
     });
     Meteor.publish('sectionPapers', function(sectionMongoId){
+        check(sectionMongoId, String);
         // For admin pages
         return articles.find({'section' : sectionMongoId});
     });
     Meteor.publish('sectionById', function(mongoId){
+        check(mongoId, String);
         return sections.findOne({_id : mongoId})
     });
     Meteor.publish('sectionPapersByDashName', function(dashName){
+        check(dashName, String);
         // console.log('..sectionPapersByDashName' +  dashName);
         var section = sections.findOne({'dash_name' : dashName})
         return articles.find({'section' : section._id});
@@ -773,7 +788,7 @@ if (Meteor.isServer) {
 
     // Search
     // ----------------
-    Meteor.publish("search", function(searchValue) {
+    Meteor.publish('search', function(searchValue) {
         if (!searchValue) {
             return articles.find({});
         }
@@ -799,7 +814,6 @@ if (Meteor.isServer) {
 
 // SUBSCRIBE
 if (Meteor.isClient) {
-    //TODO: remove global subscribe to collections
     // Meteor.subscribe('volumes');
     //  Meteor.subscribe('issues');
     Meteor.subscribe('ipranges');

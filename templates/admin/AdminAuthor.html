@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col s12">
-            <div class="card">
+            <div class="card z-depth-0">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
@@ -18,22 +18,30 @@
                     <div class="row">
                         <div class="col s12">
                             <h4>Affiliations</h4>
+                            {{#if affiliations}}
                             <ul>
                                 {{#each affiliations}}
                                 <li>{{.}}</li>
                                 {{/each}}
                             </ul>
+                            {{else}}
+                            No known affiliations.
+                            {{/if}}
                         </div>
                     </div>
                     {{/if}}
                     <div class="row">
                         <div class="col s12">
                             <h4>Articles</h4>
+                            {{#if articles}}
                             <ul class="collection">
                                 {{#each articles}}
                                 <li class="collection-item"><h5>{{{title}}}</h5><p><a href="{{pathFor 'adminArticle'}}">View</a></p></li>
                                 {{/each}}
                             </ul>
+                            {{else}}
+                            No articles associated with author.
+                            {{/if}}
                         </div>
                     </div>
                 </div>

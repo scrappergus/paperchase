@@ -1,5 +1,16 @@
 // ADMIN HELPERS
 
+Template.AdminDashboard.helpers({
+    processingPii: function(){
+        return Session.get('processing-pii');
+    },
+    journal: function(){
+        if(Session.get('journal')){
+            return Session.get('journal').journal;
+        }
+    }
+});
+
 Template.AdminNav.helpers({
     mainColor: function(){
         var journalSettings = journalConfig.findOne();
@@ -204,6 +215,14 @@ Template.AdminArticleFilesUploader.helpers({
 Template.AdminArticleXmlVerify.helpers({
     article : function(){
         return Session.get('article-form');
+    }
+});
+Template.s3ArticleFilesUpload.helpers({
+    files: function(){
+        return S3.collection.find();
+    },
+    verify: function(){
+        return Session.get('xml-verify');
     }
 });
 Template.AdminArticle.helpers({
@@ -508,7 +527,7 @@ Template.AdminAuthors.helpers({
                     label: '',
                     sortable: false,
                     fn: function(value){
-                        return new Spacebars.SafeString('<a class="btn" href="/admin/author/' + value + '">Profile</a>');
+                        return new Spacebars.SafeString('<a class="btn btn-sm" href="/admin/author/' + value + '">Profile</a>');
                     }
                 }
             ]
@@ -536,6 +555,9 @@ Template.AdminForAuthorsForm.helpers({
 // About
 // ---------------
 Template.AdminAbout.helpers({
+    'sections' : function(){
+        return Session.get('adminAboutSections');
+    },
     'showAboutForm' : function(){
         return Session.get('showAboutForm');
     }

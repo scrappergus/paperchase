@@ -1,6 +1,6 @@
 Meteor.articleFiles = {
     verifyXml: function(articleMongoId,files){
-        // console.log('..verifyXml',articleMongoId,files);
+        // console.log('..verifyXml');
         var s3Folder = 'xml';
         var file = files[0];
         var reader = new FileReader;
@@ -63,7 +63,8 @@ Meteor.articleFiles = {
         reader.readAsText(file);
     },
     uploadArticleFile: function(articleMongoId,s3Folder,files){
-        // console.log('uploadArticleFile',s3Folder);
+        // console.log('uploadArticleFile',articleMongoId,s3Folder);
+        // after XML has been verified by user, upload to s3
         var file = files[0];
         var fileNameId = file.name.replace('.xml','').replace('.pdf','');
         var messageForXml = '';
@@ -72,15 +73,16 @@ Meteor.articleFiles = {
                 console.error('Upload File Error', error);
                 Meteor.formActions.errorMessage('File not uploaded');
             }else if(res){
-                // TODO: only rename if filename not MongoID
                 Meteor.call('renameArticleAsset', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
                     if(error){
-
+                        console.error('renameArticleAsset',error);
                     }else if(newFileName){
                         var updateAssetObj = {}
                         updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
                         Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
-                            if(result){
+                            if(error){
+                                console.error('updateArticle',error);
+                            }else if(result){
                                 // clear files
                                 S3.collection.remove({});
 
@@ -117,7 +119,6 @@ Meteor.articleFiles = {
         });
     },
     figuresById: function(figures){
-        // TODO:remove this and use filesById
         var figsById = {};
 
         figures.forEach(function(fig){
@@ -168,7 +169,7 @@ Meteor.processXml = {
             abstract = abstract.replace(/<\/p>/g,'');
             abstract = abstract.replace(/<p>/g,'');
             abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
-            abstract = Meteor.general.cleanString(abstract);
+            abstract = Meteor.clean.cleanString(abstract);
         }
         return abstract;
     }

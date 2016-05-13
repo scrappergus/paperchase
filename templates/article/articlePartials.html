@@ -128,6 +128,12 @@
             {{> ArticleKeywords}}
         {{/if}}
 
+        {{#with files}}
+        {{#if supplemental}}
+            {{> ArticleSupplemental}}
+        {{/if}}
+        {{/with}}
+
         {{#if fullText}}
             {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
         {{/if}}
@@ -150,6 +156,18 @@
                 <a class="keyword tag">{{{.}}}</a>
             {{/each}}
         </div>
+    </div>
+</template>
+
+<template name="ArticleSupplemental">
+    <div class="card sidebar-card">
+        <h6 class="card-title">Supplemental Files</h6>
+        <ul>
+            {{#each supplemental}}
+                <!-- this is broken -->
+                {{#if label}}<li><a href="https://s3-us-west-1.amazonaws.com/paperchase-aging/supplemental_materials/{{articleId .}}_{{id}}.tif" class="supplemental"><span class="icon icon-download"></span> {{label}}</a></li>{{/if}}
+            {{/each}}
+        </ul>
     </div>
 </template>
 

@@ -34,11 +34,16 @@ if (Meteor.isClient) {
     Router.onBeforeAction(function() {
         // Site Settings
         // ------------------------
-        Meteor.subscribe('sectionsVisible');
-        Meteor.subscribe('sortedList','sections');
         Meteor.subscribe('journalConfig', function(){
             Session.set('journal', journalConfig.findOne());
         });
+
+        Meteor.call('getListWithData', 'sections', function(error,result){
+            if(result){
+                Session.set('sectionNav',result);
+            }
+        });
+
         this.next();
     });
 }
@@ -377,7 +382,7 @@ if (Meteor.isClient) {
     Session.setDefault('preprocess-article',false);
     Session.setDefault('issue',null);
     // for side navigation
-    Session.setDefault('section-nav',null);
+    Session.setDefault('sectionNav',null);
     // for section papers list
     Session.setDefault('article-list',null);
     // for archive.

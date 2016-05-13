@@ -114,6 +114,7 @@ Template.AdminDataSubmissionsPast.onRendered(function () {
 // Editorial Board
 // ---------------
 Template.AdminEditorialBoardForm.onRendered(function () {
+    Meteor.formActions.closeModal();
     Meteor.adminEdBoard.readyForm();
 });
 
