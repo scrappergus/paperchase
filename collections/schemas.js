@@ -26,6 +26,7 @@ articles.schema = new SimpleSchema({
     'authors.$.name_first': {type: String, optional: true, label: 'First name'},
     'authors.$.name_middle': {type: String, optional: true, label: 'Middle name'},
     'authors.$.name_last': {type: String, optional: true, label: 'Last name'},
+    'authors.$.affiliations_numbers': {type: [Number], optional: true},
     correspondence: {type: [Object], optional: true},
     'correspondence.$.email': {type: String, optional: true},
     'correspondence.$.text': {type: String, optional: true},
