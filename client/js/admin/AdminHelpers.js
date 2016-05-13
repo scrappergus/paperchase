@@ -217,6 +217,14 @@ Template.AdminArticleXmlVerify.helpers({
         return Session.get('article-form');
     }
 });
+Template.s3ArticleFilesUpload.helpers({
+    files: function(){
+        return S3.collection.find();
+    },
+    verify: function(){
+        return Session.get('xml-verify');
+    }
+});
 Template.AdminArticle.helpers({
     article : function(){
         return Session.get('article');

@@ -10,29 +10,34 @@ Meteor.authorizeCheck = {
 // All of these methods are for admin article
 Meteor.methods({
     articleChecksBeforeDbUpdate: function(articleData){
+        // console.log('articleChecksBeforeDbUpdate');
         var fut = new future();
 
         var articleAuthors,
             articleAffiliations;
 
-        // Authors Check
-        // -------------------
         if(articleData.authors){
-            articleAuthors = articleData.authors;
-        }
-        if(articleData.affiliations){
-            articleAffiliations = articleData.affiliations;
-        }
-
-        Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
-            if(error){
-                console.error('articleAuthorsCheck',error);
-                fut.throw(error);
-            }else if(authorsChecked){
-                articleData.authors = authorsChecked;
-                fut.return(articleData);
+            // Authors Check
+            // -------------------
+            if(articleData.authors){
+                articleAuthors = articleData.authors;
             }
-        });
+            if(articleData.affiliations){
+                articleAffiliations = articleData.affiliations;
+            }
+
+            Meteor.call('articleAuthorsCheck',articleAuthors, articleAffiliations, function(error,authorsChecked){
+                if(error){
+                    console.error('articleAuthorsCheck',error);
+                    fut.throw(error);
+                }else if(authorsChecked){
+                    articleData.authors = authorsChecked;
+                    fut.return(articleData);
+                }
+            });
+        }else{
+            fut.return(articleData);
+        }
 
         try {
             return fut.wait();
@@ -56,12 +61,8 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
-        // console.log('updateArticle',articleData);
+        // console.log('updateArticle',mongoId,articleData);
         // whether adding or editing an article, both will go through this method
-
-        articles.schema.validate(articleData);
-
-        Meteor.authorizeCheck.articles();
 
         var fut = new future();
 
@@ -495,6 +496,8 @@ Meteor.methods({
         // console.log('--validateArticle',mongoId);
         var validated;
         var result = {};
+
+        articles.schema.validate(articleData);
 
         try{
             Meteor.call('articleExistenceCheck',mongoId, articleData);
