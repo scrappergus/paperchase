@@ -15,16 +15,39 @@
                     <span class="card-title">Files</span>
                     <div class="row">
                         <div class="col s12">
-                            {{#if files.xml}}
-                            {{#with files}}<a class="btn" href="{{xml.url}}" target="_BLANK">{{>AdminDownloadIcon}} XML</a>{{/with}}
-                            {{else}}
-                            <a class="btn disabled">No XML</a>
-                            {{/if}}
-                            {{#if files.pdf}}
-                            {{#with files}}<a class="btn" href="{{pdf.url}}" target="_BLANK">{{>AdminDownloadIcon}} PDF</a>{{/with}}
-                            {{else}}
 
-                            <a class="btn disabled">No PDF</a>
+                            {{#if files.xml}}
+                                {{#with files}}
+
+                                    {{#with xml}}
+                                        {{#if url}}
+                                            <a class="btn" href="{{url}}" target="_BLANK">{{>AdminDownloadIcon}} XML</a>
+                                            {{else}}
+                                            <a class="btn disabled">No XML</a>
+                                        {{/if}}
+                                    {{/with}}
+
+                                {{/with}}
+
+                                {{else}}
+                                <a class="btn disabled">No XML</a>
+                            {{/if}}
+
+                            {{#if files.pdf}}
+                                {{#with files}}
+
+                                    {{#with pdf}}
+                                        {{#if url}}
+                                            <a class="btn" href="{{url}}" target="_BLANK">{{>AdminDownloadIcon}} PDF</a>
+                                            {{else}}
+                                            <a class="btn disabled">No PDF</a>
+                                        {{/if}}
+                                    {{/with}}
+
+                                {{/with}}
+
+                                {{else}}
+                                <a class="btn disabled">No PDF</a>
                             {{/if}}
                         </div>
                     </div>
