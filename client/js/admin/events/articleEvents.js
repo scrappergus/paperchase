@@ -110,13 +110,24 @@ Template.AdminArticleFiles.events({
         var articleMongoId = $('#article-mongo-id').val();
 
         var fileSettings = Session.get('article').files;
+
+        var pdfFile,
+            xmlFile;
+
+        if(fileSettings.pdf && fileSettings.pdf.file){
+            pdfFile = fileSettings.pdf.file;
+        }
+        if(fileSettings.xml && fileSettings.xml.file){
+            xmlFile = fileSettings.xml.file;
+        }
+
         var updateObj = {
             pdf: {
-                file : fileSettings.pdf.file,
+                file : pdfFile,
                 display: false
             },
             xml: {
-                file : fileSettings.xml.file,
+                file : xmlFile,
                 display: false
             }
         }
