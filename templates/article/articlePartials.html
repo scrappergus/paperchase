@@ -184,7 +184,7 @@
 
 <template name="ArticleButtons">
     <div class="article-links">
-        {{#if abstract}}<a class="small secondary button {{isActiveRoute 'Article'}} {{#if isActiveRoute 'Article'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'Article'}}">Abstract</a>{{/if}}
+        {{#if abstract}}<a class="small secondary button {{isActiveRoute 'Article'}} {{#if isActiveRoute 'Article'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'Article'}}">View Abstract</a>{{/if}}
         {{#if isSubscribed}}
             {{#with files}}
 

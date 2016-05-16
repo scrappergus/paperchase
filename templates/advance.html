@@ -2,22 +2,20 @@
 	{{> SubscribeModal}}
 
 	<div class="row">
-		<div class="page-content col s12 m8 l8">
+		<div class="page-content col s12 m12 l8">
 			<h2 class="h1">Advance Online Publications</h2>
 
-			<ul>
-				{{#each advance}}
-				<li class="collection-item">
-					{{#if section_start}} <h4>{{section_name}}</h4> {{/if}}
-					<h5>{{{title}}}</h5>
-					<p>{{>AuthorsList}}</p>
-					<p><a class="blue-grey darken-1 btn waves-effect waves-light" href="{{pathFor 'Article' _id=_id}}">Abstract</a>
-						{{>ArticleButtons article=article}}
-					</p>
-				</li>
-				<div class="divider"></div>
-				{{/each}}
-			</ul>
+			{{#each advance}}
+				{{#if section_start}} <h4 id="{{#with pluralize section_name}}{{convertToID this}}{{/with}}" class="blue-divider">{{pluralize section_name}}</h4> {{/if}}
+
+				<div class="toc-info">
+                    <h2 class="title">{{{title}}}</h2>
+                    {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
+
+                    <a class="small secondary button" style="margin-top: 15px;" href="{{pathFor 'Article' _id=_id}}">View Abstract</a>
+                    {{>ArticleButtons article=article}}           
+                </div>
+			{{/each}}
 		</div>
 	</div>
 </template>
