@@ -1,6 +1,42 @@
 // Articles
 // ----------------
 Template.AdminArticlesDashboard.events({
+    'click .crawl-content': function (e) {
+        e.preventDefault();
+        var pii = e.dataset.pii;
+        Meteor.call('crawlXmlAndPdfByPii', pii, function (err, res) {
+            if ( err) {
+                console.error('ERROR: calling crawler', error);
+                return Meteor.formActions.error();
+            }
+            Meteor.formActions.successMessage('crawled article ' + pii);
+        });
+    },
+
+    'click .crawl-figures': function (e) {
+        e.preventDefault();
+        var pii = e.dataset.pii;
+        Meteor.call('crawlFiguresByPii', pii, function (err, res) {
+            if ( err) {
+                console.error('ERROR: calling crawler', error);
+                return Meteor.formActions.error();
+            }
+            Meteor.formActions.successMessage('crawled article ' + pii);
+        });
+    },
+
+    'click .crawl-supplements': function (e) {
+        e.preventDefault();
+        var pii = e.dataset.pii;
+        Meteor.call('crawlSuplementsByPii', pii, function (err, res) {
+            if ( err) {
+                console.error('ERROR: calling crawler', error);
+                return Meteor.formActions.error();
+            }
+            Meteor.formActions.successMessage('crawled article ' + pii);
+        });
+    },
+
     'click #doi-register-check': function(e){
         e.preventDefault();
         Meteor.formActions.processing();
