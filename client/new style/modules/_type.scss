@@ -31,7 +31,7 @@ html, body {
   color: $cello;
 
   &.accented { color: $accent; }
-  &.blue { color: $electric; }
+  &.blue { color: $electric; background: none; }
   &.heavy { font-weight: 700; }
   &.caps { @extend .uppercase-titles; }
   &.clean { margin-top: 0 !important; }
@@ -145,7 +145,7 @@ h3.section-heading {
 
 h3.blue-background {
     @extend .uppercase-titles;
-    background: $electric;
+    background: lighten($electric, 5%);
     color: #fff;
     font-size: 17px;
     padding: 8px 10px;
@@ -173,6 +173,7 @@ h5.supporting {
 p {
   font-size: 17px;
   line-height: 1.4;
+  &.justify { text-align: justify; }
 }
 
 // Tablets
