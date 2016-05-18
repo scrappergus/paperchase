@@ -13,11 +13,11 @@
             </div>
             {{#each eic}}
                 <li class="col s12 m6">
-                    <p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br />
+                    <p><a href="#{{_id}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br />
                     {{address}}</p>
                 </li>
                 {{#if bio}}
-                    {{> bioModal bio=bio firstName=name_first lastName=name_last}}
+                    {{> bioModal bio=bio paperchaseId=_id}}
                 {{/if}}
             {{/each}}
         </ul>
@@ -30,11 +30,11 @@
             </div>
 			{{#each fullBoard}}
   			<li class="col s12 m6">
-  				<p><a href="#{{name_last}}{{name_first}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> {{address}}</p>
+  				<p><a href="#{{_id}}" class="modal-trigger title"><b>{{>PersonName}}</b></a><br /> {{address}}</p>
   			</li>
 
         {{#if bio}}
-          {{> bioModal bio=bio firstName=name_first lastName=name_last}}
+        {{> bioModal bio=bio paperchaseId=_id}}
         {{/if}}
 			{{/each}}
 		</ul>
@@ -42,7 +42,7 @@
 </template>
 
 <template name="bioModal">
-  <div id="{{lastName}}{{firstName}}" class="modal">
+    <div id="{{paperchaseId}}" class="modal">
     <div class="modal-content">
         <p class="bio">{{{bio}}}</p>
     </div>
