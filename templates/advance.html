@@ -6,6 +6,7 @@
 			<h2 class="h1">Advance Online Publications</h2>
 
 			{{#each advance}}
+        <!-- i'm not sure how to get the section titles? -->
 				{{#if section_start}} <h4 id="{{#with pluralize section_name}}{{convertToID this}}{{/with}}" class="blue-divider">{{pluralize section_name}}</h4> {{/if}}
 
 				<div class="toc-info">

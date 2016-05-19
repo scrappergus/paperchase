@@ -206,7 +206,9 @@ h2.authors {
     h3.article-header-1,
     h3#references {
         @extend h3.blue-background;
-        margin: 60px 0 0;
+        text-transform: capitalize !important;
+        margin: 70px 0 20px;
+        &:first-child { margin-top: 40px; }
 
         &#abstract {
             margin-top: 20px;
@@ -243,6 +245,11 @@ h2.authors {
             bottom: 138px;
         }
     }
+}
+
+.article-table {
+    td { padding: 5px; }
+    td p { margin: 0; }
 }
 
 /** Search Page

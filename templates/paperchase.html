@@ -1,13 +1,13 @@
 <template name="Home">
     <div class="row">
         <div class="page-content col s12 m7 l8">
-            <p>In 2008 the Ongoing Revolution in aging research has called for a High-Impact Journal. By now Aging journal has become one of the leading journals in the field.</p>
+            <p class="justify">In 2008 the Ongoing Revolution in aging research has called for a High-Impact Journal. By now Aging journal has become one of the leading journals in the field.</p>
 
-            <p><strong>Aging</strong> primarily publishes papers of outstanding significance, exceptional novelty, and ground-breaking discoveries from yeast to humans and from evolution to medicine. <strong>Aging</strong> covers (in addition to traditional topics on aging) others topics including cellular and molecular biology, human age-related diseases, signal transduction pathways (p53, sirtuins, PI-3K/AKT/mTOR and so on) and approaches to modulate these signaling pathways.</p>
+            <p class="justify"><strong>Aging</strong> primarily publishes papers of outstanding significance, exceptional novelty, and ground-breaking discoveries from yeast to humans and from evolution to medicine. <strong>Aging</strong> covers (in addition to traditional topics on aging) others topics including cellular and molecular biology, human age-related diseases, signal transduction pathways (p53, sirtuins, PI-3K/AKT/mTOR and so on) and approaches to modulate these signaling pathways.</p>
 
-            <p><strong>Aging</strong> is indexed by <a href="http://www.ncbi.nlm.nih.gov/pubmed?term=%22aging%20(albany%20ny)%22%20%5Bta%5D" target="_blank">PubMed/Medline</a>, <a href="http://www.ncbi.nlm.nih.gov/pmc/journals/1105/" target="_blank">PubMed Central</a>, <a href="http://isiwebofknowledge.com/" target="_blank">ISI/Thomson</a> and <a href="http://www.info.sciverse.com/scopus/" target="_blank">Scopus</a>.</p>
+            <p class="justify"><strong>Aging</strong> is indexed by <a href="http://www.ncbi.nlm.nih.gov/pubmed?term=%22aging%20(albany%20ny)%22%20%5Bta%5D" target="_blank">PubMed/Medline</a>, <a href="http://www.ncbi.nlm.nih.gov/pmc/journals/1105/" target="_blank">PubMed Central</a>, <a href="http://isiwebofknowledge.com/" target="_blank">ISI/Thomson</a> and <a href="http://www.info.sciverse.com/scopus/" target="_blank">Scopus</a>.</p>
 
-            <p><strong>Aging</strong> is abbreviated by indexes: by PubMed – Aging (Albany NY); by ISI/Thomson – Aging-US; by Scopus – Aging.</p>
+            <p class="justify"><strong>Aging</strong> is abbreviated by indexes: by PubMed – Aging (Albany NY); by ISI/Thomson – Aging-US; by Scopus – Aging.</p>
 
             {{#if news}}
                 {{> LatestNews}}
@@ -88,7 +88,7 @@
             <li class="item">
                 <h4 class="title">{{title}}</h4>
                 <h5 class="meta">{{formatDate date}}</h5>
-                <p>{{{content}}}</p>
+                <p class="justify">{{{content}}}</p>
             </li>
         {{/each}}
     </ul>

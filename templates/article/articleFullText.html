@@ -66,7 +66,7 @@
 <template name="ArticleFullText">
     {{#each sections}}
         <div class="section-container" id="{{#if equals headerLevel 1}}{{convertToID title}}{{/if}}">
-            <h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}} {{/if}} {{{title}}}</h3>
+            <h3 class="article-header-{{headerLevel}}">{{#if label}} {{label}}} {{/if}} {{titleCase title}}</h3>
             {{#each content}}
                 {{#if equals contentType 'p'}}
                 <p>{{{content}}}</p>
