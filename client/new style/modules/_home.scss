@@ -151,6 +151,7 @@
         float: left; 
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
+        width: 40%;
     }
     
     .button-list {
@@ -173,9 +174,13 @@
             border: none;
         }
 
-        li span.icon {
+        li span.icon-angle-right {
+            color: $cello;
             font-size: 10px;
             margin-left: 2px;
+            position: relative;
+            top: 0;
+            bottom: 5px !important;
         }
     }
 }
@@ -218,7 +223,7 @@
         ul.button-list li.subtitle { margin-bottom: 5px; }
     }
     .issue-highlight img.cover {
-        height: 100px;
+        width: 40%;
     }
 }
 
@@ -228,7 +233,7 @@
         ul.button-list li.subtitle { margin-bottom: 0; }
     }
     .issue-highlight img.cover {
-        height: 100px;
+        width: 25%;
     }
 }
 
@@ -238,7 +243,7 @@
         ul.button-list li.title { font-size: 17px; }
     }
     .issue-highlight img.cover {
-        height: 100px;
+        width: 28%;
     }
 }
 
@@ -248,6 +253,6 @@
         ul.button-list li.subtitle { margin-bottom: 15px; }
     }
     .issue-highlight img.cover {
-        height: 140px;
+        width: 38%;
     }
 }

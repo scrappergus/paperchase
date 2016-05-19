@@ -31,7 +31,7 @@ html, body {
   color: $cello;
 
   &.accented { color: $accent; }
-  &.blue { color: $electric; background: none; }
+  &.blue-accented { color: $electric; background: none; }
   &.heavy { font-weight: 700; }
   &.caps { @extend .uppercase-titles; }
   &.clean { margin-top: 0 !important; }
