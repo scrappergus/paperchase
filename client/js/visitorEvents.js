@@ -54,7 +54,7 @@ Template.Recommend.events({
     }
 });
 
-// Subscribe
+// Menus
 // -------
 Template.Visitor.events({
     // todo: move this into a separate function
@@ -77,6 +77,9 @@ Template.Visitor.events({
         $('.sidebar-toggle-mobile').addClass('icon-menu');
         // $('.content').toggleClass('no-sidebar');
         $('.sidebar').toggleClass('mobile-show');
+    },
+    'click #mobile-search': function(e){
+        Router.go('Search');
     }
 });
 

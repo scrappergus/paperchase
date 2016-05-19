@@ -4,6 +4,7 @@
 			Navigate
 			<span class="sidebar-toggle icon icon-close"></span>
 		</li>
+    {{> loginButtons }}
 		{{#each links}}
 			{{#if display}}
 			<a href="{{pathFor route_name}}"><li>{{name}}</li></a>

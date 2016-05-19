@@ -127,6 +127,16 @@
         color: #fff;
     }
 
+    span.icon-search {
+        cursor: pointer;
+        float: right;
+        position: relative;
+        right: 8px;
+        top: 13px;
+        color: #fff;
+        font-size: 22px;
+    }
+
     .sidebar-toggle-mobile {
         display: block;
         opacity: 1;
@@ -292,12 +302,27 @@
         &:hover { color: $accent; }
     }
 
-    a li {
+    a li,
+    #login-buttons {
         position: relative;
         padding: 21px 0 18px 40px;
         margin: 0;
         color: #fff;
         @include transition(background .25s ease-out);
+    }
+
+    #login-buttons {
+        width: 100%;
+    }
+
+    #login-buttons .login-link-and-dropdown-list {
+        display: block;
+    }
+
+    #login-buttons a {
+        display: block !important;
+        width: 100%;
+        height: 100%;
     }
 
     a li:after {
@@ -416,6 +441,10 @@ $secondary-subnav-color: darken(#00387A, 1%);
     .main .sidebar ul.nav-links {
         li.title { font-size: 15px; }
         a li { font-size: 15px; }
+    }
+
+    ul.nav-links #login-buttons {
+        display: none;
     }
 
     /*
