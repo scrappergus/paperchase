@@ -248,17 +248,11 @@ Meteor.methods({
         // console.log('-------',JSON.stringify(article.authors));
 
         // New or Edit article? If articleId given and PII found, then editing.
-        // articleByPii = articles.findOne({'ids.pii':articleId});
         if(!articleId){
             article = {}; // For a new article
             article.ids = {};
             // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
         }
-        // else if(!article && !articleByPii){
-        //     article = {}; // Article by PII not found. Then act like this is a new article
-        //     article.ids = {};
-        //     // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
-        // }
 
         if(article){
             // For editing an existing article
