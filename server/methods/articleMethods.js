@@ -232,8 +232,7 @@ Meteor.methods({
             Meteor.call('articleExistenceCheck',articleId, article, function(error,duplicateFound){
                 if(error){
                     console.error('articleExistenceCheck',error);
-                }else if(duplicateFound){
-                    article.duplicate = duplicateFound;
+                    article.duplicate = error.details;
                 }
             });
             // after processing XML
