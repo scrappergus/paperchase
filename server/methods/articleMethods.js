@@ -61,7 +61,7 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
-        // console.log('updateArticle',mongoId,articleData);
+        console.log('updateArticle',mongoId);
         // whether adding or editing an article, both will go through this method
 
         var fut = new future();
@@ -86,7 +86,9 @@ Meteor.methods({
                     });
                 }else if(mongoId){
                     // Update existing
-                    checkedData.batch = batch;
+                    if(batch){
+                        checkedData.batch = batch;
+                    }
                     var updated = articles.update({'_id' : mongoId}, {$set: checkedData});
                     fut.return(mongoId);
                 }

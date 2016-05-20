@@ -89,6 +89,7 @@ Meteor.methods({
                 return authorUpdateObj;
             });
         }else{
+            console.log('articleAuthorsCheck, return none.',authorsList,affiliationsList);
             return [];
         }
     }
