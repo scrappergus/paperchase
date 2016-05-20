@@ -2,6 +2,26 @@
 // -------------
 // Methods for processing PMC Full text XML for Mongo DB
 Meteor.methods({
+    processV3Xml: function(xmlString){
+        // this is full text XML 
+        var fut = new future();
+        Meteor.call('parseXmltoJson',xmlString, function(error,articleJson){
+            if(error){
+                console.error('parseXmltoJson',error);
+            }else if(articleJson){
+                articleJson = articleJson.article;
+                Meteor.call('pmcArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
+                    if(e){
+                        console.error(e);
+                        fut.throw(e);
+                    }else if(r){
+                        fut.return(r);
+                    }
+                });
+            }
+        });
+        return fut.wait();        
+    },
     processPmcXml: function(xmlString){
         // this is full text XML for PMC
         var fut = new future();
@@ -9,7 +29,7 @@ Meteor.methods({
             if(error){
                 console.error('parseXmltoJson',error);
             }else if(articleJson){
-                articleJson = articleJson['pmc-articleset']['article'];
+                articleJson = articleJson['pmc-articleset'].article[0];
                 Meteor.call('pmcArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
                     if(e){
                         console.error(e);
@@ -23,12 +43,13 @@ Meteor.methods({
         return fut.wait();
     },
     pmcArticleToSchema: function(xml,articleJson){
-        // console.log('..articleToSchema',articleJson);
+        // console.log('...articleToSchema', articleJson);
         // Process JSON for meteor templating and mongo db
         // xml is a string. articleJson is parsed XML to JSON. but not in the schema we need.
 
-        var journalMeta = articleJson[0]['front'][0]['journal-meta'][0];
-        var article = articleJson[0]['front'][0]['article-meta'][0];
+        var journalMeta = articleJson.front[0]['journal-meta'][0];
+        var article = articleJson.front[0]['article-meta'][0];
+
 
         var articleProcessed = {};
 
@@ -234,9 +255,9 @@ Meteor.xmlPmc = {
     articleType: function(articleJson,cb){
         // keywords is JSON from XML to get keywords. Need to pass entire JSON and not part because the short name is an attribute on article element
         var article_type = {};
-        var article = articleJson[0]['front'][0]['article-meta'][0];
+        var article = articleJson.front[0]['article-meta'][0];
         article_type.name = article['article-categories'][0]['subj-group'][0]['subject'][0];
-        article_type.short_name =  articleJson[0]['$']['article-type'];
+        article_type.short_name =  articleJson['$']['article-type'];
         if(article_type.short_name){
             article_type.short_name = article_type.short_name.replace('-','_');
         }
