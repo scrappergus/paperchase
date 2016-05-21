@@ -1,10 +1,10 @@
 <template name="Search">
 
 	<div class="row">
-        <div class="page-sidebar col s12 m4 push-m8">
-            {{> AdvancedSearch}}
+        <div class="col s12 m4 hide-on-large-only">
+            {{> AdvancedSearch mobile=true}}
         </div>
-        <div class="search page-content col s12 m8 pull-m4">
+        <div class="search page-content col s12 m8">
 
     		{{#if searchResults}}
             <h4 class="blue-divider">Search Results</h4>
@@ -43,12 +43,16 @@
                 <p>To search the journal, enter a term in the search bar. If you'd like to find specific authors, titles, or abstracts, use the advanced search to the right. </p>
     		{{/if}}
         </div>
+
+        <div class="page-sidebar col s12 m4 hide-on-med-and-down">
+            {{> AdvancedSearch mobile=false}}
+        </div>
 	 </div>
 
 </template>
 
 <template name="AdvancedSearch">
-    <div class="card sidebar-card fixed-scroll-card">
+    <div class="card sidebar-card {{#unless mobile}}fixed-scroll-card{{/unless}}">
         <div class="form-container">
             <h6 class="card-title">Advanced Search</h6>
             <form id="search-terms">
