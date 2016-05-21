@@ -11,7 +11,9 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
-                            <h3>{{name_first}} {{name_last}}</h3>
+                            <div><label>First Name:</label> {{name_first}}</div>
+                            <div><label>Middle Name:</label> {{name_middle}}</div>
+                            <div><label>Last Name:</label> {{name_last}}</div>
                         </div>
                     </div>
                     {{#if affiliations}}
@@ -19,9 +21,9 @@
                         <div class="col s12">
                             <h4>Affiliations</h4>
                             {{#if affiliations}}
-                            <ul>
+                            <ul class="collection">
                                 {{#each affiliations}}
-                                <li>{{.}}</li>
+                                <li class="collection-item">{{.}}</li>
                                 {{/each}}
                             </ul>
                             {{else}}

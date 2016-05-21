@@ -89,6 +89,10 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         issue = modifier.$set.issue;
         modifier.$set.issue_id = Meteor.call('articleIssueVolume',volume,issue);
     }
+
+    if(modifier.$set && modifier.$set.authors){
+        console.log('articles.before.update',modifier.$set);
+    }
 });
 
 // Issues

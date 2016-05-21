@@ -20,13 +20,17 @@ Meteor.methods({
         // console.log('xmlDtd',xmlString);
         // TODO: use regex for dtd
         var aopSearchPattern = '<!DOCTYPE ArticleSet PUBLIC "-\/\/NLM\/\/DTD PubMed 2.0\/\/EN" "http:\/\/www.ncbi.nlm.nih.gov:80\/entrez\/query\/static\/PubMed.dtd">';
-        var pmcSearchPattern = '<!DOCTYPE pmc-articleset PUBLIC "-\/\/NLM\/\/DTD ARTICLE SET 2.0\/\/EN" "http:\/\/dtd.nlm.nih.gov\/ncbi\/pmc\/articleset\/nlm-articleset-2.0.dtd">'
+        var fullTextV2SearchPattern = '<!DOCTYPE pmc-articleset PUBLIC "-\/\/NLM\/\/DTD ARTICLE SET 2.0\/\/EN" "http:\/\/dtd.nlm.nih.gov\/ncbi\/pmc\/articleset\/nlm-articleset-2.0.dtd">';
+        var fullTextV3SearchPattern = '<!DOCTYPE article PUBLIC "-\/\/NLM\/\/DTD Journal Publishing DTD v3.0 20080202\/\/EN" "journalpublishing3.dtd">'
         var aopRes = xmlString.search(aopSearchPattern);
-        var pmcRes = xmlString.search(pmcSearchPattern);
+        var fullTextV2 = xmlString.search(fullTextV2SearchPattern);
+        var fullTextV3 = xmlString.search(fullTextV3SearchPattern);
         if(aopRes != -1){
             return 'AOP';
-        }else if(pmcRes != -1){
-            return 'PMC';
+        }else if(fullTextV2 != -1){
+            return 'V2';
+        }else if(fullTextV3 != -1){
+            return 'V3';
         }else{
             return false;
         }
@@ -37,8 +41,17 @@ Meteor.methods({
         Meteor.call('xmlDtd',xml, function(error,dtd){
             if(error){
                 console.error('DTD',error);
-            }else if(dtd && dtd === 'PMC'){
+            }else if(dtd && dtd === 'V2'){
                 Meteor.call('processPmcXml',xml, function(error,result){
+                    if(error){
+                        console.error('processPmcXml',error);
+                    }else if(result){
+                        // console.log('processXmlString',result.dates);
+                        fut.return(result);
+                    }
+                });
+            }else if(dtd && dtd === 'V3'){
+                Meteor.call('processV3Xml',xml, function(error,result){
                     if(error){
                         console.error('processPmcXml',error);
                     }else if(result){
@@ -242,6 +255,7 @@ Meteor.xmlDbConflicts = {
         cb(result);
     },
     compareObject: function(parentKey,xmlObj,dbObj,cb){
+        // console.log('compareObject', parentKey, xmlObj, dbObj);
         var result = {};
         result.conflicts = [];
         result.merged = {};// using merged for form data. For ex, for when XML does not have PII but DB does (IDs are an object).

@@ -61,7 +61,7 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
-        // console.log('updateArticle',mongoId,articleData);
+        console.log('updateArticle',mongoId);
         // whether adding or editing an article, both will go through this method
 
         var fut = new future();
@@ -86,7 +86,9 @@ Meteor.methods({
                     });
                 }else if(mongoId){
                     // Update existing
-                    checkedData.batch = batch;
+                    if(batch){
+                        checkedData.batch = batch;
+                    }
                     var updated = articles.update({'_id' : mongoId}, {$set: checkedData});
                     fut.return(mongoId);
                 }
@@ -230,8 +232,7 @@ Meteor.methods({
             Meteor.call('articleExistenceCheck',articleId, article, function(error,duplicateFound){
                 if(error){
                     console.error('articleExistenceCheck',error);
-                }else if(duplicateFound){
-                    article.duplicate = duplicateFound;
+                    article.duplicate = error.details;
                 }
             });
             // after processing XML
@@ -246,17 +247,11 @@ Meteor.methods({
         // console.log('-------',JSON.stringify(article.authors));
 
         // New or Edit article? If articleId given and PII found, then editing.
-        // articleByPii = articles.findOne({'ids.pii':articleId});
         if(!articleId){
             article = {}; // For a new article
             article.ids = {};
             // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
         }
-        // else if(!article && !articleByPii){
-        //     article = {}; // Article by PII not found. Then act like this is a new article
-        //     article.ids = {};
-        //     // article.ids.pii = Meteor.call('getNewPii'); // no longer autofilling PII
-        // }
 
         if(article){
             // For editing an existing article

@@ -124,6 +124,7 @@ Meteor.methods({
             track++;
             // console.log(article, articles[articles]);
             var updateObj = {};
+                updateObj.advance = true; // below the method advanceMoveArticle will pull from sorters, which will then set article advance to false (via sorters upddate collection hook), so for the updateArticle after, reset to advance
             var updateArticle = false;
             if(articles[article] == true){
                 // recent checked
@@ -142,17 +143,16 @@ Meteor.methods({
                 updateObj.section_id = 5;
             }
             if(updateArticle){
-                // console.log('update: ',article,updateObj);
-                Meteor.call('updateArticle',article, updateObj, function(error,result){
+                Meteor.call('advanceMoveArticle', article, updateObj.section_id, function(error,result){
                     if(result){
-                        // now update the order
-                        Meteor.call('advanceMoveArticle', article, updateObj.section_id, function(error,result){
+                        Meteor.call('updateArticle',article, updateObj, function(error,result){
                             if(result){
                                 updated++;
                             }
                         });
                     }
                 });
+
             }
 
             if(track == total){
@@ -182,6 +182,10 @@ Meteor.methods({
     },
     advanceAddArticleToSection: function(mongoId, sectionId){
         // console.log('advanceAddArticleToSection',mongoId, sectionId);
+
+        check(mongoId, String);
+        check(sectionId, Number);
+
         var sorts = sorters.findOne({'name': 'advance'});
         var position = sorts.order.length;
         for(var i=0; i < sorts.order.length; i++) {
