@@ -277,6 +277,12 @@ if (Meteor.isClient) {
         return headers.getClientIP();
     });
     Template.registerHelper('isSubscribed', function() {
+        var journalSettings = journalConfig.findOne();
+        if(journalSettings){
+            if(journalSettings['journal']['access'] == "open") { return true; }
+        }
+
+
         ip = Meteor.ip.dot2num(headers.getClientIP());
 
         var match = ipranges.findOne({
