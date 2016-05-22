@@ -437,7 +437,7 @@ if (Meteor.isClient) {
         },
         data: function(){
             if(this.ready()){
-                var sorted  = sorters.findOne();
+                var sorted  = sorters.findOne({'name':'advance'});
                 return {
                     advance : sorted['articles']
                 }
