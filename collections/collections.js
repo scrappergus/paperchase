@@ -24,15 +24,30 @@ sorters = new Mongo.Collection('sorters', {
     if(f.name == 'advance'){
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
+
+        var last_section;
         for(var i = 0 ; i < order.length ; i++){
             for(var a = 0 ; a < articlesList.length ; a++){
                 if(articlesList[a]['_id'] === order[i]){
-                    var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
-
-                    if(section !== undefined) {
-                        articlesList[a]['section_name'] = section['section_name'];
+                    if(articlesList[a]['section_id']) {
+                        var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
+                        if(section !== undefined) {
+                            articlesList[a]['section_name'] = section['section_name'];
+                        }
+                    }
+                    else if(articlesList[a]['article_type']) {
+                        articlesList[a]['section_name'] = articlesList[a]['article_type']['name'];
                     }
 
+                    if(i==0) {
+                        articlesList[a]['section_start'] = true;
+                    }
+                    else if(last_section != articlesList[a]['section_name']){
+                        articlesList[a]['section_start'] = true;
+                    }
+
+
+                    last_section = articlesList[a]['section_name'];
                     f.articles.push(articlesList[a]);
                 }
             }

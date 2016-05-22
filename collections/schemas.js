@@ -85,6 +85,7 @@ articles.schema = new SimpleSchema({
     page_end: {type: Number, optional: true, label: 'Last page'},
     page_start: {type: Number, optional: true, label: 'First page'},
     publisher: {type: String, optional: true},
+    section: {type: String, optional: true},
     title: {type: String, optional: false},
     volume: {type: Number, optional: true, label: 'Volume'}
 });
