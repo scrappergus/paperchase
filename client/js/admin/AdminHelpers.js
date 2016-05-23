@@ -535,6 +535,24 @@ Template.AdminAuthors.helpers({
     }
 });
 
+
+// Ethics
+// ---------------
+Template.AdminEthics.helpers({
+    'showForm' : function(){
+        return Session.get('showForm');
+    }
+});
+Template.AdminEthicsForm.helpers({
+    'section' : function(){
+        var section = {};
+        if(Session.get('sectionId')){
+            section = ethics.findOne({_id : Session.get('sectionId')});
+        }
+        return section;
+    }
+});
+
 // For Authors
 // ---------------
 Template.AdminForAuthors.helpers({

@@ -146,6 +146,14 @@ edboard.schema = new SimpleSchema({
     name_middle: {type: String, optional: true, label: 'Middle name'},
     name_last: {type: String, optional: false, label: 'Last name'}
 });
+
+// ethics
+ethics.schema = new SimpleSchema({
+    title: {type: String, optional: false},
+    content: {type: String, optional: true},
+    display: {type: Boolean, optional: true}
+});
+
 // for_authors
 forAuthors.schema = new SimpleSchema({
     title: {type: String, optional: false},
