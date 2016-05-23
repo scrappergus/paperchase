@@ -14,7 +14,7 @@ Meteor.methods({
                         // console.log(result);
                     }
                     if(a == parseInt(articlesList.length -1)){
-                        fut['return'](updated + ' DOIs Saved'); //return string in case 0 articles updated. will be false otherwise
+                        fut.return(updated + ' DOIs Saved'); //return string in case 0 articles updated. will be false otherwise
                     }
                 });
             }
@@ -45,16 +45,16 @@ Meteor.methods({
                 }else if(result){
                     // console.log('result',result);
                     // maintain PII when batch updating via XML
-                    var articleInfo = articles.findOne(articlesList[a]['_id']);
+                    var articleInfo = articles.findOne(articlesList[a]._id);
                     if(articleInfo.ids && articleInfo.ids.pii){
                         result.ids.pii = articleInfo.ids.pii;
                     }
                     result.ids = articleInfo.ids;
-                    Meteor.call('updateArticle',articlesList[a]['_id'], result,function(articleUpdateError,articleUpdate){
+                    Meteor.call('updateArticle',articlesList[a]._id, result,function(articleUpdateError,articleUpdate){
                         if(articleUpdateError){
-                            console.error('Could not update article doc: ' + articlesList[a]['_id'], articleUpdateError);
+                            console.error('Could not update article doc: ' + articlesList[a]._id, articleUpdateError);
                         }else{
-                            console.log('  '+articlesList[a]['_id'] + ' Updated');
+                            console.log('  '+articlesList[a]._id + ' Updated');
                         }
                     });
                 }
@@ -74,7 +74,7 @@ Meteor.methods({
                 throw new Meteor.Error(500, 'batchDoiList: Cannot get list of PMID from PubMed based on ISSN' , error);
             }
             if(articleList){
-                fut['return'](true);
+                fut.return(true);
                 // articlesList = pre2015Oncotarget;
                 // PMID list returned. Now check if DOI at PubMed already
                 var prethis2015 = [];
@@ -218,7 +218,7 @@ Meteor.methods({
             }
             if(i == parseInt(articlesList.length - 1)){
                 // console.log('missingFiles',missingFiles);
-                fut['return'](missingFiles);
+                fut.return(missingFiles);
             }
         }
         return fut.wait();
@@ -297,7 +297,7 @@ Meteor.methods({
             if(i == parseInt(articlesList.length - 1)){
                 console.log('csvString',csvString);
                 console.log('missing ',missingCount, '. ok =', okCount,'. blob =', blobCount);
-                fut['return'](csvString);
+                fut.return(csvString);
             }
 
         }
@@ -352,10 +352,10 @@ Meteor.methods({
                             var pubMedArticle = result.data;
                             var updateObj = {};
                             if(!article.ids.pmc && pubMedArticle.ids.pmc){
-                                updateObj['ids.pmc'] = pubMedArticle.ids.pmc;
+                                updateObj.ids.pmc = pubMedArticle.ids.pmc;
                             }
                             if(!article.ids.pmid && pubMedArticle.ids.pmid){
-                                updateObj['ids.pmid']= pubMedArticle.ids.pmid;
+                                updateObj.ids.pmid= pubMedArticle.ids.pmid;
                             }
                             Meteor.call('updateArticle', article._id, updateObj, function(updateError,updateRes){
                                 if(updateError){
@@ -367,7 +367,7 @@ Meteor.methods({
                 }
             });
         }else{
-            fut['return'](true);
+            fut.return(true);
         }
         return fut.wait();
     },
@@ -478,7 +478,7 @@ Meteor.methods({
                         tracker++;
                         if(tracker == totalMissing){
                             var result = totalMissing + ' total articles missing Volume/Issue. ' + totalUpdate + ' Articles were updated.'
-                            fut['return'](result);
+                            fut.return(result);
                         }
                     });
                 }
