@@ -15,11 +15,9 @@
 					{{#if phone}}Phone: {{phone}}<br />{{/if}}
 					{{#if fax}}Fax: 716-508-8254<br />{{/if}}
 				{{/with}}
-				</p>
-
 				<!-- todo: need to add a separate helper for e-fax -->
-				<p>Email: <a href="mailto:editors@impactaging.com">editors@impactaging.com</a><br />
-					 E-Fax: {{general.fax}}</p>
+				Email: <a href="mailto:editors@impactaging.com">editors@impactaging.com</a><br />
+					 e-Fax: {{general.fax}}</p>
 
 				<p>FYI: Editorial Office staff are unable to assist with production, billing and payment queries.</p>
 				<p>Please direct such queries to the appropriate Office as listed below.</p>
@@ -28,10 +26,12 @@
 
 			<h3>Support</h3>
 			{{#with publication_prep}}
-				<p>For questions related to preparation of your article for publication, please contact {{name}}, <!-- {{title}} -->Production Director, <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
+            <p>For general inquiries, please contact <b>{{name}}, <!-- {{title}} -->Production Director</b>, <a href="mailto:{{email_address}}">{{email_address}}</a></p>
 
 				<h3>Production</h3>
-				<p>For questions related to preparation of your article for publication, please email <a href="mailto:{{email_address}}">{{email_address}}</a>.</p>
+                <p>For questions related to preparation of your article for publication, please email <a href="mailto:{{email_address}}">{{email_address}}</a><br />
+                Each issue or paper can be printed for special demand. Please email your printing requests to <a href="mailto:{{email_address}}">{{email_address}}</a></p>
+                
 			{{/with}}
 
 			<h3>Indexes</h3>
@@ -40,8 +40,13 @@
 			<h3>Billing and Invoices</h3>
 			<p>If you have a question about an invoice or have a payment query, please contact the Payment Office:<br />
 			<a href="#">payment@impactaging.com</a><br />
-			Phone: {{general.phone}} (option 3)
+			Phone: {{general.phone}}
 			</p>
+
+            <h3>Publishing Office</h3><p>Aging is published by Impact Journals,LLC<br />
+            To contact the Publishing Office, please email: <a href="mailto:publisher@impactjournals.com">publisher@impactjournals.com</a><br />
+            <a href="http://www.impactjournals.com">www.impactjournals.com</a></p>
+            
 
 		{{/with}}
 	</div>
