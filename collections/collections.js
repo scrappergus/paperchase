@@ -7,6 +7,7 @@ institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 forAuthors = new Mongo.Collection('for_authors');
+ethics = new Mongo.Collection('ethics');
 authors = new Mongo.Collection('authors');
 newsList = new Mongo.Collection('news');
 recommendations = new Mongo.Collection('recommendations');
@@ -54,6 +55,19 @@ sorters = new Mongo.Collection('sorters', {
         }
         
 
+    }else if(f.name == 'ethics'){
+        f.ordered = [];
+        var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+            // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
+                }
+            }
+        }
     }else if(f.name == 'forAuthors'){
         f.ordered = [];
         var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
@@ -67,6 +81,7 @@ sorters = new Mongo.Collection('sorters', {
                 }
             }
         }
+
     }else if(f.name == 'about'){
         // Same exact thing as forAuthors. Look into using collection name as a variable.
         f.ordered = [];
@@ -708,6 +723,16 @@ if (Meteor.isServer) {
     Meteor.publish('aboutPublic', function(){
         return about.find({display:true});
     });
+
+    // Ethics
+    // ------------
+    Meteor.publish('ethics', function(){
+        return ethics.find();
+    });
+    Meteor.publish('ethicsPublic', function(){
+        return ethics.find({display:true});
+    });
+
 
     // For Authors
     // ------------
