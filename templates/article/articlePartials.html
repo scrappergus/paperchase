@@ -76,12 +76,12 @@
 
 
 <template name="ArticleDates">
-    <h2 class="authors">
+    <h2 class="dates">
         {{#each arrayify dates}}
             {{#if equals name 'collection'}}
-                <span class="author">{{name}}: {{collectionDate value}}</span>
+                <span class="date">{{name}}: {{collectionDate value}}</span>
                 {{else}}
-                <span class="author">{{name}}: {{articleDate value}}</span>
+                <span class="date">{{name}}: {{articleDate value}}</span>
             {{/if}}
         {{/each}}
     </h2>

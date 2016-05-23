@@ -154,11 +154,13 @@ h5.article-header {
     }
 }
 
-h2.authors {
+h2.authors,
+h2.dates {
     line-height: 1.4;
     font-size: 17px;
 
-    span.author {
+    span.author,
+    span.date {
         display: inline-block;
         white-space: nowrap;
 
