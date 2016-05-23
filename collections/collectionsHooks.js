@@ -91,7 +91,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }
 
     if(modifier.$set && modifier.$set.authors){
-        console.log('articles.before.update',modifier.$set);
+        console.log('articles.before.update',modifier.$set.authors);
     }
 });
 
