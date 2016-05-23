@@ -93,8 +93,8 @@ Meteor.methods({
 
 // Methods to compare XML with DB
 // -------------
-var ignoreConflicts = ['_id','doc_updates','issue_id','batch', 'files', 'display','mongo_id','advance','feature','publisher'];
-var ignoreConflictsViaXml = ['files','publisher','issue_id']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
+var ignoreConflicts = ['_id', 'duplicate', 'doc_updates','issue_id','batch', 'files', 'display','mongo_id','advance','feature','publisher'];
+var ignoreConflictsViaXml = ['files', 'duplicate','publisher','issue_id']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
 
 Meteor.methods({
     compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
@@ -115,26 +115,27 @@ Meteor.methods({
             }
 
             if(ignoreConflicts.indexOf(keyDb) == -1){
-                Meteor.xmlDbConflicts.compare(keyDb, xmlArticle[keyDb], dbArticle[keyDb], function(compareRes){
-                    if(compareRes && compareRes.conflicts && compareRes.conflicts.length>0){
-                        compareRes.conflicts.forEach(function(conflict){
-                            result.conflicts.push(conflict);
+                Meteor.xmlDbConflicts.compare(keyDb, xmlArticle[keyDb], dbArticle[keyDb], function(compareResult){
+                    if(compareResult && compareResult.conflicts && compareResult.conflicts.length>0){
+                        compareResult.conflicts.forEach(function(conf){
+                            result.conflicts.push(conf);
                         });
                     }
-                    if(compareRes && compareRes.merged){
-                        result[keyDb] = compareRes.merged;
+                    if(compareResult && compareResult.merged){
+                        result[keyDb] = compareResult.merged;
                     }
                 });
             }
         }
+        // console.log(result.conflicts);
 
         // XML
         for(var keyXml in xmlArticle){
             if(!dbArticle[keyXml] && ignoreConflictsViaXml.indexOf(keyXml) == -1 ){
                 Meteor.xmlDbConflicts.compare(keyXml, xmlArticle[keyXml], null, function(compareRes){
                     if(compareRes && compareRes.conflicts && compareRes.conflicts.length>0){
-                        compareRes.conflicts.forEach(function(conflict){
-                            result.conflicts.push(conflict);
+                        compareRes.conflicts.forEach(function(con){
+                            result.conflicts.push(con);
                         });
                     }
                 });
@@ -156,9 +157,8 @@ Meteor.methods({
         }
 
         if(result.conflicts.length > 0){
-            result.conflicts = Meteor.xmlDbConflicts.alphabetizeConflicts(result.conflicts);
+            // result.conflicts = Meteor.xmlDbConflicts.alphabetizeConflicts(result.conflicts);
         }
-
         return result;
     }
 });
@@ -271,8 +271,9 @@ Meteor.xmlDbConflicts = {
 
         // Database
         for(var key in dbObj){
-
             if(parentKey === 'authors' && key === 'ids'){
+            }else if(parentKey === 'article_type' && key === '_id'){
+            }else if(parentKey === 'article_type' && key === 'plural'){
             }else{
                 var dbVal = null;
                 var xmlVal = null;
