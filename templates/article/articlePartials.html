@@ -8,8 +8,6 @@
         {{/if}}
 
         {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
-
-        {{#if dates}} {{>ArticleDates}} {{/if}}
     </h5>
 
     <h1 id="article-title">{{{title}}}</h1>
@@ -18,6 +16,7 @@
 <template name="ArticleHeader">
     {{>ArticleHeaderTitle}}
     {{>AuthorsRefList}}
+    {{#if dates}} {{>ArticleDates}} {{/if}}
 
     <!-- todo: implement featured photo -->
     <!-- {{#if featuredPhoto}} -->
@@ -75,15 +74,17 @@
     </h2>
 </template>
 
-<!-- Todo: make sure deleting this label isn't messing anything up -->
+
 <template name="ArticleDates">
-    {{#each arrayify dates}}
-        {{#if equals name 'collection'}}
-            <span><!-- {{name}}:  -->{{collectionDate value}}</span>
-            {{else}}
-            <span><!-- {{name}}:  -->{{articleDate value}}</span>
-        {{/if}}
-    {{/each}}
+    <h2 class="authors">
+        {{#each arrayify dates}}
+            {{#if equals name 'collection'}}
+                <span class="author">{{name}}: {{collectionDate value}}</span>
+                {{else}}
+                <span class="author">{{name}}: {{articleDate value}}</span>
+            {{/if}}
+        {{/each}}
+    </h2>
 </template>
 
 <template name="ArticleSidebar">
