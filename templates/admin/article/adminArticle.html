@@ -94,17 +94,20 @@
     <div class="row">
         <div class="col s12">
             <a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
-            {{#if ids.pii}}
-            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-content">crawl xml and pdf</a>
-            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-figures">crawl figures and tables</a>
-            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-supplements">crawl supplemental files</a>
-            {{/if}}
-
             {{#if isInRole 'edit,super-admin' 'article'}}
             <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
             <a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">PDF &amp; XML Settings</a>
             <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">PDF &amp; XML Uploader</a>
             <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            {{#if ids.pii}}
+            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-content">crawl xml and pdf</a>
+            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-figures">crawl figures and tables</a>
+            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-supplements">crawl supplemental files</a>
             {{/if}}
         </div>
     </div>
