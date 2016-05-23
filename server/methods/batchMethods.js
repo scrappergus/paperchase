@@ -488,7 +488,7 @@ Meteor.methods({
     },
     getMissingFiles: function(){
         // console.log('..getMissingFiles');
-        var articlesList = articles.find({},{_id : 1}).fetch();
+        var articlesList = articles.find({$or: [{"files.xml": {$exists:false}}, {"files.pdf": {$exists:false}}]},{_id : 1}).fetch();
         console.log('__article count = ' + articlesList.length);
         var journalShortName = journalConfig.findOne().journal.short_name;
         var crawlUrl = journalConfig.findOne().api.crawler;

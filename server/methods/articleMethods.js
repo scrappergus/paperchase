@@ -523,6 +523,28 @@ Meteor.methods({
     }
 });
 
+// For Crawling by PII
+Meteor.methods({
+    crawlXmlAndPdfByPii: function (pii) {
+        var baseUrl = journalConfig.findOne().api.crawler;
+        var journal = journalInfo.journal.short_name;
+        return http.get(baseUrl + '/crawl_content/' + journal + '/' + pii);
+    },
+
+    crawlFiguresByPii: function (pii) {
+        var baseUrl = journalConfig.findOne().api.crawler;
+        var journal = journalInfo.journal.short_name;
+        return http.get(baseUrl + '/crawl_figures/' + journal + '/' + pii);
+    },
+
+    crawlSuplementsByPii: function (pii) {
+        var baseUrl = journalConfig.findOne().api.crawler;
+        var journal = journalInfo.journal.short_name;
+        return http.get(baseUrl + '/crawl_supplemental/' + journal + '/' + pii);
+    }
+});
+
+
 // For Download CSV
 Meteor.methods({
     getArticlesDates: function(piiList){
