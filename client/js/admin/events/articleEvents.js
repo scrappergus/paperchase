@@ -16,6 +16,33 @@ Template.AdminArticlesDashboard.events({
     }
 });
 
+Template.OncotargetOjsBatch.events({
+    'click #ojs-batch-update': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        Meteor.call('batchUpdate',function(error,result){
+            if(error){
+
+            }else if(result){
+
+            }
+        });
+    },
+    'click #ojs-batch-update-dates': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        Meteor.call('batchUpdateWithoutDates',function(error,result){
+            if(error){
+
+            }else if(result){
+
+            }
+        });
+    }
+});
+
+// Article
+// ----------------
 Template.AdminArticleButtons.events({
     'click .crawl-content': function (e) {
         e.preventDefault();
@@ -50,31 +77,6 @@ Template.AdminArticleButtons.events({
             Meteor.formActions.successMessage('crawled article ' + pii);
         });
     },
-});
-
-Template.OncotargetOjsBatch.events({
-    'click #ojs-batch-update': function(e){
-        e.preventDefault();
-        Meteor.formActions.saving();
-        Meteor.call('batchUpdate',function(error,result){
-            if(error){
-
-            }else if(result){
-
-            }
-        });
-    },
-    'click #ojs-batch-update-dates': function(e){
-        e.preventDefault();
-        Meteor.formActions.saving();
-        Meteor.call('batchUpdateWithoutDates',function(error,result){
-            if(error){
-
-            }else if(result){
-
-            }
-        });
-    }
 });
 
 // Article Files
