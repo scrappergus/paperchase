@@ -14,7 +14,8 @@ articles.after.insert(function (userId, doc) {
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     var volume,
-        issue;
+        issue,
+        updatedBy = {};
     // Advance article. Update sorters colleciton.
     // if(modifier.$set){
     //   if(modifier.$set['advance']){
@@ -90,9 +91,19 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         modifier.$set.issue_id = Meteor.call('articleIssueVolume',volume,issue);
     }
 
-    if(modifier.$set && modifier.$set.authors){
-        console.log('articles.before.update',modifier.$set.authors);
+    // track updates
+    if(!doc.doc_updates){
+        modifier.$set.doc_updates = {};
+        modifier.$set.doc_updates.updates = [];
+    }else if(doc.doc_updates && !doc.doc_updates.updates){
+        modifier.$set.doc_updates = doc.doc_updates;
+        modifier.$set.doc_updates.updates = [];
+    }else{
+        modifier.$set.doc_updates = doc.doc_updates;
     }
+    updatedBy.user = userId;
+    updatedBy.date = new Date();
+    modifier.$set.doc_updates.updates.push(updatedBy);
 });
 
 // Issues
