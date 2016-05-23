@@ -97,7 +97,7 @@ html,body{
 	// #article-title{
 	// 	margin:0px;
 	// }
-	.authors{
+	.authors {
 		span{
 			&:last-child{
 				.comma{
@@ -106,18 +106,7 @@ html,body{
 			}
 		}
 	}
-	.author-affiliations{
-		span{
-			.comma{
-				display: inline-block!important;
-			}
-			&:last-child{
-				.comma{
-					display:none!important;
-				}
-			}
-		}
-	}
+
 	.affiliations{
 		color: $gray-2;
 		/*font-size: $font-sm;*/

@@ -171,6 +171,11 @@ h2.dates {
         }
     }
 
+    span.comma {
+        display: inline-block !important;
+        &:last-child { display:none !important; }
+    }
+
     // superscript
     sup.author-affiliations a {
         font-size: 13px;
