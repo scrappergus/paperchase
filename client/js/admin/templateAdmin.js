@@ -134,6 +134,22 @@ Template.AdminEthicsForm.onDestroyed(function () {
     Session.set('sectionId',null);
 });
 
+// Home Page
+// ---------------
+Template.AdminHomePage.onDestroyed(function () {
+    Session.set('sectionId',null);
+});
+Template.AdminHomePage.onRendered(function () {
+    $('.sections-list').sortable();
+});
+Template.AdminHomePageForm.onRendered(function () {
+    // console.log('..AdminEditorialBoardForm onRendered');
+    Meteor.adminHomePage.readyForm();
+});
+Template.AdminHomePageForm.onDestroyed(function () {
+    Session.set('sectionId',null);
+});
+
 // For Authors
 // ---------------
 Template.AdminForAuthors.onDestroyed(function () {

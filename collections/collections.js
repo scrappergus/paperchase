@@ -8,6 +8,7 @@ ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 forAuthors = new Mongo.Collection('for_authors');
 ethics = new Mongo.Collection('ethics');
+homePage = new Mongo.Collection('homePage');
 authors = new Mongo.Collection('authors');
 newsList = new Mongo.Collection('news');
 recommendations = new Mongo.Collection('recommendations');
@@ -48,6 +49,19 @@ sorters = new Mongo.Collection('sorters', {
 
                     last_section = articlesList[a]['section_name'];
                     f.articles.push(articlesList[a]);
+                }
+            }
+        }
+    }else if(f.name == 'homePage'){
+        f.ordered = [];
+        var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+            // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
                 }
             }
         }
@@ -305,6 +319,28 @@ ethics.allow({
         }
     }
 });
+
+homePage.allow({
+    insert: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['super-admin'])) {
+          return true;
+        }
+    },
+    update: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['super-admin'])) {
+          return true;
+        }
+    },
+    remove: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['super-admin'])) {
+          return true;
+        }
+    }
+});
+
 
 forAuthors.allow({
     insert: function (userId, doc, fields, modifier) {
@@ -687,6 +723,16 @@ if (Meteor.isServer) {
     });
     Meteor.publish('ethicsPublic', function(){
         return ethics.find({display:true});
+    });
+
+
+    // Home Page
+    // ------------
+    Meteor.publish('homePage', function(){
+        return homePage.find();
+    });
+    Meteor.publish('homePagePublic', function(){
+        return homePage.find({display:true});
     });
 
 

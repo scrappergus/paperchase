@@ -157,6 +157,13 @@ ethics.schema = new SimpleSchema({
     display: {type: Boolean, optional: true}
 });
 
+// homePage
+homePage.schema = new SimpleSchema({
+    title: {type: String, optional: false},
+    content: {type: String, optional: true},
+    display: {type: Boolean, optional: true}
+});
+
 // for_authors
 forAuthors.schema = new SimpleSchema({
     title: {type: String, optional: false},
