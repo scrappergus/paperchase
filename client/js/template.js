@@ -19,11 +19,6 @@ Template.Home.onRendered(function () {
   // $('.sub-nav').addClass('transparent');
 });
 
-Template.Home.onDestroyed(function() {
-  $('footer').unwrap();
-  // $('.sub-nav').removeClass('transparent');
-});
-
 Template.EdBoard.onRendered(function() {
   $('.modal-trigger').leanModal(); // bio modals
 });
