@@ -86,13 +86,14 @@ Meteor.methods({
         }
     },
     legacyArticleIntake: function(articleParams){
-        console.log('...legacyArticleIntake');
+        // console.log('...legacyArticleIntake');
         // console.log(articleParams);
         // only using for batch update now
         var idType = articleParams.id_type,
             idValue = articleParams.id,
             journal = articleParams.journal,
             advance = articleParams.advance,
+            ojsUser = articleParams['ojs-user'],
             batch = articleParams.batch;
         var article,
             articleMongoId,
@@ -117,12 +118,15 @@ Meteor.methods({
                 Meteor.call('ojsGetArticlesJson', idType, idValue, journal, legacyPlatformApi, function(error,articleJson){
                     if(articleJson){
                         articleJson = JSON.parse(articleJson);
-                        articleJson = articleJson['articles'][0];
+                        articleJson = articleJson.articles[0];
                         // Process article info for Paperchase DB
                         Meteor.call('ojsProcessArticleJson', articleJson, function(error,processedArticleJson){
                             if(processedArticleJson){
                                 if(advance){
                                     processedArticleJson.advance = true;
+                                }
+                                if(ojsUser){
+                                    processedArticleJson.ojsUser = ojsUser;
                                 }
                                 if(article){
                                     articleMongoId = article._id;
@@ -482,6 +486,10 @@ Meteor.methods({
                 // Add the author with Mongo ID to the article update object
                 articleUpdate.authors.push(authors[a]);
             }
+        }else if(article.pii){
+            console.log('OJS Intake - no authors: ', article.pii);    
+        }else{
+            console.log('OJS Intake - no authors');
         }
 
         // Links
