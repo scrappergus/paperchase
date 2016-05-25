@@ -101,7 +101,14 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }else{
         modifier.$set.doc_updates = doc.doc_updates;
     }
-    updatedBy.user = userId;
+
+    if(userId){
+        updatedBy.user = userId;
+    }else if(modifier.$set.ojsUser){
+        updatedBy.ojs_user = modifier.$set.ojsUser;
+        delete modifier.$set.ojsUser;
+    }
+
     updatedBy.date = new Date();
     modifier.$set.doc_updates.updates.push(updatedBy);
 

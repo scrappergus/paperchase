@@ -284,6 +284,9 @@ Meteor.adminArticleFormGet = {
             return false;
         }
     },
+    files: function(){
+        return Session.get('article-form').files;
+    },
     ids: function(){
         var ids = {};
         $('.article-id').each(function(i) {
@@ -356,6 +359,9 @@ Meteor.adminArticleFormGet = {
         // articleUpdateObj.section = ''; // Mongo ID
         // articleUpdateObj.pub_status = ''; // NLM status
 
+        // files
+        // ------
+        articleUpdateObj.files = Meteor.adminArticleFormGet.files();
 
         // site
         // -------
