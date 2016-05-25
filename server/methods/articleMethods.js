@@ -62,7 +62,7 @@ Meteor.methods({
     },
     updateArticle: function(mongoId, articleData, batch){
         // nope. articles with missing authors not showing this log
-        console.log('updateArticle',mongoId, articleData);
+        // console.log('updateArticle',mongoId, articleData);
         // whether adding or editing an article, both will go through this method
 
         var fut = new future();
@@ -220,7 +220,7 @@ Meteor.methods({
     },
     preProcessArticle: function(articleId,article){
         // Article Form: On - Article Form & Data Submissions
-        console.log('..preProcessArticle = ' + articleId);
+        // console.log('..preProcessArticle = ' + articleId);
         var articleByPii,
             articleFromDb;
 
