@@ -62,7 +62,7 @@ Meteor.methods({
     },
     updateArticle: function(mongoId, articleData, batch){
         // nope. articles with missing authors not showing this log
-        // console.log('updateArticle',mongoId);
+        console.log('updateArticle',mongoId, articleData);
         // whether adding or editing an article, both will go through this method
 
         var fut = new future();
@@ -125,7 +125,7 @@ Meteor.methods({
         return articles.update({'_id' : mongoId}, {$push: updateObj});
     },
     updateArticleByPmid: function(pmid, articleData){
-        // nope. used in batch methods.
+        // nope. used in batch methods. getPubMedInfo(), batchUpdateCorrespViaXml(), getMissingPmcIds()
         // console.log('--updateArticleByPmid |  pmid = '+pmid, articleData);
 
         if(articleData.volume && articleData.issue){
@@ -140,7 +140,7 @@ Meteor.methods({
         return articles.update({'ids.pmid' : pmid}, {$set: articleData});
     },
     addToArticleAffiliationsByPmid: function(pmid, affiliation){
-        // nope. used in batch methods
+        // nope. used in batch method. getAllAuthorsAffiliationsPubMed()
         Meteor.authorizeCheck.articles();
         // console.log('--addToArticleAffiliationsByPmid | pmid = ' + pmid  + ' / affiliation = ' + affiliation);
         return  articles.update({'ids.pmid' : pmid}, {$addToSet: {'affiliations' : affiliation}});
@@ -220,7 +220,7 @@ Meteor.methods({
     },
     preProcessArticle: function(articleId,article){
         // Article Form: On - Article Form & Data Submissions
-        // console.log('..preProcessArticle = ' + articleId);
+        console.log('..preProcessArticle = ' + articleId);
         var articleByPii,
             articleFromDb;
 
@@ -229,7 +229,8 @@ Meteor.methods({
             publisherArticleTypes,
             authorsList,
             selectedSectionId,
-            publisherArticleSections;
+            publisherArticleSections,
+            articleFilesInDb;
 
         if(!article && articleId){
             // when editing an article
@@ -351,6 +352,23 @@ Meteor.methods({
                     selectObj.selected = true;
                 }
                 article.article_section_list.push(selectObj);
+            }
+
+            // Files
+            // -----------
+            // add xml and pdf info so that we can use this to update db without erasing info
+            // only need to include xml and pdf because figs and supp will be auto processed via xml processing
+            if(article.files){
+            }else{
+                article.files = {};
+            }
+
+            articleFilesInDb = articles.findOne({'_id': articleId});
+            if(articleFilesInDb && articleFilesInDb.files.pdf){
+               article.files.pdf = articleFilesInDb.files.pdf;
+            }
+            if(articleFilesInDb && articleFilesInDb.files.xml){
+               article.files.xml = articleFilesInDb.files.xml;
             }
 
             // console.log('--------------------article');
