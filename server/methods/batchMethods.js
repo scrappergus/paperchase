@@ -25,7 +25,7 @@ Meteor.methods({
         // console.log('..batchProcessXml');
         var journalInfo = journalConfig.findOne();
         var journalShortName = journalInfo.journal.short_name;
-        var articlesList = articles.find({}).fetch();
+        var articlesList = articles.find({}, {"sort": {"last_update":1}}).fetch();
         // console.log(articlesList);
         var missingPii = [];
         var xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-' + journalShortName + '/xml/'

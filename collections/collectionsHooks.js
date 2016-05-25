@@ -104,6 +104,9 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     updatedBy.user = userId;
     updatedBy.date = new Date();
     modifier.$set.doc_updates.updates.push(updatedBy);
+
+    //recording this for easy sorting
+    modifier.$set.last_update = updatedBy.date;
 });
 
 // Issues
