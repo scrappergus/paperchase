@@ -8,6 +8,7 @@ ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
 forAuthors = new Mongo.Collection('for_authors');
 ethics = new Mongo.Collection('ethics');
+homePage = new Mongo.Collection('homePage');
 authors = new Mongo.Collection('authors');
 newsList = new Mongo.Collection('news');
 recommendations = new Mongo.Collection('recommendations');
@@ -58,6 +59,19 @@ sorters = new Mongo.Collection('sorters', {
     }else if(f.name == 'ethics'){
         f.ordered = [];
         var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+            // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
+                }
+            }
+        }
+    }else if(f.name == 'homePage'){
+        f.ordered = [];
+        var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
         // console.log(sectionsList);
         for(var i = 0 ; i < order.length ; i++){
             // console.log(order[i]);
@@ -733,6 +747,14 @@ if (Meteor.isServer) {
         return ethics.find({display:true});
     });
 
+    // Home Page
+    // ------------
+    Meteor.publish('homePage', function(){
+        return homePage.find();
+    });
+    Meteor.publish('homePagePublic', function(){
+        return homePage.find({display:true});
+    });
 
     // For Authors
     // ------------

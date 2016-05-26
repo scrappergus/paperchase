@@ -401,6 +401,8 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
+                Meteor.subscribe('homePagePublic'),
+                Meteor.subscribe('sortedList','homePage'),
                 Meteor.subscribe('feature'),
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('eb'),
@@ -409,15 +411,23 @@ if (Meteor.isClient) {
             ]
         },
         data: function(){
-            var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
-            return {
-                feature : featureList,
-                eic: edboard.find({role: 'Editor-in-Chief'}) ,
-                eb: edboard.find({role: 'Founding Editorial Board'}),
-                news:  newsList.find({display:true},{sort : {date: -1}}).fetch()
+            if(this.ready()){
+                var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
+
+                var sections = homePage.find().fetch();
+                var sorted  = sorters.findOne();
+
+                return {
+                    feature : featureList,
+                    eic: edboard.find({role: 'Editor-in-Chief'}) ,
+                    eb: edboard.find({role: 'Founding Editorial Board'}),
+                    news:  newsList.find({display:true},{sort : {date: -1}}).fetch(),
+                    sections : sorted['ordered']
+                }
             }
         }
     });
+
 
     Router.route('/advance', {
         name: 'Advance',
@@ -563,7 +573,7 @@ if (Meteor.isClient) {
                     sections : sorted['ordered']
                 };
             }
-        },
+        }
     });
 
 

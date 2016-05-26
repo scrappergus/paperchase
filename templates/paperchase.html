@@ -1,17 +1,19 @@
 <template name="Home">
     <div class="row">
         <div class="page-content col s12 m7 l8">
-            <p class="justify">In 2008 the Ongoing Revolution in aging research has called for a High-Impact Journal. By now Aging journal has become one of the leading journals in the field.</p>
 
-            <p class="justify"><strong>Aging</strong> primarily publishes papers of outstanding significance, exceptional novelty, and ground-breaking discoveries from yeast to humans and from evolution to medicine. <strong>Aging</strong> covers (in addition to traditional topics on aging) others topics including cellular and molecular biology, human age-related diseases, signal transduction pathways (p53, sirtuins, PI-3K/AKT/mTOR and so on) and approaches to modulate these signaling pathways.</p>
 
-            <p class="justify"><strong>Aging</strong> is abbreviated by indexes: by PubMed – Aging (Albany NY); by ISI/Thomson – Aging-US; by Scopus – Aging.</p>
 
-            <p class="justify"><strong>Aging</strong> is indexed by <a href="http://www.ncbi.nlm.nih.gov/pubmed?term=%22aging%20(albany%20ny)%22%20%5Bta%5D" target="_blank">PubMed/Medline</a>, <a href="http://www.ncbi.nlm.nih.gov/pmc/journals/1105/" target="_blank">PubMed Central</a>, <a href="http://isiwebofknowledge.com/" target="_blank">ISI/Thomson</a> and <a href="http://www.info.sciverse.com/scopus/" target="_blank">Scopus</a>.</p>
+            <ul class="sectioned-list">
+                {{#each sections}}
+                <li id="{{convertToID title}}">
+                    <h2 class="heavy blue-accented">{{{title}}}</h2>
+                    <p class="justify">{{{content}}}</p>
+                </li>
+                {{/each}}
+            </ul>
 
-            <p>Impact factor (IF) / ISI / Web of Science ( Thomson Reuters JCR):   2014: 6.432 </p> 
-            <p>The highest impact factor in the field</p>
-            <p>Scopus: Ranks Q1</p>
+
             
 
 
@@ -121,8 +123,10 @@
     <div class="card sidebar-card featured-nobel">
         <h6 class="card-title">Featured Nobel Articles</h6>
         <ul class="featured-items">
-            <li>Andrew V. Schally, <a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/1977/schally-autobio.html" target="_blank">Nobel Prize Laureate</a>, published <a href="/article/CanAfy9i6mBCfbE4H">his paper</a> in Aging.</li>
-            <li>Elizabeth Blackburn, a member of the Editorial Board of Aging, won the <a href="http://nobelprize.org/nobel_prizes/medicine/laureates/2009/" target="_blank">Nobel Prize in Physiology or Medicine 2009</a>. Elizabeth Blackburn co-authored a <a href="article/ECefxfZbM6tNyeqRh">paper</a> published in the first (inaugural) issue of Aging.</li>
+            <li><a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/2009/blackburn-facts.html">Elizabeth Blackburn</a>, a member of the Editorial Board of Aging, won the <a href="http://nobelprize.org/nobel_prizes/medicine/laureates/2009/" target="_blank">Nobel Prize in Physiology or Medicine 2009</a>, while being a member of the board. Elizabeth Blackburn co-authored a <a href="article/ECefxfZbM6tNyeqRh">paper</a> published in the first (inaugural) issue of Aging.</li>
+
+            <li><a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/1977/schally-facts.html" target="_blank">Andrew V. Schally</a>,  Nobel Prize Laureate, published his <a href="/article/CanAfy9i6mBCfbE4H">paper</a> in Aging.</li>
+
             <li><a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/2012/yamanaka.html" target="_blank">Shinya Yamanaka</a> won the Nobel Prize in Physiology and Medicine 2012. Shinya Yamanaka co-authored a <a href="article/djTrvzxXyJB8pzPfj">paper</a> published in Aging.</li>
         </ul>
     </div>
