@@ -80,6 +80,7 @@ articles.schema = new SimpleSchema({
     'ids.manuscript': {type: String, optional: true},
     'ids.medline': {type: String, optional: true},
     'ids.pii': {type: String, optional: true},
+    'ids.publisher': {type: String, optional: true},
     'ids.pmc': {type: String, optional: true},
     'ids.pmid': {type: String, optional: true},
     issue: {type: String, optional: true},
