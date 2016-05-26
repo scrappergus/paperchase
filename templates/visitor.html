@@ -68,9 +68,9 @@
             {{#each Breadcrumb}}
                 <li class="test">
                     {{#if equals path 'Issue'}}
-                        {{#if showLink}}<a href="/issue/{{issueLinkViaTitle title}}">{{#with stripTitle title}} {{truncate this 48}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 48}} {{/with}} {{/if}}
+                        {{#if showLink}}<a href="/issue/{{issueLinkViaTitle title}}">{{#with stripTitle title}} {{truncate this 57}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 48}} {{/with}} {{/if}}
                     {{else}}
-                        {{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 48}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 48}} {{/with}} {{/if}}
+                        {{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 57}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 48}} {{/with}} {{/if}}
                     {{/if}}
                 </li>
             {{/each}}
