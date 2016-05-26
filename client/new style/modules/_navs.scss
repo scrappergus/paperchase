@@ -241,7 +241,7 @@
         float: right;
         position: relative;
         top: 1px;
-        color: lighten(#5C7DA2, 25%);
+        color: lighten(#FFFFFF, 25%);
         @extend .uppercase-titles;
     }
 }
@@ -272,7 +272,7 @@
      * These have to be separate because css
      * parser is broken for placeholder rules.
      */
-    $placeholder-color: lighten(#3366A0, 30%);
+    $placeholder-color: lighten(#FFFFFF, 30%);
     input::placeholder { color: $placeholder-color }
     input::-webkit-input-placeholder { color: $placeholder-color }
     input::-moz-placeholder { color: $placeholder-color }
