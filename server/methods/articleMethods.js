@@ -358,6 +358,8 @@ Meteor.methods({
             // -----------
             // add xml and pdf info so that we can use this to update db without erasing info
             // only need to include xml and pdf because figs and supp will be auto processed via xml processing
+            // Gus: I added figure and supp handling to preserve the S3 file names when reprocessing the XML
+
             if(article.files){
             }else{
                 article.files = {};
@@ -370,6 +372,19 @@ Meteor.methods({
             if(articleFilesInDb && articleFilesInDb.files.xml){
                article.files.xml = articleFilesInDb.files.xml;
             }
+
+            if(articleFilesInDb && articleFilesInDb.files.figures){
+                for(var i=0 ; i < articleFilesInDb.files.figures.length; i++){
+                    article.files.figures[i].file = articleFilesInDb.files.figures[i].file;
+                }
+            }
+
+            if(articleFilesInDb && articleFilesInDb.files.supplemental){
+                for(var i=0 ; i < articleFilesInDb.files.supplemental.length; i++){
+                    article.files.supplemental[i].file = articleFilesInDb.files.supplemental[i].file;
+                }
+            }
+
 
             // console.log('--------------------article');
             // console.log(article);
