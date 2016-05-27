@@ -389,6 +389,17 @@ if (Meteor.isClient) {
     Session.setDefault('archive',null);
     Session.setDefault('article-visitor',null);
 
+    //redirects
+    Router.route('/index.html', function() {
+            Router.go('/');
+        });
+    Router.route('/editors.html', function() {
+            Router.go('/editorial-board');
+        });
+    Router.route('/ethics.html', function() {
+            Router.go('/ethics');
+        });
+
     Router.route('/', {
         name: 'Home',
         layoutTemplate: 'Visitor',
