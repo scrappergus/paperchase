@@ -153,9 +153,11 @@
 
 <template name="ArticleCorrespondence">
     <div class="card sidebar-card">
-        <h6 class="card-title">Corresponding Author</h6>
-        <p>{{#if correspondence.[0].text}} {{correspondence.[0].text}}<br /> {{/if}}
-        <a href="mailto:{{correspondence.[0].email}}">{{correspondence.[0].email}}</a></p>
+        <h6 class="card-title">Corresponding Author{{#if correspondence.[1]}}s{{/if}}</h6>
+        {{#each correspondence}}
+        <p>{{#if text}} {{text}}<br /> {{/if}}
+        <a href="mailto:{{email}}">{{email}}</a></p>
+        {{/each}}
     </div>
 </template>
 
