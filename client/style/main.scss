@@ -183,6 +183,7 @@ html,body{
 		@extend .box;
 		border: 1px solid $black-0;
 		padding: 0px!important;
+        overflow:auto;
 		table{
 			caption{
 				background: $gray-1;
