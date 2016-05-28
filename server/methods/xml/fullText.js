@@ -13,6 +13,10 @@ Meteor.methods({
             if(articleInfo.files.figures){
                 figures = articleInfo.files.figures;
             }
+            if(articleInfo.files.supplemental){
+                supplemental = articleInfo.files.supplemental;
+            }
+
             if(articleInfo.files.xml){
                 Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
                     if(getXmlError){
@@ -20,7 +24,7 @@ Meteor.methods({
                         fut['throw'](getXmlError);
                     }else if(xmlRes){
                         xml = xmlRes.content;
-                        Meteor.call('fullTextToJson',xml, figures, mongoId, function(convertXmlError, convertedXml){
+                        Meteor.call('fullTextToJson',xml, {figures:figures, supplemental:supplemental}, mongoId, function(convertXmlError, convertedXml){
                             if(convertXmlError){
                                 console.error('convertXmlError',convertXmlError);
                                 fut['throw'](convertXmlError);
@@ -35,7 +39,7 @@ Meteor.methods({
         }
         return fut.wait();
     },
-    fullTextToJson: function(xml, figures, mongoId){
+    fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
         // console.log('... fullTextToJson');
         var fut = new future();
@@ -51,7 +55,7 @@ Meteor.methods({
             for(var section = 0 ; section < sections.length ; section++){
                 // console.log(sections[section].childNodes.length);
                 var sectionType;
-                var sectionObject = Meteor.fullText.sectionToJson(sections[section],figures, mongoId);
+                var sectionObject = Meteor.fullText.sectionToJson(sections[section],files, mongoId);
                 for(var sectionAttr = 0 ; sectionAttr < sections[section].attributes.length ; sectionAttr++){
                     // console.log(sections[section].attributes[sectionAttr]);
                     if(sections[section].attributes[sectionAttr].nodeName === 'sec-type'){
@@ -70,7 +74,7 @@ Meteor.methods({
             // there will only be 1 body node, so use body[0]
             // no <sec>
             // just create 1 section
-            var sectionObject = Meteor.fullText.sectionToJson(body[0],figures, mongoId);
+            var sectionObject = Meteor.fullText.sectionToJson(body[0],files, mongoId);
             articleObject.sections.push(sectionObject);
         }
 
@@ -124,7 +128,7 @@ Meteor.methods({
 
 // for handling sections of XML, content, special elements like figures, references, tables
 Meteor.fullText = {
-    sectionToJson: function(section,figures, mongoId){
+    sectionToJson: function(section,files, mongoId){
         // XML processing of part of the content, <sec>
         // console.log('...sectionToJson');
         // console.log(section);
@@ -156,8 +160,11 @@ Meteor.fullText = {
                     content += Meteor.fullText.traverseTable(sec);
                     content += '</table>';
                 }else if(sec.localName === 'fig'){
-                    content = Meteor.fullText.convertFigure(sec,figures,mongoId);
+                    content = Meteor.fullText.convertFigure(sec,files,mongoId);
                     contentType = 'figure';
+                }else if(sec.localName === 'supplementary-material'){
+                    content = Meteor.fullText.convertSupplement(sec,files,mongoId);
+                    contentType = 'supplement';
                 }else{
                     content = Meteor.fullText.convertContent(sec);
                     contentType = 'p';
@@ -247,7 +254,7 @@ Meteor.fullText = {
         }
         return content;
     },
-    convertFigure: function(node,figures,mongoId){
+    convertFigure: function(node,files,mongoId){
         // console.log('..convertFigure',figures);
         var figureAssetsUrl = journalConfig.findOne().assets;
         var figObj;
@@ -258,15 +265,36 @@ Meteor.fullText = {
             if(figInfo){
                 figObj = figInfo;
                 // match to db file info
-                for(var f = 0 ; f < figures.length ; f++){
-                    if(figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
-                        figObj.url = figureAssetsUrl + 'paper_figures/' + figures[f].file;
+                for(var f = 0 ; f < files.figures.length ; f++){
+                    if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
+                        figObj.url = figureAssetsUrl + 'paper_figures/' + files.figures[f].file;
                     }
                 }
             }
         });
 
         return figObj;
+    },
+    convertSupplement: function(node,files,mongoId){
+        // console.log('..convertFigure',figures);
+        var suppAssetsUrl = journalConfig.findOne().assets;
+        var suppObj;
+
+
+        // get the figure id, label, title, caption
+        //------------------
+        Meteor.xmlPmc.supplemental(node,function(suppInfo){
+            if(suppInfo){
+                suppObj = suppInfo;
+                // match to db file info
+                for(var f = 0 ; f < files.supplemental.length ; f++){
+//                    if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase()){
+                        suppObj.url = suppAssetsUrl + 'supplemental_materials/' + files.supplemental[f].file;
+//                    }
+                }                    
+            }
+        });
+        return suppObj;
     },
     convertReference: function(reference){
         // console.log('...............convertReference');
