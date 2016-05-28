@@ -374,14 +374,22 @@ Meteor.methods({
             }
 
             if(articleFilesInDb && articleFilesInDb.files.figures){
-                for(var i=0 ; i < articleFilesInDb.files.figures.length; i++){
-                    article.files.figures[i].file = articleFilesInDb.files.figures[i].file;
+                for(var i=0 ; i < article.files.figures.length; i++){
+                    for(var k=0 ; k < articleFilesInDb.files.figures.length; k++){
+                        if(article.files.figures[i].id.toLowerCase() == articleFilesInDb.files.figures[k].id.toLowerCase()) {
+                            article.files.figures[i].file = articleFilesInDb.files.figures[k].file;
+                        }
+                    }
                 }
             }
 
             if(articleFilesInDb && articleFilesInDb.files.supplemental){
                 for(var i=0 ; i < articleFilesInDb.files.supplemental.length; i++){
-                    article.files.supplemental[i].file = articleFilesInDb.files.supplemental[i].file;
+                    for(var k=0 ; k < articleFilesInDb.files.supplemental.length; k++){
+                        if(article.files.supplemental[i].id.toLowerCase() == articleFilesInDb.files.supplemental[k].id.toLowerCase()) {
+                            article.files.supplemental[i].file = articleFilesInDb.files.supplemental[k].file;
+                        }
+                    }
                 }
             }
 
