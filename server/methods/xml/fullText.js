@@ -2,7 +2,8 @@
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         var fut = new future();
-        var articleJson,
+        var supplemental,
+            articleJson,
             articleInfo,
             figures = [],
             xml;
