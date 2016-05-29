@@ -1,7 +1,6 @@
 // methods used to create full text HTML from XML
 Meteor.methods({
     getFilesForFullText: function(mongoId){
-        // console.log('... getFilesForFullText: ' + mongoId);
         var fut = new future();
         var articleJson,
             articleInfo,
@@ -28,14 +27,14 @@ Meteor.methods({
                             if(convertXmlError){
                                 console.error('convertXmlError',convertXmlError);
                                 fut['throw'](convertXmlError);
-                            }else if(convertedXml){
-                                fut['return'](convertedXml);
                             }
+                            fut['return'](convertedXml);
                         });
                     }
                 });
+            } else {
+                fut.return({});
             }
-
         }
         return fut.wait();
     },

@@ -64,43 +64,47 @@
 </template>
 
 <template name="ArticleFullText">
-    {{#each sections}}
-        <div class="section-container" id="{{#if equals headerLevel 1}}{{convertToID title}}{{/if}}">
-            <h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}}} {{/if}} {{{titleCase title}}}</h3>
-            {{#each content}}
-                {{#if equals contentType 'p'}}
-                <p>{{{content}}}</p>
-                {{/if}}
+    {{#if advanceContent}}
+        {{{advanceContent}}}
+    {{else}}
+        {{#each sections}}
+            <div class="section-container" id="{{#if equals headerLevel 1}}{{convertToID title}}{{/if}}">
+                <h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}}} {{/if}} {{{titleCase title}}}</h3>
+                {{#each content}}
+                    {{#if equals contentType 'p'}}
+                    <p>{{{content}}}</p>
+                    {{/if}}
 
-                {{#if equals contentType 'figure'}}
-                <!-- Figure -->
-                    {{#with content}}
-                    <div class="full-text-image-container" id="{{id}}">
-                        {{#if label}}<label>{{{label}}}</label>{{/if}}
-                        {{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
-                        {{#if title}}<h4>{{{title}}}</h4>{{/if}}
-                        {{#if caption}}<p>{{{caption}}}</p>{{/if}}
-                    </div>
-                    {{/with}}
-                {{/if}}
+                    {{#if equals contentType 'figure'}}
+                    <!-- Figure -->
+                        {{#with content}}
+                        <div class="full-text-image-container" id="{{id}}">
+                            {{#if label}}<label>{{{label}}}</label>{{/if}}
+                            {{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
+                            {{#if title}}<h4>{{{title}}}</h4>{{/if}}
+                            {{#if caption}}<p>{{{caption}}}</p>{{/if}}
+                        </div>
+                        {{/with}}
+                    {{/if}}
 
-                {{#if equals contentType 'table'}}
-                <!-- Table -->
-                    <div class="article-table">
-                        {{{content}}}
-                    </div>
-                {{/if}}
+                    {{#if equals contentType 'table'}}
+                    <!-- Table -->
+                        <div class="article-table">
+                            {{{content}}}
+                        </div>
+                    {{/if}}
 
-                {{#if equals contentType 'supplement'}}
-                <!-- Supplemental -->
-                    {{#with content}}
-                    {{#if label}}<a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> {{label}}</a>
-                    {{else}}<a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> Supplemental File</a>{{/if}}
-                    <br />
-                    {{/with}}
-                {{/if}}
+                    {{#if equals contentType 'supplement'}}
+                    <!-- Supplemental -->
+                        {{#with content}}
+                        {{#if label}}<a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> {{label}}</a>
+                        {{else}}<a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> Supplemental File</a>{{/if}}
+                        <br />
+                        {{/with}}
+                    {{/if}}
 
-            {{/each}}
-        </div>
-    {{/each}}
+                {{/each}}
+            </div>
+        {{/each}}
+    {{/if}}
 </template>

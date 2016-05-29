@@ -726,38 +726,40 @@ if (Meteor.isClient) {
         name: 'ArticleText',
         parent: 'Issue',
         layoutTemplate: 'Visitor',
-        onBeforeAction: function(){
+        onBeforeAction: function() {
             // check if article exists
-            var articleExistsExists = articles.findOne({'_id': this.params._id});
-            if(!articleExistsExists){
-                Router.go('ArticleNotFound');
+            var article = articles.findOne({
+                '_id': this.params._id
+            });
+            if (!article) {
+                return Router.go('ArticleNotFound');
             }
 
             // Get files and fulltext
             Session.set('article-text', null);
 
             Meteor.call('getFilesForFullText', this.params._id, function(error, result) {
-                if(result){
-                    if(articleExistsExists.abstract){
-                        result.abstract = articleExistsExists.abstract;
-                    }
-                    Session.set('article-text',result);
-                }
+                result = result || {};
+                result.abstract = article.abstract;
+                result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
+                Session.set('article-text', result);
             });
             this.next();
         },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('articleInfo',this.params._id),
-                Meteor.subscribe('articleIssue',this.params._id),
+        waitOn: function() {
+            return [
+                Meteor.subscribe('articleInfo', this.params._id),
+                Meteor.subscribe('articleIssue', this.params._id),
                 Meteor.subscribe('articleTypes'),
                 Meteor.subscribe('journalConfig')
             ]
         },
-        data: function(){
-            if(this.ready()){
-                var article = articles.findOne({'_id': this.params._id});
-                if(article){
+        data: function() {
+            if (this.ready()) {
+                var article = articles.findOne({
+                    '_id': this.params._id
+                });
+                if (article) {
                     article = Meteor.article.readyData(article);
                     return {
                         article: article
@@ -767,13 +769,14 @@ if (Meteor.isClient) {
         },
         title: function() {
             var pageTitle = '';
-            if(Session.get('journal')){
+            if (Session.get('journal')) {
                 pageTitle = Session.get('journal').journal.name + ' | ';
             }
-            var articleTitle = Meteor.article.pageTitle(this.params._id) + ' - Full Text' ;
+            var articleTitle = Meteor.article.pageTitle(this.params._id) + ' - Full Text';
             return pageTitle + articleTitle;
         },
     });
+    
     Router.route('/article/:_id/purchase', {
         name: 'PurchaseArticle',
         layoutTemplate: 'Visitor',
