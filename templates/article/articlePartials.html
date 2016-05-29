@@ -146,7 +146,9 @@
         {{/with}}
 
         {{#if fullText}}
-            {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
+            {{#unless advance}}
+                {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
+            {{/unless}}
         {{/if}}
     </div>
 </template>
@@ -199,6 +201,7 @@
 <template name="ArticleButtons">
     <div class="article-links">
         {{#if abstract}}<a class="small button" href="{{pathFor 'Article'}}">View Abstract</a>{{/if}}
+
         {{#if isSubscribed}}
             {{#with files}}
 
@@ -210,12 +213,14 @@
 
                 {{#if xml.url}}
                 {{#if xml.display}}
-                <a data-id="{{_id}}" class="small button" href="http://52.20.223.77:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
+                <a data-id="{{_id}}" class="small button" href="http://lens.impactaging.com:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
                 <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
                 {{/if}}
                 {{/if}}
 
             {{/with}}
+
+
         {{else}}
             {{#with files}}
 
@@ -231,6 +236,10 @@
                 <a data-id="{{_id}}" class="small button disabled modal-trigger" href="#subscribe-modal">Full-Text</a>
                 {{/if}}
             {{/if}}
+            {{#if advanceContent}}
+            <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+            {{/if}}
+
 
             {{/with}}
         {{/if}}

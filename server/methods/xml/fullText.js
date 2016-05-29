@@ -10,14 +10,14 @@ Meteor.methods({
         articleInfo = articles.findOne({'_id' : mongoId});
         if(articleInfo){
             articleInfo = Meteor.article.readyData(articleInfo);
-            if(articleInfo.files.figures){
+            if(articleInfo.files && articleInfo.files.figures){
                 figures = articleInfo.files.figures;
             }
-            if(articleInfo.files.supplemental){
+            if(articleInfo.files && articleInfo.files.supplemental){
                 supplemental = articleInfo.files.supplemental;
             }
 
-            if(articleInfo.files.xml){
+            if(articleInfo.files && articleInfo.files.xml){
                 Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
                     if(getXmlError){
                         console.error('getXmlError',getXmlError);
