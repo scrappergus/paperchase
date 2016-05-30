@@ -24,6 +24,10 @@ sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
     var order = f.order;
     if(f.name == 'advance'){
+
+        // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
+//        var config = journalConfig.findOne({},{fields: {'assets': 1 }}); 
+
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
 
@@ -48,6 +52,11 @@ sorters = new Mongo.Collection('sorters', {
                         articlesList[a]['section_start'] = true;
                     }
 
+
+                    if(articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
+                        assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
+                        articlesList[a]['files']['pdf']['url'] = assets +"pdf/"+ articlesList[a]['files']['pdf']['file'];
+                    }
 
                     last_section = articlesList[a]['section_name'];
                     f.articles.push(articlesList[a]);
