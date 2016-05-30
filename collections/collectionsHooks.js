@@ -2,6 +2,7 @@
 // --------
 articles.before.insert(function (userId, doc) {
     // console.log('..articles before insert');
+    var updatedBy = {};
     // Volume, Issue
     if(doc.volume && doc.issue){
         volume = doc.volume;
@@ -9,6 +10,20 @@ articles.before.insert(function (userId, doc) {
         doc.issue_id = Meteor.call('articleIssueVolume',volume,issue);
     }
     // console.log(doc.issue_id);
+    // track updates
+    if(!doc.doc_updates){
+        doc.doc_updates = {};
+        doc.doc_updates.updates = [];
+    }else if(doc.doc_updates && !doc.doc_updates.updates){
+        doc.doc_updates.updates = [];
+    }
+
+    if(userId){
+        updatedBy.user = userId;
+    }
+
+    updatedBy.date = new Date();
+    doc.doc_updates.updates.push(updatedBy);
 });
 articles.after.insert(function (userId, doc) {
 });
