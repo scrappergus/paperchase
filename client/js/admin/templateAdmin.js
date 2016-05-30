@@ -118,6 +118,38 @@ Template.AdminEditorialBoardForm.onRendered(function () {
     Meteor.adminEdBoard.readyForm();
 });
 
+// Ethics
+// ---------------
+Template.AdminEthics.onDestroyed(function () {
+    Session.set('sectionId',null);
+});
+Template.AdminEthics.onRendered(function () {
+    $('.sections-list').sortable();
+});
+Template.AdminEthicsForm.onRendered(function () {
+    // console.log('..AdminEditorialBoardForm onRendered');
+    Meteor.adminEthics.readyForm();
+});
+Template.AdminEthicsForm.onDestroyed(function () {
+    Session.set('sectionId',null);
+});
+
+// Home Page
+// ---------------
+Template.AdminHomePage.onDestroyed(function () {
+    Session.set('sectionId',null);
+});
+Template.AdminHomePage.onRendered(function () {
+    $('.sections-list').sortable();
+});
+Template.AdminHomePageForm.onRendered(function () {
+    // console.log('..AdminEditorialBoardForm onRendered');
+    Meteor.adminHomePage.readyForm();
+});
+Template.AdminHomePageForm.onDestroyed(function () {
+    Session.set('sectionId',null);
+});
+
 // For Authors
 // ---------------
 Template.AdminForAuthors.onDestroyed(function () {

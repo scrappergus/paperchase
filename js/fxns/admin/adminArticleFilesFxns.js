@@ -6,33 +6,67 @@ Meteor.articleFiles = {
         var reader = new FileReader;
         var xmlString;
 
-        reader.onload = function(e) {
-            xmlString = e.target.result;
+        if(files.length == 0) {
+            var journalInfo = journalConfig.findOne();
+            var journalShortName = journalInfo.journal.short_name;
+            var assetBaseUrl = journalInfo.assets + 'xml/';
+            var assetUrl = assetBaseUrl + articleMongoId+".xml";
 
-            Meteor.call('processXmlString',xmlString, function(error,result){
-                if(error){
-                    console.error('process XML for DB', error);
-                    Meteor.formActions.errorMessage('Could not process XML for verification');
-                }else if(result){
-                    Meteor.formActions.closeModal();
-                    // Meteor.general.scrollTo('xml-verify');
-
-                    Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
+            Meteor.call('getXml',assetUrl, function(error,xmlString){
+                Meteor.call('processXmlString',xmlString, function(error,result){
                         if(error){
-                            console.log('ERROR - preProcessArticle');
-                            console.log(error);
-                        }
-                        if(result){
-                            Session.set('xml-verify',true);
-                            result._id = articleMongoId;
-                            Session.set('article-form',result);
+                            console.error('process XML for DB', error);
+                            Meteor.formActions.errorMessage('Could not process XML for verification');
+                        }else if(result){
                             Meteor.formActions.closeModal();
+                            // Meteor.general.scrollTo('xml-verify');
+
+                            Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
+                                    if(error){
+                                        console.log('ERROR - preProcessArticle');
+                                        console.log(error);
+                                    }
+                                    if(result){
+                                        Session.set('xml-verify',true);
+                                        result._id = articleMongoId;
+                                        Session.set('article-form',result);
+                                        Meteor.formActions.closeModal();
+                                    }
+                                });
                         }
                     });
-                }
-            });
+                });
+
         }
-        reader.readAsText(file);
+        else {
+            reader.onload = function(e) {
+                xmlString = e.target.result;
+
+                Meteor.call('processXmlString',xmlString, function(error,result){
+                        if(error){
+                            console.error('process XML for DB', error);
+                            Meteor.formActions.errorMessage('Could not process XML for verification');
+                        }else if(result){
+                            Meteor.formActions.closeModal();
+                            // Meteor.general.scrollTo('xml-verify');
+
+                            Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
+                                    if(error){
+                                        console.log('ERROR - preProcessArticle');
+                                        console.log(error);
+                                    }
+                                    if(result){
+                                        Session.set('xml-verify',true);
+                                        result._id = articleMongoId;
+                                        Session.set('article-form',result);
+                                        Meteor.formActions.closeModal();
+                                    }
+                                });
+                        }
+                    });
+            }
+            reader.readAsText(file);
+        }
     },
     verifyNewXml: function(files){
         var s3Folder = 'xml';

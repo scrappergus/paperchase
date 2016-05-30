@@ -358,6 +358,8 @@ Meteor.methods({
             // -----------
             // add xml and pdf info so that we can use this to update db without erasing info
             // only need to include xml and pdf because figs and supp will be auto processed via xml processing
+            // Gus: I added figure and supp handling to preserve the S3 file names when reprocessing the XML
+
             if(article.files){
             }else{
                 article.files = {};
@@ -370,6 +372,27 @@ Meteor.methods({
             if(articleFilesInDb && articleFilesInDb.files.xml){
                article.files.xml = articleFilesInDb.files.xml;
             }
+
+            if(articleFilesInDb && articleFilesInDb.files.figures){
+                for(var i=0 ; i < article.files.figures.length; i++){
+                    for(var k=0 ; k < articleFilesInDb.files.figures.length; k++){
+                        if(article.files.figures[i].id.toLowerCase() == articleFilesInDb.files.figures[k].id.toLowerCase()) {
+                            article.files.figures[i].file = articleFilesInDb.files.figures[k].file;
+                        }
+                    }
+                }
+            }
+
+            if(articleFilesInDb && articleFilesInDb.files.supplemental){
+                for(var i=0 ; i < articleFilesInDb.files.supplemental.length; i++){
+                    for(var k=0 ; k < articleFilesInDb.files.supplemental.length; k++){
+                        if(article.files.supplemental[i].id.toLowerCase() == articleFilesInDb.files.supplemental[k].id.toLowerCase()) {
+                            article.files.supplemental[i].file = articleFilesInDb.files.supplemental[k].file;
+                        }
+                    }
+                }
+            }
+
 
             // console.log('--------------------article');
             // console.log(article);
@@ -551,22 +574,34 @@ Meteor.methods({
 
 // For Crawling by PII
 Meteor.methods({
-    crawlXmlAndPdfByPii: function (pii) {
-        var baseUrl = journalConfig.findOne().api.crawler;
-        var journal = journalInfo.journal.short_name;
-        return http.get(baseUrl + '/crawl_content/' + journal + '/' + pii);
+    crawlXmlById: function (mid) {
+        jc = journalConfig.findOne();
+        var baseUrl = jc.api.crawler;
+        var journal = jc.journal.short_name;
+        return Meteor.http.get(baseUrl + '/get_article_pmc_xml/' + journal + '/' + mid);
+    },
+
+    crawlPdfById: function (mid) {
+        jc = journalConfig.findOne();
+        var baseUrl = jc.api.crawler;
+        var journal = jc.journal.short_name;
+        return Meteor.http.get(baseUrl + '/get_article_pmc_pdf/' + journal + '/' + mid);
     },
 
     crawlFiguresByPii: function (pii) {
-        var baseUrl = journalConfig.findOne().api.crawler;
-        var journal = journalInfo.journal.short_name;
-        return http.get(baseUrl + '/crawl_figures/' + journal + '/' + pii);
+        jc = journalConfig.findOne();
+        var baseUrl = jc.api.crawler;
+        var journal = jc.journal.short_name;
+
+        return Meteor.http.get(baseUrl + '/crawl_figures/' + journal + '/' + pii);
     },
 
     crawlSuplementsByPii: function (pii) {
-        var baseUrl = journalConfig.findOne().api.crawler;
-        var journal = journalInfo.journal.short_name;
-        return http.get(baseUrl + '/crawl_supplemental/' + journal + '/' + pii);
+        jc = journalConfig.findOne();
+        var baseUrl = jc.api.crawler;
+        var journal = jc.journal.short_name;
+
+        return Meteor.http.get(baseUrl + '/crawl_supplemental/' + journal + '/' + pii);
     }
 });
 

@@ -1537,6 +1537,69 @@ if (Meteor.isClient) {
         }
     });
 
+    // Ethics
+    Router.route('/admin/ethics', {
+        name: 'AdminEthics',
+        title: function() {
+            var pageTitle = 'Admin | Ethics ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('ethics'),
+                Meteor.subscribe('sortedList','ethics')
+            ]
+        },
+        data: function(){
+            // Keep data declarations here
+            // when adding data via template helper, the array shows as an object and there is an error:
+            // {#each}} currently only accepts arrays, cursors or falsey values.
+            if(this.ready()){
+                var sections = ethics.find().fetch();
+                var sorted  = sorters.findOne();
+                return {
+                    sections : sorted['ordered']
+                };
+            }
+        }
+    });
+
+    // Home Page
+    Router.route('/admin/home', {
+        name: 'AdminHomePage',
+        title: function() {
+            var pageTitle = 'Admin | Home ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('homePage'),
+                Meteor.subscribe('sortedList','homePage')
+            ]
+        },
+        data: function(){
+            // Keep data declarations here
+            // when adding data via template helper, the array shows as an object and there is an error:
+            // {#each}} currently only accepts arrays, cursors or falsey values.
+            if(this.ready()){
+                var sections = homePage.find().fetch();
+                var sorted  = sorters.findOne();
+                return {
+                    sections : sorted['ordered']
+                };
+            }
+        }
+    });
+
+
     // Institutions
     Router.route('/admin/institution', {
         name: 'AdminInstitution',

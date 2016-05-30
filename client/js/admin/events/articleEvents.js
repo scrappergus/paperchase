@@ -44,20 +44,34 @@ Template.OncotargetOjsBatch.events({
 // Article
 // ----------------
 Template.AdminArticleButtons.events({
-    'click .crawl-content': function (e) {
+    'click .crawl-xml': function (e) {
         e.preventDefault();
-        var pii = e.dataset.pii;
-        Meteor.call('crawlXmlAndPdfByPii', pii, function (err, res) {
+        var pii = e.target.dataset.pii;
+        var mid = e.target.dataset.mongoid;
+        Meteor.call('crawlXmlById', mid, function (err, res) {
             if ( err) {
                 console.error('ERROR: calling crawler', error);
                 return Meteor.formActions.error();
             }
-            Meteor.formActions.successMessage('crawled article ' + pii);
+            Meteor.formActions.successMessage('crawled article ' + mid);
+        });
+    },
+
+    'click .crawl-pdf': function (e) {
+        e.preventDefault();
+        var pii = e.target.dataset.pii;
+        var mid = e.target.dataset.mongoid;
+        Meteor.call('crawlPdfById', mid, function (err, res) {
+            if ( err) {
+                console.error('ERROR: calling crawler', error);
+                return Meteor.formActions.error();
+            }
+            Meteor.formActions.successMessage('crawled article ' + mid);
         });
     },
     'click .crawl-figures': function (e) {
         e.preventDefault();
-        var pii = e.dataset.pii;
+        var pii = e.target.dataset.pii;
         Meteor.call('crawlFiguresByPii', pii, function (err, res) {
             if ( err) {
                 console.error('ERROR: calling crawler', error);
@@ -68,7 +82,7 @@ Template.AdminArticleButtons.events({
     },
     'click .crawl-supplements': function (e) {
         e.preventDefault();
-        var pii = e.dataset.pii;
+        var pii = e.target.dataset.pii;
         Meteor.call('crawlSuplementsByPii', pii, function (err, res) {
             if ( err) {
                 console.error('ERROR: calling crawler', error);
@@ -95,7 +109,7 @@ Template.s3ArticleFilesUpload.events({
         // Uploader only allows 1 file at a time.
         // Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
         if(files){
-            if(file.type == 'text/xml'){
+            if(files.length == 0 || file.type == 'text/xml'){
                 Meteor.articleFiles.verifyXml(articleMongoId,files);
             }else if(file.type == 'application/pdf'){
                 Meteor.articleFiles.uploadArticleFile(articleMongoId,'pdf',files);

@@ -539,6 +539,27 @@ if (Meteor.isClient) {
         },
     });
 
+    Router.route('/ethics', {
+        name: 'Ethics',
+        title: 'Publication Ethics and Publication Malpractice Statements',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('ethicsPublic'),
+                Meteor.subscribe('sortedList','ethics')
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var sections = ethics.find().fetch();
+                var sorted  = sorters.findOne();
+                return {
+                    sections : sorted['ordered']
+                };
+            }
+        },
+    });
+
     Router.route('/contact', {
         name: 'Contact',
         layoutTemplate: 'Visitor',

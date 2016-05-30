@@ -249,6 +249,7 @@ Meteor.xmlPmc = {
         var abstract;
         abstract = xml.substring(xml.lastIndexOf('<abstract>')+1,xml.lastIndexOf('</abstract>'));
         abstract = abstract.replace('abstract>\n ', '');
+        abstract = abstract.replace('abstract>', '');
         abstract = Meteor.processXml.cleanAbstract(abstract);
         cb(abstract);
     },
@@ -292,12 +293,15 @@ Meteor.xmlPmc = {
     },
     authorsAffiliations: function(affiliations,cb){
         var affiliationsResult = [];
+        console.log(affiliations);
         for(var aff=0 ; aff < affiliations.length ; aff++){
             if(affiliations[aff]._){
                 affiliationsResult.push(affiliations[aff]._.trim());
             }else{
                 // console.log(affiliations[aff]);
-                affiliationsResult.push(affiliations[aff].trim());
+                // this trim line was causing crashes, so I am commenting out the trim
+                //affiliationsResult.push(affiliations[aff].trim());
+                affiliationsResult.push(affiliations[aff]);
             }
         }
         cb(affiliationsResult);

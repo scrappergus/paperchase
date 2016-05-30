@@ -105,9 +105,10 @@
     <div class="row">
         <div class="col s12">
             {{#if ids.pii}}
-            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-content">crawl xml and pdf</a>
-            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-figures">crawl figures and tables</a>
-            <a href="#" data-pii="{{ids.pii}}" class="btn btn-edit crawl-supplements">crawl supplemental files</a>
+            <a href="#" data-mongoid="{{_id}}" data-pii="{{ids.pii}}" class="btn btn-edit crawl-xml">crawl xml</a>
+            <a href="#" data-mongoid="{{_id}}" data-pii="{{ids.pii}}" class="btn btn-edit crawl-pdf">crawl pdf</a>
+            <a href="#" data-mongoid="{{_id}}" data-pii="{{ids.pii}}" class="btn btn-edit crawl-figures">crawl figures and tables</a>
+            <a href="#" data-mongoid="{{_id}}" data-pii="{{ids.pii}}" class="btn btn-edit crawl-supplements">crawl supplemental files</a>
             {{/if}}
         </div>
     </div>

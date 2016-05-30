@@ -80,6 +80,7 @@ articles.schema = new SimpleSchema({
     'ids.manuscript': {type: String, optional: true},
     'ids.medline': {type: String, optional: true},
     'ids.pii': {type: String, optional: true},
+    'ids.publisher': {type: String, optional: true},
     'ids.pmc': {type: String, optional: true},
     'ids.pmid': {type: String, optional: true},
     issue: {type: String, optional: true},
@@ -149,6 +150,21 @@ edboard.schema = new SimpleSchema({
     name_middle: {type: String, optional: true, label: 'Middle name'},
     name_last: {type: String, optional: false, label: 'Last name'}
 });
+
+// ethics
+ethics.schema = new SimpleSchema({
+    title: {type: String, optional: false},
+    content: {type: String, optional: true},
+    display: {type: Boolean, optional: true}
+});
+
+// homePage
+homePage.schema = new SimpleSchema({
+    title: {type: String, optional: false},
+    content: {type: String, optional: true},
+    display: {type: Boolean, optional: true}
+});
+
 // for_authors
 forAuthors.schema = new SimpleSchema({
     title: {type: String, optional: false},
