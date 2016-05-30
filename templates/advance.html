@@ -12,8 +12,13 @@
 				<div class="toc-info">
                     <h2 class="title">{{{title}}}</h2>
                     {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
-
+                    {{#if abstract}}
                     <a class="small secondary button" style="margin-top: 15px;" href="{{pathFor 'Article' _id=_id}}">View Abstract</a>
+                    {{/if}}
+                    {{#if files.pdf}}
+                    <a data-id="{{_id}}" class="small secondary button" href="{{files.pdf.url}}">PDF</a>
+                    {{/if}}
+
                     {{#if advanceContent}}
                     <a data-id="{{_id}}" class="small secondary button" href="{{pathFor 'ArticleText'}}">Full-Text</a>
                     {{/if}}
