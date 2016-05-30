@@ -724,7 +724,14 @@ if (Meteor.isClient) {
 
     Router.route('/article/:_id/text', {
         name: 'ArticleText',
-        parent: 'Issue',
+        parent: function() {
+            var data = this.data();
+            if(data.article.advance === true) {
+                return "Advance";
+            }else{
+                return "Issue";
+            }
+        },
         layoutTemplate: 'Visitor',
         onBeforeAction: function() {
             // check if article exists
