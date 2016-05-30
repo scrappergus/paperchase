@@ -54,11 +54,13 @@ Meteor.article = {
     },
     linkFiles:function(files,articleMongoId){
         for(var file in files){
-            if(files[file].file){
-                files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
-            }else if(file === 'supplemental' || file === 'figures'){
-                for(var f in files[file]){
-                    files[file][f].url =  journalConfig.findOne({}).assets + 'supplemental_materials/' + files[file][f].file;
+            if(files[file]) {
+                if(files[file].file){
+                    files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
+                }else if(file === 'supplemental' || file === 'figures'){
+                    for(var f in files[file]){
+                        files[file][f].url =  journalConfig.findOne({}).assets + 'supplemental_materials/' + files[file][f].file;
+                    }
                 }
             }
         }
