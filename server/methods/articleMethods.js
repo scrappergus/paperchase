@@ -82,7 +82,7 @@ Meteor.methods({
                             console.error('addArticle',error);
                             fut.throw(error);
                         }else if(result){
-                            fut.return(result);
+                            fut.return({article_id: result, saved: true});
                         }
                     });
                 }else if(mongoId){
@@ -481,17 +481,17 @@ Meteor.methods({
                 }
             ];
 
-            if(articleData.ids.pmid){
+            if(articleData.ids && articleData.ids.pmid){
                 query.push({
                     'ids.pmid': articleData.ids.pmid
                 });
             }
-            if(articleData.ids.pmc){
+            if(articleData.ids && articleData.ids.pmc){
                 query.push({
                     'ids.pmc': articleData.ids.pmc
                 });
             }
-            if(articleData.ids.pii){
+            if(articleData.ids && articleData.ids.pii){
                 query.push({
                     'ids.pii': articleData.ids.pii
                 });
@@ -523,6 +523,7 @@ Meteor.methods({
             Meteor.call('articleExistenceCheck',mongoId, articleData);
             return Meteor.call('updateArticle',mongoId, articleData);
         } catch(e){
+            console.error(e);
             throw new Meteor.Error(500, e.reason, e.details);
         }
     },
