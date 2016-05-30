@@ -72,6 +72,17 @@
             </span>
         {{/each}}
     </h2>
+
+    <p>
+    <ul>
+    {{#each affiliations}}
+    <li>
+        <sup>{{affiliationNumber @index}}</sup> {{.}}
+    </li>
+    {{/each}}
+    </ul>
+    </p>
+
 </template>
 
 
