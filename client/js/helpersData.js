@@ -202,7 +202,7 @@ Template.Issue.helpers({
         var sectionName;
 
         for ( i = 0; i < articles.length; i++ ) {
-            console.log('Article Type: ' + Meteor.general.pluralize(articles[i].article_type.name));
+//            console.log('Article Type: ' + Meteor.general.pluralize(articles[i].article_type.name));
             if ( articles[i].start_group && articles[i].article_type.name) {
                 sections.push( { title: Meteor.general.pluralize(articles[i].article_type.name) } );
             }

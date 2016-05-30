@@ -50,6 +50,10 @@ Meteor.article = {
         if(article.files){
             article.files = Meteor.article.linkFiles(article.files, article._id);
         }
+
+        if(article.affiliations.length == 1) {
+            article.singleAffiliation = true;
+        }
         return article;
     },
     linkFiles:function(files,articleMongoId){

@@ -15,7 +15,7 @@
 
 <template name="ArticleHeader">
     {{>ArticleHeaderTitle}}
-    {{>AuthorsRefList}}
+    {{>AuthorsRefList }}
     {{#if dates}} {{>ArticleDates}} {{/if}}
 
     <!-- todo: implement featured photo -->
@@ -58,15 +58,21 @@
 
 <template name="AuthorsRefList">
     <h2 class="authors">
-        {{#each authors}}
+        {{#each authors }}
             <span class="author">
                 {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
+                {{#if ../singleAffiliation}}
+                <sup class="author-affiliations">
+                    <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">1</a></span>
+                </sup>
+                {{else}}
                 {{#if affiliations_numbers}}
-                    <sup class="author-affiliations">
-                        {{#each affiliations_numbers}}
-                            <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
-                        {{/each}}
-                    </sup>
+                <sup class="author-affiliations">
+                    {{#each affiliations_numbers}}
+                    <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
+                    {{/each}}
+                </sup>
+                {{/if}}
                 {{/if}}
                 <span class="comma">,</span>
             </span>
@@ -77,7 +83,7 @@
     <ul>
     {{#each affiliations}}
     <li>
-        <sup>{{affiliationNumber @index}}</sup> {{.}}
+        <sup>{{affiliationNumber @index affiliations}}</sup> {{.}}
     </li>
     {{/each}}
     </ul>
