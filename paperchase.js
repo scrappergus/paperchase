@@ -389,7 +389,8 @@ if (Meteor.isClient) {
     Session.setDefault('archive',null);
     Session.setDefault('article-visitor',null);
 
-    //redirects
+    // Redirects
+    // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.
     Router.route('/index.html', function() {
             Router.go('/');
         });
@@ -399,6 +400,20 @@ if (Meteor.isClient) {
     Router.route('/ethics.html', function() {
             Router.go('/ethics');
         });
+    Router.route('/content', {
+            waitOn: function(){
+                return[
+                Meteor.subscribe('currentIssue'),
+                ]
+            },
+            action: function() {
+                var current = issues.find({'current':true}).fetch();
+                current = current[0];
+                var route = "/issue/v"+current['volume']+"i"+current['issue'];
+                Router.go(route);
+            }
+        });
+
 
     Router.route('/', {
         name: 'Home',
