@@ -400,7 +400,7 @@ if (Meteor.isClient) {
     Router.route('/ethics.html', function() {
             Router.go('/ethics');
         });
-    Router.route('/content', {
+    Router.route('/contents', {
             waitOn: function(){
                 return[
                 Meteor.subscribe('currentIssue'),
