@@ -140,7 +140,7 @@ Meteor.methods({
         // ABSTRACT
         // -----------
         if(article.Abstract){
-            articleProcessed.abstract = Meteor.processXml.cleanAbstract(article.Abstract[0]);
+            articleProcessed.abstract = Meteor.processXml.cleanAbstract(article.Abstract[0]._);
         }
 
         // ARTICLE TYPE
