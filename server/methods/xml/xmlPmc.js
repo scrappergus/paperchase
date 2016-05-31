@@ -293,7 +293,6 @@ Meteor.xmlPmc = {
     },
     authorsAffiliations: function(affiliations,cb){
         var affiliationsResult = [];
-        console.log(affiliations);
         for(var aff=0 ; aff < affiliations.length ; aff++){
             if(affiliations[aff]._){
                 affiliationsResult.push(affiliations[aff]._.trim());

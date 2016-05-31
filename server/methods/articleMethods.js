@@ -366,33 +366,34 @@ Meteor.methods({
             }
 
             articleFilesInDb = articles.findOne({'_id': articleId});
-            if(articleFilesInDb && articleFilesInDb.files.pdf){
-               article.files.pdf = articleFilesInDb.files.pdf;
-            }
-            if(articleFilesInDb && articleFilesInDb.files.xml){
-               article.files.xml = articleFilesInDb.files.xml;
-            }
+            if(articleFilesInDb.files) {
+                if(articleFilesInDb && articleFilesInDb.files.pdf){
+                    article.files.pdf = articleFilesInDb.files.pdf;
+                }
+                if(articleFilesInDb && articleFilesInDb.files.xml){
+                    article.files.xml = articleFilesInDb.files.xml;
+                }
 
-            if(articleFilesInDb && articleFilesInDb.files.figures){
-                for(var i=0 ; i < article.files.figures.length; i++){
-                    for(var k=0 ; k < articleFilesInDb.files.figures.length; k++){
-                        if(article.files.figures[i].id.toLowerCase() == articleFilesInDb.files.figures[k].id.toLowerCase()) {
-                            article.files.figures[i].file = articleFilesInDb.files.figures[k].file;
+                if(articleFilesInDb && articleFilesInDb.files.figures){
+                    for(var i=0 ; i < article.files.figures.length; i++){
+                        for(var k=0 ; k < articleFilesInDb.files.figures.length; k++){
+                            if(article.files.figures[i].id.toLowerCase() == articleFilesInDb.files.figures[k].id.toLowerCase()) {
+                                article.files.figures[i].file = articleFilesInDb.files.figures[k].file;
+                            }
+                        }
+                    }
+                }
+
+                if(articleFilesInDb && articleFilesInDb.files.supplemental){
+                    for(var i=0 ; i < articleFilesInDb.files.supplemental.length; i++){
+                        for(var k=0 ; k < articleFilesInDb.files.supplemental.length; k++){
+                            if(article.files.supplemental[i].id.toLowerCase() == articleFilesInDb.files.supplemental[k].id.toLowerCase()) {
+                                article.files.supplemental[i].file = articleFilesInDb.files.supplemental[k].file;
+                            }
                         }
                     }
                 }
             }
-
-            if(articleFilesInDb && articleFilesInDb.files.supplemental){
-                for(var i=0 ; i < articleFilesInDb.files.supplemental.length; i++){
-                    for(var k=0 ; k < articleFilesInDb.files.supplemental.length; k++){
-                        if(article.files.supplemental[i].id.toLowerCase() == articleFilesInDb.files.supplemental[k].id.toLowerCase()) {
-                            article.files.supplemental[i].file = articleFilesInDb.files.supplemental[k].file;
-                        }
-                    }
-                }
-            }
-
 
             // console.log('--------------------article');
             // console.log(article);
