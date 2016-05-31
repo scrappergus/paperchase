@@ -696,10 +696,18 @@ if (Meteor.isClient) {
     // Article
     // -------
     Router.route('/article/:_id', {
-        name: 'Article',
-        parent: 'Issue',
-        layoutTemplate: 'Visitor',
-        title: function() {
+         name: 'Article',
+         parent: function() {
+             var data = this.data();
+             if(data.article.advance === true) {
+                 return "Advance";
+             }else{
+                 return "Issue";
+             }
+
+         },
+         layoutTemplate: 'Visitor',
+         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
                 pageTitle = Session.get('journal').journal.name + ' | ';
