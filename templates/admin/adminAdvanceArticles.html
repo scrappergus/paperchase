@@ -155,9 +155,11 @@
             <div class="card z-depth-0">
                 <div class="card-content">
                     <form>
+                        {{#if articles}}
                         <div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
                             {{>AdminAdvanceBatchDelete}}
                         </div>
+                        {{/if}}
                         <table class="striped">
                             <thead>
                                 <tr>

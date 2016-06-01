@@ -6,6 +6,7 @@
 
     {{>StatusModal what='Advance Articles'}}
     {{#if advanceDiff}}
+    
     {{#with advanceDiff}}
     <div class="row">
         <div class="col s12">
@@ -49,10 +50,13 @@
         </div>
     </div>
     {{/with}}
-    {{else}}
-    {{>Progress}}
-    {{/if}}
     <div class="publish-advanced fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
         {{>AdminAdvanceBatchDelete}}
     </div>
+    
+    {{else}}
+
+    {{>Progress}}
+    
+    {{/if}}
 </template>
