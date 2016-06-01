@@ -22,93 +22,93 @@ sections = new Mongo.Collection('sections');
 // -------
 sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
-    var order = f.order;
-    if(f.name == 'advance'){
-        var articlesList = articles.find({'_id':{'$in':order}}).fetch();
-        f.articles = [];
+        var order = f.order;
+        if(f.name == 'advance'){
+            var articlesList = articles.find({'_id':{'$in':order}}).fetch();
+            var byId = Meteor.organize.byMongoId(articlesList);
+            f.articles = [];
 
-        var last_section;
-        for(var i = 0 ; i < order.length ; i++){
-            for(var a = 0 ; a < articlesList.length ; a++){
-                if(articlesList[a]['_id'] === order[i]){
-                    var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
+            var last_section;
+            order.map(function(id){
+                var article = {};
+                if(byId[id]){
+                    article = byId[id];
+                    // section name
+                    var section = sections.findOne({section_id : article.section_id});
                     if(section !== undefined) {        
-                        articlesList[a]['section_name'] = section['section_name'];
-                    }
-                    else if(articlesList[a]['article_type']) {
-                        articlesList[a]['section_name'] = articlesList[a]['article_type']['name'];
-                    }
-
-                    if(i==0) {
-                        articlesList[a]['section_start'] = true;
-                    }
-                    else if(last_section != articlesList[a]['section_name']){
-                        articlesList[a]['section_start'] = true;
+                        article.section_name = section.section_name;
+                    } else if(article.article_type) {
+                        article.section_name = article.article_type.name;
                     }
 
+                    // section start tracking
+                    if(i===0) {
+                        articles.section_start = true;
+                    } else if(last_section != article.section_name){
+                        article.section_start = true;
+                    }
+                    last_section = article.section_name;
 
-                    last_section = articlesList[a]['section_name'];
-                    f.articles.push(articlesList[a]);
+                    f.articles.push(article);                    
+                }
+            });
+        }else if(f.name == 'homePage'){
+            f.ordered = [];
+            var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
+            // console.log(sectionsList);
+            for(var i = 0 ; i < order.length ; i++){
+                // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]['_id']);
+                    if(sectionsList[a]['_id'] == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
                 }
             }
-        }
-    }else if(f.name == 'homePage'){
-        f.ordered = [];
-        var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
-        // console.log(sectionsList);
-        for(var i = 0 ; i < order.length ; i++){
-            // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
+        }else if(f.name == 'ethics'){
+            f.ordered = [];
+            var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
+            // console.log(sectionsList);
+            for(var i = 0 ; i < order.length ; i++){
+                // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]['_id']);
+                    if(sectionsList[a]['_id'] == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
                 }
             }
-        }
-    }else if(f.name == 'ethics'){
-        f.ordered = [];
-        var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
-        // console.log(sectionsList);
-        for(var i = 0 ; i < order.length ; i++){
-            // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
+        }else if(f.name == 'forAuthors'){
+            f.ordered = [];
+            var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
+            // console.log(sectionsList);
+            for(var i = 0 ; i < order.length ; i++){
+                // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]['_id']);
+                    if(sectionsList[a]['_id'] == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
                 }
             }
-        }
-    }else if(f.name == 'forAuthors'){
-        f.ordered = [];
-        var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
-        // console.log(sectionsList);
-        for(var i = 0 ; i < order.length ; i++){
-            // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
+        }else if(f.name == 'about'){
+            // Same exact thing as forAuthors. Look into using collection name as a variable.
+            f.ordered = [];
+            var sectionsList = about.find({'_id':{'$in':order}}).fetch();
+            for(var i = 0 ; i < order.length ; i++){
+              // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]['_id']);
+                    if(sectionsList[a]['_id'] == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
                 }
             }
+        }else if(f.name == 'sections'){
+            var unordered = sections.find({'_id':{'$in':order}}).fetch();
+            f.ordered = Meteor.sorter.sort(unordered,order);
         }
-    }else if(f.name == 'about'){
-        // Same exact thing as forAuthors. Look into using collection name as a variable.
-        f.ordered = [];
-        var sectionsList = about.find({'_id':{'$in':order}}).fetch();
-        for(var i = 0 ; i < order.length ; i++){
-          // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
-                }
-            }
-        }
-    }else if(f.name == 'sections'){
-        var unordered = sections.find({'_id':{'$in':order}}).fetch();
-        f.ordered = Meteor.sorter.sort(unordered,order);
-    }
-    return f;
+        return f;
     }
 });
 publish = new Mongo.Collection('publish');
@@ -611,7 +611,8 @@ if (Meteor.isServer) {
         return articles.find({'feature':true},{sort:{'_id':1}});
     });
     Meteor.publish('advance', function () {
-        var articlesList = articles.find();
+        var sorter = sorters.findOne({'name':'advance'});
+        var articlesList = articles.find({_id:{'$in':sorter.order}});
         return articlesList;
     });
     Meteor.publish('submissions', function () {
@@ -829,7 +830,7 @@ if (Meteor.isServer) {
     // For advance
     // ----------------
     Meteor.publish('publish', function () {
-    return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+        return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
     });
 
     // Search

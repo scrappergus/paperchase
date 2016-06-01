@@ -30,6 +30,13 @@ Meteor.organize = {
             //grouped[type].push(articles[i]);
         }
         return articles;
+    },
+    byMongoId: function(collection){
+        var result = {};
+        for(var i=0; i<collection.length; i++){
+            result[collection[i]._id] = collection[i];
+        }
+        return result;
     }
 }
 
@@ -812,3 +819,4 @@ Meteor.advance = {
         return sectionsOrder;
     }
 }
+
