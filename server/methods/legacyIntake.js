@@ -516,23 +516,50 @@ Meteor.methods({
 		return articleUpdate;
 	},
 	ojsGetAdvanceArticles: function(){
-		var fut = new future();
-		var requestURL = 'http://www.impactjournals.com//ojs-api/?v=5&i=0';
-		var res;
-		res = Meteor.http.get(requestURL);
+        // console.log('ojsGetAdvanceArticles', new Date());
+        var fut = new future();
+        var requestURL = 'http://www.impactjournals.com//ojs-api/?v=5&i=0';
+        var res;
+        res = Meteor.http.get(requestURL);
 
         if(res){
-            fut['return'](res.data.articles);
+            fut.return(res.data.articles);
         }else{
             throw new Meteor.Error(500, 'ojsAdvanceArticles' , error);
         }
 
         try {
             return fut.wait();
-        }
-        catch(err) {
+        }catch(err) {
             throw new Meteor.Error(error);
         }
+    },
+    ojsAddMissingAdvance: function(missing){
+        // console.log('ojsAddMissingAdvance',missing.length);
+        var added = [];
+        var journalInfo = journalConfig.findOne();
+        missing.map(function(article){
+            Meteor.call('ojsProcessArticleJson', article.data, function(processError,processedArticleJson){
+                if(processError) {
+                    console.error('legacyArticleIntake via ojsAddMissingAdvance',processError);
+                }else if(processedArticleJson){
+                    Meteor.call('addArticle',processedArticleJson, function(addError,result){
+                        if(addError){
+                            console.error('addError via ojsAddMissingAdvance',addError);
+                        }else if(result){
+                            Meteor.call('sorterAddItem','advance',result, function(sorterError,sorterRes){
+                                if(sorterError){
+                                    console.error('sorterAddItem via ojsAddMissingAdvance',sorterError);
+                                }else if(sorterRes){
+                                    added.push(processedArticleJson.ids.pii);                                
+                                }
+                            });
+                        }
+                    });                        
+                }            
+            });  
+        });
+        return added;
     }
 });
 

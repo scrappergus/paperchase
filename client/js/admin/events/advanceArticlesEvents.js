@@ -66,6 +66,60 @@ Template.AdminAdvanceArticles.events({
     },
 });
 
+Template.AdminAdvanceArticlesDiff.events({
+    'click #add-all-ojs': function(e){
+        Meteor.formActions.saving();
+        e.preventDefault();
+        var diff = Session.get('advanceDiff');
+        var beforeOjs = diff.ojsOnly;
+        var afterOjs = [];
+        Meteor.call('ojsAddMissingAdvance',beforeOjs, function(error,addedResult){
+            if(error){
+                console.error('ojsAddMissingAdvance',error);
+                Meteor.formActions.errorMessage('Could not add articles to Paperchase');
+            } else if(addedResult) {
+                // do not use compareWithLegacy() because takes too long. Instead use result of updated to update session variable
+                beforeOjs.forEach(function(ojsArticle){
+                    if(addedResult.indexOf(ojsArticle.pii) === -1){
+                        afterOjs.push(ojsArticle);
+                    }
+                });
+
+                diff.ojsOnly = afterOjs;
+                diff.paperchaseCount = parseInt(diff.paperchaseCount + addedResult.length);
+                Session.set('advanceDiff',diff);
+                Meteor.formActions.successMessage(addedResult.length + ' articles added to advance');            
+            }
+        });   
+    },
+    'click #remove-all-paperchase': function(e){
+        Meteor.formActions.saving();
+        e.preventDefault();
+        var diff = Session.get('advanceDiff');
+        var removeMongoIds = diff.paperchaseOnly.map(function(article){
+            return article._id;
+        });
+
+        Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,removedResult){
+            if(removedResult){
+                Meteor.call('compareWithLegacy', function(error,result){
+                    if(result){
+                        Session.set('advanceDiff',result)
+                    }
+                    if(removedResult.length == removeMongoIds.length){
+                        Meteor.formActions.successMessage(removeMongoIds.length + ' Articles Removed');
+                    }else{
+                        Meteor.formActions.successMessage(removeMongoIds.length + ' Articles Removed. Some were not removed.<br>Requested: ' + removeMongoIds.length + '<br>Removed: ' + removedResult.length);
+                    }
+                });
+            }else{
+                message = 'Could not remove articles';
+                Meteor.formActions.errorMessage(message);
+            }
+        });
+    }
+});
+
 // Advance - remove articles
 Template.AdvanceRemoveArticle.events({
     'click .delete-article': function(e){
@@ -107,9 +161,9 @@ Template.AdminAdvanceBatchDelete.events({
         Meteor.call('batchSorterRemoveItem','advance', removeMongoIds, function(error,result){
             var message;
             if(result){
-                if(t.view.parentView.name == 'Template.AdminAdvanceArticlesDiff'){
-                    var legacyArticles = Session.get('advanceLegacy');
-                    Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
+                if($(e.target).data('parent') == 'diff'){
+                    // var legacyArticles = Session.get('advanceLegacy');
+                    Meteor.call('compareWithLegacy', function(error,result){
                         if(result){
                             Session.set('advanceDiff',result)
                         }

@@ -17,42 +17,60 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <h3>OJS Only</h3>
-            <table class="card striped">
-                <tbody>
-                    {{#each ojsOnly}}
-                    <tr>
-                        <td>{{pii}}</td>
-                        <td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></td>
-                        <td><a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a></td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">OJS Only</div>
+                    {{#if ojsOnly}}
+                    <div class="row"><div class="col s12"><button class="btn btn-add" id="add-all-ojs">Add all <u>OJS</u> advance to <u>Paperchase</u></button></div></div>
+                    <div class="row"><div class="col s12"><table class="striped">
+                        <tbody>
+                            {{#each ojsOnly}}
+                            <tr>
+                                <td>{{pii}}</td>
+                                <td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{pii}}">OJS</a></td>
+                                <td><a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Paperchase</a></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table></div></div>
+                    {{else}}
+                    No missing articles
+                    {{/if}}
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-            <h3>Paperchase Only</h3>
-            <table class="card striped">
-                <tbody>
-                    {{#each paperchaseOnly}}
-                    <tr>
-                        <td>{{ids.pii}}</td>
-                        <td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a></td>
-                        <td><a href="/admin/article/{{_id}}">Paperchase</a></td>
-                        <td><input type="checkbox" data-article-id="{{_id}}" data-article-pii="{{ids.pii}}" id="{{_id}}-remove-article" class="remove-article checkbox-red"><label for="{{_id}}-remove-article"></label></td>
-                        <td>{{>AdvanceRemoveArticle}}</td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">Paperchase Only</div>
+                    {{#if paperchaseOnly}}
+                    <div class="row"><div class="col s12"><button class="btn btn-delete" id="remove-all-paperchase">Remove all <u>Paperchase</u> only</button></div></div>
+                    <div class="row"><div class="col s12"><table class="striped">
+                        <tbody>
+                            {{#each paperchaseOnly}}
+                            <tr>
+                                <td>{{ids.pii}}</td>
+                                <td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a></td>
+                                <td><a href="/admin/article/{{_id}}">Paperchase</a></td>
+                                <td><input type="checkbox" data-article-id="{{_id}}" data-article-pii="{{ids.pii}}" id="{{_id}}-remove-article" class="remove-article checkbox-red"><label for="{{_id}}-remove-article"></label></td>
+                                <td>{{>AdvanceRemoveArticle}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table></div></div>
+                    <div class="publish-advanced fixed-action-btn card grey lighten-1" style="bottom: 46px; right: 24px; padding:10px;">
+                        {{>AdminAdvanceBatchDelete parent="diff"}}
+                    </div>
+                    {{else}}
+                    No missing articles
+                    {{/if}}
+                </div>
+            </div>
         </div>
     </div>
     {{/with}}
-    <div class="publish-advanced fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
-        {{>AdminAdvanceBatchDelete}}
-    </div>
     
     {{else}}
 

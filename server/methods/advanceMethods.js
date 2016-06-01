@@ -17,55 +17,68 @@ Meteor.methods({
                 ,data: out
             });
     },
-    compareWithLegacy: function(legacyArticles){
+    compareWithLegacy: function(){
         // console.log('..compareWithLegacy');
+        var fut = new future();
         var allPii = {};
         var result = {};
         result.paperchaseOnly = [];
         result.ojsOnly = [];
         result.allPiiCount = 0;
-        if(legacyArticles){
-            // OJS Articles
-            result.ojsCount = legacyArticles.length;
-            legacyArticles.forEach(function(ojsA){
-                // console.log('OJS', ojsA.pii);
-                allPii[ojsA.pii] = {
-                    ojs : true
-                }
-            });
-            // Paperchase Articles
-            var order = sorters.findOne({name:'advance'});
-            var pcArticles = order.articles;
-            result.paperchaseCount = pcArticles.length;
-            pcArticles.forEach(function(pcA){
-                // console.log('paperchase', pcA.ids.pii)
-                if(!allPii[pcA.ids.pii]){
-                    allPii[pcA.ids.pii] = {};
-                    result.paperchaseOnly.push(pcA);
-                }
-                allPii[pcA.ids.pii].paperchase = true;
-            });
-            // Compare. Get articles only in OJS
-            for(var pii in allPii){
-                // console.log(pii, allPii[pii]);
-                result.allPiiCount++;
-                if(allPii[pii].paperchase != true){
-                    var ojsObj = {
-                        pii: pii,
-                        query: {
-                            id : pii,
-                            journal: 'oncotarget',
-                            id_type: 'pii',
-                            advance: true
-                        }
+        Meteor.call('ojsGetAdvanceArticles',function(error,legacyArticles){
+            if(error){
+                console.error('ojsGetAdvanceArticles via compareWithLegacy',error);
+                throw new Meteor.Error(500, 'ojsGetAdvanceArticles' , error);
+            }else if(legacyArticles){
+                // OJS Articles
+                result.ojsCount = legacyArticles.length;
+                legacyArticles.forEach(function(ojsA){
+                    allPii[ojsA.pii] = {
+                        ojs : true,
+                        data: ojsA
                     }
+                });
+                // Paperchase Articles
+                var order = sorters.findOne({name:'advance'});
+                var pcArticles = order.articles;
+                result.paperchaseCount = pcArticles.length;
+                pcArticles.forEach(function(pcA){
+                    // console.log('paperchase', pcA.ids.pii)
+                    if(!allPii[pcA.ids.pii]){
+                        allPii[pcA.ids.pii] = {};
+                        result.paperchaseOnly.push(pcA);
+                    }
+                    allPii[pcA.ids.pii].paperchase = true;
+                });
+                // Compare. Get articles only in OJS
+                for(var pii in allPii){
+                    // console.log(pii, allPii[pii]);
+                    result.allPiiCount++;
+                    if(allPii[pii].paperchase != true){
+                        var ojsObj = {
+                            pii: pii,
+                            query: {
+                                id : pii,
+                                journal: 'oncotarget',
+                                id_type: 'pii',
+                                advance: true
+                            },
+                            data: allPii[pii].data
+                        }
 
-                    result.ojsOnly.push(ojsObj);
+                        result.ojsOnly.push(ojsObj);
+                    }
                 }
+                fut.return(result);
+            }else{
+                fut.return();
             }
-            return result;
-        }else{
-            return;
+        });
+
+        try {
+            return fut.wait();
+        }catch(err) {
+            throw new Meteor.Error(error);
         }
     },
     makeNewOrder: function(sectionsOrder){

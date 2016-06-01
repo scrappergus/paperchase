@@ -32,7 +32,7 @@ Meteor.methods({
             return fut.wait();
         }
         catch(err) {
-            throw new Meteor.Error(error);
+            throw new Meteor.Error(err);
         }
     },
     sorterRemoveItem: function(listName,mongoId){

@@ -991,23 +991,12 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Meteor.call('ojsGetAdvanceArticles', function(error,ojsArticles){
-                if(ojsArticles){
-                    Session.set('advanceLegacy',ojsArticles)
-                    Meteor.call('compareWithLegacy', ojsArticles, function(error,result){
-                        if(result){
-                            Session.set('advanceDiff',result)
-                        }
-                    });
+            Meteor.call('compareWithLegacy', function(error,result){
+                if(result){
+                    Session.set('advanceDiff',result)
                 }
             });
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('advance'),
-                Meteor.subscribe('sortedList','advance')
-            ]
         }
     });
     Router.route('/admin/articles/advance/remove',{
