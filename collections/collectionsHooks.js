@@ -106,6 +106,11 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         modifier.$set.issue_id = Meteor.call('articleIssueVolume',volume,issue);
     }
 
+    // authors
+     if(modifier.$set && modifier.$set.authors && modifier.$set.authors.length === 0){
+        console.log('MISSING AUTHORS: ' + doc._id);
+     }
+
     // track updates
     if(!doc.doc_updates){
         modifier.$set.doc_updates = {};

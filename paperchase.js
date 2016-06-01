@@ -125,6 +125,9 @@ Router.route('/admin/add-legacy-platform-article/',{
     where: 'server',
     name: 'AddLegacyAdvanceArticle',
     action: function(){
+        if(this.request && this.request.connection && this.request.connection._peername && this.request.connection._peername.address){
+            this.params.query.ip = this.request.connection._peername.address;
+        }
         var response = this.response;
         Meteor.call('legacyArticleIntake', this.params.query, function(err, res) {
             if(err) {

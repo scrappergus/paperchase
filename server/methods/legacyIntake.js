@@ -159,7 +159,12 @@ Meteor.methods({
             }
 
             if(articleMongoId){
-                console.log('updated',articleMongoId);
+                console.log('updated article: ',articleMongoId);
+                if(articleParams.ip){
+                    console.log('updated article: ',articleMongoId, '| IP:',articleParams.ip);
+                }else{
+                    console.log('updated article: ',articleMongoId);
+                }
                 return true; // DO we need a response to Legacy platform?
             }
             else {
@@ -512,7 +517,6 @@ Meteor.methods({
         // articleUpdate.affiliations = [];
 
         // TODO: Pub Status. Query PubMed.
-
 		return articleUpdate;
 	},
 	ojsGetAdvanceArticles: function(){
