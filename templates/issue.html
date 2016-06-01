@@ -55,7 +55,7 @@
                     {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
 
                     <!-- Desc Info -->
-                    {{#with ids}}{{#if doi}}<span class="meta"><a href="{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
+                    {{#with ids}}{{#if doi}}<span class="meta"><a href="http://dx.doi.org/{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
                     {{#if page_start}}<span class="meta">pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</span>{{/if}}
 
                     <!-- Links -->

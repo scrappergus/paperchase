@@ -160,6 +160,13 @@ Meteor.methods({
                         if(issueArticles[i].files){
                             issueArticles[i].files = Meteor.article.linkFiles(issueArticles[i].files,issueArticles[i]._id);
                         }
+
+                        if(issueArticles[i].ids.doi && _.isString(issueArticles[i].ids.doi)) {
+                            issueArticles[i].ids.doi = issueArticles[i].ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
+                        }
+
+                        issueArticles[i].files = Meteor.article.linkFiles(issueArticles[i].files,issueArticles[i]._id);
+
                     }
                     issueData.articles = issueArticles;
 
