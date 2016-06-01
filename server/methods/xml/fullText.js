@@ -287,11 +287,13 @@ Meteor.fullText = {
             if(suppInfo){
                 suppObj = suppInfo;
                 // match to db file info
-                for(var f = 0 ; f < files.supplemental.length ; f++){
-//                    if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase()){
+                if(files.supplemental) {
+                    for(var f = 0 ; f < files.supplemental.length ; f++){
+                        //                    if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase()){
                         suppObj.url = suppAssetsUrl + 'supplemental_materials/' + files.supplemental[f].file;
-//                    }
-                }                    
+                        //                    }
+                    }                    
+                }
             }
         });
         return suppObj;
