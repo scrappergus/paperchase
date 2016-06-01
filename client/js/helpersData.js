@@ -186,7 +186,12 @@ Template.AuthorsRefList.helpers({
         var articleData = Template.parentData(2);
         var authorData = Template.parentData(1);
         var num = parseInt(this);
-        return articleData.affiliations[num];
+        if(articleData.affiliations) {
+            return articleData.affiliations[num];
+        }
+        else {
+            return '';
+        }
     }
 })
 
