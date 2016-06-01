@@ -27,7 +27,8 @@ if (Meteor.isClient) {
 }
 
 Router.configure({
-    loadingTemplate: 'Loading'
+    loadingTemplate: 'Loading',
+    trackPageView: true
 });
 
 if (Meteor.isClient) {
