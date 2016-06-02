@@ -182,7 +182,18 @@ h2.dates {
         &:hover { color: $accent; }
     }
 }
-
+/*hide commas*/
+/*for authors comma*/
+.authors {
+    .author{
+        &:last-child {
+            .author-comma {
+                display:none !important; 
+            }
+        }
+    }
+}
+/*for author affiliations commas*/
 .author-affiliations {
     span{
         &:last-child {
@@ -198,6 +209,7 @@ h2.dates {
         &:last-child { display:none !important; }
     }
 }
+/*end hide commas*/
 
 .featured-photo {
     width: 100%;
