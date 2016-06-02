@@ -144,7 +144,7 @@ Template.ArticleButtons.events({
         Meteor.googleAnalytics.sendEvent('Full Text - Lens',e);
     },
     'click .view-html': function(e){
-        Meteor.googleAnalytics.sendEvent('Full Text -',e);
+        Meteor.googleAnalytics.sendEvent('Full Text - HTML',e);
     }
 });
 Template.ArticleSidebar.events({
@@ -155,7 +155,7 @@ Template.ArticleSidebar.events({
         Meteor.googleAnalytics.sendEvent('Full Text - Lens',e);
     },
     'click .view-html': function(e){
-        Meteor.googleAnalytics.sendEvent('Full Text -',e);
+        Meteor.googleAnalytics.sendEvent('Full Text - HTML',e);
     }
 });
 Template.ArticleFullText.events({
