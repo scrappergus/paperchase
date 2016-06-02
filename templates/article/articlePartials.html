@@ -4,7 +4,7 @@
             <span class="article-type">{{article_type.name}}</span>
         {{/if}}
         {{#if issue_id}}
-            <span>Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</span>
+            <span><a href="{{pathFor 'Issue' vi=vi}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
         {{/if}}
 
         {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
@@ -52,7 +52,7 @@
 <template name="AuthorsList">
     <span class="authors">
         {{#each authors}}
-            <span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span></span>
+            <span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="author-comma">, </span></span>
         {{/each}}
     </span>
 </template>
@@ -75,7 +75,7 @@
                 </sup>
                 {{/if}}
                 {{/if}}
-                <span class="comma">,</span>
+                <span class="author-comma">,</span>
             </span>
         {{/each}}
     </h2>

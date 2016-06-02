@@ -47,6 +47,10 @@ Meteor.article = {
             article.volume = issueInfo.volume;
             article.issue = issueInfo.issue;
         }
+        if(!article.vi && article.volume && article.issue){
+            article.vi = 'v' + article.volume + 'i' + article.issue;
+        }
+
         if(article.files){
             article.files = Meteor.article.linkFiles(article.files, article._id);
         }
@@ -921,7 +925,7 @@ Meteor.search = {
 
 Meteor.googleAnalytics = {
     sendEvent: function(fullTextCategory, event){
-        // console.log('..sendEvent',fullTextCategory)
+        // console.log('..sendEvent',fullTextCategory,event.target.href)
         ga('send', 'event', {
             eventCategory: fullTextCategory,
             eventAction: 'click',
