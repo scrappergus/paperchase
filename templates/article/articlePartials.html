@@ -122,13 +122,13 @@
             {{#if fullText}}
                 {{#with files}}
                 {{#if pdf.url}}
-                    <a href="{{pdf.url}}" class="full-width end-cap primary button">
+                    <a href="{{pdf.url}}" class="download-pdf full-width end-cap primary button">
                         <span class="icon icon-download"></span> Download PDF
                     </a>
                 {{/if}}
                 {{/with}}
             {{else}}
-                <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="full-width end-cap primary button">
+                <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="view-html full-width end-cap primary button">
                     <span class="icon icon-file"></span> View Full Text
                 </a>
             {{/if}}
