@@ -100,6 +100,14 @@ Template.EdBoard.helpers({
     }
 });
 
+// About
+// -------
+Template.About.helpers({
+    sections: function(){
+        // console.log(Session.get('article-text'));
+        return Session.get('about-sections');
+    }
+});
 // Article
 // -------
 Template.ArticleText.helpers({

@@ -214,7 +214,7 @@ Router.route('/get-advance-articles/',{
                     // htmlString += '<div class="articlewrapper">';
                 }
 
-
+                
                 if(articleInfo['section_name'] != prevSection) {
                     if(i != 0) {
                         htmlString += '</div>';
@@ -238,7 +238,7 @@ Router.route('/get-advance-articles/',{
                 htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
                 htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
 
-                if(articleInfo.authors){
+                if(articleInfo.authors && articleInfo.authors.length > 0){
                     // htmlString += '<tr>';
                     // htmlString += '<td class="tocAuthors">';
 
@@ -531,15 +531,25 @@ if (Meteor.isClient) {
                 Meteor.subscribe('sortedList','about')
             ]
         },
-        data: function(){
-            if(this.ready()){
-                var sections = about.find().fetch();
-                var sorted  = sorters.findOne();
-                return {
-                    sections : sorted['ordered']
-                };
-            }
-        },
+        // data: function(){
+        //     if(this.ready()){
+        //         var sections = about.find().fetch();
+        //         var sorted  = sorters.findOne();
+        //         return {
+        //             sections : sorted['ordered']
+        //         };
+        //     }
+        // },
+        onBeforeAction: function(){
+            Meteor.call('getListWithData', 'about', function(error,result){
+                if(error){
+                    console.error('getListWithData',error);
+                }else if(result){
+                    Session.set('about-sections',result);
+                }
+            });
+            this.next();
+        }        
     });
 
     Router.route('/ethics', {

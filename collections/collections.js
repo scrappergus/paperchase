@@ -93,17 +93,17 @@ sorters = new Mongo.Collection('sorters', {
             }
         }else if(f.name == 'about'){
             // Same exact thing as forAuthors. Look into using collection name as a variable.
-            f.ordered = [];
-            var sectionsList = about.find({'_id':{'$in':order}}).fetch();
-            for(var i = 0 ; i < order.length ; i++){
-              // console.log(order[i]);
-                for(var a = 0 ; a < sectionsList.length ; a++){
-                    // console.log(sectionsList[a]['_id']);
-                    if(sectionsList[a]['_id'] == order[i]){
-                        f.ordered.push(sectionsList[a]);
-                    }
-                }
-            }
+            // f.ordered = [];
+            // var sectionsList = about.find({'_id':{'$in':order}}).fetch();
+            // for(var i = 0 ; i < order.length ; i++){
+            //   // console.log(order[i]);
+            //     for(var a = 0 ; a < sectionsList.length ; a++){
+            //         // console.log(sectionsList[a]['_id']);
+            //         if(sectionsList[a]['_id'] == order[i]){
+            //             f.ordered.push(sectionsList[a]);
+            //         }
+            //     }
+            // }
         }else if(f.name == 'sections'){
             var unordered = sections.find({'_id':{'$in':order}}).fetch();
             f.ordered = Meteor.sorter.sort(unordered,order);
