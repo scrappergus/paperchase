@@ -61,6 +61,7 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
+        console.log('..updateArticle', new Date());
         // nope. articles with missing authors not showing this log
         // console.log('updateArticle',mongoId, articleData);
         // whether adding or editing an article, both will go through this method
@@ -109,6 +110,7 @@ Meteor.methods({
         return articles.update(where, {$set: what},{multi:true});
     },
     unsetArticles: function(where, what){
+        console.log('..unsetArticles', new Date());
         // nope. used in removeArticlesFromIssue()
         Meteor.authorizeCheck.articles();
         var articlesToUpdate = articles.find(where).fetch()
@@ -118,6 +120,7 @@ Meteor.methods({
         }
     },
     pushArticle: function(mongoId, field, articleData){
+        console.log('..pushArticle', new Date());
         // nope. used in submissions method articlesStatusUpdate()
         Meteor.authorizeCheck.articles();
         var updateObj = {};
@@ -125,6 +128,7 @@ Meteor.methods({
         return articles.update({'_id' : mongoId}, {$push: updateObj});
     },
     updateArticleByPmid: function(pmid, articleData){
+        console.log('..updateArticleByPmid', new Date());
         // nope. used in batch methods. getPubMedInfo(), batchUpdateCorrespViaXml(), getMissingPmcIds()
         // console.log('--updateArticleByPmid |  pmid = '+pmid, articleData);
 
@@ -140,12 +144,14 @@ Meteor.methods({
         return articles.update({'ids.pmid' : pmid}, {$set: articleData});
     },
     addToArticleAffiliationsByPmid: function(pmid, affiliation){
+        console.log('..addToArticleAffiliationsByPmid', new Date());
         // nope. used in batch method. getAllAuthorsAffiliationsPubMed()
         Meteor.authorizeCheck.articles();
         // console.log('--addToArticleAffiliationsByPmid | pmid = ' + pmid  + ' / affiliation = ' + affiliation);
         return  articles.update({'ids.pmid' : pmid}, {$addToSet: {'affiliations' : affiliation}});
     },
     pushPiiArticle: function(mongoId, ids){
+        console.log('..pushPiiArticle', new Date());
         // nope. used in batch methods
         Meteor.authorizeCheck.articles();
         //used for batch processing of XML from PMC
