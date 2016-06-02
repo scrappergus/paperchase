@@ -171,11 +171,6 @@ h2.dates {
         }
     }
 
-    span.comma {
-        display: inline-block !important;
-        &:last-child { display:none !important; }
-    }
-
     // superscript
     sup.author-affiliations a {
         font-size: 13px;
@@ -185,6 +180,22 @@ h2.dates {
         padding: 0 !important;
 
         &:hover { color: $accent; }
+    }
+}
+
+.author-affiliations {
+    span{
+        &:last-child {
+            span.comma {
+                display:none !important; 
+            }
+        }
+    }
+}
+h2.dates {
+    span.comma {
+        display: inline-block !important;
+        &:last-child { display:none !important; }
     }
 }
 
