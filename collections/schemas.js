@@ -141,6 +141,22 @@ journalConfig.schema = new SimpleSchema({
     'api.doi': {type: String, optional: false},
 });
 // contact
+contact.schema = new SimpleSchema({
+    address: {type: Object, optional: true},
+    'address.street': {type: String, optional: true},
+    'address.street_2': {type: String, optional: true},
+    'address.city': {type: String, optional: true},
+    'address.state': {type: String, optional: true},
+    'address.zip': {type: String, optional: true},
+    publication_prep: {type: Object, optional: true},
+    'publication_prep.name': {type: String, optional: true},
+    'publication_prep.title': {type: String, optional: true},
+    'publication_prep.email_address': {type: String, optional: true},
+    general: {type: Object, optional: true},
+    'general.email_address': {type: String, optional: true},
+    'general.phone': {type: String, optional: true},
+    'general.fax': {type: String, optional: true}
+});
 // edboard
 edboard.schema = new SimpleSchema({
     address: {type: String, optional: true},
@@ -192,10 +208,40 @@ issues.schema = new SimpleSchema({
     cover: {type: String, optional: true}
 });
 // news
+newsList.schema = new SimpleSchema({
+    title: {type: String, optional: true},
+    content: {type: String, optional: true},
+    date: {type: Date, optional: true},
+    display: {type: Boolean, optional: true},
+    youTube: {type: String, optional: true},
+    tags: {type: [String], optional: true},
+    interview: {type: Boolean, optional: true},
+    doc_updates: {type: Object, optional: true},
+    'doc_updates.created': {type: Object, optional: true},
+    'doc_updates.created.date': {type: Date, optional: true},
+    'doc_updates.created.user': {type: String, optional: true},
+    'doc_updates.updates': {type: [Object], optional: true},
+    'doc_updates.updates.$.date': {type: Date, optional: true},
+    'doc_updates.updates.$.user': {type: String, optional: true}
+});
 // roles
 // sections
+sections.schema = new SimpleSchema({
+    name: {type: String, optional: true}, 
+    display: {type: Boolean, optional: true},
+    short_name: {type: String, optional: true}, 
+    dash_name: {type: String, optional: true}
+});
 // sorters
+sorters.schema = new SimpleSchema({
+    name: {type: String, optional: true}, 
+    order: {type: [String], optional: true}
+});
 // users
-// volume
+// volumes
+volumes.schema = new SimpleSchema({
+    volume: {type: Number, optional: true}, 
+    issues: {type: [String], optional: true}
+});
 
 // NOTE: if nested object required, parent object must be too
