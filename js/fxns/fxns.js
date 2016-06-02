@@ -925,3 +925,14 @@ Meteor.search = {
         Router.go("/search/?terms="+args.terms);
     }
 }
+
+Meteor.googleAnalytics = {
+    sendEvent: function(fullTextCategory, event){
+        // console.log('..sendEvent',fullTextCategory)
+        ga('send', 'event', {
+            eventCategory: fullTextCategory,
+            eventAction: 'click',
+            eventLabel: event.target.href
+        });        
+    }
+}

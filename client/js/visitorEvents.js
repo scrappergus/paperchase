@@ -139,6 +139,17 @@ Template.Article.events({
         Meteor.article.downloadPdf(e);
     }
 });
+Template.ArticleButtons.events({
+    'click .download-pdf': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - PDF',e);
+    },
+    'click .view-lens': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - Lens',e);
+    },
+    'click .view-html': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - HTML',e);
+    }
+});
 Template.ArticleFullText.events({
     'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
