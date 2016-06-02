@@ -111,9 +111,6 @@ Template.Issue.events({
     'click .modal-trigger': function(e) {
         Meteor.article.subscribeModal(e);
     },
-    'click .download-pdf': function(e) {
-        Meteor.article.downloadPdf(e);
-    },
     'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
     }
@@ -147,7 +144,7 @@ Template.ArticleButtons.events({
         Meteor.googleAnalytics.sendEvent('Full Text - Lens',e);
     },
     'click .view-html': function(e){
-        Meteor.googleAnalytics.sendEvent('Full Text - HTML',e);
+        Meteor.googleAnalytics.sendEvent('Full Text -',e);
     }
 });
 Template.ArticleFullText.events({

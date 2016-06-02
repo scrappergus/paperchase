@@ -113,13 +113,6 @@ Meteor.article = {
         var mongoId = $(e.target).data('id');
         var articleData = articles.findOne({'_id':mongoId});
         Session.set('articleData',articleData);
-    },
-    downloadPdf: function(e){
-        e.preventDefault();
-        var mongoId = $(e.target).data('id');
-        var articleData = articles.findOne({'_id':mongoId});
-        var pmc = articleData.ids.pmc;
-        window.open('/pdf/' + pmc + '.pdf');
     }
 }
 
