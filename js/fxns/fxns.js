@@ -691,6 +691,11 @@ Meteor.general = {
             scrollTop: $('#' + anchorId).position().top - navTop - 25
         }, 500);
     },
+    scrollToPosition: function(position){
+        $('html, body').animate({
+            scrollTop: position
+        }, 500);
+    },
     isStringEmpty: function(string){
         // console.log('isStringEmpty',string);
         string = string.replace(/\r?\n|\r(^\s+|\s+$)+/g,'').replace(/\s/g, '');
@@ -924,6 +929,65 @@ Meteor.search = {
 }
 
 Meteor.googleAnalytics = {
+    // authorize: function(event){
+    // not using now. might add later to get reports from GA into paperchase
+    //     var CLIENT_ID = '74807910';
+    //     var VIEW_ID = '123186651>';
+    //     var DISCOVERY = 'https://analyticsreporting.googleapis.com/$discovery/rest';
+    //     var SCOPES = ['https://www.googleapis.com/auth/analytics.readonly'];
+    //     // Handles the authorization flow.
+    //     // `immediate` should be false when invoked from the button click.
+    //     var useImmdiate = event ? false : true;
+    //     var authData = {
+    //         client_id: CLIENT_ID,
+    //         scope: SCOPES,
+    //         immediate: useImmdiate
+    //     };
+
+    //     gapi.auth.authorize(authData, function(response) {
+    //         var authButton = document.getElementById('auth-button');
+    //         if (response.error) {
+    //             authButton.hidden = false;
+    //         } else {
+    //             authButton.hidden = true;
+    //             queryReports();
+    //         }
+    //     });
+    // },
+    // queryReports: function(){
+    // not using now. might add later to get reports from GA into paperchase
+    //     var CLIENT_ID = '74807910';
+    //     var VIEW_ID = '123186651>';
+    //     var DISCOVERY = 'https://analyticsreporting.googleapis.com/$discovery/rest';
+    //     // Load the API from the client discovery URL.
+    //     gapi.client.load(DISCOVERY
+    //     ).then(function() {
+
+    //         // Call the Analytics Reporting API V4 batchGet method.
+    //         gapi.client.analyticsreporting.reports.batchGet( {
+    //             reportRequests:[
+    //             {
+    //                 viewId:VIEW_ID,
+    //                 dateRanges:[
+    //                     {
+    //                         startDate:"7daysAgo",
+    //                         endDate:"today"
+    //                     }],
+    //                 metrics:[
+    //                     {
+    //                         expression:"ga:sessions"
+    //                     }]
+    //                 }]
+    //             } ).then(function(response) {
+    //                 var formattedJson = JSON.stringify(response.result, null, 2);
+    //                 document.getElementById('query-output').value = formattedJson;
+    //             })
+    //         .then(null, function(err) {
+    //             // Log any errors.
+    //             console.log(err);
+    //         });
+    //     });
+    // },
     sendEvent: function(fullTextCategory, event){
         // console.log('..sendEvent',fullTextCategory,event.target.href)
         ga('send', 'event', {
@@ -931,5 +995,21 @@ Meteor.googleAnalytics = {
             eventAction: 'click',
             eventLabel: event.target.href
         });        
+    }
+}
+
+Meteor.ux = {
+    positionSessionVariable: function(template){
+        return templateSessionVariable = 'position-' + template;
+    },
+    savePosition: function(template){
+        var templateSessionVariable = Meteor.ux.positionSessionVariable(template);
+        Session.set(templateSessionVariable, document.body.scrollTop);
+    },
+    goToSavePosition: function(template){
+        var templateSessionVariable = Meteor.ux.positionSessionVariable(template);
+        if( Session.get(templateSessionVariable) ){
+            Meteor.general.scrollToPosition(Session.get(templateSessionVariable));
+        }
     }
 }

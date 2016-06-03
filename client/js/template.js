@@ -29,13 +29,6 @@ Template.scrollspyCard.onRendered(function() {
   });
 });
 
-
-// Issue
-// ------
-Template.Issue.onDestroyed(function () {
-    Session.set('issue',null);
-});
-
 // Section Papers
 // ------
 Template.SectionPapers.onRendered(function () {
