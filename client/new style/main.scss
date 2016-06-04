@@ -236,7 +236,6 @@ h2.dates {
     h3.article-header-1,
     h3#references {
         @extend h3.blue-background;
-        text-transform: capitalize !important;
         margin: 70px 0 20px;
         &:first-child { margin-top: 40px; }
 
@@ -401,7 +400,6 @@ ul.divided-list {
 
     h5.meta {
       font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.4px;
       color: #8A97A5;
     }
