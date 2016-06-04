@@ -97,15 +97,6 @@ html,body{
 	// #article-title{
 	// 	margin:0px;
 	// }
-	.authors {
-		span{
-			&:last-child{
-				.comma{
-					display:none;
-				}
-			}
-		}
-	}
 
 	.affiliations{
 		color: $gray-2;

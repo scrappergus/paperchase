@@ -4,7 +4,7 @@
             <span class="article-type">{{article_type.name}}</span>
         {{/if}}
         {{#if issue_id}}
-            <span>Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</span>
+            <span><a href="{{pathFor 'Issue' vi=vi}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
         {{/if}}
 
         {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
@@ -52,7 +52,7 @@
 <template name="AuthorsList">
     <span class="authors">
         {{#each authors}}
-            <span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span></span>
+            <span class="author">{{name_first}}{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="author-comma">, </span></span>
         {{/each}}
     </span>
 </template>
@@ -75,7 +75,7 @@
                 </sup>
                 {{/if}}
                 {{/if}}
-                <span class="comma">,</span>
+                <span class="author-comma">,</span>
             </span>
         {{/each}}
     </h2>
@@ -122,13 +122,13 @@
             {{#if fullText}}
                 {{#with files}}
                 {{#if pdf.url}}
-                    <a href="{{pdf.url}}" class="full-width end-cap primary button">
+                    <a href="{{pdf.url}}" class="download-pdf full-width end-cap primary button">
                         <span class="icon icon-download"></span> Download PDF
                     </a>
                 {{/if}}
                 {{/with}}
             {{else}}
-                <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="full-width end-cap primary button">
+                <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="view-html full-width end-cap primary button">
                     <span class="icon icon-file"></span> View Full Text
                 </a>
             {{/if}}
@@ -225,14 +225,14 @@
 
                 {{#if pdf.url}}
                 {{#if pdf.display}}
-                <a data-id="{{_id}}" class="small button" href="{{pdf.url}}">PDF</a>
+                <a target="_BLANK" data-id="{{_id}}" class="download-pdf small button" href="{{pdf.url}}">PDF</a>
                 {{/if}}
                 {{/if}}
 
                 {{#if xml.url}}
                 {{#if xml.display}}
-                <a data-id="{{_id}}" class="small button" href="http://lens.impactaging.com:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
-                <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+                <a data-id="{{_id}}" class="view-lens small button" href="http://lens.impactaging.com:4001/?id={{_id}}&journal={{journal}}">Lens Full-Text Viewer</a>
+                <a data-id="{{_id}}" class="view-html small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
                 {{/if}}
                 {{/if}}
 

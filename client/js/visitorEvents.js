@@ -111,9 +111,6 @@ Template.Issue.events({
     'click .modal-trigger': function(e) {
         Meteor.article.subscribeModal(e);
     },
-    'click .download-pdf': function(e) {
-        Meteor.article.downloadPdf(e);
-    },
     'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
     }
@@ -137,6 +134,28 @@ Template.Article.events({
     },
     'click .download-pdf': function(e) {
         Meteor.article.downloadPdf(e);
+    }
+});
+Template.ArticleButtons.events({
+    'click .download-pdf': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - PDF',e);
+    },
+    'click .view-lens': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - Lens',e);
+    },
+    'click .view-html': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - HTML',e);
+    }
+});
+Template.ArticleSidebar.events({
+    'click .download-pdf': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - PDF',e);
+    },
+    'click .view-lens': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - Lens',e);
+    },
+    'click .view-html': function(e){
+        Meteor.googleAnalytics.sendEvent('Full Text - HTML',e);
     }
 });
 Template.ArticleFullText.events({

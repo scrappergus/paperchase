@@ -27,7 +27,8 @@ if (Meteor.isClient) {
 }
 
 Router.configure({
-    loadingTemplate: 'Loading'
+    loadingTemplate: 'Loading',
+    trackPageView: true
 });
 
 if (Meteor.isClient) {
@@ -699,12 +700,11 @@ if (Meteor.isClient) {
          name: 'Article',
          parent: function() {
              var data = this.data();
-             if(data.article.advance === true) {
+             if(data && data.article && data.article.advance === true) {
                  return "Advance";
              }else{
                  return "Issue";
              }
-
          },
          layoutTemplate: 'Visitor',
          title: function() {
