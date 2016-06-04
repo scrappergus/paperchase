@@ -726,6 +726,10 @@ Meteor.general = {
               return str + 's';
         }
 
+        if (str == 'Letter to the Editor') {
+            return 'Letters to the Editor';
+        }
+
         return str;
     },
     affix: function() {
