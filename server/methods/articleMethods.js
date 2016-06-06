@@ -372,11 +372,11 @@ Meteor.methods({
             }
 
             articleFilesInDb = articles.findOne({'_id': articleId});
-            if(articleFilesInDb.files) {
+            if(articleFilesInDb && articleFilesInDb.files) {
                 if(articleFilesInDb && articleFilesInDb.files.pdf){
                     article.files.pdf = articleFilesInDb.files.pdf;
                 }
-                if(articleFilesInDb && articleFilesInDb.files.xml){
+                if(articleFilesInDb && articleFilesInDb.files && articleFilesInDb.files.xml){
                     article.files.xml = articleFilesInDb.files.xml;
                 }
 
