@@ -65,6 +65,10 @@ Meteor.article = {
         return article;
     },
     linkFiles:function(files,articleMongoId){
+        if(files === undefined) {
+            files = {};
+        }
+        
         for(var file in files){
             if(files[file]) {
                 if(files[file].file){
