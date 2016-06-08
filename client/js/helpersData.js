@@ -164,6 +164,7 @@ Template.ArticleSidebar.helpers({
     },
     items: function() {
         var articleHeaders = Session.get('article-text').sections;
+        var footnotes = Session.get('article-text').footnotes;
         var references = Session.get('article-text').references;
         var sections = [];
 
@@ -172,6 +173,13 @@ Template.ArticleSidebar.helpers({
                 sections.push( { title: articleHeaders[i].title } );
             }
         }
+
+        if ( footnotes ) {
+            for ( i = 0; i < footnotes.length; i++ ) {
+                sections.push( { title: footnotes[i].title} );
+            }
+        }
+
 
         if ( references ) {
             sections.push( { title: 'References'} );

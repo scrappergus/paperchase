@@ -87,10 +87,38 @@ Meteor.methods({
                 footnote = footnotes[footnoteIdx];
 
                 var footnoteObj = Meteor.fullText.sectionToJson(footnote);
-                
+
+                // Removing extra heading from content, some XML have them, others don't
+                var newFtContArr = [];
+                for(var footIdx=0 ; footIdx < footnoteObj.content.length ; footIdx++){
+                    var content = footnoteObj.content[footIdx];
+
+                    if(footIdx == 0) {  // Checking only the first content node, add all others without testing (prevents false matches in the content below the heading)
+                        var patt = /conflict(s)* of interest|funding|authorship/i;
+                        if(patt.test(content.content) === false) {
+                            newFtContArr.push(content);
+                        }
+                    }
+                    else {
+                        newFtContArr.push(content);
+                    }
+                }
+                footnoteObj.content = newFtContArr;
+
+                var type2title = {
+                    'conflict' : "Conflict of Interests Statement",
+                    'supported-by' : "Funding",
+                    'con' : "Authorship",
+                }
+
                 for(var footAttrIdx=0 ; footAttrIdx < footnote.attributes.length ; footAttrIdx++){
                     if(footnote.attributes[footAttrIdx].localName == 'fn-type'){
                         footnoteObj.type = footnote.attributes[footAttrIdx].nodeValue;
+
+                        if(type2title[footnoteObj.type]) {
+                            footnoteObj.title = type2title[footnoteObj.type];
+                            footnoteObj.headerLevel = 1
+                        }
                     }
                 }
 
