@@ -90,20 +90,22 @@ Meteor.methods({
 
                 // Removing extra heading from content, some XML have them, others don't
                 var newFtContArr = [];
-                for(var footIdx=0 ; footIdx < footnoteObj.content.length ; footIdx++){
-                    var content = footnoteObj.content[footIdx];
+                if(footnoteObj.content.length > 1) {
+                    for(var footIdx=0 ; footIdx < footnoteObj.content.length ; footIdx++){
+                        var content = footnoteObj.content[footIdx];
 
-                    if(footIdx == 0) {  // Checking only the first content node, add all others without testing (prevents false matches in the content below the heading)
-                        var patt = /conflict(s)* of interest|funding|authorship/i;
-                        if(patt.test(content.content) === false) {
+                        if(footIdx == 0) {  // Checking only the first content node, add all others without testing (prevents false matches in the content below the heading)
+                                var patt = /conflict(s)* of interest|funding|authorship/i;
+                            if(patt.test(content.content) === false) {
+                                newFtContArr.push(content);
+                            }
+                        }
+                        else {
                             newFtContArr.push(content);
                         }
                     }
-                    else {
-                        newFtContArr.push(content);
-                    }
+                    footnoteObj.content = newFtContArr;
                 }
-                footnoteObj.content = newFtContArr;
 
                 var type2title = {
                     'conflict' : "Conflict of Interests Statement",
