@@ -268,6 +268,11 @@ Meteor.xmlPmc = {
         var authors = [];
         for(var i = 0 ; i < authorsList.length ; i++){
             var author = {};
+
+            if(authorsList[i]['$']['equal-contrib']){
+                author.equal_contrib = true
+            }
+
             if(authorsList[i].name){
                 if(authorsList[i].name[0]['given-names']){
                     author.name_first = authorsList[i].name[0]['given-names'][0];

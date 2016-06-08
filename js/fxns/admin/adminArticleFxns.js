@@ -232,6 +232,7 @@ Meteor.adminArticleFormGet = {
             nameFirst = $(this).find('input[name="name_first"]').val();
             nameMiddle = $(this).find('input[name="name_middle"]').val();
             nameLast = $(this).find('input[name="name_last"]').val();
+            equal_contrib = $(this).find('input[name="equal_contrib"]').prop('checked');
 
             nameFirst = Meteor.clean.cleanString(nameFirst);
             nameMiddle = Meteor.clean.cleanString(nameMiddle);
@@ -241,6 +242,7 @@ Meteor.adminArticleFormGet = {
                 'name_first' : nameFirst,
                 'name_middle' : nameMiddle,
                 'name_last' : nameLast,
+                'equal_contrib' : equal_contrib,
                 'ids' : {},
                 'affiliations_numbers' : []
             };

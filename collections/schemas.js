@@ -29,6 +29,7 @@ articles.schema = new SimpleSchema({
     'authors.$.affiliations_numbers': {type: [Number], optional: true},
     'authors.$.ids': {type: Object, optional: true},
     'authors.$.ids.mongo_id': {type: String, optional: true},
+    'authors.$.equal_contrib': {type: Boolean, optional: true, label: 'Equal contributor'},
     correspondence: {type: [Object], optional: true},
     'correspondence.$.email': {type: String, optional: true},
     'correspondence.$.text': {type: String, optional: true},

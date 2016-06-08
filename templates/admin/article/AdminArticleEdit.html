@@ -422,6 +422,7 @@
                                         <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
                                         <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
                                     </div>
+
                                     <div class="col s12 m2">
                                         <label>Affiliations</label>
                                         <div class="clearfix"></div>
@@ -432,6 +433,12 @@
                                         </div>
                                         {{/each}}
                                     </div>
+                                    <div class="col s12 m2">
+                                        <input name="equal_contrib" class="author-equal-contrib" type="checkbox" checked="{{equal_contrib}}" id="equal_contrib_{{@index}}">
+                                        <label for="equal_contrib_{{@index}}" class="{{#if name_last}}active{{/if}}">Equal Contributor</label>
+                                    </div>
+
+
                                     <div class="hide">
                                         {{#each arrayify ids}}
                                         <input class="author-id" type="hide" name="{{name}}" value="{{value}}">
