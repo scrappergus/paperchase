@@ -59,6 +59,12 @@ Meteor.article = {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
         }
 
+        for(authIdx=0; authIdx < article.authors.length; authIdx++) {
+            if(article.authors[authIdx].equal_contrib == true) {
+                article.equal_contribs = true;
+            }
+        }
+
         if(article.affiliations.length == 1) {
             article.singleAffiliation = true;
         }

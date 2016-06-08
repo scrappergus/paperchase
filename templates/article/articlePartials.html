@@ -75,12 +75,19 @@
                 </sup>
                 {{/if}}
                 {{/if}}
+
+                {{#if equal_contrib}}
+                 *
+                {{/if}}
                 <span class="author-comma">,</span>
             </span>
         {{/each}}
     </h2>
+    {{#if equal_contribs}}
+    <span>* Contributed equally to this work.</span>
+    {{/if}}
 
-    <p>
+    <span>
     <ul>
     {{#each affiliations}}
     <li>
@@ -88,7 +95,7 @@
     </li>
     {{/each}}
     </ul>
-    </p>
+    </span>
 
 </template>
 
