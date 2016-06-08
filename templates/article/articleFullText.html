@@ -72,6 +72,17 @@
                                     <span>)</span>
                                     <span>.</span>
                                     {{/if}}
+
+
+                                    {{#if equals type 'web'}}
+                                    {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                    {{#if title}}<span> {{title}}.</span>{{/if}}
+                                    {{#if year}}<span> {{year}};</span>{{/if}}
+                                    {{#if source}}<span> {{source}}.</span>{{/if}}
+                                    {{#if ext_link}}<a href="{{ext_link}}" target="_BLANK">{{ext_link}}</a>{{/if}}
+                                    {{#if comment}}<span>{{comment}}</span>{{/if}}
+                                    {{/if}}
+
                                 </li>
                             {{/each}}
                         </ul>
