@@ -182,6 +182,7 @@ Meteor.methods({
                         referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','');
                     }
                 }
+
                 articleObject.references.push(referenceObj);
             }
         }
@@ -368,6 +369,8 @@ Meteor.fullText = {
     convertReference: function(reference){
         // console.log('...............convertReference');
         var referenceObj = {};
+        referenceObj.authors = '';
+        var first_author = true;
         for(var r = 0 ; r < reference.childNodes.length ; r++){
             // console.log('r = ' + r);
             if(reference.childNodes[r].childNodes){
@@ -381,7 +384,28 @@ Meteor.fullText = {
                     // console.log(referencePartName);
                     if(referencePartName == 'person_group'){
                         referenceObj.authors = Meteor.fullText.traverseAuthors(referencePart);
-                    }else if(referencePartName == 'pub_id'){
+                    }
+                    else if(referencePartName == 'name'){
+                        if(referencePart.childNodes){
+                            var referencePartCount = referencePart.childNodes.length;
+                            for(var part = 0 ; part < referencePartCount ; part++){
+                                if(referencePart.childNodes[part].localName == 'surname') {
+                                    if(first_author === false) {
+                                        referenceObj.authors += ', ';
+                                    }
+                                    else {
+                                        first_author = false;
+                                    }
+                                    
+                                    referenceObj.authors += referencePart.childNodes[part].childNodes[0].nodeValue + ' ';
+                                }
+                                else if(referencePart.childNodes[part].localName == 'given-names'){
+                                    referenceObj.authors += referencePart.childNodes[part].childNodes[0].nodeValue;
+                                }
+                            }
+                        }
+                    }
+                    else if(referencePartName == 'pub_id'){
                         // make sure attribute has pmid
                         var pmid = false;
                         for(var attr=0 ; attr<referencePart.attributes.length ; attr++){
@@ -399,6 +423,30 @@ Meteor.fullText = {
                                     referenceObj['title'] = referencePart.childNodes[part].nodeValue;
                                 }
                             }
+                        }
+                    }else if(referencePartName == 'comment'){
+                        if(referencePart.childNodes){
+                            var comment = '';
+                            var referencePartCount = referencePart.childNodes.length;
+                            for(var part = 0 ; part < referencePartCount ; part++){
+                                if(referencePart.childNodes[part].nodeValue){
+                                    comment += referencePart.childNodes[part].nodeValue; 
+                                }
+                                else if(referencePart.childNodes[part].localName == 'ext-link') {
+                                    var href = '';
+                                    for(var attrIdx = 0; attrIdx < referencePart.childNodes[part].attributes.length; attrIdx++) {
+                                        var attr = referencePart.childNodes[part].attributes[attrIdx];
+                                        if(attr.localName == 'href') {
+                                            var href = attr.nodeValue;
+                                        }
+                                    }
+                                    link_content = href ||  referencePart.childNodes[part].nodeValue;
+                                    comment += "<a href=\""+href+"\">"+link_content+"</a>";
+
+                                }
+                            }
+                            referenceObj['comment'] = comment;
+
                         }
                     }else if(referencePartName){
                         // source, year, pages, issue, volume, chapter_title
