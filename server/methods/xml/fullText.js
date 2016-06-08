@@ -46,9 +46,23 @@ Meteor.methods({
         var articleObject = {};
         var doc = new dom().parseFromString(xml);
 
+        articleObject.sections = [];
+
+        // Loose paragraphs
+        // ---------
+        var paras = xpath.select('//body/p', doc);
+        if(paras[0]){
+            for(var paraIdx = 0 ; paraIdx < paras.length ; paraIdx++){
+               para = paras[paraIdx];
+
+                var sectionObject = Meteor.fullText.sectionToJson({childNodes:[para]}, files, mongoId);
+                articleObject.sections.push(sectionObject);
+            }
+        }
+
+
         // Article Content
         // ---------------
-        articleObject.sections = [];
         var sections = xpath.select('//sec', doc);
         if(sections[0]){
             // Sections
