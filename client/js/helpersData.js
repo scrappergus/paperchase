@@ -165,12 +165,19 @@ Template.ArticleSidebar.helpers({
     items: function() {
         var articleHeaders = Session.get('article-text').sections;
         var footnotes = Session.get('article-text').footnotes;
+        var acks = Session.get('article-text').acks;
         var references = Session.get('article-text').references;
         var sections = [];
 
         for ( i = 0; i < articleHeaders.length; i++ ) {
             if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
                 sections.push( { title: articleHeaders[i].title } );
+            }
+        }
+
+        if ( acks ) {
+            for ( i = 0; i < acks.length; i++ ) {
+                sections.push( { title: acks[i].title} );
             }
         }
 

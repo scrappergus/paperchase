@@ -78,6 +78,23 @@ Meteor.methods({
             articleObject.sections.push(sectionObject);
         }
 
+        // Acknowledgements
+        // ---------
+        var acks = xpath.select('//ack', doc);
+        if(acks[0]){
+            articleObject.acks = [];
+            for(var ackIdx = 0 ; ackIdx < acks.length ; ackIdx++){
+                ack = acks[ackIdx];
+
+                var ackObj = Meteor.fullText.sectionToJson(ack);
+
+                ackObj.title = "Acknowledgements";
+                ackObj.headerLevel = 1;
+
+                articleObject.acks.push(ackObj);
+            }
+        }
+
         // Footnotes
         // ---------
         var footnotes = xpath.select('//fn', doc);

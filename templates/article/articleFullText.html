@@ -19,6 +19,18 @@
                 <div class="article-text">
                     {{>ArticleFullText}}
 
+                    {{#if acks}}
+                        {{#each acks}}
+                        <h3 id="{{convertToID title}}" class="article-header-{{headerLevel}}">{{title}}</h3>
+                            {{#each content}}
+                                {{#if equals contentType 'p'}}
+                                    <p>{{{content}}}</p>
+                                {{/if}}
+                            {{/each}}
+                        {{/each}}
+                    {{/if}}
+
+
                     {{#if footnotes}}
                         {{#each footnotes}}
                         <h3 id="{{convertToID title}}" class="article-header-{{headerLevel}}">{{title}}</h3>
