@@ -276,16 +276,23 @@ Meteor.methods({
             // add ALL affiliations for article to author object,
             // needed for author affiliation checkbox input
             affs = article.affiliations;
+            notes = article.author_notes;
             if(article.authors){
                 authorsList = article.authors;
                 // Go through each author object
                 for(var i=0 ; i < authorsList.length; i++){
                     var currentAuthorAffs,
                         authorAffiliationsEditable,
+                        currentAuthorNotes,
+                        authorNotesEditable,
                         mongo;
 
                     currentAuthorAffs = authorsList[i].affiliations_numbers;
                     authorAffiliationsEditable = []; // All affiliations for paper, which current author affs checked
+
+                    currentAuthorNotes = authorsList[i].author_notes_ids;
+                    authorNotesEditable = []; // All author notes for paper, which current author notes checked
+
 
                     // need the mongo ID for uniqueness in UI, id attribute, for checkbox
                     if(authorsList[i].ids && authorsList[i].ids.mongo_id){
@@ -310,6 +317,29 @@ Meteor.methods({
                         }
                         authorsList[i].affiliations_list = authorAffiliationsEditable;
                     }
+
+                    if(notes){
+                        for(var a = 0 ; a < notes.length ; a++){
+                            var note = notes[a];
+                            var authorNote= {
+                                id: note['id'], 
+                                author_mongo_id: mongo
+                            }
+                            authorNote.author_note = false;
+                            if(currentAuthorNotes) {
+                                for(var currentNoteIdx=0; currentNoteIdx<currentAuthorNotes.length; currentNoteIdx++) {
+                                    currentNote = currentAuthorNotes[currentNoteIdx];
+                                    if(currentNote == note['id']) {
+                                        authorNote.author_note = 'checked';
+                                    }
+                                }
+                            }
+
+                            authorNotesEditable.push(authorNote);
+                        }
+                        authorsList[i].author_notes_list = authorNotesEditable;
+                    }
+
                 }
             }
 

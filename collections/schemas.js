@@ -27,12 +27,17 @@ articles.schema = new SimpleSchema({
     'authors.$.name_middle': {type: String, optional: true, label: 'Middle name'},
     'authors.$.name_last': {type: String, optional: true, label: 'Last name'},
     'authors.$.affiliations_numbers': {type: [Number], optional: true},
+    'authors.$.author_notes_ids': {type: [String], optional: true},
     'authors.$.ids': {type: Object, optional: true},
     'authors.$.ids.mongo_id': {type: String, optional: true},
     'authors.$.equal_contrib': {type: Boolean, optional: true, label: 'Equal contributor'},
     correspondence: {type: [Object], optional: true},
     'correspondence.$.email': {type: String, optional: true},
     'correspondence.$.text': {type: String, optional: true},
+    author_notes: {type: [Object], optional: true},
+    'author_notes.$.id': {type: String, optional: true},
+    'author_notes.$.label': {type: String, optional: true},
+    'author_notes.$.note': {type: String, optional: true},
     dates: {type: Object, optional: true},
     'dates.collection': {type: Date, optional: true},
     'dates.ecorrected': {type: Date, optional: true},
@@ -100,7 +105,7 @@ authors.schema = new SimpleSchema({
     name_middle: {type: String, optional: true},
     name_last: {type: String, optional: true},
     ids: {type: Object, optional: true},
-    affiliationss: {type: [String], optional: true},
+    affiliations: {type: [String], optional: true},
 });
 // config
 journalConfig.schema = new SimpleSchema({

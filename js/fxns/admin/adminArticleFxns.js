@@ -211,6 +211,31 @@ Meteor.adminArticleFormGet = {
             return;
         }
     },
+    author_notes: function(){
+        var author_notes = [];
+        $('.author-notes-row').each(function(idx,obj){
+            var id,
+                label,
+                note;
+
+            id = $(this).find('input.author-notes-id').val();
+            label = $(this).find('input.author-notes-label').val();
+            note = $(this).find('input.author-notes-note').val();
+
+            var author_note  = {
+                'id' : id,
+                'label' : label,
+                'note' : note
+            };
+            author_notes.push(author_note);
+        });
+
+        if(author_notes.length > 0){
+           return author_notes;
+        }else{
+            return;
+        }
+    },
     articleType: function(){
         var article_type = {};
         if($('#article-type').val() != ''){
@@ -244,7 +269,8 @@ Meteor.adminArticleFormGet = {
                 'name_last' : nameLast,
                 'equal_contrib' : equal_contrib,
                 'ids' : {},
-                'affiliations_numbers' : []
+                'affiliations_numbers' : [],
+                'author_notes_ids' : []
             };
 
             var authorIds = $(this).find('.author-id').each(function(i,o){
@@ -255,6 +281,14 @@ Meteor.adminArticleFormGet = {
                     author.affiliations_numbers.push(parseInt(i));
                 }
             });
+            $(this).find('.author-note').each(function(i,o){
+                if($(o).prop('checked')){
+                    var note_id = $(o).attr('data-note-id');
+                    console.log(note_id);
+                    author.author_notes_ids.push(note_id);
+                }
+            });
+
             authors.push(author);
         });
 
@@ -389,6 +423,7 @@ Meteor.adminArticleFormGet = {
         articleUpdateObj.affiliations = Meteor.adminArticleFormGet.affiliations();
         articleUpdateObj.authors =  Meteor.adminArticleFormGet.authors();
         articleUpdateObj.correspondence =  Meteor.adminArticleFormGet.correspondence();
+        articleUpdateObj.author_notes =  Meteor.adminArticleFormGet.author_notes();
 
         // Dates and History
         // -------

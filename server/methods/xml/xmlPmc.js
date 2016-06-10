@@ -136,6 +136,9 @@ Meteor.methods({
             });
         }
 
+        // AUTHOR NOTES
+        // -----------
+
         // CORRESPONDING AUTHOR
         // -----------
         articleProcessed.correspondence = []; //can have multiple corresp elements, for ex: pmid 26678252
@@ -147,8 +150,20 @@ Meteor.methods({
             });
         }
 
-        // AUTHOR NOTES
+        // AUTHOR NOTES FOOTNOTES
         // -----------
+        articleProcessed.author_notes = [];
+        if(article['author-notes']){
+            var prenote = article['author-notes'][0]['fn'][0];
+            var note = {
+                'id': prenote['$'].id,
+               'label': prenote.label[0],
+               'note': prenote.p[0]
+            };
+
+            articleProcessed.author_notes = [note];
+        }
+        
 
         // ALL AFFILIATIONS
         // -----------
@@ -282,16 +297,21 @@ Meteor.xmlPmc = {
                 }
             }
 
-            // Author affiliations
+            // Author affiliations and Author Notes
             if(authorsList[i].xref){
                 author.affiliations_numbers = [];
+                author.author_notes_ids = [];
                 for(var authorAff=0 ; authorAff<authorsList[i].xref.length ; authorAff++){
-                    if(authorsList[i].xref[authorAff].sup){
+                    if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'aff' && authorsList[i].xref[authorAff].sup){
                         var affNumber = parseInt(authorsList[i].xref[authorAff].sup[0]-1);
                         author.affiliations_numbers.push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
                     }
+                    else if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'author-notes' && authorsList[i].xref[authorAff]['$']['rid']) {
+                        author.author_notes_ids.push(authorsList[i].xref[authorAff]['$']['rid']); 
+                    }
                 }
             }
+
             authors.push(author);
         }
         cb(authors);

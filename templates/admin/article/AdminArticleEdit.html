@@ -88,6 +88,7 @@
         <a class="btn btn-sm anchor" href="#meta">{{>AdminMetaIcon}} Meta</a>
         <a class="btn btn-sm anchor" href="#authors">{{>AdminAuthorsIcon}} Authors</a>
         <a class="btn btn-sm anchor" href="#correspondence">{{>AdminMailIcon}} Correspondence</a>
+        <a class="btn btn-sm anchor" href="#author-notes">{{>AdminMailIcon}} Author Notes</a>
         <a class="btn btn-sm anchor" href="#dates">{{>AdminDatesIcon}} Dates</a>
         <a class="btn btn-sm anchor" href="#history">{{>AdminDatesIcon}} History</a>
         <a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a>
@@ -263,6 +264,40 @@
                 {{/if}}
             </fieldset>
 
+            <fieldset id="author-notes">
+                <legend>
+                    Author Notes
+                </legend>
+                {{#if author_notes}}
+                {{#each author_notes}}
+                <div class="row no-margin">
+                    <div class="col s12">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
+                                <div class="row no-margin author-notes-row form-author-notes">
+                                    <div class="col s4 input-field">
+                                        <input class="author-notes-id" name="author_notes_id_{{@index}}" type="text" value="{{id}}"/>
+                                        <label for="author_notes_id_{{@index}}" class="{{#if id}}active{{/if}}">Label</label>
+                                    </div>
+                                    <div class="col s4 input-field">
+                                        <input class="author-notes-label" name="author_notes_label_{{@index}}" type="text" value="{{label}}"/>
+                                        <label for="author_notes_label_{{@index}}" class="{{#if label}}active{{/if}}">Label</label>
+                                    </div>
+                                    <div class="col s4 input-field">
+                                        <input class="author-notes-note" name="author_notes_note_{{@index}}"  type="text" value="{{note}}"/>
+                                        <label for="author_notes_note_{{@index}}" class="{{#if note}}active{{/if}}">Note</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{/if}}
+            </fieldset>
+
+
             <fieldset id="affiliations">
                 <legend>
                     Affiliations
@@ -433,6 +468,19 @@
                                         </div>
                                         {{/each}}
                                     </div>
+
+                                    <div class="col s12 m2">
+                                        <label>Author Notes</label>
+                                        <div class="clearfix"></div>
+                                        {{#each author_notes_list}}
+                                        <div class="margin-right-lg margin-top-md">
+                                            <input type="checkbox" class="author-note filled-in" id="author-note-{{@index}}-{{author_mongo_id}}" data-note-id="{{id}}" checked="{{author_note}}" />
+                                            <label for="author-note-{{@index}}-{{author_mongo_id}}">{{authorNoteNumber @index}}</label>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+
+
                                     <div class="col s12 m2">
                                         <input name="equal_contrib" class="author-equal-contrib" type="checkbox" checked="{{equal_contrib}}" id="equal_contrib_{{@index}}">
                                         <label for="equal_contrib_{{@index}}" class="{{#if name_last}}active{{/if}}">Equal Contributor</label>

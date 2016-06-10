@@ -17,6 +17,20 @@ Template.AdminArticleForm.events({
 
         Session.set('article-form',article);
     },
+    'change .author-note':function(e,t){
+        var checked = false;
+            authorIndex = $(e.target).closest('li').index(),
+            checkboxSettings = $(e.target).attr('id').split('-'),
+            noteIndex = checkboxSettings[2],
+            article = Session.get('article-form');
+        if($(e.target).prop('checked')){
+            checked = true;
+        }
+        article.authors[authorIndex].author_notes_list[noteIndex].checked = checked;
+
+        Session.set('article-form',article);
+    },
+
     'click #add-author' : function(e,t){
         e.preventDefault();
         var article = Session.get('article-form');
@@ -25,7 +39,8 @@ Template.AdminArticleForm.events({
             name_middle: '',
             name_last: '',
             ids: {},
-            affiliations_list: []
+            affiliations_list: [],
+            author_notes_list: []
         }
         // need this random number for uniqueness of checkboxes. for authors in the db, it is the mongo id
         var temp_id = Math.random().toString(36).substring(7);
@@ -38,6 +53,17 @@ Template.AdminArticleForm.events({
                 })
             }
         }
+
+        if(article.author_notes){
+            for(var i = 0; i < article.author_notes.length ; i++){
+                console.log('hello');
+                newAuthor.author_notes_list.push({
+                    author_mongo_id : temp_id,
+                    checked: false,
+                })
+            }
+        }
+
         if(!article.authors){
             article.authors = [];
         }
