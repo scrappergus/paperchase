@@ -67,18 +67,20 @@
                     <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">1</a></span>
                 </sup>
                 {{else}}
-                {{#if affiliations_numbers}}
                 <sup class="author-affiliations">
                     {{#each affiliations_numbers}}
                     <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
                     {{/each}}
+                    {{#each author_notes}}
+                    <span>{{label}}<span class="comma">,</span></span>
+                    {{/each}}
+                    {{#if equal_contrib}}
+                    <span>*<span class="comma">,</span></span>
+                    {{/if}}
                 </sup>
                 {{/if}}
-                {{/if}}
 
-                {{#if equal_contrib}}
-                 *
-                {{/if}}
+
                 <span class="author-comma">,</span>
             </span>
         {{/each}}
@@ -86,6 +88,13 @@
     {{#if equal_contribs}}
     <span>* Contributed equally to this work.</span>
     {{/if}}
+
+    {{#if author_notes}}
+    {{#each author_notes}}
+    <span>{{label}} {{note}}.</span>
+    {{/each}}
+    {{/if}}
+
 
     <span>
     <ul>

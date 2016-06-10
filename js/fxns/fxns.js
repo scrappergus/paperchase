@@ -63,6 +63,20 @@ Meteor.article = {
             if(article.authors[authIdx].equal_contrib == true) {
                 article.equal_contribs = true;
             }
+            if(article.authors[authIdx].author_notes_ids && article.author_notes) {
+                article.authors[authIdx].author_notes = [];
+                for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
+                    for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
+                        var note = article.author_notes[noteIdx];
+                        if(note['id'] == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
+                            article.authors[authIdx].author_notes.push({
+                               'id': note['id'],
+                               'label': note['label'] 
+                            });
+                        }
+                    }
+                }
+            }
         }
 
         if(article.affiliations.length == 1) {
