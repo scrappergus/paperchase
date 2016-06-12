@@ -153,7 +153,8 @@ Meteor.methods({
         // AUTHOR NOTES FOOTNOTES
         // -----------
         articleProcessed.author_notes = [];
-        if(article['author-notes']){
+        if(article['author-notes'] && article['author-notes'][0]['fn']){
+            console.log(article['author-notes']);
             var prenote = article['author-notes'][0]['fn'][0];
             var note = {
                 'id': prenote['$'].id,
