@@ -468,7 +468,12 @@ Meteor.fullText = {
                             var referencePartCount = referencePart.childNodes.length;
                             for(var part = 0 ; part < referencePartCount ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
-                                    referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
+                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String) {
+                                        referenceObj[referencePartName] += ". " + referencePart.childNodes[part].nodeValue;
+                                    }
+                                    else {
+                                        referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
+                                    }
                                 }
                             }
                         }
@@ -486,10 +491,15 @@ Meteor.fullText = {
         // then using a string,
         // because there is some logic that is too complicated for handlebars. For ex, when 2 authors there is no comma and instead 'and' is used.
         var authors = [];
+        var etal = '';
         if(node.childNodes){
             for(var c = 0 ; c < node.childNodes.length ; c++){
                 var n = node.childNodes[c];
-                if(n.nodeValue != ''){
+
+                if(n.tagName == 'etal') {
+                    etal = 'etal';
+                }
+                else if(n.nodeValue != ''){
                     var author = '';
                     // Get the author name
                     if(n.nodeType == 3){
@@ -516,6 +526,8 @@ Meteor.fullText = {
         }else if(authors.length > 1){
             authors = authors.join('');
         }
+
+        authors += " " + etal;
 
         return authors;
     },
