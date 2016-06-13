@@ -159,6 +159,38 @@ Meteor.methods({
             }
         }
 
+        // Glossary
+        // --------
+        var glossary = xpath.select('//glossary', doc);
+        if(glossary[0]){
+            articleObject.glossary = [];
+            var glossObj = {};
+            glossObj.content = [];
+            for(var glossIdx in glossary[0].childNodes){
+                if(typeof Number(glossIdx) == 'number') {
+                    var gloss = glossary[0].childNodes[glossIdx];
+                    if(gloss.tagName == 'title') {
+                        glossObj.title = gloss.childNodes[0].nodeValue;
+                        glossObj.headerLevel = 1;
+                    }
+                    else if (gloss.tagName == 'def-list') {
+                        var terms = xpath.select('//term', gloss);
+                        var defs = xpath.select('//def', gloss);
+
+                        var content = '';
+                        for(termIdx=0; termIdx<terms.length; termIdx++) {
+                            content += terms[termIdx]+ ', '+ defs[termIdx] + '; '; 
+                        }
+                        content = content.replace(/<(?:.|\n)*?>/gm, '');
+                        content = content.replace(/\n/gm, '');
+                        glossObj.content.push({content:content});
+                    }
+                }
+            }
+
+            articleObject.glossary.push(glossObj);
+        }
+
         // References
         // ----------
         // TODO: editorials have a different reference style
