@@ -20,18 +20,12 @@
                     {{>ArticleFullText}}
 
                     {{#if glossary}}
-                        {{#each glossary}}
-                        <h3 id="{{convertToID title}}" class="article-header-{{headerLevel}}">{{title}}</h3>
-                            {{#each content}}
-                            <p>{{{content}}}</p>
-                            {{/each}}
-                        {{/each}}
+                        {{>ArticleGlossary}}
                     {{/if}}
-
 
                     {{#if acks}}
                         {{#each acks}}
-                        <h3 id="{{convertToID title}}" class="article-header-{{headerLevel}}">{{title}}</h3>
+                        <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
                             {{#each content}}
                                 {{#if equals contentType 'p'}}
                                     <p>{{{content}}}</p>
@@ -43,7 +37,7 @@
 
                     {{#if footnotes}}
                         {{#each footnotes}}
-                        <h3 id="{{convertToID title}}" class="article-header-{{headerLevel}}">{{title}}</h3>
+                        <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
                             {{#each content}}
                                 {{#if equals contentType 'p'}}
                                     <p>{{{content}}}</p>
@@ -161,4 +155,13 @@
             </div>
         {{/each}}
     {{/if}}
+</template>
+
+<template name="ArticleGlossary">
+    <h3 id="{{convertToID 'Abbreviations'}}" class="article-header-1">Abbreviations</h3>
+    <p>
+    {{#each glossary}}
+        {{term}}: {{def}}; 
+    {{/each}}
+    </p>
 </template>

@@ -668,27 +668,20 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            Session.set('issue',null);
             var pieces = Meteor.issue.urlPieces(this.params.vi);
             // TODO: add redirect if no issue
             if(pieces && pieces.volume){
-                Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
-                    if(error){
-                        console.log('ERROR - getIssueAndFiles');
-                        console.log(error);
-                    }else if(result){
-                        Session.set('issue',result);
-                    }
-                });
+                if( Session.get('issue') && Session.get('issue').volume != pieces.volume && Session.get('issue').issue != pieces.issue || !Session.get('issue')){
+                    Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
+                        if(error){
+                            console.error('ERROR - getIssueAndFiles',error);
+                            console.log(error);
+                        }else if(result){
+                            Session.set('issue',result);
+                        }
+                    });
+                }
             }
-
-            // Meteor.call('archive',function(error,result){
-            //     if(error){
-            //         console.error('Archive Error', error);
-            //     }else if(result){
-            //         Session.set('archive',result);
-            //     }
-            // });
 
             this.next();
         }
@@ -722,6 +715,8 @@ if (Meteor.isClient) {
                 Router.go('ArticleNotFound');
             }
 
+            Meteor.article.readyFullText(this.params._id);
+
             this.next();
         },
         waitOn: function(){
@@ -751,9 +746,9 @@ if (Meteor.isClient) {
             if (this.ready()) {
                 var data = this.data();
                 if(data && data.article && data.article.advance === true) {
-                    return "Advance";
+                    return 'Advance';
                 }else{
-                    return "Issue";
+                    return 'Issue';
                 }
             }
         },
@@ -763,19 +758,13 @@ if (Meteor.isClient) {
             var article = articles.findOne({
                 '_id': this.params._id
             });
+            
             if (!article) {
                 return Router.go('ArticleNotFound');
             }
 
-            // Get files and fulltext
-            Session.set('article-text', null);
-
-            Meteor.call('getFilesForFullText', this.params._id, function(error, result) {
-                result = result || {};
-                result.abstract = article.abstract;
-                result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
-                Session.set('article-text', result);
-            });
+            Meteor.article.readyFullText(this.params._id);
+            
             this.next();
         },
         waitOn: function() {

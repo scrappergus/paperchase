@@ -141,6 +141,24 @@ Meteor.article = {
         var mongoId = $(e.target).data('id');
         var articleData = articles.findOne({'_id':mongoId});
         Session.set('articleData',articleData);
+    },
+    readyFullText: function(mongoId){
+        var article = articles.findOne({
+            '_id': mongoId
+        });      
+
+        if(article){
+            if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+                Session.set('article-text', null);    
+                Meteor.call('getFilesForFullText', mongoId, function(error, result) {
+                    result = result || {};
+                    result.abstract = article.abstract;
+                    result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
+                    Session.set('article-text', result);
+                });
+            }                 
+        }  
+  
     }
 }
 

@@ -13,7 +13,16 @@
                     {{>ArticleFigures figures=files.figures}}
                 {{/if}}
             {{/if}}
+            
+            {{#with fullText}}
+            {{#if glossary}}
+            <div class="article-text">
+            {{>ArticleGlossary}}    
+            </div>
+            {{/if}}
+            {{/with}}
         </div>
+
 
         {{#with article}}
             {{> ArticleSidebar}}

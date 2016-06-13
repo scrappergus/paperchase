@@ -58,9 +58,6 @@ Template.ArticleText.onRendered(function() {
 Template.ArticleFullText.onRendered(function() {
     // $('.materialboxed').materialbox(); // popup image
 });
-Template.ArticleFullText.onDestroyed(function () {
-    Session.set('article-text',null)
-});
 
 // Scrollspy
 // --------
