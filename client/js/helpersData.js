@@ -157,42 +157,62 @@ Template.ArticleText.helpers({
         return Session.get('article-text');
     }
 });
-
-Template.ArticleSidebar.helpers({
+Template.Article.helpers({
     fullText: function(){
         return Session.get('article-text');
+    }
+});
+
+Template.ArticleSidebar.helpers({
+    fullTextView: function(){
+        if(Router.current().route.getName() === 'ArticleText'){
+            return true;
+        }
+        return;
+    },
+    abstractView: function(){
+        if(Router.current().route.getName() === 'Article'){
+            return true;
+        }
+        return;
     },
     items: function() {
-        var articleHeaders = Session.get('article-text').sections;
-        var footnotes = Session.get('article-text').footnotes;
-        var acks = Session.get('article-text').acks;
-        var references = Session.get('article-text').references;
-        var sections = [];
-
-        for ( i = 0; i < articleHeaders.length; i++ ) {
-            if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
-                sections.push( { title: articleHeaders[i].title } );
+        if(Session.get('article-text')){
+            var articleHeaders = Session.get('article-text').sections;
+            var footnotes = Session.get('article-text').footnotes;
+            var acks = Session.get('article-text').acks;
+            var references = Session.get('article-text').references;
+            var sections = [];
+            if(articleHeaders){
+                for ( i = 0; i < articleHeaders.length; i++ ) {
+                    if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
+                        sections.push( { title: articleHeaders[i].title } );
+                    }
+                }            
             }
-        }
 
-        if ( acks ) {
-            for ( i = 0; i < acks.length; i++ ) {
-                sections.push( { title: acks[i].title} );
+            if (Session.get('article-text').glossary) {
+                sections.push( { title: 'Abbreviations'} );
             }
-        }
 
-        if ( footnotes ) {
-            for ( i = 0; i < footnotes.length; i++ ) {
-                sections.push( { title: footnotes[i].title} );
+            if ( acks ) {
+                for ( i = 0; i < acks.length; i++ ) {
+                    sections.push( { title: acks[i].title} );
+                }
             }
+
+            if ( footnotes ) {
+                for ( i = 0; i < footnotes.length; i++ ) {
+                    sections.push( { title: footnotes[i].title} );
+                }
+            }
+
+            if ( references ) {
+                sections.push( { title: 'References'} );
+            }
+
+            return sections;            
         }
-
-
-        if ( references ) {
-            sections.push( { title: 'References'} );
-        }
-
-        return sections;
     }
 });
 
@@ -222,12 +242,10 @@ Template.Issue.helpers({
         var sectionName;
 
         for ( i = 0; i < articles.length; i++ ) {
-//            console.log('Article Type: ' + Meteor.general.pluralize(articles[i].article_type.name));
             if ( articles[i].start_group && articles[i].article_type.name) {
                 sections.push( { title: Meteor.general.pluralize(articles[i].article_type.name) } );
             }
         }
-
         return sections;
     }
 });

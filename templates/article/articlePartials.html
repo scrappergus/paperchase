@@ -134,8 +134,9 @@
 <template name="ArticleSidebar">
     <div class="page-sidebar col s12 m12 l4">
         {{#if isSubscribed}}
+
             <!-- for subscribed users -->
-            {{#if fullText}}
+            {{#if fullTextView}}
                 {{#with files}}
                 {{#if pdf.url}}
                     <a href="{{pdf.url}}" class="download-pdf full-width end-cap primary button">
@@ -143,10 +144,19 @@
                     </a>
                 {{/if}}
                 {{/with}}
-            {{else}}
+            {{/if}}
+
+            {{#if abstractView}}
                 <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="view-html full-width end-cap primary button">
                     <span class="icon icon-file"></span> View Full Text
                 </a>
+                {{#with files}}
+                {{#if pdf.url}}
+                    <a href="{{pdf.url}}" class="download-pdf full-width end-cap primary button">
+                        <span class="icon icon-download"></span> Download PDF
+                    </a>
+                {{/if}}
+                {{/with}}
             {{/if}}
         {{else}}
             <!-- not subscribed -->
@@ -179,7 +189,7 @@
         {{/if}}
         {{/with}}
 
-        {{#if fullText}}
+        {{#if fullTextView}}
             {{#unless advance}}
                 {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
             {{/unless}}
