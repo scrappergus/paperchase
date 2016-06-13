@@ -21,15 +21,16 @@ Meteor.methods({
                 Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
                     if(getXmlError){
                         console.error('getXmlError',getXmlError);
-                        fut['throw'](getXmlError);
+                        fut.throw(getXmlError);
                     }else if(xmlRes){
                         xml = xmlRes.content;
                         Meteor.call('fullTextToJson',xml, {figures:figures, supplemental:supplemental}, mongoId, function(convertXmlError, convertedXml){
                             if(convertXmlError){
                                 console.error('convertXmlError',convertXmlError);
-                                fut['throw'](convertXmlError);
+                                fut.throw(convertXmlError);
+                            }else{
+                                fut.return(convertedXml);    
                             }
-                            fut['return'](convertedXml);
                         });
                     }
                 });
@@ -202,7 +203,7 @@ Meteor.methods({
         }
 
         if(articleObject){
-            fut['return'](articleObject);
+            fut.return(articleObject);
         }
         return fut.wait();
     },
