@@ -29,6 +29,7 @@ Meteor.methods({
                                 console.error('convertXmlError',convertXmlError);
                                 fut.throw(convertXmlError);
                             }else{
+                                convertedXml.mongo = mongoId;
                                 fut.return(convertedXml);    
                             }
                         });
@@ -104,7 +105,6 @@ Meteor.methods({
                 var ackObj = Meteor.fullText.sectionToJson(ack);
 
                 ackObj.title = "Acknowledgements";
-                ackObj.headerLevel = 1;
 
                 articleObject.acks.push(ackObj);
             }
@@ -151,7 +151,6 @@ Meteor.methods({
 
                         if(type2title[footnoteObj.type]) {
                             footnoteObj.title = type2title[footnoteObj.type];
-                            footnoteObj.headerLevel = 1
                         }
                     }
                 }
@@ -162,34 +161,26 @@ Meteor.methods({
 
         // Glossary
         // --------
-        var glossary = xpath.select('//glossary', doc);
+        var glossary = xpath.select('//def-list', doc);
         if(glossary[0]){
             articleObject.glossary = [];
-            var glossObj = {};
-            glossObj.content = [];
             for(var glossIdx in glossary[0].childNodes){
-                if(typeof Number(glossIdx) == 'number') {
-                    var gloss = glossary[0].childNodes[glossIdx];
-                    if(gloss.tagName == 'title') {
-                        glossObj.title = gloss.childNodes[0].nodeValue;
-                        glossObj.headerLevel = 1;
-                    }
-                    else if (gloss.tagName == 'def-list') {
-                        var terms = xpath.select('//term', gloss);
-                        var defs = xpath.select('//def', gloss);
-
-                        var content = '';
-                        for(termIdx=0; termIdx<terms.length; termIdx++) {
-                            content += terms[termIdx]+ ', '+ defs[termIdx] + '; '; 
+                if(typeof Number(glossIdx) == 'number' && glossary[0].childNodes[glossIdx].tagName == 'def-item') {
+                    var term = {};
+                    for(var i=0; i < glossary[0].childNodes[glossIdx].childNodes.length ; i++){
+                        var glossParsed = '';
+                        glossParsed = Meteor.fullText.removeParagraphTags(Meteor.fullText.convertContent(glossary[0].childNodes[glossIdx].childNodes[i]));
+                        
+                        if(glossParsed != ''){
+                            term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed; 
                         }
-                        content = content.replace(/<(?:.|\n)*?>/gm, '');
-                        content = content.replace(/\n/gm, '');
-                        glossObj.content.push({content:content});
                     }
+                    if(Object.keys(term).length !=0 ){
+                        articleObject.glossary.push(term);    
+                    }
+                    
                 }
             }
-
-            articleObject.glossary.push(glossObj);
         }
 
         // References
@@ -760,5 +751,8 @@ Meteor.fullText = {
             content = content.replace(/\/underline/g,'u');
         }
         return content;
+    },
+    removeParagraphTags: function(content){
+        return content.replace(/<\/p>/g,'').replace(/<p>/g,'');
     }
 }
