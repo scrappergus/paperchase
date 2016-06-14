@@ -30,7 +30,7 @@ Meteor.methods({
                                 fut.throw(convertXmlError);
                             }else{
                                 convertedXml.mongo = mongoId;
-                                fut.return(convertedXml);    
+                                fut.return(convertedXml);
                             }
                         });
                     }
@@ -112,50 +112,31 @@ Meteor.methods({
 
         // Footnotes
         // ---------
-        var footnotes = xpath.select('//fn', doc);
-        if(footnotes[0]){
+        var footnotes = xpath.select('//fn-group', doc);
+        if(footnotes){
             articleObject.footnotes = [];
-            for(var footnoteIdx = 0 ; footnoteIdx < footnotes.length ; footnoteIdx++){
-                footnote = footnotes[footnoteIdx];
+            for(var i=0; i<footnotes.length; i++){
+                var footObj = {};
 
-                var footnoteObj = Meteor.fullText.sectionToJson(footnote);
+                for(var c=0; c< footnotes[i].childNodes.length; c++){
+                    var foot = Meteor.fullText.convertContent(footnotes[i].childNodes[c]);
 
-                // Removing extra heading from content, some XML have them, others don't
-                var newFtContArr = [];
-                if(footnoteObj.content.length > 1) {
-                    for(var footIdx=0 ; footIdx < footnoteObj.content.length ; footIdx++){
-                        var content = footnoteObj.content[footIdx];
-
-                        if(footIdx == 0) {  // Checking only the first content node, add all others without testing (prevents false matches in the content below the heading)
-                                var patt = /conflict(s)* of interest|funding|authorship/i;
-                            if(patt.test(content.content) === false) {
-                                newFtContArr.push(content);
-                            }
-                        }
-                        else {
-                            newFtContArr.push(content);
-                        }
-                    }
-                    footnoteObj.content = newFtContArr;
-                }
-
-                var type2title = {
-                    'conflict' : "Conflict of Interests Statement",
-                    'supported-by' : "Funding",
-                    'con' : "Authorship",
-                }
-
-                for(var footAttrIdx=0 ; footAttrIdx < footnote.attributes.length ; footAttrIdx++){
-                    if(footnote.attributes[footAttrIdx].localName == 'fn-type'){
-                        footnoteObj.type = footnote.attributes[footAttrIdx].nodeValue;
-
-                        if(type2title[footnoteObj.type]) {
-                            footnoteObj.title = type2title[footnoteObj.type];
+                    if(foot){
+                        if(footnotes[i].childNodes[c].localName){
+                            footObj[footnotes[i].childNodes[c].localName] = foot;
                         }
                     }
                 }
 
-                articleObject.footnotes.push(footnoteObj);
+                if(Object.keys(footObj).length !=0 ){
+                    if(!footObj.title && footObj.fn){
+                        var conflictTestPattern = new RegExp(/conflict(s)* of interest/i);
+                        if(conflictTestPattern){
+                            footObj.title = 'Conflict of Interests Statement';
+                        }
+                    }
+                    articleObject.footnotes.push(footObj);
+                }
             }
         }
 
@@ -170,15 +151,15 @@ Meteor.methods({
                     for(var i=0; i < glossary[0].childNodes[glossIdx].childNodes.length ; i++){
                         var glossParsed = '';
                         glossParsed = Meteor.fullText.removeParagraphTags(Meteor.fullText.convertContent(glossary[0].childNodes[glossIdx].childNodes[i]));
-                        
+
                         if(glossParsed != ''){
-                            term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed; 
+                            term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed;
                         }
                     }
                     if(Object.keys(term).length !=0 ){
-                        articleObject.glossary.push(term);    
+                        articleObject.glossary.push(term);
                     }
-                    
+
                 }
             }
         }
@@ -398,7 +379,7 @@ Meteor.fullText = {
                         //                    if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase()){
                         suppObj.url = suppAssetsUrl + 'supplemental_materials/' + files.supplemental[f].file;
                         //                    }
-                    }                    
+                    }
                 }
             }
         });
@@ -434,7 +415,7 @@ Meteor.fullText = {
                                     else {
                                         first_author = false;
                                     }
-                                    
+
                                     referenceObj.authors += referencePart.childNodes[part].childNodes[0].nodeValue + ' ';
                                 }
                                 else if(referencePart.childNodes[part].localName == 'given-names'){
@@ -468,7 +449,7 @@ Meteor.fullText = {
                             var referencePartCount = referencePart.childNodes.length;
                             for(var part = 0 ; part < referencePartCount ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
-                                    comment += referencePart.childNodes[part].nodeValue; 
+                                    comment += referencePart.childNodes[part].nodeValue;
                                 }
                                 else if(referencePart.childNodes[part].localName == 'ext-link') {
                                     var href = '';

@@ -38,11 +38,7 @@
                     {{#if footnotes}}
                         {{#each footnotes}}
                         <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
-                            {{#each content}}
-                                {{#if equals contentType 'p'}}
-                                    <p>{{{content}}}</p>
-                                {{/if}}
-                            {{/each}}
+                            {{{fn}}}
                         {{/each}}
                     {{/if}}
 
