@@ -73,7 +73,6 @@
                                     <span>.</span>
                                     {{/if}}
 
-
                                     {{#if equals type 'web'}}
                                     {{#if authors}}<span> {{authors}}.</span>{{/if}}
                                     {{#if title}}<span> {{title}}.</span>{{/if}}
@@ -85,11 +84,16 @@
 
                                     {{#if equals type 'other'}}
                                     {{#if collab}}<span> {{collab}}.</span>{{/if}}
-                                    {{#if source}}<span> {{source}}.</span>{{/if}}
                                     {{#if title}}<span> {{title}}.</span>{{/if}}
                                     {{#if chapter_title}}<span> {{chapter_title}};</span>{{/if}}
                                     {{#if comment}}<span> {{{comment}}}</span>{{/if}}
+                                    {{#if source}}<span> {{source}}.</span>{{/if}}
                                     {{#if year}}<span> {{year}};</span>{{/if}}
+                                    {{/if}}
+
+                                    {{#if equals type 'database'}}
+                                    {{#if source}}<span> {{source}}.</span>{{/if}}
+                                    {{#if comment}}<span> {{{comment}}}.</span>{{/if}}
                                     {{/if}}
 
 
@@ -157,7 +161,7 @@
     <h3 id="{{convertToID 'Abbreviations'}}" class="article-header-1">Abbreviations</h3>
     <p>
     {{#each glossary}}
-        {{{term}}}: {{{def}}}; 
+        {{{term}}}: {{{def}}};
     {{/each}}
     </p>
 </template>
