@@ -508,7 +508,7 @@ Meteor.fullText = {
                 var n = node.childNodes[c];
 
                 if(n.tagName == 'etal') {
-                    etal = 'etal';
+                    etal = ',<em> et al</em>';
                 }
                 else if(n.nodeValue != ''){
                     var author = '';
@@ -538,7 +538,7 @@ Meteor.fullText = {
             authors = authors.join('');
         }
 
-        authors += " " + etal;
+        authors += etal;
 
         return authors;
     },
