@@ -22,17 +22,17 @@ Meteor.articleFiles = {
                             // Meteor.general.scrollTo('xml-verify');
 
                             Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
-                                    if(error){
-                                        console.log('ERROR - preProcessArticle');
-                                        console.log(error);
-                                    }
-                                    if(result){
-                                        Session.set('xml-verify',true);
-                                        result._id = articleMongoId;
-                                        Session.set('article-form',result);
-                                        Meteor.formActions.closeModal();
-                                    }
-                                });
+                                if(error){
+                                    console.log('ERROR - preProcessArticle');
+                                    console.log(error);
+                                }
+                                if(result){
+                                    Session.set('xml-verify',true);
+                                    result._id = articleMongoId;
+                                    Session.set('article-form',result);
+                                    Meteor.formActions.closeModal();
+                                }
+                            });
                         }
                     });
                 });
