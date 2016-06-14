@@ -50,11 +50,13 @@
                                     <b>{{number}}.</b>
 
                                     {{#if equals type 'journal'}}
+                                    {{#if editors}}<span> {{editors}}, editor.</span>{{/if}}
                                     {{#if authors}}<span> {{authors}}.</span>{{/if}}
                                     {{#if title}}<span> {{title}}.</span>{{/if}}
                                     {{#if source}}<span> {{source}}.</span>{{/if}}
                                     {{#if year}}<span> {{year}};</span>{{/if}}
                                     {{#if volume}}<span> {{volume}}:</span>{{/if}}
+                                    {{#if issue}}<span> {{issue}}</span>{{/if}}
                                     {{#if comment}}<span> {{comment}}.</span>{{/if}}
                                     {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
                                     {{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{/if}}
