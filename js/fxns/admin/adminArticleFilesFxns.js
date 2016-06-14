@@ -37,33 +37,32 @@ Meteor.articleFiles = {
                     });
                 });
 
-        }
-        else {
+        } else {
             reader.onload = function(e) {
                 xmlString = e.target.result;
 
                 Meteor.call('processXmlString',xmlString, function(error,result){
-                        if(error){
-                            console.error('process XML for DB', error);
-                            Meteor.formActions.errorMessage('Could not process XML for verification');
-                        }else if(result){
-                            Meteor.formActions.closeModal();
-                            // Meteor.general.scrollTo('xml-verify');
+                    if(error){
+                        console.error('process XML for DB', error);
+                        Meteor.formActions.errorMessage('Could not process XML for verification');
+                    }else if(result){
+                        Meteor.formActions.closeModal();
+                        // Meteor.general.scrollTo('xml-verify');
 
-                            Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
-                                    if(error){
-                                        console.log('ERROR - preProcessArticle');
-                                        console.log(error);
-                                    }
-                                    if(result){
-                                        Session.set('xml-verify',true);
-                                        result._id = articleMongoId;
-                                        Session.set('article-form',result);
-                                        Meteor.formActions.closeModal();
-                                    }
-                                });
-                        }
-                    });
+                        Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
+                            if(error){
+                                console.log('ERROR - preProcessArticle');
+                                console.log(error);
+                            }
+                            if(result){
+                                Session.set('xml-verify',true);
+                                result._id = articleMongoId;
+                                Session.set('article-form',result);
+                                Meteor.formActions.closeModal();
+                            }
+                        });
+                    }
+                });
             }
             reader.readAsText(file);
         }
