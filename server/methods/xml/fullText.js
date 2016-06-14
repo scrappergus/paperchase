@@ -402,7 +402,13 @@ Meteor.fullText = {
                     referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
                     // console.log(referencePartName);
                     if(referencePartName == 'person_group'){
-                        referenceObj.authors = Meteor.fullText.traverseAuthors(referencePart);
+                        var attr = xpath.select('@person-group-type', referencePart);
+                        if(attr.length && attr[0].value == 'editor') {
+                            referenceObj.editors = Meteor.fullText.traverseAuthors(referencePart);
+                        }
+                        else {
+                            referenceObj.authors = Meteor.fullText.traverseAuthors(referencePart);
+                        }
                     }
                     else if(referencePartName == 'name'){
                         if(referencePart.childNodes){

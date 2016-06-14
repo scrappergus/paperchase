@@ -62,15 +62,13 @@
 
                                     {{#if equals type 'book'}}
                                     {{#if authors}}<span> {{authors}}.</span>{{/if}}
-                                    {{#if year}}<span> {{year}}.</span>{{/if}}
                                     {{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
+                                    {{#if source}}<span>In: </span>{{/if}}
+                                    {{#if editors}}<span> {{editors}}, eds.</span>{{/if}}
+                                    {{#if source}}<span>{{{source}}}.</span>{{/if}}
                                     {{#if volume}}<span> {{volume}}:</span>{{/if}}
-                                    {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
-                                    <span>(</span>
-                                    {{#if source}}<span>{{{source}}}</span>{{/if}}
                                     {{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
-                                    {{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}
-                                    <span>)</span>
+                                    {{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}{{#if year}}<span>, {{year}}</span>{{/if}}{{#if fpage}}<span>, pp. {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
                                     <span>.</span>
                                     {{/if}}
 
