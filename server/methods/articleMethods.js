@@ -322,7 +322,7 @@ Meteor.methods({
                         for(var a = 0 ; a < notes.length ; a++){
                             var note = notes[a];
                             var authorNote= {
-                                id: note['id'], 
+                                id: note['id'],
                                 author_mongo_id: mongo
                             }
                             authorNote.author_note = false;
@@ -393,8 +393,7 @@ Meteor.methods({
             // Files
             // -----------
             // add xml and pdf info so that we can use this to update db without erasing info
-            // only need to include xml and pdf because figs and supp will be auto processed via xml processing
-            // Gus: I added figure and supp handling to preserve the S3 file names when reprocessing the XML
+            // only need to include xml and pdf because figs and supp will be auto processed via xml processing, in afterUploadXmlFilesCheck()
 
             if(article.files){
             }else{
@@ -408,26 +407,6 @@ Meteor.methods({
                 }
                 if(articleFilesInDb && articleFilesInDb.files && articleFilesInDb.files.xml){
                     article.files.xml = articleFilesInDb.files.xml;
-                }
-
-                if(articleFilesInDb && articleFilesInDb.files.figures){
-                    for(var i=0 ; i < article.files.figures.length; i++){
-                        for(var k=0 ; k < articleFilesInDb.files.figures.length; k++){
-                            if(article.files.figures[i].id.toLowerCase() == articleFilesInDb.files.figures[k].id.toLowerCase()) {
-                                article.files.figures[i].file = articleFilesInDb.files.figures[k].file;
-                            }
-                        }
-                    }
-                }
-
-                if(articleFilesInDb && articleFilesInDb.files.supplemental){
-                    for(var i=0 ; i < articleFilesInDb.files.supplemental.length; i++){
-                        for(var k=0 ; k < articleFilesInDb.files.supplemental.length; k++){
-                            if(article.files.supplemental[i].id.toLowerCase() == articleFilesInDb.files.supplemental[k].id.toLowerCase()) {
-                                article.files.supplemental[i].file = articleFilesInDb.files.supplemental[k].file;
-                            }
-                        }
-                    }
                 }
             }
 

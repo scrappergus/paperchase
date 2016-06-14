@@ -25,8 +25,7 @@ Meteor.articleFiles = {
                                 if(error){
                                     console.log('ERROR - preProcessArticle');
                                     console.log(error);
-                                }
-                                if(result){
+                                } else if(result){
                                     Session.set('xml-verify',true);
                                     result._id = articleMongoId;
                                     Session.set('article-form',result);

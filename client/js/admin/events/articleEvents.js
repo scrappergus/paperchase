@@ -109,7 +109,7 @@ Template.s3ArticleFilesUpload.events({
         // Uploader only allows 1 file at a time.
         // Versioning is based on file name, which is based on MongoID. Filename is articleMongoID.xml
         if(files){
-            if(files.length == 0 || file.type == 'text/xml'){
+            if(file.type == 'text/xml'){
                 Meteor.articleFiles.verifyXml(articleMongoId,files);
             }else if(file.type == 'application/pdf'){
                 Meteor.articleFiles.uploadArticleFile(articleMongoId,'pdf',files);
