@@ -216,6 +216,12 @@ Meteor.fullText = {
                     sectionObject.label = Meteor.fullText.convertContent(sec);
                 }else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.convertContent(sec);
+                }else if(sec.localName === 'sec'){
+                    var subSectionObject = Meteor.fullText.sectionToJson(sec,files,mongoId);
+                    if(subSectionObject){
+                        subSectionObject.contentType = 'subsection';
+                        sectionObject.content.push(subSectionObject);
+                    }
                 }else{
                     var subSectionObject = Meteor.fullText.sectionPartsToJson(sec,files,mongoId);
                     // Add the content object to the section object
@@ -229,7 +235,7 @@ Meteor.fullText = {
     },
     sectionPartsToJson: function(sec,files,mongoId){
         // console.log('...sectionPartsToJson',sec.localName);
-        var subSectionObject = {};
+        var sectionPartObject = {};
         var content,
             contentType;
 
@@ -261,11 +267,11 @@ Meteor.fullText = {
 
         if(content){
             content = Meteor.fullText.fixTags(content);
-            subSectionObject.content = content;
-            subSectionObject.contentType = contentType;
+            sectionPartObject.content = content;
+            sectionPartObject.contentType = contentType;
         }
 
-        return subSectionObject;
+        return sectionPartObject;
     },
     headerLevelFromId: function(sectionId){
         // section ids are in the format, s1, s1_1, s1_1_1
@@ -277,10 +283,8 @@ Meteor.fullText = {
         // need to include figures so that we can fill in src within the content
         var content = '';
         // console.log(node.localName);
-        if(node.localName != 'sec' && node.childNodes){
+        if(node.childNodes){
             // Section: Content
-            // skip <sec> children because these will be processed separately. an xpath query was used to get all <sec> and then we loop through them
-
             // Style tags
             // --------
             for(var cc = 0 ; cc < node.childNodes.length ; cc++){
@@ -343,7 +347,7 @@ Meteor.fullText = {
         return content;
     },
     convertFigure: function(node,files,mongoId){
-        // console.log('..convertFigure',figures);
+        // console.log('..convertFigure',node);
         var figureAssetsUrl = journalConfig.findOne().assets;
         var figObj;
 
@@ -443,7 +447,7 @@ Meteor.fullText = {
                         }
                     }else if(referencePartName == 'article_title'){
                         if(referencePart.childNodes){
-                            referenceObj.title = Meteor.fullText.convertContent(referencePart); 
+                            referenceObj.title = Meteor.fullText.convertContent(referencePart);
                         }
                     }else if(referencePartName == 'comment'){
                         if(referencePart.childNodes){
