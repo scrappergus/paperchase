@@ -442,12 +442,7 @@ Meteor.fullText = {
                         }
                     }else if(referencePartName == 'article_title'){
                         if(referencePart.childNodes){
-                            var referencePartCount = referencePart.childNodes.length;
-                            for(var part = 0 ; part < referencePartCount ; part++){
-                                if(referencePart.childNodes[part].nodeValue){
-                                    referenceObj.title = referencePart.childNodes[part].nodeValue;
-                                }
-                            }
+                            referenceObj.title = Meteor.fullText.convertContent(referencePart); 
                         }
                     }else if(referencePartName == 'comment'){
                         if(referencePart.childNodes){
