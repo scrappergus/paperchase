@@ -176,7 +176,7 @@ Meteor.adminArticle = {
 
         articleUpdateObj = Meteor.adminArticleFormGet.all()
 
-        if(Session.get('xml-verify')){
+        if(Session.get('xml-verify') && $('input.file_bag') && $('input.file_bag')[0]){
             // for when on the article XML uploader page, saving form will both update the database and upload XML to S3
             files = $('input.file_bag')[0].files;
         }

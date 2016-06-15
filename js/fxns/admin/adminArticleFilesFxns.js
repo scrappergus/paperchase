@@ -161,6 +161,8 @@ Meteor.articleFiles = {
     filesById: function(files){
         var filesById = {};
 
+        if(files)
+
         files.forEach(function(file){
             filesById[file.id.toLowerCase()] = file;
         });
