@@ -445,7 +445,7 @@ Meteor.fullText = {
                             var referencePartCount = referencePart.childNodes.length;
                             for(var part = 0 ; part < referencePartCount ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
-                                    referenceObj['title'] = referencePart.childNodes[part].nodeValue;
+                                    referenceObj.title = referencePart.childNodes[part].nodeValue;
                                 }
                             }
                         }
@@ -456,21 +456,26 @@ Meteor.fullText = {
                             for(var part = 0 ; part < referencePartCount ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
                                     comment += referencePart.childNodes[part].nodeValue;
-                                }
-                                else if(referencePart.childNodes[part].localName == 'ext-link') {
+                                } else if(referencePart.childNodes[part].localName == 'ext-link') {
                                     var href = '';
-                                    for(var attrIdx = 0; attrIdx < referencePart.childNodes[part].attributes.length; attrIdx++) {
+                                    for(var attrIdx=0; attrIdx<referencePart.childNodes[part].attributes.length; attrIdx++) {
                                         var attr = referencePart.childNodes[part].attributes[attrIdx];
                                         if(attr.localName == 'href') {
                                             var href = attr.nodeValue;
                                         }
                                     }
-                                    link_content = href ||  referencePart.childNodes[part].nodeValue;
-                                    comment += "<a href=\""+href+"\">"+link_content+"</a>";
+                                    link_content = href || referencePart.childNodes[part].nodeValue;
+                                    comment += '<a href="'+href+'" target="_BLANK">'+link_content+'</a>';
 
+                                } else if(referencePart.childNodes[part].localName == 'uri') {
+                                    if(referencePart.childNodes[part].childNodes[0] && referencePart.childNodes[part].childNodes[0].nodeValue){
+                                        var link = referencePart.childNodes[part].childNodes[0].nodeValue;
+                                        link = Meteor.clean.removeSpaces(link);
+                                        comment += '<a href="'+link+'" target="_BLANK">'+link+'</a>';
+                                    }
                                 }
                             }
-                            referenceObj['comment'] = comment;
+                            referenceObj.comment = comment;
 
                         }
                     }else if(referencePartName){
@@ -481,8 +486,7 @@ Meteor.fullText = {
                                 if(referencePart.childNodes[part].nodeValue){
                                     if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String) {
                                         referenceObj[referencePartName] += ". " + referencePart.childNodes[part].nodeValue;
-                                    }
-                                    else {
+                                    } else {
                                         referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
                                     }
                                 }

@@ -76,7 +76,7 @@
                                             {{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
                                             {{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}{{#if year}}<span>, {{year}}</span>{{/if}}{{#if fpage}}<span>, pp. {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
                                             <span>.</span>
-                                    
+
                                         {{! This is the non-chapter specific ref, for a whole book}}
                                         {{else}} 
                                         
@@ -176,7 +176,7 @@
     <h3 id="{{convertToID 'Abbreviations'}}" class="article-header-1">Abbreviations</h3>
     <p>
     {{#each glossary}}
-        {{{term}}}: {{{def}}}; 
+        {{{term}}}: {{{def}}};
     {{/each}}
     </p>
 </template>
