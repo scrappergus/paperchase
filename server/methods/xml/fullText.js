@@ -50,48 +50,34 @@ Meteor.methods({
 
         articleObject.sections = [];
 
-        // Loose paragraphs
-        // ---------
-        var paras = xpath.select('//body/p', doc);
-        if(paras[0]){
-            for(var paraIdx = 0 ; paraIdx < paras.length ; paraIdx++){
-               para = paras[paraIdx];
-
-                var sectionObject = Meteor.fullText.sectionToJson({childNodes:[para]}, files, mongoId);
-                articleObject.sections.push(sectionObject);
-            }
-        }
-
-
         // Article Content
         // ---------------
-        var sections = xpath.select('//sec', doc);
+        var sections = xpath.select('//body/sec | //body/p', doc);
         if(sections[0]){
-            // Sections
-            for(var section = 0 ; section < sections.length ; section++){
-                // console.log(sections[section].childNodes.length);
-                var sectionType;
-                var sectionObject = Meteor.fullText.sectionToJson(sections[section],files, mongoId);
-                for(var sectionAttr = 0 ; sectionAttr < sections[section].attributes.length ; sectionAttr++){
-                    // console.log(sections[section].attributes[sectionAttr]);
-                    if(sections[section].attributes[sectionAttr].nodeName === 'sec-type'){
-                        sectionObject.type = sections[section].attributes[sectionAttr].nodeValue;
-                    }else if(sections[section].attributes[sectionAttr].nodeName === 'id'){
-                        var sectionId = sections[section].attributes[sectionAttr].nodeValue;
+            for(var section = 0; section<sections.length; section++){
+                var sectionObject;
+                if(sections[section].localName === 'sec'){
+                    sectionObject = Meteor.fullText.sectionToJson(sections[section],files, mongoId);
+                    for(var sectionAttr = 0; sectionAttr < sections[section].attributes.length; sectionAttr++){
+                        if(sections[section].attributes[sectionAttr].nodeName === 'sec-type'){
+                            sectionObject.type = sections[section].attributes[sectionAttr].nodeValue;
+                        }else if(sections[section].attributes[sectionAttr].nodeName === 'id'){
+                            var sectionId = sections[section].attributes[sectionAttr].nodeValue;
 
-                        sectionObject.headerLevel = Meteor.fullText.headerLevelFromId(sectionId);
-                        sectionObject.sectionId = sectionId;
+                            sectionObject.headerLevel = Meteor.fullText.headerLevelFromId(sectionId);
+                            sectionObject.sectionId = sectionId;
+                        }
                     }
+                }else if(sections[section].localName === 'p'){
+                    sectionObject = {};
+                    sectionObject.content = [];
+                    sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section]));
                 }
+
+                // console.log('sectionObject',sectionObject);
+
                 articleObject.sections.push(sectionObject);
             }
-        }else if(xpath.select('//body', doc)){
-            var body =  xpath.select('//body', doc);
-            // there will only be 1 body node, so use body[0]
-            // no <sec>
-            // just create 1 section
-            var sectionObject = Meteor.fullText.sectionToJson(body[0],files, mongoId);
-            articleObject.sections.push(sectionObject);
         }
 
         // Acknowledgements
@@ -224,47 +210,61 @@ Meteor.fullText = {
         for(var c = 0 ; c < section.childNodes.length ; c++){
             // console.log('c = '  + c);
             var sec = section.childNodes[c];
-            var content,
-                contentType;
             if(sec.localName != null){
-                // Different processing for different node types
                 if(sec.localName === 'label'){
                     sectionObject.label = Meteor.fullText.convertContent(sec);
                 }else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.convertContent(sec);
-                }else if(sec.localName === 'table-wrap'){
-                    // get attributes
-                    var tableId;
-                    var tblAttr = sec.attributes;
-                    contentType = 'table';
-                    for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
-                        // console.log(tblAttr[tblA].localName + ' = ' + tblAttr[tblA].nodeValue );
-                        if(tblAttr[tblA].localName === 'id'){
-                            tableId = tblAttr[tblA].nodeValue;
-                        }
-                    }
-                    content = '<table class="bordered" id="' + tableId + '">';
-                    content += Meteor.fullText.traverseTable(sec);
-                    content += '</table>';
-                }else if(sec.localName === 'fig'){
-                    content = Meteor.fullText.convertFigure(sec,files,mongoId);
-                    contentType = 'figure';
-                }else if(sec.localName === 'supplementary-material'){
-                    content = Meteor.fullText.convertSupplement(sec,files,mongoId);
-                    contentType = 'supplement';
                 }else{
-                    content = Meteor.fullText.convertContent(sec);
-                    contentType = 'p';
-                }
-
-                // Add the content object to the section objectx
-                if(content){
-                    content = Meteor.fullText.fixTags(content);
-                    sectionObject.content.push({contentType: contentType , content: content});
+                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec);
+                    // Add the content object to the section object
+                    if(subSectionObject){
+                        sectionObject.content.push(subSectionObject);
+                    }
                 }
             }
         }
         return sectionObject;
+    },
+    sectionPartsToJson: function(sec){
+        // console.log('...sectionPartsToJson',sec.localName);
+        var subSectionObject = {};
+        var content,
+            contentType;
+
+        // Different processing for different node types
+        if(sec.localName === 'table-wrap'){
+            // get attributes
+            var tableId;
+            var tblAttr = sec.attributes;
+            contentType = 'table';
+            for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
+                // console.log(tblAttr[tblA].localName + ' = ' + tblAttr[tblA].nodeValue );
+                if(tblAttr[tblA].localName === 'id'){
+                    tableId = tblAttr[tblA].nodeValue;
+                }
+            }
+            content = '<table class="bordered" id="' + tableId + '">';
+            content += Meteor.fullText.traverseTable(sec);
+            content += '</table>';
+        }else if(sec.localName === 'fig'){
+            content = Meteor.fullText.convertFigure(sec,files,mongoId);
+            contentType = 'figure';
+        }else if(sec.localName === 'supplementary-material'){
+            content = Meteor.fullText.convertSupplement(sec,files,mongoId);
+            contentType = 'supplement';
+        }else{
+            content = Meteor.fullText.convertContent(sec);
+            contentType = 'p';
+        }
+
+        if(content){
+            content = Meteor.fullText.fixTags(content);
+            subSectionObject.content = content;
+            subSectionObject.contentType = contentType;
+        }
+
+        return subSectionObject;
     },
     headerLevelFromId: function(sectionId){
         // section ids are in the format, s1, s1_1, s1_1_1
