@@ -12,6 +12,7 @@ Meteor.methods({
             articleInfo = Meteor.article.readyData(articleInfo);
             if(articleInfo.files && articleInfo.files.figures){
                 figures = articleInfo.files.figures;
+                // console.log('figures',figures);
             }
             if(articleInfo.files && articleInfo.files.supplemental){
                 supplemental = articleInfo.files.supplemental;
@@ -26,7 +27,7 @@ Meteor.methods({
                         xml = xmlRes.content;
                         Meteor.call('fullTextToJson',xml, {figures:figures, supplemental:supplemental}, mongoId, function(convertXmlError, convertedXml){
                             if(convertXmlError){
-                                console.error('convertXmlError',convertXmlError);
+                                console.error('..convertXmlError',convertXmlError);
                                 fut.throw(convertXmlError);
                             }else{
                                 convertedXml.mongo = mongoId;
@@ -71,7 +72,7 @@ Meteor.methods({
                 }else if(sections[section].localName === 'p'){
                     sectionObject = {};
                     sectionObject.content = [];
-                    sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section]));
+                    sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section]),files,mongoId);
                 }
 
                 // console.log('sectionObject',sectionObject);
@@ -216,7 +217,7 @@ Meteor.fullText = {
                 }else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.convertContent(sec);
                 }else{
-                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec);
+                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec,files,mongoId);
                     // Add the content object to the section object
                     if(subSectionObject){
                         sectionObject.content.push(subSectionObject);
@@ -226,7 +227,7 @@ Meteor.fullText = {
         }
         return sectionObject;
     },
-    sectionPartsToJson: function(sec){
+    sectionPartsToJson: function(sec,files,mongoId){
         // console.log('...sectionPartsToJson',sec.localName);
         var subSectionObject = {};
         var content,
