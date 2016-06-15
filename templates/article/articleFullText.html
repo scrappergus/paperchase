@@ -67,7 +67,7 @@
                                         {{! Book refs are handled differently if they are chapter specific refs}}
                                         {{#if chapter_title}}
 
-                                            {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                            {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
                                             {{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
                                             {{#if source}}<span>In: </span>{{/if}}
                                             {{#if editors}}<span> {{editors}}, eds.</span>{{/if}}
@@ -80,7 +80,7 @@
                                         {{! This is the non-chapter specific ref, for a whole book}}
                                         {{else}} 
                                         
-                                            {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                            {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
                                             {{#if year}}<span> ({{year}}).</span>{{/if}}
                                             {{#if chapter_title}}<span> {{chapter_title}}.</span>{{/if}}
                                             {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
@@ -93,7 +93,7 @@
 
 
                                     {{#if equals type 'web'}}
-                                    {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                    {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
                                     {{#if title}}<span> {{title}}.</span>{{/if}}
                                     {{#if year}}<span> {{year}};</span>{{/if}}
                                     {{#if source}}<span> {{source}}.</span>{{/if}}
@@ -103,7 +103,7 @@
 
                                     {{#if equals type 'other'}}
                                     {{#if collab}}<span> {{collab}}.</span>{{/if}}
-                                    {{#if authors}}<span> {{authors}}.</span>{{/if}}
+                                    {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
                                     {{#if source}}<span> {{source}}.</span>{{/if}}
                                     {{#if title}}<span> {{title}}.</span>{{/if}}
                                     {{#if chapter_title}}<span> {{chapter_title}};</span>{{/if}}
