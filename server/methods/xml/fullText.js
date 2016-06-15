@@ -45,6 +45,9 @@ Meteor.methods({
     fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
         // console.log('... fullTextToJson');
+        xml = Meteor.clean.newLinesToSpace(xml);
+        xml = Meteor.clean.removeExtraSpaces(xml);
+        // console.log('---xml',xml);
         var fut = new future();
         var articleObject = {};
         var doc = new dom().parseFromString(xml);
@@ -328,9 +331,11 @@ Meteor.fullText = {
                         if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
                             content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
                         }else if(childNode.nodeValue){
+                            // console.log('-',childNode.nodeValue,'-');
                             content += childNode.nodeValue;
                         }
                     }else if(childNode.childNodes){
+
                         content += Meteor.fullText.convertContent(childNode);
                     }
 
@@ -338,6 +343,7 @@ Meteor.fullText = {
                         content += '</' + childNode.localName + '>';
                     }
                 }
+
             }
         }
         content = Meteor.fullText.fixTags(content);

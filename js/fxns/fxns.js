@@ -71,7 +71,7 @@ Meteor.article = {
                         if(note['id'] == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
                             article.authors[authIdx].author_notes.push({
                                'id': note['id'],
-                               'label': note['label'] 
+                               'label': note['label']
                             });
                         }
                     }
@@ -88,7 +88,7 @@ Meteor.article = {
         if(files === undefined) {
             files = {};
         }
-        
+
         for(var file in files){
             if(files[file]) {
                 if(files[file].file){
@@ -145,20 +145,20 @@ Meteor.article = {
     readyFullText: function(mongoId){
         var article = articles.findOne({
             '_id': mongoId
-        });      
+        });
 
         if(article){
             if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
-                Session.set('article-text', null);    
+                Session.set('article-text', null);
                 Meteor.call('getFilesForFullText', mongoId, function(error, result) {
                     result = result || {};
                     result.abstract = article.abstract;
                     result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
                     Session.set('article-text', result);
                 });
-            }                 
-        }  
-  
+            }
+        }
+
     }
 }
 
@@ -709,6 +709,15 @@ Meteor.clean = {
     },
     removeSpaces: function(string){
         return string.replace(/\s+/g,'');
+    },
+    removeExtraSpaces: function(string){
+        return string.replace(/\s\s+/g, ' ');
+    },
+    newLinesToSpace: function(string){
+        return string.replace(/(\r\n|\n|\r)/gm,' ');
+    },
+    removeNewLines: function(string){
+        return string.replace(/(\r\n|\n|\r)/gm,'');
     }
 }
 
@@ -1040,7 +1049,7 @@ Meteor.googleAnalytics = {
             eventCategory: fullTextCategory,
             eventAction: 'click',
             eventLabel: event.target.href
-        });        
+        });
     }
 }
 
