@@ -71,7 +71,7 @@ Meteor.methods({
                 }else if(sections[section].localName === 'p'){
                     sectionObject = {};
                     sectionObject.content = [];
-                    sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section]),files,mongoId);
+                    sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section],files,mongoId));
                 }
 
                 // console.log('sectionObject',sectionObject);
@@ -203,7 +203,7 @@ Meteor.methods({
 Meteor.fullText = {
     sectionToJson: function(section,files, mongoId){
         // XML processing of part of the content, <sec>
-        // console.log('...sectionToJson');
+        console.log('...sectionToJson');
         // console.log(section);
         var sectionObject = {};
         sectionObject.content = [];
