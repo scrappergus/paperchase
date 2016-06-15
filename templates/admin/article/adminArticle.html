@@ -95,13 +95,18 @@
         <div class="col s12">
             <a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
             {{#if isInRole 'edit,super-admin' 'article'}}
-            <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">Edit</a>
-            <a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">PDF &amp; XML Settings</a>
-            <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">PDF &amp; XML Uploader</a>
-            <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">Figures</a>
+            <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">{{>AdminEditIcon}} Edit</a>
+            <a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">{{>AdminSettingsIcon}} PDF &amp; XML Settings</a>
+            <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">{{>AdminUploadIcon}} PDF &amp; XML Uploader</a>
+            <a href="{{pathFor 'AdminArticleXmlReprocess'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleXmlReprocess'}}">{{>AdminRefreshIcon}} Reprocess XML</a>
+            <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">{{>AdminFiguresIcon}} Figures</a>
             {{/if}}
         </div>
     </div>
+    <!-- {{>AdminArticleCrawlerButtons}} -->
+</template>
+
+<template name="AdminArticleCrawlerButtons">
     <div class="row">
         <div class="col s12">
             {{#if ids.pii}}
