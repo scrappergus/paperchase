@@ -157,6 +157,84 @@ Meteor.adminArticle = {
         return authorAffiliations.map(function(affIdx){
             return allAffiliations[affIdx];
         });
+    },
+    submitForm: function(e, t){
+        // console.log('..submitForm');
+        e.preventDefault();
+        Meteor.formActions.saving();
+        var article,
+            articleUpdateObj,
+            formErrorsCount = 0,
+            formErrors = [],
+            formErrorsMessage = '',
+            duplicateId,
+            duplicateTitle,
+            files;
+
+        article = Session.get('article-form');
+        mongoId = article._id;
+
+        articleUpdateObj = Meteor.adminArticleFormGet.all()
+
+        if(Session.get('xml-verify')){
+            // for when on the article XML uploader page, saving form will both update the database and upload XML to S3
+            files = $('input.file_bag')[0].files;
+        }
+
+        // VALIDATION and SAVE and UPLOAD XML
+        // -------
+        // result is used for: duplicate article found, or if saved. Use result flag to determine (duplicate or saved).
+        if(articleUpdateObj){
+            Meteor.call('validateArticle', mongoId, articleUpdateObj, files, function(error,result){
+                if(error && error.reason != 'duplicate' && error.details){
+                    console.error('validateArticle',error);
+
+                    // TODO: move this to template data
+                    if(error.details.isArray){
+                        // Validation errors
+                        error.details.forEach(function(errorDetail){
+                            formErrorsCount++;
+                            if(errorDetail.name){
+                                formErrors.push(' ' + errorDetail.name + ': <i>' + errorDetail.type + '</i>');
+                            }
+                        });
+                        if(formErrorsCount > 1){
+                            // if just 1 error, it will be in error.reason. Otherwise, list all the keys here for invalid
+                            formErrorsMessage = '<br><br>' + formErrorsCount + ' total errors:<br>' + formErrors.toString();
+                        }
+                    }
+
+                    Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
+                }else if(error  && error.reason === 'duplicate'){
+                    console.error('validateArticle: duplicate',error);
+                    if(error.details._id){
+                        duplicateId = error.details._id;
+                    }
+                    if(error.details.title){
+                        duplicateTitle = error.details.title;
+                    }
+                    Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + duplicateId + '">' + duplicateTitle + '</a>');
+                }else if(error){
+                    console.error('validate Article',error);
+                    Meteor.formActions.errorMessage('Could not update article');
+                }else if(result && result.saved){
+                    // New article
+                    if(!mongoId){
+                        mongoId = result.article_id;
+                    }
+                    Router.go('AdminArticleOverview',{_id : mongoId});
+                }else if(result && files){
+                    // Existing article
+                    // if uploading XML too and saving form at same time
+                    Meteor.articleFiles.uploadArticleFile(mongoId,'xml',files);
+                }else if(result){
+                    // just editing article form
+                    Meteor.formActions.successMessage('Article updated');
+                }
+            });
+        }else{
+             Meteor.formActions.errorMessage('Unable to save form');
+        }
     }
 }
 
