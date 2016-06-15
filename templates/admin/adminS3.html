@@ -31,15 +31,10 @@
     {{#if files}}
     <div class="row">
         <div class="col s12 m6">
-            <button id="xml-verified" class="btn btn-primary upload">{{>AdminUploadIcon}}</button> <b class="red-text">I have verified the XML via the information below. Upload the XML.</b>
+            <p><b class="red-text">XML has NOT been uploaded. Saving the form below will update the database and save the XML.</b></p>
         </div>
         <div class="col s12 m6">
             <button id="xml-verified" class="btn btn-cancel right">{{>AdminCancelIcon}} Cancel</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <p><b class="red-text">To update the database, save the form below.</b></p>
         </div>
     </div>
     {{/if}}
