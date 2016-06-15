@@ -649,9 +649,9 @@ Meteor.clean = {
         if(string){
             string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
             string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
-            if(string.charAt(string.length - 1) === '.'){
-                string = string.substring(0, string.length-1);
-            }
+            // if(string.charAt(string.length - 1) === '.'){
+            //     string = string.substring(0, string.length-1);
+            // }
             string = string.trim();
         }
         return string;
@@ -661,6 +661,9 @@ Meteor.clean = {
     },
     removeSpaces: function(string){
         return string.replace(/\s+/g,'');
+    },
+    removeExtraSpaces: function(string){
+        return string.replace(/\s\s+/g, ' ');
     }
 }
 
