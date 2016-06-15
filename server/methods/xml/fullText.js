@@ -53,13 +53,12 @@ Meteor.methods({
 
         // Article Content
         // ---------------
-        var sections = xpath.select('//body/sec | //body/p', doc);
+        var sections = xpath.select('//body/sec | //body/p | //body/fig', doc);
         if(sections[0]){
             for(var section = 0; section<sections.length; section++){
-                var sectionObject,
-                    sectionIdObject;
+                var sectionObject = {},
+                    sectionIdObject = {};
                 if(sections[section].localName === 'sec'){
-
                     sectionObject = Meteor.fullText.sectionToJson(sections[section],files, mongoId);
                     sectionIdObject = Meteor.fullText.sectionId(sections[section]);
                     if(sectionIdObject){
@@ -67,14 +66,15 @@ Meteor.methods({
                             sectionObject[idInfo] = sectionIdObject[idInfo];
                         }
                     }
-
                 }else if(sections[section].localName === 'p'){
                     sectionObject = {};
                     sectionObject.content = [];
                     sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section],files,mongoId));
+                }else if(sections[section].localName === 'fig'){
+                    var figure = Meteor.fullText.convertFigure(sections[section],files,mongoId);
+                    sectionObject.content = [];
+                    sectionObject.content.push({content: figure, contentType: 'figure'});
                 }
-
-                // console.log('sectionObject',sectionObject);
 
                 articleObject.sections.push(sectionObject);
             }
@@ -203,8 +203,7 @@ Meteor.methods({
 Meteor.fullText = {
     sectionToJson: function(section,files, mongoId){
         // XML processing of part of the content, <sec>
-        console.log('...sectionToJson');
-        // console.log(section);
+        // console.log('...sectionToJson',section);
         var sectionObject = {};
         sectionObject.content = [];
         for(var c = 0 ; c < section.childNodes.length ; c++){
