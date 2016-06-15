@@ -97,6 +97,7 @@ Template.AdminArticleButtons.events({
 // ----------------
 Template.s3ArticleFilesUpload.events({
     'click #upload-request': function(e){
+        // console.log('s3ArticleFilesUpload');
         e.preventDefault();
         Meteor.formActions.saving();
         var article,
@@ -125,11 +126,12 @@ Template.s3ArticleFilesUpload.events({
         Session.set('article-form',null);
         Session.set('xml-verify',false);
     },
-    'click #xml-verified': function(e){
-        var articleMongoId = Session.get('article')._id;
-        var files = $('input.file_bag')[0].files;
-        Meteor.articleFiles.uploadArticleFile(articleMongoId,'xml',files);
-    }
+    // 'click #xml-verified': function(e){
+    // now only using 1 button to save to db and upload
+    //     var articleMongoId = Session.get('article')._id;
+    //     var files = $('input.file_bag')[0].files;
+    //     Meteor.articleFiles.uploadArticleFile(articleMongoId,'xml',files);
+    // }
 });
 Template.s3UploadNewArticle.events({
     'click button.upload': function(e){

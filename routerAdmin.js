@@ -785,6 +785,50 @@ if (Meteor.isClient) {
             }
         }
     });
+    Router.route('/admin/article/:_id/reprocess',{
+        name: 'AdminArticleXmlReprocess',
+        layoutTemplate: 'Admin',
+        title: function() {
+            var pageTitle = 'Admin | Reprocess XML ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        onBeforeAction: function(){
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminDashboard');
+            }else{
+                if(!Session.get('article-form') || Session.get('article-form')._id != this.params._id){
+                    Meteor.articleFiles.verifyXml(this.params._id);
+                }
+                this.next();
+            }
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articleInfo',this.params._id),
+                Meteor.subscribe('articleIssue',this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var article = articles.findOne();
+                if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
+                    if(!article.volume && article.issue_id){
+                        // for display purposes
+                        var issueInfo = issues.findOne();
+                        article.volume = issueInfo.volume;
+                        article.issue = issueInfo.issue;
+                    }
+                    if(article.volume && article.issue){
+                        article.volume_and_issue = Meteor.issue.createIssueParam(article.volume,article.issue);
+                    }
+                    Session.set('article',article);
+                }
+            }
+        }
+    })
     Router.route('/admin/add_article/',{
         name: 'AdminArticleAdd',
         layoutTemplate: 'Admin',

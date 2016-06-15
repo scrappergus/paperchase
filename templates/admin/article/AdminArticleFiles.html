@@ -248,7 +248,6 @@
                 <th>ID</th>
                 <th>Label</th>
                 <th>Title</th>
-                <th>File</th>
             </tr>
         </thead>
         <tbody>
@@ -257,7 +256,6 @@
                 <td>{{#if id}}{{id}}{{else}}&nbsp;{{/if}}</td>
                 <td>{{#if label}}{{label}}{{else}}&nbsp;{{/if}}</td>
                 <td>{{#if title}}{{{title}}}{{else}}&nbsp;{{/if}}</td>
-                <td>{{#if file}}{{{file}}}{{else}}&nbsp;{{/if}}</td>
             </tr>
             <tr>
                 <td colspan="4">{{#if caption}}{{{caption}}}{{else}}&nbsp;{{/if}}</td>
@@ -265,4 +263,29 @@
             {{/each}}
         </tbody>
     </table>
+</template>
+
+<template name="AdminArticleXmlReprocess">
+    {{>AdminHeader header="Article XML Reprocess"}}
+    {{>StatusModal}}
+
+    {{#if article}}
+
+    {{>StatusModal}}
+
+    {{#with article}}
+    {{>AdminArticleHeader}}
+    {{/with}}
+
+    {{#if verify}}
+    {{>AdminArticleXmlVerify}}
+    {{else}}
+    {{>ProcessingNotHidden}}
+    {{/if}}
+
+    {{else}}
+
+    {{#if adminNotFound}}{{>Admin404 what="Article"}}{{/if}}
+
+    {{/if}}
 </template>

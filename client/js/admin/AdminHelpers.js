@@ -212,6 +212,14 @@ Template.AdminArticleFilesUploader.helpers({
         return Session.get('xml-verify');
     }
 });
+Template.AdminArticleXmlReprocess.helpers({
+    article : function(){
+        return Session.get('article');
+    },
+    verify: function(){
+        return Session.get('xml-verify');
+    }
+});
 Template.AdminArticleXmlVerify.helpers({
     article : function(){
         return Session.get('article-form');
