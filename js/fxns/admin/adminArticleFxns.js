@@ -259,12 +259,7 @@ Meteor.adminArticleFormGet = {
             aff = Meteor.clean.cleanString(aff);
             affiliations.push(aff);
         });
-
-        if(affiliations.length > 0){
-           return affiliations;
-        }else{
-            return;
-        }
+        return affiliations;
     },
     correspondence: function(){
         var correspondence = [];
@@ -513,7 +508,6 @@ Meteor.adminArticleFormGet = {
         // Keywords
         // -------
         articleUpdateObj.keywords = Meteor.adminArticleFormGet.keywords();
-        articleUpdateObj = Meteor.generalClean.pruneEmpty(articleUpdateObj);
         // console.log('articleUpdateObj',articleUpdateObj);
         return articleUpdateObj;
     }
