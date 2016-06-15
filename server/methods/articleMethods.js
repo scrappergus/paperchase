@@ -243,9 +243,9 @@ Meteor.methods({
             article = articles.findOne({'_id': articleId});
         }else{
             // Check for duplicates
-            Meteor.call('articleExistenceCheck',articleId, article, function(error,duplicateFound){
-                if(error){
-                    console.error('articleExistenceCheck',error);
+            Meteor.call('articleExistenceCheck', articleId, article, function(duplicateFound){
+                if(duplicateFound){
+                    console.error('articleExistenceCheck',duplicateFound);
                     article.duplicate = error.details;
                 }
             });
@@ -393,7 +393,7 @@ Meteor.methods({
             // Files
             // -----------
             // add xml and pdf info so that we can use this to update db without erasing info
-            // only need to include xml and pdf because figs and supp will be auto processed via xml processing, in afterUploadXmlFilesCheck()
+            // for figures, supplemental and tables - use the XML data
 
             if(article.files){
             }else{
@@ -401,6 +401,7 @@ Meteor.methods({
             }
 
             articleFilesInDb = articles.findOne({'_id': articleId});
+            // PDF and XML
             if(articleFilesInDb && articleFilesInDb.files) {
                 if(articleFilesInDb && articleFilesInDb.files.pdf){
                     article.files.pdf = articleFilesInDb.files.pdf;
@@ -409,6 +410,19 @@ Meteor.methods({
                     article.files.xml = articleFilesInDb.files.xml;
                 }
             }
+            // Supp, Figures, Tables
+            if(article.files){
+                for(var fileType in article.files){
+                    if(fileType != 'pdf' && fileType != 'xml'){
+                        Meteor.articleFiles.maintainFilenameViaId(article.files[fileType], articleFilesInDb.files[fileType],function(fileRes){
+                            if(fileRes){
+                                article.files[fileType] = fileRes;
+                            }
+                        });
+                    }
+                }
+            }
+            // console.log('files',article.files);
 
             // console.log('--------------------article');
             // console.log(article);
@@ -509,7 +523,7 @@ Meteor.methods({
         return result;
     },
     articleExistenceCheck: function(mongoId, articleData){
-        // console.log('--articleExistenceCheck',mongoId);
+        // console.log('--articleExistenceCheck');
         var duplicate;
         // before inserting/updating article, check if doc already exists
         // will return duplicate article doc, if found
@@ -540,11 +554,17 @@ Meteor.methods({
 
             if(exists && exists.length > 1){
                 exists.forEach(function(article){
-                    if(article._id != mongoId){
+                    if(mongoId && article._id != mongoId){
+                        duplicate = article;
+                    }else if(articleData.title && article.title && Meteor.clean.removeSpaces(articleData.title) === Meteor.clean.removeSpaces(article.title)){
+                        // for when uploading AOP XML, will not have a mongoId passed to the function
                         duplicate = article;
                     }
                 });
                 throw new Meteor.Error(400, 'duplicate',duplicate);
+            }else if(exists && !mongoId && exists.length == 1){
+                // for when uploading AOP XML, will not have a mongoId passed to the function
+                throw new Meteor.Error(400, 'duplicate',exists[0]);
             }else{
                 return;
             }
@@ -552,18 +572,32 @@ Meteor.methods({
         return;
     },
     validateArticle: function(mongoId, articleData){
-        // console.log('--validateArticle',mongoId);
+        // console.log('--validateArticle');
+        var fut = new future();
         var validated;
         var result = {};
 
         articles.schema.validate(articleData);
 
-        try{
-            Meteor.call('articleExistenceCheck',mongoId, articleData);
-            return Meteor.call('updateArticle',mongoId, articleData);
-        } catch(e){
-            console.error(e);
-            throw new Meteor.Error(500, e.reason, e.details);
+        Meteor.call('articleExistenceCheck',mongoId, articleData, function(error){
+            if(error){
+                console.error('articleExistenceCheck', error);
+            }else{
+                // article does not already exist
+                Meteor.call('updateArticle',mongoId, articleData, function(error,result){
+                    if(error){
+                        console.error('updateArticle',error);
+                    }else if(result){
+                        fut.return(true);
+                    }
+                });
+            }
+        });
+
+        try {
+            return fut.wait();
+        } catch(err) {
+            throw new Meteor.Error(err);
         }
     },
     removeArticlesFromIssue: function(issueMongoId){

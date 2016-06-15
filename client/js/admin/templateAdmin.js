@@ -36,6 +36,12 @@ Template.AdminArticle.onRendered(function () {
         }, 500);
     }
 });
+
+// Article Files
+// ------------
+Template.AdminUploadArticleXml.onDestroyed(function () {
+    Session.set('new-article',null);
+});
 Template.AdminArticleFigures.onRendered(function () {
     $('.materialboxed').materialbox();
 });
@@ -50,6 +56,7 @@ Template.AdminArticleFilesUploader.onDestroyed(function () {
 });
 
 // Article Form
+// ------------
 Template.AdminArticleForm.onDestroyed(function() {
     Session.set('article-form',null);
 });

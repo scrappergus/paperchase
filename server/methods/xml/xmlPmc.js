@@ -3,7 +3,7 @@
 // Methods for processing PMC Full text XML for Mongo DB
 Meteor.methods({
     processV3Xml: function(xmlString){
-        // this is full text XML 
+        // this is full text XML
         var fut = new future();
         Meteor.call('parseXmltoJson',xmlString, function(error,articleJson){
             if(error){
@@ -20,7 +20,7 @@ Meteor.methods({
                 });
             }
         });
-        return fut.wait();        
+        return fut.wait();
     },
     processPmcXml: function(xmlString){
         // this is full text XML for PMC
@@ -164,7 +164,7 @@ Meteor.methods({
 
             articleProcessed.author_notes = [note];
         }
-        
+
 
         // ALL AFFILIATIONS
         // -----------
@@ -267,6 +267,7 @@ Meteor.xmlPmc = {
         abstract = abstract.replace('abstract>\n ', '');
         abstract = abstract.replace('abstract>', '');
         abstract = Meteor.processXml.cleanAbstract(abstract);
+        abstract = Meteor.clean.removeExtraSpaces(abstract);
         cb(abstract);
     },
     articleType: function(articleJson,cb){
@@ -308,7 +309,7 @@ Meteor.xmlPmc = {
                         author.affiliations_numbers.push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
                     }
                     else if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'author-notes' && authorsList[i].xref[authorAff]['$']['rid']) {
-                        author.author_notes_ids.push(authorsList[i].xref[authorAff]['$']['rid']); 
+                        author.author_notes_ids.push(authorsList[i].xref[authorAff]['$']['rid']);
                     }
                 }
             }
@@ -323,10 +324,7 @@ Meteor.xmlPmc = {
             if(affiliations[aff]._){
                 affiliationsResult.push(affiliations[aff]._.trim());
             }else{
-                // console.log(affiliations[aff]);
-                // this trim line was causing crashes, so I am commenting out the trim
-                //affiliationsResult.push(affiliations[aff].trim());
-                affiliationsResult.push(affiliations[aff]);
+                affiliationsResult.push(Meteor.clean.removeExtraSpaces(affiliations[aff]).trim());
             }
         }
         cb(affiliationsResult);
@@ -614,6 +612,7 @@ Meteor.xmlPmc = {
         titleTitle = titleTitle.replace('article-title>','');
         if(titleTitle){
             titleTitle = Meteor.clean.cleanString(titleTitle);
+            titleTitle = Meteor.clean.removeExtraSpaces(titleTitle);
         }
 
         cb(titleTitle);
