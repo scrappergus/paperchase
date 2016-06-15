@@ -223,7 +223,7 @@ Meteor.adminArticle = {
                         mongoId = result.article_id;
                     }
                     Router.go('AdminArticleOverview',{_id : mongoId});
-                }else if(result && files){
+                }else if(result && files && !Session.get('article-form').aop_xml){
                     // Existing article
                     // if uploading XML too and saving form at same time
                     Meteor.articleFiles.uploadArticleFile(mongoId,'xml',files);

@@ -32,7 +32,7 @@ Meteor.methods({
         var articleProcessed = {},
             articleTypeXml;
         articleProcessed.aop = true; // need this to prevent uploading XML to S3
-
+        articleProcessed.aop_xml = true;
         // PUBLISHER
         // -----------
         if(article.Journal && article.Journal[0].PublisherName){
