@@ -15,6 +15,12 @@ Meteor.organize = {
         }
         return diff;
     },
+    getIssueArticlesByID: function(id){
+        // console.log('getIssueArticlesByID');
+        var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();
+        issueArticles = Meteor.organize.groupArticles(issueArticles);
+        return issueArticles;
+    },
     groupArticles: function(articles) {
         var grouped = [];
         for(var i = 0 ; i < articles.length ; i++){
@@ -30,13 +36,6 @@ Meteor.organize = {
             //grouped[type].push(articles[i]);
         }
         return articles;
-    },
-    byMongoId: function(collection){
-        var result = {};
-        for(var i=0; i<collection.length; i++){
-            result[collection[i]._id] = collection[i];
-        }
-        return result;
     }
 }
 
@@ -48,12 +47,48 @@ Meteor.article = {
             article.volume = issueInfo.volume;
             article.issue = issueInfo.issue;
         }
+        if(!article.vi && article.volume && article.issue){
+            article.vi = 'v' + article.volume + 'i' + article.issue;
+        }
+
         if(article.files){
             article.files = Meteor.article.linkFiles(article.files, article._id);
+        }
+
+        if(article.ids.doi && _.isString(article.ids.doi)) {
+            article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
+        }
+
+        for(authIdx=0; authIdx < article.authors.length; authIdx++) {
+            if(article.authors[authIdx].equal_contrib == true) {
+                article.equal_contribs = true;
+            }
+            if(article.authors[authIdx].author_notes_ids && article.author_notes) {
+                article.authors[authIdx].author_notes = [];
+                for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
+                    for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
+                        var note = article.author_notes[noteIdx];
+                        if(note['id'] == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
+                            article.authors[authIdx].author_notes.push({
+                               'id': note['id'],
+                               'label': note['label']
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        if(article.affiliations.length == 1) {
+            article.singleAffiliation = true;
         }
         return article;
     },
     linkFiles:function(files,articleMongoId){
+        if(files === undefined) {
+            files = {};
+        }
+
         for(var file in files){
             if(files[file].file){
                 files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
@@ -111,12 +146,23 @@ Meteor.article = {
         var articleData = articles.findOne({'_id':mongoId});
         Session.set('articleData',articleData);
     },
-    downloadPdf: function(e){
-        e.preventDefault();
-        var mongoId = $(e.target).data('id');
-        var articleData = articles.findOne({'_id':mongoId});
-        var pmc = articleData.ids.pmc;
-        window.open('/pdf/' + pmc + '.pdf');
+    readyFullText: function(mongoId){
+        var article = articles.findOne({
+            '_id': mongoId
+        });
+
+        if(article){
+            if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+                Session.set('article-text', null);
+                Meteor.call('getFilesForFullText', mongoId, function(error, result) {
+                    result = result || {};
+                    result.abstract = article.abstract;
+                    result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
+                    Session.set('article-text', result);
+                });
+            }
+        }
+
     }
 }
 
@@ -327,7 +373,7 @@ Meteor.formActions = {
                 }
                 // console.log('scrollToEl = ', scrollToEl);
                 $('html, body').animate({
-                    scrollTop: $(scrollToEl).position().top
+                    scrollTop: $(scrollToEl).position().top - 50
                 }, 500);
             }
         }
@@ -655,9 +701,9 @@ Meteor.clean = {
         if(string){
             string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
             string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
-            // if(string.charAt(string.length - 1) === '.'){
-            //     string = string.substring(0, string.length-1);
-            // }
+            if(string.charAt(string.length - 1) === '.'){
+                string = string.substring(0, string.length-1);
+            }
             string = string.trim();
         }
         return string;
@@ -670,12 +716,18 @@ Meteor.clean = {
     },
     removeExtraSpaces: function(string){
         return string.replace(/\s\s+/g, ' ');
+    },
+    newLinesToSpace: function(string){
+        return string.replace(/(\r\n|\n|\r)/gm,' ');
+    },
+    removeNewLines: function(string){
+        return string.replace(/(\r\n|\n|\r)/gm,'');
     }
 }
 
 Meteor.general = {
     navHeight: function(){
-        return $('nav').height();
+        return $('.navigation').height() + $('.sub-nav').height() + 80;
     },
     footerHeight: function(){
         return $('footer').height();
@@ -691,7 +743,12 @@ Meteor.general = {
     scrollTo: function(anchorId){
         var navTop = Meteor.general.navHeight();
         $('html, body').animate({
-            scrollTop: $('#' + anchorId).position().top - navTop
+            scrollTop: $('#' + anchorId).position().top - navTop - 25
+        }, 500);
+    },
+    scrollToPosition: function(position){
+        $('html, body').animate({
+            scrollTop: position
         }, 500);
     },
     isStringEmpty: function(string){
@@ -702,6 +759,97 @@ Meteor.general = {
         }else{
             return false;
         }
+    },
+    cleanString: function(string){
+        if(string){
+            string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
+            string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
+            string = string.replace(/\s+/g,' '); // remove extra spaces
+            if(string.charAt(string.length - 1) === '.'){
+                string = string.substring(0, string.length-1);
+            }
+        }
+
+        return string;
+    },
+    pluralize: function(str) {
+        if (['Review',
+             'Editorial',
+             'Research Article',
+             'Research Perspective',
+             'Research Paper'].indexOf(str) >= 0) {
+              return str + 's';
+        }
+
+        if (str == 'Letter to the Editor') {
+            return 'Letters to the Editor';
+        }
+
+        return str;
+    },
+    affix: function() {
+        var sticky = $('.fixed-scroll-card');
+        if (sticky.length > 0) {
+            var stickyHeight = sticky.height();
+            var sidebarTop = parseInt(sticky.offset().top - 10) ;
+        }
+
+        // on scroll affix the sidebar
+        $(window).scroll(function () {
+            if (sticky.length > 0) {
+                var scrollTop = $(window).scrollTop() + 190;
+
+                if (sidebarTop < scrollTop) {
+                    sticky.addClass('fixed-active');
+                }
+                else {
+                    sticky.removeClass('fixed-active');
+                }
+            }
+        });
+
+        $(window).resize(function () {
+            if (sticky.length > 0) {
+                stickyHeight = sticky.height();
+            }
+        });
+    },
+    scrollspy: function() {
+        var lastId,
+        menu = $(".scrollspy"),
+        navHeight = 250,
+
+        // All list items
+        menuItems = menu.find("a"),
+
+        // Anchors corresponding to menu items
+        scrollItems = menuItems.map(function(){
+          var item = $($(this).attr("href"));
+          if (item.length) { return item; }
+        });
+
+        // Bind to scroll
+        $(window).scroll(function(){
+           // Get container scroll position
+           var fromTop = $(this).scrollTop() + navHeight;
+
+           // Get id of current scroll item
+           var cur = scrollItems.map(function(){
+             if ($(this).offset().top < fromTop)
+               return this;
+           });
+           // Get the id of the current element
+           cur = cur[cur.length-1];
+           var id = cur && cur.length ? cur[0].id : "";
+
+           if (lastId !== id) {
+               lastId = id;
+               // Set/remove active class
+               menuItems
+                 .parent().removeClass("active")
+                 .end().filter("[href='#"+id+"']").parent().addClass("active");
+           }
+        });
     }
 }
 
@@ -775,12 +923,16 @@ Meteor.dates = {
 
 Meteor.issue = {
     urlPieces: function(vi){
-        var pieces = vi.match('v([0-9]+)i(.*)');
-        if(pieces){
-            var res = {volume : pieces[1], issue : pieces[2]};
-            return res;
+        var res,
+            pieces;
+        if(vi){
+            pieces = vi.match('v([0-9]+)i(.*)');
+            if(pieces){
+                res = {volume : pieces[1], issue : pieces[2]};
+            }
         }
-        return;
+
+        return res;
     },
     coverPath : function(assetUrl,fileName){
         return assetUrl + 'covers/' + fileName;
@@ -829,3 +981,94 @@ Meteor.advance = {
     }
 }
 
+Meteor.search = {
+    bounceTo: function(args) {
+        Router.go("/search/?terms="+args.terms);
+    }
+}
+
+Meteor.googleAnalytics = {
+    // authorize: function(event){
+    // not using now. might add later to get reports from GA into paperchase
+    //     var CLIENT_ID = '74807910';
+    //     var VIEW_ID = '123186651>';
+    //     var DISCOVERY = 'https://analyticsreporting.googleapis.com/$discovery/rest';
+    //     var SCOPES = ['https://www.googleapis.com/auth/analytics.readonly'];
+    //     // Handles the authorization flow.
+    //     // `immediate` should be false when invoked from the button click.
+    //     var useImmdiate = event ? false : true;
+    //     var authData = {
+    //         client_id: CLIENT_ID,
+    //         scope: SCOPES,
+    //         immediate: useImmdiate
+    //     };
+
+    //     gapi.auth.authorize(authData, function(response) {
+    //         var authButton = document.getElementById('auth-button');
+    //         if (response.error) {
+    //             authButton.hidden = false;
+    //         } else {
+    //             authButton.hidden = true;
+    //             queryReports();
+    //         }
+    //     });
+    // },
+    // queryReports: function(){
+    // not using now. might add later to get reports from GA into paperchase
+    //     var CLIENT_ID = '74807910';
+    //     var VIEW_ID = '123186651>';
+    //     var DISCOVERY = 'https://analyticsreporting.googleapis.com/$discovery/rest';
+    //     // Load the API from the client discovery URL.
+    //     gapi.client.load(DISCOVERY
+    //     ).then(function() {
+
+    //         // Call the Analytics Reporting API V4 batchGet method.
+    //         gapi.client.analyticsreporting.reports.batchGet( {
+    //             reportRequests:[
+    //             {
+    //                 viewId:VIEW_ID,
+    //                 dateRanges:[
+    //                     {
+    //                         startDate:"7daysAgo",
+    //                         endDate:"today"
+    //                     }],
+    //                 metrics:[
+    //                     {
+    //                         expression:"ga:sessions"
+    //                     }]
+    //                 }]
+    //             } ).then(function(response) {
+    //                 var formattedJson = JSON.stringify(response.result, null, 2);
+    //                 document.getElementById('query-output').value = formattedJson;
+    //             })
+    //         .then(null, function(err) {
+    //             // Log any errors.
+    //             console.log(err);
+    //         });
+    //     });
+    // },
+    sendEvent: function(fullTextCategory, event){
+        // console.log('..sendEvent',fullTextCategory,event.target.href)
+        ga('send', 'event', {
+            eventCategory: fullTextCategory,
+            eventAction: 'click',
+            eventLabel: event.target.href
+        });
+    }
+}
+
+Meteor.ux = {
+    positionSessionVariable: function(template){
+        return templateSessionVariable = 'position-' + template;
+    },
+    savePosition: function(template){
+        var templateSessionVariable = Meteor.ux.positionSessionVariable(template);
+        Session.set(templateSessionVariable, document.body.scrollTop);
+    },
+    goToSavePosition: function(template){
+        var templateSessionVariable = Meteor.ux.positionSessionVariable(template);
+        if( Session.get(templateSessionVariable) ){
+            Meteor.general.scrollToPosition(Session.get(templateSessionVariable));
+        }
+    }
+}

@@ -22,93 +22,107 @@ sections = new Mongo.Collection('sections');
 // -------
 sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
-        var order = f.order;
-        if(f.name == 'advance'){
-            var articlesList = articles.find({'_id':{'$in':order}}).fetch();
-            var byId = Meteor.organize.byMongoId(articlesList);
-            f.articles = [];
+    var order = f.order;
+    if(f.name == 'advance'){
 
-            var last_section;
-            order.map(function(id){
-                var article = {};
-                if(byId[id]){
-                    article = byId[id];
-                    // section name
-                    var section = sections.findOne({section_id : article.section_id});
-                    if(section !== undefined) {
-                        article.section_name = section.section_name;
-                    } else if(article.article_type) {
-                        article.section_name = article.article_type.name;
+        // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
+//        var config = journalConfig.findOne({},{fields: {'assets': 1 }});
+
+        var articlesList = articles.find({'_id':{'$in':order}}).fetch();
+        f.articles = [];
+
+        var last_section;
+        for(var i = 0 ; i < order.length ; i++){
+            for(var a = 0 ; a < articlesList.length ; a++){
+                if(articlesList[a]['_id'] === order[i]){
+                    if(articlesList[a]['section_id']) {
+                        var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
+                        if(section !== undefined) {
+                            articlesList[a]['section_name'] = section['section_name'];
+                        }
+                    }
+                    else if(articlesList[a]['article_type']) {
+                        articlesList[a]['section_name'] = articlesList[a]['article_type']['name'];
                     }
 
-                    // section start tracking
-                    if(i===0) {
-                        articles.section_start = true;
-                    } else if(last_section != article.section_name){
-                        article.section_start = true;
+                    if(i==0) {
+                        articlesList[a]['section_start'] = true;
                     }
-                    last_section = article.section_name;
+                    else if(last_section != articlesList[a]['section_name']){
+                        articlesList[a]['section_start'] = true;
+                    }
 
-                    f.articles.push(article);
-                }
-            });
-        }else if(f.name == 'homePage'){
-            f.ordered = [];
-            var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
-            // console.log(sectionsList);
-            for(var i = 0 ; i < order.length ; i++){
-                // console.log(order[i]);
-                for(var a = 0 ; a < sectionsList.length ; a++){
-                    // console.log(sectionsList[a]['_id']);
-                    if(sectionsList[a]['_id'] == order[i]){
-                        f.ordered.push(sectionsList[a]);
+
+                    if(articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
+                        assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
+                        articlesList[a]['files']['pdf']['url'] = assets +"pdf/"+ articlesList[a]['files']['pdf']['file'];
                     }
+
+                    last_section = articlesList[a]['section_name'];
+                    f.articles.push(articlesList[a]);
                 }
             }
-        }else if(f.name == 'ethics'){
-            f.ordered = [];
-            var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
-            // console.log(sectionsList);
-            for(var i = 0 ; i < order.length ; i++){
-                // console.log(order[i]);
-                for(var a = 0 ; a < sectionsList.length ; a++){
-                    // console.log(sectionsList[a]['_id']);
-                    if(sectionsList[a]['_id'] == order[i]){
-                        f.ordered.push(sectionsList[a]);
-                    }
-                }
-            }
-        }else if(f.name == 'forAuthors'){
-            f.ordered = [];
-            var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
-            // console.log(sectionsList);
-            for(var i = 0 ; i < order.length ; i++){
-                // console.log(order[i]);
-                for(var a = 0 ; a < sectionsList.length ; a++){
-                    // console.log(sectionsList[a]['_id']);
-                    if(sectionsList[a]['_id'] == order[i]){
-                        f.ordered.push(sectionsList[a]);
-                    }
-                }
-            }
-        }else if(f.name == 'about'){
-            // Same exact thing as forAuthors. Look into using collection name as a variable.
-            // f.ordered = [];
-            // var sectionsList = about.find({'_id':{'$in':order}}).fetch();
-            // for(var i = 0 ; i < order.length ; i++){
-            //   // console.log(order[i]);
-            //     for(var a = 0 ; a < sectionsList.length ; a++){
-            //         // console.log(sectionsList[a]['_id']);
-            //         if(sectionsList[a]['_id'] == order[i]){
-            //             f.ordered.push(sectionsList[a]);
-            //         }
-            //     }
-            // }
-        }else if(f.name == 'sections'){
-            var unordered = sections.find({'_id':{'$in':order}}).fetch();
-            f.ordered = Meteor.sorter.sort(unordered,order);
         }
-        return f;
+
+
+    }else if(f.name == 'ethics'){
+        f.ordered = [];
+        var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+            // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
+                }
+            }
+        }
+    }else if(f.name == 'homePage'){
+        f.ordered = [];
+        var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+            // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
+                }
+            }
+        }
+    }else if(f.name == 'forAuthors'){
+        f.ordered = [];
+        var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
+        // console.log(sectionsList);
+        for(var i = 0 ; i < order.length ; i++){
+            // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
+                }
+            }
+        }
+
+    }else if(f.name == 'about'){
+        // Same exact thing as forAuthors. Look into using collection name as a variable.
+        f.ordered = [];
+        var sectionsList = about.find({'_id':{'$in':order}}).fetch();
+        for(var i = 0 ; i < order.length ; i++){
+          // console.log(order[i]);
+            for(var a = 0 ; a < sectionsList.length ; a++){
+                // console.log(sectionsList[a]['_id']);
+                if(sectionsList[a]['_id'] == order[i]){
+                    f.ordered.push(sectionsList[a]);
+                }
+            }
+        }
+    }else if(f.name == 'sections'){
+        var unordered = sections.find({'_id':{'$in':order}}).fetch();
+        f.ordered = Meteor.sorter.sort(unordered,order);
+    }
+    return f;
     }
 });
 publish = new Mongo.Collection('publish');
@@ -298,50 +312,6 @@ edboard.allow({
         }
     }
 });
-
-ethics.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    }
-});
-
-homePage.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    }
-});
-
-
 forAuthors.allow({
     insert: function (userId, doc, fields, modifier) {
         var u = Meteor.users.findOne({_id:userId});
@@ -518,7 +488,7 @@ if (Meteor.isServer) {
           'edboard_roles' : 1,
           'assets': 1,
           'assets_supplemental': 1,
-          'assets_figures' : 1
+          'assets_figures': 1
         }});
         return siteConfig;
     });
@@ -553,6 +523,66 @@ if (Meteor.isServer) {
     Meteor.publish('currentIssue',function(){
         return issues.find({current: true});
     });
+
+    Meteor.publish('prevIssue',function(volumeAndIssue){
+        var pieces,
+            volumeData,
+            issueData,
+            issueIndex,
+            prevIssueId;
+
+        if(volumeAndIssue){
+            pieces = Meteor.issue.urlPieces(volumeAndIssue);
+            if(pieces && pieces.volume){
+                volumeData = volumes.findOne({volume : parseInt(pieces.volume)});
+                if(pieces.issue){
+                    issueData = issues.findOne({volume : parseInt(pieces.volume), issue: pieces.issue});
+                }
+            }
+        }
+
+        if(volumeData && issueData){
+            issueIndex = volumeData.issues.indexOf(issueData._id);
+            if(issueIndex === 0){
+                return []; // publish can only return cursor or an array of cursors
+            }else{
+                prevIssueId = volumeData.issues[parseInt(issueIndex - 1)];
+                return issues.find({_id : prevIssueId});
+            }
+        }else{
+            return [];
+        }
+    });
+    Meteor.publish('nextIssue',function(volumeAndIssue){
+        var pieces,
+            volumeData,
+            issueData,
+            issueIndex,
+            nextIssueId;
+
+        if(volumeAndIssue){
+            pieces = Meteor.issue.urlPieces(volumeAndIssue);
+            if(pieces && pieces.volume){
+                volumeData = volumes.findOne({volume : parseInt(pieces.volume)});
+                if(pieces.issue){
+                    issueData = issues.findOne({volume : parseInt(pieces.volume), issue: pieces.issue});
+                }
+            }
+        }
+
+        if(volumeData && issueData){
+            issueIndex = volumeData.issues.indexOf(issueData._id);
+            if(issueIndex === 0){
+                return []; // publish can only return cursor or an array of cursors
+            }else{
+                nextIssueId = volumeData.issues[parseInt(issueIndex + 1)];
+                return issues.find({_id : nextIssueId});
+            }
+        }else{
+            return [];
+        }
+    });
+
     Meteor.publish('articleIssue',function(articleMongoId){
         // console.log('articleMongoId', articleMongoId);
         // for getting issue information for article
@@ -614,7 +644,8 @@ if (Meteor.isServer) {
     });
     Meteor.publish('advance', function () {
         var sorter = sorters.findOne({'name':'advance'});
-        var articlesList = articles.find({_id:{'$in':sorter.order}});
+        var articlesList = articles.find({'_id':{'$in':sorter.order}});
+
         return articlesList;
     });
     Meteor.publish('submissions', function () {
@@ -718,7 +749,6 @@ if (Meteor.isServer) {
         return about.find({display:true});
     });
 
-
     // Ethics
     // ------------
     Meteor.publish('ethics', function(){
@@ -728,7 +758,6 @@ if (Meteor.isServer) {
         return ethics.find({display:true});
     });
 
-
     // Home Page
     // ------------
     Meteor.publish('homePage', function(){
@@ -737,7 +766,6 @@ if (Meteor.isServer) {
     Meteor.publish('homePagePublic', function(){
         return homePage.find({display:true});
     });
-
 
     // For Authors
     // ------------
@@ -832,7 +860,7 @@ if (Meteor.isServer) {
     // For advance
     // ----------------
     Meteor.publish('publish', function () {
-        return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+    return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
     });
 
     // Search
