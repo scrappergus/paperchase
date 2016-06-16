@@ -35,7 +35,7 @@ sorters = new Mongo.Collection('sorters', {
                     article = byId[id];
                     // section name
                     var section = sections.findOne({section_id : article.section_id});
-                    if(section !== undefined) {        
+                    if(section !== undefined) {
                         article.section_name = section.section_name;
                     } else if(article.article_type) {
                         article.section_name = article.article_type.name;
@@ -49,7 +49,7 @@ sorters = new Mongo.Collection('sorters', {
                     }
                     last_section = article.section_name;
 
-                    f.articles.push(article);                    
+                    f.articles.push(article);
                 }
             });
         }else if(f.name == 'homePage'){
@@ -516,7 +516,9 @@ if (Meteor.isServer) {
           'submission.url' : 1,
           'contact' : 1,
           'edboard_roles' : 1,
-          'assets': 1
+          'assets': 1,
+          'assets_supplemental': 1,
+          'assets_figures' : 1
         }});
         return siteConfig;
     });
