@@ -375,7 +375,7 @@ Meteor.fullText = {
     },
     convertFigure: function(node,files,mongoId){
         // console.log('..convertFigure',node);
-        var figureAssetsUrl = journalConfig.findOne().assets;
+        var figureAssetsUrl = journalConfig.findOne().assets_figures;
         var figObj;
 
         // get the figure id, label, title, caption
@@ -384,9 +384,10 @@ Meteor.fullText = {
             if(figInfo){
                 figObj = figInfo;
                 // match to db file info
+                if(files.figures)
                 for(var f = 0 ; f < files.figures.length ; f++){
                     if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
-                        figObj.url = figureAssetsUrl + 'paper_figures/' + files.figures[f].file;
+                        figObj.url = figureAssetsUrl + '/' + files.figures[f].file;
                     }
                 }
             }
