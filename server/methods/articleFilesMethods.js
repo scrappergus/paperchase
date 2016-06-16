@@ -85,19 +85,29 @@ Meteor.methods({
         return fut.wait();
     },
     renameArticleFigure: function(articleMongoId, originalFileName, figureId){
-        // console.log('renameArticleFigure',articleMongoId, originalFileName, figureId)
-        // Now rename the figure if not in standard format (articlemongoid_figid)
+        // console.log('renameArticleFigure',articleMongoId, figureId)
+        // Now rename the figure if the file was not in standard format (articlemongoid_figid)
         var fut = new future();
-        var originalFilePieces,
+        var articleFigures,
+            figureIdLowercase,
+            originalFilePieces,
             fileType,
             newFileName,
             source,
-            dest;
+            dest,
+            figureFoundInDb = false,
+            result = {};
+
+        figureIdLowercase = figureId.toLowerCase();
+
+        articleInfo = articles.findOne({_id : articleMongoId});
+        articleDbFigures =articleInfo.files.figures;
 
         originalFilePieces = originalFileName.split('.');
         fileType = originalFilePieces[parseInt(originalFilePieces.length - 1)];
-        figureId = figureId.toLowerCase();
-        newFileName = articleMongoId + '_' + figureId + '.' + fileType;
+
+        newFileName = articleMongoId + '_' + figureIdLowercase + '.' + fileType;
+        result.renamedFile = newFileName;
         source = 'paper_figures/' + originalFileName;
         dest = 'paper_figures/' + newFileName;
 
@@ -106,7 +116,17 @@ Meteor.methods({
                 console.error('renameArticleAsset',err);
                 fut.throw(err);
             }else if(res){
-                fut.return(newFileName);
+                // figure was renamed on S3
+                // now create figures list with new info
+
+                // If updating existing figure
+                articleDbFigures.forEach(function(fig){
+                    if(fig.id && fig.id == figureId){
+                        fig.file = newFileName;
+                    }
+                });
+                result.figures = articleDbFigures;
+                fut.return(result);
             }
         });
         return fut.wait();
@@ -126,6 +146,7 @@ Meteor.methods({
         return result;
     },
     updateArticleDbFigures: function(articleMongoId, articleFigures){
+        // console.log('..updateArticleDbFigures',articleMongoId, articleFigures);
         var fut = new future();
         Meteor.call('updateArticle', articleMongoId, {'files.figures' : articleFigures}, function(error,result){
             if(error){
@@ -147,40 +168,32 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    afterUploadArticleFig: function(articleMongoId, originalFileName, originalFigId, newFigId){
-        // console.log('..afterUploadArticleFig',articleMongoId, originalFileName, originalFigId, newFigId);
+    afterUploadArticleFig: function(articleMongoId, originalFileName, figId){
+        // console.log('..afterUploadArticleFig',articleMongoId, originalFileName, figId);
         // Article was already uploaded to S3. This needs to happen on the client.
+        // Rename the uploaded figure and update the database
         var fut = new future();
         var fileNamePieces,
             articleInfo,
             articleFigures;
 
-
         articleInfo = articles.findOne({_id : articleMongoId});
         articleFigures =articleInfo.files.figures;
 
         fileNamePieces = originalFileName.slice('_');
-
-        Meteor.call('renameArticleFigure', articleMongoId, originalFileName, newFigId, function(error,newFileName){
+        Meteor.call('renameArticleFigure', articleMongoId, originalFileName, figId, function(error,renamedResult){
             if(error){
                 error.userMessage = 'Figure not uploaded. Please try again.';
                 console.error('renameArticleFigure',error);
                 fut.throw(error);// though it was actually uploaded, it was not renamed to standard convention. So this file cannot be used.
-            }else if(newFileName){
-                // If updating existing figure
-                articleFigures.forEach(function(fig){
-                    if(fig.id == originalFigId || fig.id.toLowerCase() == originalFigId.toLowerCase()){
-                        fig.file = newFileName;
-                    }
-                });
-
-                Meteor.call('updateArticleDbFigures', articleMongoId, articleFigures, function(error,result){
+            }else if(renamedResult){
+                Meteor.call('updateArticleDbFigures', articleMongoId, renamedResult.figures, function(error,dbUpdateResult){
                     if(error){
-                        error.userMessage = 'Figure ' + newFileName + ' uploaded, but could not update the database. Contact IT and request DB update.' ;
+                        error.userMessage = 'Figure uploaded, but could not update the database. Contact IT and request DB update.' ;
                         fut.throw(error);
                         console.error('updateArticleDbFigures',error);
-                    }else if(result){
-                        fut.return(newFileName);
+                    }else if(dbUpdateResult){
+                        fut.return(renamedResult);
                     }
                 });
             }

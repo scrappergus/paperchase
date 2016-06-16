@@ -188,6 +188,13 @@ if (Meteor.isClient) {
     Session.setDefault('recommendation',null);
 
 
+    Router.route('/', {
+        name: 'AdminHome',
+        onBeforeAction: function(){
+            Router.go('AdminDashboard');
+        }
+    });
+
     Router.route('/admin', {
         name: 'AdminDashboard',
         layoutTemplate: 'Admin',

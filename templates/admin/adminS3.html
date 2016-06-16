@@ -11,7 +11,7 @@
         {{/each}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
-        <button class="btn btn-large btn-primary upload" data-id="{{_id}}"><i class="material-icons">&#xE2C6;</i> Upload</button>
+        <button class="btn btn-large btn-primary upload" data-id="{{_id}}">{{>AdminUploadIcon}} Upload</button>
     </div></div>
 </template>
 
@@ -40,7 +40,7 @@
     {{/if}}
     {{else}}
     <div class="row"><div class="col s12 center-align">
-        <button id="upload-request" class="btn btn-large btn-primary upload" data-id="{{_id}}"><i class="material-icons">&#xE2C6;</i> Upload</button>
+        <button id="upload-request" class="btn btn-large btn-primary upload" data-id="{{_id}}">{{>AdminUploadIcon}} Upload</button>
     </div></div>
     {{/if}}
 </template>
@@ -58,7 +58,7 @@
         {{/each}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
-        <button class="btn btn-large btn-primary upload" data-id="{{_id}}"><i class="material-icons">&#xE2C6;</i> Upload</button>
+        <button class="btn btn-large btn-primary upload" data-id="{{_id}}">{{>AdminUploadIcon}} Upload</button>
     </div></div>
 </template>
 
@@ -75,7 +75,7 @@
         {{/each}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
-        <button class="btn btn-primary upload" data-id="{{figId}}"><i class="material-icons">&#xE2C6;</i> Upload &amp; Save</button>
+        <button class="btn btn-primary upload" data-id="{{figId}}">{{>AdminUploadIcon}} Upload &amp; Save</button>
     </div></div>
 </template>
 
@@ -113,6 +113,6 @@
         </div>
     </div>
     <div class="row"><div class="col s12 center-align">
-        <button class="btn btn-large btn-primary upload"><i class="material-icons">&#xE2C6;</i> Upload</button>
+        <button class="btn btn-large btn-primary upload">{{>AdminUploadIcon}} Upload</button>
     </div></div>
 </template>

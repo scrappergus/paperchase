@@ -169,15 +169,19 @@ Meteor.articleFiles = {
 
         return filesById;
     },
-    verifyFigure: function(originalFigId, newFigId){
-        // if new figure, originalFigId = new
+    verifyNewFigureName: function(figId,uploadedFilename,cb){
+        // console.log('verifyNewFigureName',originalFigId, newFigId,uploadedFilename);
+        // Verify that filename does not already exist, because we will delete uploaded image and rename.
+        // if the uploaded image has the same name as another image, then we will be accidently deleting an image
         var figures = Session.get('article').files.figures;
-        var figsById = Meteor.articleFiles.figuresById(figures);
-        if(originalFigId != newFigId && figsById[newFigId]){
-            return false; // figure ID already exists for another figure
-        }else{
-            return true;
-        }
+        var verified = true;
+        // Filename check
+        figures.forEach(function(fig){
+            if(fig.file && fig.file === uploadedFilename && fig.id != figId){
+                verified = false;
+            }
+        });
+        cb(verified);
     },
     maintainFilenameViaId: function(filesXml,filesDb,cb){
         // console.log('maintainFilenameViaId');
@@ -194,6 +198,72 @@ Meteor.articleFiles = {
             result.push(joined);
         });
         cb(result);
+    },
+    cancelFigureUploader: function(figId){
+        if(figId === 'new'){
+            $('#article-figure-request').removeClass('hide');
+            $('#article-figure-uploader').addClass('hide');
+        }else{
+            var article,
+                figures;
+
+            article = Session.get('article');
+            if(article.files && article.files.figures){
+                article.files.figures.forEach(function(fig){
+                    if(fig.id == figId){
+                        fig.editing = false;
+                    }
+                });
+            }
+            Session.set('article',article);
+        }
+    },
+    deleteFigure: function(filename){
+        S3.delete('paper_figures/' + filename, function(error,result){
+            if(error){
+                console.error('Could not delete original figure file: ' + filename);
+            }
+        });
+    }
+}
+
+// these handle the actual uploading to S3
+Meteor.upload = {
+    articleFigure: function(articleMongoId, files, uploadedFilename, figId){
+        var filenamePieces,
+            fileNameLastPiecePieces,
+            filenameLastPieceWithoutType;
+        Meteor.s3.upload(files,'paper_figures',function(error,result){
+            if(error){
+                Meteor.formActions.errorMessage('Figure not upload.');
+            }else if(result){
+                filenamePieces = uploadedFilename.split('_'); // for testing if we need to rename the uploaded image, if standard naming convention then do not delete
+                filenameLastPiecePieces = filenamePieces[filenamePieces.length - 1].split('.'); // to remove .jpg etc
+                filenameLastPieceWithoutType = filenameLastPiecePieces[0].toLowerCase();
+
+                Meteor.call('afterUploadArticleFig', articleMongoId, uploadedFilename, figId, function(error,result){
+                    // if result, then the figure got renamed to the standard naming convention and the DB got updated with this name
+                    // now delete original poorly named figure, which needs to happen on client, happens below via deleteFigure()
+                    if(error){
+                        Meteor.formActions.errorMessage(error.error);
+                    }else if(result){
+
+                        S3.collection.remove({});
+
+                        Meteor.articleFiles.cancelFigureUploader(figId); // hide uploader
+
+                        Meteor.formActions.successMessage('Figure uploaded');
+
+                        // Delete uploaded figure
+                        // if filename uploaded does not match naming convention, delete it
+                        figId = figId.toLowerCase(); // filename convention is lowercase for ID part
+                        if(uploadedFilename != result.renamedFile && articleMongoId != filenamePieces[0] || figId != filenameLastPieceWithoutType ){
+                            Meteor.articleFiles.deleteFigure(uploadedFilename);
+                        }
+                    }
+                });
+            }
+        });
     }
 }
 

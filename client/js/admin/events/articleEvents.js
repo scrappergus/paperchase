@@ -208,7 +208,6 @@ Template.AdminArticleFigures.events({
         e.preventDefault();
         var figId = $(e.target).closest('button').attr('data-id');
         // console.log(figId);
-        Session.set('figureEditing',figId);
         var article = Session.get('article');
         var files = article.files;
         var figures = files.figures;
@@ -222,103 +221,88 @@ Template.AdminArticleFigures.events({
     },
     'click .article-figure-cancel': function(e){
         e.preventDefault();
-        Session.set('figureEditing',null);
-        var figId = $(e.target).closest('button').attr('data-id');
-        if(figId === 'new'){
-            $('#article-figure-request').removeClass('hide');
-            $('#article-figure-uploader').addClass('hide');
-        }else{
-            var article = Session.get('article');
-            var files = article.files;
-            var figures = files.figures;
-            figures.forEach(function(fig){
-                if(fig.id == figId){
-                    fig.editing = false;
-                }
-            });
-            article.files.figures = figures;
-            Session.set('article',article);
-        }
+        var figId;
+        figId = $(e.target).closest('button').attr('data-id');
+        Meteor.articleFiles.cancelFigureUploader(figId);
     },
-    'click .article-figure-delete': function(e){
-        e.preventDefault();
-        Meteor.formActions.saving();
-        var articleMongoId = Session.get('article')._id;
-        var fileSettings = Session.get('article').files;
-        var figId = $(e.target).closest('button').attr('data-id');
-        var figures = fileSettings.figures;
-        var newFigures = [],
-            figToDelete;
-        figures.forEach(function(fig){
-            if(fig.id == figId){
-                figToDelete = fig.file;
-            }else{
-                newFigures.push(fig);
-            }
-        });
-        if(figToDelete){
-            S3.delete('paper_figures/' + figToDelete, function(error,result){
-                if(error){
-                    console.error('Could not delete figure file: ' + figToDelete);
-                }else{
-                    Meteor.formActions.successMessage(result);
-                }
-            });
-        }
-    },
-    'click .article-figure-add': function(e){
-        e.preventDefault();
-        $('#article-figure-request').addClass('hide');
-        $('#article-figure-uploader').removeClass('hide');
-    }
+    // 'click .article-figure-delete': function(e){
+        // e.preventDefault();
+        // Meteor.formActions.saving();
+        // var articleMongoId,
+        //     figId,
+        //     figures,
+        //     newFigures = [],
+        //     figToDelete,
+        //     userMessage;
+
+        // articleMongoId = Session.get('article')._id;
+        // fileSettings = Session.get('article').files;
+        // figId = $(e.target).closest('button').attr('data-id');
+        // figures = articles.findOne({_id : articleMongoId}).files.figures; // use DB data instead of session variable because this will get used to update the DB again with removed figure
+
+        // figures.forEach(function(fig){
+        //     if(fig.id == figId || fig.temp_id == figId){
+        //         console.log('match!',fig);
+        //         figToDelete = fig.file;
+        //     }else{
+        //         newFigures.push(fig);
+        //     }
+        // });
+        // if(figToDelete){
+        //     // console.log('figToDelete',figToDelete);
+        //     // Delete from AWS
+        //     S3.delete('paper_figures/' + figToDelete, function(error,result){
+        //         if(error){
+        //             console.error('Could not delete figure file: ' + figToDelete);
+        //         }else if(result){
+        //             console.log('figures',figures);
+        //             // Delete from DB
+        //             Meteor.call('updateArticleDbFigures', articleMongoId, figures, function(error,result){
+        //                 if(error){
+        //                     console.error('updateArticleDbFigures',error);
+        //                     userMessage = 'Figure ' + figToDelete + ' deleted, but could not update the database. Contact IT and request DB update.' ;
+        //                     Meteor.formActions.errorMessage(userMessage);
+        //                 }else if(result){
+        //                     Meteor.formActions.successMessage('Figure' + figToDelete + ' deleted.');
+        //                 }
+        //             });
+        //             Meteor.formActions.successMessage(result);
+        //         }
+        //     });
+        // }
+    // }
 });
 Template.s3FigureUpload.events({
     'click button.upload': function(e){
         e.preventDefault();
         Meteor.formActions.saving();
         var articleMongoId = Session.get('article')._id;
-        var xmlUrl,
-            s3Folder,
-            articleIds,
-            updatedFilename,
-            fileNamePieces,
-            figureVerified;
+        var files,
+            originalFigId,
+            uploadedFilename,
+            figureVerified,
+            figures;
 
-        var originalFigId = $(e.target).closest('button').attr('data-id');
-        var newFigId = $('#fig-input-' + originalFigId).val();
-        if(!newFigId){
-            newFigId = originalFigId;
-        }
-        var files = $('input.file_bag[data-id="' + originalFigId +'"]')[0].files;
+        // ID
+        figId = $(e.target).closest('button').attr('data-id');
 
-        figureVerified = Meteor.articleFiles.verifyFigure(originalFigId,newFigId);;
-        if(files[0] && figureVerified){
-            Meteor.s3.upload(files,'paper_figures',function(error,result){
-                if(error){
-                    Meteor.formActions.errorMessage('Figure not upload.');
-                }else if(result){
-                    updatedFilename = result.file.name;
-                    fileNamePieces = updatedFilename.split('_');
-                    Meteor.call('afterUploadArticleFig', articleMongoId, updatedFilename, originalFigId, newFigId, function(error,result){
-                        if(error){
-                            Meteor.formActions.errorMessage(error.error);
-                        }else if(result){
-                            Meteor.formActions.successMessage(result);
-                            if(articleMongoId != fileNamePieces[0] && newFigId != fileNamePieces[1]){
-                                S3.delete('paper_figures/' + updatedFilename,function(error,result){
-                                    if(error){
-                                        console.error('Could not delete original figure file: ' + updatedFilename);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-        }else if(!files[0]){
-            Meteor.formActions.errorMessage('Please select a figure file to upload.');
-        }else{
-            Meteor.formActions.errorMessage('Figure ID already assigned to another figure.');
+        if(figId){
+            // Upload figure file
+            // ----------------
+            files = $('input.file_bag[data-id="' + figId +'"]')[0].files;
+
+            if(files[0]){
+                uploadedFilename = files[0].name;
+                Meteor.articleFiles.verifyNewFigureName(figId, uploadedFilename, function(verifiedFilename){
+                    if(verifiedFilename){
+                        Meteor.upload.articleFigure(articleMongoId, files, uploadedFilename, figId);
+                    }else{
+                        Meteor.formActions.errorMessage('Figure ID already assigned to another figure.');
+                    }
+                });
+            }else{
+                Meteor.formActions.errorMessage('Select a figure file.');
+            }
         }
     }
 });
