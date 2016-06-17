@@ -2,7 +2,7 @@ Meteor.methods({
     getConfigSiteUrl : function(){
         var siteConfig = journalConfig.findOne({}, {fields: {journal : 1}});
         if(siteConfig){
-            return siteConfig['journal']['url'];
+            return siteConfig.journal.url;
         }
     },
     getConfigRecommendationEmail : function(){
