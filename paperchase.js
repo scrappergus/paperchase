@@ -6,6 +6,22 @@ if (Meteor.isServer) {
     });
 }
 
+
+//Redirects 
+// Redirect to the ROOT_URL if it doesn't match where we're at
+if (Meteor.isServer) {
+    WebApp.connectHandlers
+    .use(function(req, res, next) {
+            if(Meteor.absoluteUrl().match(req.headers.host) ) {
+                return next();
+            }
+            else {
+                res.writeHead(307, { 'Location': Meteor.absoluteUrl() });
+                res.end();
+            }
+        });
+}
+
 // async loader for fonts
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
