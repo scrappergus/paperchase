@@ -9,9 +9,6 @@ if (Meteor.isServer) {
 // async loader for fonts
 // https://github.com/typekit/webfontloader
 if (Meteor.isClient) {
-    // WebFontConfig = {
-    //  google: { families: [ 'Lora:400,400italic,700,700italic:latin' , 'Open Sans'] }
-    // };
     (function() {
             var wf = document.createElement('script');
             wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
@@ -22,8 +19,6 @@ if (Meteor.isClient) {
             s.parentNode.insertBefore(wf, s);
             //console.log("async fonts loaded", WebFontConfig);
     })();
-    // var journal = journalConfig.findOne();
-    // Session.setDefault('journal',journal);
 }
 
 Router.configure({
@@ -92,21 +87,7 @@ institutions.after.remove(function(userId, doc) {
 
 
 // DOWNLOAD ROUTES
-// Router.route('/pdf/:_filename',{
-//  where: 'server',
-//  action: function(){
-//      var name = this.params._filename;
-//      var filePath = process.env.PWD + '/uploads/pdf/' + name;
-//      var fs = Meteor.npmRequire('fs');
-//      var data = fs.readFileSync(filePath);
-//      this.response.writeHead(200, {
-//        'Content-Type': 'application/pdf',
-//        'Content-Disposition': 'attachment; filename=' + name
-//      });
-//      this.response.write(data);
-//      this.response.end();
-//  }
-// });
+// ---------------
 Router.route('/xml-cite-set/:_filename',{
     where: 'server',
     action: function(){
@@ -121,52 +102,6 @@ Router.route('/xml-cite-set/:_filename',{
         this.response.end();
     }
 });
-
-// INTAKE ROUTES
-Router.route('/admin/add-legacy-platform-article/',{
-    where: 'server',
-    name: 'AddLegacyAdvanceArticle',
-    action: function(){
-        var response = this.response;
-        Meteor.call('legacyArticleIntake', this.params.query, function(err, res) {
-            if(err) {
-                response.setHeader('Content-Type', 'application/json');
-                response.end(JSON.stringify({'success':false}));
-            } else {
-                response.setHeader('Content-Type', 'application/json');
-                response.end(JSON.stringify({'success':true}));
-            }
-        });
-    }
-});
-
-//cache crossref doi query responses
-Router.route('/admin/add-crossref-record/',{
-        name: 'AddCrossRefRecord',
-        where: 'server'
-    }).post(function (a,b,c) {
-            console.log('we posting');
-            console.log(a,b,c);
-
-            var response = this.response;
-            var request = this.request;
-            var aricleDoi = this.request.body;
-
-            console.log(articleDoi);
-
-//            Meteor.call('crossrefRecordIntake', this.params, function(err, res) {
-//                    console.log(this.params);
-//                    if(err) {
-//                        response.setHeader('Content-Type', 'application/json');
-//                        response.end(JSON.stringify({'success':false}));
-//                    } else {
-//                        response.setHeader('Content-Type', 'application/json');
-//                        response.end(JSON.stringify({'success':true}));
-//                    }
-//                });
-
-        });
-
 
 // OUTTAKE ROUTES
 Router.route('/get-advance-articles/',{
@@ -314,22 +249,22 @@ Router.route('/get-advance-articles/',{
 
 
 Router.route('/article/:_id/doi', {
-        where: 'server',
-        action: function() {
-            htmlString = "";
+    where: 'server',
+    action: function() {
+        htmlString = "";
 
-            var articleExistsExists = articles.findOne({'ids.pii': this.params._id});
-            if(articleExistsExists){
-                htmlString = articleExistsExists.ids.doi || '';
-            }
-
-
-            var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
-            this.response.writeHead(200, headers);
-            this.response.end(htmlString);
-
+        var articleExistsExists = articles.findOne({'ids.pii': this.params._id});
+        if(articleExistsExists){
+            htmlString = articleExistsExists.ids.doi || '';
         }
-    });
+
+
+        var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
+        this.response.writeHead(200, headers);
+        this.response.end(htmlString);
+
+    }
+});
 
 
 
@@ -758,13 +693,13 @@ if (Meteor.isClient) {
             var article = articles.findOne({
                 '_id': this.params._id
             });
-            
+
             if (!article) {
                 return Router.go('ArticleNotFound');
             }
 
             Meteor.article.readyFullText(this.params._id);
-            
+
             this.next();
         },
         waitOn: function() {
@@ -797,7 +732,7 @@ if (Meteor.isClient) {
             return pageTitle + articleTitle;
         },
     });
-    
+
     Router.route('/article/:_id/purchase', {
         name: 'PurchaseArticle',
         layoutTemplate: 'Visitor',
