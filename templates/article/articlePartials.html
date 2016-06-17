@@ -133,6 +133,7 @@
 
 <template name="ArticleSidebar">
     <div class="page-sidebar col s12 m12 l4">
+        {{#with article}}
         {{#if isSubscribed}}
 
             <!-- for subscribed users -->
@@ -174,19 +175,30 @@
                 </a>
             {{/if}}
         {{/if}}
+        {{/with}}
 
+        {{#with article}}
         {{#if correspondence}}
             {{> ArticleCorrespondence}}
         {{/if}}
+        {{/with}}
 
+        {{#if related}}
+            {{> ArticleRelatedArticles}}
+        {{/if}}
+
+        {{#with article}}
         {{#if keywords}}
             {{> ArticleKeywords}}
         {{/if}}
+        {{/with}}
 
+        {{#with article}}
         {{#with files}}
         {{#if supplemental}}
             {{> ArticleSupplemental}}
         {{/if}}
+        {{/with}}
         {{/with}}
 
         {{#if fullTextView}}
@@ -203,6 +215,18 @@
         {{#each correspondence}}
         <p>{{#if text}} {{text}}<br /> {{/if}}
         <a href="mailto:{{email}}">{{email}}</a></p>
+        {{/each}}
+    </div>
+</template>
+
+<template name="ArticleRelatedArticles">
+    <div class="card sidebar-card">
+        <h6 class="card-title">Related Article{{#if related.[1]}}s{{/if}}</h6>
+        {{#each related}}
+        <p>
+        {{#if title}}{{title}}. {{/if}}
+        {{#if pmid}}[<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}/" target="_BLANK">PubMed</a>]{{/if}}
+        </p>
         {{/each}}
     </div>
 </template>

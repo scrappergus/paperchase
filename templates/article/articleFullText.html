@@ -120,9 +120,7 @@
             {{/with}}
         </div>
 
-        {{#with article}}
-            {{> ArticleSidebar}}
-        {{/with}}
+        {{> ArticleSidebar article=article related=fullText.related}}
     </div>
 </template>
 

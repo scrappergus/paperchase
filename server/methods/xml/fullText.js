@@ -83,6 +83,51 @@ Meteor.methods({
             }
         }
 
+
+        // Related Article
+        // ---------
+        var relatedArticles = xpath.select('//related-article', doc);
+        if(relatedArticles[0]){
+            articleObject.related = [];
+            articleObject.related = [];
+            relatedArticles.forEach(function(related){
+                var relatedArticle = {},
+                    relatedAttributes,
+                    relatedTitle;
+
+                // Attributes (vol, pages, type)
+                // --------
+                if(related.attributes){
+
+                    relatedAttributes = Meteor.fullText.relatedArticleAttributes(related.attributes);
+                    if(relatedAttributes){
+                        for(var attr in relatedAttributes){
+                            relatedArticle[attr] = relatedAttributes[attr];
+                        }
+                    }
+                }
+
+                // Title
+                // --------
+                for(var i=0; i<related.childNodes.length; i++){
+                    if(related.childNodes[i].localName === 'article-title'){
+                        // console.log(related.childNodes[i].childNodes);
+                        if(related.childNodes[i].childNodes && related.childNodes[i].childNodes[0].nodeValue){
+                           relatedArticle.title =  related.childNodes[i].childNodes[0].nodeValue;
+                        }
+                        // relatedTitle = Meteor.fullText.convertContent(related.childNodes[i].childNodes[0].childNodes);
+                        // console.log(relatedTitle);
+                        // relatedArticle.title = related.childNodes[i].nodeValue;
+                    }
+                }
+
+                if(Object.keys(relatedArticle).length != 0){
+                    // console.log('relatedArticle',relatedArticle);
+                    articleObject.related.push(relatedArticle);
+                }
+            });
+        }
+
         // Acknowledgements
         // ---------
         var acks = xpath.select('//ack', doc);
@@ -526,6 +571,31 @@ Meteor.fullText = {
 
         // console.log(referenceObj);
         return referenceObj;
+    },
+    relatedArticleAttributes: function(relatedAttributes){
+        var result = {},
+            attributesInJson;
+        attributesInJson = Meteor.fullText.traverseAttributes(relatedAttributes);
+
+        for(var key in attributesInJson){
+            if(key != 'ext-link-type' && key != 'href'){
+                result[key] = attributesInJson[key];
+            }
+        }
+
+        if(attributesInJson && attributesInJson['ext-link-type'] && attributesInJson['href']){
+            result.pmid = attributesInJson['href'];
+        }
+
+        return result;
+    },
+    traverseAttributes: function(attributes){
+        var result = {};
+        for(var attr=0; attr<attributes.length ; attr++){
+           if(attributes[attr].localName,attributes[attr].nodeValue)
+           result[attributes[attr].localName] = attributes[attr].nodeValue;
+        }
+        return result;
     },
     traverseAuthors: function(node){
         // console.log('..traverseNode');
