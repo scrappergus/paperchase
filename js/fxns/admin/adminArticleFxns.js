@@ -457,6 +457,7 @@ Meteor.adminArticleFormGet = {
     title: function(){
         var articleTitle = $('.form-title').code();
         articleTitle = Meteor.clean.cleanWysiwyg(articleTitle);
+        articleTitle = articleTitle.replace(/<p>/,'').replace(/<\/p>,''/);
         return articleTitle;
     },
     all: function(){
