@@ -1,0 +1,13 @@
+<template name="ErrorMessages">
+    <div class="row error hide">
+        <div class="col s8 offset-s2 red lighten-4">
+            <h5 class="valign-wrapper"><i class="material-icons">&#xE000;</i> <span class="valign">Error</span></h5>
+            <ul>
+            {{#each errors}}
+                <li>{{.}}</li>
+            {{/each}}
+            </ul>
+
+        </div>
+    </div>
+</template>
