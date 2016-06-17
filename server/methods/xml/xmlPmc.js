@@ -268,6 +268,9 @@ Meteor.xmlPmc = {
         abstract = abstract.replace('abstract>', '');
         abstract = Meteor.processXml.cleanAbstract(abstract);
         abstract = Meteor.clean.removeExtraSpaces(abstract);
+        if(abstract.indexOf('<p>') == -1){
+            abstract = '<p>' + abstract + '</p>';
+        }
         cb(abstract);
     },
     articleType: function(articleJson,cb){
