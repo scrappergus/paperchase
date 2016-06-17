@@ -215,6 +215,14 @@ if (Meteor.isClient) {
         return Meteor.general.pluralize(str);
     });
 
+    Template.registerHelper('wrapInParagraphTag', function(str){
+        if(str.indexOf('<p>') === -1){
+            return '<p>' + str + '</p>';
+        }else{
+            return str;
+        }
+    });
+
     // Count
     // --------
     Template.registerHelper('countItems', function(items) {
@@ -238,7 +246,7 @@ if (Meteor.isClient) {
         if(str){
             return str.replace(/\w\S*/g, function(txt){
                 return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });            
+            });
         }
     });
 
