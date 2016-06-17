@@ -6,7 +6,7 @@ Meteor.methods({
         Meteor.http.get(url , function(error,result){
             if(error){
                 // console.error('Asset Check Error: ',error);
-                fut['return'](false);
+                fut.return(false);
             }else if(result){
                 // console.log(url + ' Exists');
                 xml = result.content;
@@ -15,12 +15,12 @@ Meteor.methods({
                 Meteor.call('fullTextToJson',xml, figures, function(convertXmlError, convertedXml){
                     if(convertXmlError){
                         console.error('convertXmlError',convertXmlError);
-                        fut['throw'](convertXmlError);
+                        fut.throw(convertXmlError);
                     }else if(convertedXml){
                         // console.log('convertedXml',convertedXml);
-                        fut['return'](convertedXml);
+                        fut.return(convertedXml);
                     }else{
-                        fut['return'](false);// todo: handle when there is no xml
+                        fut.return(false);// todo: handle when there is no xml
                     }
 
                 });
@@ -37,15 +37,15 @@ Meteor.methods({
         Meteor.http.get(url , function(error,result){
             if(error){
                 // console.error('Asset Check Error: ',error);
-                fut['return'](false);
+                fut.return(false);
             }else if(result){
                 // console.log(url + ' Exists');
                 xml = result.content;
                 if(xml.search(searchFor)!=-1){
-                    console.log(searchFor,xml.search(searchFor));
-                    fut['return'](true);
+                    // console.log(searchFor,xml.search(searchFor));
+                    fut.return(true);
                 }else{
-                    fut['return'](false);
+                    fut.return(false);
                 }
             }
         });
@@ -56,13 +56,13 @@ Meteor.methods({
         Meteor.http.get(url , function(error,result){
             if(error){
                 // console.error('Asset Check Error: ',error);
-                fut['return'](false);
+                fut.return(false);
             }else if(result){
                 if(result.headers['content-length'] == '15739'){
-                    fut['return'](false);
+                    fut.return(false);
                     // these are not real PDFs, they failed to upload, so do not add these filenames to the article doc
                 }else{
-                    fut['return'](true);
+                    fut.return(true);
                 }
             }
         });
@@ -77,7 +77,7 @@ Meteor.methods({
         S3.knox.copyFile(source, dest, function(err, res){
             if(err){
                 console.error('renameArticleAsset',err);
-                // fut['throw'](err);
+                // fut.throw(err);
             }else if(res){
                 fut.return(newFileName);
             }
