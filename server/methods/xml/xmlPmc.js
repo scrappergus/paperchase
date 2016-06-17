@@ -392,7 +392,7 @@ Meteor.xmlPmc = {
                         // figure title
                         // ------------
                         if(n.localName == 'title'){
-                            figObj.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
+                            figObj.title =  Meteor.clean.removeExtraSpaces(Meteor.fullText.convertContent(n).replace(/^\s+|\s+$/g, ''));
                         }
                         // figure caption
                         // ------------
