@@ -270,11 +270,16 @@ Meteor.upload = {
 Meteor.processXml = {
     cleanAbstract: function(abstract){
         if(abstract){
-            abstract = abstract.replace(/<\/p>/g,'');
-            abstract = abstract.replace(/<p>/g,'');
+            // abstract = abstract.replace(/<\/p>/g,'');
+            // abstract = abstract.replace(/<p>/g,'');
+            abstract = abstract.replace(/<sec>/g,'');
+            abstract = abstract.replace(/<\/sec>/g,'');
+            abstract = abstract.replace(/<title>/g,'<p><b>');
+            abstract = abstract.replace(/<\/title>/g,'<\/b></p>');
             abstract = abstract.replace(/^[ ]+|[ ]+$/g,'');
             abstract = Meteor.clean.cleanString(abstract);
         }
+        console.log('abstract',abstract);
         return abstract;
     }
 }

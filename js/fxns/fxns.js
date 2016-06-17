@@ -709,7 +709,7 @@ Meteor.clean = {
         return string;
     },
     cleanWysiwyg: function(input){
-        return input.replace(/&nbsp;/g,' ').replace(/<br>/g,'').replace(/<p[^>]*>/g,'').replace(/<\/p[^>]*>/g,'').trim();
+        return input.replace(/&nbsp;/g,' ').replace(/<br>/g,'').trim();
     },
     removeSpaces: function(string){
         return string.replace(/\s+/g,'');
