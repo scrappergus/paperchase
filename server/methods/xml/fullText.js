@@ -113,7 +113,7 @@ Meteor.methods({
                     if(related.childNodes[i].localName === 'article-title'){
                         // console.log(related.childNodes[i].childNodes);
                         if(related.childNodes[i].childNodes && related.childNodes[i].childNodes[0].nodeValue){
-                           relatedArticle.title =  related.childNodes[i].childNodes[0].nodeValue;
+                           relatedArticle.title =  Meteor.clean.cleanString(related.childNodes[i].childNodes[0].nodeValue);
                         }
                         // relatedTitle = Meteor.fullText.convertContent(related.childNodes[i].childNodes[0].childNodes);
                         // console.log(relatedTitle);
@@ -579,12 +579,16 @@ Meteor.fullText = {
 
         for(var key in attributesInJson){
             if(key != 'ext-link-type' && key != 'href'){
-                result[key] = attributesInJson[key];
+                result[Meteor.clean.dashesToUnderscores(key)] = attributesInJson[key];
             }
         }
 
-        if(attributesInJson && attributesInJson['ext-link-type'] && attributesInJson['href']){
-            result.pmid = attributesInJson['href'];
+        if(attributesInJson && attributesInJson['ext-link-type'] === 'pubmed' && attributesInJson.href){
+            result.pmid = attributesInJson.href;
+        }
+
+        if(attributesInJson && attributesInJson['ext-link-type'] === 'pmc' && attributesInJson.href){
+            result.pmcid = attributesInJson.href;
         }
 
         return result;

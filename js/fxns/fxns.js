@@ -718,6 +718,9 @@ Meteor.clean = {
     },
     removeNewLines: function(string){
         return string.replace(/(\r\n|\n|\r)/gm,'');
+    },
+    dashesToUnderscores: function(string){
+        return string.replace(/-/g,'_');
     }
 }
 

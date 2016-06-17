@@ -224,6 +224,7 @@
         <h6 class="card-title">Related Article{{#if related.[1]}}s{{/if}}</h6>
         {{#each related}}
         <p>
+        {{#if equals related_article_type 'commentary-article'}}<b>Commentary on:</b> {{/if}}
         {{#if title}}{{title}}. {{/if}}
         {{#if pmid}}[<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}/" target="_BLANK">PubMed</a>]{{/if}}
         </p>
