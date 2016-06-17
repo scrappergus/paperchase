@@ -3,9 +3,9 @@ issues = new Mongo.Collection('issues');
 issuesDeleted = new Mongo.Collection('issues_deleted');
 about = new Mongo.Collection('about');
 articles = new Mongo.Collection('articles');
-institutions = new Mongo.Collection("institutions");
-ipranges = new Mongo.Collection("ipranges");
-edboard = new Mongo.Collection("edboard");
+institutions = new Mongo.Collection('institutions');
+ipranges = new Mongo.Collection('ipranges');
+edboard = new Mongo.Collection('edboard');
 forAuthors = new Mongo.Collection('for_authors');
 ethics = new Mongo.Collection('ethics');
 homePage = new Mongo.Collection('homePage');
@@ -26,7 +26,7 @@ sorters = new Mongo.Collection('sorters', {
     if(f.name == 'advance'){
 
         // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
-//        var config = journalConfig.findOne({},{fields: {'assets': 1 }}); 
+       // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
 
         var articlesList = articles.find({'_id':{'$in':order}}).fetch();
         f.articles = [];
@@ -63,7 +63,7 @@ sorters = new Mongo.Collection('sorters', {
                 }
             }
         }
-        
+
 
     }else if(f.name == 'ethics'){
         f.ordered = [];
@@ -128,99 +128,21 @@ sorters = new Mongo.Collection('sorters', {
 publish = new Mongo.Collection('publish');
 
 // ALLOW
-Meteor.users.allow({
-    update: function (userId, doc, fields, modifier) {
-        if (userId && doc._id === userId) {
-            // user can modify own
-            return true;
-        }
-        // admin can modify any
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-journalConfig.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-about.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-articles.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin','edit'],'article')) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin','edit'],'article')) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin','edit'],'article')) {
-            return true;
-        }
-    }
-});
-articleTypes.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
+// ---------
+// Not creating visitor user accounts yet
+// Meteor.users.allow({
+//     update: function (userId, doc, fields, modifier) {
+//         if (userId && doc._id === userId) {
+//             // user can modify own
+//             return true;
+//         }
+//         // admin can modify any
+//         var u = Meteor.users.findOne({_id:userId});
+//         if (Roles.userIsInRole(u, ['super-admin'])) {
+//             return true;
+//         }
+//     }
+// });
 recommendations.allow({
     insert: function (userId, doc, fields, modifier) {
         return true;
@@ -238,32 +160,13 @@ recommendations.allow({
         }
     }
 });
-issues.allow({
+
+// DENY
+// ---------
+// Not creating visitor user accounts yet
+Meteor.users.deny({
     insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-issuesDeleted.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
+        return true;
     },
     update: function (userId, doc, fields, modifier) {
         return false;
@@ -272,194 +175,179 @@ issuesDeleted.allow({
         return false;
     }
 });
-volumes.allow({
+journalConfig.deny({
     insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    }
-});
-edboard.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-forAuthors.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    }
-});
-newsList.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    }
-});
-authors.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-          return true;
-        }
-    }
-});
-institutions.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-ipranges.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-sections.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-submissions.allow({
-    insert: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    update: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    },
-    remove: function (userId, doc, fields, modifier) {
-        var u = Meteor.users.findOne({_id:userId});
-        if (Roles.userIsInRole(u, ['super-admin'])) {
-            return true;
-        }
-    }
-});
-sorters.allow({
-    insert: function () {
         return true;
     },
-    update: function () {
+    update: function (userId, doc, fields, modifier) {
         return true;
     },
-    remove: function () {
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+about.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+articles.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+articleTypes.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+issues.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+issuesDeleted.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return false;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return false;
+    }
+});
+volumes.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+edboard.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+forAuthors.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+newsList.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+authors.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+institutions.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+ipranges.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+sections.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+submissions.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
+        return true;
+    }
+});
+sorters.deny({
+    insert: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    update: function (userId, doc, fields, modifier) {
+        return true;
+    },
+    remove: function (userId, doc, fields, modifier) {
         return true;
     }
 });
@@ -468,16 +356,16 @@ sorters.allow({
 // PUBLISH
 if (Meteor.isServer) {
 
-    Meteor.publish(null, function() {
-        return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
-    });
+    // Not creating visitor user accounts yet
+    // Meteor.publish(null, function() {
+    //     return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
+    // });
+    // Meteor.publish('subs', function () {
+    //     return subs.find({});
+    // });
+
     Meteor.publish(null, function (){
         return Meteor.roles.find({})
-    });
-
-
-    Meteor.publish('subs', function () {
-        return subs.find({});
     });
     Meteor.publish('journalConfig', function() {
         var siteConfig =  journalConfig.find({},{fields: {
@@ -510,14 +398,6 @@ if (Meteor.isServer) {
     Meteor.publish('issues', function () {
         return issues.find({},{sort : {volume:-1,issue:1}},{volume:1,issue:1,pub_date:1});
     });
-    // Meteor.publish('issue', function (volume,issue) {
-    //     check(issue, String);
-    //     return issues.find({volume: parseInt(volume), issue_linkable: issue});
-    // });
-    // Meteor.publish('issueArticles', function (volume,issue) {
-    //     var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
-    //     return articles.find({issue_id : issueinfo['_id']});
-    // });
     Meteor.publish('currentIssue',function(){
         return issues.find({current: true});
     });
@@ -618,19 +498,6 @@ if (Meteor.isServer) {
     Meteor.publish('articlesWithoutDates', function(){
         return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
     });
-    Meteor.publish('submissionSet', function (queryType, queryParams) {
-        var articlesList;
-        if(queryType === 'issue'){
-          articlesList = articles.find({issue_id: queryParams});
-        }else if(queryType === 'pii'){
-          articlesList = articles.find({_id:{'$in':queryParams}});
-        }
-
-        // if a user wants to change the submissions list and start over,
-        // to clear the collection we just pass a queryType that is neither issue nor pii and undefined will be returned
-
-        return articlesList;
-    });
     Meteor.publish('articlesRecentFive', function () {
         return articles.find({},{sort:{'_id':1},limit : 5});
     });
@@ -646,86 +513,56 @@ if (Meteor.isServer) {
 
         return articlesList;
     });
-    Meteor.publish('submissions', function () {
-        return submissions.find();
-    });
     Meteor.publish('aop', function () {
         return articles.find({'issue_id':{$exists:false}},{sort:{'_id':1}});
     });
 
+
+    // Not creating visitor user accounts yet
     // Users
     // ----------------
-    Meteor.publish('allUsers', function(){
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return Meteor.users.find();
-        }else{
-            this.stop();
-            return;
-        }
-    });
-    Meteor.publish('adminUsers', function(){
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return Meteor.users.find({'roles': {'$in': ['super-admin']}},{'name_first':1,'name_last':1});
-        }else{
-            this.stop();
-            return;
-        }
-    });
-    Meteor.publish('userData', function(id){
-        check(id, String);
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return Meteor.users.find({_id:id});
-        }else{
-            this.stop();
-            return;
-        }
-    });
-    Meteor.publish('currentUser', function(id){
-        check(id, String);
-        if(!this.userId) return;
-        return Meteor.users.find(this.userId, {fields: {
-          name_first: 1,
-          name_last: 1,
-        }});
-    });
-    Meteor.publish('users',function(){
-        return Meteor.users.find({},{services:0});
-    });
+    // Meteor.publish('userData', function(id){
+    //     check(id, String);
+    //     if (Roles.userIsInRole(this.userId, ['super-admin'])) {
+    //         return Meteor.users.find({_id:id});
+    //     }else{
+    //         this.stop();
+    //         return;
+    //     }
+    // });
+    // Meteor.publish('currentUser', function(id){
+    //     check(id, String);
+    //     if(!this.userId) return;
+    //     return Meteor.users.find(this.userId, {fields: {
+    //       name_first: 1,
+    //       name_last: 1,
+    //     }});
+    // });
 
     // Institutions
     // ----------------
-    Meteor.publish('institutions', function(){
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return institutions.find();
-        }else{
-            this.stop();
-            return;
-        }
-    });
-    Meteor.publish('institution', function(id){
-        check(id, String);
-        if (Roles.userIsInRole(this.userId, ['super-admin'])) {
-            return institutions.find({_id:id});
-        }else{
-            this.stop();
-            return;
-        }
-    });
+    // Meteor.publish('institution', function(id){
+    //     check(id, String);
+    //     if (Roles.userIsInRole(this.userId, ['super-admin'])) {
+    //         return institutions.find({_id:id});
+    //     }else{
+    //         this.stop();
+    //         return;
+    //     }
+    // });
 
-    Meteor.publish('ipranges', function () {
-        return ipranges.find({});
-    });
+    // Meteor.publish('ipranges', function () {
+    //     return ipranges.find({});
+    // });
 
 
     // Editorial Board
     // ---------------
     Meteor.publish('fullBoard', function () {
         return edboard.find({'role': {'$in': ['Editorial Board']}});
-        // return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
     });
     Meteor.publish('entireBoard', function () {
         return edboard.find();
-        // return edboard.find({$or: [{role:"Impact Journals Director"}, {role:"Editorial Board"}]});
     });
     Meteor.publish('eic', function () {
         return edboard.find({'role': {'$in': ['Editor-in-Chief']}});
@@ -740,36 +577,24 @@ if (Meteor.isServer) {
 
     // About
     // ------------
-    Meteor.publish('about', function(){
-        return about.find();
-    });
     Meteor.publish('aboutPublic', function(){
         return about.find({display:true});
     });
 
     // Ethics
     // ------------
-    Meteor.publish('ethics', function(){
-        return ethics.find();
-    });
     Meteor.publish('ethicsPublic', function(){
         return ethics.find({display:true});
     });
 
     // Home Page
     // ------------
-    Meteor.publish('homePage', function(){
-        return homePage.find();
-    });
     Meteor.publish('homePagePublic', function(){
         return homePage.find({display:true});
     });
 
     // For Authors
     // ------------
-    Meteor.publish('forAuthors', function(){
-        return forAuthors.find();
-    });
     Meteor.publish('forAuthorsPublic', function(){
         return forAuthors.find({display:true});
     });
@@ -796,26 +621,9 @@ if (Meteor.isServer) {
         }
     });
 
-    // Recommendations
-    // ----------------
-    Meteor.publish('recommendations', function(){
-        return recommendations.find({});
-    });
-    Meteor.publish('recommendationData',function(mongoId){
-        check(mongoId, String);
-        if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
-            return  recommendations.find({'_id':mongoId})
-        }else{
-            this.stop();
-            return;
-        }
-    });
 
     // News
     // ----------------
-    Meteor.publish('newsListAll', function(){
-    return newsList.find();
-    });
     Meteor.publish('newsListDisplay', function(){
         return newsList.find({display: true});
     });
@@ -858,7 +666,7 @@ if (Meteor.isServer) {
     // For advance
     // ----------------
     Meteor.publish('publish', function () {
-    return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+        return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
     });
 
     // Search
@@ -889,12 +697,11 @@ if (Meteor.isServer) {
 
 // SUBSCRIBE
 if (Meteor.isClient) {
-    // Meteor.subscribe('volumes');
-    //  Meteor.subscribe('issues');
-    Meteor.subscribe('ipranges');
-    Meteor.subscribe('institutions');
-    Meteor.subscribe('subs');
-    // Meteor.subscribe('journalConfig');
+    // Meteor.subscribe('ipranges');
+    // Meteor.subscribe('institutions');
     Meteor.subscribe('articleTypes');
     Meteor.subscribe('sectionsVisible');
+
+    // Not creating visitor user accounts yet
+    // Meteor.subscribe('subs');
 }
