@@ -48,6 +48,11 @@ if (Meteor.isClient) {
     Template.registerHelper('affiliationNumber', function(affiliation) {
       return parseInt(parseInt(affiliation) + 1);
     });
+
+    Template.registerHelper('authorNoteNumber', function(affiliation) { //This function is exactly the same as the one above it. Probably unnecessary 
+        return parseInt(parseInt(affiliation) + 1);
+    });
+
     Template.registerHelper('pubStatusAbbrev', function(number) {
       if (pubStatusTranslate[parseInt(number - 1)]) {
         return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
