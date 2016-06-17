@@ -59,16 +59,19 @@ Meteor.article = {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
         }
 
+        var availableLabels = ['*','#'];
         for(authIdx=0; authIdx < article.authors.length; authIdx++) {
-            if(article.authors[authIdx].equal_contrib == true) {
-                article.equal_contribs = true;
-            }
             if(article.authors[authIdx].author_notes_ids && article.author_notes) {
                 article.authors[authIdx].author_notes = [];
                 for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
                     for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
                         var note = article.author_notes[noteIdx];
                         if(note['id'] == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
+                            var indexPos = availableLabels.indexOf(note['label']);
+                            if(indexPos >= 0) {
+                                availableLabels.splice(indexPos, 1);
+                            }
+
                             article.authors[authIdx].author_notes.push({
                                'id': note['id'],
                                'label': note['label']
@@ -76,6 +79,12 @@ Meteor.article = {
                         }
                     }
                 }
+            }
+        }
+        for(authIdx=0; authIdx < article.authors.length; authIdx++) {
+            if(article.authors[authIdx].equal_contrib == true) {
+                article.equal_contribs = availableLabels[0];
+                article.authors[authIdx].equal_contrib = availableLabels[0];
             }
         }
 

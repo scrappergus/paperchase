@@ -75,7 +75,7 @@
                     <span>{{label}}<span class="comma">,</span></span>
                     {{/each}}
                     {{#if equal_contrib}}
-                    <span>*<span class="comma">,</span></span>
+                    <span>{{equal_contrib}}<span class="comma">,</span></span>
                     {{/if}}
                 </sup>
                 {{/if}}
@@ -86,7 +86,7 @@
         {{/each}}
     </h2>
     {{#if equal_contribs}}
-    <span>* Contributed equally to this work.</span>
+    <span>{{equal_contribs}} Contributed equally to this work.</span>
     {{/if}}
 
     {{#if author_notes}}
