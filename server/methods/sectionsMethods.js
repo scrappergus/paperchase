@@ -6,7 +6,7 @@ Meteor.methods({
         // get assets
         for(var i=0 ; i< articles.length ; i++){
             // console.log(articles[i]['_id']);
-            articles[i]['assets'] = Meteor.call('availableAssests', articles[i]['_id']);
+            articles[i].assets = Meteor.call('availableAssests', articles[i]['_id']);
             if(i == parseInt(articles.length - 1)){
                 // console.log(articles);
                 articles = Meteor.organize.groupArticles(articles);
@@ -14,8 +14,5 @@ Meteor.methods({
             }
         }
         return fut.wait();
-    },
-    updateSection: function(mongoId, updateObj){
-        return sections.update({_id : mongoId} , {$set: updateObj});
     }
 });
