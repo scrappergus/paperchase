@@ -107,17 +107,18 @@ Meteor.methods({
                     }
                 }
 
-                // Title
+                // Title and Source
                 // --------
                 for(var i=0; i<related.childNodes.length; i++){
                     if(related.childNodes[i].localName === 'article-title'){
-                        // console.log(related.childNodes[i].childNodes);
                         if(related.childNodes[i].childNodes && related.childNodes[i].childNodes[0].nodeValue){
                            relatedArticle.title =  Meteor.clean.cleanString(related.childNodes[i].childNodes[0].nodeValue);
                         }
-                        // relatedTitle = Meteor.fullText.convertContent(related.childNodes[i].childNodes[0].childNodes);
-                        // console.log(relatedTitle);
-                        // relatedArticle.title = related.childNodes[i].nodeValue;
+                    }
+                    if(related.childNodes[i].localName === 'source'){
+                        if(related.childNodes[i].childNodes && related.childNodes[i].childNodes[0].nodeValue){
+                           relatedArticle.source =  Meteor.clean.cleanString(related.childNodes[i].childNodes[0].nodeValue);
+                        }
                     }
                 }
 
