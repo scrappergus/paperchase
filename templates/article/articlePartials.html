@@ -225,7 +225,8 @@
         {{#each related}}
         <p>
         {{#if equals related_article_type 'commentary-article'}}Commentary on: {{/if}}
-        {{#if title}}{{title}}. {{/if}}
+        {{#if title}}{{{title}}}. {{/if}}
+        {{#if source}}{{source}}. {{/if}}
         {{#if pmid}}[<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}/" target="_BLANK">PubMed</a>]{{/if}}
         </p>
         {{/each}}

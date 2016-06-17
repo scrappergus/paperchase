@@ -113,6 +113,8 @@ Meteor.methods({
                     if(related.childNodes[i].localName === 'article-title'){
                         if(related.childNodes[i].childNodes && related.childNodes[i].childNodes[0].nodeValue){
                            relatedArticle.title =  Meteor.clean.cleanString(related.childNodes[i].childNodes[0].nodeValue);
+                        }else{
+                            relatedArticle.title =  Meteor.fullText.convertContent(related.childNodes[i]);
                         }
                     }
                     if(related.childNodes[i].localName === 'source'){
