@@ -249,8 +249,9 @@
         <h6 class="card-title">Supplemental Files</h6>
         <ul>
             {{#each supplemental}}
-                {{#if label}}<li><a href="{{url}}" class="supplemental"><span class="icon icon-download"></span> {{label}}</a></li>
-                {{else}}<li><a href="{{url}}" class="supplemental"><span class="icon icon-download"></span> Supplemental File</a></li>{{/if}}
+                {{#if url}}
+                <li><a href="{{url}}" class="supplemental"><span class="icon icon-download"></span> {{#if label}}{{label}}{{else}} Supplemental File{{/if}}</a></li>
+                {{/if}}
             {{/each}}
         </ul>
     </div>

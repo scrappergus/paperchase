@@ -486,7 +486,7 @@ Meteor.fullText = {
         return figObj;
     },
     convertSupplement: function(node,files,mongoId){
-        // console.log('..convertFigure',figures);
+        // console.log('..convertSupplement',files);
         var suppAssetsUrl = journalConfig.findOne().assets;
         var suppObj;
 
@@ -498,7 +498,9 @@ Meteor.fullText = {
                 // match to db file info
                 if(files.supplemental) {
                     for(var f = 0 ; f < files.supplemental.length ; f++){
-                        suppObj.url = suppAssetsUrl + 'supplemental_materials/' + files.supplemental[f].file;
+                        if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase() && files.supplemental[f].url){
+                            suppObj.url = files.supplemental[f].url;
+                        }
                     }
                 }
             }
