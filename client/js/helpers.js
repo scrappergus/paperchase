@@ -211,10 +211,6 @@ if (Meteor.isClient) {
         return result;
     });
 
-    Template.registerHelper('pluralize', function(str){
-        return Meteor.general.pluralize(str);
-    });
-
     Template.registerHelper('wrapInParagraphTag', function(str){
         if(str.indexOf('<p>') === -1){
             return '<p>' + str + '</p>';

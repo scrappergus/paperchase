@@ -188,7 +188,7 @@ Template.ArticleSidebar.helpers({
                     if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
                         sections.push( { title: articleHeaders[i].title } );
                     }
-                }            
+                }
             }
 
             if (Session.get('article-text').glossary) {
@@ -211,7 +211,7 @@ Template.ArticleSidebar.helpers({
                 sections.push( { title: 'References'} );
             }
 
-            return sections;            
+            return sections;
         }
     }
 });
@@ -237,15 +237,21 @@ Template.Issue.helpers({
         return Session.get('issue');
     },
     items: function() {
-        var articles = Session.get('issue').articles;
-        var sections = [];
-        var sectionName;
+        var articles,
+            articleTypes,
+            sections = [];
 
-        for ( i = 0; i < articles.length; i++ ) {
-            if ( articles[i].start_group && articles[i].article_type.name) {
-                sections.push( { title: Meteor.general.pluralize(articles[i].article_type.name) } );
+        articles = Session.get('issue').articles;
+        articleTypes = Meteor.organize.articleTypesById(articles);
+
+        for( var type_id in articleTypes ){
+            if(articleTypes[type_id].count > 0){
+                sections.push( { title: articleTypes[type_id].plural } );
+            }else{
+                sections.push( { title: articleTypes[type_id].name } );
             }
         }
+
         return sections;
     }
 });

@@ -410,8 +410,9 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var sorted  = sorters.findOne({'name':'advance'});
+                // console.log('sorted',sorted.ordered);
                 return {
-                    advance : sorted['articles']
+                    articles : sorted.ordered
                 }
             }
         }
@@ -538,7 +539,6 @@ if (Meteor.isClient) {
         }
     });
 
-
     Router.route('/contact', {
         name: 'Contact',
         layoutTemplate: 'Visitor',
@@ -610,7 +610,6 @@ if (Meteor.isClient) {
                     Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
                         if(error){
                             console.error('ERROR - getIssueAndFiles',error);
-                            console.log(error);
                         }else if(result){
                             Session.set('issue',result);
                         }

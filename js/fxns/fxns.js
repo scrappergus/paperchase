@@ -22,20 +22,55 @@ Meteor.organize = {
         return issueArticles;
     },
     groupArticles: function(articles) {
-        var grouped = [];
+        // organize for issue and add file links
+        // console.log('groupArticles');
+        var grouped = [],
+            types = {};
+
+        types = Meteor.organize.articleTypesById(articles);
+
         for(var i = 0 ; i < articles.length ; i++){
+            // type organization
+            // ---------
             var type = ''; //for articles without a type
-            if(articles[i]['article_type']){
-                type = articles[i]['article_type']['short_name'];
+            if(articles[i].article_type){
+                type = articles[i].article_type.short_name;
             }
 
             if(!grouped[type]){
                 grouped[type] = [];
-                articles[i]['start_group'] = true;
+                articles[i].start_group = true;
+                if(articles[i].article_type._id && types[articles[i].article_type._id].count > 0){
+                    articles[i].article_type.pluralize = true;
+                }
             }
-            //grouped[type].push(articles[i]);
+
+            // files
+            // ---------
+            if(articles[i].files){
+                articles[i].files = Meteor.article.linkFiles(articles[i].files, articles[i]._id);
+            }
+
+            if(articles[i].ids.doi && _.isString(articles[i].ids.doi)) {
+                articles[i].ids.doi = articles[i].ids.doi.replace(/http:\/\/dx\.doi\.org\//,""); // TODO: remove link part from DB
+            }
         }
         return articles;
+    },
+    articleTypesById: function(articles) {
+        var result = {};
+        articles.forEach(function(article){
+            if(article.article_type._id && !result[article.article_type._id]){
+                result[article.article_type._id] = article.article_type;
+                result[article.article_type._id].count = 1;
+                if(!result[article.article_type._id].plural){
+                    result[article.article_type._id].plural = result[article.article_type._id].name;
+                }
+            }else if(article.article_type._id){
+                result[article.article_type._id].count++;
+            }
+        });
+        return result;
     }
 }
 
@@ -94,23 +129,25 @@ Meteor.article = {
         return article;
     },
     linkFiles:function(files,articleMongoId){
-        if(files === undefined) {
-            files = {};
-        }
+        if(journalConfig.findOne({})){
+            if(files === undefined) {
+                files = {};
+            }
 
-        for(var file in files){
-            if(files[file]) {
-                if(files[file].file){
-                    files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
-                }else if(file === 'supplemental' || file === 'figures'){
-                    for(var f in files[file]){
-                        files[file][f].url =  journalConfig.findOne({}).assets + 'supplemental_materials/' + files[file][f].file;
+            for(var file in files){
+                if(files[file]) {
+                    if(files[file].file){
+                        files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
+                    }else if(file === 'supplemental' || file === 'figures'){
+                        for(var f in files[file]){
+                            files[file][f].url =  journalConfig.findOne({}).assets + 'supplemental_materials/' + files[file][f].file;
+                        }
                     }
                 }
             }
+            files.journal = journalConfig.findOne({}).journal.short_name;
+            files._id = articleMongoId;            
         }
-        files.journal = journalConfig.findOne({}).journal.short_name;
-        files._id = articleMongoId;
         return files;
     },
     pageTitle: function(articleId){
@@ -779,21 +816,6 @@ Meteor.general = {
         }
 
         return string;
-    },
-    pluralize: function(str) {
-        if (['Review',
-             'Editorial',
-             'Research Article',
-             'Research Perspective',
-             'Research Paper'].indexOf(str) >= 0) {
-              return str + 's';
-        }
-
-        if (str == 'Letter to the Editor') {
-            return 'Letters to the Editor';
-        }
-
-        return str;
     },
     affix: function() {
         var sticky = $('.fixed-scroll-card');

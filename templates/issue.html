@@ -25,9 +25,9 @@
             <!-- Sidebar -->
             <div class="page-sidebar col s12 m12 l4">
                 <div class="issue-scroller">
-                    {{#with prevIssue}} <span class="prev"><a href="/issue/{{vi}}"><span class="icon icon-angle-left"></span> Prev {{param}}</a></span> {{/with}}
+                    {{#with prevIssue}} <span class="prev issue-change"><a href="/issue/{{vi}}"><span class="icon icon-angle-left"></span> Prev {{param}}</a></span> {{/with}}
                     <span class="current">Volume {{volume}}, Issue {{issue}}</span>
-                    {{#with nextIssue}}  <span class="next"><a href="/issue/{{vi}}">Next <span class="icon icon-angle-right"></span></a></span> {{/with}}
+                    {{#with nextIssue}}  <span class="next issue-change"><a href="/issue/{{vi}}">Next <span class="icon icon-angle-right"></span></a></span> {{/with}}
                 </div>
                 {{> scrollspyCard title="Explore This Issue" items=items}}
             </div>
@@ -46,7 +46,9 @@
                 <!-- Section Heading -->
                 {{#if start_group}}
                     {{#if article_type.name}}
-                        <h4 id="{{#with pluralize article_type.name}}{{convertToID this}}{{/with}}" class="blue-divider">{{pluralize article_type.name}}</h4>
+                        {{#with article_type}}
+                        <h4 id="{{#if pluralize}}{{convertToID plural}}{{else}}{{convertToID name}}{{/if}}" class="blue-divider">{{#if pluralize}}{{plural}}{{else}}{{name}}{{/if}}</h4>
+                        {{/with}}
                     {{/if}}
                 {{/if}}
 

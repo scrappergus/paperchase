@@ -24,47 +24,12 @@ sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
     var order = f.order;
     if(f.name == 'advance'){
-
-        // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
-       // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
-
-        var articlesList = articles.find({'_id':{'$in':order}}).fetch();
-        f.articles = [];
-
-        var last_section;
-        for(var i = 0 ; i < order.length ; i++){
-            for(var a = 0 ; a < articlesList.length ; a++){
-                if(articlesList[a]['_id'] === order[i]){
-                    if(articlesList[a]['section_id']) {
-                        var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
-                        if(section !== undefined) {
-                            articlesList[a]['section_name'] = section['section_name'];
-                        }
-                    }
-                    else if(articlesList[a]['article_type']) {
-                        articlesList[a]['section_name'] = articlesList[a]['article_type']['name'];
-                    }
-
-                    if(i==0) {
-                        articlesList[a]['section_start'] = true;
-                    }
-                    else if(last_section != articlesList[a]['section_name']){
-                        articlesList[a]['section_start'] = true;
-                    }
-
-
-                    if(articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
-                        assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
-                        articlesList[a]['files']['pdf']['url'] = assets +"pdf/"+ articlesList[a]['files']['pdf']['file'];
-                    }
-
-                    last_section = articlesList[a]['section_name'];
-                    f.articles.push(articlesList[a]);
-                }
-            }
-        }
-
-
+        var unordered,
+            ordered;
+        unordered = articles.find({'_id':{'$in':order}}).fetch();
+        ordered = Meteor.sorter.sort(unordered,order);
+        ordered = Meteor.organize.groupArticles(ordered);
+        f.ordered = ordered;
     }else if(f.name == 'ethics'){
         f.ordered = [];
         var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
