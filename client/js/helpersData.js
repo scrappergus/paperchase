@@ -245,7 +245,7 @@ Template.Issue.helpers({
         articleTypes = Meteor.organize.articleTypesById(articles);
 
         for( var type_id in articleTypes ){
-            if(articleTypes[type_id].count > 0){
+            if(articleTypes[type_id].count > 1){
                 sections.push( { title: articleTypes[type_id].plural } );
             }else{
                 sections.push( { title: articleTypes[type_id].name } );
