@@ -61,7 +61,8 @@ h3 {
   color: lighten($cello, 5%);
   font-weight: 700;
   margin-bottom: 0;
-
+}
+h3:not(#abstract) {
   + p { margin: 5px 0 33px; }
 }
 
