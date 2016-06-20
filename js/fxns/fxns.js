@@ -40,7 +40,7 @@ Meteor.organize = {
             if(!grouped[type]){
                 grouped[type] = [];
                 articles[i].start_group = true;
-                if(articles[i].article_type._id && types[articles[i].article_type._id].count > 0){
+                if(articles[i].article_type._id && types[articles[i].article_type._id].count > 1){
                     articles[i].article_type.pluralize = true;
                 }
             }
@@ -146,7 +146,7 @@ Meteor.article = {
                 }
             }
             files.journal = journalConfig.findOne({}).journal.short_name;
-            files._id = articleMongoId;            
+            files._id = articleMongoId;
         }
         return files;
     },
