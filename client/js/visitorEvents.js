@@ -131,9 +131,6 @@ Template.SectionPapers.events({
 Template.Article.events({
     'click .modal-trigger': function(e) {
         Meteor.article.subscribeModal(e);
-    },
-    'click .download-pdf': function(e) {
-        Meteor.article.downloadPdf(e);
     }
 });
 Template.ArticleButtons.events({
