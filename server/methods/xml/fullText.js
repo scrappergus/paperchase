@@ -365,7 +365,7 @@ Meteor.fullText = {
                     var nodeAnchor = '',
                         nValue = '';
                     // console.log('cc = ' + cc );
-                    if(childNode.localName != null && childNode.localName != 'xref' ){
+                    if(childNode.localName != null && childNode.localName != 'xref'  && childNode.localName != 'ext-link'){
                         content += '<' + childNode.localName + '>';
                     }
 
@@ -373,17 +373,16 @@ Meteor.fullText = {
                     // --------
                     if(childNode.localName === 'xref'){
                         content += Meteor.fullText.linkXref(childNode);
-                    }else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
-                        // console.log('else if 1');
+                    } else if(childNode.localName === 'ext-link'){
+                        content += Meteor.fullText.linkExtLink(childNode);
+                    } else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                         //plain text or external link
                         if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
                             content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
                         }else if(childNode.nodeValue){
-                            // console.log('-',childNode.nodeValue,'-');
                             content += childNode.nodeValue;
                         }
                     }else if(childNode.childNodes){
-
                         content += Meteor.fullText.convertContent(childNode);
                     }
 
@@ -418,6 +417,23 @@ Meteor.fullText = {
             content += '<a href="#' + nodeAnchor + '"  class="anchor">';
             content += nValue;
             content += '</a>';
+        }
+        return content;
+    },
+    linkExtLink: function(linkNode){
+        var content = '',
+            attributes;
+        if(linkNode.childNodes[0]){
+            nValue = linkNode.childNodes[0].nodeValue;
+            if(nValue == null){
+              nValue = Meteor.fullText.convertContent(linkNode);
+            }
+            attributes = Meteor.fullText.traverseAttributes(linkNode.attributes);
+            if(attributes && attributes.href){
+                content += '<a href="' + attributes.href + '"  target="_BLANK">';
+                content += nValue;
+                content += '</a>';
+            }
         }
         return content;
     },
