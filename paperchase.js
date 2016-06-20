@@ -626,12 +626,7 @@ if (Meteor.isClient) {
     Router.route('/article/:_id', {
          name: 'Article',
          parent: function() {
-             var data = this.data();
-             if(data && data.article && data.article.advance === true) {
-                 return "Advance";
-             }else{
-                 return "Issue";
-             }
+            return Meteor.article.breadcrumbParent(this.data());
          },
          layoutTemplate: 'Visitor',
          title: function() {
@@ -677,14 +672,7 @@ if (Meteor.isClient) {
     Router.route('/article/:_id/text', {
         name: 'ArticleText',
         parent: function() {
-            if (this.ready()) {
-                var data = this.data();
-                if(data && data.article && data.article.advance === true) {
-                    return 'Advance';
-                }else{
-                    return 'Issue';
-                }
-            }
+            return Meteor.article.breadcrumbParent(this.data());
         },
         layoutTemplate: 'Visitor',
         onBeforeAction: function() {
