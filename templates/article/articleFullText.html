@@ -171,9 +171,17 @@
             {{#if equals contentType 'supplement'}}
             <!-- Supplemental -->
                 {{#with content}}
-                {{#if label}}<a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> {{label}}</a>
-                {{else}}<a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> Supplemental File</a>{{/if}}
-                <br />
+
+                {{#if title}}
+                <h3 class="article-header-2">{{{title}}}</h3>
+                {{/if}}
+
+                <h3 class="article-header-3"><a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> {{#if label}}{{label}}{{else}}Supplemental File{{/if}}</a></h3>
+
+                {{#if caption}}
+                <p>{{{caption}}}</p>
+                {{/if}}
+
                 {{/with}}
             {{/if}}
         {{/each}}
