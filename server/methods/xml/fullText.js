@@ -163,7 +163,7 @@ Meteor.methods({
                 if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'conflict'){
                     footObj.title = 'Conflict of Interests Statement';
                 }else if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'con'){
-                    footObj.title = 'Authors\' contributions';
+                    footObj.title = 'Author contributions';
                 }else if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'supported-by'){
                     footObj.title = 'Funding';
                 }
@@ -182,7 +182,7 @@ Meteor.methods({
                     if(foot){
                         if(footObj.title === 'Conflict of Interests Statement' && foot.indexOf('Conflict of interest statement') != -1){
                             // do not want to add 'Conflict of interest statement' to footnote content because this will be added via attribute fn-type check above
-                        }else if(footObj.title === 'Authors\' contributions' && foot.indexOf('Authors\' contributions') != -1){
+                        }else if(footObj.title === 'Author contributions' && foot.indexOf('Authors\' contributions') != -1 || foot.indexOf('Author contributions') != -1){
                             // do not want to add 'Authors\' contributions' to footnote content because this will be added via attribute fn-type check above
                         }else if(footObj.title === 'Funding' && foot.indexOf('Funding') != -1){
                             // do not want to add 'Funding' to footnote content because this will be added via attribute fn-type check above
