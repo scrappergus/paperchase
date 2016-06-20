@@ -337,7 +337,6 @@ Meteor.fullText = {
         var sectionPartObject = {};
         var content,
             contentType;
-
         // Different processing for different node types
         if(sec.localName === 'table-wrap'){
             // get attributes
@@ -377,6 +376,25 @@ Meteor.fullText = {
         var sectionIdPieces = sectionId.split('_');
         return sectionIdPieces.length;
     },
+    listType: function(attributes, node) {
+        var type = '';
+        if( attributes && attributes['list-type'] && attributes['list-type']==='order' ){
+            type = '<ol>';
+        }else if( attributes && attributes['list-type'] && attributes['list-type']==='bullet' ){
+            type = '<ul>';
+        }else if( attributes && attributes['list-type'] && attributes['list-type']==='alpha-lower' ){
+            type = '<ol type="a">';
+        }else if( attributes && attributes['list-type'] && attributes['list-type']==='alpha-upper' ){
+            type = '<ol type="A">';
+        }else if( attributes && attributes['list-type'] && attributes['list-type']==='roman-lower' ){
+            type = '<ol type="i">';
+        }else if( attributes && attributes['list-type'] && attributes['list-type']==='roman-upper' ){
+            type = '<ol type="I">';
+        }else{
+            type = '<ul>';
+        }
+        return type;
+    },
     convertContent: function(node){
         // console.log('convertContent');
         // need to include figures so that we can fill in src within the content
@@ -390,10 +408,20 @@ Meteor.fullText = {
                 var childNode = node.childNodes[cc];
                 if(childNode){
                     var nodeAnchor = '',
-                        nValue = '';
+                        nValue = '',
+                        nAttr;
+
+                    if(childNode.attributes){
+                        nAttr = Meteor.fullText.traverseAttributes(childNode.attributes);
+                    }
+
                     // console.log('cc = ' + cc );
-                    if(childNode.localName != null && childNode.localName != 'xref'  && childNode.localName != 'ext-link'){
+                    if(childNode.localName != null && childNode.localName != 'xref' && childNode.localName != 'ext-link' && childNode.localName != 'list' && childNode.localName != 'list-item'){
                         content += '<' + childNode.localName + '>';
+                    }else if(childNode.localName === 'list'){
+                        content += Meteor.fullText.listType(nAttr,childNode);
+                    }else if(childNode.localName === 'list-item'){
+                        content += '<li>';
                     }
 
                     // Special tags - xref
@@ -413,8 +441,16 @@ Meteor.fullText = {
                         content += Meteor.fullText.convertContent(childNode);
                     }
 
-                    if(childNode.localName != null && childNode.localName != 'xref' ){
+                    if(childNode.localName != null && childNode.localName != 'xref' && childNode.localName != 'ext-link' && childNode.localName != 'list' && childNode.localName != 'list-item'){
                         content += '</' + childNode.localName + '>';
+                    }else if(childNode.localName === 'list'){
+                        if( nAttr && nAttr['list-type'] && nAttr['list-type']==='order' || nAttr['list-type']==='alpha-lower' || nAttr['list-type']==='alpha-upper' || nAttr['list-type']==='roman-lower' || nAttr['list-type']==='roman-upper' ){
+                            type = '</ol>';
+                        }else if( attributes && attributes['list-type'] ){
+                            content += '</ul>';
+                        }else if(childNode.localName === 'list-item'){
+                            content += '</li>';
+                        }
                     }
                 }
 
