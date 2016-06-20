@@ -606,7 +606,7 @@ if (Meteor.isClient) {
             var pieces = Meteor.issue.urlPieces(this.params.vi);
             // TODO: add redirect if no issue
             if(pieces && pieces.volume){
-                if( Session.get('issue') && Session.get('issue').volume != pieces.volume && Session.get('issue').issue != pieces.issue || !Session.get('issue')){
+                if( Session.get('issue') && Session.get('issue').issue != pieces.issue || Session.get('issue') && Session.get('issue').volume != pieces.volume || !Session.get('issue')){
                     Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
                         if(error){
                             console.error('ERROR - getIssueAndFiles',error);
