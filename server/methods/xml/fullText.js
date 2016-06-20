@@ -149,29 +149,47 @@ Meteor.methods({
 
         // Footnotes
         // ---------
-        var footnotes = xpath.select('//fn-group', doc);
+        var footnotes = xpath.select('//back/fn-group/fn', doc);
         if(footnotes){
             articleObject.footnotes = [];
+            var footnotesWithoutTitle = 0;
             for(var i=0; i<footnotes.length; i++){
-                var footObj = {};
+                var footObj = {},
+                    attributes;
+                footObj.content = [];
 
-                for(var c=0; c< footnotes[i].childNodes.length; c++){
-                    var foot = Meteor.fullText.convertContent(footnotes[i].childNodes[c]);
+                // Footnote title via fn-type attribute
+                attributes = Meteor.fullText.traverseAttributes(footnotes[i].attributes);
+                if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'conflict'){
+                    footObj.title = 'Conflict of Interests Statement';
+                }else if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'con'){
+                    footObj.title = 'Authors\' contributions';
+                }
 
-                    if(foot){
-                        if(footnotes[i].childNodes[c].localName){
-                            footObj[footnotes[i].childNodes[c].localName] = foot;
-                        }
+                if(!footObj.title){
+                    footnotesWithoutTitle++;
+                    footObj.title = 'Footnote';
+                    if(footnotesWithoutTitle > 1){
+                        footObj.title += ' ' + footnotesWithoutTitle; // need to keep title unique for anchor tag
                     }
                 }
 
-                if(Object.keys(footObj).length !=0 ){
-                    if(!footObj.title && footObj.fn){
-                        var conflictTestPattern = new RegExp(/conflict(s)* of interest/i);
-                        if(conflictTestPattern){
-                            footObj.title = 'Conflict of Interests Statement';
+                // Footnote content
+                for(var c=0; c<footnotes[i].childNodes.length; c++){
+                    var foot = Meteor.fullText.convertContent(footnotes[i].childNodes[c]);
+                    if(foot){
+                        if(footObj.title === 'Conflict of Interests Statement' && foot.indexOf('Conflict of interest statement') != -1){
+                            // do not want to add 'Conflict of interest statement' to footnote content because this will be added via attribute fn-type check above
+                        }else if(footObj.title === 'Authors\' contributions' && foot.indexOf('Authors\' contributions') != -1){
+                            // do not want to add 'Authors\' contributions' to footnote content because this will be added via attribute fn-type check above
+                        }else{
+                            footObj.content.push(foot);
                         }
+
                     }
+                }
+
+                if(Object.keys(footObj).length!=0){
                     articleObject.footnotes.push(footObj);
                 }
             }
