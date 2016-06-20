@@ -325,6 +325,11 @@ Meteor.fullText = {
                 sectionIdObject.sectionId = sectionId;
             }
         }
+
+        if(!sectionIdObject.sectionId && section.parentNode && section.parentNode.localName && section.parentNode.localName === 'body'){
+            sectionIdObject.headerLevel = 1;
+        }
+
         return sectionIdObject;
     },
     sectionPartsToJson: function(sec,files,mongoId){
