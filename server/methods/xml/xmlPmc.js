@@ -528,7 +528,7 @@ Meteor.xmlPmc = {
                         // title
                         // ------------
                         if(n.localName == 'title'){
-                            supp.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
+                            supp.title =  Meteor.fullText.convertContent(n).replace(/^\s+|\s+$/g, '');
                         }
                         // caption
                         // ------------

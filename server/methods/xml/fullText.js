@@ -490,7 +490,6 @@ Meteor.fullText = {
         var suppAssetsUrl = journalConfig.findOne().assets;
         var suppObj;
 
-
         // get the figure id, label, title, caption
         //------------------
         Meteor.xmlPmc.supplemental(node,function(suppInfo){
@@ -499,9 +498,7 @@ Meteor.fullText = {
                 // match to db file info
                 if(files.supplemental) {
                     for(var f = 0 ; f < files.supplemental.length ; f++){
-                        //                    if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase()){
                         suppObj.url = suppAssetsUrl + 'supplemental_materials/' + files.supplemental[f].file;
-                        //                    }
                     }
                 }
             }
