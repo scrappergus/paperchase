@@ -32,7 +32,7 @@ Meteor.methods({
                 articleJson = articleJson['pmc-articleset'].article[0];
                 Meteor.call('pmcArticleToSchema', xmlString, articleJson,function(e,r){ // pass XML string (for title) AND JSON
                     if(e){
-                        console.error(e);
+                        console.error('pmcArticleToSchema',e);
                         fut.throw(e);
                     }else if(r){
                         fut.return(r);
@@ -49,7 +49,6 @@ Meteor.methods({
 
         var journalMeta = articleJson.front[0]['journal-meta'][0];
         var article = articleJson.front[0]['article-meta'][0];
-
 
         var articleProcessed = {};
 
@@ -151,7 +150,7 @@ Meteor.methods({
         // -----------
         articleProcessed.author_notes = [];
         if(article['author-notes'] && article['author-notes'][0].fn){
-            article['author-notes'][0]['fn'].forEach(function(note){
+            article['author-notes'][0].fn.forEach(function(note){
                 var noteObj = {};
                 if(note['$'].id){
                     noteObj.id = note['$'].id;
@@ -297,13 +296,13 @@ Meteor.xmlPmc = {
             }
 
             if(authorsList[i].name){
-                if(authorsList[i].name[0]['given-names']){
+                if(authorsList[i].name[0]['given-names'] && authorsList[i].name[0]['given-names'][0]){
                     author.name_first = authorsList[i].name[0]['given-names'][0];
                 }
-                if(authorsList[i].name[0].surname[0]){
+                if(authorsList[i].name[0].surname && authorsList[i].name[0].surname[0]){
                     author.name_last = authorsList[i].name[0].surname[0];
                 }
-                if(authorsList[i].name[0].suffix[0]){
+                if(authorsList[i].name[0].suffix && authorsList[i].name[0].suffix[0]){
                     author.name_suffix = authorsList[i].name[0].suffix[0];
                 }
             }
