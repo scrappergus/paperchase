@@ -807,6 +807,7 @@ if (Meteor.isClient) {
                 Router.go('AdminDashboard');
             }else{
                 if(!Session.get('article-form') || Session.get('article-form')._id != this.params._id){
+                    Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticle');
                     Meteor.articleFiles.verifyXml(this.params._id);
                 }
                 this.next();
