@@ -94,8 +94,16 @@ Meteor.article = {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
         }
 
+        // Authors
+        // ---------------
         var availableLabels = ['*','#'];
         for(authIdx=0; authIdx < article.authors.length; authIdx++) {
+            // If no affiliation_numbers saved for author and there is only 1 affiliation
+            if(!article.authors[authIdx].affiliations_numbers || article.authors[authIdx].affiliations_numbers.length === 0  && article.affiliations.length === 1) {
+                article.authors[authIdx].affiliations_numbers = [0];
+            }
+
+            // Author Notes
             if(article.authors[authIdx].author_notes_ids && article.author_notes) {
                 article.authors[authIdx].author_notes = [];
                 for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
@@ -123,9 +131,6 @@ Meteor.article = {
             }
         }
 
-        if(article.affiliations.length == 1) {
-            article.singleAffiliation = true;
-        }
         return article;
     },
     linkFiles:function(files,articleMongoId){

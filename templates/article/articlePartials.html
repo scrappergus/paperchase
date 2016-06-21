@@ -62,11 +62,7 @@
         {{#each authors }}
             <span class="author">
                 {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}
-                {{#if ../singleAffiliation}}
-                <sup class="author-affiliations">
-                    <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">1</a></span>
-                </sup>
-                {{else}}
+
                 <sup class="author-affiliations">
                     {{#each affiliations_numbers}}
                     <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
@@ -78,8 +74,6 @@
                     <span>{{equal_contrib}}<span class="comma">,</span></span>
                     {{/if}}
                 </sup>
-                {{/if}}
-
 
                 <span class="author-comma">,</span>
             </span>
