@@ -325,12 +325,15 @@ Meteor.adminArticleFormGet = {
         $('.author-row').each(function(idx,obj){
             var nameFirst,
                 nameMiddle,
-                nameLast;
+                nameLast,
+                nameSuffix,
+                equalContrib;
 
             nameFirst = $(this).find('input[name="name_first"]').val();
             nameMiddle = $(this).find('input[name="name_middle"]').val();
             nameLast = $(this).find('input[name="name_last"]').val();
-            equal_contrib = $(this).find('input[name="equal_contrib"]').prop('checked');
+            nameSuffix = $(this).find('input[name="name_suffix"]').val();
+            equalContrib = $(this).find('input[name="equal_contrib"]').prop('checked');
 
             nameFirst = Meteor.clean.cleanString(nameFirst);
             nameMiddle = Meteor.clean.cleanString(nameMiddle);
@@ -340,7 +343,8 @@ Meteor.adminArticleFormGet = {
                 'name_first' : nameFirst,
                 'name_middle' : nameMiddle,
                 'name_last' : nameLast,
-                'equal_contrib' : equal_contrib,
+                'name_suffix' : nameSuffix,
+                'equal_contrib' : equalContrib,
                 'ids' : {},
                 'affiliations_numbers' : [],
                 'author_notes_ids' : []

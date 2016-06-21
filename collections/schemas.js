@@ -26,6 +26,7 @@ articles.schema = new SimpleSchema({
     'authors.$.name_first': {type: String, optional: true, label: 'First name'},
     'authors.$.name_middle': {type: String, optional: true, label: 'Middle name'},
     'authors.$.name_last': {type: String, optional: true, label: 'Last name'},
+    'authors.$.name_suffix': {type: String, optional: true, label: 'Suffix'},
     'authors.$.affiliations_numbers': {type: [Number], optional: true},
     'authors.$.author_notes_ids': {type: [String], optional: true},
     'authors.$.ids': {type: Object, optional: true},
@@ -233,20 +234,20 @@ newsList.schema = new SimpleSchema({
 // roles
 // sections
 sections.schema = new SimpleSchema({
-    name: {type: String, optional: true}, 
+    name: {type: String, optional: true},
     display: {type: Boolean, optional: true},
-    short_name: {type: String, optional: true}, 
+    short_name: {type: String, optional: true},
     dash_name: {type: String, optional: true}
 });
 // sorters
 sorters.schema = new SimpleSchema({
-    name: {type: String, optional: true}, 
+    name: {type: String, optional: true},
     order: {type: [String], optional: true}
 });
 // users
 // volumes
 volumes.schema = new SimpleSchema({
-    volume: {type: Number, optional: true}, 
+    volume: {type: Number, optional: true},
     issues: {type: [String], optional: true}
 });
 

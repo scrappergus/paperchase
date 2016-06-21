@@ -136,9 +136,6 @@ Meteor.methods({
             });
         }
 
-        // AUTHOR NOTES
-        // -----------
-
         // CORRESPONDING AUTHOR
         // -----------
         articleProcessed.correspondence = []; //can have multiple corresp elements, for ex: pmid 26678252
@@ -306,6 +303,9 @@ Meteor.xmlPmc = {
                 if(authorsList[i].name[0].surname[0]){
                     author.name_last = authorsList[i].name[0].surname[0];
                 }
+                if(authorsList[i].name[0].suffix[0]){
+                    author.name_suffix = authorsList[i].name[0].suffix[0];
+                }
             }
 
             // Author affiliations and Author Notes
@@ -322,7 +322,6 @@ Meteor.xmlPmc = {
                     }
                 }
             }
-
             authors.push(author);
         }
         cb(authors);

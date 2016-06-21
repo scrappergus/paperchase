@@ -445,17 +445,21 @@
                                     <div class="col s12 m1 center-align">
                                         {{>AdminDragIcon}}
                                     </div>
-                                    <div class="input-field col s12 m3">
+                                    <div class="input-field col s12 m2">
                                         <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first_{{@index}}">
                                         <label for="name_first_{{@index}}" class="{{#if name_first}}active{{/if}}">First Name</label>
                                     </div>
-                                    <div class="input-field col s12 m3">
+                                    <div class="input-field col s12 m2">
                                         <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle_{{@index}}">
                                         <label for="name_middle_{{@index}}" class="{{#if name_middle}}active{{/if}}">Middle Name</label>
                                     </div>
-                                    <div class="input-field col s12 m3">
+                                    <div class="input-field col s12 m2">
                                         <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
                                         <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
+                                    </div>
+                                    <div class="input-field col s12 m2">
+                                        <input name="name_suffix" class="author" type="text" value="{{suffix}}" id="name_suffix_{{@index}}">
+                                        <label for="name_suffix_{{@index}}" class="{{#if suffix}}active{{/if}}">Suffix</label>
                                     </div>
 
                                     <div class="col s12 m2">
@@ -469,7 +473,7 @@
                                         {{/each}}
                                     </div>
 
-                                    <div class="col s12 m2">
+                                    <div class="col s12 m1">
                                         <label>Author Notes</label>
                                         <div class="clearfix"></div>
                                         {{#each author_notes_list}}
@@ -480,12 +484,10 @@
                                         {{/each}}
                                     </div>
 
-
-                                    <div class="col s12 m2">
+                                    <div class="col s12 m1">
                                         <input name="equal_contrib" class="author-equal-contrib" type="checkbox" checked="{{equal_contrib}}" id="equal_contrib_{{@index}}">
                                         <label for="equal_contrib_{{@index}}" class="{{#if name_last}}active{{/if}}">Equal Contributor</label>
                                     </div>
-
 
                                     <div class="hide">
                                         {{#each arrayify ids}}
