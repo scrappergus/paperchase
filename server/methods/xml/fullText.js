@@ -276,7 +276,7 @@ Meteor.methods({
 Meteor.fullText = {
     sectionToJson: function(section,files, mongoId){
         // XML processing of part of the content, <sec>
-        // console.log('...sectionToJson',section);
+        // console.log('...sectionToJson');
         var sectionObject = {};
         sectionObject.content = [];
         for(var c = 0 ; c < section.childNodes.length ; c++){
@@ -311,6 +311,7 @@ Meteor.fullText = {
                 }
             }
         }
+        // console.log('sectionObject',sectionObject);
         return sectionObject;
     },
     sectionId: function(section){
@@ -446,7 +447,7 @@ Meteor.fullText = {
                     }else if(childNode.localName === 'list'){
                         if( nAttr && nAttr['list-type'] && nAttr['list-type']==='order' || nAttr['list-type']==='alpha-lower' || nAttr['list-type']==='alpha-upper' || nAttr['list-type']==='roman-lower' || nAttr['list-type']==='roman-upper' ){
                             type = '</ol>';
-                        }else if( attributes && attributes['list-type'] ){
+                        }else if( nAttr && nAttr['list-type'] ){
                             content += '</ul>';
                         }else if(childNode.localName === 'list-item'){
                             content += '</li>';
