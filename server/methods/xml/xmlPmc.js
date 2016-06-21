@@ -153,25 +153,24 @@ Meteor.methods({
         // AUTHOR NOTES FOOTNOTES
         // -----------
         articleProcessed.author_notes = [];
-        if(article['author-notes'] && article['author-notes'][0]['fn']){
-            var prenote = article['author-notes'][0]['fn'][0];
-            if(prenote.label) {
-                var label = prenote.label[0];
-            }
-            else {
-                var label = "*";
-            }
+        if(article['author-notes'] && article['author-notes'][0].fn){
+            article['author-notes'][0]['fn'].forEach(function(note){
+                var noteObj = {};
+                if(note['$'].id){
+                    noteObj.id = note['$'].id;
+                }
+                if(note.label){
+                    noteObj.label = note.label[0];
+                }
+                if(note.p){
+                    noteObj.note = note.p[0];
+                }
 
-
-            var note = {
-                'id': prenote['$'].id,
-               'label': label,
-               'note': prenote.p[0]
-            };
-
-            articleProcessed.author_notes = [note];
+                if(Object.keys(noteObj).length > 0 ){
+                    articleProcessed.author_notes.push(noteObj);
+                }
+            });
         }
-
 
         // ALL AFFILIATIONS
         // -----------
