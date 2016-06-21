@@ -2,21 +2,12 @@
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         var fut = new future();
-        var supplemental,
-            articleJson,
+        var articleJson,
             articleInfo,
-            figures = [],
             xml;
         articleInfo = articles.findOne({'_id' : mongoId});
         if(articleInfo){
             articleInfo = Meteor.article.readyData(articleInfo);
-            if(articleInfo.files && articleInfo.files.figures){
-                figures = articleInfo.files.figures;
-                // console.log('figures',figures);
-            }
-            if(articleInfo.files && articleInfo.files.supplemental){
-                supplemental = articleInfo.files.supplemental;
-            }
 
             if(articleInfo.files && articleInfo.files.xml){
                 Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
@@ -25,7 +16,7 @@ Meteor.methods({
                         fut.throw(getXmlError);
                     }else if(xmlRes){
                         xml = xmlRes.content;
-                        Meteor.call('fullTextToJson',xml, {figures:figures, supplemental:supplemental}, mongoId, function(convertXmlError, convertedXml){
+                        Meteor.call('fullTextToJson', xml, articleInfo.files, mongoId, function(convertXmlError, convertedXml){
                             if(convertXmlError){
                                 console.error('..convertXmlError',convertXmlError);
                                 fut.throw(convertXmlError);
@@ -44,7 +35,7 @@ Meteor.methods({
     },
     fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
-        // console.log('... fullTextToJson');
+        // console.log('... fullTextToJson', files);
         xml = Meteor.clean.newLinesToSpace(xml);
         xml = Meteor.clean.removeExtraSpaces(xml);
         // console.log('---xml',xml);
@@ -62,7 +53,7 @@ Meteor.methods({
                 var sectionObject = {},
                     sectionIdObject = {};
                 if(sections[section].localName === 'sec'){
-                    sectionObject = Meteor.fullText.sectionToJson(sections[section],files, mongoId);
+                    sectionObject = Meteor.fullText.sectionToJson(sections[section], files, mongoId);
                     sectionIdObject = Meteor.fullText.sectionId(sections[section]);
                     if(sectionIdObject){
                         for(var idInfo in sectionIdObject){
@@ -274,7 +265,7 @@ Meteor.methods({
 
 // for handling sections of XML, content, special elements like figures, references, tables
 Meteor.fullText = {
-    sectionToJson: function(section,files, mongoId){
+    sectionToJson: function(section, files, mongoId){
         // XML processing of part of the content, <sec>
         // console.log('...sectionToJson');
         var sectionObject = {};
@@ -291,7 +282,7 @@ Meteor.fullText = {
                     var subSectionObject,
                         sectionIdObject;
 
-                    subSectionObject = Meteor.fullText.sectionToJson(sec,files,mongoId);
+                    subSectionObject = Meteor.fullText.sectionToJson(sec, files, mongoId);
                     if(subSectionObject){
                         subSectionObject.contentType = 'subsection';
                         sectionIdObject = Meteor.fullText.sectionId(sec);
@@ -303,7 +294,7 @@ Meteor.fullText = {
                         sectionObject.content.push(subSectionObject);
                     }
                 }else{
-                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec,files,mongoId);
+                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
                     // Add the content object to the section object
                     if(subSectionObject){
                         sectionObject.content.push(subSectionObject);
@@ -333,7 +324,7 @@ Meteor.fullText = {
 
         return sectionIdObject;
     },
-    sectionPartsToJson: function(sec,files,mongoId){
+    sectionPartsToJson: function(sec, files, mongoId){
         // console.log('...sectionPartsToJson',sec.localName);
         var sectionPartObject = {};
         var content,
@@ -341,11 +332,12 @@ Meteor.fullText = {
         // Different processing for different node types
         if(sec.localName === 'table-wrap'){
             // get attributes
-            var tableId;
-            var tblAttr = sec.attributes;
+            var tableId,
+                tblAttr,
+                tableGraphic;
+            tblAttr = sec.attributes;
             contentType = 'table';
             for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
-                // console.log(tblAttr[tblA].localName + ' = ' + tblAttr[tblA].nodeValue );
                 if(tblAttr[tblA].localName === 'id'){
                     tableId = tblAttr[tblA].nodeValue;
                 }
@@ -353,6 +345,24 @@ Meteor.fullText = {
             content = '<table class="bordered" id="' + tableId + '">';
             content += Meteor.fullText.traverseTable(sec);
             content += '</table>';
+
+            // do not do below via traversTable,
+            // because traversTable will return 1 single string of a table,
+            // here we want to get the table graphic
+            if(tableId){
+                for(var c = 0 ; c < sec.childNodes.length ; c++){
+                    if(sec.childNodes[c].localName === 'graphic' && files && files.tables){
+                        files.tables.forEach(function(tbl){
+                            if(tbl.id && tbl.url && tbl.id === tableId.toLowerCase()){
+                                sectionPartObject.tableGraphic = {
+                                    url: tbl.url
+                                };
+                            }
+                        });
+                    }
+
+                }
+            }
         }else if(sec.localName === 'fig'){
             content = Meteor.fullText.convertFigure(sec,files,mongoId);
             contentType = 'figure';
@@ -747,7 +757,8 @@ Meteor.fullText = {
             if(elType != null){
                 elType = Meteor.fullText.fixTableTags(elType);
             }
-            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref'){// table tag added in sectionToJson()
+            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic'){
+                // table tag added in sectionToJson()
                 var colspan;
                 var rowspan;
                 var elId;
@@ -787,6 +798,7 @@ Meteor.fullText = {
                 }
             }
             // do not combine with elseif, because we need to still close tag via code below
+
             if(elType == 'label'){
                 // Table Title - part one, or footer
                 tableLabel = Meteor.fullText.traverseTable(n);
@@ -810,7 +822,7 @@ Meteor.fullText = {
                 nodeString += Meteor.fullText.traverseTableFooter(n);
             }else if(elType == 'xref'){
                 nodeString += Meteor.fullText.linkXref(n);
-            }else{
+            }else if(elType != 'graphic'){
                 // Table content
                 if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
