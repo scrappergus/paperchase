@@ -71,7 +71,7 @@
     <h2 class="authors">
         {{#each authors }}
             <span class="author">
-                {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="author-comma">,</span>
+                {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if name_suffix}} {{name_suffix}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="author-comma">,</span>
             </span>
         {{/each}}
     </h2>
