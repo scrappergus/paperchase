@@ -367,6 +367,7 @@ Meteor.xmlPmc = {
     },
     figure: function(node,cb){
         var figObj = {};
+            // figObj.graphics = [];
 
         Meteor.xmlPmc.getAttributeId(node, function(figId){
             if(figId){
@@ -375,13 +376,34 @@ Meteor.xmlPmc = {
         });
 
         if(node.childNodes){
-
             for(var figChild=0 ; figChild < node.childNodes.length ; figChild++){
                 var nod = node.childNodes[figChild];
+                var graphicAttributes,
+                    graphicAttributesParts;
                 // label
                     if(nod.localName == 'label'){
                         figObj.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
                     }
+
+                // started working on figure graphics below, but then realized for example article PMC4637207, that even though the figure parts are different <graphic> the callouts are all for just f3, no f3_a. So instead, I updated the figure itself
+                        // figure graphics
+                        // this is needed when there are multiple <graphic> within <fig>, pretty rare, ex PMC4637207
+                        // otherwise, we just match the file by the figure ID
+
+                        // if(nod.localName == 'graphic' && nod.attributes){
+                        //     var graphic = {},
+                        //         graphicId;
+                        //
+                        //     graphicAttributes = Meteor.fullText.traverseAttributes(nod.attributes);
+                        //     if(graphicAttributes && graphicAttributes.href){
+                        //         graphicAttributesParts = graphicAttributes.href.split('-');
+                        //         graphicId = graphicAttributesParts[graphicAttributesParts.length - 1].slice(-1);
+                        //         if(graphicId){
+                        //             graphic.id = graphicId;
+                        //         }
+                        //     }
+                        //     figObj.graphics.push(graphic)
+                        // }
                 //------------------
                 // title and caption
                 //------------------
@@ -403,7 +425,6 @@ Meteor.xmlPmc = {
                 }
             }
         }
-
         cb(figObj);
     },
     figures: function(xml,cb){
