@@ -458,6 +458,7 @@ Meteor.adminArticleFormGet = {
         var articleTitle = $('.form-title').code();
         articleTitle = Meteor.clean.cleanWysiwyg(articleTitle);
         articleTitle = articleTitle.replace(/<p>/,'').replace(/<\/p>,''/);
+        articleTitle = Meteor.clean.removeEndPeriod(articleTitle);
         return articleTitle;
     },
     all: function(){
