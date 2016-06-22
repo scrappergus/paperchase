@@ -616,8 +616,8 @@ Meteor.fullText = {
                     }else if(referencePartName == 'comment'){
                         if(referencePart.childNodes){
                             var comment = '';
-                            var referencePartCount = referencePart.childNodes.length;
-                            for(var part = 0 ; part < referencePartCount ; part++){
+                            for(var part=0; part<referencePart.childNodes.length; part++){
+                                // console.log(referencePart.childNodes[part].localName);
                                 if(referencePart.childNodes[part].nodeValue){
                                     comment += referencePart.childNodes[part].nodeValue;
                                 } else if(referencePart.childNodes[part].localName == 'ext-link') {
