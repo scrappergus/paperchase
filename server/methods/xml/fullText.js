@@ -524,6 +524,7 @@ Meteor.fullText = {
             if(figInfo){
                 figObj = figInfo;
                 // match to db file info
+                if(files.figures)
                 for(var f = 0; f<files.figures.length; f++){
                     if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase() && files.figures[f].url){
                         figObj.url = files.figures[f].url;
