@@ -334,7 +334,9 @@ Meteor.fullText = {
             // get attributes
             var tableId,
                 tblAttr,
-                tableGraphic;
+                tblGraphicNode,
+                tblGraphicAttr,
+                tblGraphic;
             tblAttr = sec.attributes;
             contentType = 'table';
             for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
@@ -350,8 +352,10 @@ Meteor.fullText = {
             // because traversTable will return 1 single string of a table,
             // here we want to get the table graphic
             if(tableId){
-                for(var c = 0 ; c < sec.childNodes.length ; c++){
-                    if(sec.childNodes[c].localName === 'graphic' && files && files.tables){
+                tblGraphicNode = xpath.select('//graphic', sec);
+                if(tblGraphicNode && tblGraphicNode[0] && tblGraphicNode[0].attributes){
+                    tblGraphicAttr = Meteor.fullText.traverseAttributes( tblGraphicNode[0].attributes );
+                    if(tblGraphicAttr && tblGraphicAttr.href && files && files.tables){
                         files.tables.forEach(function(tbl){
                             if(tbl.id && tbl.url && tbl.id === tableId.toLowerCase()){
                                 sectionPartObject.tableGraphic = {
@@ -360,7 +364,6 @@ Meteor.fullText = {
                             }
                         });
                     }
-
                 }
             }
         }else if(sec.localName === 'fig'){
