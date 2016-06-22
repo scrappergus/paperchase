@@ -239,7 +239,7 @@ Meteor.methods({
                         var citationAttributes = reference.childNodes[refPiece].attributes;
                         for(var cAttr=0 ; cAttr<citationAttributes.length ; cAttr++){
                             if(citationAttributes[cAttr].localName == 'publication-type'){
-                                referenceObj.type = citationAttributes[cAttr].nodeValue;
+                                referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
                             }
                         }
                     }
