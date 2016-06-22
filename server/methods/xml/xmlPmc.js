@@ -421,7 +421,7 @@ Meteor.xmlPmc = {
                         // figure caption
                         // ------------
                         if(n.localName == 'p'){
-                            figObj.caption += Meteor.fullText.convertContent(n);
+                            figObj.caption += Meteor.fullText.convertContent(n) + '<br>';
                         }
                     }
                 }
