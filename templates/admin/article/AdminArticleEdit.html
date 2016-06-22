@@ -52,29 +52,29 @@
                     <i class="valign material-icons">&#xE000;</i><span class="valign">XML does not match the database</span>
                 </div>
 
-                <table class="bordered card z-depth-0 grey lighten-4">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Conflict</th>
-                            <th>XML</th>
-                            <th>Database</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each conflicts}}
-                        <tr>
-                            <td>{{#if parent}}{{parent}} | {{/if}}{{what}}</td>
-                            <td>{{{conflict}}}</td>
-                            <td>{{{xml}}}</td>
-                            <td>{{{db}}}</td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-
                 <h4>Save the form below to update the database</h4>
                 <p><i>If there is a conflict, the form inputs are from the XML. Unless, the XML did not contain the information and the database did. Then the input will be from the database.</i></p>
+
+                <div class="row">
+                    <div class="card z-depth-0">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col s1"><b>Item</b></div>
+                                <div class="col s3"><b>Conflict</b></div>
+                                <div class="col s4"><b>XML</b></div>
+                                <div class="col s4"><b>Database</b></div>
+                            </div>
+                            {{#each conflicts}}
+                            <div class="row border-box">
+                                <div class="col s1">{{#if parent}}{{parent}} | {{/if}}{{what}}</div>
+                                <div class="col s3">{{{conflict}}}</div>
+                                <div class="col s4">{{{xml}}}</div>
+                                <div class="col s4">{{{db}}}</div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div></div>

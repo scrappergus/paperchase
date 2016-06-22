@@ -180,7 +180,7 @@ Meteor.xmlParse = {
 }
 
 Meteor.xmlDbConflicts = {
-    compare: function(key,xmlValue,dbValue,cb){
+    compare: function(key, xmlValue, dbValue, cb){
         // console.log('   compare');
         // console.log('? ' + key + ' : ' + xmlValue + ' =? ' + dbValue);
 
@@ -193,13 +193,13 @@ Meteor.xmlDbConflicts = {
         // Just DB
         // ---------
         if(!Meteor.xmlDbConflicts.valueExists(xmlValue)){
-            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(key,dbValue)));
+            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in XML', null, Meteor.xmlDbConflicts.prettyValue(key, dbValue)));
         }
 
         // Just XML
         // ---------
         if(!Meteor.xmlDbConflicts.valueExists(dbValue)){
-            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(key,xmlValue), null));
+            result.conflicts.push(Meteor.xmlDbConflicts.conflict(key, 'Missing in Database', Meteor.xmlDbConflicts.prettyValue(key, xmlValue), null));
         }
 
         // Both DB and XML
@@ -255,8 +255,8 @@ Meteor.xmlDbConflicts = {
         }
         cb(result);
     },
-    compareObject: function(parentKey,xmlObj,dbObj,cb){
-        // console.log('compareObject', parentKey, xmlObj, dbObj);
+    compareObject: function(parentKey, xmlObj, dbObj, cb){
+        // console.log('compareObject',parentKey);
         var result = {};
         result.conflicts = [];
         result.merged = {};// using merged for form data. For ex, for when XML does not have PII but DB does (IDs are an object).
@@ -265,7 +265,7 @@ Meteor.xmlDbConflicts = {
         var dbKeyCount = Object.keys(dbObj).length;
 
         // Number of items comparison
-        if(xmlKeyCount != dbKeyCount && parentKey != 'authors'){
+        if(xmlKeyCount != dbKeyCount && parentKey != 'authors' && parentKey != 'article_type'){
             // do not count author keys because there are additional items stored in the database and names just need to be compared with XML
             result.conflicts.push(Meteor.xmlDbConflicts.conflict(parentKey, 'XML has ' + xmlKeyCount + ' items. Database has ' + dbKeyCount + ' items.',null,null));
         }
@@ -274,7 +274,10 @@ Meteor.xmlDbConflicts = {
         for(var key in dbObj){
             if(parentKey === 'authors' && key === 'ids'){
             }else if(parentKey === 'article_type' && key === '_id'){
+                // just going to compare type name
             }else if(parentKey === 'article_type' && key === 'plural'){
+            }else if(parentKey === 'article_type' && key === 'short_name'){
+            }else if(parentKey === 'article_type' && key === 'nlm_type'){
             }else{
                 var dbVal = null;
                 var xmlVal = null;
@@ -392,6 +395,7 @@ Meteor.xmlDbConflicts = {
         return result;
     },
     valueExists: function(value){
+        // console.log('valueExists',value);
         if(!value && value != 0){
             return false;
         }

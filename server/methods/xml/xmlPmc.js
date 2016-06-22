@@ -42,10 +42,12 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    pmcArticleToSchema: function(xml,articleJson){
+    pmcArticleToSchema: function(xml, articleJson){
         // console.log('...articleToSchema', articleJson);
         // Process JSON for meteor templating and mongo db
         // xml is a string. articleJson is parsed XML to JSON. but not in the schema we need.
+
+        var xmlDoc = new dom().parseFromString(xml);
 
         var journalMeta = articleJson.front[0]['journal-meta'][0];
         var article = articleJson.front[0]['article-meta'][0];
@@ -64,7 +66,7 @@ Meteor.methods({
 
         // TITLE
         // -----------
-        Meteor.xmlPmc.title(xml,function(title){
+        Meteor.xmlPmc.title(xml, function(title){
             if(title){
                 articleProcessed.title = title;
             }
@@ -155,9 +157,17 @@ Meteor.methods({
                 if(note['$'].id){
                     noteObj.id = note['$'].id;
                 }
+
                 if(note.label){
                     noteObj.label = note.label[0];
+                }else if(noteObj.id){
+                    var findLabel = xpath.select('//contrib/xref[@rid="' + noteObj.id + '"]', xmlDoc);
+                    // console.log('findLabel',findLabel);
+                    if(findLabel && findLabel[0].childNodes && findLabel[0].childNodes[0].nodeValue){
+                        noteObj.label = findLabel[0].childNodes[0].nodeValue;
+                    }
                 }
+
                 if(note.p){
                     noteObj.note = note.p[0];
                 }
@@ -315,9 +325,8 @@ Meteor.xmlPmc = {
                     if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'aff' && authorsList[i].xref[authorAff].sup){
                         var affNumber = parseInt(authorsList[i].xref[authorAff].sup[0]-1);
                         author.affiliations_numbers.push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
-                    }
-                    else if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'author-notes' && authorsList[i].xref[authorAff]['$']['rid']) {
-                        author.author_notes_ids.push(authorsList[i].xref[authorAff]['$']['rid']);
+                    } else if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'author-notes' && authorsList[i].xref[authorAff]['$'].rid) {
+                        author.author_notes_ids.push(authorsList[i].xref[authorAff]['$'].rid);
                     }
                 }
             }
