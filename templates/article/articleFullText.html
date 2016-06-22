@@ -95,6 +95,7 @@
                                     {{#if title}}<span> {{{title}}}.</span>{{/if}}
                                     {{#if year}}<span> {{year}};</span>{{/if}}
                                     {{#if source}}<span> {{source}}.</span>{{/if}}
+                                    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
                                     {{/if}}
 
                                     {{#if equals type 'other'}}
@@ -113,10 +114,10 @@
                                     {{#if title}}<span> {{{title}}}.</span>{{/if}}
                                     {{#if conf_name}}<span> {{{conf_name}}}.</span>{{/if}}
                                     {{#if year}}<span> {{year}}.</span>{{/if}}
+                                    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
                                     {{/if}}
 
                                     {{#if ext_link}}<a href="{{ext_link}}" target="_BLANK">{{ext_link}}</a>{{/if}}
-                                    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
                                 </li>
                             {{/each}}
                         </ul>
