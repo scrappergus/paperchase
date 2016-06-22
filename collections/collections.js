@@ -339,7 +339,9 @@ if (Meteor.isServer) {
           'submission.url' : 1,
           'contact' : 1,
           'edboard_roles' : 1,
-          'assets': 1
+          'assets': 1,
+          'assets_figures': 1,
+          'assets_supplemental': 1, 
         }});
         return siteConfig;
     });
