@@ -140,17 +140,19 @@ Meteor.article = {
             }
 
             for(var file in files){
-                if(files[file].file){
-                    files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
-                }else if(file === 'supplemental'){
-                    for(var f in files[file]){
-                        if(files[file][f].file)
-                        files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
-                    }
-                }else if(file === 'figures' || file === 'tables'){
-                    for(var f in files[file]){
-                        if(files[file][f].file)
-                        files[file][f].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][f].file;
+                if(typeof file === 'object'){
+                    if(files[file].file){
+                        files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
+                    }else if(file === 'supplemental'){
+                        for(var f in files[file]){
+                            if(files[file][f].file)
+                            files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
+                        }
+                    }else if(file === 'figures' || file === 'tables'){
+                        for(var f in files[file]){
+                            if(files[file][f].file)
+                            files[file][f].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][f].file;
+                        }
                     }
                 }
             }
