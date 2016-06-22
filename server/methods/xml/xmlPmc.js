@@ -367,6 +367,8 @@ Meteor.xmlPmc = {
     },
     figure: function(node,cb){
         var figObj = {};
+
+        figObj.caption = '';
             // figObj.graphics = [];
 
         Meteor.xmlPmc.getAttributeId(node, function(figId){
@@ -419,7 +421,7 @@ Meteor.xmlPmc = {
                         // figure caption
                         // ------------
                         if(n.localName == 'p'){
-                            figObj.caption = Meteor.fullText.convertContent(n);
+                            figObj.caption += Meteor.fullText.convertContent(n);
                         }
                     }
                 }
