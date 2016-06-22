@@ -104,17 +104,17 @@
         <span class="date">
             {{#each arrayify history}}
                 {{#if equals name 'collection'}}
-                    {{name}}: {{collectionDate value}} <span class="comma">; </span>
+                    {{name}}: {{collectionDate value}}<span class="comma">; </span>
                     {{else}}
-                    {{name}}: {{articleDate value}} <span class="comma">; </span>
+                    {{name}}: {{articleDate value}}<span class="comma">; </span>
                 {{/if}}
             {{/each}}
 
             {{#each arrayify dates}}
                 {{#if equals name 'collection'}}
-                    published: {{collectionDate value}} <span class="comma">; </span>
+                    published: {{collectionDate value}}<span class="comma">; </span>
                     {{else}}
-                    published: {{articleDate value}} <span class="comma">; </span>
+                    published: {{articleDate value}}<span class="comma">; </span>
                 {{/if}}
             {{/each}}
         </span>
