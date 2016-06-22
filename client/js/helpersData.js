@@ -216,7 +216,7 @@ Template.ArticleSidebar.helpers({
     }
 });
 
-Template.AuthorsRefList.helpers({
+Template.AuthorAffsAndNotes.helpers({
     tooltipAffiliation: function() {
         var articleData = Template.parentData(2);
         var authorData = Template.parentData(1);
