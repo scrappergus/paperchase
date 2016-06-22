@@ -514,20 +514,19 @@ Meteor.fullText = {
         }
         return content;
     },
-    convertFigure: function(node,files,mongoId){
+    convertFigure: function(node, files, mongoId){
         // console.log('..convertFigure',node);
-        var figureAssetsUrl = journalConfig.findOne().assets;
         var figObj;
 
         // get the figure id, label, title, caption
         //------------------
-        Meteor.xmlPmc.figure(node,function(figInfo){
+        Meteor.xmlPmc.figure(node, function(figInfo){
             if(figInfo){
                 figObj = figInfo;
                 // match to db file info
-                for(var f = 0 ; f < files.figures.length ; f++){
-                    if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
-                        figObj.url = figureAssetsUrl + 'paper_figures/' + files.figures[f].file;
+                for(var f = 0; f<files.figures.length; f++){
+                    if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase() && files.figures[f].url){
+                        figObj.url = files.figures[f].url;
                     }
                 }
             }
