@@ -704,6 +704,7 @@ if (Meteor.isClient) {
                 });
                 if (article) {
                     article = Meteor.article.readyData(article);
+                    console.log('article',article);
                     return {
                         article: article
                     };
