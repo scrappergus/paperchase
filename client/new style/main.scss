@@ -188,17 +188,18 @@ h2.dates {
     .author{
         &:last-child {
             .author-comma {
-                display:none !important; 
+                display:none !important;
             }
         }
     }
 }
 /*for author affiliations commas*/
 .author-affiliations {
+    z-index: 1;
     span{
         &:last-child {
             span.comma {
-                display:none !important; 
+                display:none !important;
             }
         }
     }
