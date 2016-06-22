@@ -63,7 +63,6 @@
                         <li class="collection-item {{#if display}}{{else}}disabled{{/if}}">
                             {{#if display}}{{else}}<h4>Hidden to Visitors</h4>{{/if}}
                             <h5><a href="{{pathFor 'AdminArticleOverview'}}">{{{title}}}</a></h5>
-                            <p>{{>AuthorsList}}</p>
                             <p>{{#if page_start}}pp {{page_start}}{{/if}}{{#if page_end}}-{{page_end}}{{/if}}</p>
                             {{>AdminArticleIds}}
                             {{#if countKeys dates}}
