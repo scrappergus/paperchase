@@ -107,13 +107,11 @@
                                     {{#if year}}<span> {{year}};</span>{{/if}}
                                     {{/if}}
 
-
                                     {{#if equals type 'conf_proc'}}
-                                    {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
-                                    {{#if title}}<span> {{{title}}}.</span>{{/if}}
-                                    {{#if conf_name}}<span> {{{conf_name}}}.</span>{{/if}}
-                                    {{#if year}}<span> {{year}}.</span>{{/if}}
-                                    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
+                                        {{>FullTextReferenceConference}}
+                                    {{/if}}
+                                    {{#if equals type 'confproc'}}
+                                        {{>FullTextReferenceConference}}
                                     {{/if}}
 
                                     {{#if ext_link}}<a href="{{ext_link}}" target="_BLANK">{{ext_link}}</a>{{/if}}
@@ -208,4 +206,12 @@
         {{{term}}}: {{{def}}};
     {{/each}}
     </p>
+</template>
+
+<template name="FullTextReferenceConference">
+    {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
+    {{#if title}}<span> {{{title}}}.</span>{{/if}}
+    {{#if conf_name}}<span> {{{conf_name}}}.</span>{{/if}}
+    {{#if year}}<span> {{year}}.</span>{{/if}}
+    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
 </template>
