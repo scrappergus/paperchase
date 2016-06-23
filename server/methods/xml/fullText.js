@@ -89,7 +89,6 @@ Meteor.methods({
                 // Attributes (vol, pages, type)
                 // --------
                 if(related.attributes){
-
                     relatedAttributes = Meteor.fullText.relatedArticleAttributes(related.attributes);
                     if(relatedAttributes){
                         for(var attr in relatedAttributes){
@@ -132,19 +131,46 @@ Meteor.methods({
 
                 var ackObj = Meteor.fullText.sectionToJson(ack);
 
-                ackObj.title = "Acknowledgements";
+                ackObj.title = 'Acknowledgements';
 
                 articleObject.acks.push(ackObj);
             }
         }
 
+        // Glossary
+        // --------
+        var glossary = xpath.select('//def-list', doc);
+        if(glossary[0]){
+            articleObject.glossary = [];
+            for(var glossIdx in glossary[0].childNodes){
+                if(typeof Number(glossIdx) == 'number' && glossary[0].childNodes[glossIdx].tagName == 'def-item') {
+                    var term = {};
+                    for(var i=0; i < glossary[0].childNodes[glossIdx].childNodes.length ; i++){
+                        var glossParsed = Meteor.fullText.convertContent(glossary[0].childNodes[glossIdx].childNodes[i]);
+                        if(glossParsed){
+                            glossParsed = Meteor.fullText.removeParagraphTags(glossParsed);
+
+                            if(glossParsed != ''){
+                                term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed;
+                            }
+                        }
+                    }
+                    if(Object.keys(term).length !=0 ){
+                        articleObject.glossary.push(term);
+                    }
+
+                }
+            }
+        }
+
         // Footnotes
-        // ---------
+        // ----------
         var footnotes = xpath.select('//back/fn-group/fn', doc);
         if(footnotes){
             articleObject.footnotes = [];
             var footnotesWithoutTitle = 0;
             for(var i=0; i<footnotes.length; i++){
+                console.log(i);
                 var footObj = {},
                     attributes;
                 footObj.content = [];
@@ -186,30 +212,6 @@ Meteor.methods({
 
                 if(Object.keys(footObj).length!=0){
                     articleObject.footnotes.push(footObj);
-                }
-            }
-        }
-
-        // Glossary
-        // --------
-        var glossary = xpath.select('//def-list', doc);
-        if(glossary[0]){
-            articleObject.glossary = [];
-            for(var glossIdx in glossary[0].childNodes){
-                if(typeof Number(glossIdx) == 'number' && glossary[0].childNodes[glossIdx].tagName == 'def-item') {
-                    var term = {};
-                    for(var i=0; i < glossary[0].childNodes[glossIdx].childNodes.length ; i++){
-                        var glossParsed = '';
-                        glossParsed = Meteor.fullText.removeParagraphTags(Meteor.fullText.convertContent(glossary[0].childNodes[glossIdx].childNodes[i]));
-
-                        if(glossParsed != ''){
-                            term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed;
-                        }
-                    }
-                    if(Object.keys(term).length !=0 ){
-                        articleObject.glossary.push(term);
-                    }
-
                 }
             }
         }
