@@ -156,15 +156,21 @@
             {{/if}}
 
             {{#if equals contentType 'table'}}
+            <h1>table</h1>
             <!-- Table -->
                 <div class="article-table">
-                    {{{content}}}
+                    <table class="bordered" id="{{id}}">
+                    {{{title}}}
+                    {{{table}}}
 
                     {{#if tableGraphic}}
                     {{#with tableGraphic}}
                     {{>FullTextFigure}}
                     {{/with}}
                     {{/if}}
+
+                    {{{footer}}}
+                    </table>
                 </div>
             {{/if}}
 

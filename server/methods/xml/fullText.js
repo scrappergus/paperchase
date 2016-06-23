@@ -35,7 +35,7 @@ Meteor.methods({
     },
     fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
-        // console.log('... fullTextToJson', files);
+        console.log('... fullTextToJson');
         xml = Meteor.clean.newLinesToSpace(xml);
         xml = Meteor.clean.removeExtraSpaces(xml);
         // console.log('---xml',xml);
@@ -332,32 +332,37 @@ Meteor.fullText = {
         // Different processing for different node types
         if(sec.localName === 'table-wrap'){
             // get attributes
-            var tableId,
-                tblAttr,
+            var tblAttr,
                 tblGraphicNode,
                 tblGraphicAttr,
-                tblGraphic;
-            tblAttr = sec.attributes;
+                tblParsed;
+
             contentType = 'table';
-            for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
-                if(tblAttr[tblA].localName === 'id'){
-                    tableId = tblAttr[tblA].nodeValue;
+            sectionPartObject.contentType = contentType;
+
+            tblAttr = Meteor.fullText.traverseAttributes(sec.attributes);
+            if(tblAttr.id){
+                sectionPartObject.id = tblAttr.id;
+            }
+
+            tblParsed = Meteor.fullText.traverseTable(sec);
+            if(tblParsed){
+                for(var key in tblParsed){
+                    sectionPartObject[key] = Meteor.fullText.fixTags(tblParsed[key]);
                 }
             }
-            content = '<table class="bordered" id="' + tableId + '">';
-            content += Meteor.fullText.traverseTable(sec);
-            content += '</table>';
 
-            // do not do below via traversTable,
-            // because traversTable will return 1 single string of a table,
-            // here we want to get the table graphic
-            if(tableId){
+            // Table Graphic
+            if(tblAttr.id){
+                // do not do below via traversTable,
+                // because traversTable will return 1 single string of a table,
+                // here we want to get the table graphic
                 tblGraphicNode = xpath.select('//graphic', sec);
                 if(tblGraphicNode && tblGraphicNode[0] && tblGraphicNode[0].attributes){
                     tblGraphicAttr = Meteor.fullText.traverseAttributes( tblGraphicNode[0].attributes );
                     if(tblGraphicAttr && tblGraphicAttr.href && files && files.tables){
                         files.tables.forEach(function(tbl){
-                            if(tbl.id && tbl.url && tbl.id === tableId.toLowerCase() && tbl.display){
+                            if(tbl.id && tbl.url && tbl.id === tblAttr.id.toLowerCase() && tbl.display){
                                 sectionPartObject.tableGraphic = {
                                     url: tbl.url
                                 };
@@ -366,13 +371,19 @@ Meteor.fullText = {
                     }
                 }
             }
-        }else if(sec.localName === 'fig'){
+            if(tblParsed.footer){
+                sectionPartObject.footer = tblParsed.footer;
+            }
+        }
+        else if(sec.localName === 'fig'){
             content = Meteor.fullText.convertFigure(sec,files,mongoId);
             contentType = 'figure';
-        }else if(sec.localName === 'supplementary-material'){
+        }
+        else if(sec.localName === 'supplementary-material'){
             content = Meteor.fullText.convertSupplement(sec,files,mongoId);
             contentType = 'supplement';
-        }else{
+        }
+        else{
             content = Meteor.fullText.convertContent(sec);
             contentType = 'p';
         }
@@ -748,16 +759,18 @@ Meteor.fullText = {
         // TODO: make this more general for traversing all nodes, not just table
         // TODO combine label and title
         // TODO: remove footerFlag. Used to add label to table footers.
-        var nodeString = '',
+        var tableString = '',
             tableHeading = '',
+            tableFooter = '',
             tableLabel = '',
+            tableTitle = '',
             tableCaption = '',
             tableTitle = '';
         for(var c = 0 ; c < node.childNodes.length ; c++){
             var n = node.childNodes[c];
-            // console.log(n.nodeName, n.nodeValue);
             // Start table el tag
             var elType = n.localName;
+            // console.log(elType);
             if(elType != null){
                 elType = Meteor.fullText.fixTableTags(elType);
             }
@@ -786,33 +799,35 @@ Meteor.fullText = {
                         colspan = "100";
                     }
                 }
-                nodeString += '<' + elType;
+                tableString += '<' + elType;
                 if(colspan){
-                    nodeString += ' colspan="' + colspan + '"';
+                    tableString += ' colspan="' + colspan + '"';
                 }
                 if(rowspan){
-                    nodeString += ' rowspan="' + rowspan + '"';
+                    tableString += ' rowspan="' + rowspan + '"';
                 }
                 if(elId){
-                    nodeString += ' id="' + elId + '"';;
+                    tableString += ' id="' + elId + '"';;
                 }
-                nodeString += '>';
+                tableString += '>';
                 if(footerFlag && tableLabel){
-                    nodeString += tableLabel + ' '; //temporary. Would like to not handle table footer labels this way.
+                    tableString += tableLabel + ' '; //temporary. Would like to not handle table footer labels this way.
                 }
             }
             // do not combine with elseif, because we need to still close tag via code below
 
             if(elType == 'label'){
                 // Table Title - part one, or footer
-                tableLabel = Meteor.fullText.traverseTable(n);
-            }else if(elType == 'caption'){
+                tableLabel = Meteor.fullText.traverseTable(n).table;
+            }
+            else if(elType == 'caption'){
                 // Table Title - part three
                 // do not use traversing functions. problem keeping title separate
                 for(var cc = 0 ; cc < n.childNodes.length ; cc++){
                     if(n.childNodes[cc].localName == 'title'){
                         tableTitle = Meteor.fullText.convertContent(n.childNodes[cc]);
-                    }else if(n.childNodes[cc].localName == 'p'){
+                    }
+                    else if(n.childNodes[cc].localName == 'p'){
                         tableCaption += Meteor.fullText.convertContent(n.childNodes[cc]);
                     }
                 }
@@ -820,29 +835,32 @@ Meteor.fullText = {
                     tableLabel = tableLabel + '.';
                 }
                 tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
-                nodeString += '<caption>' + tableHeading + '</caption>';
-            }else if(elType == 'table-wrap-foot'){
-                // console.log('..footer');
-                nodeString += Meteor.fullText.traverseTableFooter(n);
-            }else if(elType == 'xref'){
-                nodeString += Meteor.fullText.linkXref(n);
-            }else if(elType != 'graphic'){
+                tableTitle = '<caption>' + tableHeading + '</caption>';
+            }
+            else if(elType == 'table-wrap-foot'){
+                tableFooter += Meteor.fullText.traverseTableFooter(n);
+            }
+            else if(elType == 'xref'){
+                tableString += Meteor.fullText.linkXref(n);
+            }
+            else if(elType != 'graphic'){
                 // Table content
                 if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
                     var val = n.nodeValue;
-                    nodeString += val;
-                }else if(n.childNodes){
-                    nodeString += Meteor.fullText.traverseTable(n);
+                    tableString += val;
+                }
+                else if(n.childNodes){
+                    tableString += Meteor.fullText.traverseTable(n).table;
                 }
 
                 // Close table el tag
                 if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){
-                    nodeString += '</' + elType + '>'
+                    tableString += '</' + elType + '>'
                 }
             }
         }
-        return nodeString;
+        return {table: tableString, title: tableTitle, footer: tableFooter};
     },
     traverseTableFooter: function(n){
         var string = '';
@@ -863,7 +881,7 @@ Meteor.fullText = {
                     string += ' id="'+elId+'"';
                 }
                 string += '>';
-                string += Meteor.fullText.traverseTable(n.childNodes[c],true);
+                string += Meteor.fullText.traverseTable(n.childNodes[c],true).table;
                 string += '</td></tr>';
             }else if(n.childNodes[c].nodeName == 'p'){
                 string += '<tr><td colspan="100">';
