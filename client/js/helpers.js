@@ -64,10 +64,18 @@ if (Meteor.isClient) {
             return;
         }
     });
-    Template.registerHelper('semicolonCheck', function(ref) {
+    Template.registerHelper('referenceSemicolonCheck', function(ref) {
         var reference = ref.hash.reference;
         if(reference && reference.volume && reference.issue || reference.comment || reference.fpage){
             return ':';
+        }else{
+            return;
+        }
+    });
+    Template.registerHelper('referenceColonCheck', function(ref) {
+        var reference = ref.hash.reference;
+        if(reference && reference.volume && reference.issue){
+            return ';';
         }else{
             return;
         }
