@@ -648,11 +648,12 @@ Meteor.fullText = {
                     }else if(referencePartName){
                         // source, year, pages, issue, volume, chapter_title
                         if(referencePart.childNodes){
-                            var referencePartCount = referencePart.childNodes.length;
-                            for(var part = 0 ; part < referencePartCount ; part++){
+                            for(var part = 0 ; part < referencePart.childNodes.length ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
-                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String) {
-                                        referenceObj[referencePartName] += ". " + referencePart.childNodes[part].nodeValue;
+                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String ) {
+                                        if(referencePartName != 'fpage' && referencePartName != 'lpage'){
+                                            referenceObj[referencePartName] += '. ' + referencePart.childNodes[part].nodeValue;
+                                        }
                                     } else {
                                         referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
                                     }
