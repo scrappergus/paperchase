@@ -137,7 +137,7 @@
 
 <template name="ArticleFullTextSection">
     <div class="section-container" id="{{#if equals headerLevel 1}}{{convertToID title}}{{/if}}">
-        <h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}}} {{/if}} {{{title}}}</h3>
+        {{#if title}}<h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}}} {{/if}} {{{title}}}</h3>{{/if}}
         {{#each content}}
             {{#if equals contentType 'p'}}
             <p>{{{content}}}</p>
@@ -182,7 +182,7 @@
                 {{/if}}
 
                 {{#if url}}
-                <h3 class="article-header-3"><a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> {{#if label}}{{label}}{{else}}Supplemental File{{/if}}</a></h3>
+                <h3 class="article-header-3"><a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span>{{#if label}}{{label}}{{else}}Supplemental File{{/if}}</a></h3>
                 {{/if}}
 
                 {{#if caption}}

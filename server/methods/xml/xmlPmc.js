@@ -526,6 +526,7 @@ Meteor.xmlPmc = {
     },
     supplemental: function(node,cb){
         var supp = {};
+        var suppTitle;
         if(node.attributes){
             Meteor.xmlPmc.getAttributeId(node,function(id){
                 if(id){
@@ -537,11 +538,11 @@ Meteor.xmlPmc = {
         // get the label, title, caption
         //------------------
         if(node.childNodes){
-            for(var child=0 ; child < node.childNodes.length ; child++){
+            for(var child=0; child < node.childNodes.length; child++){
                 var nod = node.childNodes[child];
 
                 if(nod.childNodes){
-                    for(var c = 0 ; c < nod.childNodes.length ; c++){
+                    for(var c = 0; c < nod.childNodes.length; c++){
                         var n = nod.childNodes[c];
                         // label
                         // ------------
@@ -551,7 +552,10 @@ Meteor.xmlPmc = {
                         // title
                         // ------------
                         if(n.localName == 'title'){
-                            supp.title =  Meteor.fullText.convertContent(n).replace(/^\s+|\s+$/g, '');
+                            suppTitle =  Meteor.fullText.convertContent(n).replace(/^\s+|\s+$/g, '');
+                            if(suppTitle && suppTitle != ''){
+                                supp.title = suppTitle;
+                            }
                         }
                         // caption
                         // ------------

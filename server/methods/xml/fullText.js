@@ -396,7 +396,6 @@ Meteor.fullText = {
             sectionPartObject.content = content;
             sectionPartObject.contentType = contentType;
         }
-
         return sectionPartObject;
     },
     headerLevelFromId: function(sectionId){
@@ -484,8 +483,14 @@ Meteor.fullText = {
 
             }
         }
+
         content = Meteor.fullText.fixTags(content);
-        return content;
+
+        if(content.length === 0){
+            return;
+        }else{
+            return content;
+        }
     },
     linkXref: function(xrefNode){
         // console.log('linkXref',xrefNode);
@@ -565,6 +570,7 @@ Meteor.fullText = {
             if(suppInfo){
                 if(mediaCheck.length > 1){
                     // multiple <media>
+                    // ----------------
                     mediaCheck.forEach(function(suppMedia){
                         var suppMediaAttr,
                             suppMediaHrefPieces,
@@ -579,7 +585,7 @@ Meteor.fullText = {
                         }
                     });
                 }
-                
+
                 // match to db file info
                 if(files.supplemental) {
                     for(var f = 0; f <files.supplemental.length; f++){
