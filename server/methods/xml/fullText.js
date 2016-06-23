@@ -170,7 +170,6 @@ Meteor.methods({
             articleObject.footnotes = [];
             var footnotesWithoutTitle = 0;
             for(var i=0; i<footnotes.length; i++){
-                console.log(i);
                 var footObj = {},
                     attributes;
                 footObj.content = [];
