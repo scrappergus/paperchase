@@ -238,7 +238,7 @@ Meteor.methods({
                         // Reference type
                         var citationAttributes = reference.childNodes[refPiece].attributes;
                         for(var cAttr=0 ; cAttr<citationAttributes.length ; cAttr++){
-                            if(citationAttributes[cAttr].localName == 'publication-type'){
+                            if(citationAttributes[cAttr].localName == 'publication-type' && citationAttributes[cAttr].nodeValue){
                                 referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
                             }
                         }
@@ -247,7 +247,7 @@ Meteor.methods({
                 // Reference number
                 // ------------------
                 for(var refAttr = 0 ; refAttr < refAttributes.length ; refAttr++){
-                    if(refAttributes[refAttr].localName === 'id'){
+                    if(refAttributes[refAttr].localName === 'id' && refAttributes[refAttr].nodeValue){
                         referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','');
                     }
                 }
@@ -267,18 +267,21 @@ Meteor.methods({
 Meteor.fullText = {
     sectionToJson: function(section, files, mongoId){
         // XML processing of part of the content, <sec>
-        // console.log('...sectionToJson');
+        // console.log('.sectionToJson');
         var sectionObject = {};
         sectionObject.content = [];
-        for(var c = 0 ; c < section.childNodes.length ; c++){
-            // console.log('c = '  + c);
+        for(var c = 0; c < section.childNodes.length; c++){
             var sec = section.childNodes[c];
+
             if(sec.localName != null){
+                // console.log(sec.localName);
                 if(sec.localName === 'label'){
                     sectionObject.label = Meteor.fullText.convertContent(sec);
-                }else if(sec.localName === 'title'){
+                }
+                else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.convertContent(sec);
-                }else if(sec.localName === 'sec'){
+                }
+                else if(sec.localName === 'sec'){
                     var subSectionObject,
                         sectionIdObject;
 
@@ -293,7 +296,8 @@ Meteor.fullText = {
                         }
                         sectionObject.content.push(subSectionObject);
                     }
-                }else{
+                }
+                else{
                     var subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
                     // Add the content object to the section object
                     if(subSectionObject){
@@ -396,6 +400,7 @@ Meteor.fullText = {
             sectionPartObject.content = content;
             sectionPartObject.contentType = contentType;
         }
+
         return sectionPartObject;
     },
     headerLevelFromId: function(sectionId){
@@ -423,7 +428,6 @@ Meteor.fullText = {
         return type;
     },
     convertContent: function(node){
-        // console.log('convertContent');
         // need to include figures so that we can fill in src within the content
         var content = '';
         // console.log(node.localName);
@@ -457,7 +461,7 @@ Meteor.fullText = {
                         content += Meteor.fullText.linkXref(childNode);
                     } else if(childNode.localName === 'ext-link'){
                         content += Meteor.fullText.linkExtLink(childNode);
-                    } else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                    } else if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                         //plain text or external link
                         if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
                             content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
@@ -890,7 +894,7 @@ Meteor.fullText = {
             }
             else if(elType != 'graphic'){
                 // Table content
-                if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
                     var val = n.nodeValue;
                     tableString += val;
@@ -944,7 +948,7 @@ Meteor.fullText = {
                 // console.log('..'+c);
 
                 var n = node.childNodes[c];
-                if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // console.log(n.nodeValue);
                     string += n.nodeValue + ' ';
                 }else{
@@ -987,7 +991,6 @@ Meteor.fullText = {
                 content.caption = cap;
             }
         }
-
         return content;
     },
     fixTableTags: function(content){
