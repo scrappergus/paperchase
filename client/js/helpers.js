@@ -56,6 +56,14 @@ if (Meteor.isClient) {
     Template.registerHelper('prettyDoi', function(doi) {
       return doi.replace('http://dx.doi.org/', '');
     });
+    // Reference title
+    Template.registerHelper('punctuationCheck', function(string) {
+        if(string.charAt(string.length - 1) != '.' && string.charAt(string.length - 1) != '?' ){
+            return '.';
+        }else{
+            return;
+        }
+    });
     Template.registerHelper('showFilesButton', function(xml, pdf) {
       if (xml || pdf) {
         return true;
