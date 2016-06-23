@@ -357,7 +357,7 @@ Meteor.fullText = {
                     tblGraphicAttr = Meteor.fullText.traverseAttributes( tblGraphicNode[0].attributes );
                     if(tblGraphicAttr && tblGraphicAttr.href && files && files.tables){
                         files.tables.forEach(function(tbl){
-                            if(tbl.id && tbl.url && tbl.id === tableId.toLowerCase()){
+                            if(tbl.id && tbl.url && tbl.id === tableId.toLowerCase() && tbl.display){
                                 sectionPartObject.tableGraphic = {
                                     url: tbl.url
                                 };
