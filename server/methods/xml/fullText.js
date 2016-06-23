@@ -380,8 +380,11 @@ Meteor.fullText = {
             contentType = 'figure';
         }
         else if(sec.localName === 'supplementary-material'){
-            content = Meteor.fullText.convertSupplement(sec,files,mongoId);
-            contentType = 'supplement';
+            var suppConverted = Meteor.fullText.convertSupplement(sec,files,mongoId);
+            if(suppConverted){
+                sectionPartObject.contentType = 'supplement';
+                sectionPartObject.supps = suppConverted;
+            }
         }
         else{
             content = Meteor.fullText.convertContent(sec);
@@ -546,27 +549,63 @@ Meteor.fullText = {
 
         return figObj;
     },
-    convertSupplement: function(node,files,mongoId){
+    convertSupplement: function(node, files, mongoId){
         // console.log('..convertSupplement',files);
         var suppAssetsUrl = journalConfig.findOne().assets;
-        var suppObj;
+        var suppRes = [],
+            mediaIds = [];
+
+        var mediaCheck = xpath.select('media', node);
+
 
         // get the figure id, label, title, caption
-        //------------------
+        // match by ID of <supplemental-material>, or if there are multiple <media> then use last part in href to match
+        // ------------------
         Meteor.xmlPmc.supplemental(node,function(suppInfo){
             if(suppInfo){
-                suppObj = suppInfo;
+                if(mediaCheck.length > 1){
+                    // multiple <media>
+                    mediaCheck.forEach(function(suppMedia){
+                        var suppMediaAttr,
+                            suppMediaHrefPieces,
+                            suppMediaIdPieces,
+                            suppMediaId;
+                        suppMediaAttr = Meteor.fullText.traverseAttributes(suppMedia.attributes);
+                        if(suppMediaAttr && suppMediaAttr.href){
+                            suppMediaHrefPieces = suppMediaAttr.href.split('-');
+                            suppMediaIdPieces = suppMediaHrefPieces[suppMediaHrefPieces.length - 1].split('.');
+                            suppMediaId = suppMediaIdPieces[0];
+                            mediaIds.push(suppInfo.id.toLowerCase() + '_' + suppMediaId.toLowerCase());
+                        }
+                    });
+                }
+                
                 // match to db file info
                 if(files.supplemental) {
-                    for(var f = 0 ; f < files.supplemental.length ; f++){
+                    for(var f = 0; f <files.supplemental.length; f++){
+                        // copy parent node data (lable, title, etc)
+                        var suppObj = {};
+                        for(var key in suppInfo){
+                            suppObj[key] = suppInfo[key];
+                        }
+
                         if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase() && files.supplemental[f].url){
+                            // matched by <supplemental-material> id attribute
                             suppObj.url = files.supplemental[f].url;
+                            suppRes.push(suppObj);
+                        }
+                        else if(mediaIds.indexOf(files.supplemental[f].id.toLowerCase()) != -1 && files.supplemental[f].url){
+                            // matched by media href id parsing
+                            suppObj.url = files.supplemental[f].url;
+                            suppObj.id_alt = suppObj.id + '_' + files.supplemental[f].id.toLowerCase();
+                            suppRes.push(suppObj);
                         }
                     }
                 }
             }
         });
-        return suppObj;
+
+        return suppRes;
     },
     convertReference: function(reference){
         // console.log('...............convertReference');

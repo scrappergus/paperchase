@@ -175,7 +175,7 @@
 
             {{#if equals contentType 'supplement'}}
             <!-- Supplemental -->
-                {{#with content}}
+                {{#each supps}}
 
                 {{#if title}}
                 <h3 class="article-header-2">{{{title}}}</h3>
@@ -189,7 +189,7 @@
                 <p>{{{caption}}}</p>
                 {{/if}}
 
-                {{/with}}
+                {{/each}}
             {{/if}}
         {{/each}}
     </div>
