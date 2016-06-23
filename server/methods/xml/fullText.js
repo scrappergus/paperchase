@@ -35,7 +35,7 @@ Meteor.methods({
     },
     fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
-        console.log('... fullTextToJson');
+        // console.log('... fullTextToJson');
         xml = Meteor.clean.newLinesToSpace(xml);
         xml = Meteor.clean.removeExtraSpaces(xml);
         // console.log('---xml',xml);
