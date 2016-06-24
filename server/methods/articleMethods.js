@@ -246,7 +246,7 @@ Meteor.methods({
             Meteor.call('articleExistenceCheck', articleId, article, function(duplicateFound){
                 if(duplicateFound){
                     console.error('articleExistenceCheck',duplicateFound);
-                    article.duplicate = error.details;
+                    article.duplicate = duplicateFound.details;
                 }
             });
             // after processing XML
@@ -554,6 +554,7 @@ Meteor.methods({
 
             if(exists && exists.length > 1){
                 exists.forEach(function(article){
+                    // console.log(article._id);
                     if(mongoId && article._id != mongoId){
                         duplicate = article;
                     }else if(articleData.title && article.title && Meteor.clean.removeSpaces(articleData.title) === Meteor.clean.removeSpaces(article.title)){
