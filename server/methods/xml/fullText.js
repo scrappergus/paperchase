@@ -221,30 +221,38 @@ Meteor.methods({
         if(references[0]){
             // console.log('referencesreferences', references[0]);
             articleObject.references = [];
-            for(var referenceIdx = 0 ; referenceIdx < references.length ; referenceIdx++){
+            for(var referenceIdx = 0; referenceIdx < references.length ; referenceIdx++){
                 var reference = references[referenceIdx];
                 // console.log('... ref ' + referenceIdx);
                 var refAttributes = reference.attributes;
                 var referenceObj = {};
 
+                var elementCitation = xpath.select('element-citation', reference);
+                // console.log('elementCitation',elementCitation);
                 // Reference content and type
                 // --------------------------
-                for(var refPiece =0 ; refPiece < reference.childNodes.length ; refPiece++){
-                    if(reference.childNodes[refPiece].localName === 'element-citation'){
-                        // Reference content
-                        referenceObj = Meteor.fullText.convertReference(reference.childNodes[refPiece])
-                        // Reference type
-                        var citationAttributes = reference.childNodes[refPiece].attributes;
-                        for(var cAttr=0 ; cAttr<citationAttributes.length ; cAttr++){
-                            if(citationAttributes[cAttr].localName == 'publication-type' && citationAttributes[cAttr].nodeValue){
-                                referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
-                            }
+                if(elementCitation){
+                    elementCitation = elementCitation[0];
+                    // Reference content
+                    referenceObj = Meteor.fullText.convertReference(elementCitation);
+                    // Reference type
+                    var citationAttributes = elementCitation.attributes;
+                    for(var cAttr=0; cAttr<citationAttributes.length; cAttr++){
+                        if(citationAttributes[cAttr].localName == 'publication-type' && citationAttributes[cAttr].nodeValue){
+                            referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
                         }
                     }
                 }
+
+                // Label
+                var refLabel = xpath.select('label', reference);
+                if(refLabel && refLabel[0] && refLabel[0].childNodes && refLabel[0].childNodes[0] && refLabel[0].childNodes[0].nodeValue){
+                    referenceObj.label = refLabel[0].childNodes[0].nodeValue;
+                }
+
                 // Reference number
                 // ------------------
-                for(var refAttr = 0 ; refAttr < refAttributes.length ; refAttr++){
+                for(var refAttr = 0; refAttr < refAttributes.length; refAttr++){
                     if(refAttributes[refAttr].localName === 'id' && refAttributes[refAttr].nodeValue){
                         referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','');
                     }
@@ -620,8 +628,9 @@ Meteor.fullText = {
         var referenceObj = {};
         referenceObj.authors = '';
         var first_author = true;
-        for(var r = 0 ; r < reference.childNodes.length ; r++){
+        for(var r = 0; r < reference.childNodes.length; r++){
             // console.log('r = ' + r);
+            // console.log(reference.childNodes[r].localName);
             if(reference.childNodes[r].childNodes){
                 var referencePart,
                     referencePartName;

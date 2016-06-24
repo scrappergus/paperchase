@@ -49,7 +49,7 @@
                         <ul>
                             {{#each references}}
                                 <li id="R{{number}}">
-                                    <b>{{number}}.</b>
+                                    <b>{{#if label}}{{label}}{{else}}{{number}}{{/if}}.</b>
 
                                     {{#if asString}}
                                         {{{asString}}}
