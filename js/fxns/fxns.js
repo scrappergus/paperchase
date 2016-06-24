@@ -202,7 +202,6 @@ Meteor.article = {
         var article = articles.findOne({
             '_id': mongoId
         });
-    console.log(article);
 
         if(article){
             if(article.articleJson) {
