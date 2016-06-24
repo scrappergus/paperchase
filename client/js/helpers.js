@@ -46,7 +46,9 @@ if (Meteor.isClient) {
         }
     });
     Template.registerHelper('affiliationNumber', function(affiliation) {
-      return parseInt(parseInt(affiliation) + 1);
+            if(affiliation == '*') return affiliation;
+            return parseInt(parseInt(affiliation) + 1);  
+            
     });
     Template.registerHelper('pubStatusAbbrev', function(number) {
       if (pubStatusTranslate[parseInt(number - 1)]) {
