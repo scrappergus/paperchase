@@ -472,10 +472,5 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
 // Large Screens (+ 1170px)
 @include at-query($min, $large) {
-    .main .sidebar ul.nav-links {
-        li.title { font-size: 15px; }
-        a li { font-size: 17px; }
-    }
-
     .sub-nav { left: $sidebar-wide-width; }
 }
