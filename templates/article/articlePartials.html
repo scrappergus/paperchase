@@ -94,9 +94,11 @@
     <span>
     <ul>
     {{#each affiliations}}
+    {{#if notEmpty .}}
     <li>
         <sup>{{affiliationNumber @index affiliations}}</sup> {{.}}
     </li>
+    {{/if}}
     {{/each}}
     </ul>
     </span>
