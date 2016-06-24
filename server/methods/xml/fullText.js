@@ -35,7 +35,7 @@ Meteor.methods({
     },
     fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
-        // console.log('... fullTextToJson', files);
+        // console.log('... fullTextToJson');
         xml = Meteor.clean.newLinesToSpace(xml);
         xml = Meteor.clean.removeExtraSpaces(xml);
         // console.log('---xml',xml);
@@ -89,7 +89,6 @@ Meteor.methods({
                 // Attributes (vol, pages, type)
                 // --------
                 if(related.attributes){
-
                     relatedAttributes = Meteor.fullText.relatedArticleAttributes(related.attributes);
                     if(relatedAttributes){
                         for(var attr in relatedAttributes){
@@ -132,14 +131,40 @@ Meteor.methods({
 
                 var ackObj = Meteor.fullText.sectionToJson(ack);
 
-                ackObj.title = "Acknowledgements";
+                ackObj.title = 'Acknowledgements';
 
                 articleObject.acks.push(ackObj);
             }
         }
 
+        // Glossary
+        // --------
+        var glossary = xpath.select('//def-list', doc);
+        if(glossary[0]){
+            articleObject.glossary = [];
+            for(var glossIdx in glossary[0].childNodes){
+                if(typeof Number(glossIdx) == 'number' && glossary[0].childNodes[glossIdx].tagName == 'def-item') {
+                    var term = {};
+                    for(var i=0; i < glossary[0].childNodes[glossIdx].childNodes.length ; i++){
+                        var glossParsed = Meteor.fullText.convertContent(glossary[0].childNodes[glossIdx].childNodes[i]);
+                        if(glossParsed){
+                            glossParsed = Meteor.fullText.removeParagraphTags(glossParsed);
+
+                            if(glossParsed != ''){
+                                term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed;
+                            }
+                        }
+                    }
+                    if(Object.keys(term).length !=0 ){
+                        articleObject.glossary.push(term);
+                    }
+
+                }
+            }
+        }
+
         // Footnotes
-        // ---------
+        // ----------
         var footnotes = xpath.select('//back/fn-group/fn', doc);
         if(footnotes){
             articleObject.footnotes = [];
@@ -190,30 +215,6 @@ Meteor.methods({
             }
         }
 
-        // Glossary
-        // --------
-        var glossary = xpath.select('//def-list', doc);
-        if(glossary[0]){
-            articleObject.glossary = [];
-            for(var glossIdx in glossary[0].childNodes){
-                if(typeof Number(glossIdx) == 'number' && glossary[0].childNodes[glossIdx].tagName == 'def-item') {
-                    var term = {};
-                    for(var i=0; i < glossary[0].childNodes[glossIdx].childNodes.length ; i++){
-                        var glossParsed = '';
-                        glossParsed = Meteor.fullText.removeParagraphTags(Meteor.fullText.convertContent(glossary[0].childNodes[glossIdx].childNodes[i]));
-
-                        if(glossParsed != ''){
-                            term[glossary[0].childNodes[glossIdx].childNodes[i].tagName] = glossParsed;
-                        }
-                    }
-                    if(Object.keys(term).length !=0 ){
-                        articleObject.glossary.push(term);
-                    }
-
-                }
-            }
-        }
-
         // References
         // ----------
         // TODO: editorials have a different reference style
@@ -238,8 +239,8 @@ Meteor.methods({
                         // Reference type
                         var citationAttributes = reference.childNodes[refPiece].attributes;
                         for(var cAttr=0 ; cAttr<citationAttributes.length ; cAttr++){
-                            if(citationAttributes[cAttr].localName == 'publication-type'){
-                                referenceObj.type = citationAttributes[cAttr].nodeValue;
+                            if(citationAttributes[cAttr].localName == 'publication-type' && citationAttributes[cAttr].nodeValue){
+                                referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
                             }
                         }
                     }
@@ -247,7 +248,7 @@ Meteor.methods({
                 // Reference number
                 // ------------------
                 for(var refAttr = 0 ; refAttr < refAttributes.length ; refAttr++){
-                    if(refAttributes[refAttr].localName === 'id'){
+                    if(refAttributes[refAttr].localName === 'id' && refAttributes[refAttr].nodeValue){
                         referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','');
                     }
                 }
@@ -267,18 +268,21 @@ Meteor.methods({
 Meteor.fullText = {
     sectionToJson: function(section, files, mongoId){
         // XML processing of part of the content, <sec>
-        // console.log('...sectionToJson');
+        // console.log('.sectionToJson');
         var sectionObject = {};
         sectionObject.content = [];
-        for(var c = 0 ; c < section.childNodes.length ; c++){
-            // console.log('c = '  + c);
+        for(var c = 0; c < section.childNodes.length; c++){
             var sec = section.childNodes[c];
+
             if(sec.localName != null){
+                // console.log(sec.localName);
                 if(sec.localName === 'label'){
                     sectionObject.label = Meteor.fullText.convertContent(sec);
-                }else if(sec.localName === 'title'){
+                }
+                else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.convertContent(sec);
-                }else if(sec.localName === 'sec'){
+                }
+                else if(sec.localName === 'sec'){
                     var subSectionObject,
                         sectionIdObject;
 
@@ -293,7 +297,8 @@ Meteor.fullText = {
                         }
                         sectionObject.content.push(subSectionObject);
                     }
-                }else{
+                }
+                else{
                     var subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
                     // Add the content object to the section object
                     if(subSectionObject){
@@ -332,44 +337,61 @@ Meteor.fullText = {
         // Different processing for different node types
         if(sec.localName === 'table-wrap'){
             // get attributes
-            var tableId,
-                tblAttr,
-                tableGraphic;
-            tblAttr = sec.attributes;
+            var tblAttr,
+                tblGraphicNode,
+                tblGraphicAttr,
+                tblParsed;
+
             contentType = 'table';
-            for(var tblA = 0 ; tblA < tblAttr.length ; tblA++){
-                if(tblAttr[tblA].localName === 'id'){
-                    tableId = tblAttr[tblA].nodeValue;
+            sectionPartObject.contentType = contentType;
+
+            tblAttr = Meteor.fullText.traverseAttributes(sec.attributes);
+            if(tblAttr.id){
+                sectionPartObject.id = tblAttr.id;
+            }
+
+            tblParsed = Meteor.fullText.traverseTable(sec);
+            if(tblParsed){
+                for(var key in tblParsed){
+                    sectionPartObject[key] = Meteor.fullText.fixTags(tblParsed[key]);
                 }
             }
-            content = '<table class="bordered" id="' + tableId + '">';
-            content += Meteor.fullText.traverseTable(sec);
-            content += '</table>';
 
-            // do not do below via traversTable,
-            // because traversTable will return 1 single string of a table,
-            // here we want to get the table graphic
-            if(tableId){
-                for(var c = 0 ; c < sec.childNodes.length ; c++){
-                    if(sec.childNodes[c].localName === 'graphic' && files && files.tables){
+            // Table Graphic
+            if(tblAttr.id){
+                // do not do below via traversTable,
+                // because traversTable will return 1 single string of a table,
+                // here we want to get the table graphic
+                tblGraphicNode = xpath.select('//graphic', sec);
+                if(tblGraphicNode && tblGraphicNode[0] && tblGraphicNode[0].attributes){
+                    tblGraphicAttr = Meteor.fullText.traverseAttributes( tblGraphicNode[0].attributes );
+                    if(tblGraphicAttr && tblGraphicAttr.href && files && files.tables){
                         files.tables.forEach(function(tbl){
-                            if(tbl.id && tbl.url && tbl.id === tableId.toLowerCase()){
+                            if(tbl.id && tbl.url && tbl.id === tblAttr.id.toLowerCase() && tbl.display){
                                 sectionPartObject.tableGraphic = {
                                     url: tbl.url
                                 };
                             }
                         });
                     }
-
                 }
             }
-        }else if(sec.localName === 'fig'){
+            if(tblParsed.footer){
+                sectionPartObject.footer = tblParsed.footer;
+            }
+        }
+        else if(sec.localName === 'fig'){
             content = Meteor.fullText.convertFigure(sec,files,mongoId);
             contentType = 'figure';
-        }else if(sec.localName === 'supplementary-material'){
-            content = Meteor.fullText.convertSupplement(sec,files,mongoId);
-            contentType = 'supplement';
-        }else{
+        }
+        else if(sec.localName === 'supplementary-material'){
+            var suppConverted = Meteor.fullText.convertSupplement(sec,files,mongoId);
+            if(suppConverted){
+                sectionPartObject.contentType = 'supplement';
+                sectionPartObject.supps = suppConverted;
+            }
+        }
+        else{
             content = Meteor.fullText.convertContent(sec);
             contentType = 'p';
         }
@@ -407,7 +429,6 @@ Meteor.fullText = {
         return type;
     },
     convertContent: function(node){
-        // console.log('convertContent');
         // need to include figures so that we can fill in src within the content
         var content = '';
         // console.log(node.localName);
@@ -441,7 +462,7 @@ Meteor.fullText = {
                         content += Meteor.fullText.linkXref(childNode);
                     } else if(childNode.localName === 'ext-link'){
                         content += Meteor.fullText.linkExtLink(childNode);
-                    } else if(childNode.nodeType == 3 && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                    } else if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                         //plain text or external link
                         if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
                             content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
@@ -467,8 +488,14 @@ Meteor.fullText = {
 
             }
         }
+
         content = Meteor.fullText.fixTags(content);
-        return content;
+
+        if(content.length === 0){
+            return;
+        }else{
+            return content;
+        }
     },
     linkXref: function(xrefNode){
         // console.log('linkXref',xrefNode);
@@ -511,20 +538,20 @@ Meteor.fullText = {
         }
         return content;
     },
-    convertFigure: function(node,files,mongoId){
+    convertFigure: function(node, files, mongoId){
         // console.log('..convertFigure',node);
-        var figureAssetsUrl = journalConfig.findOne().assets;
         var figObj;
 
         // get the figure id, label, title, caption
         //------------------
-        Meteor.xmlPmc.figure(node,function(figInfo){
+        Meteor.xmlPmc.figure(node, function(figInfo){
             if(figInfo){
                 figObj = figInfo;
                 // match to db file info
-                for(var f = 0 ; f < files.figures.length ; f++){
-                    if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
-                        figObj.url = figureAssetsUrl + 'paper_figures/' + files.figures[f].file;
+                if(files.figures)
+                for(var f = 0; f<files.figures.length; f++){
+                    if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase() && files.figures[f].url){
+                        figObj.url = files.figures[f].url;
                     }
                 }
             }
@@ -532,27 +559,64 @@ Meteor.fullText = {
 
         return figObj;
     },
-    convertSupplement: function(node,files,mongoId){
+    convertSupplement: function(node, files, mongoId){
         // console.log('..convertSupplement',files);
         var suppAssetsUrl = journalConfig.findOne().assets;
-        var suppObj;
+        var suppRes = [],
+            mediaIds = [];
+
+        var mediaCheck = xpath.select('media', node);
+
 
         // get the figure id, label, title, caption
-        //------------------
+        // match by ID of <supplemental-material>, or if there are multiple <media> then use last part in href to match
+        // ------------------
         Meteor.xmlPmc.supplemental(node,function(suppInfo){
             if(suppInfo){
-                suppObj = suppInfo;
+                if(mediaCheck.length > 1){
+                    // multiple <media>
+                    // ----------------
+                    mediaCheck.forEach(function(suppMedia){
+                        var suppMediaAttr,
+                            suppMediaHrefPieces,
+                            suppMediaIdPieces,
+                            suppMediaId;
+                        suppMediaAttr = Meteor.fullText.traverseAttributes(suppMedia.attributes);
+                        if(suppMediaAttr && suppMediaAttr.href){
+                            suppMediaHrefPieces = suppMediaAttr.href.split('-');
+                            suppMediaIdPieces = suppMediaHrefPieces[suppMediaHrefPieces.length - 1].split('.');
+                            suppMediaId = suppMediaIdPieces[0];
+                            mediaIds.push(suppInfo.id.toLowerCase() + '_' + suppMediaId.toLowerCase());
+                        }
+                    });
+                }
+
                 // match to db file info
                 if(files.supplemental) {
-                    for(var f = 0 ; f < files.supplemental.length ; f++){
+                    for(var f = 0; f <files.supplemental.length; f++){
+                        // copy parent node data (lable, title, etc)
+                        var suppObj = {};
+                        for(var key in suppInfo){
+                            suppObj[key] = suppInfo[key];
+                        }
+
                         if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase() && files.supplemental[f].url){
+                            // matched by <supplemental-material> id attribute
                             suppObj.url = files.supplemental[f].url;
+                            suppRes.push(suppObj);
+                        }
+                        else if(mediaIds.indexOf(files.supplemental[f].id.toLowerCase()) != -1 && files.supplemental[f].url){
+                            // matched by media href id parsing
+                            suppObj.url = files.supplemental[f].url;
+                            suppObj.id_alt = suppObj.id + '_' + files.supplemental[f].id.toLowerCase();
+                            suppRes.push(suppObj);
                         }
                     }
                 }
             }
         });
-        return suppObj;
+
+        return suppRes;
     },
     convertReference: function(reference){
         // console.log('...............convertReference');
@@ -645,11 +709,12 @@ Meteor.fullText = {
                     }else if(referencePartName){
                         // source, year, pages, issue, volume, chapter_title
                         if(referencePart.childNodes){
-                            var referencePartCount = referencePart.childNodes.length;
-                            for(var part = 0 ; part < referencePartCount ; part++){
+                            for(var part = 0 ; part < referencePart.childNodes.length ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
-                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String) {
-                                        referenceObj[referencePartName] += ". " + referencePart.childNodes[part].nodeValue;
+                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String ) {
+                                        if(referencePartName != 'fpage' && referencePartName != 'lpage'){
+                                            referenceObj[referencePartName] += '. ' + referencePart.childNodes[part].nodeValue;
+                                        }
                                     } else {
                                         referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
                                     }
@@ -744,16 +809,18 @@ Meteor.fullText = {
         // TODO: make this more general for traversing all nodes, not just table
         // TODO combine label and title
         // TODO: remove footerFlag. Used to add label to table footers.
-        var nodeString = '',
+        var tableString = '',
             tableHeading = '',
+            tableFooter = '',
             tableLabel = '',
+            tableTitle = '',
             tableCaption = '',
             tableTitle = '';
         for(var c = 0 ; c < node.childNodes.length ; c++){
             var n = node.childNodes[c];
-            // console.log(n.nodeName, n.nodeValue);
             // Start table el tag
             var elType = n.localName;
+            // console.log(elType);
             if(elType != null){
                 elType = Meteor.fullText.fixTableTags(elType);
             }
@@ -782,33 +849,35 @@ Meteor.fullText = {
                         colspan = "100";
                     }
                 }
-                nodeString += '<' + elType;
+                tableString += '<' + elType;
                 if(colspan){
-                    nodeString += ' colspan="' + colspan + '"';
+                    tableString += ' colspan="' + colspan + '"';
                 }
                 if(rowspan){
-                    nodeString += ' rowspan="' + rowspan + '"';
+                    tableString += ' rowspan="' + rowspan + '"';
                 }
                 if(elId){
-                    nodeString += ' id="' + elId + '"';;
+                    tableString += ' id="' + elId + '"';;
                 }
-                nodeString += '>';
+                tableString += '>';
                 if(footerFlag && tableLabel){
-                    nodeString += tableLabel + ' '; //temporary. Would like to not handle table footer labels this way.
+                    tableString += tableLabel + ' '; //temporary. Would like to not handle table footer labels this way.
                 }
             }
             // do not combine with elseif, because we need to still close tag via code below
 
             if(elType == 'label'){
                 // Table Title - part one, or footer
-                tableLabel = Meteor.fullText.traverseTable(n);
-            }else if(elType == 'caption'){
+                tableLabel = Meteor.fullText.traverseTable(n).table;
+            }
+            else if(elType == 'caption'){
                 // Table Title - part three
                 // do not use traversing functions. problem keeping title separate
                 for(var cc = 0 ; cc < n.childNodes.length ; cc++){
                     if(n.childNodes[cc].localName == 'title'){
                         tableTitle = Meteor.fullText.convertContent(n.childNodes[cc]);
-                    }else if(n.childNodes[cc].localName == 'p'){
+                    }
+                    else if(n.childNodes[cc].localName == 'p'){
                         tableCaption += Meteor.fullText.convertContent(n.childNodes[cc]);
                     }
                 }
@@ -816,29 +885,32 @@ Meteor.fullText = {
                     tableLabel = tableLabel + '.';
                 }
                 tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
-                nodeString += '<caption>' + tableHeading + '</caption>';
-            }else if(elType == 'table-wrap-foot'){
-                // console.log('..footer');
-                nodeString += Meteor.fullText.traverseTableFooter(n);
-            }else if(elType == 'xref'){
-                nodeString += Meteor.fullText.linkXref(n);
-            }else if(elType != 'graphic'){
+                tableTitle = '<caption>' + tableHeading + '</caption>';
+            }
+            else if(elType == 'table-wrap-foot'){
+                tableFooter += Meteor.fullText.traverseTableFooter(n);
+            }
+            else if(elType == 'xref'){
+                tableString += Meteor.fullText.linkXref(n);
+            }
+            else if(elType != 'graphic'){
                 // Table content
-                if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
                     var val = n.nodeValue;
-                    nodeString += val;
-                }else if(n.childNodes){
-                    nodeString += Meteor.fullText.traverseTable(n);
+                    tableString += val;
+                }
+                else if(n.childNodes){
+                    tableString += Meteor.fullText.traverseTable(n).table;
                 }
 
                 // Close table el tag
                 if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){
-                    nodeString += '</' + elType + '>'
+                    tableString += '</' + elType + '>'
                 }
             }
         }
-        return nodeString;
+        return {table: tableString, title: tableTitle, footer: tableFooter};
     },
     traverseTableFooter: function(n){
         var string = '';
@@ -859,7 +931,7 @@ Meteor.fullText = {
                     string += ' id="'+elId+'"';
                 }
                 string += '>';
-                string += Meteor.fullText.traverseTable(n.childNodes[c],true);
+                string += Meteor.fullText.traverseTable(n.childNodes[c],true).table;
                 string += '</td></tr>';
             }else if(n.childNodes[c].nodeName == 'p'){
                 string += '<tr><td colspan="100">';
@@ -877,7 +949,7 @@ Meteor.fullText = {
                 // console.log('..'+c);
 
                 var n = node.childNodes[c];
-                if(n.nodeType == 3 && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // console.log(n.nodeValue);
                     string += n.nodeValue + ' ';
                 }else{
@@ -920,7 +992,6 @@ Meteor.fullText = {
                 content.caption = cap;
             }
         }
-
         return content;
     },
     fixTableTags: function(content){

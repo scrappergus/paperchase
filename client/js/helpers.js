@@ -58,6 +58,31 @@ if (Meteor.isClient) {
     Template.registerHelper('prettyDoi', function(doi) {
       return doi.replace('http://dx.doi.org/', '');
     });
+    // References
+    Template.registerHelper('punctuationCheck', function(string) {
+        if(string.charAt(string.length - 1) != '.' && string.charAt(string.length - 1) != '?' ){
+            return '.';
+        }else{
+            return;
+        }
+    });
+    Template.registerHelper('referenceSemicolonCheck', function(ref) {
+        var reference = ref.hash.reference;
+        if(reference && reference.volume && reference.issue || reference.comment || reference.fpage){
+            return ':';
+        }else{
+            return;
+        }
+    });
+    Template.registerHelper('referenceColonCheck', function(ref) {
+        var reference = ref.hash.reference;
+        if(reference && reference.volume && reference.issue){
+            return ';';
+        }else{
+            return;
+        }
+    });
+
     Template.registerHelper('showFilesButton', function(xml, pdf) {
       if (xml || pdf) {
         return true;

@@ -58,13 +58,10 @@
                                     {{#if equals type 'journal'}}
                                     {{#if editors}}<span> {{editors}}, editor.</span>{{/if}}
                                     {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
-                                    {{#if title}}<span> {{{title}}}.</span>{{/if}}
+                                    {{#if title}}<span> {{{title}}}{{punctuationCheck title}}</span>{{/if}}
                                     {{#if source}}<span> {{source}}.</span>{{/if}}
-                                    {{#if year}}<span> {{year}};</span>{{/if}}
-                                    {{#if volume}}<span> {{volume}}:</span>{{/if}}
-                                    {{#if issue}}<span> {{issue}}</span>{{/if}}
-                                    {{#if comment}}<span> {{{comment}}}.</span>{{/if}}
-                                    {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+                                    {{#if year}}<span> {{year}}</span>{{/if}}{{referenceColonCheck reference=this}}{{#if volume}}<span> {{volume}}</span>{{/if}}{{#if issue}}<span>({{issue}})</span>{{/if}}{{referenceSemicolonCheck reference=this}}{{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+                                    {{#if comment}}<span> {{{comment}}}</span>{{/if}}
                                     {{#if pmid}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{/if}}
                                     {{/if}}
 
@@ -99,6 +96,7 @@
                                     {{#if title}}<span> {{{title}}}.</span>{{/if}}
                                     {{#if year}}<span> {{year}};</span>{{/if}}
                                     {{#if source}}<span> {{source}}.</span>{{/if}}
+                                    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
                                     {{/if}}
 
                                     {{#if equals type 'other'}}
@@ -108,11 +106,18 @@
                                     {{#if title}}<span> {{{title}}}.</span>{{/if}}
                                     {{#if chapter_title}}<span> {{{chapter_title}}};</span>{{/if}}
                                     {{#if comment}}<span> {{{comment}}}</span>{{/if}}
-                                    {{#if year}}<span> {{year}};</span>{{/if}}
+                                    {{#if year}}<span> {{year}}.</span>{{/if}}
+                                    {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+                                    {{/if}}
+
+                                    {{#if equals type 'conf_proc'}}
+                                        {{>FullTextReferenceConference}}
+                                    {{/if}}
+                                    {{#if equals type 'confproc'}}
+                                        {{>FullTextReferenceConference}}
                                     {{/if}}
 
                                     {{#if ext_link}}<a href="{{ext_link}}" target="_BLANK">{{ext_link}}</a>{{/if}}
-                                    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
 
                                     {{/if}}
                                 </li>
@@ -139,7 +144,7 @@
 
 <template name="ArticleFullTextSection">
     <div class="section-container" id="{{#if equals headerLevel 1}}{{convertToID title}}{{/if}}">
-        <h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}}} {{/if}} {{{title}}}</h3>
+        {{#if title}}<h3 class="article-header-{{headerLevel}}">{{#if label}} {{{label}}}} {{/if}} {{{title}}}</h3>{{/if}}
         {{#each content}}
             {{#if equals contentType 'p'}}
             <p>{{{content}}}</p>
@@ -160,31 +165,38 @@
             {{#if equals contentType 'table'}}
             <!-- Table -->
                 <div class="article-table">
-                    {{{content}}}
+                    <table class="bordered" id="{{id}}">
+                    {{{title}}}
+                    {{{table}}}
 
                     {{#if tableGraphic}}
                     {{#with tableGraphic}}
                     {{>FullTextFigure}}
                     {{/with}}
                     {{/if}}
+
+                    {{{footer}}}
+                    </table>
                 </div>
             {{/if}}
 
             {{#if equals contentType 'supplement'}}
             <!-- Supplemental -->
-                {{#with content}}
+                {{#each supps}}
 
                 {{#if title}}
                 <h3 class="article-header-2">{{{title}}}</h3>
                 {{/if}}
 
-                <h3 class="article-header-3"><a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span> {{#if label}}{{label}}{{else}}Supplemental File{{/if}}</a></h3>
+                {{#if url}}
+                <h3 class="article-header-3"><a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span>{{#if label}}{{label}}{{else}}Supplemental File{{/if}}</a></h3>
+                {{/if}}
 
                 {{#if caption}}
                 <p>{{{caption}}}</p>
                 {{/if}}
 
-                {{/with}}
+                {{/each}}
             {{/if}}
         {{/each}}
     </div>
@@ -195,7 +207,7 @@
         {{#if label}}<label>{{{label}}}</label>{{/if}}
         {{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
         {{#if title}}<h4>{{{title}}}</h4>{{/if}}
-        {{#if caption}}<p>{{{caption}}}</p>{{/if}}
+        {{#if caption}}<p class="small-font">{{{caption}}}</p>{{/if}}
     </div>
 </template>
 
@@ -206,4 +218,12 @@
         {{{term}}}: {{{def}}};
     {{/each}}
     </p>
+</template>
+
+<template name="FullTextReferenceConference">
+    {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
+    {{#if title}}<span> {{{title}}}.</span>{{/if}}
+    {{#if conf_name}}<span> {{{conf_name}}}.</span>{{/if}}
+    {{#if year}}<span> {{year}}.</span>{{/if}}
+    {{#if comment}}<span>{{{comment}}}</span>{{/if}}
 </template>
