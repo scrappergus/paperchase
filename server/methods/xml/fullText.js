@@ -663,25 +663,28 @@ Meteor.fullText = {
                     else if(referencePartName == 'pub_id'){
                         // make sure attribute has pmid
                         var pmid = false;
-                        for(var attr=0 ; attr<referencePart.attributes.length ; attr++){
-                            // console.log(attr);
+                        for(var attr=0; attr<referencePart.attributes.length; attr++){
                             if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'pmid'){
-                                // console.log(referencePart.childNodes[0].nodeValue);
                                 referenceObj.pmid =referencePart.childNodes[0].nodeValue;
+                            }else if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'doi'){
+                                referenceObj.doi =referencePart.childNodes[0].nodeValue;
                             }
                         }
-                    }else if(referencePartName == 'article_title'){
+                    }
+                    else if(referencePartName == 'article_title'){
                         if(referencePart.childNodes){
                             referenceObj.title = Meteor.fullText.convertContent(referencePart);
                         }
-                    }else if(referencePartName == 'comment'){
+                    }
+                    else if(referencePartName == 'comment'){
                         if(referencePart.childNodes){
                             var comment = '';
                             for(var part=0; part<referencePart.childNodes.length; part++){
                                 // console.log(referencePart.childNodes[part].localName);
                                 if(referencePart.childNodes[part].nodeValue){
                                     comment += referencePart.childNodes[part].nodeValue;
-                                } else if(referencePart.childNodes[part].localName == 'ext-link') {
+                                }
+                                else if(referencePart.childNodes[part].localName == 'ext-link') {
                                     var href = '';
                                     for(var attrIdx=0; attrIdx<referencePart.childNodes[part].attributes.length; attrIdx++) {
                                         var attr = referencePart.childNodes[part].attributes[attrIdx];
@@ -692,7 +695,8 @@ Meteor.fullText = {
                                     link_content = href || referencePart.childNodes[part].nodeValue;
                                     comment += '<a href="'+href+'" target="_BLANK">'+link_content+'</a>';
 
-                                } else if(referencePart.childNodes[part].localName == 'uri') {
+                                }
+                                else if(referencePart.childNodes[part].localName == 'uri') {
                                     if(referencePart.childNodes[part].childNodes[0] && referencePart.childNodes[part].childNodes[0].nodeValue){
                                         var link = referencePart.childNodes[part].childNodes[0].nodeValue;
                                         link = Meteor.clean.removeSpaces(link);
@@ -703,7 +707,8 @@ Meteor.fullText = {
                             referenceObj.comment = comment;
 
                         }
-                    }else if(referencePartName){
+                    }
+                    else if(referencePartName){
                         // source, year, pages, issue, volume, chapter_title
                         if(referencePart.childNodes){
                             for(var part = 0 ; part < referencePart.childNodes.length ; part++){
@@ -712,7 +717,8 @@ Meteor.fullText = {
                                         if(referencePartName != 'fpage' && referencePartName != 'lpage'){
                                             referenceObj[referencePartName] += '. ' + referencePart.childNodes[part].nodeValue;
                                         }
-                                    } else {
+                                    }
+                                    else {
                                         referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
                                     }
                                 }
