@@ -202,6 +202,7 @@ Meteor.article = {
         var article = articles.findOne({
             '_id': mongoId
         });
+    console.log(article);
 
         if(article){
             if(article.articleJson) {
@@ -216,12 +217,13 @@ Meteor.article = {
                     Meteor.call('getFilesForFullText', mongoId, function(error, result) {
                             result = result || {};
                             result.abstract = article.abstract;
-                            if(article.articleJson) {
-                                result.sections = article.articleJson.sections;
-                                result.acks = article.articleJson.acks;
-                                result.references = article.articleJson.references;
-                            }
-                            else if(result.advanceContent) {
+//                            if(article.articleJson !== undefined) {
+//                                console.log("====>" + article.articleJson);
+//                                result.sections = article.articleJson.sections;
+//                                result.acks = article.articleJson.acks;
+//                                result.references = article.articleJson.references;
+//                            }
+                            if(article.advanceContent) {
                                 result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
                             }
 
