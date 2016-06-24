@@ -58,7 +58,7 @@
 
                     <!-- Desc Info -->
                     {{#with ids}}{{#if doi}}<span class="meta"><a href="http://dx.doi.org/{{doi}}">{{prettyDoi doi}}</a></span>{{/if}}{{/with}}
-                    {{#if page_start}}<span class="meta">pp {{page_start}}{{#if page_end}}-{{page_end}}{{/if}}</span>{{/if}}
+                    {{#if page_start}}<span class="meta">{{>ArticlePages}}</span>{{/if}}
 
                     <!-- Links -->
                     <br />
