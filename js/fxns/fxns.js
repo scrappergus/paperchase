@@ -189,7 +189,6 @@ Meteor.article = {
                 }
             }
         }
-        console.log(article);
         return article;
     },
     subscribeModal: function(e){
@@ -205,14 +204,30 @@ Meteor.article = {
         });
 
         if(article){
-            if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+            if(article.articleJson) {
                 Session.set('article-text', null);
-                Meteor.call('getFilesForFullText', mongoId, function(error, result) {
-                    result = result || {};
-                    result.abstract = article.abstract;
-                    result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
-                    Session.set('article-text', result);
-                });
+                var result = article.articleJson;
+                result.abstract = article.abstract;
+                Session.set('article-text', result);
+            }
+            else {
+                if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+                    Session.set('article-text', null);
+                    Meteor.call('getFilesForFullText', mongoId, function(error, result) {
+                            result = result || {};
+                            result.abstract = article.abstract;
+                            if(article.articleJson) {
+                                result.sections = article.articleJson.sections;
+                                result.acks = article.articleJson.acks;
+                                result.references = article.articleJson.references;
+                            }
+                            else if(result.advanceContent) {
+                                result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
+                            }
+
+                            Session.set('article-text', result);
+                        });
+                }
             }
         }
 
