@@ -186,10 +186,7 @@ Meteor.methods({
 
                 if(!footObj.title){
                     footnotesWithoutTitle++;
-                    footObj.title = 'Footnote';
-                    if(footnotesWithoutTitle > 1){
-                        footObj.title += ' ' + footnotesWithoutTitle; // need to keep title unique for anchor tag
-                    }
+                    footObj.title = 'Footnote ' + footnotesWithoutTitle; // need to keep title unique for anchor tag
                 }
 
                 // Footnote content
