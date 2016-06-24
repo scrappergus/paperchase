@@ -51,6 +51,10 @@
                                 <li id="R{{number}}">
                                     <b>{{number}}.</b>
 
+                                    {{#if asString}}
+                                        {{{asString}}}
+                                    {{else}}
+
                                     {{#if equals type 'journal'}}
                                     {{#if editors}}<span> {{editors}}, editor.</span>{{/if}}
                                     {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
@@ -109,6 +113,8 @@
 
                                     {{#if ext_link}}<a href="{{ext_link}}" target="_BLANK">{{ext_link}}</a>{{/if}}
                                     {{#if comment}}<span>{{{comment}}}</span>{{/if}}
+
+                                    {{/if}}
                                 </li>
                             {{/each}}
                         </ul>
