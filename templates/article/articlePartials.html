@@ -18,7 +18,7 @@
     {{>AuthorsRefList }}
     {{#if dates}} {{>ArticleDates}} {{/if}}
     {{#if ids.doi}}<span><a href="http://dx.doi.org/{{ids.doi}}">{{ids.doi}}</a></span>{{/if}}
-    {{#if ids.pmc}}<br><span><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC{{ids.pmc}}" target="_BLANK">PMC</a></span>{{/if}}
+    {{#if ids.pmc}}<span class="right"><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC{{ids.pmc}}" target="_BLANK">PMC</a></span>{{/if}}
 
     <!-- todo: implement featured photo -->
     <!-- {{#if featuredPhoto}} -->
