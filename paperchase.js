@@ -403,6 +403,7 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ]
@@ -410,7 +411,6 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var sorted  = sorters.findOne({'name':'advance'});
-                // console.log('sorted',sorted.ordered);
                 return {
                     articles : sorted.ordered
                 }
