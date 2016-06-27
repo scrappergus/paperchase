@@ -47,7 +47,7 @@ Meteor.methods({
 
         // Article Content
         // ---------------
-        var sections = xpath.select('//body/sec | //body/p | //body/fig', doc);
+        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote', doc);
         if(sections[0]){
             for(var section = 0; section<sections.length; section++){
                 var sectionObject = {},
@@ -61,13 +61,18 @@ Meteor.methods({
                         }
                     }
                 }else if(sections[section].localName === 'p'){
-                    sectionObject = {};
                     sectionObject.content = [];
                     sectionObject.content.push(Meteor.fullText.sectionPartsToJson(sections[section],files,mongoId));
                 }else if(sections[section].localName === 'fig'){
                     var figure = Meteor.fullText.convertFigure(sections[section],files,mongoId);
                     sectionObject.content = [];
                     sectionObject.content.push({content: figure, contentType: 'figure'});
+                }else if(sections[section].localName === 'disp-quote'){
+                    var quote = Meteor.fullText.convertContent(sections[section]);
+                    if(quote){
+                        sectionObject.content = [];
+                        sectionObject.content.push({content: quote, contentType: 'quote'});
+                    }
                 }
 
                 articleObject.sections.push(sectionObject);

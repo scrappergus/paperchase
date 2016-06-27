@@ -156,6 +156,12 @@
             {{>ArticleFullTextSection}}
             {{/if}}
 
+            {{#if equals contentType 'quote'}}
+                {{#if content}}
+                <blockquote>{{{content}}}</blockquote>
+                {{/if}}
+            {{/if}}
+
             {{#if equals contentType 'figure'}}
             <!-- Figure -->
                 {{#with content}}
