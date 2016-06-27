@@ -189,10 +189,6 @@ Meteor.methods({
                     footObj.title = 'Funding';
                 }
 
-                if(!footObj.title){
-                    footnotesWithoutTitle++;
-                    footObj.title = 'Footnote ' + footnotesWithoutTitle; // need to keep title unique for anchor tag
-                }
 
                 // Footnote content
                 for(var c=0; c<footnotes[i].childNodes.length; c++){
@@ -200,15 +196,26 @@ Meteor.methods({
                     if(foot){
                         if(footObj.title === 'Conflict of Interests Statement' && foot.indexOf('Conflict of interest statement') != -1){
                             // do not want to add 'Conflict of interest statement' to footnote content because this will be added via attribute fn-type check above
-                        }else if(footObj.title === 'Author contributions' && foot.indexOf('Authors\' contributions') != -1 || foot.indexOf('Author contributions') != -1){
+                        }
+                        else if(footObj.title === 'Author contributions' && foot.indexOf('Authors\' contributions') != -1 || foot.indexOf('Author contributions') != -1){
                             // do not want to add 'Authors\' contributions' to footnote content because this will be added via attribute fn-type check above
-                        }else if(footObj.title === 'Funding' && foot.indexOf('Funding') != -1){
+                        }
+                        else if(footObj.title === 'Funding' && foot.indexOf('Funding') != -1){
                             // do not want to add 'Funding' to footnote content because this will be added via attribute fn-type check above
-                        }else{
+                        }
+                        else if(!footObj.title && foot.indexOf('Funding') != -1){
+                            footObj.title = 'Funding';
+                        }
+                        else{
                             footObj.content.push(foot);
                         }
 
                     }
+                }
+
+                if(!footObj.title){
+                    footnotesWithoutTitle++;
+                    footObj.title = 'Footnote ' + footnotesWithoutTitle; // need to keep title unique for anchor tag
                 }
 
                 if(Object.keys(footObj).length!=0){
