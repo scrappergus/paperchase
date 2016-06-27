@@ -338,7 +338,7 @@ Meteor.xmlPmc = {
         var affiliationsResult = [];
         for(var aff=0 ; aff < affiliations.length ; aff++){
             if(affiliations[aff]._){
-                affiliationsResult.push(affiliations[aff]._.trim());
+                affiliationsResult.push(Meteor.clean.removeExtraSpaces(affiliations[aff]._.trim()));
             }else{
                 affiliationsResult.push(Meteor.clean.removeExtraSpaces(affiliations[aff]).trim());
             }

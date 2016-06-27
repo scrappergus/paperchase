@@ -702,6 +702,7 @@ Meteor.clean = {
             string = string.replace(/<italic>/g,'<i>').replace(/<\/italic>/g,'</i>');
             string = string.replace(/(\r\n|\n|\r)/gm,''); // line breaks
             string = string.trim();
+            string = Meteor.clean.removeExtraSpaces(string);
         }
         return string;
     },
