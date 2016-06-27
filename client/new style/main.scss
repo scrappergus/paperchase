@@ -258,6 +258,16 @@ h2.dates {
         font-weight: 700;
     }
 
+    h3.article-header-3{
+        @extend h4;
+    }
+    h3.article-header-4{
+        @extend h5;
+    }
+    h3.article-header-5{
+        @extend h6;
+    }
+
     p {
         line-height: 1.5;
         word-wrap: break-word;
