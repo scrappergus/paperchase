@@ -841,7 +841,7 @@ Meteor.fullText = {
             if(elType != null){
                 elType = Meteor.fullText.fixTableTags(elType);
             }
-            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic'){
+            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic' && elType != 'break' ){
                 // table tag added in sectionToJson()
                 var colspan;
                 var rowspan;
@@ -890,7 +890,7 @@ Meteor.fullText = {
             else if(elType == 'caption'){
                 // Table Title - part three
                 // do not use traversing functions. problem keeping title separate
-                for(var cc = 0 ; cc < n.childNodes.length ; cc++){
+                for(var cc = 0; cc < n.childNodes.length; cc++){
                     if(n.childNodes[cc].localName == 'title'){
                         tableTitle = Meteor.fullText.convertContent(n.childNodes[cc]);
                     }
@@ -914,7 +914,7 @@ Meteor.fullText = {
                 // Table content
                 if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
-                    var val = n.nodeValue;
+                    var val = Meteor.fullText.fixTags(n.nodeValue);
                     tableString += val;
                 }
                 else if(n.childNodes){
@@ -922,8 +922,11 @@ Meteor.fullText = {
                 }
 
                 // Close table el tag
-                if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot'){
+                if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'break'){
                     tableString += '</' + elType + '>'
+                }
+                else if(elType === 'break'){
+                    tableString += '<br/>';
                 }
             }
         }
@@ -988,6 +991,7 @@ Meteor.fullText = {
             content = content.replace(/<\/italic>/g,'</i>');
             content = content.replace(/<bold>/g,'<b>');
             content = content.replace(/<\/bold>/g,'</b>');
+            content = content.replace(/<break\/>/g,'<br/>');
             content = content.replace(/<underline>/g,'<u>');
             content = content.replace(/<\/underline>/g,'</u>');
 
