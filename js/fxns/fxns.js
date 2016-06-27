@@ -99,7 +99,10 @@ Meteor.article = {
         var availableLabels = ['*','#'];
         for(authIdx=0; authIdx < article.authors.length; authIdx++) {
             // If no affiliation_numbers saved for author and there is only 1 affiliation
-            if(article.affiliations && article.affiliations.length === 1 && !article.authors[authIdx].affiliations_numbers || article.authors[authIdx].affiliations_numbers.length === 0) {
+            if(article.affiliations && article.affiliations.length === 1 && !article.authors[authIdx].affiliations_numbers) {
+                article.authors[authIdx].affiliations_numbers = [0];
+            }
+            else if(article.affiliations && article.affiliations.length === 1 && article.authors[authIdx].affiliations_numbers && article.authors[authIdx].affiliations_numbers.length === 0){
                 article.authors[authIdx].affiliations_numbers = [0];
             }
 
