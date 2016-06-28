@@ -39,7 +39,7 @@
                         {{#each footnotes}}
                         <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
                             {{#each content}}
-                            <p>{{{.}}}</p>
+                            <p>{{#if label}}<sup>{{{label}}}</sup>{{/if}}{{{content_part}}}</p>
                             {{/each}}
                         {{/each}}
                     {{/if}}

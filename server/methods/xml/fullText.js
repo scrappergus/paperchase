@@ -173,7 +173,11 @@ Meteor.methods({
         var footnotes = xpath.select('//back/fn-group/fn', doc);
         if(footnotes){
             articleObject.footnotes = [];
-            var footnotesWithoutTitle = 0;
+
+            var footnotesWithoutTitles = {};
+            footnotesWithoutTitles.title = 'Footnote';
+            footnotesWithoutTitles.content = [];
+
             for(var i=0; i<footnotes.length; i++){
                 var footObj = {},
                     attributes;
@@ -189,12 +193,14 @@ Meteor.methods({
                     footObj.title = 'Funding';
                 }
 
-
                 // Footnote content
                 for(var c=0; c<footnotes[i].childNodes.length; c++){
                     var foot = Meteor.fullText.convertContent(footnotes[i].childNodes[c]);
                     if(foot){
-                        if(footObj.title === 'Conflict of Interests Statement' && foot.indexOf('Conflict of interest statement') != -1){
+                        if(footnotes[i].childNodes[c].localName === 'label'){
+                            footObj.label = foot;
+                        }
+                        else if(footObj.title === 'Conflict of Interests Statement' && foot.indexOf('Conflict of interest statement') != -1){
                             // do not want to add 'Conflict of interest statement' to footnote content because this will be added via attribute fn-type check above
                         }
                         else if(footObj.title === 'Author contributions' && foot.indexOf('Authors\' contributions') != -1 || foot.indexOf('Author contributions') != -1){
@@ -206,22 +212,29 @@ Meteor.methods({
                         else if(!footObj.title && foot.indexOf('Funding') != -1){
                             footObj.title = 'Funding';
                         }
+                        else if(footObj.title){
+                            footObj.content.push({content_part: foot});
+                        }
                         else{
-                            footObj.content.push(foot);
+                            // Not title, group all these together within same header 'Footer'
+                            footnotesWithoutTitles.content.push({label: footObj.label , content_part: foot});
                         }
 
                     }
                 }
 
-                if(!footObj.title){
-                    footnotesWithoutTitle++;
-                    footObj.title = 'Footnote ' + footnotesWithoutTitle; // need to keep title unique for anchor tag
-                }
-
-                if(Object.keys(footObj).length!=0){
+                if(Object.keys(footObj).length!=0 && footObj.title){
                     articleObject.footnotes.push(footObj);
                 }
             }
+
+            if(footnotesWithoutTitles.content.length > 0){
+                if(footnotesWithoutTitles.content.length > 1){
+                    footnotesWithoutTitles.title = 'Footnotes';
+                }
+                articleObject.footnotes.push(footnotesWithoutTitles);
+            }
+
         }
 
         // References
