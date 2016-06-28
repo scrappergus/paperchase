@@ -89,6 +89,10 @@
 .fixed-scroll-card {
     position: relative;
     top: 0;
+    bottom: 0;
+    margin-bottom: 0px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     &.fixed-active {
         @include at-query($min, $medium) {
