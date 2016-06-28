@@ -204,10 +204,13 @@ h2.dates {
         }
     }
 }
-h2.dates {
-    span.comma {
-        display: inline-block !important;
-        &:last-child { display:none !important; }
+.dates {
+    .date{
+        &:last-child{
+            span.comma {
+                display:none !important;
+            }
+        }
     }
 }
 /*end hide commas*/
