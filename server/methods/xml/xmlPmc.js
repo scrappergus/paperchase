@@ -380,11 +380,16 @@ Meteor.xmlPmc = {
         if(node.childNodes){
             for(var figChild=0 ; figChild < node.childNodes.length ; figChild++){
                 var nod = node.childNodes[figChild];
-                var graphicAttributes,
+                var figTitle,
+                    figLabel,
+                    graphicAttributes,
                     graphicAttributesParts;
                 // label
                     if(nod.localName == 'label'){
-                        figObj.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+                        figLabel = Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+                        if(figLabel){
+                            figObj.label = Meteor.clean.removeEndPeriod(figLabel);
+                        }
                     }
 
                 // started working on figure graphics below, but then realized for example article PMC4637207, that even though the figure parts are different <graphic> the callouts are all for just f3, no f3_a. So instead, I updated the figure itself
@@ -416,7 +421,10 @@ Meteor.xmlPmc = {
                         // figure title
                         // ------------
                         if(n.localName == 'title'){
-                            figObj.title =  Meteor.clean.removeExtraSpaces(Meteor.fullText.convertContent(n).replace(/^\s+|\s+$/g, ''));
+                            figTitle =  Meteor.clean.removeExtraSpaces(Meteor.fullText.convertContent(n).replace(/^\s+|\s+$/g, ''));
+                            if(figTitle){
+                                figObj.title = Meteor.clean.removeEndPeriod(figTitle);
+                            }
                         }
                         // figure caption
                         // ------------
