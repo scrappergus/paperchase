@@ -47,8 +47,8 @@ if (Meteor.isClient) {
     });
     Template.registerHelper('affiliationNumber', function(affiliation) {
             if(affiliation == '*') return affiliation;
-            return parseInt(parseInt(affiliation) + 1);  
-            
+            return parseInt(parseInt(affiliation) + 1);
+
     });
     Template.registerHelper('pubStatusAbbrev', function(number) {
       if (pubStatusTranslate[parseInt(number - 1)]) {
@@ -237,6 +237,11 @@ if (Meteor.isClient) {
         for (var key in obj) result.push({name:key,value:obj[key]});
         return result;
     });
+    Template.registerHelper('removePunctuation',function(string){
+        return Meteor.clean.removeEndPeriod(string);
+    });
+
+
 
     Template.registerHelper('wrapInParagraphTag', function(str){
         if(str.indexOf('<p>') === -1){

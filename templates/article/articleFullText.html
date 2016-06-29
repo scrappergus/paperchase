@@ -206,7 +206,7 @@
 <template name="FullTextFigure">
     <div class="full-text-image-container" id="{{id}}">
         {{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
-        <p class="small-font">{{#if label}}<span><b>{{{label}}}.</b></span>{{/if}} {{#if title}}<span><b>{{{title}}}.</b></span>{{/if}} {{{caption}}}</p>
+        <p class="small-font">{{#if label}}<span><b>{{{removePunctuation label}}}.</b></span>{{/if}} {{#if title}}<span><b>{{{title}}}.</b></span>{{/if}} {{{caption}}}</p>
     </div>
 </template>
 
