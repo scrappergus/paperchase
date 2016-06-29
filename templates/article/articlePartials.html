@@ -192,14 +192,6 @@
         {{/if}}
         {{/with}}
 
-        {{#with article}}
-        {{#with files}}
-        {{#if supplemental}}
-            {{> ArticleSupplemental}}
-        {{/if}}
-        {{/with}}
-        {{/with}}
-
         {{#if fullTextView}}
             {{#unless advance}}
                 {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
