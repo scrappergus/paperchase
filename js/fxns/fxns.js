@@ -90,7 +90,7 @@ Meteor.article = {
         }
 
         for(var file in files){
-            if(files[file].file){
+            if(files[file] && files[file].file){
                 files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
             }else if(file === 'supplemental'){
                 for(var f in files[file]){
