@@ -52,6 +52,14 @@ Meteor.organize = {
                 articles[i].files = Meteor.article.linkFiles(articles[i].files, articles[i]._id);
             }
 
+            // Abstract hiding
+            // ---------
+            // certain paper types should not display abstract buttons
+            var hiddenAbstractPaperTypeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+            if( articles[i].article_type && articles[i].article_type._id &&  hiddenAbstractPaperTypeIds.indexOf(articles[i].article_type._id) != -1){
+                articles[i].abstract = null;
+            }
+
             if(articles[i].ids.doi && _.isString(articles[i].ids.doi)) {
                 articles[i].ids.doi = articles[i].ids.doi.replace(/http:\/\/dx\.doi\.org\//,""); // TODO: remove link part from DB
             }
@@ -113,6 +121,8 @@ Meteor.impact = {
 
 Meteor.article = {
     readyData: function(article){
+        var typesToHide;
+
         if(!article.volume && article.issue_id){
             // for display purposes
             var issueInfo = issues.findOne();
@@ -129,6 +139,16 @@ Meteor.article = {
 
         if(article.ids.doi && _.isString(article.ids.doi)) {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
+        }
+
+        // Abstract
+        // ------------
+        // certain paper types should not display abstract on 'abstract' page, this is just a landing page for LinkOut
+        if( article.article_type && article.article_type._id){
+            typesToHide = Meteor.impact.getCommentariesAndEditorialTypeIds();
+            if(typesToHide.indexOf(article.article_type._id) != -1 ){
+                article.abstract = null;
+            }
         }
 
         // Dates/History
