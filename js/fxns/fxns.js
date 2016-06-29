@@ -108,10 +108,7 @@ Meteor.impact = {
         var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
         if( article && article.article_type && article.article_type._id && article.files && article.files.xml && article.files.xml.file ){
             if( typeIds.indexOf(article.article_type._id) != -1 ){
-                article.files.xml.file = null;
-                if(article.files.xml.url){
-                    article.files.xml.url = null;
-                }
+                article.files.xml.display = false;
             }
         }
 

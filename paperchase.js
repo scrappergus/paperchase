@@ -704,6 +704,9 @@ if (Meteor.isClient) {
                 });
                 if (article) {
                     article = Meteor.article.readyData(article);
+                    if(article && article.files && article.files.xml && !article.files.xml.display){
+                        Router.go('Article', {_id : this.params._id});
+                    }
                     return {
                         article: article
                     };
