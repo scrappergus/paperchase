@@ -937,8 +937,11 @@ Meteor.fullText = {
                 if(tableLabel.indexOf('.') == -1){
                     tableLabel = tableLabel + '.';
                 }
-                tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
-                tableTitle = '<caption>' + tableHeading + '</caption>';
+                tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4>';
+                if(tableCaption){
+                    tableHeading += '<p>' + tableCaption + '</p>';
+                }
+                tableTitle = tableHeading;
             }
             else if(elType == 'table-wrap-foot'){
                 tableFooter += Meteor.fullText.traverseTableFooter(n);
