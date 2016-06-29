@@ -47,11 +47,12 @@ Meteor.methods({
 
         // Article Content
         // ---------------
-        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote', doc);
+        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote | //body/table-wrap', doc);
         if(sections[0]){
             for(var section = 0; section<sections.length; section++){
                 var sectionObject = {},
                     sectionIdObject = {};
+                // console.log(sections[section].localName);
                 if(sections[section].localName === 'sec'){
                     sectionObject = Meteor.fullText.sectionToJson(sections[section], files, mongoId);
                     sectionIdObject = Meteor.fullText.sectionId(sections[section]);
@@ -72,6 +73,13 @@ Meteor.methods({
                     if(quote){
                         sectionObject.content = [];
                         sectionObject.content.push({content: quote, contentType: 'quote'});
+                    }
+                }else if(sections[section].localName === 'table-wrap'){
+                    var tbl = Meteor.fullText.convertTableWrap( sections[section] , files );
+                    if(tbl){
+                        sectionObject.content = [];
+                        tbl.contentType = 'table';
+                        sectionObject.content.push(tbl);
                     }
                 }
 
@@ -366,49 +374,7 @@ Meteor.fullText = {
             contentType;
         // Different processing for different node types
         if(sec.localName === 'table-wrap'){
-            // get attributes
-            var tblAttr,
-                tblGraphicNode,
-                tblGraphicAttr,
-                tblParsed;
-
-            contentType = 'table';
-            sectionPartObject.contentType = contentType;
-
-            tblAttr = Meteor.fullText.traverseAttributes(sec.attributes);
-            if(tblAttr.id){
-                sectionPartObject.id = tblAttr.id;
-            }
-
-            tblParsed = Meteor.fullText.traverseTable(sec);
-            if(tblParsed){
-                for(var key in tblParsed){
-                    sectionPartObject[key] = Meteor.fullText.fixTags(tblParsed[key]);
-                }
-            }
-
-            // Table Graphic
-            if(tblAttr.id){
-                // do not do below via traversTable,
-                // because traversTable will return 1 single string of a table,
-                // here we want to get the table graphic
-                tblGraphicNode = xpath.select('//graphic', sec);
-                if(tblGraphicNode && tblGraphicNode[0] && tblGraphicNode[0].attributes){
-                    tblGraphicAttr = Meteor.fullText.traverseAttributes( tblGraphicNode[0].attributes );
-                    if(tblGraphicAttr && tblGraphicAttr.href && files && files.tables){
-                        files.tables.forEach(function(tbl){
-                            if(tbl.id && tbl.url && tbl.id === tblAttr.id.toLowerCase() && tbl.display){
-                                sectionPartObject.tableGraphic = {
-                                    url: tbl.url
-                                };
-                            }
-                        });
-                    }
-                }
-            }
-            if(tblParsed.footer){
-                sectionPartObject.footer = tblParsed.footer;
-            }
+            sectionPartObject = Meteor.fullText.convertTableWrap( sec, files );
         }
         else if(sec.localName === 'fig'){
             content = Meteor.fullText.convertFigure(sec,files,mongoId);
@@ -765,6 +731,56 @@ Meteor.fullText = {
 
         // console.log(referenceObj);
         return referenceObj;
+    },
+    convertTableWrap: function(sec, files){
+        // console.log('..convertTableWrap');
+        var sectionPartObject = {};
+        // get attributes
+        var tblAttr,
+            tblGraphicNode,
+            tblGraphicAttr,
+            tblParsed;
+
+        contentType = 'table';
+        sectionPartObject.contentType = contentType;
+
+        tblAttr = Meteor.fullText.traverseAttributes(sec.attributes);
+        if(tblAttr.id){
+            sectionPartObject.id = tblAttr.id;
+        }
+
+        tblParsed = Meteor.fullText.traverseTable(sec);
+        if(tblParsed){
+            for(var key in tblParsed){
+                sectionPartObject[key] = Meteor.fullText.fixTags(tblParsed[key]);
+            }
+        }
+
+        // Table Graphic
+        if(tblAttr.id){
+            // do not do below via traversTable,
+            // because traversTable will return 1 single string of a table,
+            // here we want to get the table graphic
+            tblGraphicNode = xpath.select('//graphic', sec);
+            if(tblGraphicNode && tblGraphicNode[0] && tblGraphicNode[0].attributes){
+                tblGraphicAttr = Meteor.fullText.traverseAttributes( tblGraphicNode[0].attributes );
+                if(tblGraphicAttr && tblGraphicAttr.href && files && files.tables){
+                    files.tables.forEach(function(tbl){
+                        if(tbl.id && tbl.url && tbl.id === tblAttr.id.toLowerCase() && tbl.display){
+                            sectionPartObject.tableGraphic = {
+                                url: tbl.url
+                            };
+                        }
+                    });
+                }
+            }
+        }
+
+        if(tblParsed.footer){
+            sectionPartObject.footer = tblParsed.footer;
+        }
+
+        return sectionPartObject;
     },
     relatedArticleAttributes: function(relatedAttributes){
         var result = {},

@@ -52,6 +52,14 @@ Meteor.organize = {
                 articles[i].files = Meteor.article.linkFiles(articles[i].files, articles[i]._id);
             }
 
+            // Abstract hiding
+            // ---------
+            // certain paper types should not display abstract buttons
+            var hiddenAbstractPaperTypeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+            if( articles[i].article_type && articles[i].article_type._id &&  hiddenAbstractPaperTypeIds.indexOf(articles[i].article_type._id) != -1){
+                articles[i].abstract = null;
+            }
+
             if(articles[i].ids.doi && _.isString(articles[i].ids.doi)) {
                 articles[i].ids.doi = articles[i].ids.doi.replace(/http:\/\/dx\.doi\.org\//,""); // TODO: remove link part from DB
             }
@@ -76,10 +84,14 @@ Meteor.organize = {
 }
 
 Meteor.impact = {
+    getCommentariesAndEditorialTypeIds: function() {
+        return ['PxXCzMrRgnm4LJfz9','GZwKzxk2PgcKycbNF','DtafcmBcwi5RKtfi6','SQJkMnvsWEBYzKQBr', 'jxHErCBv4iEQRd8nY', 'dSRSmvMuYaX6tmBD7']
+    },
     hideAccepted: function(article) {
-        if( article.history && article.article_type && article.article_type._id ){
+        var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+        if( article && article.history && article.article_type && article.article_type._id ){
             // Commentaries and Editorials, Commentary, Editorial, Editorial Comment, Editorial Interview, Letter to the Editor
-            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
+            if( typeIds.indexOf(article.article_type._id) != -1 ){
                 var filteredHistory = {};
                 for(var key in article.history){
                     if( key != 'accepted' ){
@@ -93,8 +105,9 @@ Meteor.impact = {
         return article;
     },
     hideFullText: function(article) {
+        var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
         if( article && article.article_type && article.article_type._id && article.files && article.files.xml && article.files.xml.file ){
-            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
+            if( typeIds.indexOf(article.article_type._id) != -1 ){
                 article.files.xml.file = null;
                 if(article.files.xml.url){
                     article.files.xml.url = null;
@@ -108,6 +121,8 @@ Meteor.impact = {
 
 Meteor.article = {
     readyData: function(article){
+        var typesToHide;
+
         if(!article.volume && article.issue_id){
             // for display purposes
             var issueInfo = issues.findOne();
@@ -124,6 +139,16 @@ Meteor.article = {
 
         if(article.ids.doi && _.isString(article.ids.doi)) {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
+        }
+
+        // Abstract
+        // ------------
+        // certain paper types should not display abstract on 'abstract' page, this is just a landing page for LinkOut
+        if( article.article_type && article.article_type._id){
+            typesToHide = Meteor.impact.getCommentariesAndEditorialTypeIds();
+            if(typesToHide.indexOf(article.article_type._id) != -1 ){
+                article.abstract = null;
+            }
         }
 
         // Dates/History
