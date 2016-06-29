@@ -9,7 +9,7 @@ Meteor.methods({
         if(articleInfo){
             articleInfo = Meteor.article.readyData(articleInfo);
 
-            if(articleInfo.files && articleInfo.files.xml){
+            if(articleInfo.files && articleInfo.files.xml && articleInfo.files.xml.url){
                 Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
                     if(getXmlError){
                         console.error('getXmlError',getXmlError);

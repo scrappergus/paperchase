@@ -47,6 +47,7 @@ Meteor.organize = {
 
             // files
             // ---------
+            articles[i] = Meteor.impact.hideFullText(articles[i]);
             if(articles[i].files){
                 articles[i].files = Meteor.article.linkFiles(articles[i].files, articles[i]._id);
             }
@@ -74,6 +75,37 @@ Meteor.organize = {
     }
 }
 
+Meteor.impact = {
+    hideAccepted: function(article) {
+        if( article.history && article.article_type && article.article_type._id ){
+            // Commentaries and Editorials, Commentary, Editorial, Editorial Comment, Editorial Interview, Letter to the Editor
+            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
+                var filteredHistory = {};
+                for(var key in article.history){
+                    if( key != 'accepted' ){
+                        filteredHistory[key] = article.history[key];
+                    }
+                }
+                article.history = filteredHistory;
+            }
+        }
+
+        return article;
+    },
+    hideFullText: function(article) {
+        if( article && article.article_type && article.article_type._id && article.files && article.files.xml && article.files.xml.file ){
+            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
+                article.files.xml.file = null;
+                if(article.files.xml.url){
+                    article.files.xml.url = null;
+                }
+            }
+        }
+
+        return article;
+    }
+}
+
 Meteor.article = {
     readyData: function(article){
         if(!article.volume && article.issue_id){
@@ -94,21 +126,12 @@ Meteor.article = {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
         }
 
-
         // Dates/History
         // ---------------
-        if( article.history && article.article_type && article.article_type._id ){
-            // Commentaries and Editorials, Commentary, Editorial, Editorial Comment, Editorial Interview, Letter to the Editor
-            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
-                var filteredHistory = {};
-                for(var key in article.history){
-                    if( key != 'accepted' ){
-                        filteredHistory[key] = article.history[key];
-                    }
-                }
-                article.history = filteredHistory;
-            }
-        }
+        article = Meteor.impact.hideAccepted(article);
+
+        // Full Text
+        article = Meteor.impact.hideFullText(article);
 
         // Authors
         // ---------------
@@ -152,7 +175,7 @@ Meteor.article = {
 
         return article;
     },
-    linkFiles:function(files,articleMongoId){
+    linkFiles:function(files, articleMongoId){
         if(journalConfig.findOne({})){
             if(files === undefined) {
                 files = {};
@@ -235,12 +258,12 @@ Meteor.article = {
                     Meteor.call('getFilesForFullText', mongoId, function(error, result) {
                             result = result || {};
                             result.abstract = article.abstract;
-//                            if(article.articleJson !== undefined) {
-//                                console.log("====>" + article.articleJson);
-//                                result.sections = article.articleJson.sections;
-//                                result.acks = article.articleJson.acks;
-//                                result.references = article.articleJson.references;
-//                            }
+                        //    if(article.articleJson !== undefined) {
+                        //        console.log("====>" + article.articleJson);
+                        //        result.sections = article.articleJson.sections;
+                        //        result.acks = article.articleJson.acks;
+                        //        result.references = article.articleJson.references;
+                        //    }
                             if(article.advanceContent) {
                                 result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
                             }
