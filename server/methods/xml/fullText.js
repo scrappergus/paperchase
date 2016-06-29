@@ -941,7 +941,7 @@ Meteor.fullText = {
                 if(tableCaption){
                     tableHeading += '<p>' + tableCaption + '</p>';
                 }
-                tableTitle = '<caption>' + tableHeading + '</caption>';
+                tableTitle = tableHeading;
             }
             else if(elType == 'table-wrap-foot'){
                 tableFooter += Meteor.fullText.traverseTableFooter(n);

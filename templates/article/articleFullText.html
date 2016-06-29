@@ -171,9 +171,14 @@
 
             {{#if equals contentType 'table'}}
             <!-- Table -->
+
+                {{#if title}}
+                <div class="table-title">{{{title}}}</div>
+                {{/if}}
+
                 <div class="article-table">
                     <table class="bordered" id="{{id}}">
-                    {{{title}}}
+
                     {{{table}}}
 
                     {{#if tableGraphic}}

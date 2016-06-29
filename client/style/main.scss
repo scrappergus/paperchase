@@ -169,17 +169,21 @@ html,body{
 		}
 	}
 	/*table*/
+	.table-title{
+		background: $gray-1;
+		padding: $pad-md;
+		border-top: 1px solid $black-0;
+		border-left: 1px solid $black-0;
+		border-right: 1px solid $black-0;
+		text-align: center;
+	}
 	.article-table{
 		@extend .box;
 		border: 1px solid $black-0;
 		padding: 0px!important;
-        overflow:auto;
+        overflow: auto;
+		margin-top: 0px;
 		table{
-			caption{
-				background: $gray-1;
-				padding: $pad-md;
-				border-bottom: 1px solid $black-0;
-			}
 			thead{;
 				border-bottom: 1px solid $black-0;
 				tr{
