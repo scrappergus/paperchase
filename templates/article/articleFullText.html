@@ -191,17 +191,11 @@
             <!-- Supplemental -->
                 {{#each supps}}
 
-                {{#if title}}
-                <h3 class="article-header-2">{{{title}}}</h3>
-                {{/if}}
-
                 {{#if url}}
                 <h3 class="article-header-3"><a href="{{url}}" class="supplemental" id="{{id}}"><span class="icon icon-download"></span>{{#if label}}{{label}}{{else}}Supplemental File{{/if}}</a></h3>
                 {{/if}}
 
-                {{#if caption}}
-                <p>{{{caption}}}</p>
-                {{/if}}
+                <p>{{#if title}}<span><b>{{{title}}}</b></span>{{/if}}{{#if caption}}<span>{{{caption}}}</span>{{/if}}</p>
 
                 {{/each}}
             {{/if}}
