@@ -107,7 +107,7 @@ Meteor.impact = {
     hideFullText: function(article) {
         var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
         if( article && article.article_type && article.article_type._id && article.files && article.files.xml && article.files.xml.file ){
-            if( article.history && article.article_type && article.article_type._id ){
+            if( typeIds.indexOf(article.article_type._id) != -1 ){
                 article.files.xml.file = null;
                 if(article.files.xml.url){
                     article.files.xml.url = null;
