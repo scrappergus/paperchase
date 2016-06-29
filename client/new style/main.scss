@@ -46,6 +46,14 @@
         display: inline-block;
         margin: 10px 0 10px;
     }
+
+    span.issue-pages {
+        @extend h2;
+        font-size: 15px;
+        display: inline-block;
+        margin: 4px 0 10px;
+    }
+
 }
 
 

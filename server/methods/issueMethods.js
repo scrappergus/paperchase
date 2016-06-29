@@ -72,6 +72,17 @@ Meteor.methods({
                 }else if(issueArticles){
                     issueData.articles = issueArticles;
 
+                    var lowestPageNum =  9999999;
+                    var highestPageNum = 0;
+                    for(var idx = 0; idx < issueData.articles.length; idx++) {
+                        var art = issueData.articles[idx];
+                        if(art.page_start < lowestPageNum) lowestPageNum = art.page_start;
+                        if(art.page_end > highestPageNum) highestPageNum = art.page_end;
+                    }
+
+                    issueData.page_start = lowestPageNum;
+                    issueData.page_end = highestPageNum;
+
                     Meteor.call('getPrevAndNextIssue', volume, issue, admin, function(error, result){
                         if(error){
                             console.error(error);
