@@ -98,7 +98,7 @@ a {
 
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
-    h1, .h1 { font-size: 38px; }
+    h1, .h1 { font-size: 34px; }
     h2, .h2 { font-size: 24px;
               color: $kashmir; }
     h3, .h3 { font-size: 20px; }
