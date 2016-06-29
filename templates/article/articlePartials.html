@@ -193,9 +193,11 @@
         {{/with}}
 
         {{#if fullTextView}}
-            {{#unless advance}}
+        {{#with article}}
+            {{#if equals article_type.short_name 'research_paper'}}
                 {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
-            {{/unless}}
+            {{/if}}
+            {{/with}}
         {{/if}}
     </div>
 </template>
