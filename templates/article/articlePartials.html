@@ -110,11 +110,7 @@
     <h2 class="dates">
             {{#each arrayify history}}
                 <span class="date">
-                {{#if equals name 'collection'}}
-                    {{name}}: {{collectionDate value}} <span class="comma">; </span>
-                    {{else}}
                     {{name}}: {{articleDate value}} <span class="comma">; </span>
-                {{/if}}
                 </span>
             {{/each}}
 
