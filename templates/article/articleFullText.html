@@ -211,10 +211,8 @@
 
 <template name="FullTextFigure">
     <div class="full-text-image-container" id="{{id}}">
-        {{#if label}}<label>{{{label}}}</label>{{/if}}
         {{#if url}}<a href="/figure/?article={{articleId .}}&img={{url}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
-        {{#if title}}<h4>{{{title}}}</h4>{{/if}}
-        {{#if caption}}<p class="small-font">{{{caption}}}</p>{{/if}}
+        {{#if title}}<p class="small-font">{{#if label}}<span><b>{{{label}}}.</b></span>{{/if}} {{#if title}}<span><b>{{{title}}}.</b></span>{{/if}} {{{caption}}}</p>{{/if}}
     </div>
 </template>
 
