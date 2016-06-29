@@ -189,14 +189,16 @@ Meteor.articleFiles = {
         // TODO filesDb is wrong
         var result = [];
         var filesDbById = Meteor.articleFiles.filesById(filesDb);
-        filesXml.forEach(function(file){
-            var joined = file;
-            var fileId = file.id.toLowerCase();
-            if(filesDbById[fileId] && filesDbById[fileId].file){
-                joined.file = filesDbById[fileId].file;
-            }
-            result.push(joined);
-        });
+        if(filesXml) {
+            filesXml.forEach(function(file){
+                    var joined = file;
+                    var fileId = file.id.toLowerCase();
+                    if(filesDbById[fileId] && filesDbById[fileId].file){
+                        joined.file = filesDbById[fileId].file;
+                    }
+                    result.push(joined);
+                });
+        }
         cb(result);
     },
     cancelFigureUploader: function(figId){
