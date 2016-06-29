@@ -108,21 +108,21 @@
 
 <template name="ArticleDates">
     <h2 class="dates">
-            {{#each arrayify history}}
-                <span class="date">
-                    {{name}}: {{articleDate value}} <span class="comma">; </span>
-                </span>
-            {{/each}}
+        {{#each arrayify history}}
+            <span class="date">
+                {{name}}: {{articleDate value}} <span class="comma">; </span>
+            </span>
+        {{/each}}
 
-            {{#each arrayify dates}}
-                <span class="date">
-                {{#if equals name 'collection'}}
-                    published: {{collectionDate value}} <span class="comma">; </span>
-                    {{else}}
-                    published: {{articleDate value}} <span class="comma">; </span>
-                {{/if}}
-                </span>
-            {{/each}}
+        {{#each arrayify dates}}
+            <span class="date">
+            {{#if equals name 'collection'}}
+                published: {{collectionDate value}} <span class="comma">; </span>
+                {{else}}
+                published: {{articleDate value}} <span class="comma">; </span>
+            {{/if}}
+            </span>
+        {{/each}}
     </h2>
 </template>
 
