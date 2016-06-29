@@ -176,6 +176,12 @@ Template.ArticleSidebar.helpers({
         }
         return;
     },
+    fullTextReady: function(){
+        if(Session.get('article-text')) { 
+            return true;
+        }
+        return;
+    },
     items: function() {
         if(Session.get('article-text')){
             var articleHeaders = Session.get('article-text').sections;
