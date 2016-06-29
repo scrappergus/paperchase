@@ -20,9 +20,11 @@
             {{/each}}
         </div>
 
-        <div class="page-sidebar col hide-on-med-and-down l4">
-            {{> scrollspyCard title="Table of Contents" items=items}}
-        </div>
+        {{#if archiveReady}}
+            <div class="page-sidebar col hide-on-med-and-down l4">
+                {{> scrollspyCard title="Table of Contents" items=items}}
+            </div>
+        {{/if}}
     </div>
 </template>
 

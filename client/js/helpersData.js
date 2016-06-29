@@ -124,6 +124,12 @@ Template.Archive.helpers({
     volumes: function(){
         return Session.get('archive');
     },
+    archiveReady: function() {
+        if(Session.get('archive')) {
+            return true;
+        }
+        return false;
+    },
     items: function(){
         // Todo: update this static helper
         var volumes = [
