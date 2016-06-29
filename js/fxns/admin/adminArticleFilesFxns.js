@@ -191,13 +191,13 @@ Meteor.articleFiles = {
         var filesDbById = Meteor.articleFiles.filesById(filesDb);
         if(filesXml) {
             filesXml.forEach(function(file){
-                    var joined = file;
-                    var fileId = file.id.toLowerCase();
-                    if(filesDbById[fileId] && filesDbById[fileId].file){
-                        joined.file = filesDbById[fileId].file;
-                    }
-                    result.push(joined);
-                });
+                var joined = file;
+                var fileId = file.id.toLowerCase();
+                if(filesDbById[fileId] && filesDbById[fileId].file){
+                    joined.file = filesDbById[fileId].file;
+                }
+                result.push(joined);
+            });
         }
         cb(result);
     },
