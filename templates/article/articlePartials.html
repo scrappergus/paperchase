@@ -189,11 +189,13 @@
         {{/with}}
 
         {{#if fullTextReady}}
-            {{#with article}}
-                {{#if equals article_type.short_name 'research_paper'}}
-                    {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
-                {{/if}}
-            {{/with}}
+            {{#if fullTextView}}
+                {{#with article}}
+                    {{#if equals article_type.short_name 'research_paper'}}
+                        {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
+                    {{/if}}
+                {{/with}}
+            {{/if}}
         {{/if}}
     </div>
 </template>
