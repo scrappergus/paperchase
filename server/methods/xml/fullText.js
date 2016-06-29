@@ -373,7 +373,7 @@ Meteor.fullText = {
         }
         return content;
     },
-    convertFigure: function(node,files,mongoId){
+    convertFigure: function(node, files, mongoId){
         // console.log('..convertFigure',node);
         var figureAssetsUrl = journalConfig.findOne().assets_figures;
         var figObj;
@@ -384,7 +384,7 @@ Meteor.fullText = {
             if(figInfo){
                 figObj = figInfo;
                 // match to db file info
-                if(files.figures)
+                if(files && files.figures)
                 for(var f = 0 ; f < files.figures.length ; f++){
                     if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase()){
                         figObj.url = figureAssetsUrl + '/' + files.figures[f].file;
