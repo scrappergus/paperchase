@@ -106,7 +106,7 @@ Meteor.article = {
                         filteredHistory[key] = article.history[key];
                     }
                 }
-                article.history = filteredHistory;            
+                article.history = filteredHistory;
             }
         }
 
@@ -820,6 +820,14 @@ Meteor.clean = {
     },
     dashesToUnderscores: function(string){
         return string.replace(/-/g,'_');
+    },
+    removeEndPeriod: function(string){
+        if(string){
+            if(string.charAt(string.length - 1) === '.'){
+                string = string.substring(0, string.length-1);
+            }
+        }
+        return string;
     }
 }
 
