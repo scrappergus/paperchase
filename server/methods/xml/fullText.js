@@ -937,7 +937,10 @@ Meteor.fullText = {
                 if(tableLabel.indexOf('.') == -1){
                     tableLabel = tableLabel + '.';
                 }
-                tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4><p>' + tableCaption + '</p>';
+                tableHeading = '<h4>' + tableLabel + ' ' + tableTitle + '</h4>';
+                if(tableCaption){
+                    tableHeading += '<p>' + tableCaption + '</p>';
+                }
                 tableTitle = '<caption>' + tableHeading + '</caption>';
             }
             else if(elType == 'table-wrap-foot'){
