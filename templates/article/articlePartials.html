@@ -204,8 +204,10 @@
     <div class="card sidebar-card">
         <h6 class="card-title">Corresponding Author{{#if correspondence.[1]}}s{{/if}}</h6>
         {{#each correspondence}}
-        <p>{{#if text}} {{text}}<br /> {{/if}}
-        <a href="mailto:{{email}}">{{email}}</a></p>
+        <p class="correspondence">
+            {{#if text}}<span class="correspondence-text">{{text}}</span><br /> {{/if}}
+            <a class="correspondence-email" href="mailto:{{email}}">{{email}}</a>
+        </p>
         {{/each}}
     </div>
 </template>

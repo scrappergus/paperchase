@@ -213,6 +213,13 @@ h2.dates {
         }
     }
 }
+.correspondence{
+    overflow: hidden;
+    .correspondence-text,
+    .correspondence-email{
+        word-wrap: break-word;
+    }
+}
 /*end hide commas*/
 
 .featured-photo {
