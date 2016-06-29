@@ -76,10 +76,14 @@ Meteor.organize = {
 }
 
 Meteor.impact = {
+    getCommentariesAndEditorialTypeIds: function() {
+        return ['PxXCzMrRgnm4LJfz9','GZwKzxk2PgcKycbNF','DtafcmBcwi5RKtfi6','SQJkMnvsWEBYzKQBr', 'jxHErCBv4iEQRd8nY', 'dSRSmvMuYaX6tmBD7']
+    },
     hideAccepted: function(article) {
-        if( article.history && article.article_type && article.article_type._id ){
+        var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+        if( article && article.history && article.article_type && article.article_type._id ){
             // Commentaries and Editorials, Commentary, Editorial, Editorial Comment, Editorial Interview, Letter to the Editor
-            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
+            if( typeIds.indexOf(article.article_type._id) != -1 ){
                 var filteredHistory = {};
                 for(var key in article.history){
                     if( key != 'accepted' ){
@@ -93,8 +97,9 @@ Meteor.impact = {
         return article;
     },
     hideFullText: function(article) {
+        var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
         if( article && article.article_type && article.article_type._id && article.files && article.files.xml && article.files.xml.file ){
-            if( article.article_type._id === 'PxXCzMrRgnm4LJfz9' || article.article_type._id === 'GZwKzxk2PgcKycbNF' || article.article_type._id === 'DtafcmBcwi5RKtfi6' || article.article_type._id === 'SQJkMnvsWEBYzKQBr' || article.article_type._id === 'jxHErCBv4iEQRd8nY' || article.article_type._id === 'dSRSmvMuYaX6tmBD7' ){
+            if( article.history && article.article_type && article.article_type._id ){
                 article.files.xml.file = null;
                 if(article.files.xml.url){
                     article.files.xml.url = null;
