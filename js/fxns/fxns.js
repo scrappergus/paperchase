@@ -114,14 +114,16 @@ Meteor.impact = {
 
         return article;
     },
-    limitedTocForPerspectives: function(article, fullText) {
-        if( article && article.article_type && article.article_type._id && article.article_type._id === 'zBhBSXX5HTpDN2Wyb' ){
-            fullText.sections.forEach(function(section){
-                var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/
-                if(section.title && !section.title.match(titleDisplayPattern)){
-                    section.hideTitleInToc = true;
-                }
-            });
+    limitedTocForPaperTypes: function(article, fullText) {
+        if( article && article.article_type && article.article_type._id ){
+            if( article.article_type._id === 'zBhBSXX5HTpDN2Wyb' || article.article_type._id === 'quAmLJarW5DBMWXXB'){
+                fullText.sections.forEach(function(section){
+                    var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/
+                    if(section.title && !section.title.match(titleDisplayPattern)){
+                        section.hideTitleInToc = true;
+                    }
+                });
+            }
         }
 
         return fullText;
@@ -302,7 +304,7 @@ Meteor.article = {
                                 result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
                             }
 
-                            result = Meteor.impact.limitedTocForPerspectives(article, result);
+                            result = Meteor.impact.limitedTocForPaperTypes(article, result);
 
                             Session.set('article-text', result);
                         });
