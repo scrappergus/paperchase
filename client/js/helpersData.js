@@ -199,16 +199,16 @@ Template.ArticleSidebar.helpers({
     },
     items: function() {
         if(Session.get('article-text')){
-            var articleHeaders = Session.get('article-text').sections;
+            var articleSections = Session.get('article-text').sections;
             var footnotes = Session.get('article-text').footnotes;
             var acks = Session.get('article-text').acks;
             var references = Session.get('article-text').references;
             var sections = [];
-            if(articleHeaders){
-                for ( i = 0; i < articleHeaders.length; i++ ) {
-                    if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
+            if(articleSections){
+                for ( i = 0; i < articleSections.length; i++ ) {
+                    if ( articleSections[i].headerLevel && articleSections[i].headerLevel === 1 ) {
                         var sectionTitle = '';
-                        sectionTitle = articleHeaders[i].title;
+                        sectionTitle = articleSections[i].title;
                         sectionTitle = sectionTitle.replace(/<a\b[^>]*>(.*?)<\/a>/i,'').replace('[]','');
                         sections.push( { title: sectionTitle } );
                     }
@@ -234,7 +234,7 @@ Template.ArticleSidebar.helpers({
             if ( references ) {
                 sections.push( { title: 'References'} );
             }
-            
+
             return sections;
         }
     }
