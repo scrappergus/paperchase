@@ -427,7 +427,7 @@ Meteor.fullText = {
         return type;
     },
     convertList: function(node) {
-        // console.log('--convertList',node);
+        // console.log('--convertList');
         var list = '';
         var attributes = Meteor.fullText.traverseAttributes(node.attributes);
 
@@ -447,6 +447,7 @@ Meteor.fullText = {
                         nAttr;
                     if(liNode.localName === 'list-item'){
                         list += '<li>';
+                        //TODO: handle tables within <li> better, convertContentChild will just parse the <table> as a string, but we should use convertTableWrap, which returns an obj
                         list += Meteor.fullText.convertContent(liNode);
                         list += '</li>';
                     }
@@ -479,53 +480,10 @@ Meteor.fullText = {
                 for(var cc = 0 ; cc < node.childNodes.length ; cc++){
                     var childNode = node.childNodes[cc];
                     if(childNode){
-                        var nodeAnchor = '',
-                            nValue = '',
-                            nAttr;
-
-                        // get attributes
-                        if(childNode.attributes){
-                            nAttr = Meteor.fullText.traverseAttributes(childNode.attributes);
-                        }
-
-                        if( childNode.localName === 'xref' ){
-                            content += Meteor.fullText.linkXref(childNode);
-                        }
-                        else if( childNode.localName === 'ext-link' ){
-                            content += Meteor.fullText.linkExtLink(childNode);
-                        }
-                        else {
-                            //Open tag
-                            if(childNode.localName != null){
-                                content += '<' + childNode.localName + '>';
-                            }
-
-                            //Tag content
-                            if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
-                                //plain text or external link
-                                if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
-                                    content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
-                                }
-                                else if(childNode.nodeValue){
-                                    content += childNode.nodeValue;
-                                }
-                            }
-                            else if(childNode.childNodes){
-                                content += Meteor.fullText.convertContent(childNode);
-                            }
-
-                            //Close tag
-                            if(childNode.localName != null){
-                                content += '</' + childNode.localName + '>';
-                            }
-                        }
+                        content += Meteor.fullText.convertContentChild(childNode)
                     }
-
                 }
-
-
             }
-
         }
 
         content = Meteor.fullText.fixTags(content);
@@ -536,10 +494,57 @@ Meteor.fullText = {
             return content;
         }
     },
+    convertContentChild: function(node){
+        var content = '',
+            nAttr,
+            convertedChildInChild;
+
+        // get attributes
+        if(node.attributes){
+            nAttr = Meteor.fullText.traverseAttributes(node.attributes);
+        }
+
+        if( node.localName === 'xref' ){
+            content += Meteor.fullText.linkXref(node);
+        }
+        else if( node.localName === 'ext-link' ){
+            content += Meteor.fullText.linkExtLink(node);
+        }
+        else {
+            //Open tag
+            if(node.localName != null){
+                content += '<' + node.localName + '>';
+            }
+
+            //Tag content
+            if(node.nodeType == 3 && node.nodeValue && node.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                //plain text or external link
+                if(node.nodeValue && node.nodeValue.indexOf('http') != -1 || node.nodeValue.indexOf('https') != -1 ){
+                    content += '<a href="'+ node.nodeValue +'" target="_BLANK">' + node.nodeValue + '</a>';
+                }
+                else if(node.nodeValue){
+                    content += node.nodeValue;
+                }
+            }
+            else if(node.childNodes){
+                convertedChildInChild = Meteor.fullText.convertContent(node);
+                if(convertedChildInChild){
+                    content += Meteor.fullText.convertContent(node);
+                }
+            }
+
+            //Close tag
+            if(node.localName != null){
+                content += '</' + node.localName + '>';
+            }
+        }
+        return content;
+    },
     linkXref: function(xrefNode){
         // console.log('linkXref',xrefNode.childNodes);
         // Determine - Reference or Figure or table-fn?
-        var content = '';
+        var content = '',
+            nodeAnchor = '';
         if(xrefNode.childNodes[0]){
             nValue = xrefNode.childNodes[0].nodeValue;
             if(nValue == null){
@@ -918,11 +923,12 @@ Meteor.fullText = {
             var n = node.childNodes[c];
             // Start table el tag
             var elType = n.localName;
+
             // console.log(elType);
             if(elType != null){
                 elType = Meteor.fullText.fixTableTags(elType);
             }
-            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic' && elType != 'break' ){
+            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic' && elType != 'break' && elType != 'list' ){
                 // table tag added in sectionToJson()
                 var colspan;
                 var rowspan;
@@ -940,7 +946,6 @@ Meteor.fullText = {
                 }
 
                 // create the start tag
-                // console.log(elType);
                 if(elType === 'fn'){
                     elType = 'td';
                     if(!colspan){
@@ -994,12 +999,17 @@ Meteor.fullText = {
             else if(elType == 'xref'){
                 tableString += Meteor.fullText.linkXref(n);
             }
+            else if(elType === 'list'){
+                tableString += Meteor.fullText.convertList(n);
+            }
             else if(elType != 'graphic'){
                 // Table content
                 if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
                     var val = Meteor.fullText.fixTags(n.nodeValue);
-                    tableString += val;
+                    if(val){
+                        tableString += val;
+                    }
                 }
                 else if(n.childNodes){
                     tableString += Meteor.fullText.traverseTable(n).table;
@@ -1014,6 +1024,7 @@ Meteor.fullText = {
                 }
             }
         }
+
         return {table: tableString, title: tableTitle, footer: tableFooter};
     },
     traverseTableFooter: function(n){
