@@ -195,7 +195,7 @@
         {{#if fullTextReady}}
             {{#if fullTextView}}
                 {{#with article}}
-                    {{#if equals article_type.short_name 'research_paper'}}
+                    {{#if showToc}}
                         {{> scrollspyCard title="Table of Contents" items=items abstract=abstract references=references}}
                     {{/if}}
                 {{/with}}

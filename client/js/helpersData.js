@@ -182,6 +182,16 @@ Template.ArticleSidebar.helpers({
         }
         return;
     },
+    showToc: function() {
+        var articleData = Template.parentData(1).article;
+        console.log(articleData);
+        if(articleData && articleData.article_type) {
+            if(['research_paper', 'review', 'research_perspective'].indexOf(articleData.article_type.short_name) > -1) {
+                return true
+            }
+        }
+        return;
+    },
     fullTextReady: function(){
         if(Session.get('article-text')) { 
             return true;
