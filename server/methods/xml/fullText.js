@@ -419,10 +419,51 @@ Meteor.fullText = {
             type = '<ol type="i">';
         }else if( attributes && attributes['list-type'] && attributes['list-type']==='roman-upper' ){
             type = '<ol type="I">';
+        }else if( attributes && attributes['list-type'] && attributes['list-type']==='simple' ){
+            type = '<ul list-style="none">';
         }else{
             type = '<ul>';
         }
         return type;
+    },
+    convertList: function(node) {
+        // console.log('--convertList',node);
+        var list = '';
+        var attributes = Meteor.fullText.traverseAttributes(node.attributes);
+
+        // Open ul tag
+        list += Meteor.fullText.listType(attributes, node);
+
+
+        //li tag
+        //-------------
+
+        if(node.childNodes){
+            for(var li = 0; li< node.childNodes.length; li++){
+                var liNode = node.childNodes[li];
+                if(liNode){
+                    var nodeAnchor = '',
+                        nValue = '',
+                        nAttr;
+                    if(liNode.localName === 'list-item'){
+                        list += '<li>';
+                        list += Meteor.fullText.convertContent(liNode);
+                        list += '</li>';
+                    }
+                }
+            }
+        }
+
+        //Close ul tag
+        //-------------
+        if( attributes && attributes['list-type'] && attributes['list-type']==='order' || attributes['list-type']==='alpha-lower' || attributes['list-type']==='alpha-upper' || attributes['list-type']==='roman-lower' || attributes['list-type']==='roman-upper' ){
+            list += '</ol>';
+        }
+        else if( attributes && attributes['list-type'] ){
+            list += '</ul>';
+        }
+
+        return list;
     },
     convertContent: function(node){
         // need to include figures so that we can fill in src within the content
@@ -430,72 +471,61 @@ Meteor.fullText = {
         // console.log(node.localName);
         if(node.childNodes){
             // Section: Content
-            // Style tags
             // --------
-            for(var cc = 0 ; cc < node.childNodes.length ; cc++){
-                var childNode = node.childNodes[cc];
-                if(childNode){
-                    var nodeAnchor = '',
-                        nValue = '',
-                        nAttr;
+            if( node.localName && node.localName === 'list' ){
+                content += Meteor.fullText.convertList(node)
+            }
+            else{
+                for(var cc = 0 ; cc < node.childNodes.length ; cc++){
+                    var childNode = node.childNodes[cc];
+                    if(childNode){
+                        var nodeAnchor = '',
+                            nValue = '',
+                            nAttr;
 
-                    // get attributes
-                    if(childNode.attributes){
-                        nAttr = Meteor.fullText.traverseAttributes(childNode.attributes);
-                    }
-
-
-                    if( childNode.localName === 'xref' ){
-                        content += Meteor.fullText.linkXref(childNode);
-                    }
-                    else if( childNode.localName === 'ext-link' ){
-                        content += Meteor.fullText.linkExtLink(childNode);
-                    }
-                    else {
-                        //Start tag
-                        if(childNode.localName != null && childNode.localName != 'list' && childNode.localName != 'list-item'){
-                            content += '<' + childNode.localName + '>';
-                        }
-                        else if(childNode.localName === 'list'){
-                            content += Meteor.fullText.listType(nAttr,childNode);
-                        }
-                        else if(childNode.localName === 'list-item'){
-                            content += '<li>';
+                        // get attributes
+                        if(childNode.attributes){
+                            nAttr = Meteor.fullText.traverseAttributes(childNode.attributes);
                         }
 
-                        //Tag content
-                        if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
-                            //plain text or external link
-                            if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
-                                content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
+                        if( childNode.localName === 'xref' ){
+                            content += Meteor.fullText.linkXref(childNode);
+                        }
+                        else if( childNode.localName === 'ext-link' ){
+                            content += Meteor.fullText.linkExtLink(childNode);
+                        }
+                        else {
+                            //Open tag
+                            if(childNode.localName != null){
+                                content += '<' + childNode.localName + '>';
                             }
-                            else if(childNode.nodeValue){
-                                content += childNode.nodeValue;
-                            }
-                        }
-                        else if(childNode.childNodes){
-                            content += Meteor.fullText.convertContent(childNode);
-                        }
 
-                        //Close tag
-                        if(childNode.localName != null && childNode.localName != 'list' && childNode.localName != 'list-item'){
-                            content += '</' + childNode.localName + '>';
-                        }
-                        else if(childNode.localName === 'list'){
-                            if( nAttr && nAttr['list-type'] && nAttr['list-type']==='order' || nAttr['list-type']==='alpha-lower' || nAttr['list-type']==='alpha-upper' || nAttr['list-type']==='roman-lower' || nAttr['list-type']==='roman-upper' ){
-                                type = '</ol>';
+                            //Tag content
+                            if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                                //plain text or external link
+                                if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
+                                    content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
+                                }
+                                else if(childNode.nodeValue){
+                                    content += childNode.nodeValue;
+                                }
                             }
-                            else if( nAttr && nAttr['list-type'] ){
-                                content += '</ul>';
+                            else if(childNode.childNodes){
+                                content += Meteor.fullText.convertContent(childNode);
                             }
-                            else if(childNode.localName === 'list-item'){
-                                content += '</li>';
+
+                            //Close tag
+                            if(childNode.localName != null){
+                                content += '</' + childNode.localName + '>';
                             }
                         }
                     }
+
                 }
 
+
             }
+
         }
 
         content = Meteor.fullText.fixTags(content);
