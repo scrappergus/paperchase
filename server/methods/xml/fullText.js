@@ -452,6 +452,7 @@ Meteor.fullText = {
                         content += Meteor.fullText.linkExtLink(childNode);
                     }
                     else {
+                        //Start tag
                         if(childNode.localName != null && childNode.localName != 'list' && childNode.localName != 'list-item'){
                             content += '<' + childNode.localName + '>';
                         }
@@ -462,11 +463,13 @@ Meteor.fullText = {
                             content += '<li>';
                         }
 
+                        //Tag content
                         if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                             //plain text or external link
                             if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
                                 content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
-                            }else if(childNode.nodeValue){
+                            }
+                            else if(childNode.nodeValue){
                                 content += childNode.nodeValue;
                             }
                         }
@@ -474,15 +477,18 @@ Meteor.fullText = {
                             content += Meteor.fullText.convertContent(childNode);
                         }
 
+                        //Close tag
                         if(childNode.localName != null && childNode.localName != 'list' && childNode.localName != 'list-item'){
                             content += '</' + childNode.localName + '>';
                         }
                         else if(childNode.localName === 'list'){
                             if( nAttr && nAttr['list-type'] && nAttr['list-type']==='order' || nAttr['list-type']==='alpha-lower' || nAttr['list-type']==='alpha-upper' || nAttr['list-type']==='roman-lower' || nAttr['list-type']==='roman-upper' ){
                                 type = '</ol>';
-                            }else if( nAttr && nAttr['list-type'] ){
+                            }
+                            else if( nAttr && nAttr['list-type'] ){
                                 content += '</ul>';
-                            }else if(childNode.localName === 'list-item'){
+                            }
+                            else if(childNode.localName === 'list-item'){
                                 content += '</li>';
                             }
                         }
