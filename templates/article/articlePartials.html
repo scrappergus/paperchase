@@ -80,16 +80,6 @@
             </span>
         {{/each}}
     </h2>
-    {{#if equal_contribs}}
-    <span>{{equal_contribs}} Contributed equally to this work.</span>
-    {{/if}}
-
-    {{#if author_notes}}
-    {{#each author_notes}}
-    <div>{{label}} {{note}}.</div>
-    {{/each}}
-    {{/if}}
-
 
     <span>
     <ul>
@@ -102,6 +92,18 @@
     {{/each}}
     </ul>
     </span>
+
+    {{#if equal_contribs}}
+    <span>{{equal_contribs}} Contributed equally to this work.</span>
+    {{/if}}
+
+    {{#if author_notes}}
+    {{#each author_notes}}
+    <div>{{label}} {{note}}.</div>
+    {{/each}}
+    {{/if}}
+
+
 
 </template>
 
