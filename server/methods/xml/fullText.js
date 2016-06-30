@@ -1073,7 +1073,6 @@ Meteor.fullText = {
         var casePattern = /^(INTRODUCTION|RESULTS|DISCUSSION|METHODS)/;
         var suppCasePattern = /^(SUPPLEMENTAL|SUPPLEMENTARY)/;
         if(str.match(casePattern)){
-            console.log('YES',str);
             str = str.toLowerCase();
             str = str.charAt(0).toUpperCase() + str.slice(1);
         }else if(str.match(suppCasePattern)){
