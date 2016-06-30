@@ -113,6 +113,18 @@ Meteor.impact = {
         }
 
         return article;
+    },
+    limitedTocForPerspectives: function(article, fullText) {
+        if( article && article.article_type && article.article_type._id && article.article_type._id === 'zBhBSXX5HTpDN2Wyb' ){
+            fullText.sections.forEach(function(section){
+                var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/
+                if(section.title && !section.title.match(titleDisplayPattern)){
+                    section.hideTitleInToc = true;
+                }
+            });
+        }
+
+        return fullText;
     }
 }
 
@@ -289,6 +301,8 @@ Meteor.article = {
                             if(article.advanceContent) {
                                 result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
                             }
+
+                            result = Meteor.impact.limitedTocForPerspectives(article, result);
 
                             Session.set('article-text', result);
                         });

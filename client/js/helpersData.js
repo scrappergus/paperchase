@@ -204,13 +204,16 @@ Template.ArticleSidebar.helpers({
             var acks = Session.get('article-text').acks;
             var references = Session.get('article-text').references;
             var sections = [];
+
             if(articleSections){
                 for ( i = 0; i < articleSections.length; i++ ) {
                     if ( articleSections[i].headerLevel && articleSections[i].headerLevel === 1 ) {
-                        var sectionTitle = '';
-                        sectionTitle = articleSections[i].title;
-                        sectionTitle = sectionTitle.replace(/<a\b[^>]*>(.*?)<\/a>/i,'').replace('[]','');
-                        sections.push( { title: sectionTitle } );
+                        if( !articleSections[i].hideTitleInToc ){
+                            var sectionTitle = '';
+                            sectionTitle = articleSections[i].title;
+                            sectionTitle = sectionTitle.replace(/<a\b[^>]*>(.*?)<\/a>/i,'').replace('[]','');
+                            sections.push( { title: sectionTitle } );                            
+                        }
                     }
                 }
             }
