@@ -192,7 +192,7 @@ Template.ArticleSidebar.helpers({
         return;
     },
     fullTextReady: function(){
-        if(Session.get('article-text')) { 
+        if(Session.get('article-text')) {
             return true;
         }
         return;
@@ -207,7 +207,10 @@ Template.ArticleSidebar.helpers({
             if(articleHeaders){
                 for ( i = 0; i < articleHeaders.length; i++ ) {
                     if ( articleHeaders[i].headerLevel && articleHeaders[i].headerLevel === 1 ) {
-                        sections.push( { title: articleHeaders[i].title } );
+                        var sectionTitle = '';
+                        sectionTitle = articleHeaders[i].title;
+                        sectionTitle = sectionTitle.replace(/<a\b[^>]*>(.*?)<\/a>/i,'').replace('[]','');
+                        sections.push( { title: sectionTitle } );
                     }
                 }
             }
@@ -231,7 +234,7 @@ Template.ArticleSidebar.helpers({
             if ( references ) {
                 sections.push( { title: 'References'} );
             }
-
+            
             return sections;
         }
     }
