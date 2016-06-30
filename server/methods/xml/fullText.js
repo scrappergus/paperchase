@@ -318,7 +318,7 @@ Meteor.fullText = {
                     sectionObject.label = Meteor.fullText.convertContent(sec);
                 }
                 else if(sec.localName === 'title'){
-                    sectionObject.title = Meteor.fullText.convertContent(sec);
+                    sectionObject.title = Meteor.fullText.fixCase(Meteor.fullText.convertContent(sec));
                 }
                 else if(sec.localName === 'sec'){
                     var subSectionObject,
@@ -1068,6 +1068,20 @@ Meteor.fullText = {
             content = content.replace(/\/underline/g,'u');
         }
         return content;
+    },
+    fixCase: function(str) {
+        var casePattern = /^(INTRODUCTION|RESULTS|DISCUSSION|METHODS)/;
+        var suppCasePattern = /^(SUPPLEMENTAL|SUPPLEMENTARY)/;
+        if(str.match(casePattern)){
+            console.log('YES',str);
+            str = str.toLowerCase();
+            str = str.charAt(0).toUpperCase() + str.slice(1);
+        }else if(str.match(suppCasePattern)){
+            str = 'Supplementary Materials';
+        }else if(str === 'Author contributions'){
+            str = 'Author Contributions';
+        }
+        return str;
     },
     removeParagraphTags: function(content){
         return content.replace(/<\/p>/g,'').replace(/<p>/g,'');
