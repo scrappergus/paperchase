@@ -273,6 +273,10 @@ Meteor.methods({
                     for(var cAttr=0; cAttr<citationAttributes.length; cAttr++){
                         if(citationAttributes[cAttr].localName == 'publication-type' && citationAttributes[cAttr].nodeValue){
                             referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
+                            if(referenceObj.type === 'ohter'){
+                                // For when reference attribute has a typo in XML
+                                referenceObj.type = 'other';
+                            }
                         }
                     }
                 }
