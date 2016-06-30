@@ -513,7 +513,13 @@ Meteor.fullText = {
         else {
             //Open tag
             if(node.localName != null){
-                content += '<' + node.localName + '>';
+                content += '<' + node.localName;
+
+                if(node.localName === 'table'){
+                    content += ' class="bordered" ';
+                }
+
+                content += '>';
             }
 
             //Tag content
