@@ -214,10 +214,10 @@ Meteor.methods({
                         else if(footObj.title === 'Author contributions' && foot.indexOf('Authors\' contributions') != -1 || foot.indexOf('Author contributions') != -1){
                             // do not want to add 'Authors\' contributions' to footnote content because this will be added via attribute fn-type check above
                         }
-                        else if(footObj.title === 'Funding' && foot.indexOf('Funding') != -1){
+                        else if(footObj.title === 'Funding' && foot.match(/^(\<b>)*Funding/)){
                             // do not want to add 'Funding' to footnote content because this will be added via attribute fn-type check above
                         }
-                        else if(!footObj.title && foot.indexOf('Funding') != -1){
+                        else if(!footObj.title && foot.match(/^(\<b>)*Funding/)){
                             footObj.title = 'Funding';
                         }
                         else if(footObj.title){
