@@ -439,45 +439,52 @@ Meteor.fullText = {
                         nValue = '',
                         nAttr;
 
+                    // get attributes
                     if(childNode.attributes){
                         nAttr = Meteor.fullText.traverseAttributes(childNode.attributes);
                     }
 
-                    // console.log('cc = ' + cc );
-                    if(childNode.localName != null && childNode.localName != 'xref' && childNode.localName != 'ext-link' && childNode.localName != 'list' && childNode.localName != 'list-item'){
-                        content += '<' + childNode.localName + '>';
-                    }else if(childNode.localName === 'list'){
-                        content += Meteor.fullText.listType(nAttr,childNode);
-                    }else if(childNode.localName === 'list-item'){
-                        content += '<li>';
-                    }
 
-                    // Special tags - xref
-                    // --------
-                    if(childNode.localName === 'xref'){
+                    if( childNode.localName === 'xref' ){
                         content += Meteor.fullText.linkXref(childNode);
-                    } else if(childNode.localName === 'ext-link'){
-                        content += Meteor.fullText.linkExtLink(childNode);
-                    } else if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
-                        //plain text or external link
-                        if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
-                            content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
-                        }else if(childNode.nodeValue){
-                            content += childNode.nodeValue;
-                        }
-                    }else if(childNode.childNodes){
-                        content += Meteor.fullText.convertContent(childNode);
                     }
+                    else if( childNode.localName === 'ext-link' ){
+                        content += Meteor.fullText.linkExtLink(childNode);
+                    }
+                    else {
+                        if(childNode.localName != null && childNode.localName != 'list' && childNode.localName != 'list-item'){
+                            content += '<' + childNode.localName + '>';
+                        }
+                        else if(childNode.localName === 'list'){
+                            content += Meteor.fullText.listType(nAttr,childNode);
+                        }
+                        else if(childNode.localName === 'list-item'){
+                            content += '<li>';
+                        }
 
-                    if(childNode.localName != null && childNode.localName != 'xref' && childNode.localName != 'ext-link' && childNode.localName != 'list' && childNode.localName != 'list-item'){
-                        content += '</' + childNode.localName + '>';
-                    }else if(childNode.localName === 'list'){
-                        if( nAttr && nAttr['list-type'] && nAttr['list-type']==='order' || nAttr['list-type']==='alpha-lower' || nAttr['list-type']==='alpha-upper' || nAttr['list-type']==='roman-lower' || nAttr['list-type']==='roman-upper' ){
-                            type = '</ol>';
-                        }else if( nAttr && nAttr['list-type'] ){
-                            content += '</ul>';
-                        }else if(childNode.localName === 'list-item'){
-                            content += '</li>';
+                        if(childNode.nodeType == 3 && childNode.nodeValue && childNode.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+                            //plain text or external link
+                            if(childNode.nodeValue && childNode.nodeValue.indexOf('http') != -1 || childNode.nodeValue.indexOf('https') != -1 ){
+                                content += '<a href="'+ childNode.nodeValue +'" target="_BLANK">' + childNode.nodeValue + '</a>';
+                            }else if(childNode.nodeValue){
+                                content += childNode.nodeValue;
+                            }
+                        }
+                        else if(childNode.childNodes){
+                            content += Meteor.fullText.convertContent(childNode);
+                        }
+
+                        if(childNode.localName != null && childNode.localName != 'list' && childNode.localName != 'list-item'){
+                            content += '</' + childNode.localName + '>';
+                        }
+                        else if(childNode.localName === 'list'){
+                            if( nAttr && nAttr['list-type'] && nAttr['list-type']==='order' || nAttr['list-type']==='alpha-lower' || nAttr['list-type']==='alpha-upper' || nAttr['list-type']==='roman-lower' || nAttr['list-type']==='roman-upper' ){
+                                type = '</ol>';
+                            }else if( nAttr && nAttr['list-type'] ){
+                                content += '</ul>';
+                            }else if(childNode.localName === 'list-item'){
+                                content += '</li>';
+                            }
                         }
                     }
                 }
@@ -494,7 +501,7 @@ Meteor.fullText = {
         }
     },
     linkXref: function(xrefNode){
-        // console.log('linkXref',xrefNode);
+        // console.log('linkXref',xrefNode.childNodes);
         // Determine - Reference or Figure or table-fn?
         var content = '';
         if(xrefNode.childNodes[0]){
@@ -515,6 +522,7 @@ Meteor.fullText = {
             content += nValue;
             content += '</a>';
         }
+
         return content;
     },
     linkExtLink: function(linkNode){
@@ -532,6 +540,7 @@ Meteor.fullText = {
                 content += '</a>';
             }
         }
+
         return content;
     },
     convertFigure: function(node, files, mongoId){
@@ -1082,7 +1091,7 @@ Meteor.fullText = {
             }
             else if(str.match(suppCasePattern)){
                 str = 'Supplementary Materials';
-            }            
+            }
         }
         return str;
     },
