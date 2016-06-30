@@ -1071,7 +1071,7 @@ Meteor.fullText = {
     },
     fixCase: function(str) {
         var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS)/;
-        var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY)/;
+        var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental)/;
         if(str.match(/(MATERIALS AND METHODS)/)){
             str = 'Materials and Methods';
         }
