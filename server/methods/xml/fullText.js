@@ -318,7 +318,7 @@ Meteor.fullText = {
                     sectionObject.label = Meteor.fullText.convertContent(sec);
                 }
                 else if(sec.localName === 'title'){
-                    sectionObject.title = Meteor.fullText.fixCase(Meteor.fullText.convertContent(sec));
+                    sectionObject.title = Meteor.fullText.fixSectionTitle(Meteor.fullText.convertContent(sec));
                 }
                 else if(sec.localName === 'sec'){
                     var subSectionObject,
@@ -1144,7 +1144,7 @@ Meteor.fullText = {
         }
         return content;
     },
-    fixCase: function(str) {
+    fixSectionTitle: function(str) {
         var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
         var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
         if(str){
@@ -1157,6 +1157,9 @@ Meteor.fullText = {
             }
             else if(str.match(suppCasePattern)){
                 str = 'Supplementary Materials';
+            }
+            else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
+                str = 'Materials and Methods';
             }
         }
         return str;
