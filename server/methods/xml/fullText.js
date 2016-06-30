@@ -1034,6 +1034,7 @@ Meteor.fullText = {
         return {table: tableString, title: tableTitle, footer: tableFooter};
     },
     traverseTableFooter: function(n){
+        // console.log('..traverseTableFooter');
         var string = '';
         string += '<tfoot>';
 
@@ -1052,7 +1053,19 @@ Meteor.fullText = {
                     string += ' id="'+elId+'"';
                 }
                 string += '>';
-                string += Meteor.fullText.traverseTable(n.childNodes[c],true).table;
+                // string += Meteor.fullText.traverseTable(n.childNodes[c],true).table;
+
+                for(var cc=0; cc<n.childNodes[c].childNodes.length; cc++){
+                    var foot;
+                    if(n.childNodes[c].childNodes[cc].localName === 'label'){
+                        string += '<sup>';
+                    }
+                    string += Meteor.fullText.removeParagraphTags(Meteor.fullText.convertContentChild(n.childNodes[c].childNodes[cc]));
+                    if(n.childNodes[c].childNodes[cc].localName === 'label'){
+                        string += '</sup> ';
+                    }
+                }
+
                 string += '</td></tr>';
             }else if(n.childNodes[c].nodeName == 'p'){
                 string += '<tr><td colspan="100">';
