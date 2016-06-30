@@ -61,7 +61,7 @@ Meteor.methods({
         return articles.insert(articleData);
     },
     updateArticle: function(mongoId, articleData, batch){
-        console.log('..updateArticle', new Date());
+        // console.log('..updateArticle', new Date());
         // nope. articles with missing authors not showing this log
         // console.log('updateArticle',mongoId, articleData);
         // whether adding or editing an article, both will go through this method
