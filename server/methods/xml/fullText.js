@@ -1070,12 +1070,16 @@ Meteor.fullText = {
         return content;
     },
     fixCase: function(str) {
-        var casePattern = /^(INTRODUCTION|RESULTS|DISCUSSION|METHODS)/;
-        var suppCasePattern = /^(SUPPLEMENTAL|SUPPLEMENTARY)/;
-        if(str.match(casePattern)){
+        var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS)/;
+        var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY)/;
+        if(str.match(/(MATERIALS AND METHODS)/)){
+            str = 'Materials and Methods';
+        }
+        else if(str.match(casePattern)){
             str = str.toLowerCase();
             str = str.charAt(0).toUpperCase() + str.slice(1);
-        }else if(str.match(suppCasePattern)){
+        }
+        else if(str.match(suppCasePattern)){
             str = 'Supplementary Materials';
         }
         return str;
