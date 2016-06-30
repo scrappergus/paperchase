@@ -127,6 +127,9 @@ html,body{
 	}
 	.article-header-1{
 		@extend h5;
+		a{
+			color: $white;
+		}
 	}
 	.article-header-2{
 		@extend h6;
