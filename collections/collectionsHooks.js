@@ -54,6 +54,16 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
+
+    // maintain Files
+    if(modifier.$set && modifier.$set.files){
+        for(var fileType in doc.files){
+            if(!modifier.$set.files[fileType]){
+                modifier.$set.files[fileType] = doc.files[fileType];
+            }
+        }
+    }
+
     // maintain Dates
     if(modifier.$set && modifier.$set.dates){
         for(var dateType in doc.dates){
