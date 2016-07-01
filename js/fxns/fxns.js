@@ -294,12 +294,11 @@ Meteor.article = {
                 Session.set('article-text', null);
                 var result = article.articleJson;
                 result.abstract = article.abstract;
-                if(result.sections) {
+                if(result && result.sections) {
                     var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
                     var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
 
                     for(var idx=0; idx < result.sections.length; idx++) {
-                        console.log(result.sections[idx]);
                         str = result.sections[idx].title;
                         if(str){
                             if(str.match(/(MATERIALS AND METHODS)/)){
