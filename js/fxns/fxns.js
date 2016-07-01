@@ -301,7 +301,7 @@ Meteor.article = {
                     for(var idx=0; idx < result.sections.length; idx++) {
                         str = result.sections[idx].title;
                         if(str){
-                            if(str.match(/(MATERIALS AND METHODS)/)){
+                            if(str.match(/MATERIALS AND METHOD(S*)/)){
                                 str = 'Materials and Methods';
                             }
                             else if(str.match(casePattern)){
