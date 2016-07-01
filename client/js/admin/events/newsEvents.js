@@ -2,7 +2,6 @@
 // --------------------
 Template.AdminNewsForm.events({
     'click .submit': function(e){
-        console.log('save!');
         Meteor.formActions.saving();
         Meteor.adminNews.formGetData(e);
     },
