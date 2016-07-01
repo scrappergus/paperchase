@@ -366,6 +366,9 @@ if (Meteor.isClient) {
                 Router.go(route);
             }
         });
+    Router.route('/papers/:v/:n/full/:pii/:doc', function() {
+            window.location.href = "http://archive.impactaging.com"+document.location.pathname;
+        });
 
 
     Router.route('/', {
