@@ -88,9 +88,18 @@
     <ul class="divided-list">
         {{#each news}}
             <li class="item">
-                <h4 class="title">{{title}}</h4>
-                <!--<h5 class="meta">{{formatDate date}}</h5>//-->
-                <p class="justify">{{{content}}}</p>
+                <p class="justify">
+                    {{#if date_display}}<b>{{formatDate date}}</b>{{/if}}
+
+                    {{#if conference}}
+                        {{#if conference_date_start}}
+                        <b>{{formatDate conference_date_start}}{{#if conference_date_end}} - {{/if}}{{formatDate conference_date_end}}:</b>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if title}}{{title}}. {{/if}}
+                    {{{content}}}
+                </p>
             </li>
         {{/each}}
     </ul>
