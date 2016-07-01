@@ -340,6 +340,33 @@ if (Meteor.isClient) {
         }
     });
 
+    Router.route('/admin/news/:_id',{
+        name: 'AdminNewsOverview',
+        title: function() {
+            var pageTitle = 'Admin | News ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return [
+                Meteor.subscribe('newsItem', this.params._id)
+            ]
+        },
+        data: function(){
+            if(this.ready()){
+                var newsFound = newsList.findOne({_id : this.params._id});
+                if(newsFound){
+                    Session.set('newsData',newsFound);
+                }else{
+                    Session.set('admin-not-found',true);
+                }
+            }
+        }
+    });
+
     // Recommendations
     Router.route('/admin/recommendations',{
         name: 'AdminRecommendations',

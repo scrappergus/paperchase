@@ -99,8 +99,11 @@ Template.AdminIssueDeleted.onRendered(function (){
 
 // News
 // ------
+Template.AdminNewsAdd.onRendered(function () {
+    Session.set('newsData', null);
+});
 Template.AdminNewsEdit.onDestroyed(function () {
-    Session.set('newsData',null);
+    Session.set('newsData', null);
 });
 Template.AdminNewsForm.onRendered(function () {
     Meteor.adminNews.readyForm();

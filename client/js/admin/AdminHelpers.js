@@ -643,6 +643,11 @@ Template.AdminNewsEdit.helpers({
         return Session.get('newsData');
     }
 });
+Template.AdminNewsOverview.helpers({
+    news: function() {
+        return Session.get('newsData');
+    }
+});
 Template.AdminNewsForm.helpers({
     news: function() {
         var news = {}; // if undefined, the template form will not load. So we need an empty object.

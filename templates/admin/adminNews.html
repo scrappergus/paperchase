@@ -16,6 +16,7 @@
                                 <th data-field="date">Date</th>
                                 <th data-field="display">Display</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -24,6 +25,7 @@
                                 <td>{{title}}</td>
                                 <td>{{formatDate date}}</td>
                                 <td>{{#if display}}Yes{{else}}No{{/if}}</td>
+                                <td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminNewsOverview'}}">See More</a></td>
                                 <td><a class="waves-effect waves-light btn btn-edit" href="{{pathFor 'AdminNewsEdit'}}">Edit</a></td>
                             </tr>
                             {{/each}}
@@ -76,7 +78,9 @@
                         <legend>Content</legend>
                         <div class="row">
                             <div class="input-field col s12">
-                                <div class="news-content">{{{content}}}</div>
+                                <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                                    <div class="news-content">{{{content}}}</div>
+                                </div>
                             </div>
                         </div>
                     </fieldset>
@@ -130,12 +134,23 @@
                     </fieldset>
 
                     <fieldset>
-                        <!-- <legend>Date</legend> -->
+                        <legend>Date</legend>
                         <div class="row">
                             <div class="input-field col s12 m6">
                                 <input type="date" class="datepicker" id="news-date" value="{{inputDate date}}" data-value="{{inputDate date}}">
                                 <label for="news-date" class="active">Date</label>
                             </div>
+                            <div class="input-field col s12 m6">
+                                <input type="date" class="datepicker" id="news-date-end" value="{{inputDate date_end}}" data-value="{{inputDate date_end}}">
+                                <label for="news-date-end" class="active">End Date</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <fieldset>
+                        <legend>Settings</legend>
+                        <div class="row">
                             <div class="input-field col s12 m6">
                                 <input name="news-display" type="checkbox" checked="{{checked display}}" id="news-display">
                                 <label for="news-display">Display</label>
@@ -152,6 +167,46 @@
                     </div>
                 </form>
             </div></div>
+        </div></div>
+    </div></div>
+    {{/with}}
+</template>
+
+<template name="AdminNewsOverview">
+    {{>AdminHeader header="News"}}
+    {{#with news}}
+    <div class="row"><div class="col s12">
+        <div class="card z-depth-0"><div class="card-content">
+            <div class="row">
+                <div class="col s12">
+                    <a href="{{pathFor 'AdminNewsEdit' _id=_id}}" class="btn">Edit</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>Title</label> {{title}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>Content</label> {{{content}}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>Dates</label> {{formatDate date}}{{#if date_end}} - {{formatDate date_end}}{{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>Display</label> {{#if display}}Yes{{else}}No{{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>Interview</label> {{#if interview}}Yes{{else}}No{{/if}}
+                </div>
+            </div>
         </div></div>
     </div></div>
     {{/with}}

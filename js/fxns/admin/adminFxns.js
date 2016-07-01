@@ -96,6 +96,12 @@ Meteor.adminNews = {
         var picker = pick.pickadate('picker');
         picker.set('select', $('#news-date').data('value'), { format: 'yyyy/mm/dd' })
 
+        // End Date
+        // ------
+        var pickEnd = $('#news-date-end').pickadate();
+        var pickerEnd = pickEnd.pickadate('picker');
+        pickerEnd.set('select', $('#news-date-end').data('value'), { format: 'yyyy/mm/dd' })
+
         // Content
         // ------
         $('.news-content').materialnote({
@@ -132,6 +138,7 @@ Meteor.adminNews = {
         newsObj.title;
         newsObj.content;
         newsObj.date;
+        newsObj.date_end;
         newsObj.youTube;
         newsObj.tags;
         newsObj.interview;
@@ -160,6 +167,14 @@ Meteor.adminNews = {
         if(newsDate){
             newsDate = new Date(newsDate);
             newsObj.date = newsDate;
+        }
+
+        // End Date
+        // ------
+        var newsDateEnd = $('#news-date-end').val();
+        if(newsDate){
+            newsDateEnd = new Date(newsDateEnd);
+            newsObj.date_end = newsDateEnd;
         }
 
         // YouTube
@@ -212,7 +227,10 @@ Meteor.adminNews = {
                         if(error){
                             Meteor.formActions.errorMessage('Could not add news', error);
                         }else if(result){
-                            Meteor.formActions.successMessage('News Added');
+                            // console.log('result',result);
+                            $('.lean-overlay').remove();
+                            Router.go('AdminNewsOverview', {_id : result});
+                            // Meteor.formActions.successMessage('News Added');
                         }
                     });
                 }else{
