@@ -294,6 +294,37 @@ Meteor.article = {
                 Session.set('article-text', null);
                 var result = article.articleJson;
                 result.abstract = article.abstract;
+                if(result.sections) {
+                    var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
+                    var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
+
+                    for(var idx=0; idx < result.sections.length; idx++) {
+                        console.log(result.sections[idx]);
+                        str = result.sections[idx].title;
+                        if(str){
+                            if(str.match(/(MATERIALS AND METHODS)/)){
+                                str = 'Materials and Methods';
+                            }
+                            else if(str.match(casePattern)){
+                                str = str.toLowerCase();
+                                str = str.charAt(0).toUpperCase() + str.slice(1);
+                            }
+                            else if(str.match(suppCasePattern)){
+                                str = 'Supplementary Materials';
+                            }
+                            else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
+                                str = 'Materials and Methods';
+                            }
+                            else if(str.match(/ACKNOWLEDGEMENTS/i)){
+                                str = 'Acknowledgements';
+                            }
+
+                        }
+
+                        result.sections[idx].title = str;
+                    }
+                }
+
                 Session.set('article-text', result);
             }
             else {
