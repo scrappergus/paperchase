@@ -6,41 +6,48 @@
         </div>
         <div class="search page-content col s12 m8">
 
-    		{{#if searchResults}}
+    		{{#if searchLoaded}}
             <h4 class="blue-divider">Search Results</h4>
-    	 	<p class="lighten" style=""><i>{{searchResults.length}} results found</i></p>
-    		
+
+    	 	<p class="lighten" style=""><i>{{queryResults.length}} results found</i></p>
+
+            {{#if queryResults}} 
             <ul class="divided-list">
-                {{#each searchResults}}
-				<li class="item">
-					<h3><a href="/article/{{_id}}">{{{title}}}</a></h3>
-					<h5 class="supporting">{{#if issue_id}}<a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a>{{/if}}</h5>
+                {{#each queryResults}}
+                <li class="item">
+                    <h3><a href="/article/{{_id}}">{{{title}}}</a></h3>
+                    <h5 class="supporting">{{#if issue_id}}<a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a>{{/if}}</h5>
 
-					<p>{{#each authors}}
-					<span class="author">
-						{{name_first}}
-						{{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span>
-					</span>
-					{{/each}}</p>
+                    <p>{{#each authors}}
+                    <span class="author">
+                        {{name_first}}
+                        {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span>
+                    </span>
+                    {{/each}}</p>
 
-					<p>{{{truncate abstract 300}}}</p>
-				</li>
-		        {{/each}}
+                    <p>{{{truncate abstract 300}}}</p>
+                </li>
+                {{/each}}
             </ul>
-
-    		{{#if queryResults}}
-    		<div class="row no-margin">
-    			<div class="col s12">
-    				<div class="result-box" style="margin-bottom:40px;">
-    					<h5>There are no results for these search terms.</h5>
-    					<p>For assistance finding a paper that was published in Aging, please contact <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a> </p>
-    				</div>
-    			</div>
-    		</div>
-    		{{/if}}
             {{else}}
+                <div class="row no-margin">
+                    <div class="col s12">
+                        <div class="result-box" style="margin-bottom:40px;">
+                            <h5>There are no results for these search terms.</h5>
+                            <p>For assistance finding a paper that was published in Aging, please contact <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a> </p>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+    		
+
+            {{else}}
+                {{#if searchLoading}}
+                    {{>Loading}}
+                {{else}}
                 <h4 class="blue-divider">Search</h4>
-                <p>To search the journal, enter a term in the search bar. If you'd like to find specific authors, titles, or abstracts, use the advanced search to the right. </p>
+                    <p>To search the journal, enter a term in the search bar. If you'd like to find specific authors, titles, or abstracts, use the advanced search to the right. </p>
+                {{/if}}
     		{{/if}}
         </div>
 

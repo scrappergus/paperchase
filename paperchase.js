@@ -919,18 +919,27 @@ if (Meteor.isClient) {
         onAfterAction: function() {
             var terms = this.params.query.terms;
             $(".search-abstract").val(terms);
+            Session.set('queryResults', null);
+            Session.set('searchLoaded', false);
+            if(terms) {
+                Session.set('searchLoading', true);
+            }
             Meteor.call('search', {
                     abstract: terms
 //                    ,authors: terms
 //                    ,title: terms
                 }, function(err, data) {
                     //            console.log('>>> args in browser', err, data);
+                    Session.set('searchLoading', false);
+                    Session.set('searchLoaded', true);
                     Session.set('queryResults', err ? [] : data);
                 });
 
         },
         data: function() {
-            return {terms:this.params.query.terms};
+            return {
+                terms:this.params.query.terms
+            };
         }
     });
 

@@ -399,9 +399,4 @@ if (Meteor.isClient) {
     });
 
 
-    // Search
-    // ---------
-    Template.registerHelper('searchResults', function() {
-        return Session.get("queryResults");
-    });
 }

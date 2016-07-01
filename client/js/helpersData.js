@@ -289,3 +289,18 @@ Template.SectionPapers.helpers({
         return Session.get('article-list');
     }
 })
+
+// Sections
+Template.Search.helpers({
+    searchLoading: function(){
+        return Session.get('searchLoading');
+    },
+    searchLoaded: function() {
+        return Session.get('searchLoaded');
+    },
+    queryResults: function() {
+        return Session.get("queryResults");
+    }
+
+});
+
