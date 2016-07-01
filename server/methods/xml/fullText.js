@@ -273,6 +273,10 @@ Meteor.methods({
                     for(var cAttr=0; cAttr<citationAttributes.length; cAttr++){
                         if(citationAttributes[cAttr].localName == 'publication-type' && citationAttributes[cAttr].nodeValue){
                             referenceObj.type = citationAttributes[cAttr].nodeValue.replace('-','_');
+                            if(referenceObj.type === 'ohter'){
+                                // For when reference attribute has a typo in XML
+                                referenceObj.type = 'other';
+                            }
                         }
                     }
                 }
@@ -926,6 +930,8 @@ Meteor.fullText = {
             tableCaption = '',
             tableTitle = '';
         for(var c = 0 ; c < node.childNodes.length ; c++){
+            var elAttr;
+
             var n = node.childNodes[c];
             // Start table el tag
             var elType = n.localName;
@@ -936,38 +942,35 @@ Meteor.fullText = {
             }
             if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic' && elType != 'break' && elType != 'list' ){
                 // table tag added in sectionToJson()
-                var colspan;
-                var rowspan;
-                var elId;
                 if(n.attributes){
-                    for(var attr in n.attributes){
-                        if(n.attributes[attr].name === 'colspan'){
-                            colspan = n.attributes[attr].nodeValue;
-                        }else if(n.attributes[attr].name === 'rowspan'){
-                            rowspan = n.attributes[attr].nodeValue;
-                        }else if(n.attributes[attr].name === 'id'){
-                            elId = n.attributes[attr].nodeValue;
-                        }
-                    };
+                    elAttr = Meteor.fullText.traverseAttributes(n.attributes);
                 }
 
-                // create the start tag
+                //Open tag
+                // footnote tags, use td instead for HTML table
                 if(elType === 'fn'){
                     elType = 'td';
-                    if(!colspan){
-                        colspan = "100";
+                    if(!elAttr.colspan){
+                        elAttr.colspan = '100';
                     }
                 }
                 tableString += '<' + elType;
-                if(colspan){
-                    tableString += ' colspan="' + colspan + '"';
+
+                //Colspan
+                if(elAttr && elAttr.colspan){
+                    tableString += ' colspan="' + elAttr.colspan + '"';
                 }
-                if(rowspan){
-                    tableString += ' rowspan="' + rowspan + '"';
+
+                //rowspan
+                if(elAttr && elAttr.rowspan){
+                    tableString += ' rowspan="' + elAttr.rowspan + '"';
                 }
-                if(elId){
-                    tableString += ' id="' + elId + '"';;
+
+                //id
+                if(elAttr && elAttr.id){
+                    tableString += ' id="' + elAttr.id + '"';;
                 }
+
                 tableString += '>';
                 if(footerFlag && tableLabel){
                     tableString += tableLabel + ' '; //temporary. Would like to not handle table footer labels this way.
@@ -1009,6 +1012,7 @@ Meteor.fullText = {
                 tableString += Meteor.fullText.convertList(n);
             }
             else if(elType != 'graphic'){
+                // console.log(elType);
                 // Table content
                 if(n.nodeType == 3 && n.nodeValue && n.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                     // text node, and make sure it is not just whitespace
