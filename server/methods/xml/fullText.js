@@ -1165,6 +1165,9 @@ Meteor.fullText = {
             else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
                 str = 'Materials and Methods';
             }
+            else if(str.match(/FUTURE PERSPECTIVES/)){
+                str = 'Future Perspectives';
+            }
         }
         return str;
     },
