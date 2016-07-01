@@ -63,6 +63,14 @@ Meteor.organize = {
             if(articles[i].ids.doi && _.isString(articles[i].ids.doi)) {
                 articles[i].ids.doi = articles[i].ids.doi.replace(/http:\/\/dx\.doi\.org\//,""); // TODO: remove link part from DB
             }
+
+            var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+
+            if(articles[i] && articles[i].article_type && articles[i].article_type._id && (articles[i].articleJson !== undefined || articles[i].advanceContent != undefined)) {
+                if( typeIds.indexOf(articles[i].article_type._id) == -1 ) {
+                    articles[i].showCrawledText = true;
+                }
+            }
         }
         return articles;
     },

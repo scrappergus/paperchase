@@ -289,11 +289,10 @@
 
             {{/with}}
 
-            {{#unless xml.url}}
-            {{#if advanceContent}}
+            
+            {{#if showCrawledText}}
             <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
             {{/if}}
-            {{/unless}}
 
 
         {{else}}
