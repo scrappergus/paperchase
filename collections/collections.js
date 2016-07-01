@@ -463,7 +463,26 @@ sorters.allow({
         return true;
     }
 });
-
+homePage.allow({
+    insert: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['super-admin'])) {
+            return true;
+        }
+    },
+    update: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['super-admin'])) {
+            return true;
+        }
+    },
+    remove: function (userId, doc, fields, modifier) {
+        var u = Meteor.users.findOne({_id:userId});
+        if (Roles.userIsInRole(u, ['super-admin'])) {
+            return true;
+        }
+    }
+});
 
 // PUBLISH
 if (Meteor.isServer) {
