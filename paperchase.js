@@ -381,9 +381,9 @@ if (Meteor.isClient) {
         });
 
 
-    Router.route('/papers/:v/:n/full/:pii', function() {
+    Router.route('/papers/:v/:n/:full/:pii', function() {
             if(this.params.pii.match('.html')) {
-                var pii = this.params.pii.replace('.html', '');
+                var pii = this.params.pii.replace('.html', '').replace('a', '');
                 if(Meteor.subscribe('articleByPii', pii)) {
                     var articleByPii = articles.findOne({"ids.pii": pii});
                     console.log(articleByPii);
@@ -393,12 +393,9 @@ if (Meteor.isClient) {
                     }
                 }
             }
-            else {
-                window.location.href = "http://archive.impactaging.com"+document.location.pathname;
-            }
         });
 
-    Router.route('/papers/:v/:n/full/:pii/:file', function() {
+    Router.route('/papers/:v/:n/:full/:pii/:file', function() {
             window.location.href = "http://archive.impactaging.com"+document.location.pathname;
         });
 
