@@ -210,3 +210,11 @@ Template.scrollspyCard.events({
         Meteor.general.scrollAnchor(e);
     }
 });
+
+// Footer
+// ------
+Template.Footer.events({
+    'click .previous-site-link': function(e){
+        ga('send', 'event', 'Archive Site');
+    }
+});
