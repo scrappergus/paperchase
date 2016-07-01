@@ -96,11 +96,15 @@ Meteor.adminNews = {
         var picker = pick.pickadate('picker');
         picker.set('select', $('#news-date').data('value'), { format: 'yyyy/mm/dd' })
 
-        // End Date
+        // Conference
         // ------
-        var pickEnd = $('#news-date-end').pickadate();
-        var pickerEnd = pickEnd.pickadate('picker');
-        pickerEnd.set('select', $('#news-date-end').data('value'), { format: 'yyyy/mm/dd' })
+        var pickConferenceStart= $('#conference-date-start').pickadate();
+        var pickerConferenceStart= pickConferenceStart.pickadate('picker');
+        pickerConferenceStart.set('select', $('#conference-date-start').data('value'), { format: 'yyyy/mm/dd' })
+
+        var pickConferenceEnd = $('#conference-date-end').pickadate();
+        var pickerConferenceEnd = pickConferenceEnd.pickadate('picker');
+        pickerConferenceEnd.set('select', $('#conference-date-end').data('value'), { format: 'yyyy/mm/dd' })
 
         // Content
         // ------
@@ -138,7 +142,10 @@ Meteor.adminNews = {
         newsObj.title;
         newsObj.content;
         newsObj.date;
-        newsObj.date_end;
+        newsObj.date_display;
+        newsObj.conference;
+        newsObj.conference_date_start;
+        newsObj.conference_date_end;
         newsObj.youTube;
         newsObj.tags;
         newsObj.interview;
@@ -163,18 +170,25 @@ Meteor.adminNews = {
 
         // Date
         // ------
+        newsObj.date_display = $('#news-date-display').is(':checked');
         var newsDate = $('#news-date').val();
         if(newsDate){
             newsDate = new Date(newsDate);
             newsObj.date = newsDate;
         }
 
-        // End Date
+        // Conference Date
         // ------
-        var newsDateEnd = $('#news-date-end').val();
-        if(newsDate){
-            newsDateEnd = new Date(newsDateEnd);
-            newsObj.date_end = newsDateEnd;
+        newsObj.conference = $('#news-conference').is(':checked');
+        var conferenceDateStart = $('#conference-date-start').val();
+        if(conferenceDateStart){
+            conferenceDateStart = new Date(conferenceDateStart);
+            newsObj.conference_date_start = conferenceDateStart;
+        }
+        var conferenceDateEnd = $('#conference-date-end').val();
+        if(conferenceDateEnd){
+            conferenceDateEnd = new Date(conferenceDateEnd);
+            newsObj.conference_date_end = conferenceDateEnd;
         }
 
         // YouTube
@@ -201,6 +215,14 @@ Meteor.adminNews = {
         // Interview
         // ------
         newsObj.interview = $('#news-interview').is(':checked');
+
+        if(newsObj.interview && newsObj.conference){
+            var invalidObj = {
+                'input_id' : 'news-interview',
+                'message' : 'News cannot be both an interview and a conference.'
+            }
+            invalidData.push(invalidObj);
+        }
 
         // Display
         // ------
@@ -238,7 +260,8 @@ Meteor.adminNews = {
                         if(error){
                             Meteor.formActions.errorMessage('Could not update news', error);
                         }else if(result){
-                            Meteor.formActions.successMessage('News Updated');
+                            $('.lean-overlay').remove();
+                            Router.go('AdminNewsOverview', {_id : newsMongoId});
                         }
                     });
                 }

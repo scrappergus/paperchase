@@ -75,6 +75,20 @@
                     </fieldset>
 
                     <fieldset>
+                        <legend>News Date</legend>
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="date" class="datepicker" id="news-date" value="{{inputDate date}}" data-value="{{inputDate date}}">
+                                <label for="news-date" class="active">Date</label>
+                            </div>
+                            <div class="input-field col s12 m6">
+                                <input name="news-date-display" type="checkbox" checked="{{checked date_display}}" id="news-date-display">
+                                <label for="news-date-display" class="{{#if notEmpty date_display}}active{{/if}}">Display News Date</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
                         <legend>Content</legend>
                         <div class="row">
                             <div class="input-field col s12">
@@ -89,17 +103,39 @@
                         <legend>Video</legend>
                         <div class="row">
                             <div class="input-field col s12">
-                                <input name="news-youtube" type="text" value="{{youTube}}" id="news-youtube">
-                                <label for="news-youtube" class="{{#if notEmpty youTube}}active{{/if}}">YouTube</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
                                 <input name="news-interview" type="checkbox" checked="{{checked interview}}" id="news-interview">
                                 <label for="news-interview" class="{{#if notEmpty interview}}active{{/if}}">Interview</label>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="news-youtube" type="text" value="{{youTube}}" id="news-youtube">
+                                <label for="news-youtube" class="{{#if notEmpty youTube}}active{{/if}}">YouTube</label>
+                            </div>
+                        </div>
                     </fieldset>
+
+
+                    <fieldset>
+                        <legend>Conference</legend>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="news-conference" type="checkbox" checked="{{checked conference}}" id="news-conference">
+                                <label for="news-conference" class="{{#if notEmpty conference}}active{{/if}}">Conference</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="date" class="datepicker" id="conference-date-start" value="{{inputDate conference_date_start}}" data-value="{{inputDate conference_date_start}}">
+                                <label for="conference-date-start" class="active">Start Date</label>
+                            </div>
+                            <div class="input-field col s12 m6">
+                                <input type="date" class="datepicker" id="conference-date-end" value="{{inputDate conference_date_end}}" data-value="{{inputDate conference_date_end}}">
+                                <label for="conference-date-end" class="active">End Date</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
 
                     <fieldset>
                         <legend>Tags</legend>
@@ -134,26 +170,11 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend>Date</legend>
-                        <div class="row">
-                            <div class="input-field col s12 m6">
-                                <input type="date" class="datepicker" id="news-date" value="{{inputDate date}}" data-value="{{inputDate date}}">
-                                <label for="news-date" class="active">Date</label>
-                            </div>
-                            <div class="input-field col s12 m6">
-                                <input type="date" class="datepicker" id="news-date-end" value="{{inputDate date_end}}" data-value="{{inputDate date_end}}">
-                                <label for="news-date-end" class="active">End Date</label>
-                            </div>
-                        </div>
-                    </fieldset>
-
-
-                    <fieldset>
                         <legend>Settings</legend>
                         <div class="row">
                             <div class="input-field col s12 m6">
                                 <input name="news-display" type="checkbox" checked="{{checked display}}" id="news-display">
-                                <label for="news-display">Display</label>
+                                <label for="news-display">Display News</label>
                             </div>
                         </div>
                     </fieldset>
@@ -184,7 +205,22 @@
             </div>
             <div class="row">
                 <div class="col s12">
+                    <label>Display News</label> {{#if display}}Yes{{else}}No{{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
                     <label>Title</label> {{title}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>News Date</label> {{#if date}}{{formatDate date}}{{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>News Date Display</label> {{#if date_display}}Yes{{else}}No{{/if}}
                 </div>
             </div>
             <div class="row">
@@ -194,12 +230,12 @@
             </div>
             <div class="row">
                 <div class="col s12">
-                    <label>Dates</label> {{formatDate date}}{{#if date_end}} - {{formatDate date_end}}{{/if}}
+                    <label>Conference</label>  {{#if conference}}Yes{{else}}No{{/if}}
                 </div>
             </div>
             <div class="row">
                 <div class="col s12">
-                    <label>Display</label> {{#if display}}Yes{{else}}No{{/if}}
+                    <label>Conference Dates</label> {{#if conference_date_start}}{{formatDate conference_date_start}}{{/if}}{{#if conference_date_end}} - {{formatDate conference_date_end}}{{/if}}
                 </div>
             </div>
             <div class="row">
