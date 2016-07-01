@@ -37,29 +37,13 @@
 
 <template name="AdminNewsAdd">
     {{>AdminHeader header="Add News"}}
-    <div class="row">
-        <div class="col s12">
-            {{>AdminNewsForm}}
-        </div>
-    </div>
+    {{>AdminNewsForm}}
 </template>
 
 <template name="AdminNewsEdit">
     {{>AdminHeader header="Edit News"}}
     {{#if news}}
-    <div class="row">
-        <div class="col s12">
-            <div class="card z-depth-0">
-                <div class="card-content">
-                    <div class="row">
-                        <div class="col s12">
-                            {{>AdminNewsForm}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{>AdminNewsForm}}
     {{else}}
     {{#if adminNotFound}}
     {{>Admin404 what="News"}}
@@ -70,98 +54,105 @@
 <template name="AdminNewsForm">
     {{#with news}}
     {{>StatusModal}}
-    <form id="article-form">
-        {{>FixedSaveBtn}}
-        {{>saving}}
 
-        <fieldset>
-            <legend>Title</legend>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input name="news-title" type="text" value="{{title}}" id="news-title">
-                    <label for="news-title" class="{{#if notEmpty title}}active{{/if}}">Title</label>
-                </div>
-            </div>
-        </fieldset>
+    <div class="row"><div class="col s12">
+        <div class="card z-depth-0"><div class="card-content">
+            <div class="row"><div class="col s12">
+                <form id="article-form">
+                    {{>FixedSaveBtn}}
+                    {{>saving}}
 
-        <fieldset>
-            <legend>Content</legend>
-            <div class="row">
-                <div class="input-field col s12">
-                    <div class="news-content">{{{content}}}</div>
-                </div>
-            </div>
-        </fieldset>
+                    <fieldset>
+                        <legend>Title</legend>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="news-title" type="text" value="{{title}}" id="news-title">
+                                <label for="news-title" class="{{#if notEmpty title}}active{{/if}}">Title</label>
+                            </div>
+                        </div>
+                    </fieldset>
 
-        <fieldset>
-            <legend>Video</legend>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input name="news-youtube" type="text" value="{{youTube}}" id="news-youtube">
-                    <label for="news-youtube" class="{{#if notEmpty youTube}}active{{/if}}">YouTube</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input name="news-interview" type="checkbox" checked="{{checked interview}}" id="news-interview">
-                    <label for="news-interview" class="{{#if notEmpty interview}}active{{/if}}">Interview</label>
-                </div>
-            </div>
-        </fieldset>
+                    <fieldset>
+                        <legend>Content</legend>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <div class="news-content">{{{content}}}</div>
+                            </div>
+                        </div>
+                    </fieldset>
 
-        <fieldset>
-            <legend>Tags</legend>
-            <div class="row" id="row-tag-btn">
-                <div class="col s12">
-                    <a class="btn-floating waves-effect waves-light btn-add add-news-tag"><i class="material-icons">&#xE145;</i></a>
-                </div>
-            </div>
-            <div class="row hide" id="row-tag-input">
-                <div class="col s2">
+                    <fieldset>
+                        <legend>Video</legend>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="news-youtube" type="text" value="{{youTube}}" id="news-youtube">
+                                <label for="news-youtube" class="{{#if notEmpty youTube}}active{{/if}}">YouTube</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="news-interview" type="checkbox" checked="{{checked interview}}" id="news-interview">
+                                <label for="news-interview" class="{{#if notEmpty interview}}active{{/if}}">Interview</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Tags</legend>
+                        <div class="row" id="row-tag-btn">
+                            <div class="col s12">
+                                <a class="btn-floating waves-effect waves-light btn-add add-news-tag"><i class="material-icons">&#xE145;</i></a>
+                            </div>
+                        </div>
+                        <div class="row hide" id="row-tag-input">
+                            <div class="col s2">
+                                <div class="row">
+                                    <div class="col s12"><a class="btn-floating waves-effect waves-light btn-add add-to-tags right"><i class="material-icons">&#xE161;</i></a></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12"><button class="btn btn-cancel btn-floating cancel-news-tag right"><i class="material-icons">&#xE15D;</i></button></div>
+                                </div>
+                            </div>
+                            <div class="col s10">
+                                <div class="card z-depth-0 grey lighten-3"><div class="card-content"><div class="news-tag-input"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                            {{#each tags}}
+                                <div class="chip news-tag">
+                                <span class="news-tag-text">{{{.}}}</span>
+                                <i class="material-icons">close</i>
+                                </div>
+                            {{/each}}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <!-- <legend>Date</legend> -->
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="date" class="datepicker" id="news-date" value="{{inputDate date}}" data-value="{{inputDate date}}">
+                                <label for="news-date" class="active">Date</label>
+                            </div>
+                            <div class="input-field col s12 m6">
+                                <input name="news-display" type="checkbox" checked="{{checked display}}" id="news-display">
+                                <label for="news-display">Display</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <input type="hidden" value="{{_id}}" id="news-mongo-id">
+
                     <div class="row">
-                        <div class="col s12"><a class="btn-floating waves-effect waves-light btn-add add-to-tags right"><i class="material-icons">&#xE161;</i></a></div>
+                        <div class="col s12 center-align">
+                            {{>SaveBtn}}
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col s12"><button class="btn btn-cancel btn-floating cancel-news-tag right"><i class="material-icons">&#xE15D;</i></button></div>
-                    </div>
-                </div>
-                <div class="col s10">
-                    <div class="card z-depth-0 grey lighten-3"><div class="card-content"><div class="news-tag-input"></div></div></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                {{#each tags}}
-                    <div class="chip news-tag">
-                    <span class="news-tag-text">{{{.}}}</span>
-                    <i class="material-icons">close</i>
-                    </div>
-                {{/each}}
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <!-- <legend>Date</legend> -->
-            <div class="row">
-                <div class="input-field col s12 m6">
-                    <input type="date" class="datepicker" id="news-date" value="{{inputDate date}}" data-value="{{inputDate date}}">
-                    <label for="news-date" class="active">Date</label>
-                </div>
-                <div class="input-field col s12 m6">
-                    <input name="news-display" type="checkbox" checked="{{checked display}}" id="news-display">
-                    <label for="news-display">Display</label>
-                </div>
-            </div>
-        </fieldset>
-
-        <input type="hidden" value="{{_id}}" id="news-mongo-id">
-
-        <div class="row">
-            <div class="col s12 center-align">
-                {{>SaveBtn}}
-            </div>
-        </div>
-    </form>
+                </form>
+            </div></div>
+        </div></div>
+    </div></div>
     {{/with}}
 </template>
