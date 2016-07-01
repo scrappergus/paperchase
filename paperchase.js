@@ -353,6 +353,19 @@ if (Meteor.isClient) {
     Router.route('/ethics.html', function() {
             Router.go('/ethics');
         });
+    Router.route('/forAuthors.html', function() {
+            Router.go('/for-authors');
+        });
+
+    Router.route('/contacts.html', function() {
+            Router.go('/contact');
+        });
+    Router.route('/about.html', function() {
+            Router.go('/about');
+        });
+
+
+
     Router.route('/contents', {
             waitOn: function(){
                 return[
@@ -366,9 +379,29 @@ if (Meteor.isClient) {
                 Router.go(route);
             }
         });
-    Router.route('/papers/:v/:n/full/:pii/:doc', function() {
+
+
+    Router.route('/papers/:v/:n/full/:pii', function() {
+            if(this.params.pii.match('.html')) {
+                var pii = this.params.pii.replace('.html', '');
+                if(Meteor.subscribe('articleByPii', pii)) {
+                    var articleByPii = articles.findOne({"ids.pii": pii});
+                    console.log(articleByPii);
+                    // check if :_id is a pii and not Mongo ID
+                    if(articleByPii){
+                        Router.go("/article/"+articleByPii._id);
+                    }
+                }
+            }
+            else {
+                window.location.href = "http://archive.impactaging.com"+document.location.pathname;
+            }
+        });
+
+    Router.route('/papers/:v/:n/full/:pii/:file', function() {
             window.location.href = "http://archive.impactaging.com"+document.location.pathname;
         });
+
 
 
     Router.route('/', {

@@ -462,6 +462,11 @@ if (Meteor.isServer) {
           return [];
         }
     });
+    Meteor.publish('articleByPii', function(pii) {
+        check(pii, String);
+        return articles.find({'ids.pii':pii},{});
+    });
+
     Meteor.publish('articlesWithoutDates', function(){
         return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
     });
