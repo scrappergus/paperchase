@@ -22,20 +22,20 @@ if (Meteor.isClient) {
 }
 
 
-//// Redirects 
-//// Global redirect for pre-launch
-//if (Meteor.isServer) {
-//    WebApp.connectHandlers
-//    .use(function(req, res, next) {
-//            if(req.headers.host.match('aging-us.com') ) {
-//                res.writeHead(307, { 'Location': "http://archive.impactaging.com" });
-//                res.end();
-//            }
-//            else {
-//                return next();
-//            }
-//        });
-//}
+// Redirects 
+// Global redirect for pre-launch
+if (Meteor.isServer) {
+    WebApp.connectHandlers
+    .use(function(req, res, next) {
+            if(req.headers.host.match('paperchase.impactaging.com') ) {
+                res.writeHead(307, { 'Location': "http://www.aging-us.com" });
+                res.end();
+            }
+            else {
+                return next();
+            }
+        });
+}
 
 
 Router.configure({
