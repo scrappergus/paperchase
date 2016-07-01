@@ -1050,6 +1050,22 @@ Meteor.dates = {
     wordDate: function(date){
         return moment(date).tz('America/New_York').format('MMMM D, YYYY');
     },
+    dateSpan: function( dateStart, dateEnd ){
+        if( dateStart && dateEnd && dateStart.getDate() === dateEnd.getDate() ){
+            return moment(dateStart).format('MMMM D, YYYY');
+        }
+        else if( dateStart && dateEnd && dateStart.getMonth() === dateEnd.getMonth() &&  dateStart.getYear() === dateEnd.getYear() ){
+            return moment(dateStart).format('MMMM D') + ' - ' + moment(dateEnd).format('D, YYYY');
+        }
+        else if( dateStart && dateEnd && dateStart.getMonth() != dateEnd.getMonth() &&  dateStart.getYear() === dateEnd.getYear() ){
+            return moment(dateStart).format('MMMM D') + ' - ' + moment(dateEnd).format('MMMM D, YYYY');
+        }
+        else if( dateStart && dateEnd && dateStart.getYear() != dateEnd.getYear() ){
+            return moment(dateStart).format('MMMM D, YYYY') + ' - ' + moment(dateEnd).format('MMMM D, YYYY');
+        }
+        return;
+        // return moment(date).tz('America/New_York').format(' D, YYYY');
+    },
     dashedToWord: function(date){
         date = Meteor.dates.dashedToDate(date);
         return moment(date).tz('America/New_York').format('MMMM D, YYYY');

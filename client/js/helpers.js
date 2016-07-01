@@ -137,6 +137,12 @@ if (Meteor.isClient) {
         }
         return;
     });
+    Template.registerHelper('formatDateSpan', function(dateStart, dateEnd) {
+        if ( dateStart && dateEnd ) {
+            return Meteor.dates.dateSpan( dateStart, dateEnd );
+        }
+        return;
+    });
     Template.registerHelper('formatDateNumber',function(date) {
         if (date) {
             return moment(date).format('MM/D/YYYY');

@@ -93,7 +93,7 @@
 
                     {{#if conference}}
                         {{#if conference_date_start}}
-                        <b>{{formatDate conference_date_start}}{{#if conference_date_end}} - {{/if}}{{formatDate conference_date_end}}:</b>
+                        <b>{{formatDateSpan conference_date_start conference_date_end}}:</b>
                         {{/if}}
                     {{/if}}
 
