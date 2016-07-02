@@ -369,6 +369,12 @@ if (Meteor.isServer) {
         return issues.find({current: true});
     });
 
+    Meteor.publish('issueByVolNum',function(vol, num){
+            console.log(typeof(vol), typeof(num));
+        return issues.find({volume:vol, issue:num});
+    });
+
+
     Meteor.publish('prevIssue',function(volumeAndIssue){
         var pieces,
             volumeData,

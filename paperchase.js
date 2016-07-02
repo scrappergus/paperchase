@@ -369,13 +369,13 @@ if (Meteor.isClient) {
     Router.route('/contents', {
             waitOn: function(){
                 return[
-                Meteor.subscribe('currentIssue'),
+                    Meteor.subscribe('issueByVolNum', this.params.query.volumeId, this.params.query.issueId),
                 ]
             },
             action: function() {
-                var current = issues.find({'current':true}).fetch();
-                current = current[0];
-                var route = "/issue/v"+current['volume']+"i"+current['issue'];
+                var issue = issues.find().fetch();
+                issue = issue[0];
+                var route = "/issue/v"+issue['volume']+"i"+issue['issue'];
                 Router.go(route);
             }
         });
@@ -386,7 +386,6 @@ if (Meteor.isClient) {
                 var pii = this.params.pii.replace('.html', '').replace('a', '');
                 if(Meteor.subscribe('articleByPii', pii)) {
                     var articleByPii = articles.findOne({"ids.pii": pii});
-                    console.log(articleByPii);
                     // check if :_id is a pii and not Mongo ID
                     if(articleByPii){
                         Router.go("/article/"+articleByPii._id);
