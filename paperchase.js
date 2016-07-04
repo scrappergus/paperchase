@@ -400,16 +400,27 @@ if (Meteor.isClient) {
 
     Router.route('/full/:pii', function() {
             var pii = this.params.pii;
-                if(Meteor.subscribe('articleByPii', pii)) {
+            Meteor.subscribe('articleByPii', pii, function() {
                     var articleByPii = articles.findOne({"ids.pii": pii});
-                    // check if :_id is a pii and not Mongo ID
                     if(articleByPii){
                         Router.go("/article/"+articleByPii._id);
                     }
-                }
+                });
         });
 
 
+    Router.route('/full/:volume/:page_start', function() {
+                var volume = parseInt(this.params.volume);
+                var page_start = parseInt(this.params.page_start);
+
+                Meteor.subscribe('articleByVolumePage', volume, page_start, function() {
+                        var article = articles.findOne({'volume': volume, page_start: page_start});
+
+                        if(article){
+                            Router.go("/article/"+article._id);
+                        }
+                    });
+        });
 
 
     Router.route('/', {

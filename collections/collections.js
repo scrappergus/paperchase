@@ -473,6 +473,13 @@ if (Meteor.isServer) {
         return articles.find({'ids.pii':pii},{});
     });
 
+    Meteor.publish('articleByVolumePage', function(volume, page_start) {
+        check(volume, Number);
+        check(page_start, Number);
+        return articles.find({volume:volume, page_start:page_start});
+    });
+
+
     Meteor.publish('articlesWithoutDates', function(){
         return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
     });
