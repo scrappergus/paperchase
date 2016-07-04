@@ -398,6 +398,18 @@ if (Meteor.isClient) {
             window.location.href = "http://archive.impactaging.com"+document.location.pathname;
         });
 
+    Router.route('/full/:pii', function() {
+            var pii = this.params.pii;
+                if(Meteor.subscribe('articleByPii', pii)) {
+                    var articleByPii = articles.findOne({"ids.pii": pii});
+                    // check if :_id is a pii and not Mongo ID
+                    if(articleByPii){
+                        Router.go("/article/"+articleByPii._id);
+                    }
+                }
+        });
+
+
 
 
     Router.route('/', {
