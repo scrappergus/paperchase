@@ -184,12 +184,7 @@ Template.ArticleSidebar.helpers({
     },
     showToc: function() {
         var articleData = Template.parentData(1).article;
-        if(articleData && articleData.article_type) {
-            if(['research_paper', 'review', 'research_perspective'].indexOf(articleData.article_type.short_name) > -1) {
-                return true
-            }
-        }
-        return;
+        return Meteor.impact.showToc(articleData);
     },
     fullTextReady: function(){
         if(Session.get('article-text')) {
@@ -223,7 +218,7 @@ Template.ArticleSidebar.helpers({
                             var sectionTitle = '';
                             sectionTitle = articleSections[i].title;
                             sectionTitle = sectionTitle.replace(/<a\b[^>]*>(.*?)<\/a>/i,'').replace('[]','');
-                            sections.push( { title: sectionTitle } );                            
+                            sections.push( { title: sectionTitle } );
                         }
                     }
                 }
@@ -314,4 +309,3 @@ Template.Search.helpers({
     }
 
 });
-

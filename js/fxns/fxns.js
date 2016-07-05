@@ -135,6 +135,15 @@ Meteor.impact = {
         }
 
         return fullText;
+    },
+    showToc: function(articleData){
+        // console.log('showToc',articleData);
+        if(articleData && articleData.article_type) {
+            if(['research_paper', 'review', 'research_perspective'].indexOf(articleData.article_type.short_name) > -1) {
+                return true
+            }
+        }
+        return;
     }
 }
 
