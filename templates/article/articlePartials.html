@@ -145,14 +145,13 @@
             {{/if}}
 
             {{#if abstractView}}
-                {{#with files}}
-                {{#if xml.url}}
-                {{#if xml.display}}
+                {{#if fullTextAvailable}}
                     <a href="{{pathFor 'ArticleText' hash='fulltext'}}" class="view-html full-width end-cap primary button">
                         <span class="icon icon-file"></span> View Full Text
                     </a>
                 {{/if}}
-                {{/if}}
+
+                {{#with files}}
                 {{#if pdf.url}}
                     <a href="{{pdf.url}}" class="download-pdf full-width end-cap primary button">
                         <span class="icon icon-download"></span> Download PDF

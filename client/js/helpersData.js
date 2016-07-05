@@ -197,6 +197,17 @@ Template.ArticleSidebar.helpers({
         }
         return;
     },
+    fullTextAvailable: function() {
+        var articleData = Template.parentData(1).article;
+        if(articleData.files && articleData.files.xml && articleData.files.xml.url && articleData.files.xml.display) {
+            return true
+        }
+        if(articleData.articleJson) {
+            return true
+        }
+
+        return;
+    },
     items: function() {
         if(Session.get('article-text')){
             var articleSections = Session.get('article-text').sections;

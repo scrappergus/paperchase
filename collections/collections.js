@@ -369,6 +369,12 @@ if (Meteor.isServer) {
         return issues.find({current: true});
     });
 
+    Meteor.publish('issueByVolNum',function(vol, num){
+            console.log(typeof(vol), typeof(num));
+        return issues.find({volume:vol, issue:num});
+    });
+
+
     Meteor.publish('prevIssue',function(volumeAndIssue){
         var pieces,
             volumeData,
@@ -462,6 +468,18 @@ if (Meteor.isServer) {
           return [];
         }
     });
+    Meteor.publish('articleByPii', function(pii) {
+        check(pii, String);
+        return articles.find({'ids.pii':pii},{});
+    });
+
+    Meteor.publish('articleByVolumePage', function(volume, page_start) {
+        check(volume, Number);
+        check(page_start, Number);
+        return articles.find({volume:volume, page_start:page_start});
+    });
+
+
     Meteor.publish('articlesWithoutDates', function(){
         return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
     });

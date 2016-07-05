@@ -22,13 +22,13 @@ if (Meteor.isClient) {
 }
 
 
-//Redirects 
+// Redirects 
 // Global redirect for pre-launch
 if (Meteor.isServer) {
     WebApp.connectHandlers
     .use(function(req, res, next) {
-            if(req.headers.host.match('aging-us.com') ) {
-                res.writeHead(307, { 'Location': "http://archive.impactaging.com" });
+            if(req.headers.host.match('paperchase.impactaging.com') ) {
+                res.writeHead(307, { 'Location': "http://www.aging-us.com" });
                 res.end();
             }
             else {
@@ -353,21 +353,73 @@ if (Meteor.isClient) {
     Router.route('/ethics.html', function() {
             Router.go('/ethics');
         });
+    Router.route('/forAuthors.html', function() {
+            Router.go('/for-authors');
+        });
+
+    Router.route('/contacts.html', function() {
+            Router.go('/contact');
+        });
+    Router.route('/about.html', function() {
+            Router.go('/about');
+        });
+
+
+
     Router.route('/contents', {
             waitOn: function(){
                 return[
-                Meteor.subscribe('currentIssue'),
+                    Meteor.subscribe('issueByVolNum', this.params.query.volumeId, this.params.query.issueId),
                 ]
             },
             action: function() {
-                var current = issues.find({'current':true}).fetch();
-                current = current[0];
-                var route = "/issue/v"+current['volume']+"i"+current['issue'];
+                var issue = issues.find().fetch();
+                issue = issue[0];
+                var route = "/issue/v"+issue['volume']+"i"+issue['issue'];
                 Router.go(route);
             }
         });
-    Router.route('/papers/:v/:n/full/:pii/:doc', function() {
+
+
+    Router.route('/papers/:v/:n/:full/:pii', function() {
+            if(this.params.pii.match('.html')) {
+                var pii = this.params.pii.replace('.html', '').replace('a', '');
+                if(Meteor.subscribe('articleByPii', pii)) {
+                    var articleByPii = articles.findOne({"ids.pii": pii});
+                    // check if :_id is a pii and not Mongo ID
+                    if(articleByPii){
+                        Router.go("/article/"+articleByPii._id);
+                    }
+                }
+            }
+        });
+
+    Router.route('/papers/:v/:n/:full/:pii/:file', function() {
             window.location.href = "http://archive.impactaging.com"+document.location.pathname;
+        });
+
+    Router.route('/full/:pii', function() {
+            var pii = this.params.pii;
+            Meteor.subscribe('articleByPii', pii, function() {
+                    var articleByPii = articles.findOne({"ids.pii": pii});
+                    if(articleByPii){
+                        Router.go("/article/"+articleByPii._id);
+                    }
+                });
+        });
+
+
+    Router.route('/full/:volume/:page_start', function() {
+                var volume = parseInt(this.params.volume);
+                var page_start = parseInt(this.params.page_start);
+
+                Meteor.subscribe('articleByVolumePage', volume, page_start, function() {
+                        var article = articles.findOne({'volume': volume, page_start: page_start});
+
+                        if(article){
+                            Router.go("/article/"+article._id);
+                        }
+                    });
         });
 
 
