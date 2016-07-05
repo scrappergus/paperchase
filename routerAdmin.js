@@ -1233,6 +1233,40 @@ if (Meteor.isClient) {
             this.next();
         }
     });
+    Router.route('/admin/issue/:vi/edit', {
+        name: 'AdminIssueEdit',
+        title: function() {
+            var pageTitle = 'Admin | Edit Issue ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin',
+        onBeforeAction: function(){
+            Session.set('issue',null);
+            if(this.params.vi){
+                var pieces = Meteor.issue.urlPieces(this.params.vi);
+                if(pieces && pieces.volume && pieces.issue){
+                    Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, true, function(error,result){
+                        if(error){
+                            console.error('ERROR - getIssueAndFiles',error);
+                        }else if(result){
+                            Session.set('issue',result);
+                        }else{
+                            Session.set('admin-not-found',true);
+                        }
+                    });
+                }else{
+                    Session.set('admin-not-found',true);
+                }
+            }else{
+                Session.set('admin-not-found',true);
+            }
+
+            this.next();
+        }
+    });
     Router.route('/admin/issue_deleted', {
         name: 'AdminIssueDeleted',
         title: function() {

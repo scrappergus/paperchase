@@ -1,6 +1,6 @@
 // Issue
 // ----------------
-Template.AdminIssue.events({
+Template.AdminIssueEdit.events({
     'click .anchor': function(e){
         Meteor.general.scrollAnchor(e);
     },
@@ -26,6 +26,7 @@ Template.AdminIssue.events({
 });
 Template.AdminIssueForm.events({
     'submit form': function(e,t){
+        // console.log('...click AdminIssueForm');
         e.preventDefault();
         Meteor.formActions.saving();
         var mongoId = $('#mongo-id').attr('data-id');
@@ -87,21 +88,28 @@ Template.AdminIssueForm.events({
         Meteor.call('validateIssue', mongoId, issueData, function(error, result){
             if(error){
                 console.error('validateIssue',error);
-            }else if(result && result.duplicate){
+            }
+            else if(result && result.duplicate){
                 Meteor.formActions.errorMessage('Duplicate Issue Found: ' + '<a href="/admin/issue/v' + result.volume + 'i' + result.issue + '">Volume ' + result.volume + ', Issue ' + result.issue + '</a>');
-            }else if(result && result.invalid_list){
+            }
+            else if(result && result.invalid_list){
                 Meteor.formActions.invalid(result.invalid_list);
-            }else if(result && result.saved){
+            }
+            else if(result && result.saved){
                 if(!mongoId){
                     mongoId = result.article_id;
                 }
-                Meteor.formActions.successMessage('Issue Updated');
+                $('.lean-overlay').remove();
+                Router.go('AdminIssue', {vi : 'v' + issueData.volume + 'i' + issueData.issue});
+                // Meteor.formActions.successMessage('Issue Updated');
                 Meteor.call('getIssueAndFiles', issueData.volume, issueData.issue, true, function(error,result){
                     if(error){
                         console.error('ERROR - getIssueAndFiles',error);
-                    }else if(result){
+                    }
+                    else if(result){
                         Session.set('issue',result);
-                    }else{
+                    }
+                    else{
                         Session.set('admin-not-found',true);
                     }
                 });

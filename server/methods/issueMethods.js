@@ -57,61 +57,93 @@ Meteor.methods({
         return volumes.update({_id :volumeId },updateObj);
     },
     addIssue: function(issueData){
+        var fut = new future();
+        // console.log('..addIssue', issueData);
         //check if volume exists, if not add
         var vol,
             iss,
             issueId;
-        issueData['issue'] = issueData['issue'];
-        issueData['volume'] = parseInt(issueData['volume']);
+
+        issueData.volume = parseInt(issueData.volume);
+
         if(!issueData.issue_linkable){
             issueData.issue_linkable = Meteor.issue.linkeableIssue(issueData.issue);
         }
-        vol = volumes.findOne({'volume':issueData['volume']});
-        //double check that issue does not exist
-        iss = issues.findOne({'volume':issueData['volume'],'issue':issueData['issue']});
 
-        if(!iss){
+        //double check that issue does not exist
+        iss = issues.findOne({'volume': issueData.volume, 'issue': issueData.issue});
+
+        if( !iss ){
             issueId = issues.insert(issueData);
-        }else{
-            issueId = iss['_id'];
+            // console.log(' issue created', issueId);
         }
-        if(!vol){
-            Meteor.call('addVolume',issueData['volume'],issueId, function(error,_id){
+        else{
+            issueId = iss._id;
+        }
+
+        // If Vol does not exist, then create
+        vol = volumes.findOne({'volume': issueData.volume});
+        if( !vol ){
+            Meteor.call('addVolume', issueData.volume, issueId, function(error,_id){
                 if(error){
-                    console.log('ERROR: ' + error.message);
+                    console.error('ERROR: ' + error.message);
+                }
+                else{
+                    fut.return(issueId);
                 }
             });
-        }else{
+        }
+        else{
             // Add issue to issue array, append to end
             Meteor.call('addIssueToVolume',issueData['volume'],issueId, function(error,_id){
                 if(error){
-                    console.log('ERROR: ' + error.message);
+                    console.error('ERROR: ' + error.message);
+                }
+                else{
+                    fut.return(issueId);
                 }
             });
         }
-        return issueId;
+
+        try {
+            return fut.wait();
+        } catch(err) {
+            throw new Meteor.Error(err);
+        }
     },
     updateIssue: function(mongoId, update){
+        // console.log('..updateIssue');
+        var fut = new future();
         if(!mongoId){
             Meteor.call('addIssue',update,function(error,result){
                 if(error){
                     console.error('addIssue',error);
-                }else if(result){
-                    return result;
                 }
-            })
-        }else{
-            return issues.update({'_id':mongoId},{$set:update});
+                else if(result){
+                    fut.return(result);
+                }
+            });
+        }
+        else{
+            fut.return(issues.update({'_id':mongoId},{$set:update}));
+        }
+
+        try {
+            return fut.wait();
+        } catch(err) {
+            throw new Meteor.Error(err);
         }
     },
     findIssue: function(where){
         return issues.findOne(where);
     },
     addVolume: function(volume,issue){
+        // console.log('..addVolume',volume,issue);
         var insertObj = {'volume':volume};
         if(issue){
-            insertObj['issues'] = [issue];
+            insertObj.issues = [];
         }
+        insertObj.issues.push(issue);
         return volumes.insert(insertObj);
     },
     addIssueToVolume: function(volume,newIssueMongoId){
@@ -360,29 +392,35 @@ Meteor.methods({
         Meteor.call('checkIssueInputs', issueData, function(error,issueInvalid){
             if(error){
                 fut.throw(error);
-            }else if(issueInvalid && issueInvalid.length > 0){
+            }
+            else if(issueInvalid && issueInvalid.length > 0){
                 result.invalid = true;
                 result.invalid_list = issueInvalid;
                 fut.return(result);
-            }else{
-                Meteor.call('findIssueByVolIssue',issueData.volume, issueData.issue, function(error,issueExists){
+            }
+            else{
+                Meteor.call('findIssueByVolIssue', issueData.volume, issueData.issue, function(error, issueExists){
                     if(error){
                         fut.throw(error);
-                    }else if(issueExists && issueExists._id != issueMongoId){
+                    }
+                    else if(issueExists && issueExists._id != issueMongoId){
                         result = issueExists;
                         result.duplicate = true;
                         fut.return(issueExists);
-                    }else{
+                    }
+                    else{
                         // no duplicates and all valid. Now update/insert
-                        Meteor.call('updateIssue',issueMongoId, issueData, function(error,issueSaved){
+                        Meteor.call('updateIssue', issueMongoId, issueData, function(error, issueSaved){
                             if(error){
                                 fut.throw(error);
-                            }else if(issueSaved){
+                            }
+                            else if(issueSaved){
                                 // hide or display issue articles based on issueData.display
                                 Meteor.call('updateArticleBy',{issue_id : issueMongoId}, {display : issueData.display}, function(error, articlesUpdated){
                                     if(error){
                                         fut.throw(error);
-                                    }else if(articlesUpdated){
+                                    }
+                                    else if(articlesUpdated){
                                         result.issue_id = issueMongoId;
                                         result.saved = true;
                                         fut.return(result);

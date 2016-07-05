@@ -3,12 +3,9 @@
 
     {{>AdminIssueForm}}
 </template>
-<template name="AdminIssue">
-    {{>AdminHeader header="Issue"}}
 
-    {{#if issueData}}
 
-    {{#with issueData}}
+<template name="AdminIssueHeader">
     <div class="row">
         <div class="col s12">
             <div class="card blue-grey lighten-5 z-depth-0">
@@ -28,6 +25,16 @@
             </div>
         </div>
     </div>
+</template>
+
+<template name="AdminIssueEdit">
+    {{>AdminHeader header="Edit Issue"}}
+
+    {{#if issueData}}
+
+    {{#with issueData}}
+
+    {{>AdminIssueHeader}}
 
     <div class="row page-anchors">
         <div class="col s12">
@@ -133,6 +140,23 @@
     {{#if adminNotFound}}{{>Admin404 what="Issue"}}{{/if}}
 
     {{/if}}
+</template>
+
+<template name="AdminIssue">
+
+    {{>AdminHeader header="Issue"}}
+
+    {{#with issueData}}
+
+    {{>AdminIssueHeader}}
+
+    <!-- <div class="row">
+        <div class="col s12">
+            <a href="{{pathFo}}"></a>
+        </div>
+    </div> -->
+
+    {{/with}}
 </template>
 
 <template name="AdminIssueForm">
