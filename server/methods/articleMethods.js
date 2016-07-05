@@ -589,7 +589,7 @@ Meteor.methods({
                     if(error){
                         console.error('updateArticle',error);
                     }else if(result){
-                        fut.return(true);
+                        fut.return(result);
                     }
                 });
             }

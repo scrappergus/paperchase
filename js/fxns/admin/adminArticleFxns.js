@@ -228,8 +228,9 @@ Meteor.adminArticle = {
                     // if uploading XML too and saving form at same time
                     Meteor.articleFiles.uploadArticleFile(mongoId,'xml',files);
                 }else if(result){
+                    Router.go('AdminArticleOverview',{_id : result});
                     // just editing article form
-                    Meteor.formActions.successMessage('Article updated');
+                    // Meteor.formActions.successMessage('Article updated');
                 }
             });
         }else{
