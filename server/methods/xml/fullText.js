@@ -352,17 +352,19 @@ Meteor.fullText = {
         // console.log('sectionObject',sectionObject);
         return sectionObject;
     },
-    sectionId: function(section){
-        var sectionIdObject = {};
-        for(var sectionAttr = 0; sectionAttr < section.attributes.length; sectionAttr++){
-            if(section.attributes[sectionAttr].nodeName === 'sec-type'){
-                sectionIdObject.type = section.attributes[sectionAttr].nodeValue;
-            }else if(section.attributes[sectionAttr].nodeName === 'id'){
-                var sectionId = section.attributes[sectionAttr].nodeValue;
+    sectionId: function( section){
+        // console.log('..sectionId');
+        var sectionIdObject = {},
+            sectAttr;
 
-                sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectionId);
-                sectionIdObject.sectionId = sectionId;
-            }
+        sectAttr = Meteor.fullText.traverseAttributes(section.attributes);
+
+        if(sectAttr && sectAttr['sec-type']){
+            sectionIdObject.type = sectAttr['sec-type'].nodeValue;
+        }
+        else if(sectAttr && sectAttr.id){
+            sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectAttr.id);
+            sectionIdObject.sectionId = sectAttr.id;
         }
 
         if(!sectionIdObject.sectionId && section.parentNode && section.parentNode.localName && section.parentNode.localName === 'body'){
