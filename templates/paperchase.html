@@ -23,7 +23,8 @@
                 {{> HomePageLatestIssue}}
             {{/with}}
 
-            <a href="http://eepurl.com/bmC9OL" target="_blank" class="full-width primary button">Sign Up for TOC Alerts</a>
+            {{> FeaturedInterviewSidebar}}
+            <!--<a href="http://eepurl.com/bmC9OL" target="_blank" class="full-width primary button">Sign Up for TOC Alerts</a>-->
 
             <!-- {{> HomePageEditorList}} -->
             {{> FeaturedNobelArticlesSidebar}}
@@ -134,6 +135,16 @@
         </ul>
     </div>
 </template>
+
+<template name="FeaturedInterviewSidebar">
+    {{#with interview}}
+    <div class="card sidebar-card featured-nobel">
+        <h6 class="card-title"><a href="http://youtu.be/{{youTube}}">{{title}}</a></h6>
+        {{{content}}}
+    </div>
+    {{/with}}
+</template>
+
 
 <template name="LatestNewsSidebar">
     <div class="card sidebar-card">

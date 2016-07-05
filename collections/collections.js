@@ -610,12 +610,16 @@ if (Meteor.isServer) {
     // News
     // ----------------
     Meteor.publish('newsListDisplay', function(){
-        return newsList.find({display: true});
+        return newsList.find({display: true, interview: false});
     });
     Meteor.publish('newsItem', function(mongoId){
         check(mongoId, String);
         return newsList.find({_id:mongoId});
     });
+    Meteor.publish('mostRecentInterview', function(){
+        return newsList.find({display: true, interview: true});
+    });
+
 
 
     // Sections
