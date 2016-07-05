@@ -540,7 +540,9 @@ Meteor.fullText = {
             if(node.nodeType == 3 && node.nodeValue && node.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                 //plain text or external link
                 if(node.nodeValue && node.nodeValue.indexOf('http') != -1 || node.nodeValue.indexOf('https') != -1 ){
-                    content += '<a href="'+ node.nodeValue +'" target="_BLANK">' + node.nodeValue + '</a>';
+                    // console.log(node.nodeValue);
+                    content += Meteor.general.findLink(node.nodeValue);
+                    // content += '<a href="'+ node.nodeValue +'" target="_BLANK">' + node.nodeValue + '</a>';
                 }
                 else if(node.nodeValue){
                     content += node.nodeValue;
