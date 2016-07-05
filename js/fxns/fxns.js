@@ -135,6 +135,14 @@ Meteor.impact = {
         }
 
         return fullText;
+    },
+    showToc: function(articleData){
+        if(articleData && articleData.article_type) {
+            if(['research_paper', 'review', 'research_perspective', 'priority_research_paper'].indexOf(articleData.article_type.short_name) > -1) {
+                return true
+            }
+        }
+        return;
     }
 }
 
@@ -1039,6 +1047,12 @@ Meteor.general = {
                  .parent().removeClass("active")
                  .end().filter("[href='#"+id+"']").parent().addClass("active");
            }
+        });
+    },
+    findLink: function(string){
+        var urlRegex = /(https?:\/\/[^\s)]+)/g;
+        return string.replace(urlRegex, function(url) {
+            return '<a href="' + url + '" target="_BLANK">' + url + '</a>';
         });
     }
 }

@@ -55,7 +55,7 @@ Meteor.methods({
                 // console.log(sections[section].localName);
                 if(sections[section].localName === 'sec'){
                     sectionObject = Meteor.fullText.sectionToJson(sections[section], files, mongoId);
-                    sectionIdObject = Meteor.fullText.sectionId(sections[section]);
+                    sectionIdObject = Meteor.fullText.sectionId(sections[section], true);
                     if(sectionIdObject){
                         for(var idInfo in sectionIdObject){
                             sectionObject[idInfo] = sectionIdObject[idInfo];
@@ -331,7 +331,7 @@ Meteor.fullText = {
                     subSectionObject = Meteor.fullText.sectionToJson(sec, files, mongoId);
                     if(subSectionObject){
                         subSectionObject.contentType = 'subsection';
-                        sectionIdObject = Meteor.fullText.sectionId(sec);
+                        sectionIdObject = Meteor.fullText.sectionId(sec, false);
                         if(sectionIdObject){
                             for(var idInfo in sectionIdObject){
                                 subSectionObject[idInfo] = sectionIdObject[idInfo];
@@ -352,17 +352,27 @@ Meteor.fullText = {
         // console.log('sectionObject',sectionObject);
         return sectionObject;
     },
-    sectionId: function(section){
-        var sectionIdObject = {};
-        for(var sectionAttr = 0; sectionAttr < section.attributes.length; sectionAttr++){
-            if(section.attributes[sectionAttr].nodeName === 'sec-type'){
-                sectionIdObject.type = section.attributes[sectionAttr].nodeValue;
-            }else if(section.attributes[sectionAttr].nodeName === 'id'){
-                var sectionId = section.attributes[sectionAttr].nodeValue;
+    sectionId: function( section, primarySection ){
+        // console.log('..sectionId',primarySection);
+        var sectionIdObject = {},
+            sectAttr;
 
-                sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectionId);
-                sectionIdObject.sectionId = sectionId;
-            }
+        sectAttr = Meteor.fullText.traverseAttributes(section.attributes);
+
+        if(sectAttr && sectAttr['sec-type']){
+            sectionIdObject.type = sectAttr['sec-type'].nodeValue;
+        }
+        else if(sectAttr && sectAttr.id){
+            sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectAttr.id);
+            sectionIdObject.sectionId = sectAttr.id;
+        }
+
+        // Header Level
+        if(primarySection){
+            sectionIdObject.headerLevel = 1;
+        }
+        else{
+            sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectAttr.id);
         }
 
         if(!sectionIdObject.sectionId && section.parentNode && section.parentNode.localName && section.parentNode.localName === 'body'){
@@ -530,7 +540,9 @@ Meteor.fullText = {
             if(node.nodeType == 3 && node.nodeValue && node.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
                 //plain text or external link
                 if(node.nodeValue && node.nodeValue.indexOf('http') != -1 || node.nodeValue.indexOf('https') != -1 ){
-                    content += '<a href="'+ node.nodeValue +'" target="_BLANK">' + node.nodeValue + '</a>';
+                    // console.log(node.nodeValue);
+                    content += Meteor.general.findLink(node.nodeValue);
+                    // content += '<a href="'+ node.nodeValue +'" target="_BLANK">' + node.nodeValue + '</a>';
                 }
                 else if(node.nodeValue){
                     content += node.nodeValue;
