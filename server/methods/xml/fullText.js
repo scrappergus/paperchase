@@ -55,7 +55,7 @@ Meteor.methods({
                 // console.log(sections[section].localName);
                 if(sections[section].localName === 'sec'){
                     sectionObject = Meteor.fullText.sectionToJson(sections[section], files, mongoId);
-                    sectionIdObject = Meteor.fullText.sectionId(sections[section]);
+                    sectionIdObject = Meteor.fullText.sectionId(sections[section], true);
                     if(sectionIdObject){
                         for(var idInfo in sectionIdObject){
                             sectionObject[idInfo] = sectionIdObject[idInfo];
@@ -331,7 +331,7 @@ Meteor.fullText = {
                     subSectionObject = Meteor.fullText.sectionToJson(sec, files, mongoId);
                     if(subSectionObject){
                         subSectionObject.contentType = 'subsection';
-                        sectionIdObject = Meteor.fullText.sectionId(sec);
+                        sectionIdObject = Meteor.fullText.sectionId(sec, false);
                         if(sectionIdObject){
                             for(var idInfo in sectionIdObject){
                                 subSectionObject[idInfo] = sectionIdObject[idInfo];
@@ -352,8 +352,8 @@ Meteor.fullText = {
         // console.log('sectionObject',sectionObject);
         return sectionObject;
     },
-    sectionId: function( section){
-        // console.log('..sectionId');
+    sectionId: function( section, primarySection ){
+        // console.log('..sectionId',primarySection);
         var sectionIdObject = {},
             sectAttr;
 
@@ -365,6 +365,14 @@ Meteor.fullText = {
         else if(sectAttr && sectAttr.id){
             sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectAttr.id);
             sectionIdObject.sectionId = sectAttr.id;
+        }
+
+        // Header Level
+        if(primarySection){
+            sectionIdObject.headerLevel = 1;
+        }
+        else{
+            sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectAttr.id);
         }
 
         if(!sectionIdObject.sectionId && section.parentNode && section.parentNode.localName && section.parentNode.localName === 'body'){
