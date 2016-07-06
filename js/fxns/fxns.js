@@ -136,7 +136,6 @@ Meteor.article = {
                 }
             }
         }
-        console.log(article);
         return article;
     },
     subscribeModal: function(e){
@@ -859,7 +858,6 @@ Meteor.general = {
     },
     scrollToLastChild: function(child){
         if($('.' + child + ':last-child').length != 0){
-            console.log($('.' + child + ':last-child'));
             $('html, body').animate({
                 scrollTop: $('.' + child + ':last-child').position().top
             }, 500);
