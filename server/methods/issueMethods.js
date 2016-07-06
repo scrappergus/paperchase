@@ -21,17 +21,17 @@ Meteor.methods({
             var volumeIssues = volumesList[v].issues;
             if(volumeIssues !== undefined) {
                 for(var vi=0 ; vi < volumeIssues.length ; vi++){
-                    var volumeIssuesId = volumeIssues[vi];
+                    var issueMongoId = volumeIssues[vi];
                     // add cover path to issue
-                    if(articleIssueId && volumeIssuesId == articleIssueId){
+                    if(articleIssueId && issueMongoId == articleIssueId){
                         // For providing all available issues on the article form
-                        issuesObj[volumeIssuesId].selected = true;
+                        issuesObj[issueMongoId].selected = true;
                     }
-                    if(issuesObj[volumeIssuesId] && issuesObj[volumeIssuesId].cover){
-                        issuesObj[volumeIssuesId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[volumeIssuesId].cover);
+                    if(issuesObj[issueMongoId] && issuesObj[issueMongoId].cover){
+                        issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
                     }
-                    if(issuesObj[volumeIssuesId]){
-                        volumesList[v].issues_data.push(issuesObj[volumeIssuesId]);
+                    if(issuesObj[issueMongoId]){
+                        volumesList[v].issues_data.push(issuesObj[issueMongoId]);
                     }
                 }
             }
@@ -112,7 +112,7 @@ Meteor.methods({
         }
     },
     updateIssue: function(mongoId, update){
-        // console.log('..updateIssue');
+        // console.log('..updateIssue',update);
         var fut = new future();
         if(!mongoId){
             Meteor.call('addIssue',update,function(error,result){
@@ -486,5 +486,24 @@ Meteor.methods({
         catch(err) {
             throw new Meteor.Error(errorMessage);
         }
+    },
+    updateIssuePages: function(issueId){
+        var issuePages,
+            issueData;
+        Meteor.call('getDisplayArticlesByIssueId', issueId, function(error, result){
+            if(error){
+                console.error('getDisplayArticlesByIssueId', error);
+            }
+            else if(result){
+                issuePages = Meteor.issue.pages(result);
+                if(issuePages){
+                    Meteor.call('updateIssue', issueId, {pages : issuePages}, function(error, result){
+                        if(error){
+                            console.error('updateIssue', error);
+                        }
+                    });
+                }
+            }
+        });
     }
 });
