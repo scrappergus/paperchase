@@ -433,11 +433,7 @@ Meteor.adminArticleFormGet = {
             }
         });
 
-        if(keywords.length > 0){
-           return keywords;
-        }else{
-            return;
-        }
+        return keywords;
     },
     pageEnd: function(){
         if($('#page_end').val()){
