@@ -9,27 +9,25 @@ Meteor.methods({
 
         journal = journalConfig.findOne({}).journal.short_name;
         assetUrl =  journalConfig.findOne().assets;
-        issuesList = issues.find({},{}).fetch();
+        issuesList = issues.find({display:true},{}).fetch();
         volumesList = volumes.find({},{sort : {volume:-1}}).fetch();
 
-        for(var i=0 ; i<issuesList.length ; i++){
+        for(var i=0; i<issuesList.length; i++){
             issuesObj[issuesList[i]._id] = issuesList[i];
         }
 
-        for(var v=0 ; v < volumesList.length ; v++){
+        for(var v=0; v < volumesList.length; v++){
             volumesList[v].issues_data = [];
             var volumeIssues = volumesList[v].issues;
             if(volumeIssues !== undefined) {
-                for(var vi=0 ; vi < volumeIssues.length ; vi++){
+                for(var vi=0; vi < volumeIssues.length; vi++){
                     var volumeIssuesId = volumeIssues[vi];
+
                     // add cover path to issue
-                    if(articleIssueId && volumeIssuesId == articleIssueId){
-                        // For providing all available issues on the article form
-                        issuesObj[volumeIssuesId].selected = true;
-                    }
                     if(issuesObj[volumeIssuesId] && issuesObj[volumeIssuesId].cover){
                         issuesObj[volumeIssuesId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[volumeIssuesId].cover);
                     }
+
                     if(issuesObj[volumeIssuesId]){
                         volumesList[v].issues_data.push(issuesObj[volumeIssuesId]);
                     }
@@ -72,20 +70,7 @@ Meteor.methods({
                 }else if(issueArticles){
                     issueData.articles = issueArticles;
 
-                    var lowestPageNum =  9999999;
-                    var highestPageNum = 0;
-                    for(var idx = 0; idx < issueData.articles.length; idx++) {
-                        var art = issueData.articles[idx];
-                        if(art.page_start < lowestPageNum) lowestPageNum = art.page_start;
-                        if(art.page_end > highestPageNum) highestPageNum = art.page_end;
-                    }
-
-                    if(lowestPageNum < 999999) {
-                        issueData.page_start = lowestPageNum;
-                    }
-                    if(highestPageNum > 0) {
-                        issueData.page_end = highestPageNum;
-                    }
+                    issueData.pages = Meteor.issue.pages(issueData);
 
                     Meteor.call('getPrevAndNextIssue', volume, issue, admin, function(error, result){
                         if(error){

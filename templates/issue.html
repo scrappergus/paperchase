@@ -17,10 +17,10 @@
                             {{#if pub_date}}
                             <span class="issue-date">{{formatIssueDate pub_date date_settings}}</span>
                             {{/if}}
-                            {{#if page_start}}
+                            {{#with pages}}
                             <br />
-                            <span class="issue-pages">pp {{page_start}}-{{page_end}}</span>
-                            {{/if}}
+                            <span class="issue-pages">pp {{start}} &mdash; {{end}}</span>
+                            {{/with}}
 
                         </div>
                     </div>
