@@ -84,6 +84,7 @@ monbro:iron-router-breadcrumb@1.0.10
 mongo@1.1.9_1
 mongo-id@1.0.5
 mongo-livedata@1.0.12
+mvrx:bluebird@0.0.1
 npm-bcrypt@0.8.7
 npm-container@1.2.0
 npm-mongo@1.4.44_1
