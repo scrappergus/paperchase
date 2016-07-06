@@ -687,7 +687,8 @@ if (Meteor.isClient) {
                     Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
                         if(error){
                             console.error('ERROR - getIssueAndFiles',error);
-                        }else if(result){
+                        }
+                        else if(result){
                             Session.set('issue',result);
                         }
                     });

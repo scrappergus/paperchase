@@ -95,6 +95,10 @@ a {
   &:hover { color: lighten($link, 10%); }
 }
 
+.small-font{
+    font-size: small;
+}
+
 
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
