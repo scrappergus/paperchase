@@ -382,7 +382,7 @@ Meteor.methods({
         }
 
         if(articleUpdate.volume && articleUpdate.issue){
-            articleUpdate.volume_and_issue  = Meteor.issue.createIssueParam(articleUpdate.volume,articleUpdate.issue);
+            articleUpdate.vi  = Meteor.issue.createIssueParam(articleUpdate.volume,articleUpdate.issue);
         }
 
         if(article.pages && article.pages != null){
@@ -492,7 +492,7 @@ Meteor.methods({
                 articleUpdate.authors.push(authors[a]);
             }
         }else if(article.pii){
-            console.log('OJS Intake - no authors: ', article.pii);    
+            console.log('OJS Intake - no authors: ', article.pii);
         }else{
             console.log('OJS Intake - no authors');
         }
@@ -555,15 +555,14 @@ Meteor.methods({
                                 if(sorterError){
                                     console.error('sorterAddItem via ojsAddMissingAdvance',sorterError);
                                 }else if(sorterRes){
-                                    added.push(processedArticleJson.ids.pii);                                
+                                    added.push(processedArticleJson.ids.pii);
                                 }
                             });
                         }
-                    });                        
-                }            
-            });  
+                    });
+                }
+            });
         });
         return added;
     }
 });
-
