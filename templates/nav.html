@@ -7,7 +7,11 @@
     {{> loginButtons }}
 		{{#each links}}
 			{{#if display}}
+            {{#if url}}
+			<a href="{{url}}"><li>{{name}}</li></a>
+            {{else}}
 			<a href="{{pathFor route_name}}"><li>{{name}}</li></a>
+            {{/if}}
 			{{/if}}
 		{{/each}}
 	</ul>
@@ -16,7 +20,11 @@
 <template name="MobileMenu">
 	{{#each links}}
     	{{#if display}}
+        {{#if url}}
+    	<li><a href="{{url}}" class="valign-wrapper"><span class="valign">{{name}}</span></a></li>
+        {{else}}
     	<li><a href="{{path}}" class="valign-wrapper"><span class="valign">{{name}}</span></a></li>
+        {{/if}}
     	{{/if}}
 	{{/each}}
 	<div class="divider"></div>

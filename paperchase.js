@@ -441,7 +441,9 @@ if (Meteor.isClient) {
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('eb'),
                 Meteor.subscribe('newsListDisplay'),
-                Meteor.subscribe('currentIssue')
+                Meteor.subscribe('currentIssue'),
+                Meteor.subscribe('mostRecentInterview')
+
             ]
         },
         data: function(){
@@ -451,12 +453,15 @@ if (Meteor.isClient) {
                 var sections = homePage.find().fetch();
                 var sorted  = sorters.findOne();
 
+                var mostRecentInterview = newsList.findOne({display:true, interview:true},{sort : {date: -1}});
+
                 return {
                     feature : featureList,
                     eic: edboard.find({role: 'Editor-in-Chief'}) ,
                     eb: edboard.find({role: 'Founding Editorial Board'}),
-                    news:  newsList.find({display:true},{sort : {date: -1}}).fetch(),
-                    sections : sorted['ordered']
+                    news:  newsList.find({display:true, interview:false},{sort : {date: -1}}).fetch(),
+                    sections : sorted['ordered'],
+                    interview : mostRecentInterview
                 }
             }
         }
