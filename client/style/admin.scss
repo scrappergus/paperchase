@@ -99,6 +99,20 @@
     li.disabled{
         @include opacity(0.2);
     }
+    .article-form-anchors{
+        margin: 0;
+        li{
+            display: inline-block;
+            margin-bottom: $margin-sm;
+        }
+    }
+    #article-form{
+        fieldset{
+            legend{
+                @extend h4;
+            }
+        }
+    }
 
 /* General ------------------------*/
     main{

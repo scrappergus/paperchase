@@ -81,17 +81,19 @@
     {{/if}}
 
     <div class="row page-anchors"><div class="col s12">
-        <a class="btn btn-sm anchor" href="#article-title">{{>AdminTitleIcon}} Title</a>
-        <a class="btn btn-sm anchor" href="#meta">{{>AdminIdsIcon}} IDs</a>
-        <a class="btn btn-sm anchor" href="#abstract">{{>AdminAbstractIcon}} Abstract</a>
-        <a class="btn btn-sm anchor" href="#site">{{>AdminSiteIcon}} Site</a>
-        <a class="btn btn-sm anchor" href="#meta">{{>AdminMetaIcon}} Meta</a>
-        <a class="btn btn-sm anchor" href="#authors">{{>AdminAuthorsIcon}} Authors</a>
-        <a class="btn btn-sm anchor" href="#correspondence">{{>AdminMailIcon}} Correspondence</a>
-        <a class="btn btn-sm anchor" href="#author-notes">{{>AdminMailIcon}} Author Notes</a>
-        <a class="btn btn-sm anchor" href="#dates">{{>AdminDatesIcon}} Dates</a>
-        <a class="btn btn-sm anchor" href="#history">{{>AdminDatesIcon}} History</a>
-        <a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a>
+        <ul class="article-form-anchors">
+            <li><a class="btn btn-sm anchor" href="#article-title">{{>AdminTitleIcon}} Title</a></li>
+            <li><a class="btn btn-sm anchor" href="#meta">{{>AdminIdsIcon}} IDs</a></li>
+            <li><a class="btn btn-sm anchor" href="#abstract">{{>AdminAbstractIcon}} Abstract</a></li>
+            <li><a class="btn btn-sm anchor" href="#site">{{>AdminSiteIcon}} Site</a></li>
+            <li><a class="btn btn-sm anchor" href="#meta">{{>AdminMetaIcon}} Meta</a></li>
+            <li><a class="btn btn-sm anchor" href="#authors">{{>AdminAuthorsIcon}} Authors</a></li>
+            <li><a class="btn btn-sm anchor" href="#author-notes">{{>AdminMailIcon}} Author Notes</a></li>
+            <li><a class="btn btn-sm anchor" href="#correspondence">{{>AdminMailIcon}} Correspondence</a></li>
+            <li><a class="btn btn-sm anchor" href="#dates">{{>AdminDatesIcon}} Dates</a></li>
+            <li><a class="btn btn-sm anchor" href="#history">{{>AdminDatesIcon}} History</a></li>
+            <li><a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a></li>
+        </ul>
     </div></div>
 
     <div class="row"><div class="col s12"><div class="card z-depth-0">
@@ -113,10 +115,7 @@
             </fieldset>
 
             <fieldset id="ids">
-                <legend>
-                    IDs
-                    <button id="add-ids" class="btn btn-floating waves-effect waves-light" alt="Add ID">{{>AdminAddIcon}}</button>
-                </legend>
+                <legend>IDs {{>AdminArticleFormAddBtn what='ids'}}</legend>
                 {{>AddArticleId}}
                 {{#if ids}}
                 <div class="row">
@@ -150,16 +149,16 @@
 
             <fieldset id="site">
                 <legend>Site Settings</legend>
-                    <div class="row">
-                        <div class="input-field col s12 m4 center-align">
+                    <div class="row left-align no-margin">
+                        <div class="input-field col s12 m4">
                             <input class="form-feature filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
                             <label for="feature-checkbox">Feature</label>
                         </div>
-                        <div class="form-advance input-field col s12 m4 center-align">
+                        <div class="form-advance input-field col s12 m4">
                             <input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{checked advance}}{{checked aop}}"/>
                             <label for="advance-checkbox">Advance</label>
                         </div>
-                        <div class="form-display input-field col s12 m4 center-align">
+                        <div class="form-display input-field col s12 m4">
                             <input class="filled-in" name="display" type="checkbox" id="display-checkbox"  checked="{{checked display}}"/>
                             <label for="display-checkbox">Display</label>
                         </div>
@@ -169,15 +168,15 @@
             <fieldset id="meta">
                 <legend>Meta</legend>
                 <div class="row">
-                    <div class="input-field col s6 m2">
+                    <div class="input-field col s6 m1">
                         <input class="form-page_start" type="number" id="page_start" value="{{page_start}}"/>
                         <label for="page_start" class="{{#if page_start}}active{{/if}}">First Page</label>
                     </div>
-                    <div class="input-field col s6 m2">
+                    <div class="input-field col s6 m1">
                         <input class="form-page_end" type="number" id="page_end" value="{{page_end}}"/>
                         <label for="page_end" class="{{#if page_end}}active{{/if}}">Last Page</label>
                     </div>
-                    <div class="input-field col s6 m4 input-field">
+                    <div class="input-field col s6 m3 input-field">
                         <select class="form-issue form-volume form-issue_id" id="article-issue">
                             <option value="">&mdash;&mdash; Select Issue &mdash;&mdash;</option>
                             {{#each volumes}}
@@ -188,6 +187,15 @@
                             {{/each}}
                         </select>
                         <label for="article-issue">Volume / Issue</label>
+                    </div>
+                    <div class="input-field col s6 m3">
+                        <select class="form-status" id="article-pub-status">
+                            <option value="">&mdash; Select &mdash;</option>
+                            {{#each pub_status_list}}
+                            <option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
+                            {{/each}}
+                        </select>
+                        <label for="article-pub-status">Pub Status</label>
                     </div>
                 </div>
                 <div class="row">
@@ -210,47 +218,44 @@
                         <label for="article-section">Article Section</label>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="input-field col s4">
-                        <select class="form-status" id="article-pub-status">
-                            <option value="">&mdash; Select &mdash;</option>
-                            {{#each pub_status_list}}
-                            <option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
-                            {{/each}}
-                        </select>
-                        <label for="article-pub-status">Pub Status</label>
-                    </div>
-                </div>
             </fieldset>
 
             <fieldset id="authors">
-                <legend>
-                    Authors
-                    <button id="add-author" class="btn btn-floating waves-effect waves-light" alt="Add Author">{{>AdminAddIcon}}</button>
-                </legend>
+                <legend>Authors {{>AdminArticleFormAddBtn what='author'}}</legend>
                 {{#if authors}}
                 {{>AdminArticleFormAuthors}}
                 {{/if}}
             </fieldset>
 
+            <fieldset id="affiliations">
+                <legend>Affiliations {{>AdminArticleFormAddBtn what='affiliation'}}</legend>
+                {{#if affiliations}}
+                {{>AdminArticleFormAffiliations}}
+                {{/if}}
+            </fieldset>
+
+            <fieldset id="author-notes">
+                <legend>Author Notes</legend>
+                {{#if author_notes}}
+                {{>AdminArticleFormNotes}}
+                {{/if}}
+            </fieldset>
+
             <fieldset id="correspondence">
-                <legend>
-                    Correspondence
-                    <button id="add-correspondence" class="btn btn-floating waves-effect waves-light" alt="Add Author">{{>AdminAddIcon}}</button>
-                </legend>
+                <legend>Correspondence {{>AdminArticleFormAddBtn what='correspondence'}}</legend>
                 {{#if correspondence}}
                 {{#each correspondence}}
                 <div class="row no-margin">
                     <div class="col s11">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
-                                <div class="row no-margin correspondence-row form-correspondence">
+                                <div class="row no-margin correspondence-row">
                                     <div class="col s6 input-field">
                                         <input class="correspondence-text" name="correspondence_text_{{@index}}" type="text" value="{{text}}"/>
                                         <label for="correspondence_text_{{@index}}" class="{{#if text}}active{{/if}}">Text</label>
                                     </div>
                                     <div class="col s6 input-field">
-                                        <input class="correspondence-email" name="correspondence_email_{{@index}}"  type="email" value="{{email}}"/>
+                                        <input class="correspondence-email" name="correspondence_email_{{@index}}" type="email" value="{{email}}"/>
                                         <label for="correspondence_email_{{@index}}" class="{{#if email}}active{{/if}}">Email</label>
                                     </div>
                                 </div>
@@ -266,55 +271,8 @@
                 {{/if}}
             </fieldset>
 
-            <fieldset id="author-notes">
-                <legend>
-                    Author Notes
-                </legend>
-                {{#if author_notes}}
-                {{#each author_notes}}
-                <div class="row no-margin">
-                    <div class="col s12">
-                        <div class="card blue-grey lighten-5 z-depth-0">
-                            <div class="card-content">
-                                <div class="row no-margin author-notes-row form-author-notes">
-                                    <div class="col s4 input-field">
-                                        <input class="author-notes-id" name="author_notes_id_{{@index}}" type="text" value="{{id}}"/>
-                                        <label for="author_notes_id_{{@index}}" class="{{#if id}}active{{/if}}">Label</label>
-                                    </div>
-                                    <div class="col s4 input-field">
-                                        <input class="author-notes-label" name="author_notes_label_{{@index}}" type="text" value="{{label}}"/>
-                                        <label for="author_notes_label_{{@index}}" class="{{#if label}}active{{/if}}">Label</label>
-                                    </div>
-                                    <div class="col s4 input-field">
-                                        <input class="author-notes-note" name="author_notes_note_{{@index}}"  type="text" value="{{note}}"/>
-                                        <label for="author_notes_note_{{@index}}" class="{{#if note}}active{{/if}}">Note</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{/each}}
-                {{/if}}
-            </fieldset>
-
-
-            <fieldset id="affiliations">
-                <legend>
-                    Affiliations
-                    <button id="add-affiliation" class="btn btn-floating waves-effect waves-light" alt="Add Affiliation">{{>AdminAddIcon}}</button>
-                </legend>
-                {{#if affiliations}}
-                {{>AdminArticleFormAffiliations}}
-                {{/if}}
-            </fieldset>
-
             <fieldset id="dates">
-                <legend>
-                    Dates
-                    <button id="add-dates" class="btn btn-floating waves-effect waves-light" alt="Add Date">{{>AdminAddIcon}}</button>
-                </legend>
+                <legend> Dates {{>AdminArticleFormAddBtn what='dates'}}</legend>
                 {{>AddArticleDate}}
                 {{#if dates}}
                 <div class="row">
@@ -336,10 +294,7 @@
             </fieldset>
 
             <fieldset id="history">
-                <legend>
-                    History
-                    <button id="add-history" class="btn btn-floating waves-effect waves-light" alt="Add History">{{>AdminAddIcon}}</button>
-                </legend>
+                <legend>History {{>AdminArticleFormAddBtn what='history'}}</legend>
                 {{>AddArticleHistory}}
                 {{#if history}}
                 <div class="row">
@@ -360,10 +315,7 @@
             </fieldset>
 
             <fieldset id="keywords">
-                <legend>
-                    Keywords
-                    <button id="add-kw" class="btn btn-floating waves-effect waves-light" alt="Add Keyword">{{>AdminAddIcon}}</button>
-                </legend>
+                <legend>Keywords {{>AdminArticleFormAddBtn what='kw'}}</legend>
                 {{#if keywords}}
                 <div class="row form-keywords">
                     {{#each keywords}}
@@ -424,6 +376,9 @@
 
 
 <!--Form Partials-->
+<template name="AdminArticleFormAddBtn">
+    <button id="add-{{what}}" class="btn btn-floating waves-effect waves-light" alt="Add {{what}}">{{>AdminAddIcon}}</button>
+</template>
 <template name="AdminDateInput">
     <input id="{{name}}" type="date" class="datepicker dates" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
     <label for="{{name}}" class="active">{{name}}</label>
@@ -445,54 +400,59 @@
                                     <div class="col s12 m1 center-align">
                                         {{>AdminDragIcon}}
                                     </div>
-                                    <div class="input-field col s12 m2">
-                                        <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first_{{@index}}">
-                                        <label for="name_first_{{@index}}" class="{{#if name_first}}active{{/if}}">First Name</label>
-                                    </div>
-                                    <div class="input-field col s12 m2">
-                                        <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle_{{@index}}">
-                                        <label for="name_middle_{{@index}}" class="{{#if name_middle}}active{{/if}}">Middle Name</label>
-                                    </div>
-                                    <div class="input-field col s12 m2">
-                                        <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
-                                        <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
-                                    </div>
-                                    <div class="input-field col s12 m2">
-                                        <input name="name_suffix" class="author" type="text" value="{{name_suffix}}" id="name_suffix_{{@index}}">
-                                        <label for="name_suffix_{{@index}}" class="{{#if name_suffix}}active{{/if}}">Suffix</label>
-                                    </div>
-
-                                    <div class="col s12 m2">
-                                        <label>Affiliations</label>
-                                        <div class="clearfix"></div>
-                                        {{#each affiliations_list}}
-                                        <div class="margin-right-lg margin-top-md">
-                                            <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
-                                            <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
+                                    <div class="col s12 m11 center-align">
+                                        <div class="row no-margin">
+                                            <div class="input-field col s12 m3">
+                                                <input name="name_first" class="author" type="text" value="{{name_first}}" id="name_first_{{@index}}">
+                                                <label for="name_first_{{@index}}" class="{{#if name_first}}active{{/if}}">First Name</label>
+                                            </div>
+                                            <div class="input-field col s12 m3">
+                                                <input name="name_middle" class="author" type="text" value="{{name_middle}}" id="name_middle_{{@index}}">
+                                                <label for="name_middle_{{@index}}" class="{{#if name_middle}}active{{/if}}">Middle Name</label>
+                                            </div>
+                                            <div class="input-field col s12 m3">
+                                                <input name="name_last" class="author" type="text" value="{{name_last}}" id="name_last_{{@index}}">
+                                                <label for="name_last_{{@index}}" class="{{#if name_last}}active{{/if}}">Last Name</label>
+                                            </div>
+                                            <div class="input-field col s12 m2">
+                                                <input name="name_suffix" class="author" type="text" value="{{name_suffix}}" id="name_suffix_{{@index}}">
+                                                <label for="name_suffix_{{@index}}" class="{{#if name_suffix}}active{{/if}}">Suffix</label>
+                                            </div>
+                                            <div class="col s12 m1 left-align">
+                                                <input name="equal_contrib" class="author-equal-contrib" type="checkbox" checked="{{equal_contrib}}" id="equal_contrib_{{@index}}">
+                                                <label for="equal_contrib_{{@index}}" class="{{#if name_last}}active{{/if}}">Equal Contributor</label>
+                                            </div>
                                         </div>
-                                        {{/each}}
-                                    </div>
+                                        <div class="row no-margin">
+                                            <div class="col s12 m6 left-align">
+                                                <label>Affiliations</label>
+                                                <div class="clearfix"></div>
+                                                {{#each affiliations_list}}
+                                                <span class="margin-right-lg">
+                                                    <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
+                                                    <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
+                                                </span>
+                                                {{/each}}
+                                            </div>
 
-                                    <div class="col s12 m1">
-                                        <label>Author Notes</label>
-                                        <div class="clearfix"></div>
-                                        {{#each author_notes_list}}
-                                        <div class="margin-right-lg margin-top-md">
-                                            <input type="checkbox" class="author-note filled-in" id="author-note-{{@index}}-{{author_mongo_id}}" data-note-id="{{id}}" checked="{{author_note}}" />
-                                            <label for="author-note-{{@index}}-{{author_mongo_id}}">{{authorNoteNumber @index}}</label>
+                                            <div class="col s12 m3 left-align">
+                                                <label>Author Notes</label>
+                                                <div class="clearfix"></div>
+                                                {{#each author_notes_list}}
+                                                <span class="margin-right-lg">
+                                                    <input type="checkbox" class="author-note filled-in" id="author-note-{{@index}}-{{author_mongo_id}}" data-note-id="{{id}}" checked="{{author_note}}" />
+                                                    <label for="author-note-{{@index}}-{{author_mongo_id}}">{{authorNoteNumber @index}}</label>
+                                                </span>
+                                                {{/each}}
+                                            </div>
+
+                                            <div class="hide">
+                                                {{#each arrayify ids}}
+                                                <input class="author-id" type="hide" name="{{name}}" value="{{value}}">
+                                                {{/each}}
+                                            </div>
                                         </div>
-                                        {{/each}}
-                                    </div>
 
-                                    <div class="col s12 m1">
-                                        <input name="equal_contrib" class="author-equal-contrib" type="checkbox" checked="{{equal_contrib}}" id="equal_contrib_{{@index}}">
-                                        <label for="equal_contrib_{{@index}}" class="{{#if name_last}}active{{/if}}">Equal Contributor</label>
-                                    </div>
-
-                                    <div class="hide">
-                                        {{#each arrayify ids}}
-                                        <input class="author-id" type="hide" name="{{name}}" value="{{value}}">
-                                        {{/each}}
                                     </div>
                                 </div>
                             </div>
@@ -538,6 +498,47 @@
         </div>
     </div>
 </template>
+<template name="AdminArticleFormNotes">
+    <div class="row">
+        <div class="col s12">
+            <ol class="notes-list">
+                {{#each author_notes}}
+                <li id="authors-note-li-{{@index}}" class="authors-note-li">
+                    <div class="row no-margin">
+                        <div class="col s11">
+                            <div class="card blue-grey lighten-5 z-depth-0">
+                                <div class="card-content">
+                                    <div class="row no-margin valign-wrapper">
+                                        <!-- <div class="col s12 m1 center-align">
+                                            {{>AdminDragIcon}}
+                                        </div> -->
+                                        <div class="col s12 m4 input-field">
+                                            <input class="author-notes-id" name="author_notes_id_{{@index}}" type="text" value="{{id}}"/>
+                                            <label for="author_notes_id_{{@index}}" class="{{#if id}}active{{/if}}">Label</label>
+                                        </div>
+                                        <div class="col s12 m4 input-field">
+                                            <input class="author-notes-label" name="author_notes_label_{{@index}}" type="text" value="{{label}}"/>
+                                            <label for="author_notes_label_{{@index}}" class="{{#if label}}active{{/if}}">Label</label>
+                                        </div>
+                                        <div class="col s12 m4 input-field">
+                                            <input class="author-notes-note" name="author_notes_note_{{@index}}"  type="text" value="{{note}}"/>
+                                            <label for="author_notes_note_{{@index}}" class="{{#if note}}active{{/if}}">Note</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col s1">
+                            {{>AdminRemoveIcon what="notes" index=@index name=@index  nameAdditional="notes"}}
+                        </div> -->
+                    </div>
+                </li>
+                {{/each}}
+            </ol>
+        </div>
+    </div>
+</template>
+
 <template name="AddArticleHistory">
     <div class="edit-box teal lighten-5 add-article-history hide">
         <div class="row">
@@ -571,10 +572,6 @@
                 <p class="center-align">{{value}}</p>
             </div>
             {{/each}}
-            <div class="col s12 m4 center-align">
-                <button id="add-{{name}}" class="btn add-btn btn-sm add-id-type">Mongo</button>
-                <p class="center-align">{{_id}}</p>
-            </div>
         </div>
     </div>
 </template>

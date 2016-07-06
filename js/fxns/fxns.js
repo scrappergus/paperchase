@@ -856,6 +856,14 @@ Meteor.general = {
                  .end().filter("[href='#"+id+"']").parent().addClass("active");
            }
         });
+    },
+    scrollToLastChild: function(child){
+        if($('.' + child + ':last-child').length != 0){
+            console.log($('.' + child + ':last-child'));
+            $('html, body').animate({
+                scrollTop: $('.' + child + ':last-child').position().top
+            }, 500);
+        }
     }
 }
 

@@ -55,8 +55,7 @@ Template.AdminArticleForm.events({
         }
 
         if(article.author_notes){
-            for(var i = 0; i < article.author_notes.length ; i++){
-                console.log('hello');
+            for(var i = 0; i < article.author_notes.length; i++){
                 newAuthor.author_notes_list.push({
                     author_mongo_id : temp_id,
                     checked: false,
@@ -85,6 +84,7 @@ Template.AdminArticleForm.events({
         Session.set('article-form',article);
     },
     // Correspondence
+    // -------
     'click #add-correspondence': function(e,t){
         e.preventDefault();
         var article = Session.get('article-form');
@@ -95,20 +95,16 @@ Template.AdminArticleForm.events({
         article.correspondence.push({});
 
         Session.set('article-form',article);
-
-        Meteor.general.scrollTo('affiliations');
+        // Meteor.general.scrollToLastChild('correspondence-row');
     },
     'click .remove-correspondence': function(e,t){
-        // console.log('------------------------- remove-correspondence');
         e.preventDefault();
         var article = Session.get('article-form');
         var correspondenceIndex = $(e.target).attr('data-index');
-        // console.log('correspondenceIndex',correspondenceIndex);
 
         article.correspondence.splice(correspondenceIndex, 1);
         Session.set('article-form',article);
     },
-    // -------
     // Affiliations
     // -------
     'click #add-affiliation': function(e,t){
@@ -133,11 +129,9 @@ Template.AdminArticleForm.events({
         }
 
         Session.set('article-form',article);
-
-        Meteor.general.scrollTo('dates');
+        Meteor.general.scrollToLastChild('affiliation-li');
     },
     'click .remove-affiliation': function(e,t){
-        // console.log('------------------------- remove-affiliation');
         e.preventDefault();
         var article = Session.get('article-form');
         var affiliationIndex = $(e.target).closest('li').index();
@@ -194,11 +188,7 @@ Template.AdminArticleForm.events({
         }
         article.keywords.push('');
         Session.set('article-form',article);
-        if($('.kw-li:last-child').length != 0){
-            $('html, body').animate({
-                scrollTop: $('.kw-li:last-child').find('input').position().top
-            }, 500);
-        }
+        Meteor.general.scrollToLastChild('kw');
     },
     'click .remove-kw': function(e,t){
         e.preventDefault();

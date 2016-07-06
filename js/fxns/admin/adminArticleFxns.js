@@ -39,11 +39,14 @@ Meteor.adminArticle = {
         // console.log('..articleListOptions');
         var allListOptions;
         var addListOptions = {};
+
         if(articleKey === 'history'){
             allListOptions = dateTypeDateList
-        }else if(articleKey === 'dates'){
+        }
+        else if(articleKey === 'dates'){
             allListOptions = pubTypeDateList;
-        }else if(articleKey === 'ids'){
+        }
+        else if(articleKey === 'ids'){
             allListOptions = pubIdTypeList;
         }
 
@@ -362,7 +365,6 @@ Meteor.adminArticleFormGet = {
             $(this).find('.author-note').each(function(i,o){
                 if($(o).prop('checked')){
                     var note_id = $(o).attr('data-note-id');
-                    console.log(note_id);
                     author.author_notes_ids.push(note_id);
                 }
             });
