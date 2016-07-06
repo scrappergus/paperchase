@@ -19,7 +19,7 @@
                             {{/if}}
                             {{#with pages}}
                             <br />
-                            <span class="issue-pages">pp {{start}} &mdash; {{end}}</span>
+                            <span class="issue-pages">{{>IssuePages}}</span>
                             {{/with}}
 
                         </div>
@@ -74,4 +74,8 @@
     {{else}}
         {{>Loading}}
     {{/if}}
+</template>
+
+<template name="IssuePages">
+    pp {{start}} &mdash; {{end}}
 </template>

@@ -10,7 +10,7 @@
                         {{#each issues_data}}
                         <li class="archive-issue col s4 m2 l2">
                             <a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{coverPath}}"></a>
-                            <a class="issue-info" href="/issue/v{{volume}}i{{issue_linkable}}">Volume {{volume}},<br/> Number {{issue}}</a>
+                            <a class="issue-info" href="/issue/v{{volume}}i{{issue_linkable}}">Volume {{volume}},<br/> Number {{issue}}{{#with pages}}<br/>{{>IssuePages}}{{/with}}</a>
                         </li>
                         {{/each}}
                     </ul>

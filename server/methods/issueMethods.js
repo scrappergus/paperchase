@@ -28,6 +28,17 @@ Meteor.methods({
                             // console.log(issueMongoId);
                             issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
                         }
+
+                        Meteor.call('getDisplayArticlesPagesByIssueId', issueMongoId, function(error,result){
+                            if(error){
+                                console.error('getDisplayArticlesPagesByIssueId', error);
+                            }
+                            else if(result){
+                                // console.log('pages = ', result);
+                                issuesObj[issueMongoId].pages = result;
+                            }
+                        });
+
                         volumesList[v].issues_data.push(issuesObj[issueMongoId]);
                     }
                 }
@@ -40,6 +51,13 @@ Meteor.methods({
         var issueArticles = articles.find({'issue_id' : issueId, display: true},{sort : {page_start:1}}).fetch();
         issueArticles = Meteor.organize.groupArticles(issueArticles);
         return issueArticles;
+    },
+    getDisplayArticlesPagesByIssueId: function(issueId){
+        var issueArticles;
+        issueArticles = articles.find({'issue_id' : issueId, display: true},{page_start: 1, page_end: 1},{sort : {page_start:1}}).fetch();
+        issueArticles = Meteor.organize.groupArticles(issueArticles);
+        // console.log('issueArticles',issueArticles);
+        return Meteor.issue.pages({articles: issueArticles});
     },
     getIssueAndFiles: function(volume, issue, admin){
         // console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
