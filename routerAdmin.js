@@ -648,6 +648,7 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('articleIssue',this.params._id)
             ]
@@ -655,18 +656,24 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var article = articles.findOne();
-                if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-                    if(!article.volume && article.issue_id){
-                        // for display purposes
-                        var issueInfo = issues.findOne();
-                        article.volume = issueInfo.volume;
-                        article.issue = issueInfo.issue;
-                    }
-                    if(article.volume && article.issue){
-                        article.volume_and_issue = Meteor.issue.createIssueParam(article.volume,article.issue);
-                    }
+
+                if(article){
+                    article = Meteor.article.readyData(article);
                     Session.set('article',article);
                 }
+                // if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
+                //     if(!article.volume && article.issue_id){
+                //         // for display purposes
+                //         var issueInfo = issues.findOne();
+                //         article.volume = issueInfo.volume;
+                //         article.issue = issueInfo.issue;
+                //     }
+                //     if(article.volume && article.issue){
+                //         article.volume_and_issue = Meteor.issue.createIssueParam(article.volume,article.issue); // this can probably be removed
+                //         article.vi = Meteor.issue.createIssueParam(article.volume,article.issue);
+                //     }
+                //     Session.set('article',article);
+                // }
             }
         }
     });
@@ -810,12 +817,18 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-                Meteor.subscribe('articleInfo',this.params._id)
+                Meteor.subscribe('articleInfo',this.params._id),
+                Meteor.subscribe('journalConfig')
             ]
         },
         data: function(){
             if(this.ready()){
-                Session.set('article-id',this.params._id);
+                var article = articles.findOne({'_id': this.params._id});
+                if(article){
+                    article = Meteor.article.readyData(article);
+                    Session.set('article',article);
+                    Session.set('article-id',this.params._id);
+                }
             }
         }
     });
@@ -843,22 +856,15 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('articleInfo',this.params._id),
-                Meteor.subscribe('articleIssue',this.params._id)
+                Meteor.subscribe('articleIssue',this.params._id),
+                Meteor.subscribe('journalConfig')
             ]
         },
         data: function(){
             if(this.ready()){
-                var article = articles.findOne();
-                if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-                    if(!article.volume && article.issue_id){
-                        // for display purposes
-                        var issueInfo = issues.findOne();
-                        article.volume = issueInfo.volume;
-                        article.issue = issueInfo.issue;
-                    }
-                    if(article.volume && article.issue){
-                        article.volume_and_issue = Meteor.issue.createIssueParam(article.volume,article.issue);
-                    }
+                var article = articles.findOne({'_id': this.params._id});
+                if(article){
+                    article = Meteor.article.readyData(article);
                     Session.set('article',article);
                 }
             }
