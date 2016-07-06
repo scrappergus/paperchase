@@ -1084,3 +1084,35 @@ Meteor.ux = {
         }
     }
 }
+
+Meteor.db = {
+    trackUpdates: function(userId, doc, fieldNames, modifier, options){
+        var docUpdates = {},
+            updatedBy = {};
+        docUpdates.updates = []
+
+        // track updates
+        // -------------------
+        // maintain previous updates
+        if(doc.doc_updates && !doc.doc_updates.updates){
+            docUpdates = doc.doc_updates;
+            docUpdates.updates = [];
+        }
+        else if(doc.doc_updates && doc.doc_updates.updates){
+            docUpdates = doc.doc_updates;
+        }
+
+        // current user update
+        if(userId){
+            updatedBy.user = userId;
+        }
+        else if(modifier.$set.ojsUser){
+            updatedBy.ojs_user = modifier.$set.ojsUser;
+            delete modifier.$set.ojsUser;
+        }
+
+        updatedBy.date = new Date();
+        docUpdates.updates.push(updatedBy);
+        return docUpdates;
+    }
+}

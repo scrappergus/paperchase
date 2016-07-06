@@ -30,8 +30,7 @@ articles.after.insert(function (userId, doc) {
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     var volume,
-        issue,
-        updatedBy = {};
+        issue;
     // Advance article. Update sorters colleciton.
     // if(modifier.$set){
     //   if(modifier.$set['advance']){
@@ -118,36 +117,18 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }
 
     // authors
-     if(modifier.$set && modifier.$set.authors && modifier.$set.authors.length === 0){
+    if(modifier.$set && modifier.$set.authors && modifier.$set.authors.length === 0){
         console.log('MISSING AUTHORS: ' + doc._id);
-     }
-
-    // track updates
-    if(!doc.doc_updates){
-        modifier.$set.doc_updates = {};
-        modifier.$set.doc_updates.updates = [];
-    }
-    else if(doc.doc_updates && !doc.doc_updates.updates){
-        modifier.$set.doc_updates = doc.doc_updates;
-        modifier.$set.doc_updates.updates = [];
-    }
-    else{
-        modifier.$set.doc_updates = doc.doc_updates;
     }
 
-    if(userId){
-        updatedBy.user = userId;
-    }
-    else if(modifier.$set.ojsUser){
-        updatedBy.ojs_user = modifier.$set.ojsUser;
+    modifier.$set.doc_updates = Meteor.db.trackUpdates(userId, doc, fieldNames, modifier, options);
+    if(modifier.$set.ojsUser){
+        // we use this in trackUpdates
         delete modifier.$set.ojsUser;
     }
 
-    updatedBy.date = new Date();
-    modifier.$set.doc_updates.updates.push(updatedBy);
-
     //recording this for easy sorting
-    modifier.$set.last_update = updatedBy.date;
+    modifier.$set.last_update = new Date();
 });
 
 // Issues
