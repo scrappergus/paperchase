@@ -22,7 +22,7 @@ if (Meteor.isClient) {
 }
 
 
-// Redirects 
+// Redirects
 // Global redirect for pre-launch
 if (Meteor.isServer) {
     WebApp.connectHandlers
