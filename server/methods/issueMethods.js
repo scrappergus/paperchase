@@ -21,15 +21,13 @@ Meteor.methods({
             var volumeIssues = volumesList[v].issues;
             if(volumeIssues !== undefined) {
                 for(var vi=0; vi < volumeIssues.length; vi++){
-                    var volumeIssuesId = volumeIssues[vi];
-
+                    var issueMongoId = volumeIssues[vi];
                     // add cover path to issue
-                    if(issuesObj[volumeIssuesId] && issuesObj[volumeIssuesId].cover){
-                        issuesObj[volumeIssuesId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[volumeIssuesId].cover);
+                    if(issuesObj[issueMongoId] && issuesObj[issueMongoId].cover){
+                        issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
                     }
-
-                    if(issuesObj[volumeIssuesId]){
-                        volumesList[v].issues_data.push(issuesObj[volumeIssuesId]);
+                    if(issuesObj[issueMongoId]){
+                        volumesList[v].issues_data.push(issuesObj[issueMongoId]);
                     }
                 }
             }
