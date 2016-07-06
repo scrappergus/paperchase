@@ -341,7 +341,7 @@ if (Meteor.isServer) {
           'edboard_roles' : 1,
           'assets': 1,
           'assets_figures': 1,
-          'assets_supplemental': 1, 
+          'assets_supplemental': 1,
         }});
         return siteConfig;
     });
@@ -370,7 +370,6 @@ if (Meteor.isServer) {
     });
 
     Meteor.publish('issueByVolNum',function(vol, num){
-            console.log(typeof(vol), typeof(num));
         return issues.find({volume:vol, issue:num});
     });
 
