@@ -103,7 +103,6 @@ html,body{
 	}
 	.kw{
 		margin: $margin-sm 0 $margin-sm $margin-sm;
-		@extend .serif;
 		text-transform: none!important;
 	}
 	/* Figures */
@@ -121,29 +120,6 @@ html,body{
 
 	/* Full Text */
 	/* --------- */
-	/* section headers */
-	.article-header-0{
-		@extend h4;
-	}
-	.article-header-1{
-		@extend h5;
-		a{
-			color: $white;
-		}
-	}
-	.article-header-2{
-		@extend h6;
-	}
-	.article-header-3{
-		@extend h7;
-	}
-	.article-header-4{
-		text-decoration: none!important;
-		@extend h8;
-	}
-	.article-header-5{
-		@extend p;
-	}
 	/* section nav */
 	.section-nav{
 		height: 90vh;
@@ -203,9 +179,6 @@ html,body{
 	}
 
 /* Buttons ------------------------*/
-	.btn{
-		@extend .serif;
-	}
 	.btn.active{
 		background: $gray-2;
 	}
