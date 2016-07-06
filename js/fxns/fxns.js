@@ -962,7 +962,7 @@ Meteor.issue = {
         var highestPageNum = 0;
         for(var idx = 0; idx <  articles.length; idx++) {
             var art = articles[idx];
-            console.log(art.page_start, ' - ', art.page_end);
+            // console.log(art.page_start, ' - ', art.page_end);
             if(art.page_start < lowestPageNum) lowestPageNum = art.page_start;
             if(art.page_end > highestPageNum) highestPageNum = art.page_end;
         }

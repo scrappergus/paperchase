@@ -22,6 +22,19 @@ Template.AdminIssueEdit.events({
                 Router.go('AdminIssueDeleted');
             }
         });
+    },
+    'click #page-spans': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        Meteor.call('updateIssuePages', Session.get('issue')._id, function(error, result){
+            if(error){
+                console.error('updateIssuePages',error);
+                Meteor.formActions.errorMessage('Could not update issue pages.<br>' + error.error);
+            }
+            else if(result){
+                Meteor.formActions.successMessage('Pages updated');
+            }
+        });
     }
 });
 Template.AdminIssueForm.events({
