@@ -29,15 +29,15 @@ Meteor.methods({
                             issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
                         }
 
-                        Meteor.call('getDisplayArticlesPagesByIssueId', issueMongoId, function(error,result){
-                            if(error){
-                                console.error('getDisplayArticlesPagesByIssueId', error);
-                            }
-                            else if(result){
-                                // console.log('pages = ', result);
-                                issuesObj[issueMongoId].pages = result;
-                            }
-                        });
+                        // Meteor.call('getDisplayArticlesPagesByIssueId', issueMongoId, function(error,result){
+                        //     if(error){
+                        //         console.error('getDisplayArticlesPagesByIssueId', error);
+                        //     }
+                        //     else if(result){
+                        //         // console.log('pages = ', result);
+                        //         issuesObj[issueMongoId].pages = result;
+                        //     }
+                        // });
 
                         volumesList[v].issues_data.push(issuesObj[issueMongoId]);
                     }
