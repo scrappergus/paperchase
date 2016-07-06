@@ -338,25 +338,35 @@ button.button {
 
 /* Full Text */
 /* section headers */
-.article-header-0{
+// .article-header-0{
+//     @extend h4;
+// }
+// .article-header-1{
+//     @extend h5;
+//     a{
+//         color: $white;
+//     }
+// }
+// .article-header-2{
+//     @extend h6;
+// }
+// .article-header-3{
+//     @extend h7;
+// }
+// .article-header-4{
+//     text-decoration: none!important;
+//     @extend h8;
+// }
+// .article-header-5{
+//     @extend p;
+// }
+
+h3.article-header-3{
     @extend h4;
 }
-.article-header-1{
+h3.article-header-4{
     @extend h5;
-    a{
-        color: $white;
-    }
 }
-.article-header-2{
+h3.article-header-5{
     @extend h6;
-}
-.article-header-3{
-    @extend h7;
-}
-.article-header-4{
-    text-decoration: none!important;
-    @extend h8;
-}
-.article-header-5{
-    @extend p;
 }
