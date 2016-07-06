@@ -4,13 +4,27 @@
     {{#each volumes}}
         <li class="collection-item collection-header">
             <h3>Volume {{volume}}</h3>
-            <a class="btn btn-sm" href="{{pathFor 'AdminVolume' v=volume}}">Edit Order</a>
+            <a class="btn btn-sm" href="{{pathFor 'AdminVolume' v=volume}}">Edit Issue Order</a>
         </li>
 
         {{#each issues_data}}
-            <li class="collection-item"><a href="/admin/issue/v{{volume}}i{{issue_linkable}}">Issue {{issue}}</a></li>
+            <li class="collection-item">
+                <div class="row no-margin">
+                    <div class="col s4">
+                        <a href="{{pathFor 'AdminIssue' vi=vi}}">Issue {{issue}}</a>
+                    </div>
+                    <div class="col s4">
+                        <a href="{{pathFor 'AdminIssueEdit' vi=vi}}">Edit Issue {{issue}}</a>
+                    </div>
+                    <div class="col s4">
+                        {{#with pages}}
+                        {{>IssuePages}}
+                        {{/with}}
+                    </div>
+                </div>
+
+            </li>
         {{/each}}
     {{/each}}
     </ul>
 </template>
-

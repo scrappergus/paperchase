@@ -27,6 +27,16 @@ articles.before.insert(function (userId, doc) {
     doc.doc_updates.updates.push(updatedBy);
 });
 articles.after.insert(function (userId, doc) {
+    // Pages - Keep issue doc pages up to date
+    if( doc.page_start || doc.page_end ){
+        if( doc.issue_id ){
+            Meteor.call('updateIssuePages', doc.issue_id, function(error, result){
+                if(error){
+                    console.error('updateIssuePages', error);
+                }
+            });
+        }
+    }
 });
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     var volume,
@@ -131,6 +141,31 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     modifier.$set.last_update = new Date();
 });
 
+articles.after.update(function (userId, doc, fieldNames, modifier, options) {
+    // Pages - Keep issue doc pages up to date
+    if( doc.page_start || doc.page_end || this.previous.page_start || this.previous.page_end ){
+        if( doc.page_start != this.previous.page_start || doc.page_end != this.previous.page_end || doc.issue_id != this.previous.issue_id || !doc.display && this.previous.display || doc.display && !this.previous.display ){
+            // Update issue
+            if( doc.issue_id ){
+                Meteor.call('updateIssuePages', doc.issue_id, function(error, result){
+                    if(error){
+                        console.error('updateIssuePages', error);
+                    }
+                });
+            }
+            if( doc.issue_id && doc.issue_id != this.previous.issue_id ){
+                // Article changed issues, update both issues page spans
+                Meteor.call('updateIssuePages', this.previous.issue_id, function(error, result){
+                    if(error){
+                        console.error('updateIssuePages', error);
+                    }
+                });
+            }
+
+        }
+    }
+});
+
 // Issues
 // -----
 issues.after.insert(function (userId, doc) {
@@ -141,7 +176,8 @@ issues.after.insert(function (userId, doc) {
     issueData.doc_updates.created_by = userId;
 });
 issues.before.update(function (userId, doc, fieldNames, modifier, options) {
-
+    // Current issue
+    //------------
     if(modifier.$set && modifier.$set.current){
         var previouslyCurrent = issues.findOne({current: true});
         if(previouslyCurrent && previouslyCurrent._id != doc._id){
@@ -151,6 +187,14 @@ issues.before.update(function (userId, doc, fieldNames, modifier, options) {
                 }
             });
         }
+    }
+
+    // track updates
+    // -------------
+    modifier.$set.doc_updates = Meteor.db.trackUpdates(userId, doc, fieldNames, modifier, options);
+    if(modifier.$set.ojsUser){
+        // we use this in trackUpdates
+        delete modifier.$set.ojsUser;
     }
 });
 

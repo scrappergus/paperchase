@@ -133,7 +133,7 @@ Article Form
 This form is used in multiple places (Add Article, Edit Article, Verify XML). Data is prepared via `preProcessArticle()`.
 
 **preProcessArticle**
-Begins by either taking database article JSON or parsed JSON from XML. If the JSON is from XML, then `compareProcessedXmlWithDb()` checks for data conflicts with the database. Also, if the JSON is from XML, `articleExistenceCheck()` makes sure that there are no duplicate articles. 
+Begins by either taking database article JSON or parsed JSON from XML. If the JSON is from XML, then `compareProcessedXmlWithDb()` checks for data conflicts with the database. Also, if the JSON is from XML, `articleExistenceCheck()` makes sure that there are no duplicate articles.
 
 **Data**
 
@@ -204,7 +204,15 @@ Uses template AdminUploadArticleXml. Duplicates artilces are checked via article
 
 Authors
 ----------------
-There is a collection for authors, authors. This is updated after saving the article form. Author affiliations are stored as objects in an array in the author doc `[{affiliation: “Harvard”}]`, so that we can add attributes if current or other data about the known affiliations. 
+There is a collection for authors, authors. This is updated after saving the article form. Author affiliations are stored as objects in an array in the author doc `[{affiliation: “Harvard”}]`, so that we can add attributes if current or other data about the known affiliations.
+
+Issue Pages
+-------------
+This gets updated via article collection hooks. There is no input for issue pages. After inserting/updating an article, if any of these conditions true then the pages are recalculated:
+-  start page changed
+-  end page changed
+-  display changed (articles hidden aren't used to calculate page span)
+-  issue changed (both issues' page spans get updated)
 
 Issue Form
 -------------
@@ -321,5 +329,3 @@ Used on admin site for wysiwyg input.
 
 **zimme:active-route**
 Use to determine if the current route is the active one. For ex, to add active class to button groups.
-
-

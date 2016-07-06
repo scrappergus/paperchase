@@ -31,6 +31,9 @@ Meteor.methods({
                         issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
                     }
                     if(issuesObj[issueMongoId]){
+                        issuesObj[issueMongoId].vi = Meteor.issue.createIssueParam(issuesObj[issueMongoId].volume , issuesObj[issueMongoId].issue);
+                    }
+                    if(issuesObj[issueMongoId]){
                         volumesList[v].issues_data.push(issuesObj[issueMongoId]);
                     }
                 }
