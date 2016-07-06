@@ -6,6 +6,7 @@
 
 
 <template name="AdminIssueHeader">
+    {{>AdminIssueButtons}}
     <div class="row">
         <div class="col s12">
             <div class="card blue-grey lighten-5 z-depth-0">
@@ -15,6 +16,7 @@
                             <h2 class="no-margin">Volume {{volume}}, Issue {{issue}}</h2>
                             <div class="admin-id"><label>Mongo ID:</label> {{_id}}</div>
                             {{#if pub_date}}<h4>{{formatDate pub_date}}</h4>{{/if}}
+                            {{#with pages}}<h4>{{>IssuePages}}</h4>{{/with}}
                         </div>
                         <div class="col s12 m3 right-align">
                             {{#with prevIssue}}<a class="btn btn-sm" href="/admin/issue/{{vi}}">{{>AdminPreviousIcon}} Prev</a>{{/with}}
@@ -108,6 +110,16 @@
     {{/if}}
 </template>
 
+<template name="AdminIssueButtons">
+    <div class="row">
+        <div class="col s12">
+            <a href="{{pathFor 'AdminIssue' vi=vi}}" class="btn {{isActiveRoute 'AdminIssue'}}">Overview</a>
+            <a href="{{pathFor 'AdminIssueEdit' vi=vi}}" class="btn {{isActiveRoute 'AdminIssueEdit'}}">Edit</a>
+        </div>
+    </div>
+
+</template>
+
 <template name="AdminIssue">
 
     {{>AdminHeader header="Issue"}}
@@ -118,7 +130,11 @@
 
     <div class="row">
         <div class="col s12">
-            <a href="{{pathFor 'AdminIssueEdit' vi=vi}}" class="btn">Edit Issue</a>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <button type="button" name="page-spans" id="page-spans" class="btn btn-sm">Recalculate Page Spans</button>
+                </div>
+            </div>
         </div>
     </div>
 

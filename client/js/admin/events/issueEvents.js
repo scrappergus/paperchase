@@ -22,19 +22,6 @@ Template.AdminIssueEdit.events({
                 Router.go('AdminIssueDeleted');
             }
         });
-    },
-    'click #page-spans': function(e){
-        e.preventDefault();
-        Meteor.formActions.saving();
-        Meteor.call('updateIssuePages', Session.get('issue')._id, function(error, result){
-            if(error){
-                console.error('updateIssuePages',error);
-                Meteor.formActions.errorMessage('Could not update issue pages.<br>' + error.error);
-            }
-            else if(result){
-                Meteor.formActions.successMessage('Pages updated');
-            }
-        });
     }
 });
 Template.AdminIssueForm.events({
@@ -166,5 +153,23 @@ Template.IssueCoverUploader.events({
         }else if(!files[0]){
             Meteor.formActions.errorMessage('Please select a cover file to upload.');
         }
+    }
+});
+Template.AdminIssue.events({
+    'click #page-spans': function(e){
+        e.preventDefault();
+        Meteor.formActions.saving();
+        var issue = Session.get('issue');
+        Meteor.call('updateIssuePages', Session.get('issue')._id, function(error, result){
+            if(error){
+                console.error('updateIssuePages',error);
+                Meteor.formActions.errorMessage('Could not update issue pages.<br>' + error.error);
+            }
+            else if(result){
+                issue.pages = result;
+                Session.set('issue', issue);
+                Meteor.formActions.successMessage('Pages updated');
+            }
+        });
     }
 });

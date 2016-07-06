@@ -493,6 +493,7 @@ Meteor.methods({
         }
     },
     updateIssuePages: function(issueId){
+        var fut = new future();
         var issuePages,
             issueData;
         Meteor.call('getDisplayArticlesByIssueId', issueId, function(error, result){
@@ -506,9 +507,18 @@ Meteor.methods({
                         if(error){
                             console.error('updateIssue', error);
                         }
+                        else if(result){
+                            fut.return(issuePages);
+                        }
                     });
                 }
             }
         });
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     }
 });
