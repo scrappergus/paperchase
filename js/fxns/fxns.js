@@ -1163,25 +1163,6 @@ Meteor.issue = {
     },
     createIssueParam: function(volume,issue){
         return 'v' + volume + 'i' + issue;
-    },
-    pages: function(issueData){
-        var pages = {};
-        var lowestPageNum =  9999999;
-        var highestPageNum = 0;
-        for(var idx = 0; idx < issueData.articles.length; idx++) {
-            var art = issueData.articles[idx];
-            if(art.page_start < lowestPageNum) lowestPageNum = art.page_start;
-            if(art.page_end > highestPageNum) highestPageNum = art.page_end;
-        }
-
-        if(lowestPageNum < 999999) {
-            pages.start = lowestPageNum;
-        }
-        if(highestPageNum > 0) {
-            pages.end = highestPageNum;
-        }
-
-        return pages;
     }
 }
 
