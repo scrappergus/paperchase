@@ -381,7 +381,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
         border: none;
         color: #fff;
         &::placeholder { color: #3366A0 }
-        &::-webkit-&-placeholder { color: #3366A0 }
+        // &::-webkit-&-placeholder { color: #3366A0 }
         input::-moz-placeholder { color: #3366A0 }
         &:focus { border-color: $teal; }
     }
