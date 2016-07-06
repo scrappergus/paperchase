@@ -22,11 +22,12 @@ Meteor.methods({
             if(volumeIssues !== undefined) {
                 for(var vi=0; vi < volumeIssues.length; vi++){
                     var issueMongoId = volumeIssues[vi];
-                    // add cover path to issue
-                    if(issuesObj[issueMongoId] && issuesObj[issueMongoId].cover){
-                        issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
-                    }
                     if(issuesObj[issueMongoId]){
+                        // add cover path to issue
+                        if(issuesObj[issueMongoId].cover){
+                            // console.log(issueMongoId);
+                            issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
+                        }
                         volumesList[v].issues_data.push(issuesObj[issueMongoId]);
                     }
                 }
