@@ -99,6 +99,8 @@
 
             {{>FixedSaveBtn}}
 
+            {{>RequiredSymbolRowMessage}}
+
             <fieldset id="article-title">
                 <legend>{{>RequiredSymbol}} Title</legend>
                 <div class="row">
@@ -119,7 +121,7 @@
                 {{#if ids}}
                 <div class="row">
                     {{#each arrayify ids}}
-                    <div class="col s11 m3">
+                    <div class="col s11 m2">
                         <div class="card blue-grey lighten-5 z-depth-0">
                             <div class="card-content">
                                 <input class="article-id form-{{name}}" type="text" id="article-id-{{name}}" value="{{value}}"/>
@@ -413,8 +415,6 @@
                     {{>SaveBtn}}
                 </div>
             </div>
-
-            {{>RequiredSymbolRowMessage}}
         </form>
     </div></div></div>
 
