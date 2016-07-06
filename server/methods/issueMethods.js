@@ -186,6 +186,8 @@ Meteor.methods({
                 issueData.coverPath = Meteor.issue.coverPath(assetUrl,issueData.cover);
             }
 
+            issueData.vi = Meteor.issue.createIssueParam( issueData.volume, issueData.issue );
+
             Meteor.call(articlesToGet,issueData._id, function(error,issueArticles){
                 if(error){
                     console.error(error);
