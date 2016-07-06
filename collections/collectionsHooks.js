@@ -14,7 +14,8 @@ articles.before.insert(function (userId, doc) {
     if(!doc.doc_updates){
         doc.doc_updates = {};
         doc.doc_updates.updates = [];
-    }else if(doc.doc_updates && !doc.doc_updates.updates){
+    }
+    else if(doc.doc_updates && !doc.doc_updates.updates){
         doc.doc_updates.updates = [];
     }
 
@@ -54,7 +55,6 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-
     // maintain Files
     if(modifier.$set && modifier.$set.files){
         for(var fileType in doc.files){
@@ -81,7 +81,6 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-
     // Affiliations
     //add affiliation number to author
     //might need to adjust this as article updates get added
@@ -98,7 +97,8 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
                     var affiliationIndex = affiliationsList.indexOf(authorsList[i].affiliations_names[a]);
                     authorsList[i].affiliations_numbers.push(parseInt(affiliationIndex));
                 }
-            }else if(authorsList[i].affiliations_numbers){
+            }
+            else if(authorsList[i].affiliations_numbers){
 
             }
         }
@@ -110,7 +110,8 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
             modifier.$set.volume = issueData.volume;
             modifier.$set.issue = issueData.issue;
         }
-    }else if(modifier.$set && modifier.$set.volume && modifier.$set.issue){
+    }
+    else if(modifier.$set && modifier.$set.volume && modifier.$set.issue){
         volume = modifier.$set.volume;
         issue = modifier.$set.issue;
         modifier.$set.issue_id = Meteor.call('articleIssueVolume',volume,issue);
@@ -125,16 +126,19 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     if(!doc.doc_updates){
         modifier.$set.doc_updates = {};
         modifier.$set.doc_updates.updates = [];
-    }else if(doc.doc_updates && !doc.doc_updates.updates){
+    }
+    else if(doc.doc_updates && !doc.doc_updates.updates){
         modifier.$set.doc_updates = doc.doc_updates;
         modifier.$set.doc_updates.updates = [];
-    }else{
+    }
+    else{
         modifier.$set.doc_updates = doc.doc_updates;
     }
 
     if(userId){
         updatedBy.user = userId;
-    }else if(modifier.$set.ojsUser){
+    }
+    else if(modifier.$set.ojsUser){
         updatedBy.ojs_user = modifier.$set.ojsUser;
         delete modifier.$set.ojsUser;
     }
@@ -200,7 +204,8 @@ sections.after.insert(function (userId, doc) {
 sections.after.update(function (userId, doc, fieldNames, modifier, options){
     if(modifier.$set.display) {
         Meteor.call('sorterAddItem','sections',doc._id);
-    }else{
+    }
+    else{
         Meteor.call('sorterRemoveItem','sections',doc._id);
     }
 });
