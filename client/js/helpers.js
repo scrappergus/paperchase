@@ -66,7 +66,7 @@ if (Meteor.isClient) {
             return;
         }
     });
-    Template.registerHelper('referenceSemicolonCheck', function(ref) {
+    Template.registerHelper('referenceColonCheck', function(ref) {
         var reference = ref.hash.reference;
         if(reference && reference.volume && reference.issue || reference.comment || reference.fpage){
             return ':';
@@ -74,7 +74,7 @@ if (Meteor.isClient) {
             return;
         }
     });
-    Template.registerHelper('referenceColonCheck', function(ref) {
+    Template.registerHelper('referenceSemicolonCheck', function(ref) {
         var reference = ref.hash.reference;
         if(reference && reference.volume && reference.issue){
             return ';';
