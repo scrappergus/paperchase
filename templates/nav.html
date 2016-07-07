@@ -8,13 +8,15 @@
 		{{#each links}}
 			{{#if display}}
             {{#if url}}
-			<a href="{{url}}"><li>{{name}}</li></a>
+            <a href="{{url}}" target="_blank" class="full-width primary button" ><li>{{name}}</li></a>
             {{else}}
 			<a href="{{pathFor route_name}}"><li>{{name}}</li></a>
             {{/if}}
 			{{/if}}
 		{{/each}}
 	</ul>
+    <a href="http://eepurl.com/bmC9OL" target="_blank" class="full-width primary button" >Sign Up for TOC Alerts</a>
+
 </template>
 
 <template name="MobileMenu">
