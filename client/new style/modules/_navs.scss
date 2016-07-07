@@ -315,7 +315,7 @@
         width: 100%;
         float: left;
         position: relative;
-        padding: 21px 0 18px 40px;
+        padding: 21px 25px 18px 40px;
         margin: 0;
         color: #fff;
         @include transition(background .25s ease-out);
@@ -366,7 +366,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
 .main .sidebar.secondary {
     background: #fff;
     ul.nav-links {
-        a:not(.toc-signup-button) { 
+        a:not(.toc-signup-button) {
             color: $cello;
         }
         a:hover {
