@@ -76,7 +76,7 @@ if (Meteor.isClient) {
     });
     Template.registerHelper('referenceSemicolonCheck', function(ref) {
         var reference = ref.hash.reference;
-        if(reference && reference.volume && reference.issue){
+        if(reference && reference.volume && reference.issue || reference.fpage){
             return ';';
         }else{
             return;
