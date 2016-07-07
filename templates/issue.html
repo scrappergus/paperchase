@@ -32,7 +32,7 @@
                 <div class="issue-scroller">
                     {{#with prevIssue}} <span class="prev issue-change"><a href="/issue/{{vi}}"><span class="icon icon-angle-left"></span> Prev {{param}}</a></span> {{/with}}
                     <span class="current">Volume {{volume}}, Issue {{issue}}</span>
-                    {{#with nextIssue}}  <span class="next issue-change"><a href="/issue/{{vi}}">Next <span class="icon icon-angle-right"></span></a></span> {{/with}}
+                    {{#if nextIssue}}{{#with nextIssue}}  <span class="next issue-change"><a href="/issue/{{vi}}">Next <span class="icon icon-angle-right"></span></a></span> {{/with}}{{else}}<span class="next issue-change">&nbsp;</span>{{/if}}
                 </div>
                 {{> scrollspyCard title="Explore This Issue" items=items}}
             </div>

@@ -145,7 +145,8 @@ Meteor.methods({
             prevIssueData = issues.findOne({_id : prevIssueId});
             if(!admin && prevIssueData && prevIssueData.display === true){
                 result.prev = prevIssueData;
-            }else if(prevIssueData){
+            }
+            else if(prevIssueData && prevIssueData.display === true){
                 result.prev = prevIssueData;
             }
         }
@@ -153,7 +154,8 @@ Meteor.methods({
             nextIssueData = issues.findOne({_id : nextIssueId});
             if(!admin && nextIssueData && nextIssueData.display === true){
                 result.next = nextIssueData;
-            }else if(nextIssueData){
+            }
+            else if(nextIssueData && nextIssueData.display === true){
                 result.next = nextIssueData;
             }
         }
