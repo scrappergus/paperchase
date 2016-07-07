@@ -1001,4 +1001,26 @@ if (Meteor.isClient) {
         }
     });
 
+// INTERVIEWS PAGE
+    Router.route('/interviews', {
+        name: 'Interviews',
+        layoutTemplate: 'Visitor',
+        title: function() {
+            var pageTitle = '';
+            if(Session.get('journal')){
+                pageTitle = Session.get('journal').journal.name + ' | ';
+            }
+            return pageTitle + 'Interviews';
+        },
+        waitOn: function() {
+            return [
+            Meteor.subscribe('interviews')
+            ]
+        },
+        data: function() {
+            return {
+                interviews: newsList.find({display: true, interview: true},{sort: {'date':-1}}).fetch()
+            };
+        }
+    });
 }

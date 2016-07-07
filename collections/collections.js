@@ -618,6 +618,10 @@ if (Meteor.isServer) {
     Meteor.publish('mostRecentInterview', function(){
         return newsList.find({display: true, interview: true});
     });
+    Meteor.publish('interviews', function(){
+        return newsList.find({display: true, interview: true});
+    });
+
 
 
 
