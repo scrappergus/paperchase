@@ -281,6 +281,14 @@
 .main .sidebar ul.nav-links {
     padding-top: 0;
     margin-top: 0;
+    float: left;
+    width: 100%;
+    height: 100%;
+
+    li{
+        float: left;
+        width: 100%;
+    }
 
     li.title {
         font-size: 15px;
@@ -302,8 +310,10 @@
         &:hover { color: $accent; }
     }
 
-    a li,
+    li a,
     #login-buttons {
+        width: 100%;
+        float: left;
         position: relative;
         padding: 21px 0 18px 40px;
         margin: 0;
@@ -325,7 +335,7 @@
         height: 100%;
     }
 
-    a li:after {
+    a:after {
         content: "\e902";
         font-family: 'icomoon';
         position: absolute;
@@ -338,12 +348,12 @@
                             right .25s ease-out);
     }
 
-    a:hover li {
+    a:hover {
         background: lighten($sidebar-color, 3%);
         color: #fff;
     }
 
-    a:hover li:after {
+    a:hover:after {
         opacity: 1;
         right: 20px;
     }
@@ -356,12 +366,14 @@ $secondary-subnav-color: darken(#00387A, 1%);
 .main .sidebar.secondary {
     background: #fff;
     ul.nav-links {
-        a li { color: $cello; }
-        a:hover li {
+        a:not(.toc-signup-button) { 
+            color: $cello;
+        }
+        a:hover {
             background: $electric;
             color: #fff;
         }
-        a:hover li:after {
+        a:hover:after {
             color: #fff;
         }
     }
@@ -440,7 +452,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
     .main .sidebar ul.nav-links {
         li.title { font-size: 15px; }
-        a li { font-size: 15px; }
+        a { font-size: 15px; }
     }
 
     ul.nav-links #login-buttons {

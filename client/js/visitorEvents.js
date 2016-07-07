@@ -72,7 +72,7 @@ Template.Visitor.events({
         $('.content').toggleClass('no-sidebar');
         $('.sidebar').toggleClass('mobile-show');
     },
-    'click ul.nav-links a li': function(e){
+    'click ul.nav-links li a': function(e){
         $('.sidebar-toggle-mobile').removeClass('icon-close');
         $('.sidebar-toggle-mobile').addClass('icon-menu');
         $('.sidebar').removeClass('mobile-show');
