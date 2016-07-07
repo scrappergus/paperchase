@@ -290,36 +290,42 @@
         width: 100%;
     }
 
-    li.title {
+    li.nav-title {
         font-size: 15px;
         text-transform: uppercase;
-        padding: 21px 0 18px 0;
-        margin: 10px 40px 5px 40px;
         font-weight: 700;
-        border-bottom: 1px solid #eee;
         position: relative;
+        .title-content{
+            border-bottom: 1px solid #eee;
+        }
     }
 
     .sidebar-toggle {
         cursor: pointer;
         color: $electric;
         position: absolute;
-        right: 0;
+        right: 20px;
         font-size: 18px;
         @include transition(color .25s ease-out);
         &:hover { color: $accent; }
     }
 
     li a,
+    .nav-title .title-content,
     #login-buttons {
         width: 100%;
         float: left;
         position: relative;
         padding: 21px 25px 18px 40px;
         margin: 0;
+    }
+
+    li a,
+    #login-buttons {
         color: #fff;
         @include transition(background .25s ease-out);
     }
+
 
     #login-buttons {
         width: 100%;
@@ -451,7 +457,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
     .nav-content ul { display: block; }
 
     .main .sidebar ul.nav-links {
-        li.title { font-size: 15px; }
+        li.nav-title { font-size: 15px; }
         a { font-size: 15px; }
     }
 
