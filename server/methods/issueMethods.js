@@ -173,6 +173,9 @@ Meteor.methods({
         issue = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
         if(issue && issue.cover){
             issue.coverPath = Meteor.issue.coverPath(assetUrl,issue.cover);
+            if(issue.volume == 8) {
+                issue.largeCover = true;
+            }
         }
         
         return issue;

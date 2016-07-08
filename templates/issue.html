@@ -9,7 +9,7 @@
             {{else}}
             {{#with issueParams}}
             <div class="toc-title">
-                <div class="cover-image {{#if volume equals 8}}large-cover{{/if}}">
+                <div class="cover-image">
                     <img src="{{coverPath}}">
                 </div>
                 <!-- Title Information -->
@@ -24,7 +24,7 @@
 
             {{#with issueMeta}}
             <div class="toc-title">
-                <div class="cover-image">
+                <div class="cover-image {{#if largeCover}}large-cover{{/if}}">
                     <img src="{{coverPath}}">
                 </div>
                 <!-- Title Information -->
