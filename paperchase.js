@@ -334,6 +334,8 @@ if (Meteor.isClient) {
     Session.setDefault('missingPii',null);
     Session.setDefault('preprocess-article',false);
     Session.setDefault('issue',null);
+    Session.setDefault('issueMeta',null);
+    Session.setDefault('issueParams',null);
     // for side navigation
     Session.setDefault('sectionNav',null);
     // for section papers list
@@ -680,10 +682,23 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+
             var pieces = Meteor.issue.urlPieces(this.params.vi);
             // TODO: add redirect if no issue
             if(pieces && pieces.volume){
-                if( Session.get('issue') && Session.get('issue').issue != pieces.issue || Session.get('issue') && Session.get('issue').volume != pieces.volume || !Session.get('issue')){
+                Session.set('issueParams', {volume: parseInt(pieces.volume), issue: pieces.issue.toString()});
+                Meteor.call('getIssueMeta', pieces.volume, pieces.issue, function(error, issueMeta){
+                    if(error){
+                        console.error('ERROR - getIssueAndFiles',error);
+                    }
+                    else if(issueMeta){
+                        Session.set('issueMeta', issueMeta);
+                    }
+                });
+
+
+
+                if( !Session.get('issue') || Session.get('issue') && Session.get('issue').issue != pieces.issue || Session.get('issue') && Session.get('issue').volume != pieces.volume){
                     Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
                         if(error){
                             console.error('ERROR - getIssueAndFiles',error);

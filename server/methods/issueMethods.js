@@ -162,4 +162,19 @@ Meteor.methods({
 
         return result;
     },
+    getIssueMeta: function(volume, issue){
+        var issue,
+            journal,
+            assetUrl;
+
+        journal = journalConfig.findOne({}).journal.short_name;
+        assetUrl =  journalConfig.findOne().assets;
+
+        issue = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
+        if(issue && issue.cover){
+            issue.coverPath = Meteor.issue.coverPath(assetUrl,issue.cover);
+        }
+        
+        return issue;
+    }
 });
