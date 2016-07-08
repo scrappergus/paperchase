@@ -113,6 +113,11 @@ Template.Issue.events({
     },
     'click .anchor': function(e) {
         Meteor.general.scrollAnchor(e);
+    },
+    'click .issue-change': function(e) {
+        Session.set('issue',null);
+        Session.set('issueParams',null);
+        Session.set('issueMeta',null);
     }
 });
 

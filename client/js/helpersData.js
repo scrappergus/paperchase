@@ -266,8 +266,18 @@ Template.AuthorAffsAndNotes.helpers({
 // Issue
 // ------
 Template.Issue.helpers({
+    issueParams: function(){
+        return Session.get('issueParams');
+    },
+    issueMeta: function(){
+        if(Session.get('issueParams') && Session.get('issueMeta') && Session.get('issueMeta').volume === Session.get('issueParams').volume && Session.get('issueParams').issue === Session.get('issueMeta').issue ){
+            return Session.get('issueMeta');
+        }
+    },
     issueData: function(){
-        return Session.get('issue');
+        if(Session.get('issueMeta') && Session.get('issue') && Session.get('issue').volume === Session.get('issueMeta').volume && Session.get('issue').issue === Session.get('issueMeta').issue ){
+            return Session.get('issue');
+        }
     },
     items: function() {
         var articles,
