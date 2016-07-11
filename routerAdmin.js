@@ -27,35 +27,35 @@ Router.route('/admin/doi_status_csv/',{
                         pmid = '',
                         pii = '';
 
-                    if(result[i]['paperchase']['dates'] && result[i]['paperchase']['dates']['epub']){
-                        epub = moment(result[i]['paperchase']['dates']['epub']).format('YYYY-MM-D');
+                    if(result[i].paperchase.dates && result[i].paperchase.dates.epub){
+                        epub = moment(result[i].paperchase.dates.epub).format('YYYY-MM-D');
                     }
-                    if(result[i]['paperchase']['ids']['pmc']){
-                        pmc = result[i]['paperchase']['ids']['pmc'];
+                    if(result[i].paperchase.ids.pmc){
+                        pmc = result[i].paperchase.ids.pmc;
                     }
-                    if(result[i]['paperchase']['ids']['pmid']){
-                        pmid = result[i]['paperchase']['ids']['pmid'];
+                    if(result[i].paperchase.ids.pmid){
+                        pmid = result[i].paperchase.ids.pmid;
                     }
-                    if(result[i]['paperchase']['ids']['pii']){
-                        pii = result[i]['paperchase']['ids']['pii'];
+                    if(result[i].paperchase.ids.pii){
+                        pii = result[i].paperchase.ids.pii;
                     }
-                    if(result[i]['deposited']['timestamp']){
-                        deposited = moment(result[i]['deposited']['timestamp']).format('YYYY-MM-D');
+                    if(result[i].deposited.timestamp){
+                        deposited = moment(result[i].deposited.timestamp).format('YYYY-MM-D');
                     }
-                    if(result[i]['indexed_date']){
-                        indexed = moment(result[i]['indexed_date']).format('YYYY-MM-D');
+                    if(result[i].indexed_date){
+                        indexed = moment(result[i].indexed_date).format('YYYY-MM-D');
                     }
-                    if(result[i]['crossref_epub_date']){
-                        crossRefEpub = result[i]['crossref_epub_date'];
+                    if(result[i].crossref_epub_date){
+                        crossRefEpub = result[i].crossref_epub_date;
                     }
-                    if(result[i]['crossref_print_date']){
-                        crossRefPrint = result[i]['crossref_print_date'];
+                    if(result[i].crossref_print_date){
+                        crossRefPrint = result[i].crossref_print_date;
                     }
-                    if(result[i]['doi']){
-                        doi = result[i]['doi'];
+                    if(result[i].doi){
+                        doi = result[i].doi;
                     }
-                    if(result[i]['registered']){
-                        registered = result[i]['registered'];
+                    if(result[i].registered){
+                        registered = result[i].registered;
                     }
 
                     csvData += pii + ',' + registered + ',' + deposited + ',' + indexed + ',' + crossRefEpub + ',' + crossRefPrint + ',' + epub + ',' + doi + ',' + pmc + ',' + pmid + '\n';
@@ -92,19 +92,19 @@ Router.route('/admin/article_dates_csv/:pii',{
                         accepted = '';
 
                     if(articlesList[i].ids && articlesList[i].ids.pii){
-                        pii = articlesList[i].ids.pii
+                        pii = articlesList[i].ids.pii;
                     }
 
                     if(articlesList[i].history && articlesList[i].history.received){
-                        received = articlesList[i].history.received
+                        received = articlesList[i].history.received;
                     }
 
                     if(articlesList[i].history && articlesList[i].history.accepted){
-                        accepted = articlesList[i].history.accepted
+                        accepted = articlesList[i].history.accepted;
                     }
 
                     if(articlesList[i].dates && articlesList[i].dates.epub){
-                        epub = articlesList[i].dates.epub
+                        epub = articlesList[i].dates.epub;
                     }
 
                     csvData += pii + ',' + received + ',' + accepted + ',' + epub + '\n';
@@ -209,7 +209,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('articlesRecentFive'),
                 Meteor.subscribe('articlesWithoutDates'),
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -238,7 +238,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('about'),
                 Meteor.subscribe('sortedList','about')
-            ]
+            ];
         },
         onBeforeAction: function(){
             Meteor.call('getListWithData', 'about', function(error,result){
@@ -267,14 +267,14 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('sectionsAll'),
                 Meteor.subscribe('sortedList','sections')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 var sorted  = sorters.findOne();
                 // more data set is AdminHelpers.js (main side nav)
                 return {
-                    sectionSideNav : sorted['ordered']
+                    sectionSideNav : sorted.ordered
                 };
             }
         }
@@ -294,7 +294,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('newsListAll')
-            ]
+            ];
         }
     });
     Router.route('/admin/news-add',{
@@ -306,11 +306,6 @@ if (Meteor.isClient) {
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
             return pageTitle;
-        },
-        waitOn: function(){
-            return [
-                // Meteor.subscribe('news')
-            ]
         }
     });
     Router.route('/admin/news-edit/:_id',{
@@ -326,7 +321,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('newsItem', this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -353,7 +348,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('newsItem', this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -381,13 +376,13 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('recommendations')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 return{
                     recommendations: recommendations.find().fetch()
-                }
+                };
             }
         }
     });
@@ -404,7 +399,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('recommendationData',this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -444,7 +439,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('articleTypes')
-            ]
+            ];
         }
     });
     Router.route('/admin/data_submissions/past',{
@@ -462,15 +457,15 @@ if (Meteor.isClient) {
                 Meteor.subscribe('adminUsers'),
                 Meteor.subscribe('submissions'),
                 Meteor.subscribe('articles')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 return{
                     articles: articles.find({},{submissions:1}).fetch(),
                     submissions: submissions.find().fetch()
-                }
-            };
+                };
+            }
         }
     });
 
@@ -505,7 +500,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('feature'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -518,14 +513,14 @@ if (Meteor.isClient) {
                     journal = Session.get('journal').journal;
                 }
 
-                if(sorted && sorted['articles']){
-                    sortedArticles = sorted['articles'];
+                if(sorted && sorted.articles){
+                    sortedArticles = sorted.articles;
                 }
                 return {
                     feature : featureList,
                     advance : sortedArticles,
                     journal : journal
-                }
+                };
             }
         }
     });
@@ -542,12 +537,12 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('articles')
-            ]
+            ];
         },
         data: function(){
             return {
                 articles : articles.find().fetch()
-            }
+            };
         }
     });
     Router.route('/admin/articles/audit',{
@@ -564,23 +559,26 @@ if (Meteor.isClient) {
             Meteor.call('allArticlesFilesAudit',function(error,result){
                 if(error){
                     throw new Meteor.Error(error);
-                }else{
+                }
+                else{
                     Session.set('articles-files-audit',result);
-                };
+                }
             });
             Meteor.call('pubMedAndPmcAudit',function(error,result){
                 if(error){
                     throw new Meteor.Error(error);
-                }else{
+                }
+                else{
                     Session.set('articles-ncbi-audit',result);
-                };
+                }
             });
             Meteor.call('duplicateArticles',function(error,result){
                 if(error){
                     throw new Meteor.Error(error);
-                }else{
+                }
+                else{
                     Session.set('articles-duplicate',result);
-                };
+                }
             });
             this.next();
         }
@@ -651,7 +649,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('articleIssue',this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -707,7 +705,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('articleIssue',this.params._id),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -742,7 +740,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('articleIssue',this.params._id),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -777,7 +775,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('articleIssue',this.params._id),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -819,7 +817,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -858,7 +856,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleInfo',this.params._id),
                 Meteor.subscribe('articleIssue',this.params._id),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -869,7 +867,7 @@ if (Meteor.isClient) {
                 }
             }
         }
-    })
+    });
     Router.route('/admin/add_article/',{
         name: 'AdminArticleAdd',
         layoutTemplate: 'Admin',
@@ -931,13 +929,13 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('articleTypes')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 return {
                     types : articleTypes.find({},{sort:{name:1}}).fetch()
-                }
+                };
             }
         }
     });
@@ -983,14 +981,13 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('aop')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
-
                 return{
                     articles: articles.find().fetch()
-                }
+                };
             }
         }
     });
@@ -1010,7 +1007,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1024,7 +1021,7 @@ if (Meteor.isClient) {
                     pubdate: advance.pubtime.toLocaleDateString(),
                     pubtime: advance.pubtime.toLocaleTimeString(),
                     total: sorted.articles.length
-                }
+                };
             }
         }
     });
@@ -1044,7 +1041,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1061,7 +1058,7 @@ if (Meteor.isClient) {
 
                 return{
                     articles: res
-                }
+                };
             }
         }
     });
@@ -1078,7 +1075,7 @@ if (Meteor.isClient) {
         onBeforeAction: function(){
             Meteor.call('compareWithLegacy', function(error,result){
                 if(result){
-                    Session.set('advanceDiff',result)
+                    Session.set('advanceDiff',result);
                 }
             });
             this.next();
@@ -1098,7 +1095,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1106,7 +1103,7 @@ if (Meteor.isClient) {
                 // console.log(sorted.articles);
                 return{
                     articles: sorted.articles
-                }
+                };
             }
         }
     });
@@ -1125,7 +1122,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('sectionsAll')
-            ]
+            ];
         }
     });
     Router.route('/admin/sections-add', {
@@ -1137,12 +1134,7 @@ if (Meteor.isClient) {
             }
             return pageTitle;
         },
-        layoutTemplate: 'Admin',
-        waitOn: function(){
-            return[
-                // sections
-            ]
-        }
+        layoutTemplate: 'Admin'
     });
     Router.route('/admin/sections/:_id',{
         name: 'AdminSectionPapers',
@@ -1161,7 +1153,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('sectionPapers', this.params._id)
-            ]
+            ];
         }
     });
     Router.route('/admin/sections-edit/:_id',{
@@ -1177,7 +1169,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('sectionById', this.params._id)
-            ]
+            ];
         }
     });
 
@@ -1342,8 +1334,8 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('allUsers')
-            ]
+                Meteor.subscribe('allUsers')
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1368,7 +1360,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('userData',this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1409,7 +1401,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('userData',this.params._id)
-            ]
+            ];
         }
     });
     Router.route('/admin/user/:_id/subs', {
@@ -1435,7 +1427,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('userData',this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1490,7 +1482,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('authorsList'),
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1513,9 +1505,9 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-            Meteor.subscribe('articles'),
-            Meteor.subscribe('authorData',this.params._id)
-            ]
+                Meteor.subscribe('articles'),
+                Meteor.subscribe('authorData',this.params._id)
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1550,7 +1542,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('entireBoard'),
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1598,7 +1590,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('edBoardMember',this.params._id),
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -1629,7 +1621,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('forAuthors'),
                 Meteor.subscribe('sortedList','forAuthors')
-            ]
+            ];
         },
         data: function(){
             // Keep data declarations here
@@ -1639,7 +1631,7 @@ if (Meteor.isClient) {
                 var sections = forAuthors.find().fetch();
                 var sorted  = sorters.findOne();
                 return {
-                    sections : sorted['ordered']
+                    sections : sorted.ordered
                 };
             }
         }
@@ -1660,7 +1652,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('ethics'),
                 Meteor.subscribe('sortedList','ethics')
-            ]
+            ];
         },
         data: function(){
             // Keep data declarations here
@@ -1670,7 +1662,7 @@ if (Meteor.isClient) {
                 var sections = ethics.find().fetch();
                 var sorted  = sorters.findOne();
                 return {
-                    sections : sorted['ordered']
+                    sections : sorted.ordered
                 };
             }
         }
@@ -1691,7 +1683,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('homePage'),
                 Meteor.subscribe('sortedList','homePage')
-            ]
+            ];
         },
         data: function(){
             // Keep data declarations here
@@ -1701,7 +1693,7 @@ if (Meteor.isClient) {
                 var sections = homePage.find().fetch();
                 var sorted  = sorters.findOne();
                 return {
-                    sections : sorted['ordered']
+                    sections : sorted.ordered
                 };
             }
         }
@@ -1722,7 +1714,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('institutions')
-            ]
+            ];
         },
         data: function () {
             return {
@@ -1743,7 +1735,7 @@ if (Meteor.isClient) {
         data: function(){
             return {
                 insertForm: true
-            }
+            };
         }
     });
     Router.route('/admin/institution/edit/:_id', {
@@ -1758,14 +1750,14 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-            Meteor.subscribe('institution',this.params._id)
-            ]
+                Meteor.subscribe('institution',this.params._id)
+            ];
         },
         data: function(){
             return {
                 institution: institutions.findOne({"_id":this.params._id}),
                 updateForm: true
-            }
+            };
         }
     });
 
@@ -1788,7 +1780,7 @@ if (Meteor.isClient) {
                 }
                 return {
                     journal : journal
-                }
+                };
             }
         }
     });
@@ -1808,16 +1800,18 @@ if (Meteor.isClient) {
             Meteor.call('allArticlesFilesAudit',function(error,result){
                 if(error){
                     throw new Meteor.Error(error);
-                }else{
+                }
+                else{
                     Session.set('articles-files-audit',result);
-                };
+                }
             });
             Meteor.call('pubMedAndPmcAudit',function(error,result){
                 if(error){
                     throw new Meteor.Error(error);
-                }else{
+                }
+                else{
                     Session.set('articles-ncbi-audit',result);
-                };
+                }
             });
             this.next();
         }
