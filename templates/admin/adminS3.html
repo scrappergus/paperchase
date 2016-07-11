@@ -76,7 +76,7 @@
         {{/each}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
-        <button class="btn btn-primary upload" data-id="{{assetId}}">{{>AdminUploadIcon}} Upload &amp; Save</button>
+        <button class="btn btn-primary upload" data-id="{{assetId}}" data-type="{{assetType}}">{{>AdminUploadIcon}} Upload &amp; Save</button>
     </div></div>
 </template>
 
@@ -84,7 +84,7 @@
     <div class="file-field input-field">
         <div class="btn">
             <span>File</span>
-            <input class="file_bag" type="file" data-id={{id}}>
+            <input class="file_bag" type="file" data-id="{{id}}">
         </div>
         <div class="file-path-wrapper">
             <input class="file-path" type="text">

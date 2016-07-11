@@ -205,6 +205,20 @@ Template.AdminArticleFiguresXml.helpers({
         return Session.get('xml-figures');
     }
 });
+//Supplemental
+Template.AdminArticleSupplemental.helpers({
+    article : function(){
+        return Session.get('article');
+    },
+    xmlSupplemental : function(){
+        return Session.get('xml-supplemental');
+    }
+});
+Template.AdminArticleSupplementalXml.helpers({
+    xmlSupplemental : function(){
+        return Session.get('xml-supplemental');
+    }
+});
 //Files - PDF/XML
 Template.AdminArticleFiles.helpers({
     article : function(){

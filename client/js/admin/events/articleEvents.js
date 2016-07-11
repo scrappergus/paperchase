@@ -207,10 +207,16 @@ Template.AdminArticleFiles.events({
 
 Template.AdminArticleFigures.events({
     'click .article-figure-edit': function(e){
-        Meteor.articleFiles.editAsset(e, 'figures', true);
+        var assetId;
+        e.preventDefault();
+        assetId = $(e.target).closest('button').attr('data-id');
+        Meteor.articleFiles.editAsset(assetId, 'figures', true);
     },
     'click .article-asset-cancel': function(e){
-        Meteor.articleFiles.editAsset(e, 'figures', false);
+        var assetId;
+        e.preventDefault();
+        assetId = $(e.target).closest('button').attr('data-id');
+        Meteor.articleFiles.editAsset(assetId, 'figures', false);
     }
     // 'click .article-figure-delete': function(e){
         // e.preventDefault();
@@ -259,6 +265,20 @@ Template.AdminArticleFigures.events({
         // }
     // }
 });
+Template.AdminArticleSupplemental.events({
+    'click .article-supp-edit': function(e){
+        var assetId;
+        e.preventDefault();
+        assetId = $(e.target).closest('button').attr('data-id');
+        Meteor.articleFiles.editAsset(assetId, 'supplemental', true);
+    },
+    'click .article-asset-cancel': function(e){
+        var assetId;
+        e.preventDefault();
+        assetId = $(e.target).closest('button').attr('data-id');
+        Meteor.articleFiles.editAsset(assetId, 'supplemental', false);
+    }
+});
 
 Template.s3ArticleAssetsUpload.events({
     'click button.upload': function(e){
@@ -266,29 +286,36 @@ Template.s3ArticleAssetsUpload.events({
         Meteor.formActions.saving();
         var articleMongoId = Session.get('article')._id;
         var assetId,
+            assetType,
             files,
             uploadedFilename;
 
         // ID
         assetId = $(e.target).closest('button').attr('data-id');
+        assetType = $(e.target).closest('button').attr('data-type');
 
-        if(assetId){
-            // Upload figure file
+        if(assetId && assetType){
+            // Upload asset file
             // ----------------
             files = $('input.file_bag[data-id="' + assetId +'"]')[0].files;
 
             if(files[0]){
                 uploadedFilename = files[0].name;
-                Meteor.articleFiles.verifyNewFigureName(assetId, uploadedFilename, function(verifiedFilename){
+                Meteor.articleFiles.verifyUploadedFilename(assetId, uploadedFilename, assetType, function(verifiedFilename){
                     if(verifiedFilename){
-                        Meteor.upload.articleFigure(articleMongoId, files, uploadedFilename, assetId);
-                    }else{
-                        Meteor.formActions.errorMessage('Figure ID already assigned to another figure.');
+                        Meteor.upload.articleAsset(articleMongoId, files, uploadedFilename, assetId, assetType);
+                    }
+                    else{
+                        Meteor.formActions.errorMessage('ID already assigned to another figure.');
                     }
                 });
-            }else{
-                Meteor.formActions.errorMessage('Select a figure file.');
             }
+            else{
+                Meteor.formActions.errorMessage('Select a file.');
+            }
+        }
+        else{
+            Meteor.formActions.errorMessage('Could not upload file.');
         }
     }
 });

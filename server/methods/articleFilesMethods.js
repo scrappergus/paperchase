@@ -68,8 +68,9 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    renameArticleAsset: function(articleMongoId, folder, originalFileName){
-        // console.log('renameArticleAsset',articleMongoId);
+    renameArticleFile: function(articleMongoId, folder, originalFileName){
+        // PDF or XML
+        // console.log('renameArticleFile',articleMongoId);
         var fut = new future();
         var newFileName = articleMongoId + '.' + folder;
         var source = folder + '/' + originalFileName;
@@ -84,52 +85,59 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    renameArticleFigure: function(articleMongoId, originalFileName, figureId){
-        // console.log('renameArticleFigure',articleMongoId, figureId)
-        // Now rename the figure if the file was not in standard format (articlemongoid_figid)
+    renameArticleAsset: function(articleMongoId, originalFileName, assetId, assetType){
+        console.log('renameArticleAsset', articleMongoId, originalFileName, assetId, assetType);
+        // Now rename the asset if the name was not in standard format (articlemongoid_assetId)
         var fut = new future();
-        var articleFigures,
-            figureIdLowercase,
+        var journal,
+            assets,
+            articleDbAssets,
+            assetIdLowercase,
             originalFilePieces,
             fileType,
             newFileName,
+            s3Folder,
             source,
-            dest,
-            figureFoundInDb = false,
-            result = {};
+            dest;
 
-        figureIdLowercase = figureId.toLowerCase();
+        journal = journalConfig.findOne();
 
-        articleInfo = articles.findOne({_id : articleMongoId});
-        articleDbFigures =articleInfo.files.figures;
+        if(journal){
+            s3Folder = journal.s3.folders.article[assetType];
 
-        originalFilePieces = originalFileName.split('.');
-        fileType = originalFilePieces[parseInt(originalFilePieces.length - 1)];
+            assetIdLowercase = assetId.toLowerCase();
 
-        newFileName = articleMongoId + '_' + figureIdLowercase + '.' + fileType;
-        result.renamedFile = newFileName;
-        source = 'paper_figures/' + originalFileName;
-        dest = 'paper_figures/' + newFileName;
+            articleInfo = articles.findOne({_id : articleMongoId});
+            articleDbAssets = articleInfo.files[assetType];
 
-        S3.knox.copyFile(source, dest, function(err, res){
-            if(err){
-                console.error('renameArticleAsset',err);
-                fut.throw(err);
-            }else if(res){
-                // figure was renamed on S3
-                // now create figures list with new info
+            originalFilePieces = originalFileName.split('.');
+            fileType = originalFilePieces[parseInt(originalFilePieces.length - 1)];
 
-                // If updating existing figure
-                articleDbFigures.forEach(function(fig){
-                    if(fig.id && fig.id == figureId){
-                        fig.file = newFileName;
-                    }
-                });
-                result.figures = articleDbFigures;
-                fut.return(result);
-            }
-        });
-        return fut.wait();
+            newFileName = articleMongoId + '_' + assetIdLowercase + '.' + fileType;
+            // result.renamedFile = newFileName;
+            source = s3Folder + '/' + originalFileName;
+            dest = s3Folder + '/' + newFileName;
+
+            S3.knox.copyFile(source, dest, function(err, res){
+                if(err){
+                    console.error('renameArticleAsset',err);
+                    fut.throw(err);
+                }
+                else if(res){
+                    // asset was renamed on S3
+                    // now create Asset list with new info
+
+                    articleDbAssets.forEach(function(asset){
+                        if(asset.id && asset.id == assetId){
+                            asset.file = newFileName;
+                        }
+                    });
+                    // result[assetType] = articleDbAssets;
+                    fut.return(articleDbAssets);
+                }
+            });
+            return fut.wait();
+        }
     },
     allArticlesFilesAudit: function(){
         var result = {};
@@ -145,13 +153,17 @@ Meteor.methods({
         result.xml = xmlList.length;
         return result;
     },
-    updateArticleDbFigures: function(articleMongoId, articleFigures){
-        // console.log('..updateArticleDbFigures',articleMongoId, articleFigures);
+    updateArticleDbAssets: function(articleMongoId, assets, assetType){
+        // console.log('..updateArticleDbAssets', articleMongoId, assets, assetType);
         var fut = new future();
-        Meteor.call('updateArticle', articleMongoId, {'files.figures' : articleFigures}, function(error,result){
+        var filesToUpdateObj = {};
+        var filesToUpdate = 'files.' + assetType;
+        filesToUpdateObj[filesToUpdate] = assets;
+        Meteor.call('updateArticle', articleMongoId, filesToUpdateObj, function(error, result){
             if(error){
                 fut.throw(error);
-            }else if(result){
+            }
+            else if(result){
                 fut.return(result);
             }
         });
@@ -168,31 +180,33 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    afterUploadArticleFig: function(articleMongoId, originalFileName, figId){
-        // console.log('..afterUploadArticleFig',articleMongoId, originalFileName, figId);
+    afterUploadArticleAsset: function(articleMongoId, originalFileName, assetId, assetType){
+        // console.log('..afterUploadArticleAsset', articleMongoId, originalFileName, assetId);
         // Article was already uploaded to S3. This needs to happen on the client.
-        // Rename the uploaded figure and update the database
+        // Rename the uploaded file and update the database
         var fut = new future();
         var fileNamePieces,
             articleInfo,
-            articleFigures;
+            assets;
 
         articleInfo = articles.findOne({_id : articleMongoId});
-        articleFigures =articleInfo.files.figures;
+        assets = articleInfo.files[assetType];
 
         fileNamePieces = originalFileName.slice('_');
-        Meteor.call('renameArticleFigure', articleMongoId, originalFileName, figId, function(error,renamedResult){
+        Meteor.call('renameArticleAsset', articleMongoId, originalFileName, assetId, assetType, function(error, renamedResult){
             if(error){
-                error.userMessage = 'Figure not uploaded. Please try again.';
-                console.error('renameArticleFigure',error);
+                error.userMessage = 'File not uploaded. Please try again.';
+                console.error('renameArticleAsset',error);
                 fut.throw(error);// though it was actually uploaded, it was not renamed to standard convention. So this file cannot be used.
-            }else if(renamedResult){
-                Meteor.call('updateArticleDbFigures', articleMongoId, renamedResult.figures, function(error,dbUpdateResult){
+            }
+            else if(renamedResult){
+                Meteor.call('updateArticleDbAssets', articleMongoId, renamedResult, assetType, function(error, dbUpdateResult){
                     if(error){
-                        error.userMessage = 'Figure uploaded, but could not update the database. Contact IT and request DB update.' ;
+                        error.userMessage = 'Asset uploaded, but could not update the database. Contact IT and request DB update.' ;
                         fut.throw(error);
-                        console.error('updateArticleDbFigures',error);
-                    }else if(dbUpdateResult){
+                        console.error('updateArticleDbAssets',error);
+                    }
+                    else if(dbUpdateResult){
                         fut.return(renamedResult);
                     }
                 });

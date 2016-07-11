@@ -191,11 +191,15 @@ PDF files are versioned, so consistent naming is essential. In the Paperchase DB
 
 Before rendering the template, AdminArticleFigures, if the article has XML uploaded, then it's parsed for figure nodes. The ID, label, title and caption are listed below the figure uploader/editor. The data for the XML figures is stored in the session variable `xml-figures`.
 
-Deleting: Uses template AdminArticleFigures. After clicking the edit button next to the figure, a delete button is displayed. Delete happens via client. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
+Deleting: Not enabled.
 
-Uploading: Uses template s3FigureUpload. First the file is uploaded to the paper_figures folder on S3, which must happen on the client. Then on the server, using afterUploadArticleFig(), the uploaded figure is renamed to standard convention (articlemongoid_figureid). The original file is copied and named using articlemongoid_figureid. The original file is deleted, via the client. See articleEvents.js. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
+Uploading: The only way to update the figures in the DB is via uploading XML (besides filename) Only figures listed in the DB can be uploaded. Uses template s3ArticleAssetsUpload. First the file is uploaded to the paper_figures folder on S3, which must happen on the client. Then on the server, using afterUploadArticleAsset(), the uploaded figure is renamed to standard convention (articlemongoid_figureid). The original file is copied and named using articlemongoid_figureid. The original file is deleted, via the client. See articleEvents.js. This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
 
-Updating/Adding New Figure: Both actions use same template event from s3FigureUpload, which will also verify that the figure ID is unique. They also use the server method afterUploadArticleFig(). This DOES NOT update the database. The only way to update the figures in the DB is via uploading XML.
+**Supplemental**
+ - File naming: articleMongId_suppId
+ - File storage: on AWS S3 in journal bucket (paperchase-journalshortname) in the supplemental_materials folder
+
+Uses same template and functions as figure uploader.
 
 
 New Article via XML

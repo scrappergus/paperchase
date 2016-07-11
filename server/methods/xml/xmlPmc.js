@@ -267,6 +267,48 @@ Meteor.methods({
             fut.return();
         }
         return fut.wait();
+    },
+    pmcSupplementalInXml: function(articleMongoId){
+        // console.log('pmcSupplementalInXml', articleMongoId);
+        // for finding all supplemental referenced in the full text XML
+        var fut = new future();
+        var articleJson,
+            articleInfo,
+            doc,
+            dbSupplemental,
+            xmlFigures,
+            figuresResult = [];
+
+        articleInfo = articles.findOne({_id : articleMongoId});
+
+        if(articleInfo && articleInfo.files && articleInfo.files.supplemental){
+            dbSupplemental = articleInfo.files.supplemental;
+        }
+
+        if(articleInfo && articleInfo.files && articleInfo.files.xml){
+            articleInfo = Meteor.article.readyData(articleInfo);
+            if(articleInfo.files.xml){
+                Meteor.call('getXml',articleInfo.files.xml.url, function(error, xml){
+                    if(error){
+                        console.error('getXmlError',error);
+                        fut.throw(error);
+                    }
+                    else if(xml){
+                        // console.log('xml',xml);
+                        Meteor.xmlPmc.supplementalMaterials(xml, function(result){
+                            if(result){
+                                console.log('result',result)
+                                fut.return(result);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        else{
+            fut.return();
+        }
+        return fut.wait();
     }
 });
 

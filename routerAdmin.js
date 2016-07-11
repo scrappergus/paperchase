@@ -160,6 +160,7 @@ if (Meteor.isClient) {
     Session.setDefault('xml-verify',null);
     Session.setDefault('xml-file',null);
     Session.setDefault('xml-figures',null);
+    Session.setDefault('xml-supplemental',null);
     Session.setDefault('article-form',null);
     Session.setDefault('new-article',null); // only for when uploading XML, this is the data parsed out
     Session.setDefault('articles-updated',null); //right now just for when deleting an issue, removing issue info from docs
@@ -650,6 +651,50 @@ if (Meteor.isClient) {
 
                     }else if(result){
                         Session.set('xml-figures',result);
+                    }
+                });
+                this.next();
+            }
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('articleInfo',this.params._id),
+                Meteor.subscribe('articleIssue',this.params._id),
+                Meteor.subscribe('journalConfig')
+            ];
+        },
+        data: function(){
+            if(this.ready()){
+                var article = articles.findOne({'_id': this.params._id});
+                if(article){
+                    article = Meteor.article.readyData(article);
+                    Session.set('article',article);
+                }
+            }
+        }
+    });
+
+    Router.route('/admin/article/:_id/supplemental',{
+        name: 'AdminArticleSupplemental',
+        layoutTemplate: 'Admin',
+        title: function() {
+            var pageTitle = 'Admin | Article Supplemental ';
+            if(Session.get('journal')){
+                pageTitle += ': ' + Session.get('journal').journal.name;
+            }
+            return pageTitle;
+        },
+        onBeforeAction: function(){
+            if(!Roles.userIsInRole(Meteor.userId(), ['edit','super-admin'],'article')){
+                Router.go('AdminArticleOverview', {_id : this.params._id});
+            }else{
+                Meteor.adminArticle.urlViaPiiOrMongo(this.params._id,'AdminArticleFigures');
+                Meteor.call('pmcSupplementalInXml',this.params._id,function(error,result){
+                    if(error){
+                        console.error('pmcSupplementalInXml', error);
+                    }
+                    else if(result){
+                        Session.set('xml-supplemental',result);
                     }
                 });
                 this.next();

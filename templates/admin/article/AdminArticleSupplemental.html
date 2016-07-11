@@ -1,9 +1,10 @@
-<template name="AdminArticleFigures">
-    {{>AdminHeader header="Article Figures"}}
+<template name="AdminArticleSupplemental">
+    {{>AdminHeader header="Article Supplemental"}}
 
     {{#if article}}
 
     {{>StatusModal}}
+
 
     {{>AdminArticleHeader article=article}}
 
@@ -12,41 +13,41 @@
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <span class="card-title">Saved Figures</span>
-                    {{#if files.figures}}
+                    <span class="card-title">Saved Supplemental</span>
+                    {{#if files.supplemental}}
                     {{#with files}}
                     <ul class="collection">
                         <li class="collection-item">
                             <div class="row no-margin">
                                 <div class="col s12 m2"><b>ID</b></div>
-                                <div class="col s12 m2"><b>Figure</b></div>
+                                <div class="col s12 m2"><b>File</b></div>
                                 <div class="col s8 m4"><b>Edit</b></div>
                             </div>
                         </li>
-                        {{#each figures}}
+                        {{#each supplemental}}
                         <li class="collection-item">
                             <div class="row no-margin">
                                 <div class="col s12 m2">
                                     {{id}}
                                 </div>
                                 <div class="col s12 m2">
-                                    {{#if url}}
+                                    {{#if file}}
                                     <div class="card z-depth-0 blue-grey lighten-5">
-                                        <div class="card-content">
-                                            <img src="{{url}}" class="materialboxed responsive-img" alt="{{id}}" id="figure-{{id}}">
+                                        <div class="card-content center-align">
+                                            {{#if url}}<a class="btn" href="{{url}}" target="_BLANK">{{>AdminDownloadIcon}}</a>{{/if}}
                                         </div>
                                     </div>
                                     {{else}}
-                                    No Image Saved
+                                    No File Saved
                                     {{/if}}
                                 </div>
                                 {{#if editing}}
                                 <div class="col s8 m4">
-                                    {{>AdminArticleAssetsUploader uploadType='Edit' assetType='figures' id=id}}
+                                    {{>AdminArticleAssetsUploader uploadType='Edit' assetType='supplemental' id=id}}
                                 </div>
                                 {{else}}
                                 <div class="col s8 m4">
-                                    <button class="btn btn-edit btn-floating article-figure-edit" data-id="{{id}}">{{>AdminEditIcon}}</button>
+                                    <button class="btn btn-edit btn-floating article-supp-edit" data-id="{{id}}">{{>AdminEditIcon}}</button>
                                 </div>
                                 {{/if}}
                             </div>
@@ -55,16 +56,16 @@
                     </ul>
                     {{/with}}
                     {{else}}
-                    <h4>No Figures</h4>
+                    <h4>No Supplemental</h4>
                     {{/if}}
-                    <p>Figure id, label, title, and caption are taken from the XML. To update figures list, upload new XML. This uploader is solely to upload new figure files.</p>
+                    <p>Supplemental id, label, title, and caption are taken from the XML. To update supplemental list, upload new XML. This uploader is solely to upload new supplemental files.</p>
                 </div>
             </div>
         </div>
     </div>
     {{/with}}
 
-    {{#if xmlFigures}}{{>AdminArticleFiguresXml}}{{/if}}
+    {{#if xmlSupplemental}}{{>AdminArticleSupplementalXml}}{{/if}}
 
     {{else}}
 
@@ -73,29 +74,27 @@
     {{/if}}
 </template>
 
-<template name="AdminArticleFiguresXml">
-    {{#with xmlFigures}}
+<template name="AdminArticleSupplementalXml">
+    {{#with xmlSupplemental}}
     <div class="row">
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <span class="card-title">XML Figures Data</span>
+                    <span class="card-title">XML Supplemental Data</span>
                     <ul class="collection">
                         <li class="collection-item">
                             <div class="row no-margin">
                                 <div class="col s2"><b>ID</b></div>
                                 <div class="col s2"><b>Label</b></div>
-                                <div class="col s4"><b>Title</b></div>
-                                <div class="col s4"><b>Caption</b></div>
+                                <div class="col s8"><b>Caption</b></div>
                             </div>
                         </li>
-                        {{#each xmlFigures}}
+                        {{#each xmlSupplemental}}
                         <li class="collection-item">
                             <div class="row no-margin">
                                 <div class="col s2">{{id}}</div>
                                 <div class="col s2">{{label}}</div>
-                                <div class="col s4">{{title}}</div>
-                                <div class="col s4">{{{caption}}}</div>
+                                <div class="col s8">{{{caption}}}</div>
                             </div>
                         </li>
                         {{/each}}
@@ -110,26 +109,4 @@
         </div>
     </div>
     {{/with}}
-</template>
-
-
-<template name="AdminArticleAssetsUploader">
-    <div class="card z-depth-0 blue-grey lighten-5">
-        <div class="card-content">
-            <span class="card-title"><button class="btn btn-cancel btn-floating article-asset-cancel right" data-id="{{id}}">{{>AdminCancelIcon}} Cancel</button></span>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input type="text" value="{{id}}" id="fig-input-{{id}}" name="fig-input-{{id}}" class="active" disabled/>
-                    <label for="fig-input-{{id}}" class="active">Figure ID</label>
-                </div>
-            </div>
-            {{>s3ArticleAssetsUpload assetId=id assetType=assetType}}
-            <!-- <div class="row">
-                <div class="col s12 center-align">
-                    <br><br>
-                    <button class="btn btn-delete article-figure-delete" data-id="{{id}}">{{>AdminDeleteIcon}} Delete</button>
-                </div>
-            </div> -->
-        </div>
-    </div>
 </template>

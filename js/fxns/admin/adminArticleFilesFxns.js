@@ -110,7 +110,7 @@ Meteor.articleFiles = {
         };
         reader.readAsText(file);
     },
-    uploadArticleFile: function(articleMongoId,s3Folder,files){
+    uploadArticleFile: function(articleMongoId, s3Folder,files){
         // console.log('uploadArticleFile',files);
         // after XML has been verified by user, upload to s3
         // event action comes from the article form, after saving information to the db the XML is uploaded to S3
@@ -118,15 +118,15 @@ Meteor.articleFiles = {
         // var file = files[0];
         var fileNameId = files[0].name.replace('.xml','').replace('.pdf','');
         var messageForXml = '';
-        Meteor.s3.upload(files,s3Folder,function(error,res){
+        Meteor.s3.upload(files, s3Folder,function(error,res){
             if(error){
                 console.error('Upload File Error', error);
                 Meteor.formActions.errorMessage('File not uploaded');
             }
             else if(res){
-                Meteor.call('renameArticleAsset', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
+                Meteor.call('renameArticleFile', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
                     if(error){
-                        console.error('renameArticleAsset',error);
+                        console.error('renameArticleFile',error);
                     }
                     else if(newFileName){
                         var updateAssetObj = {};
@@ -180,36 +180,32 @@ Meteor.articleFiles = {
 
         return filesById;
     },
-    verifyNewFigureName: function(figId,uploadedFilename,cb){
-        // console.log('verifyNewFigureName',originalFigId, newFigId,uploadedFilename);
+    verifyUploadedFilename: function(assetId, uploadedFilename, assetType, cb){
+        // console.log('verifyUploadedFilename', assetId, uploadedFilename, assetType);
         // Verify that filename does not already exist, because we will delete uploaded image and rename.
         // if the uploaded image has the same name as another image, then we will be accidently deleting an image
-        var figures = Session.get('article').files.figures;
+        var assets = Session.get('article').files[assetType];
         var verified = true;
         // Filename check
-        figures.forEach(function(fig){
-            if(fig.file && fig.file === uploadedFilename && fig.id != figId){
+        assets.forEach(function(asset){
+            if(asset.file && asset.file === uploadedFilename && asset.id != assetId){
                 verified = false;
             }
         });
         cb(verified);
     },
-
-    deleteFigure: function(filename){
-        S3.delete('paper_figures/' + filename, function(error,result){
+    deleteAsset:  function(filename, folder){
+        S3.delete(folder + '/' + filename, function(error,result){
             if(error){
-                console.error('Could not delete original figure file: ' + filename);
+                console.error('Could not delete original file: ' + filename);
             }
         });
     },
-    editAsset: function(e, assetType, editing){
-        // used to set editing, or also to cancel editing
-        e.preventDefault();
-        var assetId,
-            article,
+    editAsset: function(assetId, assetType, editing){
+        // used to set editing, or to cancel editing
+        var article,
             assets;
 
-        assetId = $(e.target).closest('button').attr('data-id');
         article = Session.get('article');
         assets = article.files[assetType];
 
@@ -227,22 +223,31 @@ Meteor.articleFiles = {
 
 // these handle the actual uploading to S3
 Meteor.upload = {
-    articleFigure: function(articleMongoId, files, uploadedFilename, figId){
-        var filenamePieces,
+    articleAsset: function(articleMongoId, files, uploadedFilename, assetId, assetType){
+        // console.log('articleAsset', articleMongoId, files, uploadedFilename, assetId, assetType);
+        // Figures and supplemental, todo: tables
+        var s3Folder,
+            filenamePieces,
             fileNameLastPiecePieces,
             filenameLastPieceWithoutType;
-        Meteor.s3.upload(files,'paper_figures',function(error,result){
+
+        if(Session.get('journal')){
+            s3Folder = Session.get('journal').s3.folders.article[assetType];
+        }
+
+        Meteor.s3.upload(files, s3Folder, function(error,result){
             if(error){
-                Meteor.formActions.errorMessage('Figure not upload.');
+                Meteor.formActions.errorMessage('File not upload.');
             }
             else if(result){
-                filenamePieces = uploadedFilename.split('_'); // for testing if we need to rename the uploaded image, if standard naming convention then do not delete
+                // filenamePieces = for testing if we need to rename the uploaded image, if standard naming convention then do not delete
+                filenamePieces = uploadedFilename.split('_');
                 filenameLastPiecePieces = filenamePieces[filenamePieces.length - 1].split('.'); // to remove .jpg etc
                 filenameLastPieceWithoutType = filenameLastPiecePieces[0].toLowerCase();
 
-                Meteor.call('afterUploadArticleFig', articleMongoId, uploadedFilename, figId, function(error,result){
-                    // if result, then the figure got renamed to the standard naming convention and the DB got updated with this name
-                    // now delete original poorly named figure, which needs to happen on client, happens below via deleteFigure()
+                Meteor.call('afterUploadArticleAsset', articleMongoId, uploadedFilename, assetId, assetType, function(error,result){
+                    // if result, then the file got renamed to the standard naming convention and the DB got updated with this name
+                    // now delete original poorly named file, which needs to happen on client, happens below via deletAsset()
                     if(error){
                         Meteor.formActions.errorMessage(error.error);
                     }
@@ -250,15 +255,15 @@ Meteor.upload = {
 
                         S3.collection.remove({});
 
-                        Meteor.articleFiles.cancelFigureUploader(figId); // hide uploader
+                        Meteor.articleFiles.editAsset(assetId, assetType); // hide uploader
 
-                        Meteor.formActions.successMessage('Figure uploaded');
+                        Meteor.formActions.successMessage('File uploaded!');
 
-                        // Delete uploaded figure
+                        // Delete uploaded file
                         // if filename uploaded does not match naming convention, delete it
-                        figId = figId.toLowerCase(); // filename convention is lowercase for ID part
-                        if(uploadedFilename != result.renamedFile && articleMongoId != filenamePieces[0] || figId != filenameLastPieceWithoutType ){
-                            Meteor.articleFiles.deleteFigure(uploadedFilename);
+                        assetId = assetId.toLowerCase(); // filename convention is lowercase for ID part
+                        if(uploadedFilename != result.renamedFile && articleMongoId != filenamePieces[0] || assetId != filenameLastPieceWithoutType ){
+                            Meteor.articleFiles.deleteAsset(uploadedFilename, s3Folder);
                         }
                     }
                 });
