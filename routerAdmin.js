@@ -1000,6 +1000,12 @@ if (Meteor.isClient) {
             }
             return pageTitle;
         },
+        onBeforeAction: function(){
+            if(Session.get('journal').journal.name != 'oncotarget'){
+                Router.go('AdminAop');
+            }
+            this.next();
+        },
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
@@ -1033,6 +1039,12 @@ if (Meteor.isClient) {
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
             return pageTitle;
+        },
+        onBeforeAction: function(){
+            if(Session.get('journal').journal.name != 'oncotarget'){
+                Router.go('AdminAop');
+            }
+            this.next();
         },
         layoutTemplate: 'Admin',
         waitOn: function(){
@@ -1073,6 +1085,12 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+            if(Session.get('journal').journal.name != 'oncotarget'){
+                Router.go('AdminAop');
+            }
+            this.next();
+        },
+        onBeforeAction: function(){
             Meteor.call('compareWithLegacy', function(error,result){
                 if(result){
                     Session.set('advanceDiff',result);
@@ -1089,6 +1107,12 @@ if (Meteor.isClient) {
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
             return pageTitle;
+        },
+        onBeforeAction: function(){
+            if(Session.get('journal').journal.name != 'oncotarget'){
+                Router.go('AdminAop');
+            }
+            this.next();
         },
         layoutTemplate: 'Admin',
         waitOn: function(){
