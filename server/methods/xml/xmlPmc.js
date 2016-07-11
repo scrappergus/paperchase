@@ -297,7 +297,7 @@ Meteor.methods({
                         // console.log('xml',xml);
                         Meteor.xmlPmc.supplementalMaterials(xml, function(result){
                             if(result){
-                                console.log('result',result)
+                                // console.log('result',result)
                                 fut.return(result);
                             }
                         });
