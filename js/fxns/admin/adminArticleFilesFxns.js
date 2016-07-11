@@ -194,6 +194,24 @@ Meteor.articleFiles = {
         });
         cb(verified);
     },
+    maintainFilenameViaId: function(filesXml,filesDb,cb){
+        // console.log('maintainFilenameViaId');
+        // for maintaining the filename of the file
+        // TODO filesDb is wrong
+        var result = [];
+        var filesDbById = Meteor.articleFiles.filesById(filesDb);
+        if(filesXml) {
+            filesXml.forEach(function(file){
+                var joined = file;
+                var fileId = file.id.toLowerCase();
+                if(filesDbById[fileId] && filesDbById[fileId].file){
+                    joined.file = filesDbById[fileId].file;
+                }
+                result.push(joined);
+            });
+        }
+        cb(result);
+    },    
     deleteAsset:  function(filename, folder){
         S3.delete(folder + '/' + filename, function(error,result){
             if(error){
