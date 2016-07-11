@@ -184,15 +184,15 @@ Template.AdminArticleFiles.events({
                 file : xmlFile,
                 display: false
             }
-        }
+        };
         //dotted update causing problems with update, so just pass filename with display settings for now
 
         if($('#display-xml').prop('checked')){
             updateObj.xml.display = true;
-        };
+        }
         if($('#display-pdf').prop('checked')){
             updateObj.pdf.display  = true;
-        };
+        }
         Meteor.call('updateArticle',articleMongoId, {files: updateObj}, function(error,result){
             if(error){
                 Meteor.formActions.errorMessage();
