@@ -181,11 +181,17 @@ Template.AdminArticlesDashboard.helpers({
 
 // Article
 // ---------------
+Template.AdminArticleButtons.helpers({
+    journal: function(){
+        return Session.get('journal');
+    }
+});
 Template.AdminArticleOverview.helpers({
     article : function(){
         return Session.get('article');
     }
 });
+//Figures
 Template.AdminArticleFigures.helpers({
     article : function(){
         return Session.get('article');
@@ -199,6 +205,7 @@ Template.AdminArticleFiguresXml.helpers({
         return Session.get('xml-figures');
     }
 });
+//Files - PDF/XML
 Template.AdminArticleFiles.helpers({
     article : function(){
         return Session.get('article');
@@ -624,7 +631,7 @@ Template.s3Upload.helpers({
         return S3.collection.find();
     }
 });
-Template.s3FigureUpload.helpers({
+Template.s3ArticleAssetsUpload.helpers({
     'files': function(){
         // console.log(S3.collection.find());
         return S3.collection.find();

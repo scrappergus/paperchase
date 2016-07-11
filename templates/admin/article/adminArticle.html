@@ -108,6 +108,7 @@
 <template name="AdminArticleButtons">
     <div class="row">
         <div class="col s12">
+            {{#with article}}
             <a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
             {{#if isInRole 'edit,super-admin' 'article'}}
             <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">{{>AdminEditIcon}} Edit</a>
@@ -115,6 +116,11 @@
             <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">{{>AdminUploadIcon}} PDF &amp; XML Uploader</a>
             <a href="{{pathFor 'AdminArticleXmlReprocess'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleXmlReprocess'}}">{{>AdminRefreshIcon}} Reprocess XML</a>
             <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">{{>AdminFiguresIcon}} Figures</a>
+            {{/if}}
+            {{/with}}
+
+            {{#if journal}}
+            <a href="{{journal.visitor}}article/{{article._id}}" class="btn" target="_BLANK">{{>AdminFwdIcon}} Visitor Site</a>
             {{/if}}
         </div>
     </div>
@@ -140,9 +146,10 @@
     {{#if article}}
 
     {{>StatusModal}}
-    {{#with article}}
 
-    {{>AdminArticleHeader}}
+    {{>AdminArticleHeader article=article}}
+
+    {{#with article}}
 
     <div class="row">
         <div class="col s12">
@@ -153,7 +160,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="row"><div class="col s12">
         <div class="card z-depth-0">
@@ -359,7 +365,8 @@
 </template>
 
 <template name="AdminArticleHeader">
-    {{>AdminArticleButtons}}
+    {{>AdminArticleButtons article=article}}
+    {{#with article}}
     <div class="row">
         <div class="col s12">
             <div class="card blue-grey lighten-5 z-depth-0">
@@ -371,6 +378,7 @@
             </div>
         </div>
     </div>
+    {{/with}}
 </template>
 
 <template name="AdminArticleIds">
@@ -381,7 +389,19 @@
             {{#if equals name 'doi'}}
             <div class="admin-id"><label>{{name}}:</label> <a href="{{value}}">{{prettyDoi value}}</a></div>
             {{else}}
+
+            {{#if equals name 'pmc'}}
+            <div class="admin-id"><label>{{name}}:</label> <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/{{value}}" target="_BLANK">{{value}}</a></div>
+            {{else}}
+
+            {{#if equals name 'pmc'}}
+            <div class="admin-id"><label>{{name}}:</label> <a href="http://www.ncbi.nlm.nih.gov/pubmed/{{value}}" target="_BLANK">{{value}}</a></div>
+            {{else}}
             <div class="admin-id"><label>{{name}}:</label> {{value}}</div>
+            {{/if}}
+
+            {{/if}}
+
             {{/if}}
             {{/each}}
         </div>

@@ -5,7 +5,7 @@
 
     {{>StatusModal}}
 
-    {{#with article}}{{>AdminArticleHeader}}{{/with}}
+    {{>AdminArticleHeader article=article}}
 
     {{#with article}}
     <div class="row">
@@ -123,7 +123,7 @@
                     <label for="fig-input-{{id}}" class="active">Figure ID</label>
                 </div>
             </div>
-            {{>s3FigureUpload figId=id}}
+            {{>s3ArticleAssetsUpload assetId=id}}
             <!-- <div class="row">
                 <div class="col s12 center-align">
                     <br><br>

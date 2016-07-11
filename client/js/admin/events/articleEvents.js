@@ -272,30 +272,28 @@ Template.AdminArticleFigures.events({
         // }
     // }
 });
-Template.s3FigureUpload.events({
+Template.s3ArticleAssetsUpload.events({
     'click button.upload': function(e){
         e.preventDefault();
         Meteor.formActions.saving();
         var articleMongoId = Session.get('article')._id;
-        var files,
-            originalFigId,
-            uploadedFilename,
-            figureVerified,
-            figures;
+        var assetId,
+            files,
+            uploadedFilename;
 
         // ID
-        figId = $(e.target).closest('button').attr('data-id');
+        assetId = $(e.target).closest('button').attr('data-id');
 
-        if(figId){
+        if(assetId){
             // Upload figure file
             // ----------------
-            files = $('input.file_bag[data-id="' + figId +'"]')[0].files;
+            files = $('input.file_bag[data-id="' + assetId +'"]')[0].files;
 
             if(files[0]){
                 uploadedFilename = files[0].name;
-                Meteor.articleFiles.verifyNewFigureName(figId, uploadedFilename, function(verifiedFilename){
+                Meteor.articleFiles.verifyNewFigureName(assetId, uploadedFilename, function(verifiedFilename){
                     if(verifiedFilename){
-                        Meteor.upload.articleFigure(articleMongoId, files, uploadedFilename, figId);
+                        Meteor.upload.articleFigure(articleMongoId, files, uploadedFilename, assetId);
                     }else{
                         Meteor.formActions.errorMessage('Figure ID already assigned to another figure.');
                     }

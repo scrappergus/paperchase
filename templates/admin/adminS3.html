@@ -62,9 +62,10 @@
     </div></div>
 </template>
 
-<template name="s3FigureUpload">
+<!-- s3ArticleAssetsUpload = supplemental and figures. todo: add table figures -->
+<template name="s3ArticleAssetsUpload">
     <div class="row"><div class="col s12 center-align">
-        {{>FileUploader id=figId}}
+        {{>FileUploader id=assetId}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
         {{#each files}}
@@ -75,7 +76,7 @@
         {{/each}}
     </div></div>
     <div class="row"><div class="col s12 center-align">
-        <button class="btn btn-primary upload" data-id="{{figId}}">{{>AdminUploadIcon}} Upload &amp; Save</button>
+        <button class="btn btn-primary upload" data-id="{{assetId}}">{{>AdminUploadIcon}} Upload &amp; Save</button>
     </div></div>
 </template>
 
