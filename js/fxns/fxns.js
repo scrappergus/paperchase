@@ -5,9 +5,9 @@ Meteor.organize = {
         for(var i=0 ; i < a1.length ; i++){
             a[a1[i]]=true;
         }
-        for(var i=0 ; i<a2.length ; i++){
-            if(a[a2[i]]) delete a[a2[i]];
-            else a[a2[i]]=true;
+        for(var ii=0 ; ii<a2.length ; ii++){
+            if(a[a2[ii]]) delete a[a2[ii]];
+            else a[a2[ii]]=true;
         }
         for(var k in a){
             diff.push(k);
@@ -25,19 +25,19 @@ Meteor.organize = {
         var grouped = [];
         for(var i = 0 ; i < articles.length ; i++){
             var type = ''; //for articles without a type
-            if(articles[i]['article_type']){
-                type = articles[i]['article_type']['short_name'];
+            if(articles[i].article_type){
+                type = articles[i].article_type.short_name;
             }
 
             if(!grouped[type]){
                 grouped[type] = [];
-                articles[i]['start_group'] = true;
+                articles[i].start_group = true;
             }
             //grouped[type].push(articles[i]);
         }
         return articles;
     }
-}
+};
 
 Meteor.article = {
     readyData: function(article){
@@ -60,7 +60,7 @@ Meteor.article = {
         }
 
         for(authIdx=0; authIdx < article.authors.length; authIdx++) {
-            if(article.authors[authIdx].equal_contrib == true) {
+            if(article.authors[authIdx].equal_contrib === true) {
                 article.equal_contribs = true;
             }
             if(article.authors[authIdx].author_notes_ids && article.author_notes) {
@@ -68,10 +68,10 @@ Meteor.article = {
                 for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
                     for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
                         var note = article.author_notes[noteIdx];
-                        if(note['id'] == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
+                        if(note.id == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
                             article.authors[authIdx].author_notes.push({
-                               'id': note['id'],
-                               'label': note['label']
+                               'id': note.id,
+                               'label': note.label
                             });
                         }
                     }
@@ -98,9 +98,9 @@ Meteor.article = {
                     files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
                 }
             }else if(file === 'figures'){
-                for(var f in files[file]){
-                    if(files[file][f].file)
-                    files[file][f].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][f].file;
+                for(var ff in files[file]){
+                    if(files[file][ff].file)
+                    files[file][ff].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][ff].file;
                 }
             }
         }
@@ -115,7 +115,7 @@ Meteor.article = {
             tmp;
         article = articles.findOne({'_id': articleId});
         if(article){
-            articleTitle = article.title
+            articleTitle = article.title;
             tmp = document.createElement('DIV');
             tmp.innerHTML = articleTitle;
             articleTitlePlain = tmp.textContent || tmp.innerText || '';
@@ -123,15 +123,15 @@ Meteor.article = {
         return articleTitlePlain;
     },
     affiliationsNumbers: function(article){
-        if(article['authors']){
-            var authorsList = article['authors'];
-            var affiliationsList = article['affiliations'];
+        if(article.authors){
+            var authorsList = article.authors;
+            var affiliationsList = article.affiliations;
             for(var i = 0 ; i < authorsList.length ; i++){
-                if(article['authors'][i]['affiliations_numbers']){
-                    article['authors'][i]['affiliations_numbers'] = [];
-                    var authorAffiliations = article['authors'][i]['affiliations'];
+                if(article.authors[i].affiliations_numbers){
+                    article.authors[i].affiliations_numbers = [];
+                    var authorAffiliations = article.authors[i].affiliations;
                     for(var a = 0 ; a < authorAffiliations.length ; a++){
-                        article['authors'][i]['affiliations_numbers'].push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
+                        article.authors[i].affiliations_numbers.push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
                     }
                 }
             }
@@ -163,7 +163,7 @@ Meteor.article = {
         }
 
     }
-}
+};
 
 Meteor.formActions = {
     saving: function(message){
@@ -678,7 +678,7 @@ Meteor.formActions = {
             });
         }
     }
-}
+};
 
 Meteor.ip = {
     dot2num: function(dot){
@@ -693,7 +693,7 @@ Meteor.ip = {
         }
         return d;
     }
-}
+};
 
 Meteor.clean = {
     cleanString: function(string){
@@ -728,7 +728,7 @@ Meteor.clean = {
     removeNewLines: function(string){
         return string.replace(/(\r\n|\n|\r)/gm,'');
     }
-}
+};
 
 Meteor.general = {
     navHeight: function(){
@@ -857,13 +857,13 @@ Meteor.general = {
         });
     },
     scrollToLastChild: function(child){
-        if($('.' + child + ':last-child').length != 0){
+        if($('.' + child + ':last-child').length !== 0){
             $('html, body').animate({
                 scrollTop: $('.' + child + ':last-child').position().top
             }, 500);
         }
     }
-}
+};
 
 Meteor.sorter = {
     sort: function(unordered,order){
@@ -874,7 +874,7 @@ Meteor.sorter = {
         for(var i = 0 ; i < order.length ; i++){
           // console.log(order[i]);
           for(var a = 0 ; a < unordered.length ; a++){
-            if(unordered[a]['_id'] == order[i]){
+            if(unordered[a]._id == order[i]){
               ordered.push(unordered[a]);
             }
           }
@@ -882,22 +882,22 @@ Meteor.sorter = {
         // console.log(ordered);
         return ordered;
     }
-}
+};
 
 Meteor.dates = {
     article: function(date){
         // console.log('Article Date:', typeof date, date);
-        var date = new Date(date);
+        date = new Date(date);
         // console.log(date);
         // console.log(moment(utcDate,'ddd, DD MMM YYYY HH:mm:ss ZZ'));
         return moment(date).utc().format('MMMM D, YYYY');
     },
     articleCsv: function(date){
-        var date = new Date(date);
+        date = new Date(date);
         return moment(date).utc().format('MM-D-YYYY'); // cannot use commas for csv date. they will be considered as new columns.
     },
     inputForm: function(date){
-      return moment(date).utc().format('YYYY/MM/DD');
+        return moment(date).utc().format('YYYY/MM/DD');
     },
     wordDate: function(date){
         return moment(date).tz('America/New_York').format('MMMM D, YYYY');
@@ -931,7 +931,7 @@ Meteor.dates = {
     zeroBasedMonth: function(month){
         return parseInt(month - 1);
     }
-}
+};
 
 Meteor.issue = {
     urlPieces: function(vi){
@@ -976,7 +976,7 @@ Meteor.issue = {
 
         return pages;
     }
-}
+};
 
 Meteor.advance = {
     articlesBySection: function(articlesList){
@@ -1012,13 +1012,13 @@ Meteor.advance = {
         });
         return sectionsOrder;
     }
-}
+};
 
 Meteor.search = {
     bounceTo: function(args) {
         Router.go("/search/?terms="+args.terms);
     }
-}
+};
 
 Meteor.googleAnalytics = {
     // authorize: function(event){
@@ -1088,11 +1088,11 @@ Meteor.googleAnalytics = {
             eventLabel: event.target.href
         });
     }
-}
+};
 
 Meteor.ux = {
     positionSessionVariable: function(template){
-        return templateSessionVariable = 'position-' + template;
+        return 'position-' + template;
     },
     savePosition: function(template){
         var templateSessionVariable = Meteor.ux.positionSessionVariable(template);
@@ -1104,13 +1104,13 @@ Meteor.ux = {
             Meteor.general.scrollToPosition(Session.get(templateSessionVariable));
         }
     }
-}
+};
 
 Meteor.db = {
     trackUpdates: function(userId, doc, fieldNames, modifier, options){
         var docUpdates = {},
             updatedBy = {};
-        docUpdates.updates = []
+        docUpdates.updates = [];
 
         // track updates
         // -------------------
@@ -1136,4 +1136,4 @@ Meteor.db = {
         docUpdates.updates.push(updatedBy);
         return docUpdates;
     }
-}
+};
