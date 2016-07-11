@@ -507,7 +507,8 @@ if (Meteor.isServer) {
           'edboard_roles' : 1,
           'assets': 1,
           'assets_supplemental': 1,
-          'assets_figures': 1
+          'assets_figures': 1,
+          'visitor': 1
         }});
         return siteConfig;
     });
