@@ -15,7 +15,7 @@ Template.AdminNav.helpers({
     mainColor: function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['site']['spec']['color']['main_rgb'];
+            return journalSettings.site.spec.color.main_rgb;
         }
     },
 });
@@ -160,7 +160,7 @@ Template.AdminDoiStatus.helpers({
                     }
                 }
             ]
-        }
+        };
     }
 });
 
@@ -325,7 +325,7 @@ Template.AdminArticlesList.helpers({
                     }
                 }
             ]
-        }
+        };
     }
 });
 Template.AdminAop.helpers({
@@ -366,7 +366,7 @@ Template.AdminAop.helpers({
                     }
                 }
             ]
-        }
+        };
     }
 });
 
@@ -420,7 +420,7 @@ Template.AdminDataSubmissionsPast.helpers({
                     key: 'created_date',
                     label: 'Date',
                     fn: function(d){
-                        return moment(d).format('MM/D/YYYY')
+                        return moment(d).format('MM/D/YYYY');
                     }
                 },
                 {
@@ -428,7 +428,7 @@ Template.AdminDataSubmissionsPast.helpers({
                     label: 'Created By',
                     fn: function(uId){
                         var u = Meteor.users.findOne({'_id':uId},{'name_first': 1, 'name_last':1});
-                        return u['name_first'] + ' ' + u['name_last'];
+                        return u.name_first + ' ' + u.name_last;
                     }
                 },
                 {
@@ -436,7 +436,7 @@ Template.AdminDataSubmissionsPast.helpers({
                     label: 'File'
                 }
             ]
-        }
+        };
     },
     articleSettings: function () {
         return {
@@ -475,7 +475,7 @@ Template.AdminDataSubmissionsPast.helpers({
                     fn: function(value){
                         var stat = 'unknown';
                         if(pubStatusTranslate[parseInt(value - 1)]){
-                            stat = pubStatusTranslate[parseInt(value - 1)]['abbrev'];
+                            stat = pubStatusTranslate[parseInt(value - 1)].abbrev;
                         }
                         return stat;
                     }
@@ -485,7 +485,7 @@ Template.AdminDataSubmissionsPast.helpers({
                     label: 'Last Submission',
                     fn: function(submissions){
                         if(submissions){
-                            var d = submissions[submissions.length - 1]['created_date'];
+                            var d = submissions[submissions.length - 1].created_date;
                             d = moment(d).format('MM/D/YYYY');
                             return d;
                         }
@@ -494,7 +494,7 @@ Template.AdminDataSubmissionsPast.helpers({
             ]
         };
     }
-})
+});
 
 // Institution
 // ---------------
@@ -724,7 +724,7 @@ Template.AdminNav.helpers({
     bannerLogo: function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['logo']['banner'];
+            return journalSettings.journal.logo.banner;
         }
     }
 });
