@@ -47,7 +47,8 @@ Meteor.adminAbout = {
             if(error){
                 console.error('updateAbout',error);
                 Meteor.formActions.errorMessage('Could not ' + updateType + ' about section.<br>' + error.reason);
-            }else if(result){
+            }
+            else if(result){
                 Meteor.formActions.successMessage('About section updated');
                 Session.set('showAboutForm',false);
                 Session.set('aboutSectionId',null);
@@ -57,4 +58,4 @@ Meteor.adminAbout = {
         });
         // }
     }
-}
+};

@@ -15,14 +15,14 @@ Meteor.admin = {
     },
     clone: function(obj) {
         //http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
-        if (null == obj || 'object' != typeof obj) return obj;
+        if (null === obj || 'object' != typeof obj) return obj;
         var copy = obj.constructor();
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) copy[key] = obj[key];
         }
         return copy;
     }
-}
+};
 
 Meteor.adminSite = {
     formGetData: function(e){
@@ -48,7 +48,8 @@ Meteor.adminSite = {
             sideNavOption.name = $('#' + routeOptionName + '-label')[0].innerText;
             if($(this).is(':checked')){
                 sideNavOption.display = true;
-            }else{
+            }
+            else{
                 sideNavOption.display = false;
             }
             updateObj.side_nav.push(sideNavOption);
@@ -63,7 +64,8 @@ Meteor.adminSite = {
             sectionSideNavOption._id = $(this).attr('id');
             if($(this).is(':checked')){
                 sectionSideNavOption.display = true;
-            }else{
+            }
+            else{
                 sectionSideNavOption.display = false;
             }
             updateObj.section_side_nav.push(sectionSideNavOption);
@@ -86,7 +88,7 @@ Meteor.adminSite = {
         //  Meteor.formActions.success();
         // }
     },
-}
+};
 
 Meteor.adminNews = {
     readyForm: function(){
@@ -94,17 +96,17 @@ Meteor.adminNews = {
         // ------
         var pick = $('#news-date').pickadate();
         var picker = pick.pickadate('picker');
-        picker.set('select', $('#news-date').data('value'), { format: 'yyyy/mm/dd' })
+        picker.set('select', $('#news-date').data('value'), { format: 'yyyy/mm/dd' });
 
         // Conference
         // ------
         var pickConferenceStart= $('#conference-date-start').pickadate();
         var pickerConferenceStart= pickConferenceStart.pickadate('picker');
-        pickerConferenceStart.set('select', $('#conference-date-start').data('value'), { format: 'yyyy/mm/dd' })
+        pickerConferenceStart.set('select', $('#conference-date-start').data('value'), { format: 'yyyy/mm/dd' });
 
         var pickConferenceEnd = $('#conference-date-end').pickadate();
         var pickerConferenceEnd = pickConferenceEnd.pickadate('picker');
-        pickerConferenceEnd.set('select', $('#conference-date-end').data('value'), { format: 'yyyy/mm/dd' })
+        pickerConferenceEnd.set('select', $('#conference-date-end').data('value'), { format: 'yyyy/mm/dd' });
 
         // Content
         // ------
@@ -139,17 +141,17 @@ Meteor.adminNews = {
             newsMongoId,
             success;
 
-        newsObj.title;
-        newsObj.content;
-        newsObj.date;
-        newsObj.date_display;
-        newsObj.conference;
-        newsObj.conference_date_start;
-        newsObj.conference_date_end;
-        newsObj.youTube;
-        newsObj.tags;
-        newsObj.interview;
-        newsObj.display;
+        newsObj.title = null;
+        newsObj.content = null;
+        newsObj.date = null;
+        newsObj.date_displa = nully;
+        newsObj.conference = null;
+        newsObj.conference_date_start = null;
+        newsObj.conference_date_end = null;
+        newsObj.youTube = null;
+        newsObj.tags = null;
+        newsObj.interview = null;
+        newsObj.display = null;
 
         Meteor.formActions.saving();
         $('input').removeClass('invalid');
@@ -164,7 +166,7 @@ Meteor.adminNews = {
         // ------
         var newsContent = $('.news-content').code();
         newsContent = Meteor.clean.cleanWysiwyg(newsContent);
-        if(newsContent != ''){
+        if(newsContent !== ''){
             newsObj.content = newsContent;
         }
 
@@ -195,12 +197,12 @@ Meteor.adminNews = {
         // ------
         var youTube = $('#news-youtube').val();
         if(youTube.indexOf('http') != -1){
-            var invalidObj = {
+            invalidData.push({
                 'input_id' : 'news-youtube',
                 'message' : 'YouTube ID cannot include http. Please only include the ID, for ex: eEp7km4t4Qk'
-            }
-            invalidData.push(invalidObj);
-        }else{
+            });
+        }
+        else{
             newsObj.youTube = youTube;
         }
 
@@ -217,11 +219,10 @@ Meteor.adminNews = {
         newsObj.interview = $('#news-interview').is(':checked');
 
         if(newsObj.interview && newsObj.conference){
-            var invalidObj = {
+            invalidData.push({
                 'input_id' : 'news-interview',
                 'message' : 'News cannot be both an interview and a conference.'
-            }
-            invalidData.push(invalidObj);
+            });
         }
 
         // Display
@@ -234,7 +235,8 @@ Meteor.adminNews = {
         // ------
         if(invalidData.length > 0){
             Meteor.formActions.invalid(invalidData);
-        }else{
+        }
+        else{
             Meteor.adminNews.save(newsMongoId, newsObj);
         }
     },
@@ -243,23 +245,27 @@ Meteor.adminNews = {
             if(error){
                 // console.error('YouTube ID check',error);
                 Meteor.formActions.errorMessage('Could not save news.<br>The YouTube ID does not produce a video. Please verify that the ID is correct.');
-            }else{
+            }
+            else{
                 if(!newsMongoId){
                     Meteor.call('addNews',newsObj,function(error,result){
                         if(error){
                             Meteor.formActions.errorMessage('Could not add news', error);
-                        }else if(result){
+                        }
+                        else if(result){
                             // console.log('result',result);
                             $('.lean-overlay').remove();
                             Router.go('AdminNewsOverview', {_id : result});
                             // Meteor.formActions.successMessage('News Added');
                         }
                     });
-                }else{
+                }
+                else{
                     Meteor.call('updateNews',newsMongoId, newsObj,function(error,result){
                         if(error){
                             Meteor.formActions.errorMessage('Could not update news', error);
-                        }else if(result){
+                        }
+                        else if(result){
                             $('.lean-overlay').remove();
                             Router.go('AdminNewsOverview', {_id : newsMongoId});
                         }
@@ -278,7 +284,7 @@ Meteor.adminNews = {
         $('#row-tag-btn').removeClass('hide');
         $('#row-tag-input').addClass('hide');
     }
-}
+};
 
 Meteor.adminEdBoard = {
     formPrepareData: function(mongoId){
@@ -296,7 +302,7 @@ Meteor.adminEdBoard = {
                 for(var r=0 ; r<edboardRoles.length ; r++){
                     var roleObj = {
                         name: edboardRoles[r]
-                    }
+                    };
                     if(member.role && $.inArray(roleObj.name, member.role) > -1){
                         roleObj.selected = true;
                     }
@@ -337,7 +343,7 @@ Meteor.adminEdBoard = {
         memberAddress = $('.member-address').code();
         if(memberAddress){
             memberAddress = Meteor.clean.cleanWysiwyg(memberAddress);
-            if(memberAddress != ''){
+            if(memberAddress !== ''){
                 member.address = memberAddress;
             }
         }
@@ -347,7 +353,7 @@ Meteor.adminEdBoard = {
         memberBio = $('.member-bio').code();
         if(memberBio){
             memberBio = Meteor.clean.cleanWysiwyg(memberBio);
-            if(memberBio != ''){
+            if(memberBio !== ''){
                 member.bio = memberBio;
             }
         }
@@ -382,12 +388,15 @@ Meteor.adminEdBoard = {
                     }
                 });
                 Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
-            }else if(error){
+            }
+            else if(error){
                 console.error('updateEdboardMember',error);
                 Meteor.formActions.errorMessage('Could not update editorial board.');
-            }else if(result && typeof result != 'boolean'){
+            }
+            else if(result && typeof result != 'boolean'){
                 Router.go('AdminEditorialBoardEdit', {_id : result}); // new member added
-            }else if(result && typeof result === 'boolean'){
+            }
+            else if(result && typeof result === 'boolean'){
                 Meteor.formActions.successMessage('Editorial Board Updated');
             }
         });
@@ -419,7 +428,7 @@ Meteor.adminEdBoard = {
             ]
         });
     }
-}
+};
 
 Meteor.adminIssue = {
     readyIssueForm: function(){
@@ -437,7 +446,7 @@ Meteor.adminIssue = {
             ]
         });
     }
-}
+};
 
 
 Meteor.adminEthics = {
@@ -481,7 +490,8 @@ Meteor.adminEthics = {
             success = ethics.insert(forDb);
             // Update sorters collection
             Meteor.call('sorterAddItem','ethics',success);
-        }else{
+        }
+        else{
             // Update
             success = ethics.update({_id : mongoId} , {$set: forDb});
         }
@@ -491,7 +501,7 @@ Meteor.adminEthics = {
             Session.set('sectionId',null);
         }
     }
-}
+};
 
 Meteor.adminHomePage = {
     readyForm: function(){
@@ -534,7 +544,8 @@ Meteor.adminHomePage = {
             success = homePage.insert(forDb);
             // Update sorters collection
             Meteor.call('sorterAddItem','homePage',success);
-        }else{
+        }
+        else{
             // Update
             success = homePage.update({_id : mongoId} , {$set: forDb});
         }
@@ -544,9 +555,7 @@ Meteor.adminHomePage = {
             Session.set('sectionId',null);
         }
     }
-}
-
-
+};
 
 Meteor.adminForAuthors = {
     readyForm: function(){
@@ -589,7 +598,8 @@ Meteor.adminForAuthors = {
             success = forAuthors.insert(forDb);
             // Update sorters collection
             Meteor.call('sorterAddItem','forAuthors',success);
-        }else{
+        }
+        else{
             // Update
             success = forAuthors.update({_id : mongoId} , {$set: forDb});
         }
@@ -599,7 +609,7 @@ Meteor.adminForAuthors = {
             Session.set('sectionId',null);
         }
     }
-}
+};
 
 
 Meteor.adminSections = {
@@ -612,16 +622,16 @@ Meteor.adminSections = {
         forDb.display = $('#section-display').is(':checked');
 
         if(!forDb.name){
-            var invalidObj = {
+            invalidData.push({
                 'input_class' : 'section-name',
                 'message' : 'Section Name Is Empty'
-            }
-            invalidData.push(invalidObj);
+            });
             Meteor.formActions.invalid(invalidData);
-        }else{
+        }
+        else{
             forDb.short_name = forDb.name.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
                 if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-                return index == 0 ? match.toLowerCase() : match.toUpperCase();
+                return index === 0 ? match.toLowerCase() : match.toUpperCase();
             }); // based on http://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
 
             forDb.dash_name = forDb.name.toLowerCase().replace(/\s/g,'-').replace(':','');
@@ -631,7 +641,8 @@ Meteor.adminSections = {
             if(!mongoId){
                 // Insert
                 success = sections.insert(forDb);
-            }else{
+            }
+            else{
                 // Update
                 success = sections.update({_id : mongoId} , {$set: forDb});
             }
@@ -640,7 +651,7 @@ Meteor.adminSections = {
             }
         }
     }
-}
+};
 
 Meteor.adminUser = {
     getFormCheckBoxes: function(){
@@ -682,7 +693,7 @@ Meteor.adminUser = {
 
         return user;
     }
-}
+};
 
 Meteor.dataSubmissions = {
     getPiiList: function(){
@@ -715,17 +726,18 @@ Meteor.dataSubmissions = {
         Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
             $('.saving').addClass('hide');
             if(error){
-                console.log('ERROR - articleSetXmlValidation');
-                console.log(error)
-            }else if(result === 'invalid'){
+                console.error('ERROR - articleSetXmlValidation',error);
+            }
+            else if(result === 'invalid'){
                 alert('XML set invalid');
-            }else{
+            }
+            else{
                 //all the articles are valid, now do the download
                 window.open('/xml-cite-set/' + result);
             }
         });
     }
-}
+};
 
 Meteor.validate = {
     email: function(email){
@@ -733,11 +745,12 @@ Meteor.validate = {
         if(email){
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
-        }else{
+        }
+        else{
             return;
         }
     }
-}
+};
 
 Meteor.generalClean = {
     pruneEmpty: function(obj) {
@@ -745,26 +758,31 @@ Meteor.generalClean = {
             if(!obj[key] || obj[key]  === ''){
                 // console.log('DELETE ',obj[key]);
                 delete obj[key];
-            }else if(typeof obj[key] == 'object' && !Array.isArray(obj[key])){
+            }
+            else if(typeof obj[key] == 'object' && !Array.isArray(obj[key])){
                 if(Object.keys(obj[key]).length === 0 && typeof obj[key].getMonth != 'function'){
                     // console.log('DELETE ',obj[key]);
                     delete obj[key];
-                }else{
+                }
+                else{
                     obj[key] = Meteor.generalClean.pruneEmpty(obj[key]);
                 }
-            }else if(typeof obj[key] == 'object' && Array.isArray(obj[key])){
+            }
+            else if(typeof obj[key] == 'object' && Array.isArray(obj[key])){
                 var newArray = [];
                 for(var i=0 ; i < obj[key].length ; i++){
-                    if(typeof obj[key][i] === 'string' && obj[key][i] != '' || typeof obj[key][i] === 'number' ){
+                    if(typeof obj[key][i] === 'string' && obj[key][i] !== '' || typeof obj[key][i] === 'number' ){
                         newArray.push(obj[key][i]);
-                    }else if(typeof obj[key][i] === 'object'){
+                    }
+                    else if(typeof obj[key][i] === 'object'){
                         newArray.push(Meteor.generalClean.pruneEmpty(obj[key][i]));
                     }
                 }
 
                 if(newArray.length > 0){
                     obj[key] = newArray;
-                }else{
+                }
+                else{
                     delete obj[key];
                 }
 
@@ -773,4 +791,4 @@ Meteor.generalClean = {
         }
         return obj;
     }
-}
+};

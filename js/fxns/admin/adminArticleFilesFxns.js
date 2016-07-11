@@ -3,7 +3,7 @@ Meteor.articleFiles = {
         // this will process the XML information for the form and XML upload verification
         // console.log('..verifyXml',articleMongoId,files);
         var s3Folder = 'xml';
-        var reader = new FileReader;
+        var reader = new FileReader();
         var file,
             xmlString;
         var journalInfo,
@@ -11,7 +11,7 @@ Meteor.articleFiles = {
             assetUrl,
             xmlFileName;
 
-        if(!files || files.length == 0) {
+        if(!files || files.length === 0) {
             // only for when reprocessing XML already on S3
             journalInfo = journalConfig.findOne();
             if(journalInfo)
@@ -22,18 +22,21 @@ Meteor.articleFiles = {
                 Meteor.call('getXml',assetUrl, function(xmlError,xmlString){
                     if(xmlError){
                         console.error('xmlError',xmlError);
-                    }else if(xmlString){
+                    }
+                    else if(xmlString){
                         Meteor.call('processXmlString',xmlString, function(error,result){
                             if(error){
                                 console.error('process XML for DB', error);
                                 Meteor.formActions.errorMessage('Could not process XML for verification');
-                            }else if(result){
+                            }
+                            else if(result){
                                 Meteor.formActions.closeModal();
 
                                 Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
                                     if(error){
                                         console.error('ERROR - preProcessArticle',error);
-                                    } else if(result){
+                                    }
+                                    else if(result){
                                         Session.set('xml-verify',true);
                                         result._id = articleMongoId;
                                         Session.set('article-form',result);
@@ -45,7 +48,8 @@ Meteor.articleFiles = {
                     }
                 });
             }
-        } else {
+        }
+        else {
             file = files[0];
             reader.onload = function(e) {
                 xmlString = e.target.result;
@@ -54,13 +58,15 @@ Meteor.articleFiles = {
                     if(error){
                         console.error('process XML for DB', error);
                         Meteor.formActions.errorMessage('Could not process XML for verification');
-                    }else if(result){
+                    }
+                    else if(result){
                         Meteor.formActions.closeModal();
 
                         Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
                             if(error){
                                 console.error('ERROR - preProcessArticle',error);
-                            }else if(result){
+                            }
+                            else if(result){
                                 Session.set('xml-verify',true);
                                 result._id = articleMongoId;
                                 Session.set('article-form',result);
@@ -69,14 +75,14 @@ Meteor.articleFiles = {
                         });
                     }
                 });
-            }
+            };
             reader.readAsText(file);
         }
     },
     verifyNewXml: function(files){
         var s3Folder = 'xml';
         var file = files[0];
-        var reader = new FileReader;
+        var reader = new FileReader();
         var xmlString;
 
         reader.onload = function(e) {
@@ -86,20 +92,22 @@ Meteor.articleFiles = {
                 if(error){
                     console.error('process XML for DB', error);
                     Meteor.formActions.errorMessage('Could not process XML for verification');
-                }else if(processedXml){
+                }
+                else if(processedXml){
                     // check for duplicates
                     Meteor.call('articleExistenceCheck',null,processedXml,function(duplicateFound){
                         if(duplicateFound){
                             console.error('articleExistenceCheck',duplicateFound);
                             Meteor.formActions.errorMessage('Article Already Exists. Please upload XML via the article page.<br><a href="/admin/article/' + duplicateFound.details._id + '">' + duplicateFound.details.title + '</a>');
-                        }else{
+                        }
+                        else{
                             Meteor.formActions.closeModal();
                             Session.set('new-article',processedXml);
                         }
                     });
                 }
             });
-        }
+        };
         reader.readAsText(file);
     },
     uploadArticleFile: function(articleMongoId,s3Folder,files){
@@ -107,24 +115,27 @@ Meteor.articleFiles = {
         // after XML has been verified by user, upload to s3
         // event action comes from the article form, after saving information to the db the XML is uploaded to S3
         if(files && files[0] && files[0].name)
-        var file = files[0];
-        var fileNameId = file.name.replace('.xml','').replace('.pdf','');
+        // var file = files[0];
+        var fileNameId = files[0].name.replace('.xml','').replace('.pdf','');
         var messageForXml = '';
         Meteor.s3.upload(files,s3Folder,function(error,res){
             if(error){
                 console.error('Upload File Error', error);
                 Meteor.formActions.errorMessage('File not uploaded');
-            }else if(res){
+            }
+            else if(res){
                 Meteor.call('renameArticleAsset', articleMongoId, s3Folder, res.file.name, function(error,newFileName){
                     if(error){
                         console.error('renameArticleAsset',error);
-                    }else if(newFileName){
-                        var updateAssetObj = {}
+                    }
+                    else if(newFileName){
+                        var updateAssetObj = {};
                         updateAssetObj['files.' + s3Folder + '.file'] = newFileName;
                         Meteor.call('updateArticle',articleMongoId,updateAssetObj, function(error,result){
                             if(error){
                                 console.error('updateArticle',error);
-                            }else if(result){
+                            }
+                            else if(result){
                                 // clear files
                                 S3.collection.remove({});
 
@@ -205,7 +216,8 @@ Meteor.articleFiles = {
         if(figId === 'new'){
             $('#article-figure-request').removeClass('hide');
             $('#article-figure-uploader').addClass('hide');
-        }else{
+        }
+        else{
             var article,
                 figures;
 
@@ -227,7 +239,7 @@ Meteor.articleFiles = {
             }
         });
     }
-}
+};
 
 // these handle the actual uploading to S3
 Meteor.upload = {
@@ -238,7 +250,8 @@ Meteor.upload = {
         Meteor.s3.upload(files,'paper_figures',function(error,result){
             if(error){
                 Meteor.formActions.errorMessage('Figure not upload.');
-            }else if(result){
+            }
+            else if(result){
                 filenamePieces = uploadedFilename.split('_'); // for testing if we need to rename the uploaded image, if standard naming convention then do not delete
                 filenameLastPiecePieces = filenamePieces[filenamePieces.length - 1].split('.'); // to remove .jpg etc
                 filenameLastPieceWithoutType = filenameLastPiecePieces[0].toLowerCase();
@@ -248,7 +261,8 @@ Meteor.upload = {
                     // now delete original poorly named figure, which needs to happen on client, happens below via deleteFigure()
                     if(error){
                         Meteor.formActions.errorMessage(error.error);
-                    }else if(result){
+                    }
+                    else if(result){
 
                         S3.collection.remove({});
 
@@ -267,7 +281,7 @@ Meteor.upload = {
             }
         });
     }
-}
+};
 
 Meteor.processXml = {
     cleanAbstract: function(abstract){
@@ -283,4 +297,4 @@ Meteor.processXml = {
         }
         return abstract;
     }
-}
+};

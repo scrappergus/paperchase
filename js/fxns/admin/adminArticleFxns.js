@@ -5,11 +5,11 @@ Meteor.adminArticle = {
 
         // update the order of affiliations in the author objects
         for(var a = 0; a < article.authors.length ; a++){
-            var affs = article['authors'][a]['affiliations_list'];
+            var affs = article.authors[a].affiliations_list;
             var movedAff = affs[originalIndex];
             affs.splice(originalIndex,1);
             affs.splice(newIndex, 0, movedAff);
-            article['authors'][a]['affiliations_list'] = affs;
+            article.authors[a].affiliations_list = affs;
         }
 
         Session.set('article-form',article);
@@ -41,7 +41,7 @@ Meteor.adminArticle = {
         var addListOptions = {};
 
         if(articleKey === 'history'){
-            allListOptions = dateTypeDateList
+            allListOptions = dateTypeDateList;
         }
         else if(articleKey === 'dates'){
             allListOptions = pubTypeDateList;
@@ -67,7 +67,8 @@ Meteor.adminArticle = {
             // console.log('SHOW');
             $('.add-article-' + type).removeClass('hide');
             $('#add-' + type).html('<i class="material-icons">&#xE15C;</i>');
-        }else{
+        }
+        else{
             // console.log('HIDE');
             $('.add-article-' + type).addClass('hide');
             $('#add-' + type).html('<i class="material-icons">&#xE147;</i>');
@@ -111,8 +112,8 @@ Meteor.adminArticle = {
         // ------
         // selects
         $('#article-issue').material_select();
-        $('#article-type').material_select();;
-        $('#article-section').material_select();;
+        $('#article-type').material_select();
+        $('#article-section').material_select();
         $('#article-pub-status').material_select();
 
         // modals
@@ -144,11 +145,13 @@ Meteor.adminArticle = {
             // check if :_id is a pii and not Mongo ID
             if(articleByPii){
                 Router.go(articleRoute, {_id: articleByPii._id});
-            }else{
+            }
+            else{
                 Session.set('admin-not-found',true);
                 // Router.go('AdminArticleAdd');
             }
-        }else{
+        }
+        else{
             Session.set('article',articleExistsExists);
         }
     },
@@ -177,7 +180,7 @@ Meteor.adminArticle = {
         article = Session.get('article-form');
         mongoId = article._id;
 
-        articleUpdateObj = Meteor.adminArticleFormGet.all()
+        articleUpdateObj = Meteor.adminArticleFormGet.all();
 
         if(Session.get('xml-verify') && $('input.file_bag') && $('input.file_bag')[0]){
             // for when on the article XML uploader page, saving form will both update the database and upload XML to S3
@@ -208,7 +211,8 @@ Meteor.adminArticle = {
                     }
 
                     Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
-                }else if(error  && error.reason === 'duplicate'){
+                }
+                else if(error  && error.reason === 'duplicate'){
                     console.error('validateArticle: duplicate',error);
                     if(error.details._id){
                         duplicateId = error.details._id;
@@ -217,30 +221,35 @@ Meteor.adminArticle = {
                         duplicateTitle = error.details.title;
                     }
                     Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + duplicateId + '">' + duplicateTitle + '</a>');
-                }else if(error){
+                }
+                else if(error){
                     console.error('validate Article',error);
                     Meteor.formActions.errorMessage('Could not update article');
-                }else if(result && result.saved){
+                }
+                else if(result && result.saved){
                     // New article
                     if(!mongoId){
                         mongoId = result.article_id;
                     }
                     Router.go('AdminArticleOverview',{_id : mongoId});
-                }else if(result && files && !Session.get('article-form').aop_xml){
+                }
+                else if(result && files && !Session.get('article-form').aop_xml){
                     // Existing article
                     // if uploading XML too and saving form at same time
                     Meteor.articleFiles.uploadArticleFile(mongoId,'xml',files);
-                }else if(result){
+                }
+                else if(result){
                     Router.go('AdminArticleOverview',{_id : result});
                     // just editing article form
                     // Meteor.formActions.successMessage('Article updated');
                 }
             });
-        }else{
+        }
+        else{
              Meteor.formActions.errorMessage('Unable to save form');
         }
     }
-}
+};
 
 Meteor.adminArticleFormGet = {
     abstract: function(){
@@ -251,7 +260,8 @@ Meteor.adminArticleFormGet = {
     advance: function(){
         if($('#advance-checkbox').prop('checked')){
             return true;
-        }else{
+        }
+        else{
             return false;
         }
     },
@@ -284,7 +294,8 @@ Meteor.adminArticleFormGet = {
 
         if(correspondence.length > 0){
            return correspondence;
-        }else{
+        }
+        else{
             return;
         }
     },
@@ -309,13 +320,14 @@ Meteor.adminArticleFormGet = {
 
         if(author_notes.length > 0){
            return author_notes;
-        }else{
+        }
+        else{
             return;
         }
     },
     articleType: function(){
         var article_type = {};
-        if($('#article-type').val() != ''){
+        if($('#article-type').val() !== ''){
             article_type.short_name = $('#article-type').val();
             article_type.nlm_type = $('#article-type option:selected')[0].dataset.nlm;
             article_type.plural = $('#article-type option:selected')[0].dataset.plural;
@@ -374,7 +386,8 @@ Meteor.adminArticleFormGet = {
 
         if(authors.length > 0){
            return authors;
-        }else{
+        }
+        else{
             return;
         }
     },
@@ -389,14 +402,16 @@ Meteor.adminArticleFormGet = {
     display: function(){
         if($('#display-checkbox').prop('checked')){
             return true;
-        }else{
+        }
+        else{
             return false;
         }
     },
     feature: function(){
         if($('#feature-checkbox').prop('checked')){
             return true;
-        }else{
+        }
+        else{
             return false;
         }
     },
@@ -409,7 +424,7 @@ Meteor.adminArticleFormGet = {
             var idType,
                 idVal;
 
-            idVal = $(this).val()
+            idVal = $(this).val();
             idVal = Meteor.clean.cleanString(idVal);
 
             idType = $(this).attr('id'); //of the form, article-id-key
@@ -420,7 +435,7 @@ Meteor.adminArticleFormGet = {
         return ids;
     },
     issueId: function(){
-        if($('#article-issue').val() != ''){
+        if($('#article-issue').val() !== ''){
             return $('#article-issue').val();
         }
     },
@@ -448,12 +463,12 @@ Meteor.adminArticleFormGet = {
         }
     },
     section: function(){
-        if($('#article-section').val() != ''){
+        if($('#article-section').val() !== ''){
             return $('#article-section').val();
         }
     },
     status: function(){
-        if($('#article-pub-status').val() != ''){
+        if($('#article-pub-status').val() !== ''){
             return $('#article-pub-status').val();
         }
     },
@@ -516,4 +531,4 @@ Meteor.adminArticleFormGet = {
         // console.log('articleUpdateObj',articleUpdateObj);
         return articleUpdateObj;
     }
-}
+};

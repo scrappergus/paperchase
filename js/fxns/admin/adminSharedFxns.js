@@ -1,13 +1,13 @@
 Meteor.adminShared = {
     formGetData: function (e) {
-        var forDb = {}
+        var forDb = {};
 
         // Section title
         // ---------------
         var title = $('.section-title').code();
         // console.log(title);
         title = Meteor.clean.cleanWysiwyg(title);
-        if(title != ''){
+        if(title !== ''){
             forDb.title = title;
         }
 
@@ -15,7 +15,7 @@ Meteor.adminShared = {
         // ---------------
         var section = $('.section-content').code();
         // section = Meteor.clean.cleanWysiwyg(section);
-        if(section != ''){
+        if(section !== ''){
             forDb.content = section;
         }
 
@@ -25,7 +25,7 @@ Meteor.adminShared = {
 
         return forDb;
     }
-}
+};
 
 
 Meteor.s3 = {
@@ -47,4 +47,4 @@ Meteor.s3 = {
             }
         });
     }
-}
+};

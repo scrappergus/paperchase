@@ -47,7 +47,8 @@ Meteor.adminEthics = {
             if(error){
                 console.error('updateEthics',error);
                 Meteor.formActions.errorMessage('Could not ' + updateType + ' about section.<br>' + error.reason);
-            }else if(result){
+            }
+            else if(result){
                 Meteor.formActions.successMessage('Ethics section updated');
                 Session.set('showEthicsForm',false);
                 Session.set('ethicsSectionId',null);
@@ -57,5 +58,4 @@ Meteor.adminEthics = {
         });
         // }
     }
-}
-
+};
