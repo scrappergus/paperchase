@@ -194,50 +194,34 @@ Meteor.articleFiles = {
         });
         cb(verified);
     },
-    maintainFilenameViaId: function(filesXml,filesDb,cb){
-        // console.log('maintainFilenameViaId');
-        // for maintaining the filename of the file
-        // TODO filesDb is wrong
-        var result = [];
-        var filesDbById = Meteor.articleFiles.filesById(filesDb);
-        if(filesXml) {
-            filesXml.forEach(function(file){
-                var joined = file;
-                var fileId = file.id.toLowerCase();
-                if(filesDbById[fileId] && filesDbById[fileId].file){
-                    joined.file = filesDbById[fileId].file;
-                }
-                result.push(joined);
-            });
-        }
-        cb(result);
-    },
-    cancelFigureUploader: function(figId){
-        if(figId === 'new'){
-            $('#article-figure-request').removeClass('hide');
-            $('#article-figure-uploader').addClass('hide');
-        }
-        else{
-            var article,
-                figures;
 
-            article = Session.get('article');
-            if(article.files && article.files.figures){
-                article.files.figures.forEach(function(fig){
-                    if(fig.id == figId){
-                        fig.editing = false;
-                    }
-                });
-            }
-            Session.set('article',article);
-        }
-    },
     deleteFigure: function(filename){
         S3.delete('paper_figures/' + filename, function(error,result){
             if(error){
                 console.error('Could not delete original figure file: ' + filename);
             }
         });
+    },
+    editAsset: function(e, assetType, editing){
+        // used to set editing, or also to cancel editing
+        e.preventDefault();
+        var assetId,
+            article,
+            assets;
+
+        assetId = $(e.target).closest('button').attr('data-id');
+        article = Session.get('article');
+        assets = article.files[assetType];
+
+        assets.forEach(function(asset){
+            if(asset.id == assetId){
+                asset.editing = editing;
+            }
+        });
+
+        article.files[assetType] = assets;
+
+        Session.set('article',article);
     }
 };
 

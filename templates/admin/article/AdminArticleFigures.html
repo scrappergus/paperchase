@@ -42,7 +42,7 @@
                                 </div>
                                 {{#if editing}}
                                 <div class="col s8 m4">
-                                    {{>AdminArticleFigureUploader uploadType='Edit' id=id}}
+                                    {{>AdminArticleAssetsUploader uploadType='Edit' id=id}}
                                 </div>
                                 {{else}}
                                 <div class="col s8 m4">
@@ -113,10 +113,10 @@
 </template>
 
 
-<template name="AdminArticleFigureUploader">
+<template name="AdminArticleAssetsUploader">
     <div class="card z-depth-0 blue-grey lighten-5">
         <div class="card-content">
-            <span class="card-title"><button class="btn btn-cancel btn-floating article-figure-cancel right" data-id="{{id}}">{{>AdminCancelIcon}} Cancel</button></span>
+            <span class="card-title"><button class="btn btn-cancel btn-floating article-asset-cancel right" data-id="{{id}}">{{>AdminCancelIcon}} Cancel</button></span>
             <div class="row">
                 <div class="input-field col s12">
                     <input type="text" value="{{id}}" id="fig-input-{{id}}" name="fig-input-{{id}}" class="active" disabled/>

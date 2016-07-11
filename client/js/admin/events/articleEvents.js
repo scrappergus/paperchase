@@ -203,28 +203,15 @@ Template.AdminArticleFiles.events({
         });
     }
 });
+
+
 Template.AdminArticleFigures.events({
     'click .article-figure-edit': function(e){
-        e.preventDefault();
-        var figId = $(e.target).closest('button').attr('data-id');
-        // console.log(figId);
-        var article = Session.get('article');
-        var files = article.files;
-        var figures = files.figures;
-        figures.forEach(function(fig){
-            if(fig.id == figId){
-                fig.editing = true;
-            }
-        });
-        article.files.figures = figures;
-        Session.set('article',article);
+        Meteor.articleFiles.editAsset(e, 'figures', true);
     },
-    'click .article-figure-cancel': function(e){
-        e.preventDefault();
-        var figId;
-        figId = $(e.target).closest('button').attr('data-id');
-        Meteor.articleFiles.cancelFigureUploader(figId);
-    },
+    'click .article-asset-cancel': function(e){
+        Meteor.articleFiles.editAsset(e, 'figures', false);
+    }
     // 'click .article-figure-delete': function(e){
         // e.preventDefault();
         // Meteor.formActions.saving();
@@ -272,6 +259,7 @@ Template.AdminArticleFigures.events({
         // }
     // }
 });
+
 Template.s3ArticleAssetsUpload.events({
     'click button.upload': function(e){
         e.preventDefault();
