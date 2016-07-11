@@ -119,23 +119,7 @@ Router.route('/admin/article_dates_csv/:pii',{
         this.response.end();
     }
 });
-// Router.route('/admin/xml_audit/',{
-//  name: 'xmlAudit',
-//  where: 'server',
-//  action: function(){
-//      var filename = journalConfig.findOne().journal.short_name + '_xml_audit.csv';
-//      var csvData = '' + '\n';
-//      console.log('data', this.request.data);
-//      csvData += this.request.data;
 
-//      this.response.writeHead(200, {
-//        'Content-Type': 'text/csv',
-//        'Content-Disposition': 'attachment; filename=' + filename
-//      });
-//      this.response.write(csvData);
-//      this.response.end();
-//  }
-// });
 
 if (Meteor.isClient) {
     // Variables
@@ -151,7 +135,6 @@ if (Meteor.isClient) {
     Session.setDefault('showAboutForm',false);
     Session.setDefault('aboutSectionId', null);
     // News
-    // Session.setDefault('newsId',null);
     Session.setDefault('newsData',null);
     // Paper sections
     Session.setDefault('paperSectionId',null);
@@ -508,7 +491,6 @@ if (Meteor.isClient) {
                 var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
                 var sorted  = sorters.findOne();
                 var sortedArticles;
-                // var journalSettings = journalConfig.findOne();
                 if(Session.get('journal')){
                     journal = Session.get('journal').journal;
                 }
@@ -614,20 +596,6 @@ if (Meteor.isClient) {
                 });
                 this.next();
             }
-        },
-        data: function(){
-            // if(this.ready()){
-            //     var article = articles.findOne();
-            //     if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-            //         if(!article.volume && article.issue_id){
-            //             // for display purposes
-            //             var issueInfo = issues.findOne();
-            //             article.volume = issueInfo.volume;
-            //             article.issue = issueInfo.issue;
-            //         }
-            //         Session.set('article',article);
-            //     }
-            // }
         }
     });
     Router.route('/admin/article/:_id',{
@@ -659,19 +627,6 @@ if (Meteor.isClient) {
                     article = Meteor.article.readyData(article);
                     Session.set('article',article);
                 }
-                // if(article && article._id == this.params._id){ // hack for timing problem when subscried to articles already
-                //     if(!article.volume && article.issue_id){
-                //         // for display purposes
-                //         var issueInfo = issues.findOne();
-                //         article.volume = issueInfo.volume;
-                //         article.issue = issueInfo.issue;
-                //     }
-                //     if(article.volume && article.issue){
-                //         article.volume_and_issue = Meteor.issue.createIssueParam(article.volume,article.issue); // this can probably be removed
-                //         article.vi = Meteor.issue.createIssueParam(article.volume,article.issue);
-                //     }
-                //     Session.set('article',article);
-                // }
             }
         }
     });
@@ -1100,7 +1055,6 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var sorted  = sorters.findOne({name:'advance'});
-                // console.log(sorted.articles);
                 return{
                     articles: sorted.articles
                 };
@@ -1547,7 +1501,6 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var edboardList = edboard.find().fetch();
-                // console.log(edboardList);
                 return {
                     edboard : edboardList
                 };
