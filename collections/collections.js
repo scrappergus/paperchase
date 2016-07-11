@@ -22,107 +22,115 @@ sections = new Mongo.Collection('sections');
 // -------
 sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
-    var order = f.order;
-    if(f.name == 'advance'){
+        var order = f.order;
+        var sectionsList;
+        if(f.name == 'advance'){
 
-        // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
-//        var config = journalConfig.findOne({},{fields: {'assets': 1 }});
+            // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
+            // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
 
-        var articlesList = articles.find({'_id':{'$in':order}}).fetch();
-        f.articles = [];
+            var articlesList = articles.find({'_id':{'$in':order}}).fetch();
+            f.articles = [];
 
-        var last_section;
-        for(var i = 0 ; i < order.length ; i++){
-            for(var a = 0 ; a < articlesList.length ; a++){
-                if(articlesList[a]['_id'] === order[i]){
-                    if(articlesList[a]['section_id']) {
-                        var section = sections.findOne({'section_id' : articlesList[a]['section_id']});
-                        if(section !== undefined) {
-                            articlesList[a]['section_name'] = section['section_name'];
+            var last_section;
+            for(var i = 0 ; i < order.length ; i++){
+                for(var a = 0 ; a < articlesList.length ; a++){
+                    if(articlesList[a]._id === order[i]){
+                        if(articlesList[a].section_id) {
+                            var section = sections.findOne({'section_id' : articlesList[a].section_id});
+                            if(section !== undefined) {
+                                articlesList[a].section_name = section.section_name;
+                            }
                         }
-                    }
-                    else if(articlesList[a]['article_type']) {
-                        articlesList[a]['section_name'] = articlesList[a]['article_type']['name'];
-                    }
+                        else if(articlesList[a].article_type) {
+                            articlesList[a].section_name = articlesList[a].article_type.name;
+                        }
 
-                    if(i==0) {
-                        articlesList[a]['section_start'] = true;
-                    }
-                    else if(last_section != articlesList[a]['section_name']){
-                        articlesList[a]['section_start'] = true;
-                    }
+                        if(i===0) {
+                            articlesList[a].section_start = true;
+                        }
+                        else if(last_section != articlesList[a].section_name){
+                            articlesList[a].section_start = true;
+                        }
 
 
-                    if(articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
-                        assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
-                        articlesList[a]['files']['pdf']['url'] = assets +"pdf/"+ articlesList[a]['files']['pdf']['file'];
-                    }
+                        if(articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
+                            assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
+                            articlesList[a].files.pdf.url = assets +"pdf/"+ articlesList[a].files.pdf.file;
+                        }
 
-                    last_section = articlesList[a]['section_name'];
-                    f.articles.push(articlesList[a]);
+                        last_section = articlesList[a].section_name;
+                        f.articles.push(articlesList[a]);
+                    }
+                }
+            }
+
+
+        }
+        else if(f.name == 'ethics'){
+            f.ordered = [];
+            sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
+            // console.log(sectionsList);
+            for(var i = 0 ; i < order.length ; i++){
+                // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]._id);
+                    if(sectionsList[a]._id == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
                 }
             }
         }
+        else if(f.name == 'homePage'){
+            f.ordered = [];
+            sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
+            // console.log(sectionsList);
+            for(var i = 0 ; i < order.length ; i++){
+                // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]._id);
+                    if(sectionsList[a]._id == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
+                }
+            }
+        }
+        else if(f.name == 'forAuthors'){
+            f.ordered = [];
+            sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
+            // console.log(sectionsList);
+            for(var i = 0 ; i < order.length ; i++){
+                // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]._id);
+                    if(sectionsList[a]._id == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
+                }
+            }
 
-
-    }else if(f.name == 'ethics'){
-        f.ordered = [];
-        var sectionsList = ethics.find({'_id':{'$in':order}}).fetch();
-        // console.log(sectionsList);
-        for(var i = 0 ; i < order.length ; i++){
-            // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
+        }
+        else if(f.name == 'about'){
+            // Same exact thing as forAuthors. Look into using collection name as a variable.
+            f.ordered = [];
+            sectionsList = about.find({'_id':{'$in':order}}).fetch();
+            for(var i = 0 ; i < order.length ; i++){
+              // console.log(order[i]);
+                for(var a = 0 ; a < sectionsList.length ; a++){
+                    // console.log(sectionsList[a]._id);
+                    if(sectionsList[a]._id == order[i]){
+                        f.ordered.push(sectionsList[a]);
+                    }
                 }
             }
         }
-    }else if(f.name == 'homePage'){
-        f.ordered = [];
-        var sectionsList = homePage.find({'_id':{'$in':order}}).fetch();
-        // console.log(sectionsList);
-        for(var i = 0 ; i < order.length ; i++){
-            // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
-                }
-            }
-        }
-    }else if(f.name == 'forAuthors'){
-        f.ordered = [];
-        var sectionsList = forAuthors.find({'_id':{'$in':order}}).fetch();
-        // console.log(sectionsList);
-        for(var i = 0 ; i < order.length ; i++){
-            // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
-                }
-            }
+        else if(f.name == 'sections'){
+            var unordered = sections.find({'_id':{'$in':order}}).fetch();
+            f.ordered = Meteor.sorter.sort(unordered,order);
         }
 
-    }else if(f.name == 'about'){
-        // Same exact thing as forAuthors. Look into using collection name as a variable.
-        f.ordered = [];
-        var sectionsList = about.find({'_id':{'$in':order}}).fetch();
-        for(var i = 0 ; i < order.length ; i++){
-          // console.log(order[i]);
-            for(var a = 0 ; a < sectionsList.length ; a++){
-                // console.log(sectionsList[a]['_id']);
-                if(sectionsList[a]['_id'] == order[i]){
-                    f.ordered.push(sectionsList[a]);
-                }
-            }
-        }
-    }else if(f.name == 'sections'){
-        var unordered = sections.find({'_id':{'$in':order}}).fetch();
-        f.ordered = Meteor.sorter.sort(unordered,order);
-    }
-    return f;
+        return f;
+
     }
 });
 publish = new Mongo.Collection('publish');
@@ -491,7 +499,7 @@ if (Meteor.isServer) {
         return Meteor.users.find({_id: this.userId}, {fields: {subscribed: 1}});
     });
     Meteor.publish(null, function (){
-        return Meteor.roles.find({})
+        return Meteor.roles.find({});
     });
 
 
@@ -539,7 +547,7 @@ if (Meteor.isServer) {
     // });
     // Meteor.publish('issueArticles', function (volume,issue) {
     //     var issueinfo = issues.find({volume: parseInt(volume), issue_linkable: issue});
-    //     return articles.find({issue_id : issueinfo['_id']});
+    //     return articles.find({issue_id : issueinfo._id});
     // });
     Meteor.publish('currentIssue',function(){
         return issues.find({current: true});
@@ -663,7 +671,15 @@ if (Meteor.isServer) {
     Meteor.publish('feature', function () {
         return articles.find({'feature':true},{sort:{'_id':1}});
     });
+    Meteor.publish('aop', function () {
+        // Paperchase advance
+        var sorter = sorters.findOne({'name':'aop'});
+        var articlesList = articles.find({'_id':{'$in':sorter.order}});
+
+        return articlesList;
+    });
     Meteor.publish('advance', function () {
+        // OJS Advance
         var sorter = sorters.findOne({'name':'advance'});
         var articlesList = articles.find({'_id':{'$in':sorter.order}});
 
@@ -672,8 +688,8 @@ if (Meteor.isServer) {
     Meteor.publish('submissions', function () {
         return submissions.find();
     });
-    Meteor.publish('aop', function () {
-        return articles.find({'issue_id':{$exists:false}},{sort:{'_id':1}});
+    Meteor.publish('withoutIssueNotAdvance', function () {
+        return articles.find({'issue_id':{$exists:false}, advance:false},{sort:{'_id':1}});
     });
 
     // Users
@@ -868,12 +884,12 @@ if (Meteor.isServer) {
     });
     Meteor.publish('sectionById', function(mongoId){
         check(mongoId, String);
-        return sections.findOne({_id : mongoId})
+        return sections.findOne({_id : mongoId});
     });
     Meteor.publish('sectionPapersByDashName', function(dashName){
         check(dashName, String);
         // console.log('..sectionPapersByDashName' +  dashName);
-        var section = sections.findOne({'dash_name' : dashName})
+        var section = sections.findOne({'dash_name' : dashName});
         return articles.find({'section' : section._id});
     });
 
