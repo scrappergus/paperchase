@@ -154,8 +154,8 @@ Meteor.methods({
         if(article['author-notes'] && article['author-notes'][0].fn){
             article['author-notes'][0].fn.forEach(function(note){
                 var noteObj = {};
-                if(note['$'].id){
-                    noteObj.id = note['$'].id;
+                if(note.$.id){
+                    noteObj.id = note.$.id;
                 }
 
                 if(note.label){
@@ -238,7 +238,8 @@ Meteor.methods({
             dbFigures,
             xmlFigures,
             figuresResult = [];
-        var articleInfo = articles.findOne({_id : articleMongoId});
+
+        articleInfo = articles.findOne({_id : articleMongoId});
 
         if(articleInfo && articleInfo.files && articleInfo.files.figures){
             dbFigures = articleInfo.files.figures;
@@ -289,8 +290,8 @@ Meteor.xmlPmc = {
         // keywords is JSON from XML to get keywords. Need to pass entire JSON and not part because the short name is an attribute on article element
         var article_type = {};
         var article = articleJson.front[0]['article-meta'][0];
-        article_type.name = article['article-categories'][0]['subj-group'][0]['subject'][0];
-        article_type.short_name =  articleJson['$']['article-type'];
+        article_type.name = article['article-categories'][0]['subj-group'][0].subject[0];
+        article_type.short_name =  articleJson.$['article-type'];
         if(article_type.short_name){
             article_type.short_name = article_type.short_name.replace('-','_');
         }
@@ -301,8 +302,8 @@ Meteor.xmlPmc = {
         for(var i = 0 ; i < authorsList.length ; i++){
             var author = {};
 
-            if(authorsList[i]['$']['equal-contrib']){
-                author.equal_contrib = true
+            if(authorsList[i].$['equal-contrib']){
+                author.equal_contrib = true;
             }
 
             if(authorsList[i].name){
@@ -322,11 +323,11 @@ Meteor.xmlPmc = {
                 author.affiliations_numbers = [];
                 author.author_notes_ids = [];
                 for(var authorAff=0 ; authorAff<authorsList[i].xref.length ; authorAff++){
-                    if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'aff' && authorsList[i].xref[authorAff].sup){
+                    if(authorsList[i].xref[authorAff].$['ref-type'] == 'aff' && authorsList[i].xref[authorAff].sup){
                         var affNumber = parseInt(authorsList[i].xref[authorAff].sup[0]-1);
                         author.affiliations_numbers.push(affNumber); // This is 0 based in the DB //TODO: look into possible attribute options for <xref> within <contrib>
-                    } else if(authorsList[i].xref[authorAff]['$']['ref-type'] == 'author-notes' && authorsList[i].xref[authorAff]['$'].rid) {
-                        author.author_notes_ids.push(authorsList[i].xref[authorAff]['$'].rid);
+                    } else if(authorsList[i].xref[authorAff].$['ref-type'] == 'author-notes' && authorsList[i].xref[authorAff].$.rid) {
+                        author.author_notes_ids.push(authorsList[i].xref[authorAff].$.rid);
                     }
                 }
             }
@@ -399,7 +400,7 @@ Meteor.xmlPmc = {
                     correspondence.text = correspondence.text.trim();
                 }
 
-                if(correspondence.text == ''){
+                if(correspondence.text === ''){
                     delete correspondence.text; //after all the replacing, check if there is actually text
                 }
             }
@@ -411,7 +412,7 @@ Meteor.xmlPmc = {
     dates: function(dates,cb){
         var datesResult = {};
         for(var i = 0 ; i < dates.length ; i++){
-            var dateType =  dates[i]['$']['pub-type'];
+            var dateType =  dates[i].$['pub-type'];
             if(dateType != 'collection'){
                 var d = '';
                 if(dates[i].month && dates[i].day && dates[i].year){
@@ -427,7 +428,7 @@ Meteor.xmlPmc = {
                 }
             }
         }
-        cb(datesResult)
+        cb(datesResult);
     },
     figure: function(node,cb){
         var figObj = {};
@@ -479,7 +480,7 @@ Meteor.xmlPmc = {
                 if(fig){
                     figuresResult.push(fig);
                 }
-            })
+            });
         });
         cb(figuresResult);
     },
@@ -493,7 +494,7 @@ Meteor.xmlPmc = {
     history: function(history,cb){
         var historyResult = {};
         for(var i = 0 ; i < history.length ; i++){
-            var dateType = history[i]['$']['date-type'];
+            var dateType = history[i].$['date-type'];
             var d = '';
             if(history[i].month && history[i].day && history[i].year){
                 d += history[i].month[0] + ' ';
@@ -510,8 +511,8 @@ Meteor.xmlPmc = {
         // idList is JSON from XML to get IDs
         var ids = {};
         for(var i = 0 ; i < idList.length ; i++){
-            var type = idList[i]['$']['pub-id-type'];
-            var idCharacters = idList[i]['_'];
+            var type = idList[i].$['pub-id-type'];
+            var idCharacters = idList[i]._;
             idCharacters = idCharacters.replace('PMC','');
             ids[type] = idCharacters;
         }
@@ -633,4 +634,4 @@ Meteor.xmlPmc = {
 
         cb(titleTitle);
     }
-}
+};
