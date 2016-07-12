@@ -361,7 +361,7 @@ Meteor.article = {
 
     },
     breadcrumbParent: function(data) {
-        if(data && data.article && data.article.advance === true && !data.article.issue_id) {
+        if(data && data.article && data.article.advance === true) {
            return 'Advance';
         }else{
            return 'Issue';
