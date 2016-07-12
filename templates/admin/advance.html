@@ -1,0 +1,53 @@
+<template name="AdminAop">
+    {{>AdminHeader header="Advance"}}
+    {{>FixedSaveBtn}}
+    {{>StatusModal}}
+    <form>
+        <div class="row">
+            <div class="col s12">
+                <div class="card z-depth-0">
+                    <div class="card-content">
+                        <div class="card-title">
+                            Advance Articles
+                        </div>
+                        <fieldset>
+                            <legend>Order</legend>
+                            <div class="row">
+                                <div class="col s1">&nbsp;</div>
+                                <div class="col s7">Title</div>
+                                <div class="col s1">PII</div>
+                                <div class="col s2">EPub</div>
+                                <div class="col s1">View</div>
+                            </div>
+                            <ul class="advance-order">
+                            {{#each advance}}
+                                <li data-id={{_id}}>
+                                    <div class="row no-margin">
+                                        <div class="col s1">{{>AdminDragIcon}}</div>
+                                        <div class="col s7">{{{title}}}</div>
+                                        <div class="col s1">{{ids.pii}}</div>
+                                        <div class="col s2">{{#if ids.epub}}{{articleDate ids.epub}}{{else}}&nbsp;{{/if}}</div>
+                                        <div class="col s1"><a href="{{pathFor 'AdminArticleOverview' _id=_id}}">View</a></div>
+                                    </div>
+                                </li>
+                            {{/each}}
+                            </ul>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">
+                        Without Issue, Not Advance Articles
+                    </div>
+                    {{> reactiveTable collection=withoutIssue settings=settings}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

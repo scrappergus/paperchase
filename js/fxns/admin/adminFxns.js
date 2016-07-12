@@ -24,6 +24,26 @@ Meteor.admin = {
     }
 };
 
+
+Meteor.adminAdvance = {
+    formGetData: function(e){
+        e.preventDefault();
+        var articleIdList = [];
+        $('.advance-order li').each(function(i, article){
+            articleIdList.push($(article).data('id'));
+        });
+        Meteor.call('updateList', 'advance', articleIdList, function(error, result){
+            if(error){
+                console.error('updateList', error);
+                Meteor.formActions.errorMessage('Could not update advance order');
+            }
+            else if(result){
+                Meteor.formActions.successMessage('Advance Order Updated');
+            }
+        });
+    }
+};
+
 Meteor.adminSite = {
     formGetData: function(e){
         // console.log('..adminSite formGetData');

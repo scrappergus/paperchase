@@ -23,8 +23,10 @@ sections = new Mongo.Collection('sections');
 sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
         var order = f.order;
-        var sectionsList;
-        if(f.name == 'advance'){
+        var sectionsList,
+            articlesList;
+        var journal = journalConfig.findOne();
+        if(f.name == 'advance' && journal.journal.short_name === 'oncotarget'){
 
             // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
             // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
@@ -64,8 +66,10 @@ sorters = new Mongo.Collection('sorters', {
                     }
                 }
             }
-
-
+        }
+        else if(f.name == 'advance'){
+            var unordered = articles.find({'_id':{'$in':order}}).fetch();
+            f.ordered = Meteor.sorter.sort(unordered,order);
         }
         else if(f.name == 'ethics'){
             f.ordered = [];
@@ -671,18 +675,13 @@ if (Meteor.isServer) {
     Meteor.publish('feature', function () {
         return articles.find({'feature':true},{sort:{'_id':1}});
     });
-    Meteor.publish('aop', function () {
-        // Paperchase advance
-        var sorter = sorters.findOne({'name':'aop'});
-        var articlesList = articles.find({'_id':{'$in':sorter.order}});
-
-        return articlesList;
-    });
     Meteor.publish('advance', function () {
-        // OJS Advance
-        var sorter = sorters.findOne({'name':'advance'});
-        var articlesList = articles.find({'_id':{'$in':sorter.order}});
-
+        var sorter,
+            articlesList;
+        sorter = sorters.findOne({'name':'advance'});
+        if(sorter && sorter.order){
+            return articles.find({'_id':{'$in':sorter.order}});
+        }
         return articlesList;
     });
     Meteor.publish('submissions', function () {

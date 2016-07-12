@@ -383,7 +383,7 @@ Meteor.methods({
                     _id : publisherArticleSections[s]._id,
                     name: publisherArticleSections[s].name,
                     short_name: publisherArticleSections[s].short_name
-                }
+                };
                 if(publisherArticleSections[s]._id == selectedSectionId){
                     selectObj.selected = true;
                 }

@@ -194,6 +194,11 @@ Template.AdminForAuthorsForm.onDestroyed(function () {
 
 // Advance
 // -------
+// paperchase
+Template.AdminAop.onRendered(function () {
+    $('.advance-order').sortable();
+});
+// OJS
 Template.AdminAdvanceArticlesSections.onRendered(function() {
     $('.collapsible').collapsible({
         accordion : false

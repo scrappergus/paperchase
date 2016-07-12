@@ -41,14 +41,6 @@ articles.after.insert(function (userId, doc) {
 articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     var volume,
         issue;
-    // Advance article. Update sorters colleciton.
-    // if(modifier.$set){
-    //   if(modifier.$set['advance']){
-    //     Meteor.call('sorterAddItem','advance',doc._id);
-    //   }else{
-    //     Meteor.call('sorterRemoveItem','advance',doc._id);
-    //   }
-    // }
 
     // for when we want to skip things in the hook
     if(modifier.$set && modifier.$set.batch){
@@ -114,7 +106,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
     }
 
     if(modifier.$set && modifier.$set.issue_id && !modifier.$set.volume){
-        issueData = issues.findOne({_id : modifier.$set.issue_id})
+        issueData = issues.findOne({_id : modifier.$set.issue_id});
         if(issueData && issueData.volume && issueData.issue){
             modifier.$set.volume = issueData.volume;
             modifier.$set.issue = issueData.issue;
@@ -142,6 +134,17 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
 });
 
 articles.after.update(function (userId, doc, fieldNames, modifier, options) {
+    var journal = journalConfig.findOne();
+    // Advance article. Update sorters colleciton.
+    if(journal.journal.short_name != 'oncotarget'){
+        if(doc.advance && !this.previous.advance){
+            Meteor.call('sorterAddItem', 'advance', doc._id);
+        }
+        else if(!doc.advance  && this.previous.advance){
+            Meteor.call('sorterRemoveItem', 'advance', doc._id);
+        }
+    }
+
     // Pages - Keep issue doc pages up to date
     if( doc.page_start || doc.page_end || this.previous.page_start || this.previous.page_end ){
         if( doc.page_start != this.previous.page_start || doc.page_end != this.previous.page_end || doc.issue_id != this.previous.issue_id || !doc.display && this.previous.display || doc.display && !this.previous.display ){
