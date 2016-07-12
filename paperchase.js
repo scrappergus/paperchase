@@ -67,7 +67,7 @@ Meteor.startup(function () {
     if (Meteor.isServer) {
         var emailSettings = Meteor.call('getConfigRecommendationEmail');
         if(emailSettings){
-            process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
+            process.env.MAIL_URL = 'smtp://' + emailSettings.address +':' + emailSettings.pw + '@smtp.gmail.com:465/';
         }
     }
 });
@@ -83,15 +83,15 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
     if(doc.IPRanges){
         doc.IPRanges.forEach(function(ipr) {
                 ipranges.insert({
-                        institutionID: doc._id
-                        ,startIP: ipr.startIP
-                        ,endIP: ipr.endIP
-                        ,startNum: dot2num(ipr.startIP)
-                        ,endNum: dot2num(ipr.endIP)
+                        institutionID: doc._id,
+                        startIP: ipr.startIP,
+                        endIP: ipr.endIP,
+                        startNum: dot2num(ipr.startIP),
+                        endNum: dot2num(ipr.endIP)
                     });
             });
     }
-}
+};
 
 institutions.after.insert(institutionUpdateInsertHook);
 institutions.after.update(institutionUpdateInsertHook);
@@ -136,46 +136,48 @@ Router.route('/get-advance-articles/',{
             var advanceList = advance.data;
             var prevSection;
             var last_index;
+            var rangeStart,
+                rangeEnd;
 
             if(this.params.query.rangeStart !== undefined) {
                 var rangeSize = this.params.query.rangeSize*1 || 3;
-                var rangeStart = this.params.query.rangeStart*rangeSize
-                var rangeEnd = rangeStart + rangeSize;
+                rangeStart = this.params.query.rangeStart*rangeSize;
+                rangeEnd = rangeStart + rangeSize;
                 if(rangeEnd > advanceList.length) rangeEnd = advanceList.length;
             }
             else {
-                var rangeStart = 0;
-                var rangeEnd = advanceList.length;
+                rangeStart = 0;
+                rangeEnd = advanceList.length;
             }
 
             var parity=0;
             for(var i = rangeStart ; i < rangeEnd; i++){
                 parity++;
                 var articleInfo = advanceList[i];
-                last_index = i-1
+                last_index = i-1;
                 if(i > 0) {
-                    prevSection = advanceList[last_index]['section_name'];
+                    prevSection = advanceList[last_index].section_name;
                 }
-                if(articleInfo['section_start']){
+                if(articleInfo.section_start){
                     // if(prevSection){
                     //  htmlString += '</div>';
                     // }
 
-                    // htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
+                    // htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo.section_name + '</h4>';
                     // htmlString += '<div class="articlewrapper">';
                 }
 
 
-                if(articleInfo['section_name'] != prevSection) {
-                    if(i != 0) {
+                if(articleInfo.section_name != prevSection) {
+                    if(i !== 0) {
                         htmlString += '</div>';
                     }
 
-                    if(i<40 && articleInfo['section_name'] == 'Research Papers') {
-                        htmlString += "<h4 id=\"recent_"+articleInfo['section_name']+"\" class=\"tocSectionTitle\">Recent "+articleInfo['section_name']+"</h4>";
+                    if(i<40 && articleInfo.section_name == 'Research Papers') {
+                        htmlString += "<h4 id=\"recent_"+articleInfo.section_name+"\" class=\"tocSectionTitle\">Recent "+articleInfo.section_name+"</h4>";
                     }
                     else {
-                        htmlString += "<h4 id=\""+articleInfo['section_name']+"\" class=\"tocSectionTitle\">"+articleInfo['section_name']+"</h4>";
+                        htmlString += "<h4 id=\""+articleInfo.section_name+"\" class=\"tocSectionTitle\">"+articleInfo.section_name+"</h4>";
                     }
 
                     htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
@@ -187,7 +189,7 @@ Router.route('/get-advance-articles/',{
                 }
 
                 htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
-                htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
+                htmlString += '<span class="tocTitle">' + articleInfo.title + '</span>';
 
                 if(articleInfo.authors){
                     // htmlString += '<tr>';
@@ -195,24 +197,24 @@ Router.route('/get-advance-articles/',{
 
                     htmlString += '<span class="tocAuthors">';
 
-                    if(articleInfo['ids']['doi']){
-                        htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
+                    if(articleInfo.ids.doi){
+                        htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo.ids.pii + '</b></p>';
                     }
                     var authors = articleInfo.authors;
                     var authorsCount = authors.length;
                     htmlString += '<p>';
                     for(var a = 0 ; a < authorsCount ; a++){
-                        if(authors[a]['name_first']){
-                            htmlString += ' ' + authors[a]['name_first'];
+                        if(authors[a].name_first){
+                            htmlString += ' ' + authors[a].name_first;
                         }
-                        if(authors[a]['name_middle']){
-                            htmlString += ' ' + authors[a]['name_middle'];
+                        if(authors[a].name_middle){
+                            htmlString += ' ' + authors[a].name_middle;
                         }
-                        if(authors[a]['name_last']){
-                            htmlString += ' ' + authors[a]['name_last'];
+                        if(authors[a].name_last){
+                            htmlString += ' ' + authors[a].name_last;
                         }
                         if(a != parseInt(authorsCount - 1)){
-                            if(authors[a]['name_first'] || authors[a]['name_middle'] || authors[a]['name_last']){
+                            if(authors[a].name_first || authors[a].name_middle || authors[a].name_last){
                                 htmlString += ', ';
                             }
                         }
@@ -251,7 +253,7 @@ Router.route('/get-advance-articles/',{
 
                 htmlString += '</div>';
 
-                if(parity%2==0) {
+                if(parity%2===0) {
                     htmlString += '</div>';
                 }
             }
@@ -312,7 +314,7 @@ Router.route('/get-interviews/',{
             }
 
             htmlString+='</div>';
-        };
+        }
         htmlString += '</body></html>';
         var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
         this.response.writeHead(200, headers);
@@ -372,12 +374,12 @@ if (Meteor.isClient) {
             waitOn: function(){
                 return[
                     Meteor.subscribe('issueByVolNum', this.params.query.volumeId, this.params.query.issueId),
-                ]
+                ];
             },
             action: function() {
                 var issue = issues.find().fetch();
                 issue = issue[0];
-                var route = "/issue/v"+issue['volume']+"i"+issue['issue'];
+                var route = "/issue/v"+issue.volume+"i"+issue.issue;
                 Router.go(route);
             }
         });
@@ -446,7 +448,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('currentIssue'),
                 Meteor.subscribe('mostRecentInterview')
 
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -462,9 +464,9 @@ if (Meteor.isClient) {
                     eic: edboard.find({role: 'Editor-in-Chief'}) ,
                     eb: edboard.find({role: 'Founding Editorial Board'}),
                     news:  newsList.find({display:true, interview:false},{sort : {date: -1}}).fetch(),
-                    sections : sorted['ordered'],
+                    sections : sorted.ordered,
                     interview : mostRecentInterview
-                }
+                };
             }
         }
     });
@@ -485,14 +487,14 @@ if (Meteor.isClient) {
                 Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 var sorted  = sorters.findOne({'name':'advance'});
                 return {
                     articles : sorted.ordered
-                }
+                };
             }
         }
     });
@@ -545,13 +547,13 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('eic'),
                 Meteor.subscribe('fullBoard')
-            ]
+            ];
         },
         data: function(){
             return {
                 eic: edboard.find({role:"Editor-in-Chief"},{sort : {name_last:-1}}),
                 fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]},{sort : {name_last:1}})
-            }
+            };
         }
     });
 
@@ -563,14 +565,14 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('forAuthorsPublic'),
                 Meteor.subscribe('sortedList','forAuthors')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 var sections = forAuthors.find().fetch();
                 var sorted  = sorters.findOne();
                 return {
-                    sections : sorted['ordered']
+                    sections : sorted.ordered
                 };
             }
         },
@@ -584,14 +586,14 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('aboutPublic'),
                 Meteor.subscribe('sortedList','about')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 var sections = about.find().fetch();
                 var sorted  = sorters.findOne();
                 return {
-                    sections : sorted['ordered']
+                    sections : sorted.ordered
                 };
             }
         },
@@ -605,14 +607,14 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('ethicsPublic'),
                 Meteor.subscribe('sortedList','ethics')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 var sections = ethics.find().fetch();
                 var sorted  = sorters.findOne();
                 return {
-                    sections : sorted['ordered']
+                    sections : sorted.ordered
                 };
             }
         }
@@ -631,7 +633,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('contact')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -747,7 +749,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleIssue',this.params._id),
                 Meteor.subscribe('articleTypes'),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -788,7 +790,7 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleIssue', this.params._id),
                 Meteor.subscribe('articleTypes'),
                 Meteor.subscribe('journalConfig')
-            ]
+            ];
         },
         data: function() {
             if (this.ready()) {
@@ -830,7 +832,7 @@ if (Meteor.isClient) {
         waitOn: function(){
             return[
                 Meteor.subscribe('articleInfo',this.params._id)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -857,7 +859,7 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('articleInfo',this.params.query.article),
                 Meteor.subscribe('articleTypes')
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -903,7 +905,7 @@ if (Meteor.isClient) {
                 var u =  Meteor.users.findOne();
                 return {
                     user: u
-                }
+                };
             }
         }
     });
@@ -941,14 +943,14 @@ if (Meteor.isClient) {
         waitOn: function(){
             return [
                 Meteor.subscribe('sectionPapersByDashName', this.params._section_dash_name)
-            ]
+            ];
         },
         data: function(){
             if(this.ready()){
                 // more data set in helpersData.js, articles
                 return {
                     section : sections.findOne({dash_name : this.params._section_dash_name})
-                }
+                };
             }
         }
     });
@@ -965,8 +967,8 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-            Meteor.subscribe('currentIssue')
-            ]
+                Meteor.subscribe('currentIssue')
+            ];
         },
         data: function(){
             if(this.ready()){
@@ -974,7 +976,7 @@ if (Meteor.isClient) {
                     issue: issues.findOne(),
                     today: new Date(),
                     nextYear: new Date(new Date().setYear(new Date().getFullYear() + 1))
-                }
+                };
             }
         }
     });
@@ -1029,8 +1031,8 @@ if (Meteor.isClient) {
         },
         waitOn: function() {
             return [
-            Meteor.subscribe('interviews')
-            ]
+                Meteor.subscribe('interviews')
+            ];
         },
         data: function() {
             return {
