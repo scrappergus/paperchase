@@ -329,9 +329,11 @@ h2.dates {
 
 /** Article Figure Viewers
  ---------------------------------------------------------*/
-.zoom-range{
-     position: relative;
-}
+ .figure-range{
+    .thumb{
+        display: none;
+    }
+ }
 .figure{
     .container{
         width: 100%!important;
