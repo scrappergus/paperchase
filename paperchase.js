@@ -781,7 +781,7 @@ if (Meteor.isClient) {
             }
 
             Meteor.article.readyFullText(this.params._id);
-
+            Session.set('article-id',this.params._id);
             this.next();
         },
         waitOn: function() {

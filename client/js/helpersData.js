@@ -171,7 +171,7 @@ Template.Article.helpers({
 
 Template.FullTextFigure.helpers({
     articleId: function() {
-        return Session.get('article-text').mongo;
+        return Session.get('article-id');
     }
 });
 
