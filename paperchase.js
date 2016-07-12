@@ -852,25 +852,40 @@ if (Meteor.isClient) {
             if(Session.get('journal')){
                 pageTitle = Session.get('journal').journal.name + ' | ';
             }
-            // TODO: add article title
             return pageTitle + 'Figure Viewer';
         },
         waitOn: function(){
             return[
-                Meteor.subscribe('articleInfo',this.params.query.article),
+                Meteor.subscribe('articleInfo', this.params.query.article),
                 Meteor.subscribe('articleTypes')
             ];
         },
         data: function(){
             if(this.ready()){
-                var id = this.params.query.article;
-                Session.set('article-id',id);
-                var article;
-                article = articles.findOne({'_id': id});
+                var article,
+                    figure;
+                var articleId = this.params.query.article;
+                var figureId = this.params.query.figure;
+
+                Session.set('article-id',articleId);
+
+                article = articles.findOne({'_id': articleId});
+                article = Meteor.article.readyData(article);
+                if(article && figureId && article.files && article.files.figures){
+                    article.files.figures.forEach(function(fig){
+                        if(fig.id.toLowerCase() == figureId.toLowerCase()){
+                            figure = fig;
+                        }
+                    });
+                }
+                else{
+                    Router.go('Article',{_id : articleId});
+                }
+
+
                 return {
                     article: article,
-                    img: this.params.query.img,
-                    title:this.params.query.figureId
+                    figure: figure
                 };
             }
         }

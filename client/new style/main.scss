@@ -326,6 +326,25 @@ h2.dates {
     .full-text-image-container { margin: 0; padding:0;}
 }
 
+
+/** Article Figure Viewers
+ ---------------------------------------------------------*/
+.zoom-range{
+     position: relative;
+}
+.figure{
+    .container{
+        width: 100%!important;
+        max-width: none!important;
+        border: 1px solid $midnight;
+        background: #ffffff;
+    }
+    .buttons{
+        margin-top: 10px;
+    }
+}
+
+
 /** Search Page
  ---------------------------------------------------------*/
 .search.page-content {

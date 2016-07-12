@@ -24,7 +24,7 @@ Template.EdBoard.onRendered(function() {
 });
 
 Template.scrollspyCard.onRendered(function() {
-  new ResizeSensor($('.main'), function(){ 
+  new ResizeSensor($('.main'), function(){
     $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
   });
 });
@@ -32,7 +32,7 @@ Template.scrollspyCard.onRendered(function() {
 // Section Papers
 // ------
 Template.SectionPapers.onRendered(function () {
-    Session.set('article-list',null)
+    Session.set('article-list',null);
 });
 
 // Article
@@ -71,7 +71,7 @@ Template.AdvancedSearch.onRendered(function() {
 });
 
 Template.AdvancedSearch.onRendered(function() {
-  new ResizeSensor($('.main'), function(){ 
+  new ResizeSensor($('.main'), function(){
     $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
   });
 });
