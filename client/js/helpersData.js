@@ -169,6 +169,12 @@ Template.Article.helpers({
     }
 });
 
+Template.FullTextFigure.helpers({
+    articleId: function() {
+        return Session.get('article-text').mongo;
+    }
+});
+
 Template.ArticleSidebar.helpers({
     fullTextView: function(){
         if(Router.current().route.getName() === 'ArticleText'){

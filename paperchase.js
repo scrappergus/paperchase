@@ -867,18 +867,21 @@ if (Meteor.isClient) {
                 var articleId = this.params.query.article;
                 var figureId = this.params.query.figure;
 
-                Session.set('article-id',articleId);
-
                 article = articles.findOne({'_id': articleId});
                 article = Meteor.article.readyData(article);
+
+                Session.set('article',article);
+                Session.set('article-id',articleId);
+
                 if(article && figureId && article.files && article.files.figures){
                     article.files.figures.forEach(function(fig){
-                        if(fig.id.toLowerCase() == figureId.toLowerCase()){
+                        if(fig.id.toLowerCase() === figureId.toLowerCase()){
                             figure = fig;
                         }
                     });
                 }
-                else{
+
+                if(!figure && articleId){
                     Router.go('Article',{_id : articleId});
                 }
 

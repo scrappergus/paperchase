@@ -41,7 +41,7 @@ Template.ArticleFigures.onRendered(function() {
 	$('.owl-carousel').owlCarousel();
 });
 
-Template.ArticleFigureViewer.onRendered(function() {
+Template.ArticleFigureViewerViewer.onRendered(function() {
     $('.figure img, .table img').wrap('<div class="container"></div>');
     var $panzoom = $('.figure img, .table img').panzoom({
                     $zoomIn: $('.zoom-in'),

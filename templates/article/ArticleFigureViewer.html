@@ -14,17 +14,7 @@
 		{{/with}}
 
 		{{#with figure}}
-		<div class="row">
-			<div class="col s12 center-align">
-				<div class="figure" id="F2">
-					<img src="{{url}}" alt="">
-					<div class="buttons">
-						<button class="zoom-in btn-floating">+</button>
-						<button class="zoom-out btn-floating">&minus;</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		{{>ArticleFigureViewerViewer}}
 		{{/with}}
 
 		<div class="row">
@@ -44,4 +34,18 @@
 		</div>
 		{{/with}}
 	</div></div>
+</template>
+
+<template name="ArticleFigureViewerViewer">
+	<div class="row">
+		<div class="col s12 center-align">
+			<div class="figure" id="F2">
+				<img src="{{url}}" alt="">
+				<div class="buttons">
+					<button class="zoom-in btn-floating">+</button>
+					<button class="zoom-out btn-floating">&minus;</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
