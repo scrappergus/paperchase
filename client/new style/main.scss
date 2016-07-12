@@ -335,6 +335,9 @@ h2.dates {
     }
  }
 .figure{
+    img{
+        max-width: 100%;
+    }
     .container{
         width: 100%!important;
         max-width: none!important;
