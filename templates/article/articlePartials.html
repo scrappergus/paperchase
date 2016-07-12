@@ -3,8 +3,12 @@
         {{#if article_type.name}}
             <span class="article-type">{{article_type.name}}</span>
         {{/if}}
-        {{#if issue_id}}
-            <span><a href="{{pathFor 'Issue' vi=vi}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
+        {{#if advance}}
+                <span><a href="/advance" style="cursor: pointer;">Advance Articles</a></span>
+        {{else}}
+            {{#if issue_id}}
+                <span><a href="{{pathFor 'Issue' vi=vi}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
+            {{/if}}
         {{/if}}
 
         {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
