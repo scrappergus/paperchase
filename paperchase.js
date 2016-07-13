@@ -1049,7 +1049,8 @@ if (Meteor.isClient) {
         },
         waitOn: function() {
             return [
-                Meteor.subscribe('interviews')
+                Meteor.subscribe('interviews'),
+                Meteor.subscribe('currentIssue')
             ];
         },
         data: function() {
