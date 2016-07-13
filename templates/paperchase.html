@@ -18,17 +18,19 @@
             <!-- {{> FeaturedNobelArticles}} -->
         </div>
 
-        <div class="page-sidebar col s12 m5 l4">
-            {{#with latestIssue}}
-                {{> HomePageLatestIssue}}
-            {{/with}}
+        {{> MainSideBar}}
+    </div>
+</template>
 
-            {{> FeaturedInterviewSidebar}}
-            <!--<a href="http://eepurl.com/bmC9OL" target="_blank" class="full-width primary button">Sign Up for TOC Alerts</a>-->
+<template name="MainSideBar">
+    <div class="page-sidebar col s12 m5 l4">
+        {{#with latestIssue}}
+            {{> HomePageLatestIssue}}
+        {{/with}}
 
-            <!-- {{> HomePageEditorList}} -->
-            {{> FeaturedNobelArticlesSidebar}}
-        </div>
+        {{> FeaturedInterviewSidebar}}
+        
+        {{> FeaturedNobelArticlesSidebar}}
     </div>
 </template>
 
