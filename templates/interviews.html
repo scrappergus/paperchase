@@ -3,19 +3,17 @@
         <div class="page-content col s12 m12 l8">
             <h1>Interviews with Outstanding Authors</h1>
         </div>
+    </div>
     {{#each interviews}}
     <div class="row">
-            <div class="page-content col s12 m12 l8">
-
-                <h2>{{{title}}}</h2>
-                <iframe width="470" height="265" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe>
-                <p>{{{content}}}</p>
-                {{#each tags}}
-                <a href="/search?terms={{.}}"><span class="interview-tag" style="padding:5px;margin:0px 10px 10px 0px;border:1px solid;float:left;display:block;width:auto;">{{.}}</span></a>
-                {{/each}}
-
-            </div>
+        <div class="page-content col s12 m12 l8">
+            <h2>{{{title}}}</h2>
+            <iframe width="470" height="265" src="https://www.youtube.com/embed/{{youTube}}" frameborder="0" allowfullscreen></iframe>
+            <p>{{{content}}}</p>
+            {{#each tags}}
+            <a href="/search?terms={{.}}"><span class="interview-tag" style="padding:5px;margin:0px 10px 10px 0px;border:1px solid;float:left;display:block;width:auto;">{{.}}</span></a>
+            {{/each}}
+        </div>
     </div>
     {{/each}}
-    </div>
 </template>
