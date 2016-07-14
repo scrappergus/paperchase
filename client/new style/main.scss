@@ -76,7 +76,7 @@
     width: 100px;
 }
 
-.toc-title > .large-cover > img {
+.toc-title > .large-cover > img,.toc-title > .cover-image > a > img {
     width: 200px;
 }
 
@@ -367,6 +367,17 @@ h2.dates {
 
     .divided-list {
         li.item:first-child { margin-top: 40px; }
+    }
+}
+.search-item{
+    .abstract{
+        margin-top: 15px;
+    }
+    .article-header{
+        .article-type{
+            font-weight: normal;
+            color: $kashmir!important;
+        }
     }
 }
 
