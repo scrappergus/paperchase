@@ -41,7 +41,7 @@ Template.AdminArticleForm.events({
             ids: {},
             affiliations_list: [],
             author_notes_list: []
-        }
+        };
         // need this random number for uniqueness of checkboxes. for authors in the db, it is the mongo id
         var temp_id = Math.random().toString(36).substring(7);
         newAuthor.ids.mongo_id = temp_id;
@@ -50,7 +50,7 @@ Template.AdminArticleForm.events({
                 newAuthor.affiliations_list.push({
                     author_mongo_id : temp_id,
                     checked: false,
-                })
+                });
             }
         }
 
@@ -59,7 +59,7 @@ Template.AdminArticleForm.events({
                 newAuthor.author_notes_list.push({
                     author_mongo_id : temp_id,
                     checked: false,
-                })
+                });
             }
         }
 
