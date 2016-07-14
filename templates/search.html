@@ -11,21 +11,19 @@
 
     	 	<p class="lighten" style=""><i>{{queryResults.length}} results found</i></p>
 
-            {{#if queryResults}} 
+            {{#if queryResults}}
             <ul class="divided-list">
                 {{#each queryResults}}
-                <li class="item">
-                    <h3><a href="/article/{{_id}}">{{{title}}}</a></h3>
-                    <h5 class="supporting">{{#if issue_id}}<a href="/issue/v{{volume}}i{{issue}}">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a>{{/if}}</h5>
+                <li class="item search-item toc-info">
+                    <h2 class="title"><a href="/article/{{_id}}">{{{title}}}</a></h2>
+                    <h6 class="desc">{{>AuthorsList}}</h6>
+					<h5 class="article-header">
+						{{>ArticleHeaderPieces}}
+					</h5>
 
-                    <p>{{#each authors}}
-                    <span class="author">
-                        {{name_first}}
-                        {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}<span class="comma">, </span>
-                    </span>
-                    {{/each}}</p>
-
-                    <p>{{{truncate abstract 300}}}</p>
+					<div class="abstract article-text">
+						{{{wrapInParagraphTag abstract}}}
+					</div>
                 </li>
                 {{/each}}
             </ul>
@@ -39,7 +37,7 @@
                     </div>
                 </div>
             {{/if}}
-    		
+
 
             {{else}}
                 {{#if searchLoading}}
