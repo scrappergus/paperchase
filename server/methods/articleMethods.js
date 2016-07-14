@@ -6,7 +6,7 @@ Meteor.authorizeCheck = {
             // throw new Meteor.Error(403, 'Access denied')
         }
     }
-}
+};
 // All of these methods are for admin article
 Meteor.methods({
     articleChecksBeforeDbUpdate: function(articleData){
@@ -113,7 +113,7 @@ Meteor.methods({
         console.log('..unsetArticles', new Date());
         // nope. used in removeArticlesFromIssue()
         Meteor.authorizeCheck.articles();
-        var articlesToUpdate = articles.find(where).fetch()
+        var articlesToUpdate = articles.find(where).fetch();
         var updated = articles.update(where, {$unset: what},{ multi: true });
         if(updated){
             return articlesToUpdate; // this will be docs pre update.
@@ -306,7 +306,7 @@ Meteor.methods({
                         for(var a = 0 ; a < affs.length ; a++){
                             var authorAff = {
                                 author_mongo_id: mongo
-                            }
+                            };
                             if(currentAuthorAffs && currentAuthorAffs.indexOf(a) != -1){
                                 // author already has affiliation
                                 authorAff.author_aff = 'checked';
@@ -322,14 +322,14 @@ Meteor.methods({
                         for(var a = 0 ; a < notes.length ; a++){
                             var note = notes[a];
                             var authorNote= {
-                                id: note['id'],
+                                id: note.id,
                                 author_mongo_id: mongo
-                            }
+                            };
                             authorNote.author_note = false;
                             if(currentAuthorNotes) {
                                 for(var currentNoteIdx=0; currentNoteIdx<currentAuthorNotes.length; currentNoteIdx++) {
                                     currentNote = currentAuthorNotes[currentNoteIdx];
-                                    if(currentNote == note['id']) {
+                                    if(currentNote == note.id) {
                                         authorNote.author_note = 'checked';
                                     }
                                 }
@@ -494,14 +494,14 @@ Meteor.methods({
             }
         ]);
         for(var duplicateType in queryRes){
-            if(queryRes[duplicateType].length > 0 && queryRes[duplicateType][0]._id != null){
+            if(queryRes[duplicateType].length > 0 && queryRes[duplicateType][0]._id !== null){
                 var duplicateList = [];
                 queryRes[duplicateType].forEach(function(duplicate){
-                    if(duplicate._id.duplicate_field != null){ //remove duplicates where field does not exist
+                    if(duplicate._id.duplicate_field !== null){ //remove duplicates where field does not exist
                         var obj = {
                             duplicate_field: duplicate._id.duplicate_field,
                             count: duplicate.count
-                        } // if object not reformatted, _id : {} return from aggregratio causes underscore to throw error Meteor does not currently support objects other than ObjectID as ids
+                        }; // if object not reformatted, _id : {} return from aggregratio causes underscore to throw error Meteor does not currently support objects other than ObjectID as ids
                         if(duplicate.data){
                             obj.article_types = [];
                             obj.mongo_ids = [];
