@@ -13,9 +13,13 @@ Template.AdminNewsForm.events({
     },
     'click .add-to-tags': function(e){
         e.preventDefault();
-        var newTag = $('.news-tag-input').code();
+        var newTag,
+            newsData;
+
+        newTag = $('.news-tag-input').code();
         newTag = Meteor.clean.cleanWysiwyg(newTag);
-        var newsData = Session.get('newsData');
+
+        newsData = Session.get('newsData');
         if(!newsData){
             newsData = {};
         }
@@ -23,8 +27,11 @@ Template.AdminNewsForm.events({
             newsData.tags = [];
         }
         newsData.tags.push(newTag);
+
         Session.set('newsData',newsData);
+
         $('.news-tag-input').code('');
+
         Meteor.adminNews.hideAddNewTag(e);
     }
 });

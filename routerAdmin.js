@@ -337,9 +337,11 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var newsFound = newsList.findOne({_id : this.params._id});
+                console.log('newsFound',newsFound);
                 if(newsFound){
                     Session.set('newsData',newsFound);
-                }else{
+                }
+                else{
                     Session.set('admin-not-found',true);
                 }
             }
