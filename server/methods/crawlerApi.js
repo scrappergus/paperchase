@@ -262,20 +262,29 @@ Meteor.methods({
         var fut = new future();
         var journalShortName = journalConfig.findOne().journal.short_name;
         var requestUrl = journalConfig.findOne().api.crawler + '/article/' + journalShortName + '/' + pii + '/doi_status';
+        var article = articles.findOne({_id : mongoId}, {ids:1});
+
+
 
         Meteor.http.get(requestUrl, function(error,result){
             if(error){
                 throw new Meteor.Error('doiRegisteredCheck' , pii, error);
-            }else if(result){
+            }
+            else if(result && article){
                 if(result.data.registered == 'Registered'){
-                    Meteor.call('updateArticle', mongoId, {'ids.doi' : result.data.doi}, function(error,result){
+                    // console.log( result.data);
+                    var ids = article.ids;
+                    ids.doi = result.data.doi;
+                    Meteor.call('updateArticle', mongoId, {ids: ids}, function(error,result){
                         if(result){
                             fut.return('Registered');
-                        }else if(error){
+                        }
+                        else if(error){
                             fut.return(error);
                         }
                     });
-                }else{
+                }
+                else{
                     fut.return('Not Registered');
                 }
             }
