@@ -102,7 +102,7 @@ Template.scrollspyItems.helpers({
 
 // Home
 // -------------
-Template.Home.helpers({
+Template.MainSideBar.helpers({
     latestIssue: function() {
         return issues.findOne({current:true});
     }
