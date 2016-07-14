@@ -1,20 +1,32 @@
 <template name="ArticleHeaderTitle">
     <h5 class="article-header">
-        {{#if article_type.name}}
-            <span class="article-type">{{article_type.name}}</span>
-        {{/if}}
-        {{#if advance}}
-                <span><a href="/advance" style="cursor: pointer;">Advance Articles</a></span>
-        {{else}}
-            {{#if issue_id}}
-                <span><a href="{{pathFor 'Issue' vi=vi}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
-            {{/if}}
-        {{/if}}
-
-        {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
+        {{>ArticleHeaderPieces}}
     </h5>
 
     <h1 id="article-title">{{{title}}}</h1>
+</template>
+
+<template name="ArticleHeaderPieces">
+    {{#if article_type.name}}
+        <span class="article-type">{{article_type.name}}</span>
+    {{/if}}
+    {{#if advance}}
+        <span><a href="/advance" style="cursor: pointer;">Advance Articles</a></span>
+    {{else}}
+    {{#if vi}}
+        <span><a href="{{pathFor 'Issue' vi=vi}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
+    {{else}}
+    {{#if issue_id}}
+    {{#if volume}}
+    {{#if issue}}
+        <span><a href="/volume/v{{volume}}i{{issue}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
+    {{/if}}
+    {{/if}}
+    {{/if}}
+    {{/if}}
+    {{/if}}
+
+    {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
 </template>
 
 <template name="ArticlePages">
@@ -237,7 +249,7 @@
 
 <template name="ArticleKeywords">
     <div class="card sidebar-card">
-        <h6 class="card-title">Related Keywords</h6>
+        <h6 class="card-title">Keywords / Related Publications</h6>
         <div class="tags">
             {{#each keywords}}
             <a class="keyword tag" href="/search/?terms={{.}}">{{{.}}}</a>
