@@ -62,7 +62,6 @@
             <div class="row"><div class="col s12">
                 <form id="article-form">
                     {{>FixedSaveBtn}}
-                    {{>saving}}
 
                     <fieldset>
                         <legend>Title</legend>
@@ -195,6 +194,7 @@
 
 <template name="AdminNewsOverview">
     {{>AdminHeader header="News"}}
+    {{#if news}}
     {{#with news}}
     <div class="row"><div class="col s12">
         <div class="card z-depth-0"><div class="card-content">
@@ -246,4 +246,7 @@
         </div></div>
     </div></div>
     {{/with}}
+    {{else}}
+    {{>Loading}}
+    {{/if}}
 </template>
