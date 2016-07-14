@@ -12,6 +12,13 @@ if (Meteor.isClient) {
         return 'checked';
       }
     });
+
+    //sidebar
+    //---------
+    Template.registerHelper('removeLink', function(str) {
+        return str.replace(/<a\b[^>]*>/i,'').replace(/<\/a>/i, '');
+    });
+
     // Article
     // -------
     Template.registerHelper('articleId', function() {
