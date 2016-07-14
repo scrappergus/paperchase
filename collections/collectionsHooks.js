@@ -47,15 +47,6 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         delete modifier.$set.batch;
     }
 
-    // maintain IDs
-    if(modifier.$set && modifier.$set.ids){
-        for(var idType in doc.ids){
-            if(!modifier.$set.ids[idType]){
-                modifier.$set.ids[idType] = doc.ids[idType];
-            }
-        }
-    }
-
     // maintain Files
     if(modifier.$set && modifier.$set.files){
         for(var fileType in doc.files){
@@ -65,22 +56,36 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-    // maintain Dates
-    if(modifier.$set && modifier.$set.dates){
-        for(var dateType in doc.dates){
-            if(!modifier.$set.dates[dateType]){
-                modifier.$set.dates[dateType] = doc.dates[dateType];
-            }
-        }
-    }
+    // maintain IDs
+    // causes bug when removing an ID on purpose
+    // if(modifier.$set && modifier.$set.ids){
+    //     for(var idType in doc.ids){
+    //         if(!modifier.$set.ids[idType]){
+    //             modifier.$set.ids[idType] = doc.ids[idType];
+    //         }
+    //     }
+    // }
+    //
+    //
+    // // maintain Dates
+    // causes bug when removing a date on purpose
+    // if(modifier.$set && modifier.$set.dates){
+    //     for(var dateType in doc.dates){
+    //         if(!modifier.$set.dates[dateType]){
+    //             modifier.$set.dates[dateType] = doc.dates[dateType];
+    //         }
+    //     }
+    // }
+
     // maintain History
-    if(modifier.$set && modifier.$set.history){
-        for(var historyType in doc.history){
-            if(!modifier.$set.history[historyType]){
-                modifier.$set.history[historyType] = doc.history[historyType];
-            }
-        }
-    }
+    // causes bug when removing a date on purpose
+    // if(modifier.$set && modifier.$set.history){
+    //     for(var historyType in doc.history){
+    //         if(!modifier.$set.history[historyType]){
+    //             modifier.$set.history[historyType] = doc.history[historyType];
+    //         }
+    //     }
+    // }
 
     // Affiliations
     //add affiliation number to author
