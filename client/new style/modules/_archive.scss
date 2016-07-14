@@ -17,16 +17,10 @@
     a.issue-info {
         display: block;
         position: relative;
-        top: -5px;
+        color: $cello;
         width: 100%;
-        background: $electric;
         font-size: 11px;
-        text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 700;
-        color: #fff;
-        padding: 4px 10px;
-        border-bottom-left-radius: 2px;
-        border-bottom-right-radius: 2px;
     }
 }
