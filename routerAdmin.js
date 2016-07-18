@@ -171,7 +171,6 @@ if (Meteor.isClient) {
     // Institutions
     Session.setDefault('recommendation',null);
 
-
     Router.route('/', {
         name: 'AdminHome',
         onBeforeAction: function(){
@@ -457,17 +456,17 @@ if (Meteor.isClient) {
 
     // Intake
     // xml uploading
-    Router.route('/admin/upload/xml',{
-        name: 'AdminArticleXmlUpload',
-        layoutTemplate: 'Admin',
-        title: function() {
-            var pageTitle = 'Admin | XML Upload ';
-            if(Session.get('journal')){
-                pageTitle += ': ' + Session.get('journal').journal.name;
-            }
-            return pageTitle;
-        },
-    });
+    // Router.route('/admin/upload/xml',{
+    //     name: 'AdminArticleXmlUpload',
+    //     layoutTemplate: 'Admin',
+    //     title: function() {
+    //         var pageTitle = 'Admin | XML Upload ';
+    //         if(Session.get('journal')){
+    //             pageTitle += ': ' + Session.get('journal').journal.name;
+    //         }
+    //         return pageTitle;
+    //     },
+    // });
 
     // Articles List
     Router.route('/admin/articles',{
