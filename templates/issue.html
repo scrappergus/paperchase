@@ -40,9 +40,8 @@
                     <br />
                     <span class="issue-pages">{{>IssuePages}}</span>
                     {{/with}}
-
-                    {{#if caption}}<div class="issue-caption">{{{caption}}}</div>{{/if}}
                 </div>
+                {{#if caption}}<div class="issue-caption"><b>About the Cover</b>{{{wrapInParagraphTag caption}}}</div>{{/if}}
             </div>
             {{/with}}
 
