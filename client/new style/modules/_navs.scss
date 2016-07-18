@@ -439,11 +439,10 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
 // Social Links
 .list-social-links{
-    // display: none;
-    li{
-        width: 20%!important;
-    }
+    width: 100%;
+    float: left;
     .social-links{
+        width: 20%!important;
         a{
             text-align: left;
             padding-left: 0px!important;
