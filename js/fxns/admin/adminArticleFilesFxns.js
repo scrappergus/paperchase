@@ -147,9 +147,9 @@ Meteor.articleFiles = {
                                 // the user probably does not need to be notified about below functions
                                 // delete uploaded file, if not equal to MongoID
                                 if(articleMongoId != fileNameId){
-                                    S3.delete(s3Folder + '/' + file.name,function(error,result){
+                                    S3.delete(s3Folder + '/' + res.file.name,function(error,result){
                                         if(error){
-                                            console.error('Could not delete original file: ' + file.name);
+                                            console.error('Could not delete original file: ' + res.file.name);
                                         }
                                     });
                                 }
@@ -211,7 +211,7 @@ Meteor.articleFiles = {
             });
         }
         cb(result);
-    },    
+    },
     deleteAsset:  function(filename, folder){
         S3.delete(folder + '/' + filename, function(error,result){
             if(error){
