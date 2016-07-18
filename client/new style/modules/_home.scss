@@ -29,8 +29,8 @@
     }
 
     h1.head {
-        margin-bottom: 20px; 
-        span { 
+        margin-bottom: 20px;
+        span {
             line-height: 1.75;
             padding: 5px 0;
             background: darken($accent, 2%);
@@ -128,7 +128,7 @@
     li {
         margin-bottom: 15px;
         border-bottom: 2px solid $electric;
-        padding: 0 0 15px; 
+        padding: 0 0 15px;
     }
 
     li > span.sub {
@@ -147,13 +147,13 @@
 .issue-highlight {
     @include clearfix;
 
-    img.cover { 
-        float: left; 
+    img.cover {
+        float: left;
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
         width: 40%;
     }
-    
+
     .button-list {
         float: left;
         margin-left: 25px;
@@ -161,7 +161,7 @@
         li { margin: 0; padding: 0; border: none; }
         li.title {
             margin-top: 15px;
-            font-size: 20px; 
+            font-size: 20px;
         }
 
         li.subtitle {
@@ -188,14 +188,14 @@
 /** Featured Nobel Articles
 ---------------------------------------------------------*/
 .featured-nobel {
-    margin-top: 40px; 
+    margin-top: 40px;
     ul.featured-items {
-        li:hover { 
-            background: none; 
+        li:hover {
+            background: none;
             border-color: #fff;
         }
 
-        li a { 
+        li a {
             color: $link;
             display: inline;
             @include transition(color 0.25s ease-out);
@@ -204,16 +204,26 @@
     }
 }
 
+
+// Social Links
+.social-links{
+    margin-top: 40px;
+    a{
+        @extend h1;
+        padding-right: 18px;
+    }
+}
+
 /** Media Queries
 ---------------------------------------------------------*/
 // MOBILE ONLY
 @include at-query($max, $small) {
-    
+
 }
 
 // MOBILE + TABLET ONLY
 @include at-query($max, $medium) {
-    
+
 }
 
 // Tablets
