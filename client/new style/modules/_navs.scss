@@ -443,6 +443,15 @@ $secondary-subnav-color: darken(#00387A, 1%);
     li{
         width: 20%!important;
     }
+    .social-links{
+        a{
+            &:hover{
+                &:after{
+                    display:none;
+                }
+            }    
+        }
+    }
 }
 
 /** Media Queries
