@@ -1,6 +1,9 @@
 <template name="LeftNav">
 	<ul class="nav-links">
 		<li class="nav-title"><span class="title-content">Navigate<span class="sidebar-toggle icon icon-close"></span></span></li>
+		<ul class="mobile-social-links">
+			{{>SocialLinks}}
+		</ul>
 		{{#each links}}
 		{{#if display}}
         {{#if url}}

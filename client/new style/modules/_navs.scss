@@ -437,14 +437,25 @@ $secondary-subnav-color: darken(#00387A, 1%);
     z-index: -5; // behind everything
 }
 
-
-
+// Social Links
+.mobile-social-links{
+    display: none;
+    li{
+        width: 20%!important;
+    }
+}
 
 /** Media Queries
 ---------------------------------------------------------*/
 // MOBILE + TABLET ONLY
 @include at-query($max, $medium) {
     .sub-nav-shim { display: none; }
+    .sidebar-toggle{
+        display: none;
+    }
+    .mobile-social-links{
+        display: block;
+    }
 }
 
 // Medium Screens (+ 970px)
