@@ -31,13 +31,17 @@
                 <div class="page-title">
                     <span class="page-desc">Table of Contents</span>
                     <h1>Volume {{volume}}, Issue {{issue}}</h1>
+
                     {{#if pub_date}}
                     <span class="issue-date">{{formatIssueDate pub_date date_settings}}</span>
                     {{/if}}
+
                     {{#with pages}}
                     <br />
                     <span class="issue-pages">{{>IssuePages}}</span>
                     {{/with}}
+
+                    {{#if caption}}<div class="issue-caption">{{{caption}}}</div>{{/if}}
                 </div>
             </div>
             {{/with}}

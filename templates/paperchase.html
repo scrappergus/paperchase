@@ -28,6 +28,8 @@
             {{> HomePageLatestIssue}}
         {{/with}}
 
+        {{> SocialLinks}}
+
         {{> FeaturedInterviewSidebar}}
 
         {{> FeaturedNobelArticlesSidebar}}
@@ -124,6 +126,14 @@
         </li>
     </ul>
 </template> -->
+
+<template name="SocialLinks">
+    <div class="social-links">
+        {{#each social}}
+            <a href="{{url}}" target="_BLANK"><i class="fi-{{foundation_icon}}"></i></a>
+        {{/each}}
+    </div>
+</template>
 
 <template name="FeaturedNobelArticlesSidebar">
     <div class="card sidebar-card featured-nobel">

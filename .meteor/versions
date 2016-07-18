@@ -55,10 +55,12 @@ iron:router@1.0.12
 iron:url@1.0.11
 jquery@1.11.4
 launch-screen@1.0.4
+lepozepo:s3@5.2.1
 less@2.5.1
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+maibaum:foundation-icons@0.0.1
 matb33:collection-hooks@0.8.1
 materialize:materialize@0.97.5
 mdg:seo@1.0.1
