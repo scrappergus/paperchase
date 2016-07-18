@@ -208,10 +208,10 @@ Meteor.methods({
                         if(footnotes[i].childNodes[c].localName === 'label'){
                             footObj.label = foot;
                         }
-                        else if(footObj.title === 'Conflict of Interests Statement' && foot.indexOf('Conflict of interest statement') != -1){
+                        else if(footObj.title === 'Conflict of Interests Statement' && foot.match(/Conflict of interest(s)* statement/i)){
                             // do not want to add 'Conflict of interest statement' to footnote content because this will be added via attribute fn-type check above
                         }
-                        else if(footObj.title === 'Author Contributions' && foot.indexOf('Authors\' contributions') != -1 || foot.indexOf('Author contributions') != -1){
+                        else if(footObj.title === 'Author Contributions' && foot.match(/author(s\')*\scontributions/i)) {
                             // do not want to add 'Authors\' contributions' to footnote content because this will be added via attribute fn-type check above
                         }
                         else if(footObj.title === 'Funding' && foot.match(/^(\<b>)*Funding/)){
