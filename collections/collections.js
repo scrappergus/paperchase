@@ -342,6 +342,7 @@ if (Meteor.isServer) {
           'assets': 1,
           'assets_figures': 1,
           'assets_supplemental': 1,
+          'social': 1
         }});
         return siteConfig;
     });
