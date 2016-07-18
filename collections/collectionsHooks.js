@@ -161,7 +161,7 @@ articles.after.update(function (userId, doc, fieldNames, modifier, options) {
                     }
                 });
             }
-            if( doc.issue_id && doc.issue_id != this.previous.issue_id ){
+            if( this.previous.issue_id && doc.issue_id && doc.issue_id != this.previous.issue_id ){
                 // Article changed issues, update both issues page spans
                 Meteor.call('updateIssuePages', this.previous.issue_id, function(error, result){
                     if(error){
@@ -169,7 +169,6 @@ articles.after.update(function (userId, doc, fieldNames, modifier, options) {
                     }
                 });
             }
-
         }
     }
 });
