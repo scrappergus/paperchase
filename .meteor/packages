@@ -38,7 +38,6 @@ hitchcott:panzoom
 mizzao:jquery-ui
 vojtechklos:materialnote
 ostrio:iron-router-title
-lepozepo:s3
 meteorhacks:aggregate
 risul:moment-timezone
 mvrx:bluebird
@@ -54,3 +53,4 @@ materialize:materialize
 aldeed:simple-schema
 reywood:iron-router-ga
 mdg:seo
+lepozepo:s3

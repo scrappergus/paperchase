@@ -445,6 +445,9 @@ $secondary-subnav-color: darken(#00387A, 1%);
 // MOBILE + TABLET ONLY
 @include at-query($max, $medium) {
     .sub-nav-shim { display: none; }
+    .sidebar-toggle{
+        display: none;
+    }
 }
 
 // Medium Screens (+ 970px)

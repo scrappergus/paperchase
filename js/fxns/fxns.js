@@ -66,7 +66,7 @@ Meteor.organize = {
 
             var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
 
-            if(articles[i] && articles[i].article_type && articles[i].article_type._id && (articles[i].articleJson !== undefined || articles[i].advanceContent != undefined)) {
+            if(articles[i] && articles[i].article_type && articles[i].article_type._id && (articles[i].articleJson !== undefined || articles[i].advanceContent !== undefined)) {
                 if( typeIds.indexOf(articles[i].article_type._id) == -1 ) {
                     articles[i].showCrawledText = true;
                 }
@@ -89,12 +89,12 @@ Meteor.organize = {
         });
         return result;
     }
-}
+};
 
 
 Meteor.impact = {
     getCommentariesAndEditorialTypeIds: function() {
-        return ['PxXCzMrRgnm4LJfz9','GZwKzxk2PgcKycbNF','DtafcmBcwi5RKtfi6','SQJkMnvsWEBYzKQBr', 'jxHErCBv4iEQRd8nY', 'dSRSmvMuYaX6tmBD7']
+        return ['PxXCzMrRgnm4LJfz9','GZwKzxk2PgcKycbNF','DtafcmBcwi5RKtfi6','SQJkMnvsWEBYzKQBr', 'jxHErCBv4iEQRd8nY', 'dSRSmvMuYaX6tmBD7'];
     },
     hideAccepted: function(article) {
         var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
@@ -127,7 +127,7 @@ Meteor.impact = {
         if( article && article.article_type && article.article_type._id ){
             if( article.article_type._id === 'zBhBSXX5HTpDN2Wyb' || article.article_type._id === 'quAmLJarW5DBMWXXB'){
                 fullText.sections.forEach(function(section){
-                    var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/
+                    var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/;
                     if(section.title && !section.title.match(titleDisplayPattern)){
                         section.hideTitleInToc = true;
                     }
@@ -140,12 +140,12 @@ Meteor.impact = {
     showToc: function(articleData){
         if(articleData && articleData.article_type) {
             if(['research_paper', 'review', 'research_perspective', 'priority_research_paper'].indexOf(articleData.article_type.short_name) > -1) {
-                return true
+                return true;
             }
         }
         return;
     }
-}
+};
 
 Meteor.article = {
     readyData: function(article){
@@ -204,15 +204,15 @@ Meteor.article = {
                 for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
                     for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
                         var note = article.author_notes[noteIdx];
-                        if(note['id'] == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
-                            var indexPos = availableLabels.indexOf(note['label']);
+                        if(note.id == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
+                            var indexPos = availableLabels.indexOf(note.label);
                             if(indexPos >= 0) {
                                 availableLabels.splice(indexPos, 1);
                             }
 
                             article.authors[authIdx].author_notes.push({
-                               'id': note['id'],
-                               'label': note['label']
+                               'id': note.id,
+                               'label': note.label
                             });
                         }
                     }
@@ -220,7 +220,7 @@ Meteor.article = {
             }
         }
         for(authIdx=0; authIdx < article.authors.length; authIdx++) {
-            if(article.authors[authIdx].equal_contrib == true) {
+            if(article.authors[authIdx].equal_contrib === true) {
                 article.equal_contribs = availableLabels[0];
                 article.authors[authIdx].equal_contrib = availableLabels[0];
             }
@@ -235,7 +235,7 @@ Meteor.article = {
             }
 
             for(var file in files){
-                if(files[file] != null){
+                if(files[file] !== null){
                     if(files[file].file){
                         files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
                     }else if(file === 'supplemental'){
@@ -263,7 +263,7 @@ Meteor.article = {
             tmp;
         article = articles.findOne({'_id': articleId});
         if(article){
-            articleTitle = article.title
+            articleTitle = article.title;
             tmp = document.createElement('DIV');
             tmp.innerHTML = articleTitle;
             articleTitlePlain = tmp.textContent || tmp.innerText || '';
@@ -271,15 +271,15 @@ Meteor.article = {
         return articleTitlePlain;
     },
     affiliationsNumbers: function(article){
-        if(article['authors']){
-            var authorsList = article['authors'];
-            var affiliationsList = article['affiliations'];
+        if(article.authors){
+            var authorsList = article.authors;
+            var affiliationsList = article.affiliations;
             for(var i = 0 ; i < authorsList.length ; i++){
-                if(article['authors'][i]['affiliations_numbers']){
-                    article['authors'][i]['affiliations_numbers'] = [];
-                    var authorAffiliations = article['authors'][i]['affiliations'];
+                if(article.authors[i].affiliations_numbers){
+                    article.authors[i].affiliations_numbers = [];
+                    var authorAffiliations = article.authors[i].affiliations;
                     for(var a = 0 ; a < authorAffiliations.length ; a++){
-                        article['authors'][i]['affiliations_numbers'].push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
+                        article.authors[i].affiliations_numbers.push(parseInt(affiliationsList.indexOf(authorAffiliations[a]) + 1));
                     }
                 }
             }
@@ -367,7 +367,7 @@ Meteor.article = {
            return 'Issue';
         }
     }
-}
+};
 
 Meteor.formActions = {
     saving: function(message){
@@ -882,7 +882,7 @@ Meteor.formActions = {
             });
         }
     }
-}
+};
 
 Meteor.ip = {
     dot2num: function(dot){
@@ -897,7 +897,7 @@ Meteor.ip = {
         }
         return d;
     }
-}
+};
 
 Meteor.clean = {
     cleanString: function(string){
@@ -937,7 +937,7 @@ Meteor.clean = {
         }
         return string;
     }
-}
+};
 
 Meteor.general = {
     navHeight: function(){
@@ -1067,7 +1067,7 @@ Meteor.sorter = {
         for(var i = 0 ; i < order.length ; i++){
           // console.log(order[i]);
           for(var a = 0 ; a < unordered.length ; a++){
-            if(unordered[a]['_id'] == order[i]){
+            if(unordered[a]._id == order[i]){
               ordered.push(unordered[a]);
             }
           }
@@ -1075,18 +1075,18 @@ Meteor.sorter = {
         // console.log(ordered);
         return ordered;
     }
-}
+};
 
 Meteor.dates = {
     article: function(date){
         // console.log('Article Date:', typeof date, date);
-        var date = new Date(date);
+        date = new Date(date);
         // console.log(date);
         // console.log(moment(utcDate,'ddd, DD MMM YYYY HH:mm:ss ZZ'));
         return moment(date).utc().format('MMMM D, YYYY');
     },
     articleCsv: function(date){
-        var date = new Date(date);
+        date = new Date(date);
         return moment(date).utc().format('MM-D-YYYY'); // cannot use commas for csv date. they will be considered as new columns.
     },
     inputForm: function(date){
@@ -1140,7 +1140,7 @@ Meteor.dates = {
     zeroBasedMonth: function(month){
         return parseInt(month - 1);
     }
-}
+};
 
 Meteor.issue = {
     urlPieces: function(vi){
@@ -1164,7 +1164,7 @@ Meteor.issue = {
     createIssueParam: function(volume,issue){
         return 'v' + volume + 'i' + issue;
     }
-}
+};
 
 Meteor.advance = {
     articlesBySection: function(articlesList){
@@ -1200,13 +1200,13 @@ Meteor.advance = {
         });
         return sectionsOrder;
     }
-}
+};
 
 Meteor.search = {
     bounceTo: function(args) {
         Router.go("/search/?terms="+args.terms);
     }
-}
+};
 
 Meteor.googleAnalytics = {
     // authorize: function(event){
@@ -1276,11 +1276,11 @@ Meteor.googleAnalytics = {
             eventLabel: event.target.href
         });
     }
-}
+};
 
 Meteor.ux = {
     positionSessionVariable: function(template){
-        return templateSessionVariable = 'position-' + template;
+        return 'position-' + template;
     },
     savePosition: function(template){
         var templateSessionVariable = Meteor.ux.positionSessionVariable(template);
@@ -1292,4 +1292,4 @@ Meteor.ux = {
             Meteor.general.scrollToPosition(Session.get(templateSessionVariable));
         }
     }
-}
+};
