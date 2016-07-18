@@ -392,7 +392,7 @@ if (Meteor.isClient) {
                     var articleByPii = articles.findOne({"ids.pii": pii});
                     // check if :_id is a pii and not Mongo ID
                     if(articleByPii){
-                        Router.go("/article/"+articleByPii._id);
+                        Router.go("/article/"+articleByPii._id+"/text");
                     }
                 }
             }
@@ -407,7 +407,7 @@ if (Meteor.isClient) {
             Meteor.subscribe('articleByPii', pii, function() {
                     var articleByPii = articles.findOne({"ids.pii": pii});
                     if(articleByPii){
-                        Router.go("/article/"+articleByPii._id);
+                        Router.go("/article/"+articleByPii._id+"/text");
                     }
                 });
         });
@@ -421,7 +421,7 @@ if (Meteor.isClient) {
                         var article = articles.findOne({'volume': volume, page_start: page_start});
 
                         if(article){
-                            Router.go("/article/"+article._id);
+                            Router.go("/article/"+article._id+"/text");
                         }
                     });
         });
