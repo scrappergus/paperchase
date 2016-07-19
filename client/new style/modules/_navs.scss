@@ -438,11 +438,12 @@ $secondary-subnav-color: darken(#00387A, 1%);
 }
 
 // Social Links
-.list-social-links{
+.mobile-social-links{
     width: 100%;
     float: left;
+    display: none;
     .social-links{
-        width: 20%!important;
+        width: 19%!important;
         display: inline-block;
         a{
             text-align: left;
