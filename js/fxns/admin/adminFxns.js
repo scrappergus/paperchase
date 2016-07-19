@@ -462,7 +462,7 @@ Meteor.adminIssue = {
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
                 ['undo', ['undo', 'redo', 'help']],
-                ['misc', ['codeview']]
+                ['misc', ['codeview', 'link']]
             ]
         });
     }
