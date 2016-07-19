@@ -124,6 +124,7 @@
 
     {{>AdminHeader header="Issue"}}
 
+    {{#if issueData}}
     {{#with issueData}}
 
     {{>AdminIssueHeader}}
@@ -141,6 +142,12 @@
     {{>AdminIssueContents}}
 
     {{/with}}
+
+    {{else}}
+
+    {{>Loading}}
+
+    {{/if}}
 </template>
 
 <template name="AdminIssueForm">
