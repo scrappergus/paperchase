@@ -23,24 +23,12 @@
     color: $kashmir;
 }
 
-/** Page Titles
+/** Issue Page Titles
  ---------------------------------------------------------*/
 .page-title {
-    span.page-desc {
-        display: block;
-        font-size: 14px;
-        margin: 12px 0 20px;
-        @extend .uppercase-titles;
-        color: rgba(162, 169, 176, .75);
-
-        &.accented {
-            color: $accent;
-        }
-
-        + h1 {
-            margin: 0;
-            padding: 0;
-        }
+    h1 {
+        margin: 0;
+        padding: 0;
     }
 
     span.issue-date {
@@ -56,6 +44,19 @@
         margin: 4px 0 10px;
     }
 
+}
+.issue-caption{
+    h4{
+        color: $electric;    
+    }
+}
+
+.page-desc.toc{
+    display: block;
+    font-size: 14px;
+    margin: 12px 0 20px;
+    @extend .uppercase-titles;
+    color: rgba(162, 169, 176, .75);
 }
 
 
