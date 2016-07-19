@@ -285,10 +285,10 @@
     width: 100%;
     height: 100%;
 
-    li{
-        float: left;
-        width: 100%;
-    }
+    // li{
+    //     float: left;
+    //     width: 100%;
+    // }
 
     li.nav-title {
         font-size: 15px;
@@ -443,6 +443,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
     float: left;
     .social-links{
         width: 20%!important;
+        display: inline-block;
         a{
             text-align: left;
             padding-left: 0px!important;
