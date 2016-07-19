@@ -125,6 +125,12 @@
     </ul>
 </template> -->
 
+<template name="SocialLinks">
+        {{#each social}}
+            <li class="social-links"><a href="{{url}}" target="_BLANK"><i class="fi-{{foundation_icon}}"></i></a></li>
+        {{/each}}
+</template>
+
 <template name="FeaturedNobelArticlesSidebar">
     <div class="card sidebar-card featured-nobel">
         <h6 class="card-title">Featured Nobel Articles</h6>
