@@ -48,6 +48,15 @@ Template.Footer.helpers({
     }
 });
 
+Template.SocialLinks.helpers({
+    social: function(){
+        var journalSettings = journalConfig.findOne();
+        if(journalSettings){
+            return journalSettings.social;
+        }
+    }
+});
+
 // SubNav
 Template.subNav.helpers({
     issn : function(){

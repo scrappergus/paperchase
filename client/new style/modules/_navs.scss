@@ -285,10 +285,10 @@
     width: 100%;
     height: 100%;
 
-    li{
-        float: left;
-        width: 100%;
-    }
+    // li{
+    //     float: left;
+    //     width: 100%;
+    // }
 
     li.nav-title {
         font-size: 15px;
@@ -437,8 +437,34 @@ $secondary-subnav-color: darken(#00387A, 1%);
     z-index: -5; // behind everything
 }
 
-
-
+// Social Links
+.social-links{
+    font-size: 20px!important;
+}
+.mobile-social-links{
+    width: 100%;
+    float: left;
+    display: none;
+    .social-links{
+        width: 19%!important;
+        display: inline-block;
+        a{
+            text-align: left;
+            padding-left: 0px!important;
+            padding-right: 0px!important;
+            &:hover{
+                background: none!important;
+                color: lighten($link, 10%)!important;
+                &:after{
+                    display:none;
+                }
+            }
+            &:first-child{
+                padding-left: 40px!important;
+            }
+        }
+    }
+}
 
 /** Media Queries
 ---------------------------------------------------------*/
@@ -447,6 +473,9 @@ $secondary-subnav-color: darken(#00387A, 1%);
     .sub-nav-shim { display: none; }
     .sidebar-toggle{
         display: none;
+    }
+    .mobile-social-links{
+        display: block;
     }
 }
 

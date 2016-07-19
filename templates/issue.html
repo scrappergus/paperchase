@@ -14,7 +14,7 @@
                 </div>
                 <!-- Title Information -->
                 <div class="page-title">
-                    <span class="page-desc">Table of Contents</span>
+                    <span class="page-desc"></span>
                     <h1>Volume {{volume}}, Issue {{issue}}</h1>
                 </div>
             </div>
@@ -29,15 +29,18 @@
                 </div>
                 <!-- Title Information -->
                 <div class="page-title">
-                    <span class="page-desc">Table of Contents</span>
+                    <span class="page-desc"></span>
                     <h1>Volume {{volume}}, Issue {{issue}}</h1>
+
                     {{#if pub_date}}
                     <span class="issue-date">{{formatIssueDate pub_date date_settings}}</span>
                     {{/if}}
+
                     {{#with pages}}
                     <br />
                     <span class="issue-pages">{{>IssuePages}}</span>
                     {{/with}}
+                    {{#if caption}}<div class="issue-caption"><h4>About the Cover</h4>{{{caption}}}</div>{{/if}}
                 </div>
             </div>
             {{/with}}
@@ -69,7 +72,8 @@
 
 <template name="ArticlesList">
     {{#if articles}}
-        <div class="row">
+        <span class="page-desc toc">Table of Contents</span>
+        <div class="row issue-articles">
             {{#each articles}}
                 <!-- Section Heading -->
                 {{#if start_group}}
