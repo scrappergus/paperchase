@@ -33,7 +33,6 @@
     {{>AdminHeader header="Edit Issue"}}
 
     {{#if issueData}}
-
     {{#with issueData}}
 
     {{>AdminIssueHeader}}
@@ -105,6 +104,8 @@
 
     {{else}}
 
+    {{>Loading}}
+
     {{#if adminNotFound}}{{>Admin404 what="Issue"}}{{/if}}
 
     {{/if}}
@@ -117,7 +118,6 @@
             <a href="{{pathFor 'AdminIssueEdit' vi=vi}}" class="btn {{isActiveRoute 'AdminIssueEdit'}}">Edit</a>
         </div>
     </div>
-
 </template>
 
 <template name="AdminIssue">
