@@ -165,7 +165,7 @@ Meteor.article = {
             article.files = Meteor.article.linkFiles(article.files, article._id);
         }
 
-        if(article.ids.doi && _.isString(article.ids.doi)) {
+        if(article.ids && article.ids.doi && _.isString(article.ids.doi)) {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
         }
 
