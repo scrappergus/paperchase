@@ -1,13 +1,13 @@
 // Admin
 // -------
 Template.Admin.onRendered(function () {
-    $('.button-collapse').sideNav();
     $('.collapsible').collapsible();
 });
 
 // Navigation
 // -----------
 Template.AdminNav.onRendered(function () {
+    $('.button-collapse').sideNav();
     $('.collapsible-nav').collapsible();
 });
 
