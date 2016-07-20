@@ -747,6 +747,11 @@ Template.AdminIssueDeleted.helpers({
         return Session.get('articles-updated');
     }
 });
+Template.AdminIssueButtons.helpers({
+    journal: function(){
+        return Session.get('journal');
+    }
+});
 
 // General
 // ---------------
