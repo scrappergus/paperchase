@@ -260,7 +260,8 @@ Meteor.methods({
                 var refAttributes = reference.attributes;
                 var referenceObj = {};
 
-                var elementCitation = xpath.select('element-citation', reference);
+                var elementCitation = xpath.select("mixed-citation | element-citation", reference);
+
                 // console.log('elementCitation',elementCitation);
                 // Reference content and type
                 // --------------------------
@@ -371,8 +372,11 @@ Meteor.fullText = {
         if(primarySection){
             sectionIdObject.headerLevel = 1;
         }
-        else{
+        else if(sectAttr && sectAttr.id) {
             sectionIdObject.headerLevel = Meteor.fullText.headerLevelFromId(sectAttr.id);
+        }
+        else {
+            sectionIdObject.headerLevel = 2;
         }
 
         if(!sectionIdObject.sectionId && section.parentNode && section.parentNode.localName && section.parentNode.localName === 'body'){
