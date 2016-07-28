@@ -197,7 +197,7 @@ Meteor.methods({
                     footObj.title = 'Conflict of Interests Statement';
                 }else if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'con'){
                     footObj.title = 'Author Contributions';
-                }else if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'supported-by'){
+                }else if(attributes && attributes['fn-type'] && (attributes['fn-type'] === 'supported-by' || attributes['fn-type'] === 'financial-disclosure')){
                     footObj.title = 'Funding';
                 }
 
