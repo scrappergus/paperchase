@@ -695,6 +695,9 @@ Meteor.fullText = {
         var referenceObj = {};
         referenceObj.authors = '';
         var first_author = true;
+        if(reference.childNodes.length == 1) {
+            referenceObj.textContent = reference.childNodes[0].nodeValue;
+        }
         for(var r = 0; r < reference.childNodes.length; r++){
             // console.log('r = ' + r);
             // console.log(reference.childNodes[r].localName);

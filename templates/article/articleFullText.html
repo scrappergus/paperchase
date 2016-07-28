@@ -80,15 +80,19 @@
                                             {{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}
                                             {{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}{{#if year}}<span>, {{year}}</span>{{/if}}{{#if fpage}}<span>, pp. {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}<span>.</span>
 
-                                        {{! This is the non-chapter specific ref, for a whole book}}
                                         {{else}}
-
-                                            {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
-                                            {{#if year}}<span> {{year}}.</span>{{/if}}
-                                            {{#if title}}<span> {{{title}}}.</span>{{/if}}
-                                            {{#if chapter_title}}<span> {{{chapter_title}}}.</span>{{/if}}
-                                            {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
-                                            {{#if source}}<span>{{{source}}}</span>{{/if}}<span>(</span>{{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}{{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}<span>)</span><span>.</span>
+                                            {{#if textContent}}
+                                                {{! This is for book refs that just contain a string, no tags}}
+                                                {{{textContent}}}
+                                            {{else }}
+                                                {{! This is the non-chapter specific ref, for a whole book}}
+                                                {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
+                                                {{#if year}}<span> {{year}}.</span>{{/if}}
+                                                {{#if title}}<span> {{{title}}}.</span>{{/if}}
+                                                {{#if chapter_title}}<span> {{{chapter_title}}}.</span>{{/if}}
+                                                {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>{{/if}}
+                                                {{#if source}}<span>{{{source}}}</span>{{/if}}<span>(</span>{{#if publisher_loc}}<span>{{{publisher_loc}}}</span>{{/if}}{{#if publisher_name}}: <span>{{{publisher_name}}}</span>{{/if}}<span>)</span><span>.</span>
+                                            {{/if}}
                                         {{/if}}
                                     {{/if}}
 
@@ -102,14 +106,19 @@
                                     {{/if}}
 
                                     {{#if equals type 'other'}}
-                                    {{#if collab}}<span> {{collab}}.</span>{{/if}}
-                                    {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
-                                    {{#if title}}<span> {{{title}}}.</span>{{/if}}
-                                    {{#if chapter_title}}<span> {{{chapter_title}}};</span>{{/if}}
-                                    {{#if source}}<span> {{source}}.</span>{{/if}}
-                                    {{#if comment}}<span> {{{comment}}}</span>{{/if}}
-                                    {{#if year}}<span> {{year}}.</span>{{/if}}
-                                    {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+                                        {{#if textContent}}
+                                            {{! This is for other type refs that just contain a string, no tags}}
+                                            {{{textContent}}}
+                                        {{else}}
+                                            {{#if collab}}<span> {{collab}}.</span>{{/if}}
+                                            {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
+                                            {{#if title}}<span> {{{title}}}.</span>{{/if}}
+                                            {{#if chapter_title}}<span> {{{chapter_title}}};</span>{{/if}}
+                                            {{#if source}}<span> {{source}}.</span>{{/if}}
+                                            {{#if comment}}<span> {{{comment}}}</span>{{/if}}
+                                            {{#if year}}<span> {{year}}.</span>{{/if}}
+                                            {{#if fpage}}<span> {{fpage}}</span>{{/if}}{{#if lpage}}<span>-{{lpage}}</span>.{{/if}}
+                                        {{/if}}
                                     {{/if}}
 
                                     {{#if equals type 'conf_proc'}}
