@@ -229,7 +229,7 @@ Template.ArticleSidebar.helpers({
             if(articleSections){
                 for ( i = 0; i < articleSections.length; i++ ) {
                     if ( articleSections[i].headerLevel && articleSections[i].headerLevel === 1 ) {
-                        if( !articleSections[i].hideTitleInToc ){
+                        if( !articleSections[i].hideTitleInToc && articleSections[i].title){
                             var sectionTitle = '';
                             sectionTitle = articleSections[i].title;
                             sectionTitle = sectionTitle.replace(/<a\b[^>]*>(.*?)<\/a>/i,'').replace('[]','');
