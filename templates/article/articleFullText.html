@@ -84,6 +84,7 @@
                                             {{#if textContent}}
                                                 {{! This is for book refs that just contain a string, no tags}}
                                                 {{{textContent}}}
+                                                {{#if doi}}<span>{{doi}}</span>.{{/if}}
                                             {{else }}
                                                 {{! This is the non-chapter specific ref, for a whole book}}
                                                 {{#if authors}}<span> {{{authors}}}.</span>{{/if}}

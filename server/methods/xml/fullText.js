@@ -806,6 +806,9 @@ Meteor.fullText = {
                     }
                 }
             }
+            else {
+                referenceObj.textContent = reference.childNodes[r].nodeValue;
+            }
         }
 
         // console.log(referenceObj);
