@@ -426,6 +426,20 @@ if (Meteor.isClient) {
                     });
         });
 
+    Router.route('/current', {
+            name: 'Current', 
+            waitOn: function() {
+                return[
+                    Meteor.subscribe('currentIssue'),
+                ]
+            },
+            action: function() {
+                var current = issues.findOne(); 
+                if(current){
+                    Router.go("/issue/v"+current['volume']+"i"+current['issue']);
+                }
+            }
+        });
 
     Router.route('/', {
         name: 'Home',
