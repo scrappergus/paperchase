@@ -10,7 +10,6 @@ gadicohen:headers
 mizzao:user-status
 matb33:collection-hooks
 service-configuration
-fourseven:scss
 gandev:server-eval
 momentjs:moment
 meteor-base
@@ -31,7 +30,6 @@ reactive-var
 email
 aslagle:reactive-table
 aldeed:template-extension
-standard-minifiers
 zimme:active-route
 bambattajb:sticky
 hitchcott:panzoom
@@ -55,3 +53,6 @@ reywood:iron-router-ga
 mdg:seo
 lepozepo:s3
 maibaum:foundation-icons
+standard-minifier-css
+standard-minifier-js
+fourseven:scss
