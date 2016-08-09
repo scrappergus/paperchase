@@ -32,7 +32,6 @@ reactive-var
 email
 aslagle:reactive-table
 aldeed:template-extension
-standard-minifiers
 zimme:active-route
 bambattajb:sticky
 hitchcott:panzoom
@@ -50,3 +49,5 @@ npm-container
 http
 alanning:roles
 aldeed:simple-schema
+standard-minifier-css
+standard-minifier-js

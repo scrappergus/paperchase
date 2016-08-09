@@ -283,9 +283,6 @@
         "form-data": {
           "version": "1.0.0-rc3",
           "dependencies": {
-            "async": {
-              "version": "1.5.2"
-            },
             "combined-stream": {
               "version": "1.0.5",
               "dependencies": {
