@@ -361,6 +361,10 @@ if (Meteor.isClient) {
             Router.go('/for-authors');
         });
 
+    Router.route('/contact.html', function() {
+            Router.go('/contact');
+        });
+
     Router.route('/contacts.html', function() {
             Router.go('/contact');
         });
