@@ -453,14 +453,10 @@ Meteor.adminArticleFormGet = {
         return keywords;
     },
     pageEnd: function(){
-        if($('#page_end').val()){
-            return parseInt($('#page_end').val());
-        }
+        return $('#page_end').val() ? parseInt($('#page_end').val()) : null;
     },
     pageStart: function(){
-        if($('#page_start').val()){
-            return parseInt($('#page_start').val());
-        }
+        return $('#page_start').val() ? parseInt($('#page_start').val()) : null;
     },
     section: function(){
         if($('#article-section').val() !== ''){
