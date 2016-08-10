@@ -68,8 +68,8 @@
                             <div class="row border-box">
                                 <div class="col s1">{{#if parent}}{{parent}} | {{/if}}{{what}}</div>
                                 <div class="col s3">{{{conflict}}}</div>
-                                <div class="col s4">{{{xml}}}</div>
-                                <div class="col s4">{{{db}}}</div>
+                                <div class="col s4">{{#if xml}}{{{xml}}}{{else}}&nbsp;{{/if}}</div>
+                                <div class="col s4">{{#if db}}{{{db}}}{{else}}&nbsp;{{/if}}</div>
                             </div>
                             {{/each}}
                         </div>
