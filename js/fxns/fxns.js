@@ -927,7 +927,7 @@ Meteor.dates = {
                 format: datePlaceholderFormat
             });
             var picker = pick.pickadate('picker');
-            picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
+            picker.set('select', $(this).attr('date'), { format: 'yyyy/mm/dd' });
         });
     },
     zeroBasedMonth: function(month){

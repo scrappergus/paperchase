@@ -17,12 +17,17 @@ Meteor.adminArticle = {
     addDateOrHistory: function(dateType,e){
         e.preventDefault();
         var article = Session.get('article-form');
+
+        var allDatesOrHistory = Meteor.adminArticleFormGet.dates(dateType);
+
         var type = $(e.target).attr('id').replace('add-','');
-        if(!article[dateType]){
-            article[dateType] = {};
+        if(!allDatesOrHistory){
+            allDatesOrHistory = {};
         }
-        article[dateType][type] = new Date();
-        article[dateType][type].setHours(0,0,0,0);
+        allDatesOrHistory[type] = new Date();
+        allDatesOrHistory[type].setHours(0,0,0,0);
+        article[dateType] = allDatesOrHistory;
+
         Session.set('article-form',article);
 
         $('#add-article-' + dateType).closeModal();
