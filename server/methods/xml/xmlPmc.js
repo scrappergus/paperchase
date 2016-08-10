@@ -187,6 +187,12 @@ Meteor.methods({
                     articleProcessed.affiliations = affiliations;
                 }
             });
+        } else if (article['contrib-group'][0] && article['contrib-group'][0].aff) {
+            Meteor.xmlPmc.authorsAffiliations(article['contrib-group'][0].aff, function(affiliations){
+                if(affiliations && affiliations.length > 0){
+                    articleProcessed.affiliations = affiliations;
+                }
+            });
         }
 
         // PUB DATES
