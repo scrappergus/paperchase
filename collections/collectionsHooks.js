@@ -186,6 +186,7 @@ issues.before.update(function (userId, doc, fieldNames, modifier, options) {
     // Current issue
     //------------
     if(modifier.$set && modifier.$set.current){
+        // Update previously current issue, set as not current
         var previouslyCurrent = issues.findOne({current: true});
         if(previouslyCurrent && previouslyCurrent._id != doc._id){
             Meteor.call('updateIssue',previouslyCurrent._id, {current:false}, function(error,result){
@@ -194,6 +195,16 @@ issues.before.update(function (userId, doc, fieldNames, modifier, options) {
                 }
             });
         }
+
+        // remove all articles in the issue from advance
+        var articlesInIssue = articles.find({ issue_id: doc._id }).fetch();
+        articlesInIssue.forEach(function(article){
+            Meteor.call('updateArticle', article._id, {advance: false}, function(error,result){
+                if(error){
+                    console.error('removing article from advance failed', aritcle._id, error);
+                }
+            });
+        });
     }
 
     // track updates
