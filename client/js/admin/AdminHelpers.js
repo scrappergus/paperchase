@@ -842,3 +842,8 @@ Template.AdminAdvanceArticlesDiff.helpers({
         return Session.get('advanceDiff');
     }
 });
+Template.AdminAdvanceArticlesRemove.helpers({
+    articles: function() {
+        return Session.get('advanceArticles');
+    }
+});

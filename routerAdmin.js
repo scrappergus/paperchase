@@ -150,6 +150,7 @@ if (Meteor.isClient) {
     Session.setDefault('savingOrder',false);
     Session.setDefault('advanceDiff',null);
     Session.setDefault('advanceLegacy',null);
+    Session.setDefault('advanceArticles',null);
     // forms
     Session.setDefault('savedMessage',null);
     Session.setDefault('errorMessage',null);
@@ -1059,15 +1060,14 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-                Meteor.subscribe('publish'),
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
         },
         data: function(){
-            if(this.ready()){
-                var sorted  = sorters.findOne({name:'advance'});
+            var sorted  = sorters.findOne({name:'advance'});
+            if(this.ready() && sorted && sorted.articles){
                 var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
                 var res;
 
@@ -1131,9 +1131,7 @@ if (Meteor.isClient) {
         data: function(){
             var sorted  = sorters.findOne({name:'advance'});
             if(this.ready() && sorted && sorted.articles){
-                return{
-                    articles: sorted.articles
-                };
+                Session.set('advanceArticles', sorted.articles);
             }
         }
     });
