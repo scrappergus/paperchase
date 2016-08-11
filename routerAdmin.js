@@ -1026,11 +1026,10 @@ if (Meteor.isClient) {
             ];
         },
         data: function(){
-            if(this.ready()){
-                var sorted  = sorters.findOne({name:'advance'});
+            var sorted  = sorters.findOne({name:'advance'});
+            if(this.ready() && sorted && sorted.articles){
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
                 var totalArticles = sorted.articles ? sorted.articles.length : null;
-
                 var sections = Meteor.advance.dataForSectionsPage(sorted.articles);
                 Session.set('advanceAdmin',sections);
 

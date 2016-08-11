@@ -989,7 +989,7 @@ Meteor.advance = {
                     articlesBySection[article.section_name] = [];
                 }
                 articlesBySection[article.section_name].push(article);
-            });    
+            });
         }
         return articlesBySection;
     },

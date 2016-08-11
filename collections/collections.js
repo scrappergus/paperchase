@@ -31,7 +31,7 @@ sorters = new Mongo.Collection('sorters', {
             // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
             // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
 
-            var articlesList = articles.find({'_id':{'$in':order}}).fetch();
+            articlesList = articles.find({'_id':{'$in':order}}).fetch();
             f.articles = [];
 
             var last_section;
