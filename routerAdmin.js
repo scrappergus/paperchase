@@ -1044,7 +1044,7 @@ if (Meteor.isClient) {
     Router.route('/admin/articles/advance/research',{
         name: 'AdminAdvanceArticlesResearch',
         title: function() {
-            var pageTitle = 'Admin | Advance Reseach Papers';
+            var pageTitle = 'Admin | Advance Research Papers';
             if(Session.get('journal')){
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
