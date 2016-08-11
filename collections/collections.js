@@ -33,7 +33,6 @@ sorters = new Mongo.Collection('sorters', {
             // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
 
             articlesList = articles.find({'_id':{'$in':order}}).fetch();
-
             articlesByMongoId = Meteor.organize.articlesByMongoId(articlesList);
 
             f.articles = [];
@@ -892,7 +891,7 @@ if (Meteor.isServer) {
     // For advance
     // ----------------
     Meteor.publish('publish', function () {
-    return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
+        return publish.find({name:'advance'}, {'limit': 1, sort: {'pubtime':-1}});
     });
 
     // Search
