@@ -1020,6 +1020,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('publish'),
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
@@ -1060,6 +1061,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
@@ -1124,6 +1126,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
