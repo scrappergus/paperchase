@@ -28,10 +28,6 @@ sorters = new Mongo.Collection('sorters', {
             articlesByMongoId;
         var journal = journalConfig.findOne();
         if(journal && f.name == 'advance' && journal.journal.short_name === 'oncotarget'){
-
-            // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
-            // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
-
             articlesList = articles.find({'_id':{'$in':order}}).fetch();
             articlesByMongoId = Meteor.organize.articlesByMongoId(articlesList);
 
