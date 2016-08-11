@@ -24,7 +24,8 @@ sorters = new Mongo.Collection('sorters', {
     transform: function(f) {
         var order = f.order;
         var sectionsList,
-            articlesList;
+            articlesList,
+            articlesByMongoId;
         var journal = journalConfig.findOne();
         if(journal && f.name == 'advance' && journal.journal.short_name === 'oncotarget'){
 
@@ -32,38 +33,33 @@ sorters = new Mongo.Collection('sorters', {
             // var config = journalConfig.findOne({},{fields: {'assets': 1 }});
 
             articlesList = articles.find({'_id':{'$in':order}}).fetch();
+
+            articlesByMongoId = Meteor.organize.articlesByMongoId(articlesList);
+
             f.articles = [];
 
             var last_section;
-            for(var i = 0 ; i < order.length ; i++){
-                for(var a = 0 ; a < articlesList.length ; a++){
-                    if(articlesList[a]._id === order[i]){
-                        if(articlesList[a].section_id) {
-                            var section = sections.findOne({'section_id' : articlesList[a].section_id});
-                            if(section !== undefined) {
-                                articlesList[a].section_name = section.section_name;
-                            }
+            for(var i = 0; i < order.length; i++){
+                var article;
+                if (articlesByMongoId[order[i]]){
+                    article = articlesByMongoId[order[i]];
+                    if (article.section_id) {
+                        var section = sections.findOne({'section_id' : article.section_id});
+                        if(section !== undefined) {
+                            article.section_name = section.section_name;
                         }
-                        else if(articlesList[a].article_type) {
-                            articlesList[a].section_name = articlesList[a].article_type.name;
-                        }
-
-                        if(i===0) {
-                            articlesList[a].section_start = true;
-                        }
-                        else if(last_section != articlesList[a].section_name){
-                            articlesList[a].section_start = true;
-                        }
-
-
-                        if(articlesList[a].files && articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
-                            assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
-                            articlesList[a].files.pdf.url = assets +"pdf/"+ articlesList[a].files.pdf.file;
-                        }
-
-                        last_section = articlesList[a].section_name;
-                        f.articles.push(articlesList[a]);
+                    } else if (article.article_type) {
+                        article.section_name = article.article_type.name;
                     }
+
+                    if (i===0) {
+                        article.section_start = true;
+                    } else if (last_section != article.section_name) {
+                        article.section_start = true;
+                    }
+
+                    last_section = article.section_name;
+                    f.articles.push(article);
                 }
             }
         }

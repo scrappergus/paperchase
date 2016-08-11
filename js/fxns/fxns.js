@@ -36,6 +36,13 @@ Meteor.organize = {
             //grouped[type].push(articles[i]);
         }
         return articles;
+    },
+    articlesByMongoId: function(articles) {
+        var articlesObj = {};
+        articles.forEach(function(article){
+            articlesObj[article._id] = article;
+        });
+        return articlesObj;
     }
 };
 
