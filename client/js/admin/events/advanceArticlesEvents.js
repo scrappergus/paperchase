@@ -53,9 +53,9 @@ Template.AdminAdvanceArticles.events({
         Meteor.formActions.saving();
         Session.set('savingOrder',true);
         var sectionsOrder = Meteor.advance.getSectionsOrderViaAdmin();
-        // console.log(sectionsOrder);
         Meteor.call('makeNewOrder',sectionsOrder,function(error,result){
             if(error){
+                console.error('makeNewOrder',error);
                 Meteor.formActions.errorMessage('Section order not saved');
             }else if(result){
                 Session.set('savingOrder',false);
@@ -88,9 +88,9 @@ Template.AdminAdvanceArticlesDiff.events({
                 diff.ojsOnly = afterOjs;
                 diff.paperchaseCount = parseInt(diff.paperchaseCount + addedResult.length);
                 Session.set('advanceDiff',diff);
-                Meteor.formActions.successMessage(addedResult.length + ' articles added to advance');            
+                Meteor.formActions.successMessage(addedResult.length + ' articles added to advance');
             }
-        });   
+        });
     },
     'click #remove-all-paperchase': function(e){
         Meteor.formActions.saving();
