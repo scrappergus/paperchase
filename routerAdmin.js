@@ -1011,7 +1011,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
                 Router.go('AdminAop');
             }
             this.next();
@@ -1029,6 +1029,7 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var sorted  = sorters.findOne({name:'advance'});
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
+                var totalArticles = sorted.articles ? sorted.articles.length : null;
 
                 var sections = Meteor.advance.dataForSectionsPage(sorted.articles);
                 Session.set('advanceAdmin',sections);
@@ -1036,7 +1037,7 @@ if (Meteor.isClient) {
                 return{
                     pubdate: advance.pubtime.toLocaleDateString(),
                     pubtime: advance.pubtime.toLocaleTimeString(),
-                    total: sorted.articles.length
+                    total: totalArticles
                 };
             }
         }

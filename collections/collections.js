@@ -26,7 +26,7 @@ sorters = new Mongo.Collection('sorters', {
         var sectionsList,
             articlesList;
         var journal = journalConfig.findOne();
-        if(f.name == 'advance' && journal.journal.short_name === 'oncotarget'){
+        if(journal && f.name == 'advance' && journal.journal.short_name === 'oncotarget'){
 
             // Gotta fix this code. Hard-coded this because I didn't have time tonight to do this correctly. See below, 'assets'
             // var config = journalConfig.findOne({},{fields: {'assets': 1 }});

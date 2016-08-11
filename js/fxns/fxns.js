@@ -983,12 +983,14 @@ Meteor.issue = {
 Meteor.advance = {
     articlesBySection: function(articlesList){
         var articlesBySection = {};
-        articlesList.forEach(function(article){
-            if(!articlesBySection[article.section_name]){
-                articlesBySection[article.section_name] = [];
-            }
-            articlesBySection[article.section_name].push(article);
-        });
+        if (articlesList) {
+            articlesList.forEach(function(article){
+                if(!articlesBySection[article.section_name]){
+                    articlesBySection[article.section_name] = [];
+                }
+                articlesBySection[article.section_name].push(article);
+            });    
+        }
         return articlesBySection;
     },
     dataForSectionsPage: function(){
