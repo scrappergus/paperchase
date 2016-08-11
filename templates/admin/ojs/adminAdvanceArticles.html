@@ -105,50 +105,55 @@
 
     {{>AdminAdvanceNav}}
     {{>StatusModal what='Advance Articles - Research Papers' action=statusAction details=modalMessage}}
+    <div class="row">
+        <div class="col s12"><div class="card z-depth-0">
+            <div class="card-content">
+                <form>
+                    <div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
+                        <button class="waves-effect waves-light btn-large submit" type="submit">Save</button>
+                    </div>
 
-    <form>
-        <div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
-            <button class="waves-effect waves-light btn-large submit" type="submit">Save</button>
-        </div>
-
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>EPub</th>
-                    <th>PII</th>
-                    <th>OJS</th>
-                    <th>Paperchase</th>
-                    <th>Recent</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each articles}}
-                <tr>
-                    <td>
-                        <h4>{{{title}}}</h4>
-                    </td>
-                    <td>
-                        {{articleDate dates.epub}}
-                    </td>
-                    <td>
-                        {{ids.pii}}
-                    </td>
-                    <td>
-                        <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
-                    </td>
-                    <td>
-                        <a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
-                    </td>
-                    <td>
-                        <input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_name 'Recent Research Papers'}}checked{{/if}}" class="recent-research"/>
-                        <label for="article-{{_id}}"></label>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </form>
+                    <table class="striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>EPub</th>
+                                <th>PII</th>
+                                <th>OJS</th>
+                                <th>Paperchase</th>
+                                <th>Recent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each articles}}
+                            <tr>
+                                <td>
+                                    <h4>{{{title}}}</h4>
+                                </td>
+                                <td>
+                                    {{articleDate dates.epub}}
+                                </td>
+                                <td>
+                                    {{ids.pii}}
+                                </td>
+                                <td>
+                                    <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
+                                </td>
+                                <td>
+                                    <a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
+                                </td>
+                                <td>
+                                    <input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_name 'Recent Research Papers'}}checked{{/if}}" class="recent-research"/>
+                                    <label for="article-{{_id}}"></label>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div></div>
+    </div>
 </template>
 
 
