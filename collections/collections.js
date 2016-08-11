@@ -56,7 +56,7 @@ sorters = new Mongo.Collection('sorters', {
                         }
 
 
-                        if(articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
+                        if(articlesList[a].files && articlesList[a].files.pdf && articlesList[a].files.pdf.file) {
                             assets = "https://s3-us-west-1.amazonaws.com/paperchase-aging/"; // Going to fix this in the morning. Need async to get config or first iteration fails.
                             articlesList[a].files.pdf.url = assets +"pdf/"+ articlesList[a].files.pdf.file;
                         }
