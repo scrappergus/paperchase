@@ -88,7 +88,20 @@ Meteor.methods({
         var articlesList = sorters.findOne({name:'advance'});
         articlesList = articlesList.articles;
         articlesList.sort(function(a,b){
-            return new Date(a.dates.epub).getTime() - new Date(b.dates.epub).getTime()
+            var aDate;
+            var bDate;
+            if(!a.dates || !a.dates.epub){
+                aDate = new Date();
+            } else {
+                aDate = new Date(a.dates.epub);
+            }
+
+            if(!b.dates || !b.dates.epub){
+                bDate = new Date();
+            } else {
+                bDate = new Date(b.dates.epub);
+            }
+            return aDate.getTime() - bDate.getTime();
         });
         articlesList.reverse();
 

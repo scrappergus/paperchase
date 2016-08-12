@@ -6,6 +6,7 @@
     {{>StatusModal what='Advance Articles' action=statusAction details=modalMessage}}
 
     <form>
+        {{#if sections}}
         <div class="publish-advanced fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
             <h5>Total count:<br>{{total}}</h5>
             <h5>Last published:<br>{{pubdate}}<br>{{pubtime}}</h5>
@@ -13,9 +14,12 @@
             <div class="clearfix" style="margin-bottom:10px;"></div>
             <button class="waves-effect waves-light btn-large green" id="save-advance-order">Save Order</button>
         </div>
+        {{/if}}
         {{#if savingOrder}}
         {{else}}
-            {{>AdminAdvanceArticlesSections}}
+            {{#if sections}}
+                {{>AdminAdvanceArticlesSections sections=sections}}
+            {{/if}}
         {{/if}}
     </form>
 </template>
@@ -74,6 +78,8 @@
             </ul>
         </div>
     </div>
+    {{else}}
+    {{>Loading}}
     {{/if}}
 </template>
 
@@ -87,7 +93,7 @@
     <div class="row">
         <div class="col s12">
             <a class="btn {{isActiveRoute 'AdminAdvanceArticles'}}" href="{{pathFor 'AdminAdvanceArticles'}}">Sections</a>
-            <a class="btn {{isActiveRoute 'AdminAdvanceArticlesResearch'}}" href="{{pathFor 'AdminAdvanceArticlesResearch'}}">Reseach Papers</a>
+            <a class="btn {{isActiveRoute 'AdminAdvanceArticlesResearch'}}" href="{{pathFor 'AdminAdvanceArticlesResearch'}}">Research Papers</a>
             <a class="btn {{isActiveRoute 'AdminAdvanceArticlesDiff'}}" href="{{pathFor 'AdminAdvanceArticlesDiff'}}">Paperchase Vs Legacy</a>
             <a class="btn {{isActiveRoute 'AdminAdvanceArticlesRemove'}}" href="{{pathFor 'AdminAdvanceArticlesRemove'}}">Remove Articles</a>
         </div>
@@ -99,50 +105,55 @@
 
     {{>AdminAdvanceNav}}
     {{>StatusModal what='Advance Articles - Research Papers' action=statusAction details=modalMessage}}
+    <div class="row">
+        <div class="col s12"><div class="card z-depth-0">
+            <div class="card-content">
+                <form>
+                    <div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
+                        <button class="waves-effect waves-light btn-large submit" type="submit">Save</button>
+                    </div>
 
-    <form>
-        <div class="fixed-action-btn card grey lighten-1" style="bottom: 45px; right: 24px; padding:10px;">
-            <button class="waves-effect waves-light btn-large submit" type="submit">Save</button>
-        </div>
-
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>EPub</th>
-                    <th>PII</th>
-                    <th>OJS</th>
-                    <th>Paperchase</th>
-                    <th>Recent</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each articles}}
-                <tr>
-                    <td>
-                        <h4>{{{title}}}</h4>
-                    </td>
-                    <td>
-                        {{articleDate dates.epub}}
-                    </td>
-                    <td>
-                        {{ids.pii}}
-                    </td>
-                    <td>
-                        <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
-                    </td>
-                    <td>
-                        <a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
-                    </td>
-                    <td>
-                        <input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_name 'Recent Research Papers'}}checked{{/if}}" class="recent-research"/>
-                        <label for="article-{{_id}}"></label>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </form>
+                    <table class="striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>EPub</th>
+                                <th>PII</th>
+                                <th>OJS</th>
+                                <th>Paperchase</th>
+                                <th>Recent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each articles}}
+                            <tr>
+                                <td>
+                                    <h4>{{{title}}}</h4>
+                                </td>
+                                <td>
+                                    {{articleDate dates.epub}}
+                                </td>
+                                <td>
+                                    {{ids.pii}}
+                                </td>
+                                <td>
+                                    <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
+                                </td>
+                                <td>
+                                    <a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
+                                </td>
+                                <td>
+                                    <input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_name 'Recent Research Papers'}}checked{{/if}}" class="recent-research"/>
+                                    <label for="article-{{_id}}"></label>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div></div>
+    </div>
 </template>
 
 

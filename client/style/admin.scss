@@ -2,6 +2,10 @@
 @import 'mixins';
 @import 'type';
 
+html{
+    overflow: scroll;
+}
+
 /* Forms -----------------------------*/
     .note-editor .note-toolbar{
         background: $black-1;

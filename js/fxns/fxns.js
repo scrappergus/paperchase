@@ -36,6 +36,13 @@ Meteor.organize = {
             //grouped[type].push(articles[i]);
         }
         return articles;
+    },
+    articlesByMongoId: function(articles) {
+        var articlesObj = {};
+        articles.forEach(function(article){
+            articlesObj[article._id] = article;
+        });
+        return articlesObj;
     }
 };
 
@@ -927,7 +934,7 @@ Meteor.dates = {
                 format: datePlaceholderFormat
             });
             var picker = pick.pickadate('picker');
-            picker.set('select', $(this).data('value'), { format: 'yyyy/mm/dd' });
+            picker.set('select', $(this).attr('date'), { format: 'yyyy/mm/dd' });
         });
     },
     zeroBasedMonth: function(month){
@@ -983,12 +990,14 @@ Meteor.issue = {
 Meteor.advance = {
     articlesBySection: function(articlesList){
         var articlesBySection = {};
-        articlesList.forEach(function(article){
-            if(!articlesBySection[article.section_name]){
-                articlesBySection[article.section_name] = [];
-            }
-            articlesBySection[article.section_name].push(article);
-        });
+        if (articlesList) {
+            articlesList.forEach(function(article){
+                if(!articlesBySection[article.section_name]){
+                    articlesBySection[article.section_name] = [];
+                }
+                articlesBySection[article.section_name].push(article);
+            });
+        }
         return articlesBySection;
     },
     dataForSectionsPage: function(){

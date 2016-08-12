@@ -68,8 +68,8 @@
                             <div class="row border-box">
                                 <div class="col s1">{{#if parent}}{{parent}} | {{/if}}{{what}}</div>
                                 <div class="col s3">{{{conflict}}}</div>
-                                <div class="col s4">{{{xml}}}</div>
-                                <div class="col s4">{{{db}}}</div>
+                                <div class="col s4">{{#if xml}}{{{xml}}}{{else}}&nbsp;{{/if}}</div>
+                                <div class="col s4">{{#if db}}{{{db}}}{{else}}&nbsp;{{/if}}</div>
                             </div>
                             {{/each}}
                         </div>
@@ -380,11 +380,11 @@
     <button id="add-{{what}}" class="btn btn-floating waves-effect waves-light" alt="Add {{what}}">{{>AdminAddIcon}}</button>
 </template>
 <template name="AdminDateInput">
-    <input id="{{name}}" type="date" class="datepicker dates" data-value="{{inputDate value}}" value="{{inputDate value}}" placeholder="{{placeholderDate value}}">
+    <input id="{{name}}" type="date" class="datepicker dates" data-value="{{inputDate value}}" value="{{inputDate value}}" date="{{inputDate value}}" placeholder="{{placeholderDate value}}">
     <label for="{{name}}" class="active">{{name}}</label>
 </template>
 <template name="AdminHistoryInput">
-    <input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
+    <input id="{{name}}" type="date" class="datepicker history" data-value="{{inputDate value}}" value="{{inputDate value}}" date="{{inputDate value}}"  placeholder="{{placeholderDate value}}">
     <label for="{{name}}" class="active">{{name}}</label>
 </template>
 <template name="AdminArticleFormAuthors">

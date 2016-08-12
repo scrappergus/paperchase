@@ -150,6 +150,7 @@ if (Meteor.isClient) {
     Session.setDefault('savingOrder',false);
     Session.setDefault('advanceDiff',null);
     Session.setDefault('advanceLegacy',null);
+    Session.setDefault('advanceArticles',null);
     // forms
     Session.setDefault('savedMessage',null);
     Session.setDefault('errorMessage',null);
@@ -1011,7 +1012,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
                 Router.go('AdminAop');
             }
             this.next();
@@ -1019,6 +1020,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('publish'),
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
@@ -1026,17 +1028,17 @@ if (Meteor.isClient) {
             ];
         },
         data: function(){
-            if(this.ready()){
-                var sorted  = sorters.findOne({name:'advance'});
+            var sorted  = sorters.findOne({name:'advance'});
+            if(this.ready() && sorted && sorted.articles){
                 var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
-
+                var totalArticles = sorted.articles ? sorted.articles.length : null;
                 var sections = Meteor.advance.dataForSectionsPage(sorted.articles);
                 Session.set('advanceAdmin',sections);
 
                 return{
                     pubdate: advance.pubtime.toLocaleDateString(),
                     pubtime: advance.pubtime.toLocaleTimeString(),
-                    total: sorted.articles.length
+                    total: totalArticles
                 };
             }
         }
@@ -1044,7 +1046,7 @@ if (Meteor.isClient) {
     Router.route('/admin/articles/advance/research',{
         name: 'AdminAdvanceArticlesResearch',
         title: function() {
-            var pageTitle = 'Admin | Advance Reseach Papers';
+            var pageTitle = 'Admin | Advance Research Papers';
             if(Session.get('journal')){
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
@@ -1059,15 +1061,15 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
-                Meteor.subscribe('publish'),
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('sections'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
         },
         data: function(){
-            if(this.ready()){
-                var sorted  = sorters.findOne({name:'advance'});
+            var sorted  = sorters.findOne({name:'advance'});
+            if(this.ready() && sorted && sorted.articles){
                 var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
                 var res;
 
@@ -1095,12 +1097,9 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
                 Router.go('AdminAop');
             }
-            this.next();
-        },
-        onBeforeAction: function(){
             Meteor.call('compareWithLegacy', function(error,result){
                 if(result){
                     Session.set('advanceDiff',result);
@@ -1119,7 +1118,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
                 Router.go('AdminAop');
             }
             this.next();
@@ -1127,16 +1126,15 @@ if (Meteor.isClient) {
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
+                Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
         },
         data: function(){
-            if(this.ready()){
-                var sorted  = sorters.findOne({name:'advance'});
-                return{
-                    articles: sorted.articles
-                };
+            var sorted  = sorters.findOne({name:'advance'});
+            if(this.ready() && sorted && sorted.articles){
+                Session.set('advanceArticles', sorted.articles);
             }
         }
     });

@@ -832,13 +832,18 @@ Template.AdminAdvanceArticles.helpers({
 //      return  Session.get('advanceAdmin');
 //  }
 // });
-Template.AdminAdvanceArticlesSections.helpers({
+Template.AdminAdvanceArticles.helpers({
     sections: function(){
-        return  Session.get('advanceAdmin');
+        return Session.get('advanceAdmin');
     }
 });
 Template.AdminAdvanceArticlesDiff.helpers({
     advanceDiff: function(){
         return Session.get('advanceDiff');
+    }
+});
+Template.AdminAdvanceArticlesRemove.helpers({
+    articles: function() {
+        return Session.get('advanceArticles');
     }
 });
