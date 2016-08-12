@@ -672,6 +672,16 @@ Meteor.fullText = {
                             suppObj[key] = suppInfo[key];
                         }
 
+                        if(files.supplemental[f].label) {
+                            suppObj.label = files.supplemental[f].label;
+                        }
+                        if(files.supplemental[f].title) {
+                            suppObj.title = files.supplemental[f].title;
+                        }
+                        if(files.supplemental[f].caption) {
+                            suppObj.caption = files.supplemental[f].caption;
+                        }
+
                         if(files.supplemental[f].id.toLowerCase() === suppObj.id.toLowerCase() && files.supplemental[f].url){
                             // matched by <supplemental-material> id attribute
                             suppObj.url = files.supplemental[f].url;
