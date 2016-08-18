@@ -651,7 +651,7 @@ if (Meteor.isServer) {
         if(queryType === 'issue'){
           articlesList = articles.find({issue_id: queryParams});
         }else if(queryType === 'pii'){
-          articlesList = articles.find({_id:{'$in':queryParams}});
+          articlesList = articles.find({'ids.pii':{'$in':queryParams}});
         }
 
         // if a user wants to change the submissions list and start over,
