@@ -15,7 +15,7 @@ Template.AdminAdvanceArticlesResearch.events({
         });
         Meteor.call('updateAdvanceResearch', researchPapers, function(error,result){
             if(error){
-
+                console.error('updateAdvanceResearch', error);
             }else if(result){
                 // console.log('result',result);
                 Meteor.formActions.successMessage(result.recent + ' Recent Articles<br>' + result.updated + ' Articles Updated');
