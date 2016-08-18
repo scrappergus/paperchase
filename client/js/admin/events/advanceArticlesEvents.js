@@ -136,7 +136,7 @@ Template.AdvanceRemoveArticle.events({
                     Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
                         if(result){
                             // Meteor.formActions.successMessage('Article Removed');
-                            Session.set('advanceDiff',result)
+                            Session.set('advanceDiff',result);
                         }
                     });
                 }
@@ -165,7 +165,7 @@ Template.AdminAdvanceBatchDelete.events({
                     // var legacyArticles = Session.get('advanceLegacy');
                     Meteor.call('compareWithLegacy', function(error,result){
                         if(result){
-                            Session.set('advanceDiff',result)
+                            Session.set('advanceDiff',result);
                         }
                     });
                 }
