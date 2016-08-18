@@ -1,5 +1,5 @@
 <template name="ArticleDates">
-    <h2 class="dates">
+    <span class="dates">
         {{#each arrayify history}}
             <span class="date">
                 {{name}}: {{articleDate value}} <span class="comma">; </span>
@@ -15,17 +15,17 @@
             {{/if}}
             </span>
         {{/each}}
-    </h2>
+    </span>
 </template>
 
 <template name="AuthorsRefList">
-    <h2 class="authors">
+    <span class="authors">
         {{#each authors }}
             <span class="author">
                 {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if name_suffix}} {{name_suffix}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="author-comma">,</span>
             </span>
         {{/each}}
-    </h2>
+    </span>
 
     <span>
     <ul>
