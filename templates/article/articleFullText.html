@@ -230,8 +230,17 @@
 </template>
 
 <template name="FullTextFigure">
+    <h1>med= {{medium}}</h1>
+    <h1>url = {{url}}</h1>
     <div class="full-text-image-container" id="{{id}}">
-        {{#if url}}<a href="/figure/?article={{articleId}}&figure={{id}}" target="_blank"><img class="full-text-image" src="{{url}}"/></a>{{/if}}
+        {{#if url}}
+        <a href="/figure/?article={{articleId}}&figure={{id}}" target="_blank">
+            <picture>
+                <source media="(min-width: 1000px)" srcset="{{url}}">
+                <img class="full-text-image" src="{{medium}}"/>
+            </picture>
+        </a>
+        {{/if}}
         {{>FullTextFigureText}}
     </div>
 </template>

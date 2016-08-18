@@ -243,14 +243,23 @@ Meteor.article = {
                             if(files[file][f].file)
                             files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
                         }
-                    }else if(file === 'figures' || file === 'tables'){
+                    }else if(file === 'tables'){
                         for(var f in files[file]){
                             if(files[file][f].file)
                             files[file][f].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][f].file;
                         }
+                    }else if(file === 'figures' || file === 'tables'){
+                        for(var img in files[file]){
+                            if(files[file][img].file)
+                            // var extType = files[file][img].file.split('.').pop();
+                            // files[file][img].fileWithoutExt = files[file][img].file.replace(/\.[^/.]+$/, "");
+                            files[file][img].medium = journalConfig.findOne({}).cloudfront.paper_figures.domain + '/' + files[file][img].file.replace(/\.[^/.]+$/, "") + '_1000.' + files[file][img].file.split('.').pop();
+                            files[file][img].url =  journalConfig.findOne({}).cloudfront.paper_figures.domain + '/' + files[file][img].file;
+                        }
                     }
                 }
             }
+            console.log('files',files.figures[0].medium);
             files.journal = journalConfig.findOne({}).journal.short_name;
             files._id = articleMongoId;
         }
