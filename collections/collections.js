@@ -38,7 +38,7 @@ sorters = new Mongo.Collection('sorters', {
                 var article;
                 if (articlesByMongoId[order[i]]){
                     article = articlesByMongoId[order[i]];
-                    if (article.section_id) {
+                    if (article.section_id || article.section_id === 0) {
                         var section = sections.findOne({'section_id' : article.section_id});
                         if(section !== undefined && section.section_name) {
                             article.section_name = section.section_name;

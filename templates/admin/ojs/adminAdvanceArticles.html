@@ -143,7 +143,7 @@
                                     <a href="{{pathFor 'AdminArticleOverview' _id=_id}}">Paperchase</a>
                                 </td>
                                 <td>
-                                    <input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_name 'Recent Research Papers'}}checked{{/if}}" class="recent-research"/>
+                                    <input id="article-{{_id}}" data-article-id="{{_id}}" type="checkbox" checked="{{#if equals section_id 0}}checked{{/if}}" class="recent-research"/>
                                     <label for="article-{{_id}}"></label>
                                 </td>
                             </tr>

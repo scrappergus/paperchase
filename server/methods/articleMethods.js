@@ -376,15 +376,30 @@ Meteor.methods({
             if(article.section){
                 selectedSectionId = article.section;
             }
+            if(!selectedSectionId && selectedSectionId != 0 && article.section_id || article.section_id === 0) {
+                // For OJS
+                selectedSectionId = article.section_id;
+            }
+
             article.article_section_list = [];
             publisherArticleSections = sections.find().fetch();
-            for(var s =0 ; s < publisherArticleSections.length ; s++){
+            for(var s=0; s < publisherArticleSections.length; s++){
                 var selectObj = {
                     _id : publisherArticleSections[s]._id,
                     name: publisherArticleSections[s].name,
                     short_name: publisherArticleSections[s].short_name
                 };
+
+                if(!selectObj.name && publisherArticleSections[s].section_name){
+                    // For OJS
+                    selectObj.name = publisherArticleSections[s].section_name;
+                }
+
+
                 if(publisherArticleSections[s]._id == selectedSectionId){
+                    selectObj.selected = true;
+                } else if(publisherArticleSections[s].section_id == selectedSectionId){
+                    // for OJS
                     selectObj.selected = true;
                 }
                 article.article_section_list.push(selectObj);

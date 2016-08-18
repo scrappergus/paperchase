@@ -142,7 +142,7 @@ Meteor.methods({
         var orderBySectionId = Meteor.call('orderBySectionId',order.articles);
         var total = 0;
         for(var article in articles){
-            total++
+            total++;
         }
         // update all article docs
         // and get order ready to update
@@ -152,7 +152,7 @@ Meteor.methods({
             var updateObj = {};
                 updateObj.advance = true; // below the method advanceMoveArticle will pull from sorters, which will then set article advance to false (via sorters upddate collection hook), so for the updateArticle after, reset to advance
             var updateArticle = false;
-            if(articles[article] == true){
+            if(articles[article] === true){
                 // recent checked
                 updateObj.section_id = 0;
                 recent++;
@@ -185,7 +185,7 @@ Meteor.methods({
                 result = {
                     recent: recent,
                     updated: updated
-                }
+                };
                 fut['return'](result);
             }
         }
@@ -243,7 +243,7 @@ Meteor.methods({
                     }
                 });
             }
-        })
+        });
         return fut.wait();
     }
 });
