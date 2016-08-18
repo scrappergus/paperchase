@@ -1,0 +1,52 @@
+<template name="ArticleDates">
+    <h2 class="dates">
+        {{#each arrayify history}}
+            <span class="date">
+                {{name}}: {{articleDate value}} <span class="comma">; </span>
+            </span>
+        {{/each}}
+
+        {{#each arrayify dates}}
+            <span class="date">
+            {{#if equals name 'collection'}}
+                published: {{collectionDate value}} <span class="comma">; </span>
+                {{else}}
+                published: {{articleDate value}} <span class="comma">; </span>
+            {{/if}}
+            </span>
+        {{/each}}
+    </h2>
+</template>
+
+<template name="AuthorsRefList">
+    <h2 class="authors">
+        {{#each authors }}
+            <span class="author">
+                {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if name_suffix}} {{name_suffix}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="author-comma">,</span>
+            </span>
+        {{/each}}
+    </h2>
+
+    <span>
+    <ul>
+    {{#each affiliations}}
+    {{#if notEmpty .}}
+    <li>
+        <sup>{{affiliationNumber @index affiliations}}</sup> {{.}}
+    </li>
+    {{/if}}
+    {{/each}}
+    </ul>
+    </span>
+
+    {{#if equal_contribs}}
+    <span>{{equal_contribs}} Contributed equally to this work.</span>
+    {{/if}}
+
+    {{#if author_notes}}
+    {{#each author_notes}}
+    <div>{{label}} {{note}}.</div>
+    {{/each}}
+    {{/if}}
+
+</template>
