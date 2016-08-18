@@ -40,8 +40,10 @@ sorters = new Mongo.Collection('sorters', {
                     article = articlesByMongoId[order[i]];
                     if (article.section_id) {
                         var section = sections.findOne({'section_id' : article.section_id});
-                        if(section !== undefined) {
+                        if(section !== undefined && section.section_name) {
                             article.section_name = section.section_name;
+                        } else if(section !== undefined && section.name) {
+                            article.section_name = section.name;
                         }
                     } else if (article.article_type) {
                         article.section_name = article.article_type.name;
