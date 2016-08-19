@@ -50,3 +50,13 @@
     {{/if}}
 
 </template>
+
+<template name="AuthorAffsAndNotes">
+    <sup class="author-affiliations">
+        {{#each affiliations_numbers}}
+        <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
+        {{/each}}
+        {{#each author_notes}}<span>{{label}}<span class="comma">,</span></span>{{/each}}
+        {{#if equal_contrib}}<span>{{equal_contrib}}<span class="comma">,</span></span>{{/if}}
+    </sup>
+</template>
