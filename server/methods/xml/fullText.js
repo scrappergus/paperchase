@@ -706,7 +706,7 @@ Meteor.fullText = {
         referenceObj.authors = '';
         var first_author = true;
         if(reference.childNodes.length == 1) {
-            referenceObj.textContent = reference.childNodes[0].nodeValue;
+            referenceObj.textContent = [{content:reference.childNodes[0].nodeValue, type:'text'}];
         }
         for(var r = 0; r < reference.childNodes.length; r++){
             // console.log('r = ' + r);
@@ -808,7 +808,12 @@ Meteor.fullText = {
                                         }
                                     }
                                     else {
-                                        referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
+                                        if(referenceObj.textContent !== undefined) {
+                                            referenceObj.textContent.push({content: referencePart.childNodes[part].nodeValue, type:'ext_link'});
+                                        }
+                                        else {
+                                            referenceObj[referencePartName] = referencePart.childNodes[part].nodeValue;
+                                        }
                                     }
                                 }
                             }
@@ -817,7 +822,10 @@ Meteor.fullText = {
                 }
             }
             else {
-                referenceObj.textContent = reference.childNodes[r].nodeValue;
+                if(referenceObj.textContent === undefined) {
+                    referenceObj.textContent = [];
+                }
+                referenceObj.textContent.push({content:reference.childNodes[r].nodeValue, type:'text'});
             }
         }
 
