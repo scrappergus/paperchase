@@ -15,7 +15,7 @@ Template.AdminAdvanceArticlesResearch.events({
         });
         Meteor.call('updateAdvanceResearch', researchPapers, function(error,result){
             if(error){
-
+                console.error('updateAdvanceResearch', error);
             }else if(result){
                 // console.log('result',result);
                 Meteor.formActions.successMessage(result.recent + ' Recent Articles<br>' + result.updated + ' Articles Updated');
@@ -136,7 +136,7 @@ Template.AdvanceRemoveArticle.events({
                     Meteor.call('compareWithLegacy', legacyArticles, function(error,result){
                         if(result){
                             // Meteor.formActions.successMessage('Article Removed');
-                            Session.set('advanceDiff',result)
+                            Session.set('advanceDiff',result);
                         }
                     });
                 }
@@ -165,7 +165,7 @@ Template.AdminAdvanceBatchDelete.events({
                     // var legacyArticles = Session.get('advanceLegacy');
                     Meteor.call('compareWithLegacy', function(error,result){
                         if(result){
-                            Session.set('advanceDiff',result)
+                            Session.set('advanceDiff',result);
                         }
                     });
                 }

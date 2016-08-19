@@ -88,7 +88,7 @@ Meteor.article = {
             }
         }
 
-        if(article.affiliations.length == 1) {
+        if(article.affiliations && article.affiliations.length == 1) {
             article.singleAffiliation = true;
         }
         return article;

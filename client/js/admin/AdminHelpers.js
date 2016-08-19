@@ -277,6 +277,9 @@ Template.AdminArticle.helpers({
     }
 });
 Template.AdminArticleForm.helpers({
+    journal_short_name: function(){
+        return Session.get('journal').journal.short_name;
+    },
     article : function(){
         return Session.get('article-form');
     }
