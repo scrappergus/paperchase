@@ -40,7 +40,7 @@ pubIdTypeList = {
     // 'publisher-id':'Publisher’s identifier',
     // 'sici':'Serial Item and Contribution Identifier',
     // 'std-designation':'The official number of a standard, from a standards body such as ISO, NISO, IEEE, ASME'
-}
+};
 articleTypeList = {
     'abstract' : 'The article itself is an abstract (of a paper or presentation) that usually has been presented or published separately.',
     'addendum' : 'A published work that adds additional information or clarification to another work (The somewhat similar value “correction” corrects an error in previously published material.)',
@@ -72,4 +72,4 @@ articleTypeList = {
     'retraction' : 'Retraction or disavowal of previously published material',
     'review-article': 'Review or state-of-the-art summary article (The related value “research-article” describes original research.)',
     // 'translation' : 'Translation of an article originally produced in a different language'
-}
+};
