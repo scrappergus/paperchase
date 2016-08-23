@@ -55,6 +55,7 @@
             </div>
         </div>
     </div>
+
     {{#if error}}
     <div class="row">
         <div class="col s12">
@@ -135,18 +136,31 @@
                             <div class="row"><div class="col s12">
                                 <span class="badge">{{article_type.type}}</span>
                                 <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit" alt="Edit Article"><i class="material-icons">&#xE254;</i></button>
-                                <h3>{{{title}}}</h3>
-                                <h4>{{>AuthorsRefList}}</h4>
-                                <h6>Volume {{volume}}, Issue {{issue}}</h6>
-                                {{#if page_start}}<h6><label>pp: </label>{{page_start}}{{#if page_end}} &mdash; {{page_end}}{{/if}}</h6>{{/if}}
-                                {{#if dates}}
-                                    {{>ArticleDates}}
-                                {{/if}}
-                                <h6><label>Pub Status:</label> {{pub_status}}</h6>
+
+                                <h6><label>Pub Status:</label> {{status}}</h6>
+
+                                <h6>
+                                    {{#if article_type.name}}
+                                        <span class="article-type">{{article_type.name}}</span>
+                                        {{#if issue_id}}
+                                        &nbsp; | &nbsp;
+                                        {{/if}}
+                                    {{/if}}
+                                    {{#if issue_id}}
+                                        <span>Volume {{volume}}, Issue {{issue}}</span>
+                                        {{#if page_start}}
+                                        &nbsp; | &nbsp;
+                                        {{/if}}
+                                    {{/if}}
+                                    {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
+                                </h6>
+
+                                <h4>{{{title}}}</h4>
+                                <p>{{>AuthorsRefList}}</p>
                             </div></div>
 
                             <div class="row">
-                                <div class="col s6">
+                                <div class="col s12 m4">
                                     <h5>Article IDs</h5>
                                     <ul>
                                     {{#each arrayify ids}}
@@ -154,11 +168,27 @@
                                     {{/each}}
                                     </ul>
                                 </div>
-                                <div class="col s6">
+                                <div class="col s12 m4">
                                     <h5>Article History</h5>
                                     <ul>
                                     {{#each arrayify history}}
-                                        <li><label>{{name}}:</label> {{formatDate value}}</li>
+                                        <li><label>{{name}}:</label> {{articleDate value}}</li>
+                                    {{/each}}
+                                    </ul>
+                                </div>
+                                <div class="col s12 m4">
+                                    <h5>Article Dates</h5>
+                                    <ul>
+                                    {{#each arrayify dates}}
+                                        <li>
+                                            {{#if equals name 'collection'}}
+                                            <label>published (collection):</label>
+                                            {{collectionDate value}}
+                                            {{else}}
+                                            <label>published:</label>
+                                            {{articleDate value}}
+                                            {{/if}}
+                                        </li>
                                     {{/each}}
                                     </ul>
                                 </div>
@@ -172,7 +202,6 @@
     </div>
     {{/if}}
 </template>
-
 
 <template name="AdminDataSubmissionsPast">
     {{>AdminHeader header="Past Admin Data Submissions"}}
