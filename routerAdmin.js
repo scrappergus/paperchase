@@ -153,6 +153,7 @@ if (Meteor.isClient) {
     Session.setDefault('advanceArticles',null);
     // forms
     Session.setDefault('savedMessage',null);
+    Session.setDefault('error',null);
     Session.setDefault('errorMessage',null);
     Session.setDefault('statusModalAction',null);
     Session.setDefault('statusModalDetails',null);
