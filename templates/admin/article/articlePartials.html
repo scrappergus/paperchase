@@ -1,60 +1,39 @@
-<template name="ArticleDates">
-    <span class="dates">
-        {{#each arrayify history}}
-            <span class="date">
-                {{name}}: {{articleDate value}} <span class="comma">; </span>
-            </span>
-        {{/each}}
-
-        {{#each arrayify dates}}
-            <span class="date">
-            {{#if equals name 'collection'}}
-                published: {{collectionDate value}} <span class="comma">; </span>
-                {{else}}
-                published: {{articleDate value}} <span class="comma">; </span>
-            {{/if}}
-            </span>
-        {{/each}}
-    </span>
-</template>
-
 <template name="AuthorsRefList">
-    <span class="authors">
-        {{#each authors }}
-            <span class="author">
-                {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if name_suffix}} {{name_suffix}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="author-comma">,</span>
-            </span>
+    <div class="authors-and-ref">
+        <div class="authors">
+            {{#each authors }}
+                <span class="author">
+                    {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if name_suffix}} {{name_suffix}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="comma">,</span>
+                </span>
+            {{/each}}
+        </div>
+
+        <ul class="author-affiliations">
+        {{#each affiliations}}
+        {{#if notEmpty .}}
+            <li>
+                <sup>{{affiliationNumber @index affiliations}}</sup> {{.}}
+            </li>
+        {{/if}}
         {{/each}}
-    </span>
+        </ul>
 
-    <span>
-    <ul>
-    {{#each affiliations}}
-    {{#if notEmpty .}}
-    <li>
-        <sup>{{affiliationNumber @index affiliations}}</sup> {{.}}
-    </li>
-    {{/if}}
-    {{/each}}
-    </ul>
-    </span>
+        {{#if equal_contribs}}
+        <span class="equal-contrib">{{equal_contribs}} Contributed equally to this work.</span>
+        {{/if}}
 
-    {{#if equal_contribs}}
-    <span>{{equal_contribs}} Contributed equally to this work.</span>
-    {{/if}}
-
-    {{#if author_notes}}
-    {{#each author_notes}}
-    <div>{{label}} {{note}}.</div>
-    {{/each}}
-    {{/if}}
-
+        {{#if author_notes}}
+        {{#each author_notes}}
+        <span class="author-notes">{{label}} {{note}}.</span>
+        {{/each}}
+        {{/if}}
+    </div>
 </template>
 
 <template name="AuthorAffsAndNotes">
     <sup class="author-affiliations">
         {{#each affiliations_numbers}}
-        <span><a href="#" class="tooltip--triangle" data-tooltip="{{tooltipAffiliation}}">{{affiliationNumber .}}</a><span class="comma">,</span></span>
+        <span>{{affiliationNumber .}}<span class="comma">,</span></span>
         {{/each}}
         {{#each author_notes}}<span>{{label}}<span class="comma">,</span></span>{{/each}}
         {{#if equal_contrib}}<span>{{equal_contrib}}<span class="comma">,</span></span>{{/if}}
