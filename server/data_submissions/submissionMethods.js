@@ -11,44 +11,6 @@ Meteor.methods({
             throw new Meteor.Error('Cannot register set');
         }
     },
-    preprocessSubmission: function(articlesList){
-        console.log('--preprocessSubmission');
-        console.log(articlesList.length);
-        if(articlesList){
-            var fut = new future();
-            var articlesList;
-            var processed;
-            for(var i = 0 ; i < articlesList.length ; i++){
-                console.log('... '+i);
-                var pmid = articlesList[i]['ids']['pmid'];
-                console.log('     '+pmid);
-
-                //check saved pub status against pubmed
-                Meteor.call('getPubStatusFromPmid',pmid, function(error,result){
-                    if(error){
-                        console.log('ERROR - getPubStatusFromPmid');
-                        console.log(error);
-                        throw new Meteor.Error('ERROR - getPubStatusFromPmid', error);
-                    }
-                    if(result){
-                        articlesList[i]['pubmed_pub_status'] = result;
-                        if(i == parseInt(articlesList.length -1)){
-                            // if this is the last article we are checking, return
-                            processed = articlesList;
-                        }
-                    }else{
-                        throw new Meteor.Error('ERROR - getPubStatusFromPmid', 'No Result');
-                    }
-                });
-            }
-            if(processed){
-                console.log('processed');
-                console.log(processed);
-                fut['return'](processed);
-            }
-            return fut.wait();
-        }
-    },
     generateDateXml: function(date){
         var date = new Date(date);
         var xmlString = '';

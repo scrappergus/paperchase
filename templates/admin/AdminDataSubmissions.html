@@ -1,5 +1,6 @@
 <template name="AdminDataSubmissions">
     {{>AdminHeader header="New Data Submission"}}
+    {{>SendingSuccessMessage what="DOI registered"}}
     <!-- <a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a> -->
     {{>DataSubmissionsSearchForms}}
 
@@ -35,7 +36,6 @@
         </div>
     </div>
     {{#if missingPii}}
-    {{>SendingSuccessMessage what="DOI registered"}}
     <div class="row">
         <div class="col s12">
             <h3>Missing PII</h3>
@@ -58,15 +58,6 @@
             <ul class="collection">
                 {{#each articles}}
                 <li class="collection-item">
-                    {{#if equals pubmed_pub_status pub_status}}
-                    {{else}}
-                    <!-- <div class="box red lighten-4">
-                        <h3>Pub Status Not Matched on PubMed</h3>
-                        <h4><label>Saved:</label> {{pub_status}}</h4>
-                        <h4><label>PubMed:</label> {{pubmed_pub_status}}</h4>
-                    </div> -->
-                    {{/if}}
-
                     <div class="row article-edit hide" id="edit-{{_id}}">
                         <div class="col s12">
                             <div class="row"><div class="col s12">
