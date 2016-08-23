@@ -463,14 +463,14 @@ Meteor.adminArticleFormGet = {
     pageStart: function(){
         return $('#page_start').val() ? parseInt($('#page_start').val()) : null;
     },
+    pubStatus: function(){
+        if($('#article-pub-status').val() !== ''){
+            return $('#article-pub-status').val();
+        }
+    },
     section: function(){
         if($('#article-section').val() !== ''){
             return $('#article-section').val();
-        }
-    },
-    status: function(){
-        if($('#article-pub-status').val() !== ''){
-            return $('#article-pub-status').val();
         }
     },
     title: function(){
@@ -511,7 +511,7 @@ Meteor.adminArticleFormGet = {
         articleUpdateObj.issue_id = Meteor.adminArticleFormGet.issueId();
         articleUpdateObj.article_type = Meteor.adminArticleFormGet.articleType();
         articleUpdateObj.section = Meteor.adminArticleFormGet.section();
-        articleUpdateObj.status = Meteor.adminArticleFormGet.status();
+        articleUpdateObj.pub_status = Meteor.adminArticleFormGet.pubStatus();
 
         // authors and affiliations
         articleUpdateObj.affiliations = Meteor.adminArticleFormGet.affiliations();

@@ -228,6 +228,10 @@
         </div>
     </div>
     <div class="row">
+        <div class="col s2 right-align"><label>Pub Status:</label></div>
+        <div class="col s10">{{#if pub_status}}{{pub_status}}{{else}}N/A{{/if}}</div>
+    </div>
+    <div class="row">
         <div class="col s2 right-align"><label>Site Settings:</label></div>
         <div class="col s10">
             <p class="valign-wrapper"><label class="valign">Advance:</label> {{#if advance}}{{>AdminTrueIcon}}{{else}}{{>AdminFalseIcon}}{{/if}}</p>
