@@ -1,60 +1,6 @@
 // Indexers
 // ----------------
 Template.AdminDataSubmissions.events({
-    'keydown input': function(e,t){
-        var tag = '<div class="chip">Tag<i class="material-icons">close</i></div>'
-        if(e.which == 13) {
-            e.preventDefault();
-            var pii = $(e.target).val();
-
-            //first check if already present
-            var piiList = Meteor.dataSubmissions.getPiiList();
-
-            if(piiList.indexOf(pii) === -1){
-                $('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="material-icons" data-pii="' + pii + '">&#xE5CD;</i></span>');
-            }else{
-                alert('PII already in list');
-            }
-        }
-    },
-    'click .zmdi-close-circle-o': function(e,t){
-        e.preventDefault();
-        var pii = $(e.target).attr('data-pii');
-        pii = pii.trim();
-        $('#chip-'+pii).remove();
-    },
-    'submit .form-pii': function(e,t){
-        e.preventDefault();
-
-        var piiList = Meteor.dataSubmissions.getPiiList();
-
-        //check if there's anything to add to the array of pii
-        if($('#submissions_search_pii').val()){
-            var addPii = $('#submissions_search_pii').val();
-            //do not add if already present
-            if(piiList.indexOf(addPii) === -1){
-                piiList.push(addPii);
-            }
-        }
-        if(piiList.length === 0){
-            alert('no PII to search');
-        }
-
-        //get articles
-        var queryType = 'pii',
-            queryParams = piiList;
-
-        Meteor.dataSubmissions.getArticles(queryType,queryParams);
-    },
-    'submit .form-issue': function(e,t){
-        e.preventDefault();
-        var issueId = $('#submissions_search_issue').val();
-
-        //get articles
-        var queryType = 'issue',
-            queryParams = issueId;
-        Meteor.dataSubmissions.getArticles(queryType,queryParams);
-    },
     'click .clear': function(e){
         e.preventDefault();
         // Session.set('submission_list',null);
@@ -76,10 +22,10 @@ Template.AdminDataSubmissions.events({
         var missingPiiList = [];
 
         for(var i = 0 ; i < submissionList.length ; i++){
-            if(submissionList[i]['ids']['pii']){
-                piiList += submissionList[i]['ids']['pii'] + ',';
+            if(submissionList[i].ids.pii){
+                piiList += submissionList[i].ids.pii + ',';
             }else{
-                missingPiiList.push(submissionList[i]['title']);
+                missingPiiList.push(submissionList[i].title);
             }
         }
 
@@ -132,4 +78,55 @@ Template.AdminDataSubmissions.events({
         $('#overview-' + articleId).removeClass('hide');
         $('.edit-article').removeClass('hide');
     }
-})
+});
+
+Template.DataSubmissionsSearchForms.events({
+    'keydown input': function(e,t){
+        var tag = '<div class="chip">Tag<i class="material-icons">close</i></div>';
+        if(e.which == 13) {
+            e.preventDefault();
+            var pii = $(e.target).val();
+
+            //first check if already present
+            var piiList = Meteor.dataSubmissions.getPiiList();
+
+            if(piiList.indexOf(pii) === -1){
+                $('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="material-icons" data-pii="' + pii + '">&#xE5CD;</i></span>');
+            }else{
+                alert('PII already in list');
+            }
+        }
+    },
+    'submit .form-issue': function(e,t){
+        e.preventDefault();
+        var issueId = $('#submissions_search_issue').val();
+
+        //get articles
+        var queryType = 'issue',
+            queryParams = issueId;
+        Meteor.dataSubmissions.getArticles(queryType,queryParams);
+    },
+    'submit .form-pii': function(e,t){
+        e.preventDefault();
+        console.log('CLICK PII Form');
+        var piiList = Meteor.dataSubmissions.getPiiList();
+
+        //check if there's anything to add to the array of pii
+        if($('#submissions_search_pii').val()){
+            var addPii = $('#submissions_search_pii').val();
+            //do not add if already present
+            if(piiList.indexOf(addPii) === -1){
+                piiList.push(addPii);
+            }
+        }
+        if(piiList.length === 0){
+            alert('no PII to search');
+        }
+
+        //get articles
+        var queryType = 'pii',
+            queryParams = piiList;
+
+        Meteor.dataSubmissions.getArticles(queryType,queryParams);
+    },
+});

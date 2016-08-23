@@ -424,12 +424,13 @@ Template.AdminUploadArticleXml.helpers({
 
 // Data Submission
 // ---------------
-Template.AdminDataSubmissions.helpers({
+Template.DataSubmissionsSearchForms.helpers({
     volumes: function(){
         return Session.get('archive');
-    },
+    }
+});
+Template.AdminDataSubmissions.helpers({
     articles: function(){
-        // console.log('..Articles helper');
         var articlesList = articles.find().fetch();
         if(articlesList){
             Meteor.dataSubmissions.doneProcessing();
