@@ -97,15 +97,6 @@ Template.DataSubmissionsSearchForms.events({
             }
         }
     },
-    'submit .form-issue': function(e,t){
-        e.preventDefault();
-        var issueId = $('#submissions_search_issue').val();
-
-        //get articles
-        var queryType = 'issue',
-            queryParams = issueId;
-        Meteor.dataSubmissions.getArticles(queryType,queryParams);
-    },
     'submit .form-pii': function(e,t){
         e.preventDefault();
         console.log('CLICK PII Form');
@@ -129,4 +120,16 @@ Template.DataSubmissionsSearchForms.events({
 
         Meteor.dataSubmissions.getArticles(queryType,queryParams);
     },
+});
+
+Template.DataSubmissionsSearchFormIssue.events({
+    'submit .form-issue': function(e,t){
+        e.preventDefault();
+        var issueId = $('#submissions_search_issue').val();
+
+        //get articles
+        var queryType = 'issue',
+            queryParams = issueId;
+        Meteor.dataSubmissions.getArticles(queryType,queryParams);
+    }
 });

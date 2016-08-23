@@ -426,9 +426,21 @@ Template.AdminUploadArticleXml.helpers({
 // ---------------
 Template.DataSubmissionsSearchForms.helpers({
     volumes: function(){
+        // this helper is only used to determine whether or not to load DataSubmissionsSearchFormIssue
+        // only want to load template when data available so that there are no timing problems initializing select dropdown
+        if (Session.get('archive') && Session.get('archive').length > 0){
+            return Session.get('archive');
+        } else{
+            return null;
+        }
+    }
+});
+Template.DataSubmissionsSearchFormIssue.helpers({
+    volumes: function(){
         return Session.get('archive');
     }
 });
+
 Template.AdminDataSubmissions.helpers({
     articles: function(){
         var articlesList = articles.find().fetch();

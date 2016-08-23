@@ -115,6 +115,9 @@ Template.AdminDataSubmissions.onRendered(function () {
     $('select').material_select();
     Session.set('submission_list',null);
 });
+Template.DataSubmissionsSearchFormIssue.onRendered(function () {
+    $('select').material_select();
+});
 Template.AdminDataSubmissionsPast.onRendered(function () {
     Session.set('article-id',null);
     Session.set('article',null);
