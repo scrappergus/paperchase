@@ -1,6 +1,6 @@
 // pubTypeDateList, dateTypeDateList and pubIdTypeList: http://jats.nlm.nih.gov/archiving/tag-library/1.0/index.html
 pubTypeDateList = {
-    'collection': 'Collection (Issue)',
+    // 'collection': 'Collection (Issue)',
     'epub': 'Electronic publication',
     'ppub': 'Print publication',
     'epub-ppub': 'Both print and electronic publications',
