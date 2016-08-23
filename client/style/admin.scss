@@ -103,7 +103,7 @@ html{
     li.disabled{
         @include opacity(0.2);
     }
-    .article-form-anchors{
+    .article-form-anchors, .article-nav{
         margin: 0;
         li{
             display: inline-block;

@@ -96,21 +96,23 @@
 <template name="AdminArticleButtons">
     <div class="row">
         <div class="col s12">
-            {{#with article}}
-            <a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a>
-            {{#if isInRole 'edit,super-admin' 'article'}}
-            <a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">{{>AdminEditIcon}} Edit</a>
-            <a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">{{>AdminSettingsIcon}} PDF &amp; XML Settings</a>
-            <a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">{{>AdminUploadIcon}} PDF &amp; XML Uploader</a>
-            <a href="{{pathFor 'AdminArticleXmlReprocess'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleXmlReprocess'}}">{{>AdminRefreshIcon}} Reprocess XML</a>
-            <a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">{{>AdminFiguresIcon}} Figures</a>
-            <a href="{{pathFor 'AdminArticleSupplemental'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleSupplemental'}}">{{>AdminSupplementalIcon}} Supplemental</a>
-            {{/if}}
-            {{/with}}
+            <ul class="article-nav">
+                {{#with article}}
+                <li><a href="{{pathFor 'AdminArticleOverview'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleOverview'}}">Overview</a></li>
+                {{#if isInRole 'edit,super-admin' 'article'}}
+                <li><a href="{{pathFor 'AdminArticle'}}" class="btn btn-edit {{isActiveRoute 'AdminArticle'}}">{{>AdminEditIcon}} Edit</a></li>
+                <li><a href="{{pathFor 'AdminArticleFiles'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFiles'}}">{{>AdminSettingsIcon}} PDF &amp; XML Settings</a></li>
+                <li><a href="{{pathFor 'AdminArticleFilesUploader'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFilesUploader'}}">{{>AdminUploadIcon}} PDF &amp; XML Uploader</a></li>
+                <li><a href="{{pathFor 'AdminArticleXmlReprocess'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleXmlReprocess'}}">{{>AdminRefreshIcon}} Reprocess XML</a></li>
+                <li><a href="{{pathFor 'AdminArticleFigures'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleFigures'}}">{{>AdminFiguresIcon}} Figures</a></li>
+                <li><a href="{{pathFor 'AdminArticleSupplemental'}}" class="btn btn-edit {{isActiveRoute 'AdminArticleSupplemental'}}">{{>AdminSupplementalIcon}} Supplemental</a></li>
+                {{/if}}
+                {{/with}}
 
-            {{#if journal}}
-            <a href="{{journal.visitor}}article/{{article._id}}" class="btn" target="_BLANK">{{>AdminFwdIcon}} Visitor Site</a>
-            {{/if}}
+                {{#if journal}}
+                <li><a href="{{journal.visitor}}article/{{article._id}}" class="btn" target="_BLANK">{{>AdminFwdIcon}} Visitor Site</a></li>
+                {{/if}}
+            </ul>
         </div>
     </div>
     <!-- {{>AdminArticleCrawlerButtons}} -->
