@@ -1,7 +1,7 @@
 Meteor.methods({
     registerDoiSet: function(piiList){
         piiList = piiList.substring(0, piiList.length - 1); //remove trailing comma
-        var requestURL = doiConfig['api']['doi'] + journalConfig['short_name'] +'/' + piiList;
+        var requestURL = doiConfig.api.doi + journalConfig['short_name'] +'/' + piiList;
         var res;
         res = Meteor.http.get(requestURL + '?test=true');
         if(res && res.statusCode === 200){
@@ -12,7 +12,7 @@ Meteor.methods({
         }
     },
     generateDateXml: function(date){
-        var date = new Date(date);
+        date = new Date(date);
         var xmlString = '';
         xmlString += '<Year>';
         xmlString +=  date.getFullYear();
@@ -33,7 +33,7 @@ Meteor.methods({
             throw new Meteor.Error('xml-generation failed', 'Could not create article XML');
         }else{
             // console.log(article);
-            var xmlString = '<Article><Journal><PublisherName>' + journalSettings['publisher']['name'] + '</PublisherName><JournalTitle>' + journalSettings['name'] + '</JournalTitle><Issn>' + journalSettings['issn'] + '</Issn>';
+            var xmlString = '<Article><Journal><PublisherName>' + journalSettings.publisher.name + '</PublisherName><JournalTitle>' + journalSettings.name + '</JournalTitle><Issn>' + journalSettings.issn + '</Issn>';
             xmlString += '<Volume>' + article.volume + '</Volume>';
             xmlString += '<Issue>' + article.issue + '</Issue>';
 
@@ -73,25 +73,25 @@ Meteor.methods({
                 xmlString += '<AuthorList>';
                 for(var a = 0; a < article.authors.length ; a++){
                     xmlString += '<Author>';
-                    if(article.authors[a]['name_first']){
+                    if(article.authors[a].name_first){
                         xmlString += '<FirstName>';
-                        xmlString += article.authors[a]['name_first'];
+                        xmlString += article.authors[a].name_first;
                         xmlString += '</FirstName>';
                     }
-                    if(article.authors[a]['name_middle']){
+                    if(article.authors[a].name_middle){
                         xmlString += '<MiddleName>';
-                        xmlString += article.authors[a]['name_middle'];
+                        xmlString += article.authors[a].name_middle;
                         xmlString += '</MiddleName>';
                     }
-                    if(article.authors[a]['name_last']){
+                    if(article.authors[a].name_last){
                         xmlString += '<LastName>';
-                        xmlString += article.authors[a]['name_last'];
+                        xmlString += article.authors[a].name_last;
                         xmlString += '</LastName>';
                     }
-                    if(article.authors[a]['affiliations_numbers']){
+                    if(article.authors[a].affiliations_numbers){
                         xmlString += '<Affiliation>';
-                        for(var aff = 0 ; aff < article.authors[a]['affiliations_numbers'].length ; aff++){
-                            var authorAffNumber = article.authors[a]['affiliations_numbers'][aff];
+                        for(var aff = 0 ; aff < article.authors[a].affiliations_numbers.length ; aff++){
+                            var authorAffNumber = article.authors[a].affiliations_numbers[aff];
                             var authorAff = article.affiliations[authorAffNumber];
                             authorAff = Meteor.call('xmlStringFix',authorAff);
                             xmlString += authorAff;
@@ -108,7 +108,7 @@ Meteor.methods({
 
             //article ids
             xmlString += '<ArticleIdList>';
-            var articleIds = article['ids'];
+            var articleIds = article.ids;
             for(var articleId in articleIds){
                 //reset attribute value
                 var articleIdType = articleId;
@@ -125,7 +125,7 @@ Meteor.methods({
 
             //article history
             xmlString += '<History>';
-            var articleHistory = article['history'];
+            var articleHistory = article.history;
             for(var history in articleHistory){
                 xmlString += '<PubDate PubStatus="' + history + '">';
                 xmlString += Meteor.call('generateDateXml',articleHistory[history]);
@@ -146,7 +146,7 @@ Meteor.methods({
         var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
         articleSetXmlString += '<ArticleSet>';
         for(var i = 0 ; i < submissionList.length; i++){
-            var pii = submissionList[i]['ids']['pii'];
+            var pii = submissionList[i].ids.pii;
             // console.log('... '+i);
             Meteor.call('generateArticleCiteXml',pii,function(error,xmlString){
                 if(error){
@@ -211,9 +211,9 @@ Meteor.methods({
             var update = {
                 'submission_id' : submissions_id,
                 'created_date' : created,
-                'pub_status' : parseInt(submissionList[i]['pub_status'])
+                'pub_status' : parseInt(submissionList[i].pub_status)
             };
-            Meteor.call('pushArticle', submissionList[i]['_id'], 'submissions', update);
+            Meteor.call('pushArticle', submissionList[i]._id, 'submissions', update);
         }
     },
     xmlStringFix: function(string){
