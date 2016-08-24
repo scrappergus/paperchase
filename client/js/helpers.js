@@ -15,7 +15,7 @@ if (Meteor.isClient) {
     // Article
     // -------
     Template.registerHelper('articleId', function() {
-      return Session.get('article-id');
+      return Session.get('articleId');
     })
     Template.registerHelper('getPmid', function(article) {
         // console.log('..getPmid');
@@ -49,7 +49,7 @@ if (Meteor.isClient) {
       return parseInt(parseInt(affiliation) + 1);
     });
 
-    Template.registerHelper('authorNoteNumber', function(affiliation) { //This function is exactly the same as the one above it. Probably unnecessary 
+    Template.registerHelper('authorNoteNumber', function(affiliation) { //This function is exactly the same as the one above it. Probably unnecessary
         return parseInt(parseInt(affiliation) + 1);
     });
 
@@ -179,7 +179,7 @@ if (Meteor.isClient) {
         return a == b;
     });
     Template.registerHelper('equalsArticleId', function(id) {
-        if(Session.get('article-id') === id){
+        if(Session.get('articleId') === id){
             return true;
         }
     });
@@ -249,7 +249,7 @@ if (Meteor.isClient) {
 
     Template.registerHelper('convertToID', function(str) {
       if(str) {
-        return str = str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
+        return str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
       } else {
         return;
       }
@@ -371,6 +371,12 @@ if (Meteor.isClient) {
     // Search
     // ---------
     Template.registerHelper('searchResults', function() {
-        return Session.get("queryResults");
+        return Session.get('queryResults');
+    });
+
+    // Data Submissions
+    // ----------
+    Template.registerHelper('articleDataReady', function() {
+        return Session.get('article-form');
     });
 }

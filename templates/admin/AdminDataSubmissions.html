@@ -17,7 +17,13 @@
     </div>
     {{/if}}
 
-    {{>processing}}
+    {{#if processing}}
+    <div class="row">
+        <div class="col s12">
+            {{>processing}}
+        </div>
+    </div>
+    {{/if}}
 
     {{#if articles}}
     <div class="row">
@@ -72,7 +78,9 @@
                             </div></div>
                         </div>
                         {{#if equalsArticleId _id}}
+                        {{#if articleDataReady}}
                         {{>ArticleForm}}
+                        {{/if}}
                         {{/if}}
                     </div>
                     <div class="row article-overview" id="overview-{{_id}}">

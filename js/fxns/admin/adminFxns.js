@@ -726,32 +726,39 @@ Meteor.dataSubmissions = {
     },
     getArticles: function(queryType,queryParams){
         // console.log('... getArticles = ' + queryType + ' / ' + queryParams);
-        Meteor.dataSubmissions.processing();
         Meteor.subscribe('submissionSet', queryType, queryParams);
     },
-    processing: function(){
-        $('.saving').removeClass('hide');
+    buildQuery: function(){
+        var query = {};
+
+        if (Session.get('queryType') === 'issue'){
+            query.find = {issue_id:  Session.get('queryParams')};
+        } else if (Session.get('queryType') === 'pii'){
+            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
+        } else if(Session.get('queryType') === 'reset'){
+            Meteor.dataSubmissions.resetPage();
+            return;
+        }
+
+        query.options = {sort : {page_start:1}};
+        return query;
     },
-    doneProcessing: function(){
-        $('.saving').addClass('hide');
-    },
-    errorProcessing: function(){
-        Session.set('error',true);
-        $('.saving').addClass('hide');
+    resetPage: function(){
+        Session.set('submission_list',null);
+        Session.set('articleId', null);
+        Session.set('queryType',null);
+        Session.set('queryParams',null);
+        Session.set('error',false);
+        Session.set('processingQuery', false);
     },
     validateXmlSet: function(){
-        $('.saving').removeClass('hide');
         var submissionList = articles.find().fetch();
-        // console.log(submissionList);
         Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
-            $('.saving').addClass('hide');
             if(error){
                 console.error('ERROR - articleSetXmlValidation',error);
-            }
-            else if(result === 'invalid'){
+            } else if(result === 'invalid'){
                 alert('XML set invalid');
-            }
-            else{
+            } else{
                 //all the articles are valid, now do the download
                 window.open('/xml-cite-set/' + result);
             }

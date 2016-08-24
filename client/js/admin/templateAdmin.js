@@ -119,7 +119,7 @@ Template.DataSubmissionsSearchFormIssue.onRendered(function () {
     $('select').material_select();
 });
 Template.AdminDataSubmissionsPast.onRendered(function () {
-    Session.set('article-id',null);
+    Session.set('articleId',null);
     Session.set('article',null);
     $('ul.tabs').tabs();
 });

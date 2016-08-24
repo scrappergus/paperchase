@@ -6,8 +6,9 @@ Template.AdminDataSubmissions.events({
         Session.set('queryType', 'reset');
         Session.set('queryParams', null);
         Session.set('error',false);
+        Session.set('processingQuery', false);
         $('.data-submission-pii').remove();
-        $('.saving').addClass('hide');
+        // $('.saving').addClass('hide');
     },
     'click #download-set-xml': function(e){
         e.preventDefault();
@@ -46,33 +47,27 @@ Template.AdminDataSubmissions.events({
     },
     'click .edit-article': function(e){
         e.preventDefault();
+        Session.set('article-form', null);
         // disable other edit buttons
         $('.edit-article').addClass('hide');
         $(e.target).closest('button').removeClass('hide');
         var articleId = $(e.target).closest('button').attr('id').replace('edit-','');
         Meteor.call('preProcessArticle',articleId,function(error,result){
-            if(error){
-                console.log('ERROR - preProcessArticle');
-                console.log(error);
-            }
-            if(result){
+            if (error){
+                console.error('ERROR - preProcessArticle', error);
+            } else if (result){
                 Session.set('article-form',result);
             }
         });
-        // var articleIndex = $(e.target).closest('.collection-item').index();
-        // var article = Session.get('submission_list')[articleIndex];
-        // var article =  articles.findOne({'_id' : articleId});
 
-        Session.set('article-id',articleId);
-        // Session.set('preprocess-article',true);
-        // Session.set('article',article);
+        Session.set('articleId',articleId);
 
         $('#edit-' + articleId).removeClass('hide');
         $('#overview-' + articleId).addClass('hide');
     },
     'click .cancel-article':function(e){
         var articleId = $(e.target).closest('button').attr('id').replace('cancel-','');
-        Session.set('article-id',null);
+        Session.set('articleId',null);
         $('#edit-' + articleId).addClass('hide');
         $('#overview-' + articleId).removeClass('hide');
         $('.edit-article').removeClass('hide');
@@ -118,6 +113,7 @@ Template.DataSubmissionsSearchForms.events({
 
         Session.set('queryType', 'pii');
         Session.set('queryParams', piiList);
+        Session.set('processingQuery', true);
 
         Meteor.dataSubmissions.getArticles(queryType,queryParams);
     },
@@ -133,6 +129,7 @@ Template.DataSubmissionsSearchFormIssue.events({
             queryParams = issueId;
         Session.set('queryType', 'issue');
         Session.set('queryParams', issueId);
+        Session.set('processingQuery', true);
         Meteor.dataSubmissions.getArticles(queryType, queryParams);
     }
 });

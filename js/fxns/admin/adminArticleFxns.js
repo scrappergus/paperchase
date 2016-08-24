@@ -80,8 +80,6 @@ Meteor.adminArticle = {
         }
     },
     readyArticleForm: function(){
-        // console.log('..readyArticleForm');
-
         // title
         // ------
         $('.form-title').materialnote({

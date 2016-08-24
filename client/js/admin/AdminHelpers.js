@@ -444,21 +444,15 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
-        var query = {};
+        var query =  Meteor.dataSubmissions.buildQuery();
 
-        if (Session.get('queryType') === 'issue'){
-            query.find = {issue_id:  Session.get('queryParams')};
-        } else if (Session.get('queryType') === 'pii'){
-            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
-        } else if(Session.get('queryType') === 'reset'){
-            return;
+        var articlesList;
+        if(query){
+            articlesList = articles.find(query.find, query.options).fetch();
         }
 
-        query.options = {sort : {page_start:1}}
-
-        var articlesList = articles.find(query.find, query.options).fetch();
         if(articlesList){
-            Meteor.dataSubmissions.doneProcessing();
+            Session.set('processingQuery', false);
             return articlesList;
         }
     },
@@ -467,6 +461,9 @@ Template.AdminDataSubmissions.helpers({
     },
     missingPii: function(){
         return Session.get('missingPii');
+    },
+    processing: function(){
+        return Session.get('processingQuery');
     }
 });
 Template.AdminDataSubmissionsPast.helpers({

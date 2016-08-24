@@ -173,8 +173,10 @@ if (Meteor.isClient) {
     // Institutions
     Session.setDefault('recommendation',null);
     // Data submissions
+    Session.setDefault('articleId',null);
     Session.setDefault('queryType',null);
     Session.setDefault('queryParams',null);
+    Session.setDefault('processingQuery', false);
 
 
     Router.route('/', {
@@ -423,8 +425,7 @@ if (Meteor.isClient) {
                     Session.set('archive',result);
                 }
             });
-            Session.set('submission_list',null);
-            Session.set('error',false);
+            Meteor.dataSubmissions.resetPage();
             this.next();
         },
         waitOn: function(){
@@ -832,7 +833,7 @@ if (Meteor.isClient) {
                 if(article){
                     article = Meteor.article.readyData(article);
                     Session.set('article',article);
-                    Session.set('article-id',this.params._id);
+                    Session.set('articleId',this.params._id);
                 }
             }
         }
