@@ -444,6 +444,7 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
+        var result = [];
         var query =  Meteor.dataSubmissions.buildQuery();
 
         var articlesList;
@@ -451,9 +452,13 @@ Template.AdminDataSubmissions.helpers({
             articlesList = articles.find(query.find, query.options).fetch();
         }
 
+        articlesList.forEach(function(article){
+            result.push(Meteor.article.readyData(article));
+        });
+
         if(articlesList){
             Session.set('processingQuery', false);
-            return articlesList;
+            return result;
         }
     },
     error: function(){
