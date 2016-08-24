@@ -20,41 +20,48 @@
     {{>processing}}
 
     {{#if articles}}
-    <div class="row btn-group box border-gray">
-        <div class="col s4">
-            <button class="waves-effect waves-light btn" id="register-doi-set">
-                Register DOI
-            </button>
-        </div>
-        <div class="col s4 center-align">
-            <button class="waves-effect waves-light btn" id="download-set-xml">
-                Download XML
-            </button>
-        </div>
-        <div class="col s4">
-            <button class="waves-effect waves-light btn right clear">clear</button>
-        </div>
-    </div>
-    {{#if missingPii}}
     <div class="row">
         <div class="col s12">
-            <h3>Missing PII</h3>
-            <h4>Cannot register</h4>
-            <ul>
-            {{#each missingPii}}
-                <li>{{{.}}}</li>
-            {{/each}}
-            </ul>
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="row no-margin">
+                        <div class="col s4">
+                            <button class="waves-effect waves-light btn" id="register-doi-set">
+                                Register DOI
+                            </button>
+                        </div>
+                        <div class="col s4 center-align">
+                            <button class="waves-effect waves-light btn" id="download-set-xml">
+                                Download XML
+                            </button>
+                        </div>
+                        <div class="col s4">
+                            <button class="waves-effect waves-light btn right clear">clear</button>
+                        </div>
+                    </div>
+
+                    {{#if missingPii}}
+                    <div class="row">
+                        <div class="col s12">
+                            <h3>Missing PII</h3>
+                            <h4>Cannot register</h4>
+                            <ul>
+                            {{#each missingPii}}
+                                <li>{{{.}}}</li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
         </div>
     </div>
-    {{/if}}
     <div class="row">
         <div class="col s12">
-            <h4>Article Count: {{countItems articles}}</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
+            <div class="card-title">
+                <h4>Article Count: {{countItems articles}}</h4>
+            </div>
             <ul class="collection">
                 {{#each articles}}
                 <li class="collection-item">
@@ -71,12 +78,17 @@
                     </div>
                     <div class="row article-overview" id="overview-{{_id}}">
                         <div class="col s12">
+
+                            <div class="row no-margin">
+                                <div class="col s6">
+                                    <label>Pub Status:</label> {{#if status}}{{status}}{{else}}N/A{{/if}}
+                                </div>
+                                <div class="col s6">
+                                    <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit right" alt="Edit Article">{{>AdminEditIcon}}</button>
+                                </div>
+                            </div>
+
                             <div class="row"><div class="col s12">
-                                <span class="badge">{{article_type.type}}</span>
-                                <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit" alt="Edit Article"><i class="material-icons">&#xE254;</i></button>
-
-                                <h6><label>Pub Status:</label> {{status}}</h6>
-
                                 <h6>
                                     {{#if article_type.name}}
                                         <span class="article-type">{{article_type.name}}</span>
