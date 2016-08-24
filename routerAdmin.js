@@ -172,6 +172,10 @@ if (Meteor.isClient) {
     Session.setDefault('admin-user',null);
     // Institutions
     Session.setDefault('recommendation',null);
+    // Data submissions
+    Session.setDefault('queryType',null);
+    Session.setDefault('queryParams',null);
+
 
     Router.route('/', {
         name: 'AdminHome',

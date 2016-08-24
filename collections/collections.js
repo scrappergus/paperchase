@@ -132,6 +132,7 @@ sorters = new Mongo.Collection('sorters', {
 });
 publish = new Mongo.Collection('publish');
 
+
 // ALLOW
 Meteor.users.allow({
     update: function (userId, doc, fields, modifier) {
@@ -647,17 +648,14 @@ if (Meteor.isServer) {
         return articles.find({ $or: [ { 'dates.epub': {$exists: false} }, { 'history.accepted': {$exists: false}}, { 'history.received': {$exists: false}} ] });
     });
     Meteor.publish('submissionSet', function (queryType, queryParams) {
-        var articlesList;
-        if(queryType === 'issue'){
-          articlesList = articles.find({issue_id: queryParams});
-        }else if(queryType === 'pii'){
-          articlesList = articles.find({'ids.pii':{'$in':queryParams}});
+        var query = {};
+        if (queryType === 'issue'){
+            query.find = {issue_id: queryParams};
+        } else if (queryType === 'pii'){
+            query.find = {'ids.pii':{'$in':queryParams}};
         }
 
-        // if a user wants to change the submissions list and start over,
-        // to clear the collection we just pass a queryType that is neither issue nor pii and undefined will be returned
-
-        return articlesList;
+        return articles.find(query.find, query.options);
     });
     Meteor.publish('articlesRecentFive', function () {
         return articles.find({},{sort:{'_id':1},limit : 5});
@@ -820,7 +818,7 @@ if (Meteor.isServer) {
     Meteor.publish('authorData', function(mongoId){
         check(mongoId, String);
         if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
-            return authors.find({'_id':mongoId})
+            return authors.find({'_id':mongoId});
         }else{
             this.stop();
             return;
@@ -835,7 +833,7 @@ if (Meteor.isServer) {
     Meteor.publish('recommendationData',function(mongoId){
         check(mongoId, String);
         if (Roles.userIsInRole(this.userId, ['admin', 'super-admin'])) {
-            return  recommendations.find({'_id':mongoId})
+            return  recommendations.find({'_id':mongoId});
         }else{
             this.stop();
             return;

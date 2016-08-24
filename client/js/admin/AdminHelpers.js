@@ -443,7 +443,15 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
-        var articlesList = articles.find().fetch();
+        var query;
+        if (Session.get('queryType') === 'issue'){
+            query = {issue_id:  Session.get('queryParams')};
+        } else if (Session.get('queryType') === 'pii'){
+            query = {'ids.pii':{'$in': Session.get('queryParams')}};
+        } else if(Session.get('queryType') === 'reset'){
+            return;
+        }
+        var articlesList = articles.find(query).fetch();
         if(articlesList){
             Meteor.dataSubmissions.doneProcessing();
             return articlesList;
@@ -550,6 +558,7 @@ Template.AdminInstitutionForm.helpers({
     }
 });
 // Recommendation
+// ---------------
 Template.AdminRecommendationUpdate.helpers({
     'recommendation' : function(){
         return Session.get('recommendation');
@@ -557,6 +566,7 @@ Template.AdminRecommendationUpdate.helpers({
 });
 
 // Authors
+// ---------------
 Template.AdminAuthors.helpers({
     settings: function () {
         return {

@@ -3,9 +3,8 @@
 Template.AdminDataSubmissions.events({
     'click .clear': function(e){
         e.preventDefault();
-        // Session.set('submission_list',null);
-        Meteor.subscribe('articles-submission',null,null); //just subscribe to nothin to clear the list
-
+        Session.set('queryType', 'reset');
+        Session.set('queryParams', null);
         Session.set('error',false);
         $('.data-submission-pii').remove();
         $('.saving').addClass('hide');
@@ -99,7 +98,6 @@ Template.DataSubmissionsSearchForms.events({
     },
     'submit .form-pii': function(e,t){
         e.preventDefault();
-        console.log('CLICK PII Form');
         var piiList = Meteor.dataSubmissions.getPiiList();
 
         //check if there's anything to add to the array of pii
@@ -118,6 +116,9 @@ Template.DataSubmissionsSearchForms.events({
         var queryType = 'pii',
             queryParams = piiList;
 
+        Session.set('queryType', 'pii');
+        Session.set('queryParams', piiList);
+
         Meteor.dataSubmissions.getArticles(queryType,queryParams);
     },
 });
@@ -130,6 +131,8 @@ Template.DataSubmissionsSearchFormIssue.events({
         //get articles
         var queryType = 'issue',
             queryParams = issueId;
-        Meteor.dataSubmissions.getArticles(queryType,queryParams);
+        Session.set('queryType', 'issue');
+        Session.set('queryParams', issueId);
+        Meteor.dataSubmissions.getArticles(queryType, queryParams);
     }
 });
