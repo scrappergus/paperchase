@@ -72,8 +72,7 @@ Meteor.adminArticle = {
             // console.log('SHOW');
             $('.add-article-' + type).removeClass('hide');
             $('#add-' + type).html('<i class="material-icons">&#xE15C;</i>');
-        }
-        else{
+        } else{
             // console.log('HIDE');
             $('.add-article-' + type).addClass('hide');
             $('#add-' + type).html('<i class="material-icons">&#xE147;</i>');

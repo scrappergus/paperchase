@@ -1,7 +1,9 @@
-Template.AdminArticleForm.events({
+Template.ArticleFormContainer.events({
     'click .anchor': function(e){
         Meteor.general.scrollAnchor(e);
-    },
+    }
+});
+Template.ArticleForm.events({
     // Authors
     // -------
     'change .author-affiliation':function(e,t){
@@ -233,6 +235,7 @@ Template.AdminArticleForm.events({
         e.preventDefault();
         var article = Session.get('article-form');
         var type = $(e.target).attr('id').replace('add-','');
+
         if(!article.ids){
             article.ids = {};
         }

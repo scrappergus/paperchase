@@ -276,12 +276,13 @@ Template.AdminArticle.helpers({
         }
     }
 });
-Template.AdminArticleForm.helpers({
-    journal_short_name: function(){
-        return Session.get('journal').journal.short_name;
-    },
+Template.ArticleForm.helpers({
     article : function(){
-        return Session.get('article-form');
+        var articleForm = Session.get('article-form');
+        if( Session.get('journal') && Session.get('journal').journal.short_name){
+            articleForm.journal_short_name = Session.get('journal').journal.short_name;
+        }
+        return articleForm;
     }
 });
 Template.AddArticleDate.helpers({

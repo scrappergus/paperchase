@@ -57,10 +57,10 @@ Template.AdminArticleFilesUploader.onDestroyed(function () {
 
 // Article Form
 // ------------
-Template.AdminArticleForm.onDestroyed(function() {
+Template.ArticleForm.onDestroyed(function() {
     Session.set('article-form',null);
 });
-Template.AdminArticleForm.onRendered(function () {
+Template.ArticleForm.onRendered(function () {
     Meteor.adminArticle.readyArticleForm();
 });
 Template.AdminDateInput.onRendered(function() {
