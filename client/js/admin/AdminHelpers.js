@@ -279,7 +279,7 @@ Template.AdminArticle.helpers({
 Template.ArticleForm.helpers({
     article : function(){
         var articleForm = Session.get('article-form');
-        if( Session.get('journal') && Session.get('journal').journal.short_name){
+        if( articleForm && Session.get('journal') && Session.get('journal').journal.short_name){
             articleForm.journal_short_name = Session.get('journal').journal.short_name;
         }
         return articleForm;
