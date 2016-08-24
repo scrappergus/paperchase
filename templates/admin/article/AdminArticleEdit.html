@@ -7,7 +7,7 @@
 
     {{#if articleProcessed}}
 
-    {{>AdminArticleForm}}
+    {{>ArticleFormContainer article=article}}
 
     {{else}}
 
@@ -22,7 +22,7 @@
     {{/if}}
 </template>
 
-<template name="AdminArticleForm">
+<template name="ArticleFormContainer">
     {{#with article}}
 
     {{>StatusModal}}
@@ -95,286 +95,292 @@
             <li><a class="btn btn-sm anchor" href="#keywords">{{>AdminKeywordsIcon}} Keywords</a></li>
         </ul>
     </div></div>
+    {{/with}}
 
     <div class="row"><div class="col s12"><div class="card z-depth-0">
-        <form id="article-form" class="card-content">
-
-            {{>FixedSaveBtn}}
-
-            {{>RequiredSymbolRowMessage}}
-
-            <fieldset id="article-title">
-                <legend>{{>RequiredSymbol}} Title</legend>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <div class="card blue-grey z-depth-0 lighten-5 no-margin">
-                            <div class="form-title">{{{title}}}</div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset id="ids">
-                <legend>IDs {{>AdminArticleFormAddBtn what='ids'}}</legend>
-                {{>AddArticleId}}
-                {{#if ids}}
-                <div class="row">
-                    {{#each arrayify ids}}
-                    <div class="col s11 m2">
-                        <div class="card blue-grey lighten-5 z-depth-0">
-                            <div class="card-content">
-                                <input class="article-id form-{{name}}" type="text" id="article-id-{{name}}" value="{{value}}"/>
-                                <label for="article-id-{{name}}" class="active">{{name}}</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s1 no-padding">
-                        <i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
-                    </div>
-                    {{/each}}
-                </div>
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="abstract">
-                <legend>Abstract</legend>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <div class="card blue-grey z-depth-0 lighten-5 no-margin">
-                            <div class="form-abstract">{{{abstract}}}</div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset id="site">
-                <legend>Site Settings</legend>
-                    <div class="row left-align">
-                        <div class="input-field col s12 m4 no-margin">
-                            <input class="form-feature filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
-                            <label for="feature-checkbox">Feature</label>
-                        </div>
-                        <div class="input-field col s12 m4 no-margin">
-                            <input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{checked advance}}{{checked aop}}"/>
-                            <label for="advance-checkbox">Advance</label>
-                        </div>
-                        <div class="input-field col s12 m4 no-margin">
-                            <input class="filled-in" name="display" type="checkbox" id="display-checkbox"  checked="{{checked display}}"/>
-                            <label for="display-checkbox">Display</label>
-                        </div>
-                    </div>
-            </fieldset>
-
-            <fieldset id="meta">
-                <legend>Meta</legend>
-                <div class="row">
-                    <div class="input-field col s6 m1">
-                        <input class="form-page_start" type="number" id="page_start" value="{{page_start}}"/>
-                        <label for="page_start" class="{{#if page_start}}active{{/if}}">First Page</label>
-                    </div>
-                    <div class="input-field col s6 m1">
-                        <input class="form-page_end" type="number" id="page_end" value="{{page_end}}"/>
-                        <label for="page_end" class="{{#if page_end}}active{{/if}}">Last Page</label>
-                    </div>
-                    <div class="input-field col s6 m3 input-field">
-                        <select class="form-issue form-volume form-issue_id" id="article-issue">
-                            <option value="">&mdash;&mdash; Select Issue &mdash;&mdash;</option>
-                            {{#each volumes}}
-                            <option disabled>&mdash; Volume {{volume}} &mdash;</option>
-                            {{#each issues_data}}
-                            <option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">Volume {{volume}}, Issue {{issue}}</option>
-                            {{/each}}
-                            {{/each}}
-                        </select>
-                        <label for="article-issue">Volume / Issue</label>
-                    </div>
-                    <div class="input-field col s6 m3">
-                        <select class="form-status" id="article-pub-status">
-                            <option value="">&mdash; Select &mdash;</option>
-                            {{#each pub_status_list}}
-                            <option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
-                            {{/each}}
-                        </select>
-                        <label for="article-pub-status">Pub Status</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s6 m4">
-                        <select class="form-article-type" id="article-type">
-                            <option value="">&mdash; Select &mdash;</option>
-                            {{#each article_type_list}}
-                            <option value="{{short_name}}" data-id="{{_id}}" data-plural="{{plural}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
-                            {{/each}}
-                        </select>
-                        <label for="article-type">Article Type</label>
-                    </div>
-                    <div class="input-field col s6 m4">
-                        <select class="form-section" id="article-section">
-                            <option value="">&mdash; Select &mdash;</option>
-                            {{#each article_section_list}}
-                            <option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
-                            {{/each}}
-                        </select>
-                        <label for="article-section">Article Section</label>
-                        {{#if journal_short_name equals 'oncotarget'}}*** If moving recent research paper out of recent, must also update advance page{{/if}}
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset id="authors">
-                <legend>Authors {{>AdminArticleFormAddBtn what='author'}}</legend>
-                {{#if authors}}
-                {{>AdminArticleFormAuthors}}
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="affiliations">
-                <legend>Affiliations {{>AdminArticleFormAddBtn what='affiliation'}}</legend>
-                {{#if affiliations}}
-                {{>AdminArticleFormAffiliations}}
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="author-notes">
-                <legend>Author Notes</legend>
-                {{#if author_notes}}
-                {{>AdminArticleFormNotes}}
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="correspondence">
-                <legend>Correspondence {{>AdminArticleFormAddBtn what='correspondence'}}</legend>
-                {{#if correspondence}}
-                {{#each correspondence}}
-                <div class="row no-margin">
-                    <div class="col s11">
-                        <div class="card blue-grey lighten-5 z-depth-0">
-                            <div class="card-content">
-                                <div class="row no-margin correspondence-row">
-                                    <div class="col s6 input-field">
-                                        <input class="correspondence-text" name="correspondence_text_{{@index}}" type="text" value="{{text}}"/>
-                                        <label for="correspondence_text_{{@index}}" class="{{#if text}}active{{/if}}">Text</label>
-                                    </div>
-                                    <div class="col s6 input-field">
-                                        <input class="correspondence-email" name="correspondence_email_{{@index}}" type="email" value="{{email}}"/>
-                                        <label for="correspondence_email_{{@index}}" class="{{#if email}}active{{/if}}">Email</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s1 no-padding">
-                        {{>AdminRemoveIcon index=@index name=@index nameAdditional="correspondence" what="correspondence"}}
-                    </div>
-                </div>
-                {{/each}}
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="dates">
-                <legend> Dates {{>AdminArticleFormAddBtn what='dates'}}</legend>
-                {{>AddArticleDate}}
-                {{#if dates}}
-                <div class="row">
-                    {{! Separating out collection, because this is the only date that we are allowing mm-yyyy format on}}
-                    {{#each arrayify dates}}
-                    <div class="col s11 m2">
-                        <div class="card blue-grey lighten-5 z-depth-0">
-                            <div class="card-content">
-                                {{>AdminDateInput}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s1 no-padding">
-                        {{>AdminRemoveIcon name=name what="dates"}}
-                    </div>
-                    {{/each}}
-                </div>
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="history">
-                <legend>History {{>AdminArticleFormAddBtn what='history'}}</legend>
-                {{>AddArticleHistory}}
-                {{#if history}}
-                <div class="row">
-                    {{#each arrayify history}}
-                        <div class="col s11 m2">
-                            <div class="card blue-grey lighten-5 z-depth-0">
-                                <div class="card-content">
-                                    {{>AdminHistoryInput}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s1 no-padding">
-                            {{>AdminRemoveIcon name=name what="history"}}
-                        </div>
-                    {{/each}}
-                </div>
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="keywords">
-                <legend>Keywords {{>AdminArticleFormAddBtn what='kw'}}</legend>
-                {{#if keywords}}
-                <div class="row form-keywords">
-                    {{#each keywords}}
-                    <div class="col s11 m4">
-                        <div class="card blue-grey lighten-5 z-depth-0">
-                            <div class="card-content">
-                                <input class="kw" type="text" value="{{.}}"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s1 no-padding">
-                        {{>AdminRemoveIcon name=@index nameAdditional="kw" what="kw"}}
-                    </div>
-                    {{/each}}
-                </div>
-                {{/if}}
-            </fieldset>
-
-            <fieldset id="figures">
-                <legend>Figures</legend>
-                <div class="row form-figures">
-                    <div class="col s12">
-                        {{#if files.figures}}
-                        {{>AdminArticleFigOrSuppTable files=files.figures}}
-                        {{else}}
-                        N/A
-                        {{/if}}
-                        <p class="font-sm">The only way to update figures in the database is by uploading XML. There are no inputs to update this on the admin site.</p>
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset id="supplemental">
-                <legend>Supplemental Material</legend>
-                <div class="row">
-                    <div class="col s12">
-                        {{#if files.supplemental}}
-                        {{>AdminArticleFigOrSuppTable files=files.supplemental}}
-                        {{else}}
-                        N/A
-                        {{/if}}
-                        <p class="font-sm">The only way to update supplemental materials in the database is by uploading XML. There are no inputs to update this on the admin site.</p>
-                    </div>
-                </div>
-            </fieldset>
-
-            <div class="row">
-                <div class="col s12 center-align">
-                    {{>SaveBtn}}
-                </div>
-            </div>
-        </form>
+        {{>ArticleForm}}
     </div></div></div>
-
-    {{/with}}
 </template>
 
+<template name="ArticleForm">
+    {{#with article}}
+    <form id="article-form" class="card-content">
 
+        {{>FixedSaveBtn}}
+
+        {{>RequiredSymbolRowMessage}}
+
+        <fieldset id="article-title">
+            <legend>{{>RequiredSymbol}} Title</legend>
+            <div class="row">
+                <div class="input-field col s12">
+                    <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                        <div class="form-title">{{{title}}}</div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="ids">
+            <legend>IDs {{>AdminArticleFormAddBtn what='ids'}}</legend>
+            {{>AddArticleId}}
+            {{#if ids}}
+            <div class="row">
+                {{#each arrayify ids}}
+                <div class="col s11 m2">
+                    <div class="card blue-grey lighten-5 z-depth-0">
+                        <div class="card-content">
+                            <input class="article-id form-{{name}}" type="text" id="article-id-{{name}}" value="{{value}}"/>
+                            <label for="article-id-{{name}}" class="active">{{name}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s1 no-padding">
+                    <i id="remove-{{name}}" class="prefix remove-id material-icons red-type close-icon">&#xE15C;</i>
+                </div>
+                {{/each}}
+            </div>
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="abstract">
+            <legend>Abstract</legend>
+            <div class="row">
+                <div class="input-field col s12">
+                    <div class="card blue-grey z-depth-0 lighten-5 no-margin">
+                        <div class="form-abstract">{{{abstract}}}</div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="site">
+            <legend>Site Settings</legend>
+                <div class="row left-align">
+                    <div class="input-field col s12 m4 no-margin">
+                        <input class="form-feature filled-in" name="feature" type="checkbox" id="feature-checkbox" checked="{{checked feature}}"/>
+                        <label for="feature-checkbox">Feature</label>
+                    </div>
+                    <div class="input-field col s12 m4 no-margin">
+                        <input class="filled-in" name="advance" type="checkbox" id="advance-checkbox"  checked="{{checked advance}}{{checked aop}}"/>
+                        <label for="advance-checkbox">Advance</label>
+                    </div>
+                    <div class="input-field col s12 m4 no-margin">
+                        <input class="filled-in" name="display" type="checkbox" id="display-checkbox"  checked="{{checked display}}"/>
+                        <label for="display-checkbox">Display</label>
+                    </div>
+                </div>
+        </fieldset>
+
+        <fieldset id="meta">
+            <legend>Meta</legend>
+            <div class="row">
+                <div class="input-field col s6 m1">
+                    <input class="form-page_start" type="number" id="page_start" value="{{page_start}}"/>
+                    <label for="page_start" class="{{#if page_start}}active{{/if}}">First Page</label>
+                </div>
+                <div class="input-field col s6 m1">
+                    <input class="form-page_end" type="number" id="page_end" value="{{page_end}}"/>
+                    <label for="page_end" class="{{#if page_end}}active{{/if}}">Last Page</label>
+                </div>
+                <div class="input-field col s6 m3 input-field">
+                    <select class="form-issue form-volume form-issue_id" id="article-issue">
+                        <option value="">&mdash;&mdash; Select Issue &mdash;&mdash;</option>
+                        {{#each volumes}}
+                        <option disabled>&mdash; Volume {{volume}} &mdash;</option>
+                        {{#each issues_data}}
+                        <option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">Volume {{volume}}, Issue {{issue}}</option>
+                        {{/each}}
+                        {{/each}}
+                    </select>
+                    <label for="article-issue">Volume / Issue</label>
+                </div>
+                <div class="input-field col s6 m3">
+                    <select class="form-status" id="article-pub-status">
+                        <option value="">&mdash; Select &mdash;</option>
+                        {{#each pub_status_list}}
+                        <option value="{{abbrev}}" disabled="{{#if disabled}}disabled{{/if}}" selected="{{#if selected}}selected{{/if}}">{{abbrev}}</option>
+                        {{/each}}
+                    </select>
+                    <label for="article-pub-status">Pub Status</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6 m4">
+                    <select class="form-article-type" id="article-type">
+                        <option value="">&mdash; Select &mdash;</option>
+                        {{#each article_type_list}}
+                        <option value="{{short_name}}" data-id="{{_id}}" data-plural="{{plural}}" data-nlm="{{nlm_type}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                    <label for="article-type">Article Type</label>
+                </div>
+                <div class="input-field col s6 m4">
+                    <select class="form-section" id="article-section">
+                        <option value="">&mdash; Select &mdash;</option>
+                        {{#each article_section_list}}
+                        <option value="{{_id}}" selected="{{#if selected}}selected{{/if}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                    <label for="article-section">Article Section</label>
+                    {{#if journal_short_name equals 'oncotarget'}}
+                    {{journal_short_name}}
+                        *** If moving recent research paper out of recent, must also update advance page
+                    {{/if}}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="authors">
+            <legend>Authors {{>AdminArticleFormAddBtn what='author'}}</legend>
+            {{#if authors}}
+            {{>AdminArticleFormAuthors}}
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="affiliations">
+            <legend>Affiliations {{>AdminArticleFormAddBtn what='affiliation'}}</legend>
+            {{#if affiliations}}
+            {{>AdminArticleFormAffiliations}}
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="author-notes">
+            <legend>Author Notes</legend>
+            {{#if author_notes}}
+            {{>AdminArticleFormNotes}}
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="correspondence">
+            <legend>Correspondence {{>AdminArticleFormAddBtn what='correspondence'}}</legend>
+            {{#if correspondence}}
+            {{#each correspondence}}
+            <div class="row no-margin">
+                <div class="col s11">
+                    <div class="card blue-grey lighten-5 z-depth-0">
+                        <div class="card-content">
+                            <div class="row no-margin correspondence-row">
+                                <div class="col s6 input-field">
+                                    <input class="correspondence-text" name="correspondence_text_{{@index}}" type="text" value="{{text}}"/>
+                                    <label for="correspondence_text_{{@index}}" class="{{#if text}}active{{/if}}">Text</label>
+                                </div>
+                                <div class="col s6 input-field">
+                                    <input class="correspondence-email" name="correspondence_email_{{@index}}" type="email" value="{{email}}"/>
+                                    <label for="correspondence_email_{{@index}}" class="{{#if email}}active{{/if}}">Email</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col s1 no-padding">
+                    {{>AdminRemoveIcon index=@index name=@index nameAdditional="correspondence" what="correspondence"}}
+                </div>
+            </div>
+            {{/each}}
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="dates">
+            <legend> Dates {{>AdminArticleFormAddBtn what='dates'}}</legend>
+            {{>AddArticleDate}}
+            {{#if dates}}
+            <div class="row">
+                {{! Separating out collection, because this is the only date that we are allowing mm-yyyy format on}}
+                {{#each arrayify dates}}
+                <div class="col s11 m2">
+                    <div class="card blue-grey lighten-5 z-depth-0">
+                        <div class="card-content">
+                            {{>AdminDateInput}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col s1 no-padding">
+                    {{>AdminRemoveIcon name=name what="dates"}}
+                </div>
+                {{/each}}
+            </div>
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="history">
+            <legend>History {{>AdminArticleFormAddBtn what='history'}}</legend>
+            {{>AddArticleHistory}}
+            {{#if history}}
+            <div class="row">
+                {{#each arrayify history}}
+                    <div class="col s11 m2">
+                        <div class="card blue-grey lighten-5 z-depth-0">
+                            <div class="card-content">
+                                {{>AdminHistoryInput}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s1 no-padding">
+                        {{>AdminRemoveIcon name=name what="history"}}
+                    </div>
+                {{/each}}
+            </div>
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="keywords">
+            <legend>Keywords {{>AdminArticleFormAddBtn what='kw'}}</legend>
+            {{#if keywords}}
+            <div class="row form-keywords">
+                {{#each keywords}}
+                <div class="col s11 m4">
+                    <div class="card blue-grey lighten-5 z-depth-0">
+                        <div class="card-content">
+                            <input class="kw" type="text" value="{{.}}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s1 no-padding">
+                    {{>AdminRemoveIcon name=@index nameAdditional="kw" what="kw"}}
+                </div>
+                {{/each}}
+            </div>
+            {{/if}}
+        </fieldset>
+
+        <fieldset id="figures">
+            <legend>Figures</legend>
+            <div class="row form-figures">
+                <div class="col s12">
+                    {{#if files.figures}}
+                    {{>AdminArticleFigOrSuppTable files=files.figures}}
+                    {{else}}
+                    N/A
+                    {{/if}}
+                    <p class="font-sm">The only way to update figures in the database is by uploading XML. There are no inputs to update this on the admin site.</p>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="supplemental">
+            <legend>Supplemental Material</legend>
+            <div class="row">
+                <div class="col s12">
+                    {{#if files.supplemental}}
+                    {{>AdminArticleFigOrSuppTable files=files.supplemental}}
+                    {{else}}
+                    N/A
+                    {{/if}}
+                    <p class="font-sm">The only way to update supplemental materials in the database is by uploading XML. There are no inputs to update this on the admin site.</p>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="row">
+            <div class="col s12 center-align">
+                {{>SaveBtn}}
+            </div>
+        </div>
+    </form>
+    {{/with}}
+</template>
 
 <!--Form Partials-->
 <template name="AdminArticleFormAddBtn">
