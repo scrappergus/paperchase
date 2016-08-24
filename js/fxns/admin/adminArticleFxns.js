@@ -213,8 +213,7 @@ Meteor.adminArticle = {
                     }
 
                     Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
-                }
-                else if(error  && error.reason === 'duplicate'){
+                } else if(error  && error.reason === 'duplicate'){
                     console.error('validateArticle: duplicate',error);
                     if(error.details._id){
                         duplicateId = error.details._id;
@@ -227,28 +226,32 @@ Meteor.adminArticle = {
                 else if(error){
                     console.error('validate Article',error);
                     Meteor.formActions.errorMessage('Could not update article');
-                }
-                else if(result && result.saved){
+                } else if(result && result.saved){
                     // New article
                     if(!mongoId){
                         mongoId = result.article_id;
                     }
-                    Router.go('AdminArticleOverview',{_id : mongoId});
-                }
-                else if(result && files && !Session.get('article-form').aop_xml){
+                    Meteor.adminArticle.actionAfterSave(mongoId);
+                } else if(result && files && !Session.get('article-form').aop_xml){
                     // Existing article
                     // if uploading XML too and saving form at same time
                     Meteor.articleFiles.uploadArticleFile(mongoId,'xml',files);
-                }
-                else if(result){
-                    Router.go('AdminArticleOverview',{_id : result});
+                } else if(result){
+                    Meteor.adminArticle.actionAfterSave(result);
                     // just editing article form
-                    // Meteor.formActions.successMessage('Article updated');
                 }
             });
-        }
-        else{
+        } else{
              Meteor.formActions.errorMessage('Unable to save form');
+        }
+    },
+    actionAfterSave: function(mongoId){
+        if(Router.current().route._path.indexOf('data-submissions') != -1){
+            // Editing via data submissions
+            Meteor.dataSubmissions.closeEditView();
+        } else{
+            // Article edit page
+            Router.go('AdminArticleOverview',{_id : mongoId});
         }
     }
 };

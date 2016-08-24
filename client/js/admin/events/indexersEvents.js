@@ -52,6 +52,7 @@ Template.AdminDataSubmissions.events({
         $('.edit-article').addClass('hide');
         $(e.target).closest('button').removeClass('hide');
         var articleId = $(e.target).closest('button').attr('id').replace('edit-','');
+        Session.set('articleId',articleId);
         Meteor.call('preProcessArticle',articleId,function(error,result){
             if (error){
                 console.error('ERROR - preProcessArticle', error);
@@ -60,17 +61,11 @@ Template.AdminDataSubmissions.events({
             }
         });
 
-        Session.set('articleId',articleId);
-
         $('#edit-' + articleId).removeClass('hide');
         $('#overview-' + articleId).addClass('hide');
     },
     'click .cancel-article':function(e){
-        var articleId = $(e.target).closest('button').attr('id').replace('cancel-','');
-        Session.set('articleId',null);
-        $('#edit-' + articleId).addClass('hide');
-        $('#overview-' + articleId).removeClass('hide');
-        $('.edit-article').removeClass('hide');
+        Meteor.dataSubmissions.closeEditView();
     }
 });
 

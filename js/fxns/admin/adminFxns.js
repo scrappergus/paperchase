@@ -751,6 +751,13 @@ Meteor.dataSubmissions = {
         Session.set('error',false);
         Session.set('processingQuery', false);
     },
+    closeEditView: function(){
+        var articleId = Session.get('articleId');
+        Session.set('articleId',null);
+        $('#edit-' + articleId).addClass('hide');
+        $('#overview-' + articleId).removeClass('hide');
+        $('.edit-article').removeClass('hide');
+    },
     validateXmlSet: function(){
         var submissionList = articles.find().fetch();
         Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
