@@ -443,15 +443,19 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
-        var query;
+        var query = {};
+
         if (Session.get('queryType') === 'issue'){
-            query = {issue_id:  Session.get('queryParams')};
+            query.find = {issue_id:  Session.get('queryParams')};
         } else if (Session.get('queryType') === 'pii'){
-            query = {'ids.pii':{'$in': Session.get('queryParams')}};
+            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
         } else if(Session.get('queryType') === 'reset'){
             return;
         }
-        var articlesList = articles.find(query).fetch();
+
+        query.options = {sort : {page_start:1}}
+
+        var articlesList = articles.find(query.find, query.options).fetch();
         if(articlesList){
             Meteor.dataSubmissions.doneProcessing();
             return articlesList;
