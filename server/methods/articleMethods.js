@@ -352,11 +352,11 @@ Meteor.methods({
             article.pub_status_list = pubStatusTranslate;
             var statusIndex = null;
             for(var statOptIdx = pubStatusTranslate.length-1; statOptIdx >= 0; statOptIdx--){
-                if (article.pub_status_list[statOptIdx].abbrev == article.pub_status){
+                if (article.pub_status && article.pub_status_list[statOptIdx].abbrev == article.pub_status){
                     article.pub_status_list[statOptIdx].selected = true;
                     statusIndex = statOptIdx;
                 }
-                if (statusIndex || statusIndex === 0 && statOptIdx < statusIndex){
+                if (article.pub_status && statusIndex || statusIndex === 0 && statOptIdx < statusIndex){
                     article.pub_status_list[statOptIdx].disabled = true;
                 }
             }
