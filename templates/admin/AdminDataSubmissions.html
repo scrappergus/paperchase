@@ -65,89 +65,101 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <div class="card-title">
-                <h4>Article Count: {{countItems articles}}</h4>
-            </div>
+            <h4>Article Count: {{countItems articles}}</h4>
             <ul class="collection">
                 {{#each articles}}
                 <li class="collection-item">
                     <div class="row article-edit hide" id="edit-{{_id}}">
-                        <div class="col s12">
-                            <div class="row"><div class="col s12">
-                                <button id="cancel-{{_id}}" class="cancel-article btn btn-floating waves-effect waves-light red right" alt="Cancel Edit Article"><i class="material-icons">&#xE5C9;</i></button>
-                            </div></div>
-                        </div>
-                        {{#if equalsArticleId _id}}
-                        {{#if articleDataReady}}
-                        {{>ArticleForm}}
-                        {{/if}}
-                        {{/if}}
-                    </div>
-                    <div class="row article-overview" id="overview-{{_id}}">
-                        <div class="col s12">
 
-                            <div class="row no-margin">
-                                <div class="col s6">
-                                    <label>Pub Status:</label> {{#if status}}{{status}}{{else}}<span class="red-type">N/A</span>{{/if}}
-                                </div>
-                                <div class="col s6">
-                                    <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit right" alt="Edit Article">{{>AdminEditIcon}}</button>
+                        <div class="col s12">
+                            <div class="card z-depth-0">
+                                <div class="card-content">
+                                    <div class="row no-margin">
+                                        <div class="col s6">
+                                            <h2>Edit Article</h2>
+                                        </div>
+                                        <div class="col s6">
+                                            <button id="cancel-{{_id}}" class="cancel-article btn btn-floating waves-effect waves-light red right" alt="Cancel Edit Article"><i class="material-icons">&#xE5C9;</i></button>
+                                        </div>
+                                    </div>
+
+                                    {{#if equalsArticleId _id}}
+                                    {{#if articleDataReady}}
+                                    {{>ArticleForm}}
+                                    {{/if}}
+                                    {{/if}}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row article-overview no-margin" id="overview-{{_id}}">
+                        <div class="col s12">
+                            <div class="card z-depth-0 blue-grey lighten-5 no-margin">
+                                <div class="card-content">
+                                    <div class="row no-margin">
+                                        <div class="col s6">
+                                            <label>Pub Status:</label> {{#if status}}{{status}}{{else}}<span class="red-type">N/A</span>{{/if}}
+                                        </div>
+                                        <div class="col s6">
+                                            <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit right" alt="Edit Article">{{>AdminEditIcon}}</button>
+                                        </div>
+                                    </div>
 
-                            <div class="row"><div class="col s12">
-                                <h6>
-                                    {{#if article_type.name}}
-                                        <span class="article-type">{{article_type.name}}</span>
-                                        {{#if issue_id}}
-                                        &nbsp; | &nbsp;
-                                        {{/if}}
-                                    {{/if}}
-                                    {{#if issue_id}}
-                                        <span>Volume {{volume}}, Issue {{issue}}</span>
-                                        {{#if page_start}}
-                                        &nbsp; | &nbsp;
-                                        {{/if}}
-                                    {{/if}}
-                                    {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
-                                </h6>
-
-                                <h3 style="margin: 0;">{{{title}}}</h3>
-                                <p>{{>AuthorsRefList}}</p>
-                            </div></div>
-
-                            <div class="row">
-                                <div class="col s12 m4">
-                                    <h5>Article IDs</h5>
-                                    <ul>
-                                    {{#each arrayify ids}}
-                                        <li><label>{{name}}:</label> {{value}}</li>
-                                    {{/each}}
-                                    </ul>
-                                </div>
-                                <div class="col s12 m4">
-                                    <h5>Article History</h5>
-                                    <ul>
-                                    {{#each arrayify history}}
-                                        <li><label>{{name}}:</label> {{articleDate value}}</li>
-                                    {{/each}}
-                                    </ul>
-                                </div>
-                                <div class="col s12 m4">
-                                    <h5>Article Dates</h5>
-                                    <ul>
-                                    {{#each arrayify dates}}
-                                        <li>
-                                            {{#if equals name 'collection'}}
-                                            <label>published (collection):</label>
-                                            {{collectionDate value}}
-                                            {{else}}
-                                            <label>published:</label>
-                                            {{articleDate value}}
+                                    <div class="row"><div class="col s12">
+                                        <h6>
+                                            {{#if article_type.name}}
+                                                <span class="article-type">{{article_type.name}}</span>
+                                                {{#if issue_id}}
+                                                &nbsp; | &nbsp;
+                                                {{/if}}
                                             {{/if}}
-                                        </li>
-                                    {{/each}}
-                                    </ul>
+                                            {{#if issue_id}}
+                                                <span>Volume {{volume}}, Issue {{issue}}</span>
+                                                {{#if page_start}}
+                                                &nbsp; | &nbsp;
+                                                {{/if}}
+                                            {{/if}}
+                                            {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
+                                        </h6>
+
+                                        <h3 style="margin: 0 0 10px 0;">{{{title}}}</h3>
+                                        <p>{{>AuthorsRefList}}</p>
+                                    </div></div>
+
+                                    <div class="row">
+                                        <div class="col s12 m4">
+                                            <h5>Article IDs</h5>
+                                            <ul>
+                                            {{#each arrayify ids}}
+                                                <li><label>{{name}}:</label> {{value}}</li>
+                                            {{/each}}
+                                            </ul>
+                                        </div>
+                                        <div class="col s12 m4">
+                                            <h5>Article History</h5>
+                                            <ul>
+                                            {{#each arrayify history}}
+                                                <li><label>{{name}}:</label> {{articleDate value}}</li>
+                                            {{/each}}
+                                            </ul>
+                                        </div>
+                                        <div class="col s12 m4">
+                                            <h5>Article Dates</h5>
+                                            <ul>
+                                            {{#each arrayify dates}}
+                                                <li>
+                                                    {{#if equals name 'collection'}}
+                                                    <label>published (collection):</label>
+                                                    {{collectionDate value}}
+                                                    {{else}}
+                                                    <label>published:</label>
+                                                    {{articleDate value}}
+                                                    {{/if}}
+                                                </li>
+                                            {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
