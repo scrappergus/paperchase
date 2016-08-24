@@ -724,32 +724,31 @@ Meteor.dataSubmissions = {
         });
         return piiList;
     },
-    getArticles: function(queryType,queryParams){
-        // console.log('... getArticles = ' + queryType + ' / ' + queryParams);
-        Meteor.subscribe('submissionSet', queryType, queryParams);
-    },
-    buildQuery: function(){
-        var query = {};
+    getArticles: function(){
+        var articlesList,
+            result;
+            
+        Session.set('processingQuery', true);
 
-        if (Session.get('queryType') === 'issue'){
-            query.find = {issue_id:  Session.get('queryParams')};
-        } else if (Session.get('queryType') === 'pii'){
-            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
-        } else if(Session.get('queryType') === 'reset'){
+        var queryType = Session.get('queryType');
+        var queryParams = Session.get('queryParams');
+
+        if(queryType === 'reset'){
             Meteor.dataSubmissions.resetPage();
             return;
+        } else if(queryType && queryParams){
+            Session.set('queried', true);
+            Meteor.subscribe('submissionSet', queryType, queryParams);
         }
-
-        query.options = {sort : {page_start:1}};
-        return query;
     },
     resetPage: function(){
         Session.set('submission_list',null);
         Session.set('articleId', null);
+        Session.set('queried', null);
         Session.set('queryType',null);
         Session.set('queryParams',null);
-        Session.set('error',false);
         Session.set('processingQuery', false);
+        Session.set('queryResultsCount', null);
     },
     closeEditView: function(){
         var articleId = Session.get('articleId');

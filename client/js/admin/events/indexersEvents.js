@@ -5,10 +5,7 @@ Template.AdminDataSubmissions.events({
         e.preventDefault();
         Session.set('queryType', 'reset');
         Session.set('queryParams', null);
-        Session.set('error',false);
-        Session.set('processingQuery', false);
-        $('.data-submission-pii').remove();
-        // $('.saving').addClass('hide');
+        Meteor.dataSubmissions.resetPage();
     },
     'click #download-set-xml': function(e){
         e.preventDefault();
@@ -108,9 +105,8 @@ Template.DataSubmissionsSearchForms.events({
 
         Session.set('queryType', 'pii');
         Session.set('queryParams', piiList);
-        Session.set('processingQuery', true);
 
-        Meteor.dataSubmissions.getArticles(queryType,queryParams);
+        Meteor.dataSubmissions.getArticles();
     },
 });
 
@@ -124,7 +120,6 @@ Template.DataSubmissionsSearchFormIssue.events({
             queryParams = issueId;
         Session.set('queryType', 'issue');
         Session.set('queryParams', issueId);
-        Session.set('processingQuery', true);
-        Meteor.dataSubmissions.getArticles(queryType, queryParams);
+        Meteor.dataSubmissions.getArticles();
     }
 });
