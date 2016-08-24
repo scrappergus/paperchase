@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'variables';
 .sans{
   font-family: 'Open Sans', Geneva, sans-serif;
 }
@@ -21,10 +22,10 @@ h2{
     color: $black-1;
 }
 h3{
-    color: $black-2;
+    color: $black-0;
 }
 h4{
-    color: $black-0;
+    color: $black-2;
 }
 h5{
     color: $black-1;
