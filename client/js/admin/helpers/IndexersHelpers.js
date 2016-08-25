@@ -57,14 +57,13 @@ Template.AdminDataSubmissions.helpers({
         }
     },
     ppubAlreadySubmitted: function(){
-        var articlesList = articles.find().fetch();
-        var ppubAlreadySubmitted = [];
-        articlesList.forEach(function(article){
-            if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
-                ppubAlreadySubmitted.push(article);
-            }
-        });
-        return ppubAlreadySubmitted;
+        return Meteor.dataSubmissions.ppubAlreadySubmitted(Template.instance());
+    },
+    submitCount: function(){
+        var okToSubmit = Meteor.dataSubmissions.allSansAlreadySubmittedPpub(Template.instance());
+        if(okToSubmit){
+            return okToSubmit.length;
+        }
     },
     processing: function(){
         return Template.instance().processing.get();
