@@ -17,12 +17,6 @@ html,body{
 		font-weight: bold;
 	}
 	/* Type adjustments */
-	.truncate {
-		width: 100%;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
 	.orange-type{
 		color: $orange;
 	}

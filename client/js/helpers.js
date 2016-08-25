@@ -17,34 +17,6 @@ if (Meteor.isClient) {
     Template.registerHelper('articleId', function() {
       return Session.get('articleId');
     });
-    Template.registerHelper('getPmid', function(article) {
-        // console.log('..getPmid');
-        // for references without PMID in XML
-        var references;
-        var pmid;
-        if(article.title){
-            // console.log(article.number + ' = ' +article.title);
-            Meteor.call('getPubMedId', article, function(error, pmid){
-                if(pmid){
-                    var fullText = Session.get('article-text');
-                    if(fullText){
-                      references = fullText.references;
-                      // Update reference PMID key
-                      // do not rely on number of reference as index of reference in array.
-                      if(references){
-                        for(var ref=0 ; ref<references.length ; ref++){
-                            if(references[ref].number === article.number){
-                                fullText.references[ref].pmid = pmid;
-                                // Update Session variable
-                                Session.set('article-text',fullText);
-                            }
-                        }
-                      }
-                    }
-                }
-            });
-        }
-    });
     Template.registerHelper('affiliationNumber', function(affiliation) {
       return parseInt(parseInt(affiliation) + 1);
     });
@@ -65,37 +37,8 @@ if (Meteor.isClient) {
     });
     // Dates
     // -----
-    Template.registerHelper('timestamp', function(date) {
-      date = new Date(date);
-      return date.getTime();
-    });
-    Template.registerHelper('dateDayExists', function(date) {
-      //if the date object should have a day value associated with it
-      if (moment(date).format('HH') === 0) {
-        return true;
-      } else {
-        return false;
-      }
-    });
     Template.registerHelper('placeholderDate', function(date) {
       return moment(date).format('M D, YYYY');
-    });
-    Template.registerHelper('getMonthWord', function(month) {
-      var d = new Date(month);
-      var month = new Array();
-      month[0] = 'January';
-      month[1] = 'February';
-      month[2] = 'March';
-      month[3] = 'April';
-      month[4] = 'May';
-      month[5] = 'June';
-      month[6] = 'July';
-      month[7] = 'August';
-      month[8] = 'September';
-      month[9] = 'October';
-      month[10] = 'November';
-      month[11] = 'December';
-      return month[d.getMonth()];
     });
     Template.registerHelper('inputDate', function(date) {
         if (date) {
@@ -107,12 +50,6 @@ if (Meteor.isClient) {
     Template.registerHelper('formatDate', function(date) {
         if (date) {
             return Meteor.dates.wordDate(date);
-        }
-        return;
-    });
-    Template.registerHelper('formatDateNumber',function(date) {
-        if (date) {
-            return moment(date).format('MM/D/YYYY');
         }
         return;
     });
@@ -135,12 +72,6 @@ if (Meteor.isClient) {
     Template.registerHelper('articleDate',function(date) {
         if(date){
             return Meteor.dates.article(date);
-        }
-        return;
-    });
-    Template.registerHelper('collectionDate',function(date) {
-        if(date){
-            return moment(date).format('MMMM YYYY');
         }
         return;
     });
@@ -211,10 +142,6 @@ if (Meteor.isClient) {
         return result;
     });
 
-    Template.registerHelper('pluralize', function(str){
-        return Meteor.general.pluralize(str);
-    });
-
     // Count
     // --------
     Template.registerHelper('countItems', function(items) {
@@ -228,48 +155,6 @@ if (Meteor.isClient) {
         return count;
     });
 
-    // Title
-    // ----------------------
-    Template.registerHelper('stripTitle', function(title) {
-        return title.substr(title.indexOf("|") + 1);
-    });
-
-    Template.registerHelper('titleCase', function(str) {
-        if(str){
-            return str.replace(/\w\S*/g, function(txt){
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-        }
-    });
-
-    Template.registerHelper('convertToID', function(str) {
-      if(str) {
-        return str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
-      } else {
-        return;
-      }
-    });
-
-    UI.registerHelper('truncate', function(str, limit) {
-        if ( str.length > limit + 3 ) {
-            str = str.substr( 0, limit ) + "...";
-        }
-        return str;
-    });
-    Template.registerHelper('issueLinkViaTitle', function(issueTitle) {
-        // TODO: instead customize package to return more data in the breadcrumb object
-        var journalName = '';
-        if(journalConfig.findOne()){
-            journalName = journalConfig.findOne().journal.name;
-        }
-        issueTitle = issueTitle.replace(journalName + ' | ','');
-        issueTitle = issueTitle.replace(',','');
-        issueTitle = issueTitle.replace('Volume','v');
-        issueTitle = issueTitle.replace('Issue','i');
-        issueTitle = issueTitle.replace(/\s+/g,'');
-        return issueTitle;
-    });
-
     // Misc
     // ---------
     Template.registerHelper('actionSaving', function(action){
@@ -278,13 +163,6 @@ if (Meteor.isClient) {
                   return true;
               }
         }
-    });
-
-
-    // Search
-    // ---------
-    Template.registerHelper('searchResults', function() {
-        return Session.get('queryResults');
     });
 
     // Data Submissions

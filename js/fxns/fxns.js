@@ -786,21 +786,6 @@ Meteor.general = {
 
         return string;
     },
-    pluralize: function(str) {
-        if (['Review',
-             'Editorial',
-             'Research Article',
-             'Research Perspective',
-             'Research Paper'].indexOf(str) >= 0) {
-              return str + 's';
-        }
-
-        if (str == 'Letter to the Editor') {
-            return 'Letters to the Editor';
-        }
-
-        return str;
-    },
     affix: function() {
         var sticky = $('.fixed-scroll-card');
         if (sticky.length > 0) {
