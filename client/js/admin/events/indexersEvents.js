@@ -11,37 +11,6 @@ Template.AdminDataSubmissions.events({
         e.preventDefault();
         Meteor.dataSubmissions.validateXmlSet();
     },
-    // 'click #register-doi-set': function(e){
-    //     e.preventDefault();
-    //     // var submissionList = Session.get('submission_list');
-    //     var submissionList = articles.find().fetch();
-    //     var piiList = '';
-    //     var missingPiiList = [];
-    //
-    //     for(var i = 0 ; i < submissionList.length ; i++){
-    //         if(submissionList[i].ids.pii){
-    //             piiList += submissionList[i].ids.pii + ',';
-    //         }else{
-    //             missingPiiList.push(submissionList[i].title);
-    //         }
-    //     }
-    //
-    //     if(missingPiiList.length > 0){
-    //         Session.set('missingPii',missingPiiList);
-    //     }
-    //     if(piiList.length > 0){
-    //         Meteor.call('registerDoiSet', piiList, function(error,result){
-    //             if(error){
-    //                 console.log('ERROR - registerDoiSet');
-    //                 console.log(error);
-    //                 alert('Could not register DOIs');
-    //             }
-    //             if(result){
-    //                 Meteor.formActions.success();
-    //             }
-    //         });
-    //     }
-    // },
     'click .edit-article': function(e){
         e.preventDefault();
         Session.set('article-form', null);
@@ -125,3 +94,37 @@ Template.DataSubmissionsSearchFormIssue.events({
         Meteor.dataSubmissions.getArticles();
     }
 });
+
+// Template.RegisterDoiSet.events({
+    // 'click #register-doi-set': function(e){
+    //     e.preventDefault();
+    //     // var submissionList = Session.get('submission_list');
+    //     var submissionList = articles.find().fetch();
+    //     var piiList = '';
+    //     var missingPiiList = [];
+    //
+    //     for(var i = 0 ; i < submissionList.length ; i++){
+    //         if(submissionList[i].ids.pii){
+    //             piiList += submissionList[i].ids.pii + ',';
+    //         }else{
+    //             missingPiiList.push(submissionList[i].title);
+    //         }
+    //     }
+    //
+    //     if(missingPiiList.length > 0){
+    //         Session.set('missingPii',missingPiiList);
+    //     }
+    //     if(piiList.length > 0){
+    //         Meteor.call('registerDoiSet', piiList, function(error,result){
+    //             if(error){
+    //                 console.log('ERROR - registerDoiSet');
+    //                 console.log(error);
+    //                 alert('Could not register DOIs');
+    //             }
+    //             if(result){
+    //                 Meteor.formActions.success();
+    //             }
+    //         });
+    //     }
+    // },
+// });

@@ -452,9 +452,6 @@ Template.AdminDataSubmissions.helpers({
     // error: function(){
     //     return Session.get('error');
     // },
-    // missingPii: function(){
-    //     return Session.get('missingPii');
-    // },
     piiNotFound: function(){
         return Session.get('piiNotFound');
     },
@@ -551,6 +548,12 @@ Template.AdminDataSubmissionsPast.helpers({
             ]
         };
     }
+});
+
+Template.RegisterDoiSet.helpers({
+    // missingPii: function(){
+    //     return Session.get('missingPii');
+    // },
 });
 
 // Institution

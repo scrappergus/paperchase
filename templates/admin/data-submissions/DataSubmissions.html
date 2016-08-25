@@ -35,11 +35,6 @@
             <div class="card z-depth-0">
                 <div class="card-content">
                     <div class="row no-margin valign-wrapper">
-                        <!-- <div class="col s4">
-                            <button class="waves-effect waves-light btn" id="register-doi-set">
-                                Register DOI
-                            </button>
-                        </div> -->
                         <div class="col s4 valign">
                             <h4>Article Count: {{countItems articles}}</h4>
                             <button class="waves-effect waves-light btn" id="download-set-xml">
@@ -53,20 +48,6 @@
                             {{>DataSubmissionsClear}}
                         </div>
                     </div>
-
-                    <!-- {{#if missingPii}}
-                    <div class="row">
-                        <div class="col s12">
-                            <h3>Missing PII</h3>
-                            <h4>Cannot register</h4>
-                            <ul>
-                            {{#each missingPii}}
-                                <li>{{{.}}}</li>
-                            {{/each}}
-                            </ul>
-                        </div>
-                    </div>
-                    {{/if}} -->
                 </div>
             </div>
         </div>
@@ -254,4 +235,25 @@
             </div>
         </div>
     </div>
+</template>
+
+<template name="RegisterDoiSet">
+    <!-- <div class="col s4">
+        <button class="waves-effect waves-light btn" id="register-doi-set">
+            Register DOI
+        </button>
+    </div> -->
+    <!-- {{#if missingPii}}
+    <div class="row">
+        <div class="col s12">
+            <h3>Missing PII</h3>
+            <h4>Cannot register</h4>
+            <ul>
+            {{#each missingPii}}
+                <li>{{{.}}}</li>
+            {{/each}}
+            </ul>
+        </div>
+    </div>
+    {{/if}} -->
 </template>
