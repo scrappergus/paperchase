@@ -141,7 +141,7 @@ Meteor.methods({
     },
     articleSetCiteXmlValidation: function(submissionList, userId){
         //create a string of article xml, validate at pubmed, return any articles that failed
-        console.log('--articleSetXmlValidation ');
+        // console.log('--articleSetXmlValidation ');
         var fut = new future();
         var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
         articleSetXmlString += '<ArticleSet>';
@@ -159,8 +159,7 @@ Meteor.methods({
                         articleSetXmlString += '</ArticleSet>';
                         Meteor.call('pubMedCiteCheck', articleSetXmlString, function(e, r){
                             if(e){
-                                console.log('ERROR - pubMedCiteCheck');
-                                console.log(e);
+                                console.error('ERROR - pubMedCiteCheck', e);
                                 throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation', result.headers.location);
                             }
 
@@ -172,7 +171,7 @@ Meteor.methods({
                                 var yyyy = today.getFullYear();
                                 var time = today.getTime();
                                 var fileName = mm + '_' + dd + '_' + yyyy + '_' + time + '.xml';
-                                Meteor.call('saveXmlCiteSet',articleSetXmlString,fileName);
+                                Meteor.call('saveXmlCiteSet',articleSetXmlString, fileName);
 
                                 //update the submissions collection
                                 var created = new Date();
@@ -185,7 +184,7 @@ Meteor.methods({
                                 fut['return'](fileName);
                             }else{
                                 console.log('ERROR: XML Set NOT valid.');
-                                fut['return']('invalid');
+                                fut.return('invalid');
                             }
                         });
                     }
@@ -207,14 +206,15 @@ Meteor.methods({
         });
     },
     articlesStatusUpdate: function(submissionList, submissions_id, created){
-        for(var i=0 ; i< submissionList.length ; i++){
+        submissionList.forEach(function(article){
             var update = {
                 'submission_id' : submissions_id,
                 'created_date' : created,
-                'pub_status' : parseInt(submissionList[i].pub_status)
+                'pub_status' : article.pub_status
             };
-            Meteor.call('pushArticle', submissionList[i]._id, 'submissions', update);
-        }
+
+            Meteor.call('pushArticle', article._id, 'submissions', update);
+        });
     },
     xmlStringFix: function(string){
         //&
