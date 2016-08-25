@@ -174,11 +174,13 @@ if (Meteor.isClient) {
     Session.setDefault('recommendation',null);
     // Data submissions
     Session.setDefault('articleId',null);
-    Session.setDefault('queryType',null);
-    Session.setDefault('queryParams',null);
+    Session.setDefault('queryType',null); // either issue or pii, used in the subscription to query collection
+    Session.setDefault('queryParams',null); // either issue_id or pii array, used in the subscription to query collection
     Session.setDefault('processingQuery', false);
-    Session.setDefault('queryResultsResults', null);
-    Session.setDefault('queried', null);
+    Session.setDefault('queryResults', null); // the articles found with data processed
+    Session.setDefault('queried', null); // used to determine whether to show no articles found or not, if articles=0 and !queried, then form is reset. Otherwise, no articles
+    Session.setDefault('queryForDisplay', null); //used to display query to user
+    Session.setDefault('piiNotFound', null);
 
 
     Router.route('/', {
@@ -430,11 +432,11 @@ if (Meteor.isClient) {
             Meteor.dataSubmissions.resetPage();
             this.next();
         },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('articleTypes')
-            ];
-        }
+        // waitOn: function(){
+        //     return[
+        //         Meteor.subscribe('articleTypes')
+        //     ];
+        // }
     });
     Router.route('/admin/data_submissions/past',{
         name: 'AdminDataSubmissionsPast',

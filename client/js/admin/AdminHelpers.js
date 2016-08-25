@@ -444,19 +444,25 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
-        return Session.get('queryResultsResults');
+        return Session.get('queryResults');
+    },
+    query: function(){
+        return Session.get('queryForDisplay');
     },
     // error: function(){
     //     return Session.get('error');
     // },
-    missingPii: function(){
-        return Session.get('missingPii');
+    // missingPii: function(){
+    //     return Session.get('missingPii');
+    // },
+    piiNotFound: function(){
+        return Session.get('piiNotFound');
     },
     processing: function(){
         return Session.get('processingQuery');
     },
     noneFound: function(){
-        if(Session.get('queried') && !Session.get('processingQuery') && Session.get('queryResultsResults').length === 0){
+        if(Session.get('queried') && !Session.get('processingQuery') && Session.get('queryResults').length === 0){
             return true;
         }
     }

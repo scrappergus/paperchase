@@ -16,6 +16,10 @@ Template Data
 ============
 When possible, use helper files to pass data to template: `AdminHelpers.js` and `helpersData.js`
 
+Data
+============
+Meteor.article.readyData() should be used before viewing article DB data
+
 Deploy
 ============
  - change favicon to journal deploying (all journal favicons located in /public)
@@ -50,6 +54,13 @@ Admin permissions are tested on the admin parent template.
 
 404 and Loading
 Cannot use the same template variable to determine to show 404 message or loading. There is a global variable, admin-not-found, which gets set in the router (the article routes use Meteor.adminArticle.urlViaPiiOrMongo()) and is used to determine whether to show 404 message. Loading template is shown when template variable with page data is null.
+
+
+Data Submissions
+------------
+/admin/data-submissions
+Create submission set based on PII list or Issue. Uses subscription to submissionSet, which will either query for issue_id or list of PII. Two session variables are passed to the subscription, queryType and queryParams. The type will determine if issue or PII search. The params will be either issue_id or array of PII. Before subscribing, if queryType = reset, then clear the template variable using the reset function Meteor.dataSubmissions.resetPage(). The results are put into the session variable queryResults after the ready callback from the subscription via the function Meteor.dataSubmissions.updateResults(), which will also check if any PII queried for were not found.
+
 
 
 Site Control

@@ -105,6 +105,7 @@ Template.DataSubmissionsSearchForms.events({
 
         Session.set('queryType', 'pii');
         Session.set('queryParams', piiList);
+        Session.set('queryForDisplay',  'PII: ' + piiList);
 
         Meteor.dataSubmissions.getArticles();
     },
@@ -120,6 +121,7 @@ Template.DataSubmissionsSearchFormIssue.events({
             queryParams = issueId;
         Session.set('queryType', 'issue');
         Session.set('queryParams', issueId);
+        Session.set('queryForDisplay', 'Issue: ' + $('#submissions_search_issue option:selected').text());
         Meteor.dataSubmissions.getArticles();
     }
 });

@@ -15,12 +15,16 @@
     {{#if noneFound}}
     <div class="row">
         <div class="col s12">
-            <button class="waves-effect waves-light btn right clear">clear</button>
+            {{>DataSubmissionsClear}}
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-            <h4>No Articles Found</h4>
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <h4 class="white-text">No Articles Found</h4>
+                </div>
+            </div>
         </div>
     </div>
     {{/if}}
@@ -30,19 +34,23 @@
         <div class="col s12">
             <div class="card z-depth-0">
                 <div class="card-content">
-                    <div class="row no-margin">
+                    <div class="row no-margin valign-wrapper">
                         <!-- <div class="col s4">
                             <button class="waves-effect waves-light btn" id="register-doi-set">
                                 Register DOI
                             </button>
                         </div> -->
-                        <div class="col s6">
+                        <div class="col s4 valign">
+                            <h4>Article Count: {{countItems articles}}</h4>
                             <button class="waves-effect waves-light btn" id="download-set-xml">
-                                Download XML
+                                {{>AdminDownloadIcon}} Download XML
                             </button>
                         </div>
-                        <div class="col s6">
-                            <button class="waves-effect waves-light btn right clear">clear</button>
+                        <div class="col s4 center valign">
+                            <h4><label>Searched:</label><br>{{query}}</h4>
+                        </div>
+                        <div class="col s4 valign">
+                            {{>DataSubmissionsClear}}
                         </div>
                     </div>
 
@@ -63,9 +71,23 @@
             </div>
         </div>
     </div>
+
+    {{#if piiNotFound}}
     <div class="row">
         <div class="col s12">
-            <h4>Article Count: {{countItems articles}}</h4>
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <div class="row no-margin center">
+                        <h4 class="white-text">PII not Found:<br>{{piiNotFound}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    <div class="row">
+        <div class="col s12">
             <ul class="collection">
                 {{#each articles}}
                 <li class="collection-item">
@@ -170,6 +192,10 @@
         </div>
     </div>
     {{/if}}
+</template>
+
+<template name="DataSubmissionsClear">
+    <button class="waves-effect waves-light btn right clear">{{>AdminCancelIcon}} clear</button>
 </template>
 
 <template name="DataSubmissionsSearchForms">
