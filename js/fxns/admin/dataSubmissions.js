@@ -1,4 +1,25 @@
 Meteor.dataSubmissions = {
+    ppubAlreadySubmitted: function(template){
+        var articlesList = Meteor.dataSubmissions.getArticles(template);
+        var ppubAlreadySubmitted = [];
+        articlesList.forEach(function(article){
+            if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
+                ppubAlreadySubmitted.push(article);
+            }
+        });
+        return ppubAlreadySubmitted;
+    },
+    allSansAlreadySubmittedPpub: function(template){
+        var articlesList = Meteor.dataSubmissions.getArticles(template);
+        var okToSubmit = [];
+        articlesList.forEach(function(article){
+            if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
+            } else{
+                okToSubmit.push(article);
+            }
+        });
+        return okToSubmit;
+    },
     getPiiList: function(){
         var piiList = [];
         $('.data-submission-pii').each(function(){
@@ -24,17 +45,32 @@ Meteor.dataSubmissions = {
         $('#overview-' + articleId).removeClass('hide');
         $('.edit-article').removeClass('hide');
     },
-    validateXmlSet: function(){
-        var submissionList = articles.find().fetch();
-        Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
-            if(error){
-                console.error('ERROR - articleSetXmlValidation',error);
-            } else if(result === 'invalid'){
-                alert('XML set invalid');
-            } else{
-                //all the articles are valid, now do the download
-                window.open('/xml-cite-set/' + result);
-            }
-        });
+    getArticles: function(template){
+        var queryType = template.queryType.get();
+        var queryParams = template.queryParams.get();
+
+        var query = {};
+        query.options = {sort: {page_start:1}};
+        if (queryType === 'issue'){
+            query.find = {issue_id: queryParams};
+        } else if (queryType === 'pii'){
+            query.find = {'ids.pii':{'$in':queryParams}};
+        }
+
+        return articles.find(query.find, query.options).fetch();
+    },
+    validateXmlSet: function(template){
+        // var submissionList = Meteor.dataSubmissions.allSansAlreadySubmittedPpub(template);
+        // console.log(submissionList.length);
+        // Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
+        //     if(error){
+        //         console.error('ERROR - articleSetXmlValidation',error);
+        //     } else if(result === 'invalid'){
+        //         alert('XML set invalid');
+        //     } else{
+        //         //all the articles are valid, now do the download
+        //         window.open('/xml-cite-set/' + result);
+        //     }
+        // });
     }
 };
