@@ -128,14 +128,17 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         console.log('MISSING AUTHORS: ' + doc._id);
     }
 
-    modifier.$set.doc_updates = Meteor.db.trackUpdates(userId, doc, fieldNames, modifier, options);
-    if(modifier.$set.ojsUser){
-        // we use this in trackUpdates
-        delete modifier.$set.ojsUser;
-    }
+    if(modifier.$set){
+        modifier.$set.doc_updates = Meteor.db.trackUpdates(userId, doc, fieldNames, modifier, options);
 
-    //recording this for easy sorting
-    modifier.$set.last_update = new Date();
+        if( modifier.$set.ojsUser){
+            // we use this in trackUpdates
+            delete modifier.$set.ojsUser;
+        }
+
+        //recording this for easy sorting
+        modifier.$set.last_update = new Date();
+    }
 });
 
 articles.after.update(function (userId, doc, fieldNames, modifier, options) {
