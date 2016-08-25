@@ -16,7 +16,7 @@ if (Meteor.isClient) {
     // -------
     Template.registerHelper('articleId', function() {
       return Session.get('articleId');
-    })
+    });
     Template.registerHelper('getPmid', function(article) {
         // console.log('..getPmid');
         // for references without PMID in XML
@@ -76,7 +76,7 @@ if (Meteor.isClient) {
     });
     Template.registerHelper('dateDayExists', function(date) {
       //if the date object should have a day value associated with it
-      if (moment(date).format('HH') == 0) {
+      if (moment(date).format('HH') === 0) {
         return true;
       } else {
         return false;
@@ -273,88 +273,6 @@ if (Meteor.isClient) {
         issueTitle = issueTitle.replace('Issue','i');
         issueTitle = issueTitle.replace(/\s+/g,'');
         return issueTitle;
-    });
-
-
-
-
-    // Subscribers
-    // -------
-    Template.registerHelper('clientIP', function() {
-        return headers.getClientIP();
-    });
-    Template.registerHelper('isSubscribed', function() {
-        var journalSettings = journalConfig.findOne();
-        if(journalSettings){
-            if(journalSettings['journal']['access'] == "open") { return true; }
-        }
-
-
-        ip = Meteor.ip.dot2num(headers.getClientIP());
-
-        var match = ipranges.findOne({
-            startNum: {
-                $lte: ip
-            },
-            endNum: {
-                $gte: ip
-            }
-        }
-        );
-
-        if (match === undefined) {
-            userId = Meteor.userId();
-            match = Meteor.users.findOne({
-                '_id': userId,
-                subscribed: true
-            });
-        }
-
-        return match !== undefined;
-    });
-    Template.registerHelper('isSubscribedUser', function() {
-        userId = Meteor.userId();
-        match = Meteor.users.findOne({
-            '_id': userId,
-            subscribed: true
-        });
-        return match !== undefined;
-    });
-    Template.registerHelper('isSubscribedIP', function() {
-        ip = Meteor.ipdot2num(headers.getClientIP());
-
-        var match = ipranges.findOne({
-            startNum: {
-                $lte: ip
-            },
-            endNum: {
-                $gte: ip
-            }
-        }
-        );
-
-        return match !== undefined;
-    });
-    Template.registerHelper('getInstitutionByIP', function() {
-        ip = Meteor.ip.dot2num(headers.getClientIP());
-
-        var match = ipranges.findOne({
-            startNum: {
-                $lte: ip
-            },
-            endNum: {
-                $gte: ip
-            }
-        }
-        );
-
-        if (match) {
-            inst_match = institutions.findOne({
-                "_id": match.institutionID
-            });
-        }
-
-        return inst_match || false;
     });
 
     // Misc
