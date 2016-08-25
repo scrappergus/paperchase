@@ -9,17 +9,6 @@ Template.registerHelper('pubMedPpubOk', function(pub_status, submissions) {
       return true;
   }
 });
-Template.DataSubmissionsSearchForms.helpers({
-    volumes: function(){
-        // this helper is only used to determine whether or not to load DataSubmissionsSearchFormIssue
-        // only want to load template when data available so that there are no timing problems initializing select dropdown
-        if (Session.get('archive') && Session.get('archive').length > 0){
-            return Session.get('archive');
-        } else{
-            return null;
-        }
-    }
-});
 Template.DataSubmissionsSearchFormIssue.helpers({
     volumes: function(){
         return Session.get('archive');
@@ -28,23 +17,53 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
-        return Session.get('queryResults');
+        var articlesProcessedResult = [];
+        var articlesList = articles.find({},{sort : {page_start:1}}).fetch();
+        articlesList.forEach(function(article){
+            articlesProcessedResult.push(Meteor.article.readyData(article));
+        });
+        return articlesProcessedResult;
     },
     query: function(){
-        return Session.get('queryForDisplay');
+        return Template.instance().queryForDisplay.get();
     },
     // error: function(){
     //     return Session.get('error');
     // },
     piiNotFound: function(){
-        return Session.get('piiNotFound');
+        if(Template.instance().queryType.get() === 'pii'){
+            var piiNotFound = [];
+            var articlesByPii = {};
+            var articlesList = articles.find().fetch();
+            articlesList.forEach(function(article){
+                if(article.ids.pii){
+                    articlesByPii[article.ids.pii] = true;
+                }
+            });
+            Template.instance().queryParams.get().forEach(function(pii){
+                if(!articlesByPii[pii]){
+                    piiNotFound.push(pii);
+                }
+            });
+            return piiNotFound;
+        } else {
+            return false;
+        }
+        // return Session.get('piiNotFound');
     },
     processing: function(){
-        return Session.get('processingQuery');
+        return Template.instance().processing.get();
     },
     noneFound: function(){
-        if(Session.get('queried') && !Session.get('processingQuery') && Session.get('queryResults').length === 0){
+        if(Template.instance().queried.get() && !Template.instance().processing.get() && articles.find().fetch().length === 0){
             return true;
+        }
+    },
+    volumes: function(){
+        if (Session.get('archive') && Session.get('archive').length > 0){
+            return Session.get('archive');
+        } else{
+            return null;
         }
     }
 });

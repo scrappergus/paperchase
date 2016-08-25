@@ -59,8 +59,7 @@ Cannot use the same template variable to determine to show 404 message or loadin
 Data Submissions
 ------------
 /admin/data-submissions
-Create submission set based on PII list or Issue. Uses subscription to submissionSet, which will either query for issue_id or list of PII. Two session variables are passed to the subscription, queryType and queryParams. The type will determine if issue or PII search. The params will be either issue_id or array of PII. Before subscribing, if queryType = reset, then clear the template variable using the reset function Meteor.dataSubmissions.resetPage(). The results are put into the session variable queryResults after the ready callback from the subscription via the function Meteor.dataSubmissions.updateResults(), which will also check if any PII queried for were not found.
-
+Create submission set based on PII list or Issue. Uses subscription to submissionSet, which will either query for issue_id or list of PII. Two reactive template variables are passed to the subscription, queryType and queryParams. The type will determine if issue or PII search. The params will be either issue_id or array of PII. Before subscribing, if queryType = reset, then clear the template variable using the reset function Meteor.dataSubmissions.resetPage(). The results are pulled directly from the subscribed collection, with data processed before passing to the template.
 
 
 Site Control
@@ -272,6 +271,7 @@ Allows sending email from a Meteor app. Published by mdg.
 Sass and SCSS support
 
 **gadicohen:headers**
+TODO: remove this package
 For institutaion access. In helpers getInstitutionByIP and isSubscribedIP
 
 **gandev:server-eval**

@@ -2,7 +2,36 @@
     {{>AdminHeader header="New Data Submission"}}
     <!-- {{>SendingSuccessMessage what="DOI registered"}} -->
     <!-- <a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a> -->
-    {{>DataSubmissionsSearchForms}}
+    <div class="row">
+        <div class="col s12 m10">
+            <h2>Search By:</h2>
+        </div>
+        <div class="col s6">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <form class="form-pii">
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <input id="submissions_search_pii" type="number" class="validate">
+                        <label for="submissions_search_pii">PII</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12" id="search_pii_list"></div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{#if volumes}}
+        {{>DataSubmissionsSearchFormIssue}}
+        {{/if}}
+    </div>
 
     {{#if processing}}
     <div class="row">
@@ -185,7 +214,7 @@
     <button class="waves-effect waves-light btn right clear">{{>AdminCancelIcon}} clear</button>
 </template>
 
-<template name="DataSubmissionsSearchForms">
+<!-- <template name="DataSubmissionsSearchForms">
     <div class="row">
         <div class="col s12 m10">
             <h2>Search By:</h2>
@@ -216,7 +245,7 @@
         {{>DataSubmissionsSearchFormIssue}}
         {{/if}}
     </div>
-</template>
+</template> -->
 
 <template name="DataSubmissionsSearchFormIssue">
     <div class="col s6">

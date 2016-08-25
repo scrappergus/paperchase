@@ -7,82 +7,15 @@ Meteor.dataSubmissions = {
         });
         return piiList;
     },
-    getArticles: function(){
-        var articlesList,
-            result;
-
-        Session.set('processingQuery', true);
-        Session.set('piiNotFound', null);
-        Session.set('queryResults', []);
-
-        var queryType = Session.get('queryType');
-        var queryParams = Session.get('queryParams');
-
-        if(queryType === 'reset'){
-            Meteor.dataSubmissions.resetPage();
-            return;
-        } else if(queryType && queryParams){
-            Session.set('queried', true);
-            Meteor.subscribe('submissionSet', queryType, queryParams, {
-                onReady: function () {
-                    Meteor.dataSubmissions.updateResults();
-                }
-            });
-        }
-    },
-    updateResults: function(){
-        var articlesResult;
-        var articlesProcessedResult = [];
-        var query = {};
-        var piiNotFound = [];
-        var articlesByPii = {};
-
-        if (Session.get('queryType') === 'issue'){
-            query.find = {issue_id:  Session.get('queryParams')};
-        } else if (Session.get('queryType') === 'pii'){
-            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
-        }
-
-        query.options = {sort : {page_start:1}};
-
-        articlesResult =articles.find(query.find, query.options).fetch();
-
-        articlesResult.forEach(function(article){
-            // @TODO move readydata to collection transform
-            articlesProcessedResult.push(Meteor.article.readyData(article));
-            if(article.ids.pii){
-                articlesByPii[article.ids.pii] = true; // used to check if any PII queried for were not found, below
-            }
-        });
-
-        if(articlesProcessedResult.length > 0){
-            Session.set('queryResults', articlesProcessedResult);
-        }
-
-        // check for if any PII not found
-        if (Session.get('queryType') === 'pii' && articlesProcessedResult.length != Session.get('queryParams').length){
-            Session.get('queryParams').forEach(function(pii){
-                if(!articlesByPii[pii]){
-                    piiNotFound.push(pii);
-                }
-            });
-        }
-        if(piiNotFound.length > 0){
-            Session.set('piiNotFound',piiNotFound);
-        }
-
-        Session.set('processingQuery', false);
-    },
-    resetPage: function(){
+    resetPage: function(template){
         Session.set('submission_list',null);
         Session.set('articleId', null);
-        Session.set('queried', null);
-        Session.set('queryType',null);
-        Session.set('queryParams',null);
-        Session.set('processingQuery', false);
-        Session.set('queryResults', null);
-        Session.set('queryForDisplay', null);
-        Session.set('piiNotFound', null);
+
+        template.queryType.set();
+        template.queryParams.set();
+        template.queried.set(false);
+        template.processing.set(false);
+        template.queryForDisplay.set();
     },
     closeEditView: function(){
         var articleId = Session.get('articleId');

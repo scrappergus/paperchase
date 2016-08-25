@@ -1,11 +1,9 @@
 // Indexers
 // ----------------
 Template.AdminDataSubmissions.events({
-    'click .clear': function(e){
+    'click .clear': function(e, template){
         e.preventDefault();
-        Session.set('queryType', 'reset');
-        Session.set('queryParams', null);
-        Meteor.dataSubmissions.resetPage();
+        Meteor.dataSubmissions.resetPage(template);
     },
     'click #download-set-xml': function(e){
         e.preventDefault();
@@ -32,11 +30,8 @@ Template.AdminDataSubmissions.events({
     },
     'click .cancel-article':function(e){
         Meteor.dataSubmissions.closeEditView();
-    }
-});
-
-Template.DataSubmissionsSearchForms.events({
-    'keydown input': function(e,t){
+    },
+    'keydown input': function(e, template){
         var tag = '<div class="chip">Tag<i class="material-icons">close</i></div>';
         if(e.which == 13) {
             e.preventDefault();
@@ -52,46 +47,46 @@ Template.DataSubmissionsSearchForms.events({
             }
         }
     },
-    'submit .form-pii': function(e,t){
+    'submit .form-pii': function(e, template){
         e.preventDefault();
+        template.processing.set(true);
+        template.queried.set(true);
+
         var piiList = Meteor.dataSubmissions.getPiiList();
 
         //check if there's anything to add to the array of pii
-        if($('#submissions_search_pii').val()){
+        if ($('#submissions_search_pii').val()){
             var addPii = $('#submissions_search_pii').val();
             //do not add if already present
-            if(piiList.indexOf(addPii) === -1){
+            if (piiList.indexOf(addPii) === -1){
                 piiList.push(addPii);
             }
         }
-        if(piiList.length === 0){
+        if (piiList.length === 0){
             alert('no PII to search');
         }
 
-        //get articles
         var queryType = 'pii',
             queryParams = piiList;
 
-        Session.set('queryType', 'pii');
-        Session.set('queryParams', piiList);
-        Session.set('queryForDisplay',  'PII: ' + piiList);
-
-        Meteor.dataSubmissions.getArticles();
+        template.queryType.set('pii');
+        template.queryParams.set(piiList);
+        template.queryForDisplay.set('PII: ' + piiList);
     },
-});
-
-Template.DataSubmissionsSearchFormIssue.events({
-    'submit .form-issue': function(e,t){
+    'submit .form-issue': function(e, template){
         e.preventDefault();
+        template.processing.set(true);
+        template.queried.set(true);
+
         var issueId = $('#submissions_search_issue').val();
 
         //get articles
         var queryType = 'issue',
             queryParams = issueId;
-        Session.set('queryType', 'issue');
-        Session.set('queryParams', issueId);
-        Session.set('queryForDisplay', 'Issue: ' + $('#submissions_search_issue option:selected').text());
-        Meteor.dataSubmissions.getArticles();
+
+        template.queryType.set('issue');
+        template.queryParams.set(issueId);
+        template.queryForDisplay.set('Issue: ' + $('#submissions_search_issue option:selected').text());
     }
 });
 
