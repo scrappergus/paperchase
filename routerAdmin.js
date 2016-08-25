@@ -177,7 +177,7 @@ if (Meteor.isClient) {
     Session.setDefault('queryType',null);
     Session.setDefault('queryParams',null);
     Session.setDefault('processingQuery', false);
-    Session.setDefault('queryResultsCount', null);
+    Session.setDefault('queryResultsResults', null);
     Session.setDefault('queried', null);
 
 

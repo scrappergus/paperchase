@@ -727,7 +727,7 @@ Meteor.dataSubmissions = {
     getArticles: function(){
         var articlesList,
             result;
-            
+
         Session.set('processingQuery', true);
 
         var queryType = Session.get('queryType');
@@ -738,8 +738,40 @@ Meteor.dataSubmissions = {
             return;
         } else if(queryType && queryParams){
             Session.set('queried', true);
-            Meteor.subscribe('submissionSet', queryType, queryParams);
+            Meteor.subscribe('submissionSet', queryType, queryParams, {
+                onReady: function () {
+                    console.log('READY');
+                    Meteor.dataSubmissions.updateResults();
+                }
+            });
         }
+    },
+    updateResults: function(){
+        var result = [];
+        var query = {};
+
+        if (Session.get('queryType') === 'issue'){
+            query.find = {issue_id:  Session.get('queryParams')};
+        } else if (Session.get('queryType') === 'pii'){
+            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
+        }
+
+        query.options = {sort : {page_start:1}};
+
+        var articlesList =articles.find(query.find, query.options).fetch();
+
+        articlesList.forEach(function(article){
+            // @TODO move readydata to collection transform
+            result.push(Meteor.article.readyData(article));
+        });
+
+        if(articlesList){
+            Session.set('queryResultsResults', articlesList);
+        } else{
+            Session.set('queryResultsResults', []);
+        }
+
+        Session.set('processingQuery', false);
     },
     resetPage: function(){
         Session.set('submission_list',null);
@@ -748,7 +780,7 @@ Meteor.dataSubmissions = {
         Session.set('queryType',null);
         Session.set('queryParams',null);
         Session.set('processingQuery', false);
-        Session.set('queryResultsCount', null);
+        Session.set('queryResultsResults', null);
     },
     closeEditView: function(){
         var articleId = Session.get('articleId');

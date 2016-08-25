@@ -444,32 +444,7 @@ Template.DataSubmissionsSearchFormIssue.helpers({
 
 Template.AdminDataSubmissions.helpers({
     articles: function(){
-        var result = [];
-        var query = {};
-
-        if (Session.get('queryType') === 'issue'){
-            query.find = {issue_id:  Session.get('queryParams')};
-        } else if (Session.get('queryType') === 'pii'){
-            query.find = {'ids.pii':{'$in': Session.get('queryParams')}};
-        }
-
-        query.options = {sort : {page_start:1}};
-
-        var articlesList =articles.find(query.find, query.options).fetch();
-
-        articlesList.forEach(function(article){
-            // @TODO move readydata to collection transform
-            result.push(Meteor.article.readyData(article));
-        });
-
-        if(articlesList){
-            Session.set('queryResultsCount', articlesList.length);
-        } else{
-            Session.set('queryResultsCount', 0);
-        }
-
-        Session.set('processingQuery', false);
-        return result;
+        return Session.get('queryResultsResults');
     },
     // error: function(){
     //     return Session.get('error');
@@ -481,7 +456,7 @@ Template.AdminDataSubmissions.helpers({
         return Session.get('processingQuery');
     },
     noneFound: function(){
-        if(Session.get('queried') && !Session.get('processingQuery') && Session.get('queryResultsCount') === 0){
+        if(Session.get('queried') && !Session.get('processingQuery') && Session.get('queryResultsResults').length === 0){
             return true;
         }
     }
