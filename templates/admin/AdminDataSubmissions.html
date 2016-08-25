@@ -170,13 +170,7 @@
                                             <ul>
                                             {{#each arrayify dates}}
                                                 <li>
-                                                    {{#if equals name 'collection'}}
-                                                    <label>published (collection):</label>
-                                                    {{collectionDate value}}
-                                                    {{else}}
-                                                    <label>published:</label>
-                                                    {{articleDate value}}
-                                                    {{/if}}
+                                                    <label>{{name}}:</label> {{articleDate value}}
                                                 </li>
                                             {{/each}}
                                             </ul>

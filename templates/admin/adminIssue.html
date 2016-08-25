@@ -292,11 +292,7 @@
                             <div class="row">
                                 <div class="col s12">
                                     {{#each arrayify dates}}
-                                        {{#if equals name 'collection'}}
-                                            <label>{{name}}:</label> {{collectionDate value}}
-                                            {{else}}
-                                            <label>{{name}}:</label> {{articleDate value}}
-                                        {{/if}}
+                                        <label>{{name}}:</label> {{articleDate value}}
                                     {{/each}}
                                 </div>
                             </div>
