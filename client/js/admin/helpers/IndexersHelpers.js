@@ -51,13 +51,23 @@ Template.AdminDataSubmissions.helpers({
         }
         // return Session.get('piiNotFound');
     },
-    processing: function(){
-        return Template.instance().processing.get();
-    },
     noneFound: function(){
         if(Template.instance().queried.get() && !Template.instance().processing.get() && articles.find().fetch().length === 0){
             return true;
         }
+    },
+    ppubAlreadySubmitted: function(){
+        var articlesList = articles.find().fetch();
+        var ppubAlreadySubmitted = [];
+        articlesList.forEach(function(article){
+            if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
+                ppubAlreadySubmitted.push(article);
+            }
+        });
+        return ppubAlreadySubmitted;
+    },
+    processing: function(){
+        return Template.instance().processing.get();
     },
     volumes: function(){
         if (Session.get('archive') && Session.get('archive').length > 0){

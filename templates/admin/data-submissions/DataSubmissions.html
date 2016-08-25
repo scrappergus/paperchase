@@ -58,6 +58,26 @@
     </div>
     {{/if}}
 
+    {{#if ppubAlreadySubmitted}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <h4 class="white-text">Cannot submit these articles, they were already submitted as PPub</h4>
+                    <p class="white-text">
+                        When downloading XML, these articles will not be included in the submission set.
+                    </p>
+                    <ul>
+                        {{#each ppubAlreadySubmitted}}
+                        <li><a class="white-text" href="{pathFor 'AdminArticleOverview'}" target="_BLANK">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
     {{#if articles}}
     <div class="row">
         <div class="col s12">
