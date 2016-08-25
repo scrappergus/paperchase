@@ -53,11 +53,6 @@ if (Meteor.isClient) {
         return parseInt(parseInt(affiliation) + 1);
     });
 
-    Template.registerHelper('pubStatusAbbrev', function(number) {
-      if (pubStatusTranslate[parseInt(number - 1)]) {
-        return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
-      }
-    });
     Template.registerHelper('prettyDoi', function(doi) {
       return doi.replace('http://dx.doi.org/', '');
     });
