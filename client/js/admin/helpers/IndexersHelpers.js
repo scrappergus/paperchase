@@ -1,5 +1,14 @@
 // Data Submission
 // ---------------
+
+// Begin PubMed
+Template.registerHelper('pubMedPpubOk', function(pub_status, submissions) {
+  if(pub_status === 'ppub' && submissions[submissions.length - 1].pub_status === 'ppub' ){
+      return false;
+  } else{
+      return true;
+  }
+});
 Template.DataSubmissionsSearchForms.helpers({
     volumes: function(){
         // this helper is only used to determine whether or not to load DataSubmissionsSearchFormIssue
@@ -124,9 +133,12 @@ Template.AdminDataSubmissionsPast.helpers({
         };
     }
 });
+// End PubMed
 
+// Begin CrossRef
 Template.RegisterDoiSet.helpers({
     // missingPii: function(){
     //     return Session.get('missingPii');
     // },
 });
+// End CrossRef

@@ -102,6 +102,18 @@
                                     <div class="row no-margin">
                                         <div class="col s6">
                                             <label>Pub Status:</label> {{#if pub_status}}{{pub_status}}{{else}}<span class="red-type">N/A</span>{{/if}}
+
+                                            {{#if submissions}}
+                                            {{#if pubMedPpubOk pub_status submissions}}
+                                            {{else}}
+                                            <h3 class="red-type">Cannot submit this article. Article was already submitted as PPub</h3>
+                                            {{/if}}
+                                            {{/if}}
+
+                                            {{#if pub_status}}
+                                            {{else}}
+                                            <h3 class="red-type">Pub Status Required</h3>
+                                            {{/if}}
                                         </div>
                                         <div class="col s6">
                                             <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit right" alt="Edit Article">{{>AdminEditIcon}}</button>
