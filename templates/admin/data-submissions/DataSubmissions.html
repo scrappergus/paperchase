@@ -51,7 +51,16 @@
         <div class="col s12">
             <div class="card z-depth-0 red">
                 <div class="card-content">
-                    <h4 class="white-text">No Articles Found</h4>
+                    <div class="row">
+                        <div class="col s12 center">
+                            <h4 class="white-text">No Articles Found</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 center">
+                            <h4 class="white-text"><label class="white-text">Searched:</label><br>{{query}}</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -242,14 +251,14 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <select id="submissions_search_issue">
-                                <option disabled>Select Issue</option>
-                                    {{#each volumes}}
-                                    <optgroup label="Volume {{volume}}">
-                                        {{#each issues_data}}
-                                        <option value="{{_id}}">Volume {{volume}}, Issue {{issue}}</option>
-                                        {{/each}}
-                                    </optgroup>
+                                <option>Select Issue</option>
+                                {{#each volumes}}
+                                <optgroup label="Volume {{volume}}">
+                                    {{#each issues_data}}
+                                    <option value="{{_id}}">Volume {{volume}}, Issue {{issue}}</option>
                                     {{/each}}
+                                </optgroup>
+                                {{/each}}
                             </select>
                             <label for="submissions_search_issue">Issue</label>
                         </div>
