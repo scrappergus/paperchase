@@ -5,9 +5,9 @@ Template.AdminDataSubmissions.events({
         e.preventDefault();
         Meteor.dataSubmissions.resetPage(template);
     },
-    'click #download-set-xml': function(e){
+    'click #download-set-xml': function(e, template){
         e.preventDefault();
-        Meteor.dataSubmissions.validateXmlSet();
+        Meteor.dataSubmissions.validateXmlSet(template);
     },
     'click .edit-article': function(e){
         e.preventDefault();
@@ -75,18 +75,23 @@ Template.AdminDataSubmissions.events({
     },
     'submit .form-issue': function(e, template){
         e.preventDefault();
-        template.processing.set(true);
-        template.queried.set(true);
 
         var issueId = $('#submissions_search_issue').val();
 
-        //get articles
-        var queryType = 'issue',
-            queryParams = issueId;
+        if(issueId !== '0'){
+            template.processing.set(true);
+            template.queried.set(true);
 
-        template.queryType.set('issue');
-        template.queryParams.set(issueId);
-        template.queryForDisplay.set('Issue: ' + $('#submissions_search_issue option:selected').text());
+            //get articles
+            var queryType = 'issue',
+                queryParams = issueId;
+
+            template.queryType.set('issue');
+            template.queryParams.set(issueId);
+            template.queryForDisplay.set('Issue: ' + $('#submissions_search_issue option:selected').text());
+        } else{
+            alert('Please select an issue');
+        }
     }
 });
 
