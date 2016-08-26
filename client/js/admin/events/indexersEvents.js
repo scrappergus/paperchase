@@ -7,7 +7,7 @@ Template.AdminDataSubmissions.events({
     },
     'click #download-set-xml': function(e, template){
         e.preventDefault();
-        Meteor.dataSubmissions.validateXmlSet(template);
+        Meteor.dataSubmissions.validatePubMedXmlSet(template);
     },
     'click .edit-article': function(e){
         e.preventDefault();

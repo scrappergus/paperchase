@@ -25,8 +25,8 @@ Meteor.methods({
         xmlString += '</Day>';
         return xmlString;
     },
-    generateArticleCiteXml: function(articlePii){
-        // console.log('..generateArticleXml ');
+    createArticlePubMedXml: function(articlePii){
+        // console.log('..createArticlePubMedXml ');
         var article = articles.findOne({'ids.pii':articlePii});
         var journalSettings = Meteor.call('getConfigJournal');
         if(article.length === 0){
@@ -139,7 +139,7 @@ Meteor.methods({
             return xmlString;
         }
     },
-    articleSetCiteXmlValidation: function(submissionList, userId){
+    createPubMedArticleSetXml: function(submissionList, userId){
         //create a string of article xml, validate at pubmed, return any articles that failed
         // console.log('--articleSetXmlValidation ');
         var fut = new future();
@@ -148,10 +148,9 @@ Meteor.methods({
         for(var i = 0 ; i < submissionList.length; i++){
             var pii = submissionList[i].ids.pii;
             // console.log('... '+i);
-            Meteor.call('generateArticleCiteXml',pii,function(error,xmlString){
+            Meteor.call('createArticlePubMedXml', pii, function(error, xmlString){
                 if(error){
-                    console.log('ERROR - generateArticleCiteXml');
-                    console.log(error);
+                    console.error('ERROR - generateArticleCiteXml', error);
                 }else{
                     articleSetXmlString += xmlString;
                     if(i === parseInt(submissionList.length -1)){
