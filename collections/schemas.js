@@ -136,6 +136,8 @@ journalConfig.schema = new SimpleSchema({
     'email_lib_recommendation': {type: Object, optional: false},
     'email_lib_recommendation.address': {type: String, optional: false},
     'email_lib_recommendation.pw': {type: String, optional: false},
+    'email_sender': {type: Object, optional: false},
+    'email_data_submissions': {type: [String], optional: false},
     submission: {type: Object, optional: false},
     'submission.url': {type: String, optional: false},
     'submission.user': {type: String, optional: true},
