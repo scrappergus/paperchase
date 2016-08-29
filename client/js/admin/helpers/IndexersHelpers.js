@@ -60,7 +60,7 @@ Template.AdminDataSubmissions.helpers({
         return Meteor.dataSubmissions.ppubAlreadySubmitted(Template.instance());
     },
     submitCount: function(){
-        var okToSubmit = Meteor.dataSubmissions.allSansAlreadySubmittedPpub(Template.instance());
+        var okToSubmit = Meteor.dataSubmissions.articleOkToSubmit(Template.instance());
         if(okToSubmit){
             return okToSubmit.length;
         }

@@ -9,7 +9,7 @@ Meteor.dataSubmissions = {
         });
         return ppubAlreadySubmitted;
     },
-    allSansAlreadySubmittedPpub: function(template){
+    articleOkToSubmit: function(template){
         var articlesList = Meteor.dataSubmissions.getArticles(template);
         var okToSubmit = [];
         articlesList.forEach(function(article){
@@ -59,18 +59,17 @@ Meteor.dataSubmissions = {
 
         return articles.find(query.find, query.options).fetch();
     },
-    validateXmlSet: function(template){
-        // var submissionList = Meteor.dataSubmissions.allSansAlreadySubmittedPpub(template);
-        // console.log(submissionList.length);
-        // Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
-        //     if(error){
-        //         console.error('ERROR - articleSetXmlValidation',error);
-        //     } else if(result === 'invalid'){
-        //         alert('XML set invalid');
-        //     } else{
-        //         //all the articles are valid, now do the download
-        //         window.open('/xml-cite-set/' + result);
-        //     }
-        // });
+    validatePubMedXmlSet: function(template){
+        var submissionList = Meteor.dataSubmissions.articleOkToSubmit(template);
+        Meteor.call('pubMedArticleSetXml', submissionList, Meteor.userId(), function(error,result){
+            if(error){
+                console.error('ERROR - articleSetXmlValidation',error);
+            } else if(result === 'invalid'){
+                alert('XML set invalid');
+            } else{
+                //all the articles are valid, now do the download
+                window.open('/xml-cite-set/' + result);
+            }
+        });
     }
 };
