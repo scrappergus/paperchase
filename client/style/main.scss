@@ -138,12 +138,12 @@ html,body{
 	}
 	.kw{
 		margin: $margin-sm 0 $margin-sm $margin-sm;
-		@extend .serif;
-		text-transform: none!important;
+		@extend .serif !optional;
+		text-transform: none !important;
 	}
 /* Buttons ------------------------*/
 	.btn{
-		@extend .serif;
+		@extend .serif !optional;
 	}
 	.btn.active{
 		background: $gray-2;
