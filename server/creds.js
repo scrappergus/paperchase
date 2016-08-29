@@ -6,7 +6,7 @@ Meteor.methods({
         }
     },
     getConfigSenderEmail : function(){
-        var emailConfig = journalConfig.findOne({}, {fields: {email_lib_recommendation : 1}});
+        var emailConfig = journalConfig.findOne({}, {fields: {email_sender : 1}});
         if(emailConfig){
             return {
                 'address' : emailConfig.email_sender.address.replace('@','%40'),
