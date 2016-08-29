@@ -29,6 +29,7 @@ Meteor.methods({
         // console.log('..createArticlePubMedXml ',articleMongo);
         var article = articles.findOne({_id :articleMongo});
         var journalSettings = Meteor.call('getConfigJournal');
+        var pubType = 'Journal Article';
         if(article.length === 0){
             throw new Meteor.Error('xml-generation failed', 'Could not create article XML');
         }else{
@@ -105,7 +106,17 @@ Meteor.methods({
                 }
                 xmlString += '</AuthorList>';
 
-                xmlString += '<PublicationType>' + article.article_type.name + '</PublicationType>'; //TODO: change to nlm type
+                if(article.article_type.pubmed_type){
+                    pubType = article.article_type.name ;
+
+                } else if(article.article_type._id){
+                    // check if article just does not have pubmed_type saved, because this was added to article type collection after launch
+                    var articleType = articleTypes.findOne({_id : article.article_type._id});
+                    if(articleType.pubmed_type){
+                        pubType = articleType.pubmed_type;
+                    }
+                }
+                xmlString += '<PublicationType>' + pubType + '</PublicationType>';
             }
 
             //article ids
