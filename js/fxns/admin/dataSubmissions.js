@@ -61,6 +61,7 @@ Meteor.dataSubmissions = {
         return articles.find(query.find, query.options).fetch();
     },
     validatePubMedXmlSet: function(template){
+        Session.set('creatingXml', true);
         var submissionList = Meteor.dataSubmissions.articleOkToSubmit(template);
         Meteor.call('pubMedArticleSetXml', submissionList, Meteor.userId(), function(error,result){
             if(error){
@@ -70,6 +71,7 @@ Meteor.dataSubmissions = {
             } else{
                 //all the articles are valid, now do the download
                 window.open('/xml-cite-set/' + result);
+                Session.set('creatingXml', false);
             }
         });
     }

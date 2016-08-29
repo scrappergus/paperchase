@@ -125,6 +125,13 @@
     </div>
     {{/if}}
 
+    {{#if creatingXml}}
+    <div class="row">
+        <div class="col s12">
+            {{>ProcessingNotHidden}}
+        </div>
+    </div>
+    {{else}}
     <div class="row">
         <div class="col s12">
             <ul class="collection">
@@ -236,6 +243,7 @@
             </ul>
         </div>
     </div>
+    {{/if}}
     {{/if}}
 </template>
 

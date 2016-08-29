@@ -174,6 +174,7 @@ if (Meteor.isClient) {
     Session.setDefault('recommendation',null);
     // Data submissions
     Session.setDefault('articleId',null);
+    Session.setDefault('creatingXml', false);
 
     Router.route('/', {
         name: 'AdminHome',

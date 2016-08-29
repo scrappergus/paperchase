@@ -24,6 +24,9 @@ Template.AdminDataSubmissions.helpers({
         });
         return articlesProcessedResult;
     },
+    creatingXml: function(){
+        return Session.get('creatingXml');
+    },
     query: function(){
         return Template.instance().queryForDisplay.get();
     },
