@@ -715,50 +715,6 @@ Meteor.adminUser = {
     }
 };
 
-Meteor.dataSubmissions = {
-    getPiiList: function(){
-        var piiList = [];
-        $('.data-submission-pii').each(function(){
-            var pii = $(this).attr('data-pii');
-            piiList.push(pii);
-        });
-        return piiList;
-    },
-    getArticles: function(queryType,queryParams){
-        // console.log('... getArticles = ' + queryType + ' / ' + queryParams);
-        Meteor.dataSubmissions.processing();
-        var articleSub = Meteor.subscribe('submissionSet',queryType,queryParams);
-    },
-    processing: function(){
-        $('.saving').removeClass('hide');
-    },
-    doneProcessing: function(){
-        $('.saving').addClass('hide');
-    },
-    errorProcessing: function(){
-        Session.set('error',true);
-        $('.saving').addClass('hide');
-    },
-    validateXmlSet: function(){
-        $('.saving').removeClass('hide');
-        var submissionList = articles.find().fetch();
-        // console.log(submissionList);
-        Meteor.call('articleSetCiteXmlValidation', submissionList, Meteor.userId(), function(error,result){
-            $('.saving').addClass('hide');
-            if(error){
-                console.error('ERROR - articleSetXmlValidation',error);
-            }
-            else if(result === 'invalid'){
-                alert('XML set invalid');
-            }
-            else{
-                //all the articles are valid, now do the download
-                window.open('/xml-cite-set/' + result);
-            }
-        });
-    }
-};
-
 Meteor.validate = {
     email: function(email){
         //http://stackoverflow.com/questions/46155/validate-email-address-in-javascript

@@ -153,6 +153,7 @@ if (Meteor.isClient) {
     Session.setDefault('advanceArticles',null);
     // forms
     Session.setDefault('savedMessage',null);
+    Session.setDefault('error',null);
     Session.setDefault('errorMessage',null);
     Session.setDefault('statusModalAction',null);
     Session.setDefault('statusModalDetails',null);
@@ -171,6 +172,9 @@ if (Meteor.isClient) {
     Session.setDefault('admin-user',null);
     // Institutions
     Session.setDefault('recommendation',null);
+    // Data submissions
+    Session.setDefault('articleId',null);
+    Session.setDefault('creatingXml', false);
 
     Router.route('/', {
         name: 'AdminHome',
@@ -400,7 +404,7 @@ if (Meteor.isClient) {
     });
 
     // Data submissions
-    Router.route('/admin/data_submissions',{
+    Router.route('/admin/data-submissions',{
         name: 'AdminDataSubmissions',
         layoutTemplate: 'Admin',
         title: function() {
@@ -418,14 +422,7 @@ if (Meteor.isClient) {
                     Session.set('archive',result);
                 }
             });
-            Session.set('submission_list',null);
-            Session.set('error',false);
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('articleTypes')
-            ];
         }
     });
     Router.route('/admin/data_submissions/past',{
@@ -827,7 +824,7 @@ if (Meteor.isClient) {
                 if(article){
                     article = Meteor.article.readyData(article);
                     Session.set('article',article);
-                    Session.set('article-id',this.params._id);
+                    Session.set('articleId',this.params._id);
                 }
             }
         }

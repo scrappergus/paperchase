@@ -120,8 +120,6 @@ Meteor.methods({
         }
     },
     pushArticle: function(mongoId, field, articleData){
-        console.log('..pushArticle', new Date());
-        // nope. used in submissions method articlesStatusUpdate()
         Meteor.authorizeCheck.articles();
         var updateObj = {};
         updateObj[field] = articleData;
@@ -350,9 +348,14 @@ Meteor.methods({
             // Pub Status
             // ----------
             article.pub_status_list = pubStatusTranslate;
-            for(var p = 0; p < pubStatusTranslate.length; p++){
-                if(article.pub_status_list[p].abbrev == article.pub_status){
-                    article.pub_status_list[p].selected = true;
+            var statusIndex = null;
+            for(var statOptIdx = pubStatusTranslate.length-1; statOptIdx >= 0; statOptIdx--){
+                if (article.pub_status && article.pub_status_list[statOptIdx].abbrev == article.pub_status){
+                    article.pub_status_list[statOptIdx].selected = true;
+                    statusIndex = statOptIdx;
+                }
+                if (article.pub_status && statusIndex || statusIndex === 0 && statOptIdx < statusIndex){
+                    article.pub_status_list[statOptIdx].disabled = true;
                 }
             }
 

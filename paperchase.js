@@ -7,7 +7,7 @@ if (Meteor.isServer) {
 }
 
 
-//Redirects 
+//Redirects
 // Redirect to the ROOT_URL if it doesn't match where we're at
 if (Meteor.isServer) {
     WebApp.connectHandlers
@@ -67,9 +67,9 @@ Meteor.startup(function () {
     // Email
     // ------------------------
     if (Meteor.isServer) {
-        var emailSettings = Meteor.call('getConfigRecommendationEmail');
+        var emailSettings = Meteor.call('getConfigSenderEmail');
         if(emailSettings){
-            process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
+            process.env.MAIL_URL = 'smtp://' + emailSettings.address +':' + emailSettings.pw + '@smtp.gmail.com:465/';
         }
     }
 });
@@ -85,15 +85,15 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
     if(doc.IPRanges){
         doc.IPRanges.forEach(function(ipr) {
                 ipranges.insert({
-                        institutionID: doc._id
-                        ,startIP: ipr.startIP
-                        ,endIP: ipr.endIP
-                        ,startNum: dot2num(ipr.startIP)
-                        ,endNum: dot2num(ipr.endIP)
-                    });
+                    institutionID: doc._id,
+                    startIP: ipr.startIP,
+                    endIP: ipr.endIP,
+                    startNum: dot2num(ipr.startIP),
+                    endNum: dot2num(ipr.endIP),
+                });
             });
     }
-}
+};
 
 institutions.after.insert(institutionUpdateInsertHook);
 institutions.after.update(institutionUpdateInsertHook);

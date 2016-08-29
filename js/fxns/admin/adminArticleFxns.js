@@ -72,8 +72,7 @@ Meteor.adminArticle = {
             // console.log('SHOW');
             $('.add-article-' + type).removeClass('hide');
             $('#add-' + type).html('<i class="material-icons">&#xE15C;</i>');
-        }
-        else{
+        } else{
             // console.log('HIDE');
             $('.add-article-' + type).addClass('hide');
             $('#add-' + type).html('<i class="material-icons">&#xE147;</i>');
@@ -81,8 +80,6 @@ Meteor.adminArticle = {
         }
     },
     readyArticleForm: function(){
-        // console.log('..readyArticleForm');
-
         // title
         // ------
         $('.form-title').materialnote({
@@ -216,8 +213,7 @@ Meteor.adminArticle = {
                     }
 
                     Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
-                }
-                else if(error  && error.reason === 'duplicate'){
+                } else if(error  && error.reason === 'duplicate'){
                     console.error('validateArticle: duplicate',error);
                     if(error.details._id){
                         duplicateId = error.details._id;
@@ -230,28 +226,32 @@ Meteor.adminArticle = {
                 else if(error){
                     console.error('validate Article',error);
                     Meteor.formActions.errorMessage('Could not update article');
-                }
-                else if(result && result.saved){
+                } else if(result && result.saved){
                     // New article
                     if(!mongoId){
                         mongoId = result.article_id;
                     }
-                    Router.go('AdminArticleOverview',{_id : mongoId});
-                }
-                else if(result && files && !Session.get('article-form').aop_xml){
+                    Meteor.adminArticle.actionAfterSave(mongoId);
+                } else if(result && files && !Session.get('article-form').aop_xml){
                     // Existing article
                     // if uploading XML too and saving form at same time
                     Meteor.articleFiles.uploadArticleFile(mongoId,'xml',files);
-                }
-                else if(result){
-                    Router.go('AdminArticleOverview',{_id : result});
+                } else if(result){
+                    Meteor.adminArticle.actionAfterSave(result);
                     // just editing article form
-                    // Meteor.formActions.successMessage('Article updated');
                 }
             });
-        }
-        else{
+        } else{
              Meteor.formActions.errorMessage('Unable to save form');
+        }
+    },
+    actionAfterSave: function(mongoId){
+        if(Router.current().route._path.indexOf('data-submissions') != -1){
+            // Editing via data submissions
+            Meteor.dataSubmissions.closeEditView();
+        } else{
+            // Article edit page
+            Router.go('AdminArticleOverview',{_id : mongoId});
         }
     }
 };
@@ -463,14 +463,14 @@ Meteor.adminArticleFormGet = {
     pageStart: function(){
         return $('#page_start').val() ? parseInt($('#page_start').val()) : null;
     },
+    pubStatus: function(){
+        if($('#article-pub-status').val() !== ''){
+            return $('#article-pub-status').val();
+        }
+    },
     section: function(){
         if($('#article-section').val() !== ''){
             return $('#article-section').val();
-        }
-    },
-    status: function(){
-        if($('#article-pub-status').val() !== ''){
-            return $('#article-pub-status').val();
         }
     },
     title: function(){
@@ -511,7 +511,7 @@ Meteor.adminArticleFormGet = {
         articleUpdateObj.issue_id = Meteor.adminArticleFormGet.issueId();
         articleUpdateObj.article_type = Meteor.adminArticleFormGet.articleType();
         articleUpdateObj.section = Meteor.adminArticleFormGet.section();
-        articleUpdateObj.status = Meteor.adminArticleFormGet.status();
+        articleUpdateObj.pub_status = Meteor.adminArticleFormGet.pubStatus();
 
         // authors and affiliations
         articleUpdateObj.affiliations = Meteor.adminArticleFormGet.affiliations();

@@ -17,14 +17,14 @@ pubStatusTranslate = [
     //  'abbrev' : 'pmcr',
     //  'message' : 'Article revision in PubMed Central'
     // },
-    {
-        'abbrev' : 'pubmed',
-        'message' : 'Article citation first appeared in PubMed'
-    },
-    {
-        'abbrev' : 'medline',
-        'message' : 'Date made a MEDLINE record'
-    },
+    // {
+    //     'abbrev' : 'pubmed',
+    //     'message' : 'Article citation first appeared in PubMed'
+    // },
+    // {
+    //     'abbrev' : 'medline',
+    //     'message' : 'Date made a MEDLINE record'
+    // },
     // {
     //  'abbrev' : 'pubmedr',
     //  'message' : 'Article citation revision in PubMed'
@@ -53,4 +53,4 @@ pubStatusTranslate = [
         'abbrev' : 'revised',
         'message' : 'Article revised by publisher/author'
     },
-]
+];

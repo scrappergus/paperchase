@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'variables';
 .sans{
   font-family: 'Open Sans', Geneva, sans-serif;
 }
@@ -11,6 +12,30 @@ $breakpoints: (
   large : 56.25rem
 );
 
+h1,h2,h3{
+    font-weight: bold;
+}
+h1{
+    color: $black-0;
+}
+h2{
+    color: $black-1;
+}
+h3{
+    color: $black-0;
+}
+h4{
+    color: $black-2;
+}
+h5{
+    color: $black-1;
+}
+h6{
+    color: $black-2;
+}
+p{
+    color: $color-paragraph;
+}
 
 $h1-font-sizes: (
   null  : 2rem,
@@ -23,9 +48,7 @@ $h2-font-sizes: (
   large : 2.25rem
 );
 $h3-font-sizes: (
-  null  : 1.4rem,
-  medium: 1.5rem,
-  large : 1.75rem
+  null  : 1.5rem
 );
 $h4-font-sizes: (
   null  : 1.25rem

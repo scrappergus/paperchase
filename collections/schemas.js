@@ -97,6 +97,7 @@ articles.schema = new SimpleSchema({
     page_end: {type: Number, optional: true, label: 'Last page'},
     page_start: {type: Number, optional: true, label: 'First page'},
     publisher: {type: String, optional: true},
+    pub_status: {type: String, optional: true},
     section: {type: String, optional: true},
     title: {type: String, optional: false},
     volume: {type: Number, optional: true, label: 'Volume'}
@@ -135,6 +136,8 @@ journalConfig.schema = new SimpleSchema({
     'email_lib_recommendation': {type: Object, optional: false},
     'email_lib_recommendation.address': {type: String, optional: false},
     'email_lib_recommendation.pw': {type: String, optional: false},
+    'email_sender': {type: Object, optional: false},
+    'email_data_submissions': {type: [String], optional: false},
     submission: {type: Object, optional: false},
     'submission.url': {type: String, optional: false},
     'submission.user': {type: String, optional: true},

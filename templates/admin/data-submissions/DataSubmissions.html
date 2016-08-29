@@ -1,0 +1,309 @@
+<template name="AdminDataSubmissions">
+    {{>AdminHeader header="New Data Submission"}}
+    <!-- {{>SendingSuccessMessage what="DOI registered"}} -->
+    <!-- <a href="{{pathFor 'AdminDataSubmissionsPast'}}">Past Submissions</a> -->
+    <div class="row">
+        <div class="col s12 m10">
+            <h2>Search By:</h2>
+        </div>
+        <div class="col s6">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <form class="form-pii">
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <input id="submissions_search_pii" type="number" class="validate">
+                        <label for="submissions_search_pii">PII</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12" id="search_pii_list"></div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                        <button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{#if volumes}}
+        {{>DataSubmissionsSearchFormIssue}}
+        {{/if}}
+    </div>
+
+    {{#if processing}}
+    <div class="row">
+        <div class="col s12">
+            {{>ProcessingNotHidden}}
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if noneFound}}
+    <div class="row">
+        <div class="col s12">
+            {{>DataSubmissionsClear}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 center">
+                            <h4 class="white-text">No Articles Found</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 center">
+                            <h4 class="white-text"><label class="white-text">Searched:</label><br>{{query}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if ppubAlreadySubmitted}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <h4 class="white-text">Cannot submit these articles, they were already submitted as PPublish</h4>
+                    <p class="white-text">
+                        When downloading XML, these articles will not be included in the submission set.
+                    </p>
+                    <ul>
+                        {{#each ppubAlreadySubmitted}}
+                        <li><a class="white-text" href="{pathFor 'AdminArticleOverview'}" target="_BLANK">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if articles}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="row no-margin valign-wrapper">
+                        <div class="col s4 valign">
+                            {{#if equals submitCount 0 }}
+                            <h4>No Articles To Submit</h4>
+                            <p>Either previously submitted PPublish, or articles missing pub status</p>
+                            {{else}}
+                            <h4>Article Count: {{submitCount}}</h4>
+                            <span style="font-size: x-small;">* Count reflects removing previously submitted PPublish & any without a pub status</span>
+                            <button class="waves-effect waves-light btn" id="download-set-xml">
+                                {{>AdminDownloadIcon}} Download XML
+                            </button>
+                            {{/if}}
+                        </div>
+                        <div class="col s4 center valign">
+                            <h4><label>Searched:</label><br>{{query}}</h4>
+                        </div>
+                        <div class="col s4 valign">
+                            {{>DataSubmissionsClear}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{#if piiNotFound}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <div class="row no-margin center">
+                        <h4 class="white-text">PII not Found:<br>{{piiNotFound}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if creatingXml}}
+    <div class="row">
+        <div class="col s12">
+            {{>ProcessingNotHidden}}
+        </div>
+    </div>
+    {{else}}
+    <div class="row">
+        <div class="col s12">
+            <ul class="collection">
+                {{#each articles}}
+                <li class="collection-item">
+                    <div class="row article-edit hide" id="edit-{{_id}}">
+                        <div class="col s12">
+                            <div class="card z-depth-0">
+                                <div class="card-content">
+                                    <div class="row no-margin">
+                                        <div class="col s6">
+                                            <h2>Edit Article</h2>
+                                        </div>
+                                        <div class="col s6">
+                                            <button id="cancel-{{_id}}" class="cancel-article btn btn-floating waves-effect waves-light red right" alt="Cancel Edit Article"><i class="material-icons">&#xE5C9;</i></button>
+                                        </div>
+                                    </div>
+
+                                    {{#if equalsArticleId _id}}
+                                    {{#if articleDataReady}}
+                                    {{>ArticleForm}}
+                                    {{/if}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row article-overview no-margin" id="overview-{{_id}}">
+                        <div class="col s12">
+                            <div class="card z-depth-0 blue-grey lighten-5 no-margin">
+                                <div class="card-content">
+                                    <div class="row no-margin">
+                                        <div class="col s6">
+                                            <label>Pub Status:</label> {{#if pub_status}}{{pub_status}}{{else}}<span class="red-type">N/A</span>{{/if}}
+
+                                            {{#if submissions}}
+                                            {{#if pubMedPpubOk pub_status submissions}}
+                                            {{else}}
+                                            <h3 class="red-type">Cannot submit this article. Article was already submitted as PPublish</h3>
+                                            {{/if}}
+                                            {{/if}}
+
+                                            {{#if pub_status}}
+                                            {{else}}
+                                            <h3 class="red-type">Pub Status Required</h3>
+                                            {{/if}}
+                                        </div>
+                                        <div class="col s6">
+                                            <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit right" alt="Edit Article">{{>AdminEditIcon}}</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row"><div class="col s12">
+                                        <h6>
+                                            {{#if article_type.name}}
+                                                <span class="article-type">{{article_type.name}}</span>
+                                                {{#if issue_id}}
+                                                &nbsp; | &nbsp;
+                                                {{/if}}
+                                            {{/if}}
+                                            {{#if issue_id}}
+                                                <span>Volume {{volume}}, Issue {{issue}}</span>
+                                                {{#if page_start}}
+                                                &nbsp; | &nbsp;
+                                                {{/if}}
+                                            {{/if}}
+                                            {{#if page_start}}<span>pp {{page_start}}{{#if page_end}} &ndash; {{page_end}}{{/if}}</span>{{/if}}
+                                        </h6>
+
+                                        <h3 style="margin: 0 0 10px 0;">{{{title}}}</h3>
+                                        <p>{{>AuthorsRefList}}</p>
+                                    </div></div>
+
+                                    <div class="row">
+                                        <div class="col s12 m4">
+                                            <h5>Article IDs</h5>
+                                            <ul>
+                                            {{#each arrayify ids}}
+                                                <li><label>{{name}}:</label> {{value}}</li>
+                                            {{/each}}
+                                            </ul>
+                                        </div>
+                                        <div class="col s12 m4">
+                                            <h5>Article History</h5>
+                                            <ul>
+                                            {{#each arrayify history}}
+                                                <li><label>{{name}}:</label> {{articleDate value}}</li>
+                                            {{/each}}
+                                            </ul>
+                                        </div>
+                                        <div class="col s12 m4">
+                                            <h5>Article Dates</h5>
+                                            <ul>
+                                            {{#each arrayify dates}}
+                                                <li>
+                                                    <label>{{name}}:</label> {{articleDate value}}
+                                                </li>
+                                            {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    {{/if}}
+    {{/if}}
+</template>
+
+<template name="DataSubmissionsClear">
+    <button class="waves-effect waves-light btn right clear">{{>AdminCancelIcon}} clear</button>
+</template>
+
+<template name="DataSubmissionsSearchFormIssue">
+    <div class="col s6">
+        <div class="card z-depth-0">
+            <div class="card-content">
+                <form class="form-issue">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select id="submissions_search_issue">
+                                <option value="0">Select Issue</option>
+                                {{#each volumes}}
+                                <optgroup label="Volume {{volume}}">
+                                    {{#each issues_data}}
+                                    <option value="{{_id}}">Volume {{volume}}, Issue {{issue}}</option>
+                                    {{/each}}
+                                </optgroup>
+                                {{/each}}
+                            </select>
+                            <label for="submissions_search_issue">Issue</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <button class="submit btn waves-effect waves-light green" type="submit" name="action" alt="Search">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="RegisterDoiSet">
+    <!-- <div class="col s4">
+        <button class="waves-effect waves-light btn" id="register-doi-set">
+            Register DOI
+        </button>
+    </div> -->
+    <!-- {{#if missingPii}}
+    <div class="row">
+        <div class="col s12">
+            <h3>Missing PII</h3>
+            <h4>Cannot register</h4>
+            <ul>
+            {{#each missingPii}}
+                <li>{{{.}}}</li>
+            {{/each}}
+            </ul>
+        </div>
+    </div>
+    {{/if}} -->
+</template>

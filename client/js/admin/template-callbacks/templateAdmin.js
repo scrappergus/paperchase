@@ -57,10 +57,10 @@ Template.AdminArticleFilesUploader.onDestroyed(function () {
 
 // Article Form
 // ------------
-Template.AdminArticleForm.onDestroyed(function() {
+Template.ArticleForm.onDestroyed(function() {
     Session.set('article-form',null);
 });
-Template.AdminArticleForm.onRendered(function () {
+Template.ArticleForm.onRendered(function () {
     Meteor.adminArticle.readyArticleForm();
 });
 Template.AdminDateInput.onRendered(function() {
@@ -111,12 +111,33 @@ Template.AdminNewsForm.onRendered(function () {
 
 // Data Submissions
 // --------------
+Template.AdminDataSubmissions.onCreated(function () {
+    var template = Template.instance();
+
+    template.processing = new ReactiveVar(false);
+    template.queried = new ReactiveVar(); // used to determine whether to show no articles message
+    template.articles = new ReactiveVar();
+    template.queryType = new ReactiveVar();
+    template.queryParams = new ReactiveVar();
+    template.queryForDisplay = new ReactiveVar(); // used to show user what was searched (since there are 2 forms. For ex, possible they selected an issue but did not submit, so this clarifies what is displayed)
+
+    template.autorun( function() {
+        template.subscribe( 'submissionSet', template.queryType.get(), template.queryParams.get(), function() {
+            setTimeout( function() {
+                template.processing.set( false );
+            }, 300 );
+        });
+    });
+});
 Template.AdminDataSubmissions.onRendered(function () {
     $('select').material_select();
     Session.set('submission_list',null);
 });
+Template.DataSubmissionsSearchFormIssue.onRendered(function () {
+    $('select').material_select();
+});
 Template.AdminDataSubmissionsPast.onRendered(function () {
-    Session.set('article-id',null);
+    Session.set('articleId',null);
     Session.set('article',null);
     $('ul.tabs').tabs();
 });

@@ -1,12 +1,14 @@
-Template.AdminArticleForm.events({
+Template.ArticleFormContainer.events({
     'click .anchor': function(e){
         Meteor.general.scrollAnchor(e);
-    },
+    }
+});
+Template.ArticleForm.events({
     // Authors
     // -------
     'change .author-affiliation':function(e,t){
         var checked = false;
-            authorIndex = $(e.target).closest('li').index(),
+            var authorIndex = $(e.target).closest('li').index(),
             checkboxSettings = $(e.target).attr('id').split('-'),
             affIndex = checkboxSettings[1],
             article = Session.get('article-form');
@@ -19,7 +21,7 @@ Template.AdminArticleForm.events({
     },
     'change .author-note':function(e,t){
         var checked = false;
-            authorIndex = $(e.target).closest('li').index(),
+            var authorIndex = $(e.target).closest('li').index(),
             checkboxSettings = $(e.target).attr('id').split('-'),
             noteIndex = checkboxSettings[2],
             article = Session.get('article-form');
@@ -233,6 +235,7 @@ Template.AdminArticleForm.events({
         e.preventDefault();
         var article = Session.get('article-form');
         var type = $(e.target).attr('id').replace('add-','');
+
         if(!article.ids){
             article.ids = {};
         }
