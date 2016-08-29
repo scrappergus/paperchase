@@ -62,35 +62,50 @@ Meteor.article = {
             article.files = Meteor.article.linkFiles(article.files, article._id);
         }
 
-        if(article.ids.doi && _.isString(article.ids.doi)) {
+        if(article.ids && article.ids.doi && _.isString(article.ids.doi)) {
             article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,"");
         }
 
-        if(article.authors){
-            for(authIdx=0; authIdx < article.authors.length; authIdx++) {
-                if(article.authors[authIdx].equal_contrib === true) {
-                    article.equal_contribs = true;
-                }
-                if(article.authors[authIdx].author_notes_ids && article.author_notes) {
-                    article.authors[authIdx].author_notes = [];
-                    for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
-                        for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
-                            var note = article.author_notes[noteIdx];
-                            if(note.id == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
-                                article.authors[authIdx].author_notes.push({
-                                   'id': note.id,
-                                   'label': note.label
-                                });
+        // Authors
+        // ---------------
+        var availableLabels = ['*','#'];
+        for(authIdx=0; authIdx < article.authors.length; authIdx++) {
+            // If no affiliation_numbers saved for author and there is only 1 affiliation
+            if(article.affiliations && article.affiliations.length === 1 && !article.authors[authIdx].affiliations_numbers) {
+                article.authors[authIdx].affiliations_numbers = [0];
+            }
+            else if(article.affiliations && article.affiliations.length === 1 && article.authors[authIdx].affiliations_numbers && article.authors[authIdx].affiliations_numbers.length === 0){
+                article.authors[authIdx].affiliations_numbers = [0];
+            }
+
+            // Author Notes
+            if(article.authors[authIdx].author_notes_ids && article.author_notes) {
+                article.authors[authIdx].author_notes = [];
+                for(var authorNoteIdx=0; authorNoteIdx<article.authors[authIdx].author_notes_ids.length;authorNoteIdx++) {
+                    for(var noteIdx=0; noteIdx<article.author_notes.length;noteIdx++) {
+                        var note = article.author_notes[noteIdx];
+                        if(note.id == article.authors[authIdx].author_notes_ids[authorNoteIdx]) {
+                            var indexPos = availableLabels.indexOf(note.label);
+                            if(indexPos >= 0) {
+                                availableLabels.splice(indexPos, 1);
                             }
+
+                            article.authors[authIdx].author_notes.push({
+                               'id': note.id,
+                               'label': note.label
+                            });
                         }
                     }
                 }
             }
         }
-
-        if(article.affiliations && article.affiliations.length == 1) {
-            article.singleAffiliation = true;
+        for(authIdx=0; authIdx < article.authors.length; authIdx++) {
+            if(article.authors[authIdx].equal_contrib === true) {
+                article.equal_contribs = availableLabels[0];
+                article.authors[authIdx].equal_contrib = availableLabels[0];
+            }
         }
+
         return article;
     },
     linkFiles:function(files,articleMongoId){
