@@ -25,9 +25,9 @@ Meteor.methods({
         xmlString += '</Day>';
         return xmlString;
     },
-    createArticlePubMedXml: function(articlePii){
-        // console.log('..createArticlePubMedXml ');
-        var article = articles.findOne({'ids.pii':articlePii});
+    createArticlePubMedXml: function(articleMongo){
+        // console.log('..createArticlePubMedXml ',articleMongo);
+        var article = articles.findOne({_id :articleMongo});
         var journalSettings = Meteor.call('getConfigJournal');
         if(article.length === 0){
             throw new Meteor.Error('xml-generation failed', 'Could not create article XML');
@@ -38,7 +38,7 @@ Meteor.methods({
             xmlString += '<Issue>' + article.issue + '</Issue>';
 
             //status and date
-            if(article.pub_status === 4){
+            if(article.pub_status === 'epublish' || article.pub_status === 'ppublish'){
                 xmlString += '<PubDate PubStatus="ppublish">';
             }else{
                 xmlString += '<PubDate PubStatus="aheadofprint">';
@@ -88,7 +88,7 @@ Meteor.methods({
                         xmlString += article.authors[a].name_last;
                         xmlString += '</LastName>';
                     }
-                    if(article.authors[a].affiliations_numbers){
+                    if(article.authors[a].affiliations_numbers && article.authors[a].affiliations_numbers.length > 0){
                         xmlString += '<Affiliation>';
                         for(var aff = 0 ; aff < article.authors[a].affiliations_numbers.length ; aff++){
                             var authorAffNumber = article.authors[a].affiliations_numbers[aff];
@@ -97,13 +97,15 @@ Meteor.methods({
                             xmlString += authorAff;
                         }
                         xmlString += '</Affiliation>';
+                    } else if(article.affiliations && article.affiliations.length === 1){
+                        xmlString += '<Affiliation>' + article.affiliations[0] + '</Affiliation>';
                     }
 
                     xmlString += '</Author>';
                 }
                 xmlString += '</AuthorList>';
 
-                xmlString += '<PublicationType>' + article.article_type.type + '</PublicationType>'; //TODO: change to nlm type
+                xmlString += '<PublicationType>' + article.article_type.name + '</PublicationType>'; //TODO: change to nlm type
             }
 
             //article ids
@@ -141,59 +143,64 @@ Meteor.methods({
     },
     createPubMedArticleSetXml: function(submissionList, userId){
         //create a string of article xml, validate at pubmed, return any articles that failed
-        // console.log('--articleSetXmlValidation ');
-        var fut = new future();
-        var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.0//EN" "http://www.ncbi.nlm.nih.gov:80/entrez/query/static/PubMed.dtd">';
+        // console.log('...createPubMedArticleSetXml ');
+        // var fut = new future();
+        var articleSetXmlString = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ArticleSet PUBLIC "-//NLM//DTD PubMed 2.6//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/static/PubMed.dtd">';
         articleSetXmlString += '<ArticleSet>';
-        for(var i = 0 ; i < submissionList.length; i++){
-            var pii = submissionList[i].ids.pii;
-            // console.log('... '+i);
-            Meteor.call('createArticlePubMedXml', pii, function(error, xmlString){
+        submissionList.forEach(function(article){
+            Meteor.call('createArticlePubMedXml', article._id, function(error, xmlString){
                 if(error){
-                    console.error('ERROR - generateArticleCiteXml', error);
+                    console.error('ERROR - createPubMedArticleSetXml', error);
                 }else{
                     articleSetXmlString += xmlString;
-                    if(i === parseInt(submissionList.length -1)){
-                        //last article in set, validate at pubmed
-                        articleSetXmlString += '</ArticleSet>';
-                        Meteor.call('pubMedCiteCheck', articleSetXmlString, function(e, r){
-                            if(e){
-                                console.error('ERROR - pubMedCiteCheck', e);
-                                throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation', result.headers.location);
-                            }
-
-                            if(r){
-                                //all valid. save the xml set
-                                var today = new Date();
-                                var dd = today.getDay();
-                                var mm = today.getMonth()+1;
-                                var yyyy = today.getFullYear();
-                                var time = today.getTime();
-                                var fileName = mm + '_' + dd + '_' + yyyy + '_' + time + '.xml';
-                                Meteor.call('saveXmlCiteSet',articleSetXmlString, fileName);
-
-                                //update the submissions collection
-                                var created = new Date();
-                                var submissions_id = submissions.insert({'file_name' : fileName, 'created_by' : userId, 'created_date' : created});
-
-                                //update article docs
-                                Meteor.call('articlesStatusUpdate',submissionList, submissions_id, created);
-
-                                //return file name to redirect for download route
-                                fut['return'](fileName);
-                            }else{
-                                console.log('ERROR: XML Set NOT valid.');
-                                fut.return('invalid');
-                            }
-                        });
-                    }
                 }
             });
-        }
+        });
+        articleSetXmlString += '</ArticleSet>';
+        return articleSetXmlString;
+        // return fut.wait();
+    },
+    pubMedArticleSetXml: function(submissionList, userId){
+        // console.log('..pubMedArticleSetXml');
+        var fut = new future();
+        Meteor.call('createPubMedArticleSetXml', submissionList, function(error, xmlSet){
+            if(error){
+                console.error('ERROR - createPubMedArticleSetXml', error);
+            } else if(xmlSet){
+                Meteor.call('pubMedCiteCheck', xmlSet, function(citeCheckError, r){
+                    if(citeCheckError){
+                        console.error('ERROR - pubMedCiteCheck', citeCheckError);
+                        throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation', result.headers.location);
+                    } else if(r){
+                        //all valid. save the xml set
+                        var today = new Date();
+                        var dd = today.getDay();
+                        var mm = today.getMonth()+1;
+                        var yyyy = today.getFullYear();
+                        var time = today.getTime();
+                        var fileName = mm + '_' + dd + '_' + yyyy + '_' + time + '.xml';
+                        Meteor.call('saveXmlCiteSet', xmlSet, fileName);
+
+                        //update the submissions collection
+                        var created = new Date();
+                        var submissions_id = submissions.insert({'file_name' : fileName, 'created_by' : userId, 'created_date' : created});
+
+                        //update article docs
+                        Meteor.call('articlesStatusUpdate',submissionList, submissions_id, created);
+
+                        //return file name to redirect for download route
+                        fut.return(fileName);
+                    }else{
+                        console.log('ERROR: XML Set NOT valid.');
+                        fut.return('invalid');
+                    }
+                });
+            }
+        });
         return fut.wait();
     },
     saveXmlCiteSet: function(xml,fileName){
-        console.log('... saveXmlCiteSet');
+        // console.log('... saveXmlCiteSet');
         var fs = Meteor.npmRequire('fs');
         var filePath = process.env.PWD + '/xml-sets/' + fileName;
         fs.writeFile(filePath, xml, function (err) {
