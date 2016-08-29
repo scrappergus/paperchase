@@ -630,25 +630,23 @@ Meteor.xmlPmc = {
             for(var child=0 ; child < node.childNodes.length ; child++){
                 var nod = node.childNodes[child];
 
-                if(nod.childNodes){
-                    for(var c = 0 ; c < nod.childNodes.length ; c++){
-                        var n = nod.childNodes[c];
-                        // label
-                        // ------------
-                        if(nod.localName == 'label'){
-                            supp.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
-                        }
-                        // title
-                        // ------------
-                        if(n.localName == 'title'){
-                            supp.title =  Meteor.fullText.traverseNode(n).replace(/^\s+|\s+$/g, '');
-                        }
-                        // caption
-                        // ------------
-                        if(n.localName == 'p'){
-                            supp.caption = Meteor.fullText.convertContent(n);
-                        }
-                    }
+                // label
+                // ------------
+                if(nod.localName == 'label'){
+                    supp.label =Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+                }
+
+                // title
+                // ------------
+                if(nod.localName == 'title'){
+                    supp.title =  Meteor.fullText.traverseNode(nod).replace(/^\s+|\s+$/g, '');
+                    console.log(supp.title);
+                }
+
+                // caption
+                // ------------
+                if(nod.localName == 'p'){
+                    supp.caption = Meteor.fullText.convertContent(nod);
                 }
             }
         }
