@@ -10,11 +10,12 @@ Meteor.dataSubmissions = {
         return ppubAlreadySubmitted;
     },
     articleOkToSubmit: function(template){
+        // all articles with a pub status and without previously submitted ppub
         var articlesList = Meteor.dataSubmissions.getArticles(template);
         var okToSubmit = [];
         articlesList.forEach(function(article){
             if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
-            } else{
+            } else if(article.pub_status){
                 okToSubmit.push(article);
             }
         });
