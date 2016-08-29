@@ -85,15 +85,15 @@ institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, option
     if(doc.IPRanges){
         doc.IPRanges.forEach(function(ipr) {
                 ipranges.insert({
-                        institutionID: doc._id
-                        ,startIP: ipr.startIP
-                        ,endIP: ipr.endIP
-                        ,startNum: dot2num(ipr.startIP)
-                        ,endNum: dot2num(ipr.endIP)
-                    });
+                    institutionID: doc._id,
+                    startIP: ipr.startIP,
+                    endIP: ipr.endIP,
+                    startNum: dot2num(ipr.startIP),
+                    endNum: dot2num(ipr.endIP),
+                });
             });
     }
-}
+};
 
 institutions.after.insert(institutionUpdateInsertHook);
 institutions.after.update(institutionUpdateInsertHook);
