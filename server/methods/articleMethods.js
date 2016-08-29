@@ -120,8 +120,6 @@ Meteor.methods({
         }
     },
     pushArticle: function(mongoId, field, articleData){
-        console.log('..pushArticle', new Date());
-        // nope. used in submissions method articlesStatusUpdate()
         Meteor.authorizeCheck.articles();
         var updateObj = {};
         updateObj[field] = articleData;
