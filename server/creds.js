@@ -5,6 +5,15 @@ Meteor.methods({
             return siteConfig.journal.url;
         }
     },
+    getConfigSenderEmail : function(){
+        var emailConfig = journalConfig.findOne({}, {fields: {email_lib_recommendation : 1}});
+        if(emailConfig){
+            return {
+                'address' : emailConfig.email_sender.address.replace('@','%40'),
+                'pw' : emailConfig.email_sender.pw
+            };
+        }
+    },
     getConfigRecommendationEmail : function(){
         var emailConfig = journalConfig.findOne({}, {fields: {email_lib_recommendation : 1}});
         if(emailConfig){

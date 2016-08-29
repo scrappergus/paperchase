@@ -7,7 +7,7 @@ if (Meteor.isServer) {
 }
 
 
-//Redirects 
+//Redirects
 // Redirect to the ROOT_URL if it doesn't match where we're at
 if (Meteor.isServer) {
     WebApp.connectHandlers
@@ -67,9 +67,9 @@ Meteor.startup(function () {
     // Email
     // ------------------------
     if (Meteor.isServer) {
-        var emailSettings = Meteor.call('getConfigRecommendationEmail');
+        var emailSettings = Meteor.call('getConfigSenderEmail');
         if(emailSettings){
-            process.env.MAIL_URL = 'smtp://' + emailSettings['address'] +':' + emailSettings['pw'] + '@smtp.gmail.com:465/';
+            process.env.MAIL_URL = 'smtp://' + emailSettings.address +':' + emailSettings.pw + '@smtp.gmail.com:465/';
         }
     }
 });
