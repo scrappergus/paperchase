@@ -103,7 +103,6 @@ html,body{
 	}
 	.kw{
 		margin: $margin-sm 0 $margin-sm $margin-sm;
-		@extend .serif;
 		text-transform: none!important;
 	}
 	/* Figures */
@@ -126,20 +125,20 @@ html,body{
 		@extend h4;
 	}
 	.article-header-1{
-		@extend h5;
+		@extend h5 !optional;
 		a{
 			color: $white;
 		}
 	}
 	.article-header-2{
-		@extend h6;
+		@extend h6 !optional;
 	}
 	.article-header-3{
-		@extend h7;
+		@extend h7 !optional;
 	}
 	.article-header-4{
 		text-decoration: none!important;
-		@extend h8;
+		@extend h8 !optional;
 	}
 	.article-header-5{
 		@extend p;
@@ -204,7 +203,6 @@ html,body{
 
 /* Buttons ------------------------*/
 	.btn{
-		@extend .serif;
 	}
 	.btn.active{
 		background: $gray-2;
