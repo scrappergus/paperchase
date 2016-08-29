@@ -72,7 +72,7 @@
         <div class="col s12">
             <div class="card z-depth-0 red">
                 <div class="card-content">
-                    <h4 class="white-text">Cannot submit these articles, they were already submitted as PPub</h4>
+                    <h4 class="white-text">Cannot submit these articles, they were already submitted as PPublish</h4>
                     <p class="white-text">
                         When downloading XML, these articles will not be included in the submission set.
                     </p>
@@ -94,7 +94,7 @@
                 <div class="card-content">
                     <div class="row no-margin valign-wrapper">
                         <div class="col s4 valign">
-                            <h4>Article Count: {{submitCount}} {{#if ppubAlreadySubmitted}}<br /><span style="font-size: x-small;">* Count reflects removing previously submitted PPub & any without a pub status</span>{{/if}}</h4>
+                            <h4>Article Count: {{submitCount}}<br /><span style="font-size: x-small;">* Count reflects removing previously submitted PPublish & any without a pub status</span></h4>
                             <button class="waves-effect waves-light btn" id="download-set-xml">
                                 {{>AdminDownloadIcon}} Download XML
                             </button>
@@ -164,7 +164,7 @@
                                             {{#if submissions}}
                                             {{#if pubMedPpubOk pub_status submissions}}
                                             {{else}}
-                                            <h3 class="red-type">Cannot submit this article. Article was already submitted as PPub</h3>
+                                            <h3 class="red-type">Cannot submit this article. Article was already submitted as PPublish</h3>
                                             {{/if}}
                                             {{/if}}
 

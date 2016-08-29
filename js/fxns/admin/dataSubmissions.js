@@ -3,7 +3,7 @@ Meteor.dataSubmissions = {
         var articlesList = Meteor.dataSubmissions.getArticles(template);
         var ppubAlreadySubmitted = [];
         articlesList.forEach(function(article){
-            if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
+            if(article.pub_status && article.pub_status === 'ppublish' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppublish'){
                 ppubAlreadySubmitted.push(article);
             }
         });
@@ -14,7 +14,7 @@ Meteor.dataSubmissions = {
         var articlesList = Meteor.dataSubmissions.getArticles(template);
         var okToSubmit = [];
         articlesList.forEach(function(article){
-            if(article.pub_status && article.pub_status === 'ppub' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppub'){
+            if(article.pub_status && article.pub_status === 'ppublish' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppublish'){
             } else if(article.pub_status){
                 okToSubmit.push(article);
             }

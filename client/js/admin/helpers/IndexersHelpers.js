@@ -3,7 +3,7 @@
 
 // Begin PubMed
 Template.registerHelper('pubMedPpubOk', function(pub_status, submissions) {
-  if(pub_status === 'ppub' && submissions[submissions.length - 1].pub_status === 'ppub' ){
+  if(pub_status === 'ppublish' && submissions[submissions.length - 1].pub_status === 'ppublish' ){
       return false;
   } else{
       return true;
