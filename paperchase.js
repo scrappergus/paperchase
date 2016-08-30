@@ -67,10 +67,12 @@ Meteor.startup(function () {
     // Email
     // ------------------------
     if (Meteor.isServer) {
-        var emailSettings = Meteor.call('getConfigSenderEmail');
-        if(emailSettings){
-            process.env.MAIL_URL = 'smtp://' + emailSettings.address +':' + emailSettings.pw + '@smtp.gmail.com:465/';
-        }
+        Meteor.call('getConfigSenderEmail', function(error, emailSettings){
+            if(emailSettings){
+                var connection = 'smtp://' + encodeURIComponent(emailSettings.address) +':' + encodeURIComponent(emailSettings.pw) + '@smtp.gmail.com:587/';
+                process.env.MAIL_URL = connection;
+            }
+        });
     }
 });
 
