@@ -1370,7 +1370,6 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            console.log(Roles.userIsInRole(Meteor.userId(), ['super-admin']));
             if(!Roles.userIsInRole(Meteor.userId(), ['super-admin'])){
                 Router.go('AdminDashboard');
             }else{
