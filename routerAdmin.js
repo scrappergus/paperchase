@@ -420,7 +420,7 @@ if (Meteor.isClient) {
             ];
         },
         onBeforeAction: function(){
-            if(!Roles.userIsInRole(Meteor.userId(), ['data-submissions', 'super-admin'])){
+            if(!Roles.userIsInRole(Meteor.userId(), ['data-submissions', 'super-admin'], 'article')){
                 Router.go('AdminDashboard');
             }else{
                 Meteor.call('archive',function(error,result){
