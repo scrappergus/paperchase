@@ -111,23 +111,6 @@ Template.AdminBatch.events({
             }
         });
     },
-    'click #process-all-pdf': function(e){
-        e.preventDefault();
-        // response takes too long. Do not wait for crawler
-        // window.scrollTo(0, 0);
-
-        // Meteor.formActions.saving();
-        // console.log('..clicked');
-        Meteor.call('getAllPmcPdf',function(e,r){
-            if(e){
-                console.error(e);
-                // Meteor.formActions.error();
-            }else if(r){
-                console.log(r);
-                // Meteor.formActions.successMessage(r + ' PDFs downloaded');
-            }
-        });
-    },
     'click #get-articles-crossref-dates' : function(e){
         e.preventDefault();
         window.scrollTo(0, 0);
@@ -179,7 +162,7 @@ Template.AdminBatch.events({
                 console.log(r);
                 Meteor.formActions.successMessage(r + ' Paperchase ID added');
             }
-        })
+        });
     },
     'click #initiate-articles' : function(e){
         e.preventDefault();
@@ -192,7 +175,7 @@ Template.AdminBatch.events({
                 console.log(r);
                 Meteor.formActions.successMessage(r + ' Articles Collection Created');
             }
-        })
+        });
     },
     'click #get-articles-pmc-xml' : function(e){
         e.preventDefault();
@@ -217,7 +200,7 @@ Template.AdminBatch.events({
                 console.log(r);
                 Meteor.formActions.successMessage(r + ' XML Processed');
             }
-        })
+        });
     },
     // 'click #get-all-pmid': function(e){
     //  // match PMID by title
@@ -283,7 +266,7 @@ Template.AdminBatch.events({
             if(result){
                 console.log(result);
             }
-        })
+        });
     },
     // 'click #advance-order-update' : function(e){
     //  Deprecated
