@@ -123,20 +123,6 @@ institutions.after.remove(function(userId, doc) {
 //      this.response.end();
 //  }
 // });
-Router.route('/xml-cite-set/:_filename',{
-    where: 'server',
-    action: function(){
-        var name = this.params._filename;
-        var filePath = process.env.PWD + '/xml-sets/' + name;
-        // console.log(filePath);
-        var fs = Meteor.npmRequire('fs');
-        var data = fs.readFileSync(filePath);
-        var headers = {'Content-type': 'application/xml','Content-Disposition': 'attachment'};
-        this.response.writeHead(200, headers);
-        this.response.write(data);
-        this.response.end();
-    }
-});
 
 // INTAKE ROUTES
 Router.route('/admin/add-legacy-platform-article/',{

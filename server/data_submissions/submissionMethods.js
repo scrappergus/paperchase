@@ -217,14 +217,13 @@ Meteor.methods({
         return fut.wait();
     },
     saveXmlCiteSet: function(xml,fileName){
-        // console.log('... saveXmlCiteSet');
-        var fs = Meteor.npmRequire('fs');
-        var filePath = process.env.PWD + '/xml-sets/' + fileName;
-        fs.writeFile(filePath, xml, function (err) {
-            if (err){
-                return console.log(err);
+        var bucket = journalConfig.findOne({}).s3.bucket + '/pubmed_xml_sets';
+        var params = {Bucket: bucket, Body: xml, Key: fileName};
+        S3.aws.upload(params, function(err, xml) {
+            if(err){
+                console.error('S3 PubMed XML set upload', err);
             }else{
-                // console.log('--saved ' + filePath);
+                console.log('New XML set: ' + fileName );
             }
         });
     },
