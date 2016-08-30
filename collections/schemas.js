@@ -150,6 +150,8 @@ journalConfig.schema = new SimpleSchema({
     api: {type: Object, optional: false},
     'api.crawler': {type: String, optional: false},
     'api.doi': {type: String, optional: false},
+    s3: {type: Object, optional: false},
+    's3.bucket': {type: String, optional: false}
 });
 // contact
 contact.schema = new SimpleSchema({
