@@ -78,7 +78,7 @@
                 <div class="card-content">
                     <h4 class="white-text">Cannot submit these articles, they were already submitted as PPublish</h4>
                     <p class="white-text">
-                        When downloading XML, these articles will not be included in the submission set.
+                        When creating XML, these articles will not be included in the submission set.
                     </p>
                     <ul>
                         {{#each ppubAlreadySubmitted}}
@@ -106,7 +106,7 @@
                                 <h4>Article Count: {{submitCount}}</h4>
                                 <span style="font-size: x-small;">* Count reflects removing previously submitted PPublish & any without a pub status</span>
                                 <button class="waves-effect waves-light btn" id="download-set-xml">
-                                    {{>AdminDownloadIcon}} Download XML
+                                    Send XML to PubMed
                                 </button>
                                 {{/if}}
                             </div>

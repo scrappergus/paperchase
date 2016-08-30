@@ -217,7 +217,8 @@ Meteor.methods({
         return fut.wait();
     },
     saveXmlCiteSet: function(xml,fileName){
-        var bucket = journalConfig.findOne({}).s3.bucket + '/pubmed_xml_sets';
+        var journal = journalConfig.findOne();
+        var bucket = journalConfig.findOne({}).s3.bucket + '/' + journal.s3.folders.pubmed_xml_sets;
         var params = {Bucket: bucket, Body: xml, Key: fileName};
         S3.aws.upload(params, function(err, xml) {
             if(err){
@@ -255,8 +256,12 @@ Meteor.methods({
         var journal = journalConfig.findOne();
         var message = 'New PubMed submission for ' + journal.journal.name + '\n';
         if(submissionData){
-            message += submissionData.file_name + ' sent by ' + submissionData.created_by.user_email;
+            message += submissionData.file_name + '\n';
+            message += 'sent by ' + submissionData.created_by.user_email + '\n\n';
+            message += 'XML set:\n';
+            message += journal.assets + journal.s3.folders.pubmed_xml_sets + '/' + submissionData.file_name;
         }
+
         Meteor.call('getDataSubmissionsEmails', function(error, emails){
             if(error){
                 console.error('getConfigSenderEmail', error);

@@ -151,7 +151,9 @@ journalConfig.schema = new SimpleSchema({
     'api.crawler': {type: String, optional: false},
     'api.doi': {type: String, optional: false},
     s3: {type: Object, optional: false},
-    's3.bucket': {type: String, optional: false}
+    's3.bucket': {type: String, optional: false},
+    's3.folders': {type: Object, optional: false},
+    's3.folders.pubmed_xml_set': {type: String, optional: false}
 });
 // contact
 contact.schema = new SimpleSchema({
