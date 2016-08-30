@@ -11,14 +11,9 @@ Meteor.methods({
       return id;
     },
     updateUser: function(user){
-        console.log('updateUser',user);
+        // console.log('updateUser',user);
         var fut = new future();
         var userEmail = user.email;
-        var userRoles = user.roles;
-        var userGlobalRoles = user.roles.admin;
-        delete user.email;
-        delete user.roles;
-        delete userRoles.admin;
 
         // Email
         var userInfo = Meteor.users.findOne({_id : user._id});
@@ -29,20 +24,26 @@ Meteor.methods({
 
         // Roles
         // Groups
-        for(var group in userRoles){
-            userRoles[group].forEach(function(role){
-                Roles.addUsersToRoles(user._id, role, group);
-            });
+        for(var group in user.roles){
+            if(group != 'admin'){
+                Roles.setUserRoles(user._id, [], group); // reset group
+                user.roles[group].forEach(function(role){
+                    Roles.addUsersToRoles(user._id, role, group);
+                });
+            }
         }
         // Global
-        Roles.addUsersToRoles(user._id, userGlobalRoles, Roles.GLOBAL_GROUP);
+        Roles.setUserRoles(user._id, [], Roles.GLOBAL_GROUP); // reset group
+        Roles.addUsersToRoles(user._id, user.roles.admin, Roles.GLOBAL_GROUP);
 
+        delete user.roles; // already set in DB above
+        delete user.email; // already set in user obj above
 
         Meteor.users.update({'_id':user._id},{$set:user}, function (error) {
             if(error){
                 fut.throw(error);
             }else{
-                fut.return(true)
+                fut.return(true);
             }
         });
 
@@ -57,13 +58,13 @@ Meteor.methods({
         // TODO: use roles collection for this. Looks like the collection does not retain group information though, which we need to determine different kinds of edit
         return {
             admin: ['admin','super-admin'],
-            article: ['edit'],
+            article: ['edit', 'data-submissions'],
             // user: ['edit'],
             // issue: ['edit'],
             // volume: ['edit'],
             // site: ['edit'],
             // institution: ['edit']
-        }
+        };
     },
     readyUserFormData: function(userId){
         // for both adding and editing user. If adding user then userId will be null.
@@ -77,7 +78,7 @@ Meteor.methods({
 
         if(userFound){
             userInfo = userFound;
-        }else if(userId != null){
+        }else if(userId !== null){
             fut.return(false);
         }
         // console.log('userInfo',userInfo);
@@ -91,7 +92,7 @@ Meteor.methods({
                         all_roles[group] = [];
                     }
                     roles[group].forEach(function(role){
-                        var roleObj = {role: role}
+                        var roleObj = {role: role};
                         if(Roles.userIsInRole(userInfo, role, group)){
                             roleObj.has_role = true;
                         }
