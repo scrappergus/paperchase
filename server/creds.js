@@ -14,6 +14,16 @@ Meteor.methods({
             };
         }
     },
+    getDataSubmissionsEmails: function(){
+        // for to and from emailSettings
+        var emailConfig = journalConfig.findOne({}, {fields: {email_sender: 1, email_data_submissions : 1}});
+        if(emailConfig){
+            return {
+                from: emailConfig.email_sender.address,
+                to: emailConfig.email_data_submissions.to
+            };
+        }
+    },
     getConfigRecommendationEmail : function(){
         var emailConfig = journalConfig.findOne({}, {fields: {email_lib_recommendation : 1}});
         if(emailConfig){

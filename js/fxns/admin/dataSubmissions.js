@@ -63,15 +63,16 @@ Meteor.dataSubmissions = {
     validatePubMedXmlSet: function(template){
         Session.set('creatingXml', true);
         var submissionList = Meteor.dataSubmissions.articleOkToSubmit(template);
-        Meteor.call('pubMedArticleSetXml', submissionList, Meteor.userId(), function(error,result){
+        Meteor.call('pubMedArticleSetXml', submissionList, Meteor.user(), function(error,result){
             if(error){
                 console.error('ERROR - articleSetXmlValidation',error);
             } else if(result === 'invalid'){
                 alert('XML set invalid');
             } else{
                 //all the articles are valid, now do the download
-                window.open('/xml-cite-set/' + result);
+                window.open('/xml-cite-set/' + result.fileName);
                 Session.set('creatingXml', false);
+                Meteor.call('dataSubmissionsNotifyByEmail', result.submissionId);
             }
         });
     }

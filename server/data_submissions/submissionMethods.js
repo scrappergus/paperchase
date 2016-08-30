@@ -171,9 +171,10 @@ Meteor.methods({
         return articleSetXmlString;
         // return fut.wait();
     },
-    pubMedArticleSetXml: function(submissionList, userId){
+    pubMedArticleSetXml: function(submissionList, user){
         // console.log('..pubMedArticleSetXml');
         var fut = new future();
+        var result = {};
         Meteor.call('createPubMedArticleSetXml', submissionList, function(error, xmlSet){
             if(error){
                 console.error('ERROR - createPubMedArticleSetXml', error);
@@ -190,17 +191,22 @@ Meteor.methods({
                         var yyyy = today.getFullYear();
                         var time = today.getTime();
                         var fileName = mm + '_' + dd + '_' + yyyy + '_' + time + '.xml';
+                        result.fileName = fileName;
                         Meteor.call('saveXmlCiteSet', xmlSet, fileName);
 
                         //update the submissions collection
                         var created = new Date();
-                        var submissions_id = submissions.insert({'file_name' : fileName, 'created_by' : userId, 'created_date' : created});
-
+                        var createdBy = {
+                            user_id : user._id,
+                            user_email: user.emails[0].address
+                        };
+                        var submissionId = submissions.insert({'file_name' : fileName, 'created_by' : createdBy, 'created_date' : created});
+                        result.submissionId = submissionId;
                         //update article docs
-                        Meteor.call('articlesStatusUpdate',submissionList, submissions_id, created);
+                        Meteor.call('articlesStatusUpdate', submissionList, submissionId, created);
 
                         //return file name to redirect for download route
-                        fut.return(fileName);
+                        fut.return(result);
                     }else{
                         console.log('ERROR: XML Set NOT valid.');
                         fut.return('invalid');
@@ -243,5 +249,26 @@ Meteor.methods({
             }
         }
         return string;
+    },
+    dataSubmissionsNotifyByEmail: function(submissionId){
+        this.unblock();
+        var submissionData = submissions.findOne({_id : submissionId});
+        var journal = journalConfig.findOne();
+        var message = 'New PubMed submission for ' + journal.journal.name + '\n';
+        if(submissionData){
+            message += submissionData.file_name + ' sent by ' + submissionData.created_by.user_email;
+        }
+        Meteor.call('getDataSubmissionsEmails', function(error, emails){
+            if(error){
+                console.error('getConfigSenderEmail', error);
+            } else if(emails){
+                Email.send({
+                   to: emails.to,
+                   from: emails.from,
+                   subject: 'New Data Submission',
+                   text: message
+                });
+            }
+        });
     }
 });
