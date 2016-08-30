@@ -5,3 +5,8 @@ public/images/covers/
 settings.json
 node_modules/
 server/awsConfig.js
+xml-sets/
+settings-aging.json
+settings-aging-admin.json
+settings-oncotarget.json
+settings-oncotarget-stage.json
