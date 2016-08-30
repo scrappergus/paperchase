@@ -414,15 +414,24 @@ if (Meteor.isClient) {
             }
             return pageTitle;
         },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('journalConfig')
+            ];
+        },
         onBeforeAction: function(){
-            Meteor.call('archive',function(error,result){
-                if(error){
-                    console.error('Archive Error', error);
-                }else if(result){
-                    Session.set('archive',result);
-                }
-            });
-            this.next();
+            if(!Roles.userIsInRole(Meteor.userId(), ['data-submissions', 'super-admin'])){
+                Router.go('AdminDashboard');
+            }else{
+                Meteor.call('archive',function(error,result){
+                    if(error){
+                        console.error('Archive Error', error);
+                    }else if(result){
+                        Session.set('archive',result);
+                    }
+                });
+                this.next();
+            }
         }
     });
     Router.route('/admin/data_submissions/past',{
@@ -437,7 +446,6 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             return[
-                Meteor.subscribe('adminUsers'),
                 Meteor.subscribe('submissions'),
                 Meteor.subscribe('articles')
             ];
