@@ -61,6 +61,8 @@ Data Submissions
 /admin/data-submissions
 Create submission set based on PII list or Issue. Uses subscription to submissionSet, which will either query for issue_id or list of PII. Two reactive template variables are passed to the subscription, queryType and queryParams. The type will determine if issue or PII search. The params will be either issue_id or array of PII. Before subscribing, if queryType = reset, then clear the template variable using the reset function Meteor.dataSubmissions.resetPage(). The results are pulled directly from the subscribed collection, with data processed before passing to the template.
 
+Only uses with super-admin or data-submissions roles can access.
+
 
 Site Control
 ------------
