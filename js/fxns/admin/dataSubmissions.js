@@ -1,4 +1,19 @@
 Meteor.dataSubmissions = {
+    addPiiToList: function(pii){
+        // console.log('..addPiiToList', pii);
+        if(pii){
+            //first check if already present
+            var piiList = Meteor.dataSubmissions.getPiiList();
+
+            if(piiList.indexOf(pii) === -1){
+                $('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="material-icons" data-pii="' + pii + '">&#xE5CD;</i></span>');
+            }else{
+                alert('PII already in list');
+            }
+        }else{
+            alert('Please enter a PII');
+        }
+    },
     ppubAlreadySubmitted: function(template){
         var articlesList = Meteor.dataSubmissions.getArticles(template);
         var ppubAlreadySubmitted = [];

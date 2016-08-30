@@ -36,16 +36,13 @@ Template.AdminDataSubmissions.events({
         if(e.which == 13) {
             e.preventDefault();
             var pii = $(e.target).val();
-
-            //first check if already present
-            var piiList = Meteor.dataSubmissions.getPiiList();
-
-            if(piiList.indexOf(pii) === -1){
-                $('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="material-icons" data-pii="' + pii + '">&#xE5CD;</i></span>');
-            }else{
-                alert('PII already in list');
-            }
+            Meteor.dataSubmissions.addPiiToList(pii);
         }
+    },
+    'click #add-pii': function(e){
+        e.preventDefault();
+        var pii = $('#submissions_search_pii').val();
+        Meteor.dataSubmissions.addPiiToList(pii);
     },
     'submit .form-pii': function(e, template){
         e.preventDefault();
