@@ -2,7 +2,13 @@ volumes = new Mongo.Collection('volumes');
 issues = new Mongo.Collection('issues');
 issuesDeleted = new Mongo.Collection('issues_deleted');
 about = new Mongo.Collection('about');
-articles = new Mongo.Collection('articles');
+articles = new Mongo.Collection('articles', {
+    // transform: function(article) {
+    // @TODO, move data processing here. readyData throws some errors and needs to be adjusted
+    //     // console.log('---article',article._id);
+    //     return Meteor.article.readyData(article);
+    // }
+});
 institutions = new Mongo.Collection("institutions");
 ipranges = new Mongo.Collection("ipranges");
 edboard = new Mongo.Collection("edboard");
@@ -688,7 +694,7 @@ if (Meteor.isServer) {
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return Meteor.users.find();
         }else{
-            this.stop();
+            this.ready();
             return;
         }
     });
@@ -696,7 +702,7 @@ if (Meteor.isServer) {
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return Meteor.users.find({'roles': {'$in': ['super-admin']}},{'name_first':1,'name_last':1});
         }else{
-            this.stop();
+            this.ready();
             return;
         }
     });
@@ -705,7 +711,7 @@ if (Meteor.isServer) {
         if (Roles.userIsInRole(this.userId, ['super-admin'])) {
             return Meteor.users.find({_id:id});
         }else{
-            this.stop();
+            this.ready();
             return;
         }
     });

@@ -1369,6 +1369,14 @@ if (Meteor.isClient) {
             }
             return pageTitle;
         },
+        onBeforeAction: function(){
+            console.log(Roles.userIsInRole(Meteor.userId(), ['super-admin']));
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin'])){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
+        },
         layoutTemplate: 'Admin',
         waitOn: function(){
             return[
@@ -1393,6 +1401,13 @@ if (Meteor.isClient) {
                 pageTitle += ': ' + Session.get('journal').journal.name;
             }
             return pageTitle;
+        },
+        onBeforeAction: function(){
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin'])){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
         },
         layoutTemplate: 'Admin',
         waitOn: function(){
@@ -1422,6 +1437,9 @@ if (Meteor.isClient) {
         },
         layoutTemplate: 'Admin',
         onBeforeAction: function(){
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin'])){
+                Router.go('AdminDashboard');
+            }else{
             Session.set('admin-user',null);
 
             Meteor.call('readyUserFormData', this.params._id, function(error,result){
@@ -1435,6 +1453,7 @@ if (Meteor.isClient) {
             });
 
             this.next();
+            }
         },
         waitOn: function(){
             return[
@@ -1453,14 +1472,18 @@ if (Meteor.isClient) {
         },
         layoutTemplate: 'Admin',
         onBeforeAction: function(){
-            Meteor.call('archive',function(error,result){
-                if(error){
-                    console.error('Archive Error', error);
-                }else if(result){
-                    Session.set('archive',result);
-                }
-            });
-            this.next();
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin'])){
+                Router.go('AdminDashboard');
+            }else{
+                Meteor.call('archive',function(error,result){
+                    if(error){
+                        console.error('Archive Error', error);
+                    }else if(result){
+                        Session.set('archive',result);
+                    }
+                });
+                this.next();
+            }
         },
         waitOn: function(){
             return[
@@ -1490,19 +1513,23 @@ if (Meteor.isClient) {
         },
         layoutTemplate: 'Admin',
         onBeforeAction: function(){
-            Session.set('admin-user',null);
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin'])){
+                Router.go('AdminDashboard');
+            }else{
+                Session.set('admin-user',null);
 
-            Meteor.call('readyUserFormData', null, function(error,result){
-                if(error){
-                    console.error('readyUserFormData',error);
-                }else if(result){
-                    Session.set('admin-user',result);
-                }else{
-                    Router.go('AdminAddUser');
-                }
-            });
+                Meteor.call('readyUserFormData', null, function(error,result){
+                    if(error){
+                        console.error('readyUserFormData',error);
+                    }else if(result){
+                        Session.set('admin-user',result);
+                    }else{
+                        Router.go('AdminAddUser');
+                    }
+                });
 
-            this.next();
+                this.next();
+            }
         },
     });
 
