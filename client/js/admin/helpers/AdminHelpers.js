@@ -18,7 +18,14 @@ Template.AdminNav.helpers({
             return journalSettings.site.spec.color.main_rgb;
         }
     },
+    bannerLogo: function(){
+        var journalSettings = journalConfig.findOne();
+        if(journalSettings){
+            return journalSettings.journal.logo.banner;
+        }
+    }
 });
+
 
 Template.AdminNavLinksCollapse.helpers({
     ojs: function(){
@@ -654,14 +661,6 @@ Template.AdminIssueButtons.helpers({
 
 // General
 // ---------------
-Template.AdminNav.helpers({
-    bannerLogo: function(){
-        var journalSettings = journalConfig.findOne();
-        if(journalSettings){
-            return journalSettings.journal.logo.banner;
-        }
-    }
-});
 Template.StatusModal.helpers({
     action: function(){
         return  Session.get('statusModalAction');
