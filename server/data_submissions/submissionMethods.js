@@ -249,7 +249,7 @@ Meteor.methods({
         }
         return string;
     },
-    dataSubmissionsNotifyByEmail: function(submissionId){
+    dataSubmissionsNotifyByEmail: function(submissionId, user){
         this.unblock();
         var submissionData = submissions.findOne({_id : submissionId});
         var journal = journalConfig.findOne();
@@ -261,6 +261,9 @@ Meteor.methods({
             if(error){
                 console.error('getConfigSenderEmail', error);
             } else if(emails){
+                if(emails.to.indexOf(user.emails[0].address) === -1){
+                    emails.to.push(user.emails[0].address);
+                }
                 Email.send({
                    to: emails.to,
                    from: emails.from,

@@ -82,12 +82,14 @@ Meteor.dataSubmissions = {
             if(error){
                 console.error('ERROR - articleSetXmlValidation',error);
             } else if(result === 'invalid'){
+                template.processing.set(false);
                 alert('XML set invalid');
             } else{
-                //all the articles are valid, now do the download
-                window.open('/xml-cite-set/' + result.fileName);
+                //all the articles are valid, now send the file and do the download
+                // window.open('/xml-cite-set/' + result.fileName);
                 Session.set('creatingXml', false);
-                Meteor.call('dataSubmissionsNotifyByEmail', result.submissionId);
+                Meteor.call('dataSubmissionsNotifyByEmail', result.submissionId, Meteor.user());
+                alert('Submission Sent. Please check your email for a copy of the XML.');
             }
         });
     }
