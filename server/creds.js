@@ -9,7 +9,7 @@ Meteor.methods({
         var emailConfig = journalConfig.findOne({}, {fields: {email_sender : 1}});
         if(emailConfig){
             return {
-                'address' : emailConfig.email_sender.address.replace('@','%40'),
+                'address' : emailConfig.email_sender.address,
                 'pw' : emailConfig.email_sender.pw
             };
         }
