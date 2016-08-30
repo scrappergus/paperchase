@@ -22,16 +22,20 @@ Meteor.methods({
         // TODO: use regex for dtd
         var aopSearchPattern = '<!DOCTYPE ArticleSet PUBLIC "-\/\/NLM\/\/DTD PubMed 2.0\/\/EN" "http:\/\/www.ncbi.nlm.nih.gov:80\/entrez\/query\/static\/PubMed.dtd">';
         var fullTextV2SearchPattern = '<!DOCTYPE pmc-articleset PUBLIC "-\/\/NLM\/\/DTD ARTICLE SET 2.0\/\/EN" "http:\/\/dtd.nlm.nih.gov\/ncbi\/pmc\/articleset\/nlm-articleset-2.0.dtd">';
-        var fullTextV3SearchPattern = '<!DOCTYPE article PUBLIC "-\/\/NLM\/\/DTD Journal Publishing DTD v3.0 20080202\/\/EN" "journalpublishing3.dtd">'
+        var fullTextV3SearchPattern = '<!DOCTYPE article PUBLIC "-\/\/NLM\/\/DTD Journal Publishing DTD v3.0 20080202\/\/EN" "journalpublishing3.dtd">';
+        var fullTextJatsSearchPattern = /<!DOCTYPE article PUBLIC "-\/\/NLM\/\/DTD JATS \(Z39\.96\) Journal Publishing DTD v1\.1 20151215\/\/EN" "JATS-journalpublishing1\.dtd">/;
         var aopRes = xmlString.search(aopSearchPattern);
         var fullTextV2 = xmlString.search(fullTextV2SearchPattern);
         var fullTextV3 = xmlString.search(fullTextV3SearchPattern);
+        var fullTextJats = xmlString.search(fullTextJatsSearchPattern);
         if(aopRes != -1){
             return 'AOP';
         }else if(fullTextV2 != -1){
             return 'V2';
         }else if(fullTextV3 != -1){
             return 'V3';
+        }else if(fullTextJats != -1){
+            return 'JATS';
         }else{
             return false;
         }
@@ -52,6 +56,15 @@ Meteor.methods({
                     }
                 });
             }else if(dtd && dtd === 'V3'){
+                Meteor.call('processV3Xml',xml, function(error,result){
+                    if(error){
+                        console.error('processPmcXml',error);
+                    }else if(result){
+                        // console.log('processXmlString',result.dates);
+                        fut.return(result);
+                    }
+                });
+            }else if(dtd && dtd === 'JATS'){
                 Meteor.call('processV3Xml',xml, function(error,result){
                     if(error){
                         console.error('processPmcXml',error);
