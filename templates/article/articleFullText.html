@@ -247,9 +247,16 @@
 </template>
 
 <template name="FullTextReferenceConference">
+    {{#if textContent}}
+    {{#each textContent}}{{#if equals type 'ext_link'}}<a href="{{content}}" target="_BLANK">{{content}}</a>
+    {{else}}{{{content}}}{{/if}}{{/each}}
+    {{#if doi}}<span>{{doi}}</span>.{{/if}}
+
+    {{else}}
     {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
     {{#if title}}<span> {{{title}}}.</span>{{/if}}
     {{#if conf_name}}<span> {{{conf_name}}}.</span>{{/if}}
     {{#if year}}<span> {{year}}.</span>{{/if}}
     {{#if comment}}<span>{{{comment}}}</span>{{/if}}
+    {{/if}}
 </template>
