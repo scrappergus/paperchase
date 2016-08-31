@@ -309,13 +309,18 @@ Meteor.methods({
         var fut = new future();
         var journal = journalConfig.findOne();
         if(journal){
+
+            // S3
             var fromRemotePath = journal.assets + journal.s3.folders.pubmed_xml_sets + '/' + fileName;
-
-            var directory = journal.pubmed.ftp.directory;
-            var toRemotePath = directory + '/' + fileName;
-
             var bucket = journalConfig.findOne({}).s3.bucket + '/' + journal.s3.folders.pubmed_xml_sets;
             var params = {Bucket: bucket, Key: fileName};
+
+            // PubMed FTP
+            var toRemotePath = journal.pubmed.ftp.directory + '/' + fileName;
+            var host = journal.pubmed.ftp.host;
+            var user = journal.pubmed.ftp.user;
+            var pw = journal.pubmed.ftp.pw;
+
             S3.aws.getObject(params, function(getSetErr, xmlSetData) {
                 if (getSetErr){
                     console.error('Get PubMed XML Set for Submission', getSetErr);
@@ -324,21 +329,19 @@ Meteor.methods({
                     // var xmlSetBuffer = new Buffer(xmlSetData.Body, 'binary');
                     // var xmlSetBuffer = xmlSetData.Body.toString('base64');
                     // console.log(xmlSetData.Body instanceof Buffer);
-
+                    var xmlSetBuffer = xmlSetData.Body;
                     var ftp = new JSFtp({
-                        host: journal.pubmed.ftp.host,
-                        user: journal.pubmed.ftp.user,
-                        pass: journal.pubmed.ftp.pw
+                        host: host,
+                        user: user,
+                        pass: pw
                     });
-                    ftp.put(xmlSetData.Body, toRemotePath, function(ftpErr, res) {
+                    ftp.put(xmlSetBuffer, toRemotePath, function(ftpErr) {
                         if(ftpErr){
                             console.error('FTP PubMed XML Set',ftpErr);
                             fut.throw(ftpErr);
-                        }else if(res){
+                        }else{
                             console.log('SUBMITTED');
                             fut.return(true);
-                        }else{
-                            console.log('ELSE');
                         }
                     });
                 }
