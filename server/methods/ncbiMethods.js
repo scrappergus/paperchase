@@ -143,7 +143,6 @@ Meteor.methods({
                     }else{
                         var validXml = r.content.indexOf('Your document is valid');
                         if(validXml != -1){
-                            console.log('valid');
                             fut['return'](true);
                         }else{
                             console.log('NOT valid');

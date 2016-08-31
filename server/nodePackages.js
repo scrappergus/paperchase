@@ -4,3 +4,4 @@ future = Npm.require('fibers/future');
 xpath = Meteor.npmRequire('xpath');
 async = Meteor.npmRequire('async');
 dom = Meteor.npmRequire('xmldom').DOMParser;
+JSFtp = Meteor.npmRequire('jsftp');

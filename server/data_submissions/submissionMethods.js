@@ -192,21 +192,32 @@ Meteor.methods({
                         var time = today.getTime();
                         var fileName = mm + '_' + dd + '_' + yyyy + '_' + time + '.xml';
                         result.fileName = fileName;
-                        Meteor.call('saveXmlCiteSet', xmlSet, fileName);
+                        Meteor.call('saveXmlCiteSet', xmlSet, fileName, function(saveError, saveResult){
+                            if(saveError){
+                                console.error('saveXmlCiteSet', saveError);
+                            }else if(saveResult){
+                                Meteor.call('submitPubMedXmlSet', fileName, function(submitError, submitResult){
+                                    if(submitError){
+                                        console.error('submitPubMedXmlSet', submitError);
+                                    }else if(submitResult){
+                                        console.log('submitResult',submitResult);
+                                        //update the submissions collection
+                                        var created = new Date();
+                                        var createdBy = {
+                                            user_id : user._id,
+                                            user_email: user.emails[0].address
+                                        };
+                                        var submissionId = submissions.insert({'file_name' : fileName, 'created_by' : createdBy, 'created_date' : created});
+                                        result.submissionId = submissionId;
+                                        //update article docs
+                                        Meteor.call('articlesStatusUpdate', submissionList, submissionId, created);
 
-                        //update the submissions collection
-                        var created = new Date();
-                        var createdBy = {
-                            user_id : user._id,
-                            user_email: user.emails[0].address
-                        };
-                        var submissionId = submissions.insert({'file_name' : fileName, 'created_by' : createdBy, 'created_date' : created});
-                        result.submissionId = submissionId;
-                        //update article docs
-                        Meteor.call('articlesStatusUpdate', submissionList, submissionId, created);
-
-                        //return file name to redirect for download route
-                        fut.return(result);
+                                        //return file name to redirect for download route
+                                        fut.return(result);
+                                    }
+                                });
+                            }
+                        });
                     }else{
                         console.log('ERROR: XML Set NOT valid.');
                         fut.return('invalid');
@@ -214,19 +225,34 @@ Meteor.methods({
                 });
             }
         });
-        return fut.wait();
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     saveXmlCiteSet: function(xml,fileName){
+        // console.log('.....saveXmlCiteSet');
+        var fut = new future();
         var journal = journalConfig.findOne();
         var bucket = journalConfig.findOne({}).s3.bucket + '/' + journal.s3.folders.pubmed_xml_sets;
         var params = {Bucket: bucket, Body: xml, Key: fileName};
-        S3.aws.upload(params, function(err, xml) {
+        S3.aws.upload(params, function(err, xmlUploaded) {
             if(err){
                 console.error('S3 PubMed XML set upload', err);
-            }else{
-                console.log('New XML set: ' + fileName );
+            }else if(xmlUploaded){
+                fut.return(true);
             }
         });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     articlesStatusUpdate: function(submissionList, submissions_id, created){
         submissionList.forEach(function(article){
@@ -277,5 +303,52 @@ Meteor.methods({
                 });
             }
         });
+    },
+    submitPubMedXmlSet: function(fileName){
+        // console.log('...submitPubMedXmlSet',fileName);
+        var fut = new future();
+        var journal = journalConfig.findOne();
+        if(journal){
+            var fromRemotePath = journal.assets + journal.s3.folders.pubmed_xml_sets + '/' + fileName;
+
+            var directory = journal.pubmed.ftp.directory;
+            var toRemotePath = directory + '/' + fileName;
+
+            var bucket = journalConfig.findOne({}).s3.bucket + '/' + journal.s3.folders.pubmed_xml_sets;
+            var params = {Bucket: bucket, Key: fileName};
+            S3.aws.getObject(params, function(getSetErr, xmlSetData) {
+                if (getSetErr){
+                    console.error('Get PubMed XML Set for Submission', getSetErr);
+                } else if(xmlSetData){
+                    // console.log('xmlSetData',xmlSetData.Body);
+                    // var xmlSetBuffer = new Buffer(xmlSetData.Body, 'binary');
+                    // var xmlSetBuffer = xmlSetData.Body.toString('base64');
+                    // console.log(xmlSetData.Body instanceof Buffer);
+
+                    var ftp = new JSFtp({
+                        host: journal.pubmed.ftp.host,
+                        user: journal.pubmed.ftp.user,
+                        pass: journal.pubmed.ftp.pw
+                    });
+                    ftp.put(xmlSetData.Body, toRemotePath, function(ftpErr, res) {
+                        if(ftpErr){
+                            console.error('FTP PubMed XML Set',ftpErr);
+                            fut.throw(ftpErr);
+                        }else if(res){
+                            console.log('SUBMITTED');
+                            fut.return(true);
+                        }else{
+                            console.log('ELSE');
+                        }
+                    });
+                }
+            });
+        }
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
     }
 });

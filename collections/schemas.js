@@ -153,7 +153,13 @@ journalConfig.schema = new SimpleSchema({
     s3: {type: Object, optional: false},
     's3.bucket': {type: String, optional: false},
     's3.folders': {type: Object, optional: false},
-    's3.folders.pubmed_xml_set': {type: String, optional: false}
+    's3.folders.pubmed_xml_set': {type: String, optional: false},
+    pubmed: {type: Object, optional: false},
+    'pubmed.ftp': {type: Object, optional: false},
+    'pubmed.ftp.host': {type: String, optional: false},
+    'pubmed.ftp.user': {type: String, optional: false},
+    'pubmed.ftp.pw': {type: String, optional: false},
+    'pubmed.ftp.directory': {type: String, optional: false}
 });
 // contact
 contact.schema = new SimpleSchema({
