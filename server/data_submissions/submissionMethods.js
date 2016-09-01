@@ -200,7 +200,6 @@ Meteor.methods({
                                     if(submitError){
                                         console.error('submitPubMedXmlSet', submitError);
                                     }else if(submitResult){
-                                        console.log('submitResult',submitResult);
                                         //update the submissions collection
                                         var created = new Date();
                                         var createdBy = {
@@ -325,25 +324,24 @@ Meteor.methods({
                 if (getSetErr){
                     console.error('Get PubMed XML Set for Submission', getSetErr);
                 } else if(xmlSetData){
-                    // console.log('xmlSetData',xmlSetData.Body);
-                    // var xmlSetBuffer = new Buffer(xmlSetData.Body, 'binary');
-                    // var xmlSetBuffer = xmlSetData.Body.toString('base64');
-                    // console.log(xmlSetData.Body instanceof Buffer);
-                    var xmlSetBuffer = xmlSetData.Body;
-                    var ftp = new JSFtp({
+                    var connectionProps = {
                         host: host,
                         user: user,
-                        pass: pw
+                        password: pw
+                    };
+
+                    var c = new Client();
+                    c.on('ready', function() {
+                        c.put(xmlSetData.Body, toRemotePath, function(err) {
+                            if (err){
+                                fut.throw(err);
+                            }else{
+                                fut.return(true);
+                            }
+                            c.end();
+                        });
                     });
-                    ftp.put(xmlSetBuffer, toRemotePath, function(ftpErr) {
-                        if(ftpErr){
-                            console.error('FTP PubMed XML Set',ftpErr);
-                            fut.throw(ftpErr);
-                        }else{
-                            console.log('SUBMITTED');
-                            fut.return(true);
-                        }
-                    });
+                    c.connect(connectionProps);
                 }
             });
         }
