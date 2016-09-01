@@ -105,16 +105,23 @@
                                 {{else}}
                                 <h4>Article Count: {{submitCount}}</h4>
                                 <span style="font-size: x-small;">* Count reflects removing previously submitted PPublish & any without a pub status</span>
+                                {{#if creatingXml}}
+                                Sending...
+                                {{else}}
                                 <button class="waves-effect waves-light btn" id="download-set-xml">
                                     Send XML to PubMed
                                 </button>
+                                {{/if}}
                                 {{/if}}
                             </div>
                             <div class="col s4 center valign">
                                 <h4><label>Searched:</label><br>{{query}}</h4>
                             </div>
                             <div class="col s4 valign">
+                                {{#if creatingXml}}
+                                {{else}}
                                 {{>DataSubmissionsClear}}
+                                {{/if}}
                             </div>
                         </div>
                     </div>
