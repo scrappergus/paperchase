@@ -123,6 +123,8 @@ Meteor.methods({
         // console.log('--pubMedCiteCheck');
         var fut = new future();
         var url = 'http://www.ncbi.nlm.nih.gov';
+        var validationResult = {};
+
 
         //post xml string to pubmed, response will provide redirect url. In the redirect, we check the content for valid message
         Meteor.http.post(url + '/pubmed/citcheck/',{
@@ -131,26 +133,27 @@ Meteor.methods({
             }
         }, function(error,result){
             if(error){
-                console.log('ERROR - pubMedCiteCheck');
-                console.log(error);
+                console.error('ERROR - pubMedCiteCheck', error);
             }else{
                 var goToUrl = url + result.headers.location;
                 Meteor.http.get(goToUrl, function(e,r){
                     if(e){
-                        console.log('pubMedCiteCheck get: ERROR - pubMedCiteCheck follow location');
-                        console.log(e);
+                        console.error('pubMedCiteCheck get: ERROR - pubMedCiteCheck follow location', e);
                         throw new Meteor.Error('pubMedCiteCheck get: COULD NOT follow location', result.headers.location);
                     }else{
+                        // console.log('PUBMED',r.content);
                         var validXml = r.content.indexOf('Your document is valid');
                         if(validXml != -1){
-                            fut['return'](true);
+                            validationResult.valid = true;
+                            fut.return(validationResult);
                         }else{
-                            console.log('NOT valid');
-                            fut['return'](false);
+                            validationResult.valid = false;
+                            validationResult.pubMedPath = result.headers.location;
+                            fut.return(validationResult);
                             throw new Meteor.Error('pubMedCiteCheck get: ERROR - Article Set Failed Validation', result.headers.location);
                         }
                     }
-                })
+                });
             }
         });
         return fut.wait();

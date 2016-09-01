@@ -53,6 +53,7 @@ Meteor.dataSubmissions = {
         template.queried.set(false);
         template.processing.set(false);
         template.queryForDisplay.set();
+        template.invalidLink.set();
     },
     closeEditView: function(){
         var articleId = Session.get('articleId');
@@ -81,8 +82,10 @@ Meteor.dataSubmissions = {
         Meteor.call('pubMedArticleSetXml', submissionList, Meteor.user(), function(error,result){
             if(error){
                 console.error('ERROR - articleSetXmlValidation',error);
-            } else if(result === 'invalid'){
+            } else if(!result.valid){
                 template.processing.set(false);
+                Session.set('creatingXml', false);
+                template.invalidLink.set(result.pubMedPath);
                 alert('XML set invalid');
             } else{
                 //all the articles are valid, now send the file

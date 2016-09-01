@@ -182,8 +182,9 @@ Meteor.methods({
                 Meteor.call('pubMedCiteCheck', xmlSet, function(citeCheckError, r){
                     if(citeCheckError){
                         console.error('ERROR - pubMedCiteCheck', citeCheckError);
-                        throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation', result.headers.location);
-                    } else if(r){
+                        throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation');
+                    } else if(r.valid){
+                        result.valid = true;
                         //all valid. save the xml set
                         var today = new Date();
                         var dd = today.getDate();
@@ -218,8 +219,10 @@ Meteor.methods({
                             }
                         });
                     }else{
+                        result.valid = false;
+                        result.pubMedPath = r.pubMedPath;
                         console.log('ERROR: XML Set NOT valid.');
-                        fut.return('invalid');
+                        fut.return(result);
                     }
                 });
             }

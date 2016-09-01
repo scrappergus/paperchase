@@ -77,6 +77,9 @@ Template.AdminDataSubmissions.helpers({
         } else{
             return null;
         }
+    },
+    invalidLink: function(){
+        return Template.instance().invalidLink.get();
     }
 });
 Template.AdminDataSubmissionsPast.helpers({
