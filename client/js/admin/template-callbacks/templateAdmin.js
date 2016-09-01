@@ -113,6 +113,7 @@ Template.AdminNewsForm.onRendered(function () {
 // --------------
 Template.AdminDataSubmissions.onCreated(function () {
     var template = Template.instance();
+    // Meteor.call('submitPubMedXmlSet', '8_2_2016_1472589750811.xml');
 
     template.processing = new ReactiveVar(false);
     template.queried = new ReactiveVar(); // used to determine whether to show no articles message
@@ -120,6 +121,7 @@ Template.AdminDataSubmissions.onCreated(function () {
     template.queryType = new ReactiveVar();
     template.queryParams = new ReactiveVar();
     template.queryForDisplay = new ReactiveVar(); // used to show user what was searched (since there are 2 forms. For ex, possible they selected an issue but did not submit, so this clarifies what is displayed)
+    template.invalidLink = new ReactiveVar();
 
     template.autorun( function() {
         template.subscribe( 'submissionSet', template.queryType.get(), template.queryParams.get(), function() {
