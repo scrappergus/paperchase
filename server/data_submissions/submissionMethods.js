@@ -44,8 +44,15 @@ Meteor.methods({
             }else{
                 xmlString += '<PubDate PubStatus="aheadofprint">';
             }
-            xmlString += Meteor.call('generateDateXml',article.dates.epub);
+
+            if(article.dates.epub){
+                xmlString += Meteor.call('generateDateXml', article.dates.epub);
+            }else if(article.pub_status != 'epublish' || article.pub_status != 'ppublish'){
+                xmlString += Meteor.call('generateDateXml', new Date());
+            }
+
             xmlString += '</PubDate>';
+
 
 
             xmlString += '</Journal>';

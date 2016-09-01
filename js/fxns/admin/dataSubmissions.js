@@ -78,6 +78,7 @@ Meteor.dataSubmissions = {
     },
     validatePubMedXmlSet: function(template){
         Session.set('creatingXml', true);
+        template.invalidLink.set();
         var submissionList = Meteor.dataSubmissions.articleOkToSubmit(template);
         Meteor.call('pubMedArticleSetXml', submissionList, Meteor.user(), function(error,result){
             if(error){
