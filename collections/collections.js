@@ -655,13 +655,16 @@ if (Meteor.isServer) {
     });
     Meteor.publish('submissionSet', function (queryType, queryParams) {
         var query = {};
-        if (queryType === 'issue'){
-            query.find = {issue_id: queryParams};
-        } else if (queryType === 'pii'){
-            query.find = {'ids.pii':{'$in':queryParams}};
+        if(queryType && queryParams){
+            if (queryType === 'issue'){
+                query.find = {issue_id: queryParams};
+            } else if (queryType === 'pii'){
+                query.find = {'ids.pii':{'$in':queryParams}};
+            }
+            return articles.find(query.find, query.options);
+        }else{
+            this.ready();
         }
-
-        return articles.find(query.find, query.options);
     });
     Meteor.publish('articlesRecentFive', function () {
         return articles.find({},{sort:{'_id':1},limit : 5});
