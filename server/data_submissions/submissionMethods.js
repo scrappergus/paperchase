@@ -136,10 +136,9 @@ Meteor.methods({
                     articleIdType = 'pubmed';
                 }else if(articleIdType === 'pmc'){
                     articleIdType = 'pmcid';
+                }else if(articleIdType !== 'publisher'){
+                    xmlString += '<ArticleId IdType="' + articleIdType + '">' + articleIds[articleId] + '</ArticleId>';
                 }
-
-                xmlString += '<ArticleId IdType="' + articleIdType + '">' + articleIds[articleId] + '</ArticleId>';
-
             }
             xmlString += '</ArticleIdList>';
 
