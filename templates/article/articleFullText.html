@@ -54,8 +54,12 @@
                                     {{#if asString}}
                                         {{{asString}}}
                                     {{else}}
+                                    {{#each textContent}}{{#if equals type 'ext_link'}}{{{content}}}{{/if}}{{#if equals type 'pmid'}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{pmid}}" target="_BLANK">PubMed</a>]</span>{{/if}}{{#if equals type 'doi'}}<span>doi: {{content}}</span>{{/if}}{{#if equals type 'text'}}{{{content}}}{{/if}}{{/each}}
+                                    {{/if}}
 
+                                    {{#if fakevar}}
                                     {{#if equals type 'journal'}}
+
                                     {{#if editors}}<span> {{editors}}, editor.</span>{{/if}}
                                     {{#if authors}}<span> {{{authors}}}.</span>{{/if}}
                                     {{#if title}}<span> {{{title}}}{{punctuationCheck title}}</span>{{/if}}
