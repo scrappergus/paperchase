@@ -188,7 +188,8 @@ Meteor.methods({
                 Meteor.call('pubMedCiteCheck', xmlSet, function(citeCheckError, r){
                     if(citeCheckError){
                         console.error('ERROR - pubMedCiteCheck', citeCheckError);
-                        throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation');
+                        fut.throw(citeCheckError);
+                        // throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation');
                     } else if(r.valid){
                         result.valid = true;
                         //all valid. save the xml set
@@ -238,7 +239,7 @@ Meteor.methods({
             return fut.wait();
         }
         catch(err) {
-            throw new Meteor.Error(error);
+            throw new Meteor.Error(err);
         }
     },
     saveXmlCiteSet: function(xml,fileName){

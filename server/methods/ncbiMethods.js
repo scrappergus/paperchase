@@ -138,8 +138,9 @@ Meteor.methods({
                 var goToUrl = url + result.headers.location;
                 Meteor.http.get(goToUrl, function(e,r){
                     if(e){
-                        console.error('pubMedCiteCheck get: ERROR - pubMedCiteCheck follow location', e);
-                        throw new Meteor.Error('pubMedCiteCheck get: COULD NOT follow location', result.headers.location);
+                        console.error('pubMedCiteCheck follow location', e);
+                        // throw new Meteor.Error('pubMedCiteCheck get: COULD NOT follow location', result.headers.location);
+                        fut.throw(e);
                     }else{
                         // console.log('PUBMED',r.content);
                         var validXml = r.content.indexOf('Your document is valid');

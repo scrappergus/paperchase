@@ -80,6 +80,9 @@ Template.AdminDataSubmissions.helpers({
     },
     invalidLink: function(){
         return Template.instance().invalidLink.get();
+    },
+    errorMessage: function(){
+        return Template.instance().errorMessage.get();
     }
 });
 Template.AdminDataSubmissionsPast.helpers({

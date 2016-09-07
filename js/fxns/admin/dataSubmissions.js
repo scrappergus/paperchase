@@ -54,6 +54,7 @@ Meteor.dataSubmissions = {
         template.processing.set(false);
         template.queryForDisplay.set();
         template.invalidLink.set();
+        template.errorMessage.set();
     },
     closeEditView: function(){
         var articleId = Session.get('articleId');
@@ -79,10 +80,15 @@ Meteor.dataSubmissions = {
     validatePubMedXmlSet: function(template){
         Session.set('creatingXml', true);
         template.invalidLink.set();
+        template.errorMessage.set();
         var submissionList = Meteor.dataSubmissions.articleOkToSubmit(template);
-        Meteor.call('pubMedArticleSetXml', submissionList, Meteor.user(), function(error,result){
+        Meteor.call('pubMedArticleSetXml', submissionList, Meteor.user(), function(error, result){
             if(error){
                 console.error('ERROR - articleSetXmlValidation',error);
+                template.processing.set(false);
+                template.errorMessage.set('XML could not be validated. PubMed XML validator is not responding. Please wait and try again.');
+                Session.set('creatingXml', false);
+                alert('Error. XML could not be validated. PubMed XML validator is not responding. Please wait and try again.');
             } else if(!result.valid){
                 template.processing.set(false);
                 Session.set('creatingXml', false);

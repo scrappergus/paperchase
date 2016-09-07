@@ -122,6 +122,7 @@ Template.AdminDataSubmissions.onCreated(function () {
     template.queryParams = new ReactiveVar();
     template.queryForDisplay = new ReactiveVar(); // used to show user what was searched (since there are 2 forms. For ex, possible they selected an issue but did not submit, so this clarifies what is displayed)
     template.invalidLink = new ReactiveVar();
+    template.errorMessage = new ReactiveVar();
 
     template.autorun( function() {
         template.subscribe( 'submissionSet', template.queryType.get(), template.queryParams.get(), function() {
