@@ -12,12 +12,12 @@
     <!-- ========= Navigation ========= -->
     <div class="navigation">
         <div class="nav-sidebar">
-            <a href="/"><img src="/images/aging-logo-new.png" class="logo" alt="Aging"></a>
+            <a href="/"><img src="{{bannerLogo}}" class="logo left" alt="Aging"><span class="journal-name-extra white-text left">{{nameExtra}}</span></a>
         </div>
         <div class="nav-content">
             <ul>
                 {{>SocialLinks}}
-                <li class="has-icon submit-article button"><a href="http://aging.msubmit.net/" target="_blank"><span class="icon icon-file"></span> Submit an Article</a></li>
+                <li class="has-icon submit-article button"><a href="{{submitLink}}" target="_blank"><span class="icon icon-file"></span> Submit an Article</a></li>
                 <!--<li>{{> loginButtons align="right"}}</li>-->
             </ul>
 
