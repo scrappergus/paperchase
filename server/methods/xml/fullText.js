@@ -711,128 +711,128 @@ Meteor.fullText = {
         if(reference.childNodes.length == 1) {
             referenceObj.textContent = [{content:reference.childNodes[0].nodeValue, type:'text'}];
         }
-
-        for(var r = 0; r < reference.childNodes.length; r++){
-            // console.log('r = ' + r);
-            // console.log(reference.childNodes[r].localName);
-            if(reference.childNodes[r].childNodes){
-                var referencePart,
+        else {
+            for(var r = 0; r < reference.childNodes.length; r++){
+                // console.log('r = ' + r);
+                // console.log(reference.childNodes[r].localName);
+                if(reference.childNodes[r].childNodes){
+                    var referencePart,
                     referencePartName;
-                // Reference Title, Source, Pages, Year, Authors
-                // -------
-                if(reference.childNodes[r].localName){
-                    referencePart = reference.childNodes[r];
-                    referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
-                    // console.log(referencePartName);
-                    if(referencePartName == 'person_group'){
-                        var attr = xpath.select('@person-group-type', referencePart);
-                        if(attr.length && attr[0].value == 'editor') {
-                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+                    // Reference Title, Source, Pages, Year, Authors
+                    // -------
+                    if(reference.childNodes[r].localName){
+                        referencePart = reference.childNodes[r];
+                        referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
+                        // console.log(referencePartName);
+                        if(referencePartName == 'person_group'){
+                            var attr = xpath.select('@person-group-type', referencePart);
+                            if(attr.length && attr[0].value == 'editor') {
+                                referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+                            }
+                            else {
+                                referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+                            }
                         }
-                        else {
-                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
-                        }
-                    }
-                    else if(referencePartName == 'name' || referencePartName == 'string_name'){
-                        if(referencePart.childNodes){
-                            var referencePartCount = referencePart.childNodes.length;
-                            for(var part = 0 ; part < referencePartCount ; part++){
-                                var refTemp = '';
-                                if(referencePart.childNodes[part].localName == 'surname') {
-                                    if(first_author === false) {
-                                        refTemp += ', ';
-                                    }
-                                    else {
-                                        first_author = false;
-                                    }
+                        else if(referencePartName == 'name' || referencePartName == 'string_name'){
+                            if(referencePart.childNodes){
+                                var referencePartCount = referencePart.childNodes.length;
+                                for(var part = 0 ; part < referencePartCount ; part++){
+                                    var refTemp = '';
+                                    if(referencePart.childNodes[part].localName == 'surname') {
+                                        if(first_author === false) {
+                                            refTemp += ', ';
+                                        }
+                                        else {
+                                            first_author = false;
+                                        }
 
-                                    refTemp += referencePart.childNodes[part].childNodes[0].nodeValue + ' ';
+                                        refTemp += referencePart.childNodes[part].childNodes[0].nodeValue + ' ';
+                                    }
+                                    else if(referencePart.childNodes[part].localName == 'given-names'){
+                                        refTemp += referencePart.childNodes[part].childNodes[0].nodeValue;
+                                    }
                                 }
-                                else if(referencePart.childNodes[part].localName == 'given-names'){
-                                    refTemp += referencePart.childNodes[part].childNodes[0].nodeValue;
-                                }
-                            }
-                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
-                        }
-                    }
-                    else if(referencePartName == 'pub_id'){
-                        // make sure attribute has pmid
-                        var pmid = false;
-                        for(var attr=0; attr<referencePart.attributes.length; attr++){
-                            if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'pmid'){
-                                referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'pmid'});
-                            }else if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'doi'){
-                                referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'doi'});
+                                referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
                             }
                         }
-                    }                                   
-                    else if(referencePartName == 'article_title'){
-                        if(referencePart.childNodes){
-                            referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'text'});
-                        }
-                    }
-                    else if(referencePartName == 'ext_link'){
-                        if(referencePart.childNodes){
-                            referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'ext_link'});
-                        }
-                    }
-                    else if(referencePartName == 'comment'){
-                        if(referencePart.childNodes){
-                            var comment = '';
-                            for(var part=0; part<referencePart.childNodes.length; part++){
-                                // console.log(referencePart.childNodes[part].localName);
-                                if(referencePart.childNodes[part].nodeValue){
-                                    comment += referencePart.childNodes[part].nodeValue;
+                        else if(referencePartName == 'pub_id'){
+                            // make sure attribute has pmid
+                            var pmid = false;
+                            for(var attr=0; attr<referencePart.attributes.length; attr++){
+                                if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'pmid'){
+                                    referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'pmid'});
+                                }else if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'doi'){
+                                    referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'doi'});
                                 }
-                                else if(referencePart.childNodes[part].localName == 'ext-link') {
-                                    var href = '';
-                                    for(var attrIdx=0; attrIdx<referencePart.childNodes[part].attributes.length; attrIdx++) {
-                                        var attr = referencePart.childNodes[part].attributes[attrIdx];
-                                        if(attr.localName == 'href') {
-                                            var href = attr.nodeValue;
+                            }
+                        }                                   
+                        else if(referencePartName == 'article_title'){
+                            if(referencePart.childNodes){
+                                referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'text'});
+                            }
+                        }
+                        else if(referencePartName == 'ext_link'){
+                            if(referencePart.childNodes){
+                                referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'ext_link'});
+                            }
+                        }
+                        else if(referencePartName == 'comment'){
+                            if(referencePart.childNodes){
+                                var comment = '';
+                                for(var part=0; part<referencePart.childNodes.length; part++){
+                                    // console.log(referencePart.childNodes[part].localName);
+                                    if(referencePart.childNodes[part].nodeValue){
+                                        comment += referencePart.childNodes[part].nodeValue;
+                                    }
+                                    else if(referencePart.childNodes[part].localName == 'ext-link') {
+                                        var href = '';
+                                        for(var attrIdx=0; attrIdx<referencePart.childNodes[part].attributes.length; attrIdx++) {
+                                            var attr = referencePart.childNodes[part].attributes[attrIdx];
+                                            if(attr.localName == 'href') {
+                                                var href = attr.nodeValue;
+                                            }
+                                        }
+                                        link_content = href || referencePart.childNodes[part].nodeValue;
+                                        comment += '<a href="'+href+'" target="_BLANK">'+link_content+'</a>';
+
+                                    }
+                                    else if(referencePart.childNodes[part].localName == 'uri') {
+                                        if(referencePart.childNodes[part].childNodes[0] && referencePart.childNodes[part].childNodes[0].nodeValue){
+                                            var link = referencePart.childNodes[part].childNodes[0].nodeValue;
+                                            link = Meteor.clean.removeSpaces(link);
+                                            comment += '<a href="'+link+'" target="_BLANK">'+link+'</a>';
                                         }
                                     }
-                                    link_content = href || referencePart.childNodes[part].nodeValue;
-                                    comment += '<a href="'+href+'" target="_BLANK">'+link_content+'</a>';
-
                                 }
-                                else if(referencePart.childNodes[part].localName == 'uri') {
-                                    if(referencePart.childNodes[part].childNodes[0] && referencePart.childNodes[part].childNodes[0].nodeValue){
-                                        var link = referencePart.childNodes[part].childNodes[0].nodeValue;
-                                        link = Meteor.clean.removeSpaces(link);
-                                        comment += '<a href="'+link+'" target="_BLANK">'+link+'</a>';
-                                    }
-                                }
+                                referenceObj.textContent.push([{content:comment, type:'text'}]);
                             }
-                            referenceObj.textContent.push([{content:comment, type:'text'}]);
                         }
-                    }
-                    else if(referencePartName){
-                        // source, year, pages, issue, volume, chapter_title
-                        var refTemp = '';
-                        if(referencePart.childNodes){
-                            for(var part = 0 ; part < referencePart.childNodes.length ; part++){
-                                if(referencePart.childNodes[part].nodeValue){
-                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String ) {
-                                        if(referencePartName != 'fpage' && referencePartName != 'lpage'){
-                                            refTemp += '. ' + referencePart.childNodes[part].nodeValue;
+                        else if(referencePartName){
+                            // source, year, pages, issue, volume, chapter_title
+                            var refTemp = '';
+                            if(referencePart.childNodes){
+                                for(var part = 0 ; part < referencePart.childNodes.length ; part++){
+                                    if(referencePart.childNodes[part].nodeValue){
+                                        if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String ) {
+                                            if(referencePartName != 'fpage' && referencePartName != 'lpage'){
+                                                refTemp += '. ' + referencePart.childNodes[part].nodeValue;
+                                            }
+                                        }
+                                        else {
+                                            refTemp = referencePart.childNodes[part].nodeValue;
                                         }
                                     }
-                                    else {
-                                        refTemp = referencePart.childNodes[part].nodeValue;
-                                    }
                                 }
+                                referenceObj.textContent.push({content: refTemp, type:'text'}); 
                             }
-                            referenceObj.textContent.push({content: refTemp, type:'text'}); 
                         }
                     }
                 }
-            }
-            else {
-                referenceObj.textContent.push({content:reference.childNodes[r].nodeValue, type:'text'});
+                else {
+                    referenceObj.textContent.push({content:reference.childNodes[r].nodeValue, type:'text'});
+                }
             }
         }
-
         return referenceObj;
     },
     convertTableWrap: function(sec, files){
