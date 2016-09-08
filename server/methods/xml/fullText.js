@@ -733,7 +733,7 @@ Meteor.fullText = {
                             referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
                         }
                     }
-                    else if(referencePartName == 'name'){
+                    else if(referencePartName == 'name' || referencePartName == 'string_name'){
                         if(referencePart.childNodes){
                             var referencePartCount = referencePart.childNodes.length;
                             for(var part = 0 ; part < referencePartCount ; part++){
