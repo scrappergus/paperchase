@@ -10,7 +10,7 @@ Meteor.methods({
             title: doc.title,
             authors: getAuthorNameString(doc.authors),
             abstract: doc.abstract,
-            keywords: getAuthorNameString(doc.keywords)
+            keywords: getKeywordNameString(doc.keywords)
           });
         }
 
@@ -117,14 +117,20 @@ Meteor.methods({
         }
 
         function indexArticle(doc) {
-          return superagent.put(INDEX_URL + 'article/' + doc._id).send({
-            title: doc.title,
-            authors: getAuthorNameString(doc.authors),
-            abstract: doc.abstract,
-            volume: doc.volume,
-            issue: doc.issue, 
-            keywords: getKeywordString(doc.keywords)
-          });
+            var esObj = {
+                title: doc.title,
+                authors: getAuthorNameString(doc.authors),
+                abstract: doc.abstract,
+                volume: doc.volume,
+                issue: doc.issue, 
+                keywords: getKeywordString(doc.keywords)
+            };
+
+            return superagent.put(INDEX_URL + 'article/' + doc._id).send(esObj);
+        }
+
+        function getArticleUrl(ids) {
+            return '';
         }
 
         function getAuthorNameString(authors) {
@@ -134,9 +140,6 @@ Meteor.methods({
                 .map(function(key) {
                         if(['name_first', 'name_last'].indexOf(key)) {
                             return author[key];
-                        }
-                        else {
-                            return false;
                         }
                 })
             .join(' ').trim();
