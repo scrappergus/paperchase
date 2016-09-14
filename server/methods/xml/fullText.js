@@ -2,6 +2,7 @@
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         var fut = new future();
+        var result = {};
         var articleJson,
             articleInfo,
             xml;
@@ -22,7 +23,9 @@ Meteor.methods({
                                 fut.throw(convertXmlError);
                             }else{
                                 convertedXml.mongo = mongoId;
-                                fut.return(convertedXml);
+                                result.convertedXml = convertedXml;
+                                result.lastModified = xmlRes.headers['last-modified'];
+                                fut.return(result);
                             }
                         });
                     }
@@ -765,7 +768,7 @@ Meteor.fullText = {
                                     referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'doi'});
                                 }
                             }
-                        }                                   
+                        }
                         else if(referencePartName == 'article_title'){
                             if(referencePart.childNodes){
                                 referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'text'});
@@ -823,7 +826,7 @@ Meteor.fullText = {
                                         }
                                     }
                                 }
-                                referenceObj.textContent.push({content: refTemp, type:'text'}); 
+                                referenceObj.textContent.push({content: refTemp, type:'text'});
                             }
                         }
                     }
