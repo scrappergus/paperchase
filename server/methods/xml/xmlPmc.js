@@ -384,14 +384,26 @@ Meteor.xmlPmc = {
         cb(authors);
     },
     authorsAffiliations: function(affiliations,cb){
+        // for all affiliations in the paper
         var affiliationsResult = [];
         for(var aff=0 ; aff < affiliations.length ; aff++){
+            var completeAffiliation;
+
             if(affiliations[aff]._){
-                affiliationsResult.push(Meteor.clean.removeExtraSpaces(affiliations[aff]._.trim()));
+                completeAffiliation = Meteor.clean.removeExtraSpaces(affiliations[aff]._.trim());
             }else{
-                affiliationsResult.push(Meteor.clean.removeExtraSpaces(affiliations[aff]).trim());
+                completeAffiliation = Meteor.clean.removeExtraSpaces(affiliations[aff]).trim();
+            }
+
+            if(affiliations[aff].country && affiliations[aff].country[0]){
+                completeAffiliation += ' ' + affiliations[aff].country[0];
+            }
+
+            if(completeAffiliation){
+                affiliationsResult.push(completeAffiliation);
             }
         }
+
         cb(affiliationsResult);
     },
     authorsCorresponding: function(corresp,cb){
