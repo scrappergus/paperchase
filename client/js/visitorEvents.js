@@ -198,10 +198,22 @@ Template.Search.events({
         Meteor.call('search', {
             authors: e.target.authors && e.target.authors.value,
             abstract: e.target.abstract && e.target.abstract.value,
-            title: e.target.title && e.target.title.value
+            title: e.target.title && e.target.title.value,
+            keywords: e.target.keywords && e.target.keywords.value,
+            impactSearch : e.target.impactSearch && e.target.impactSearch.checked
         }, function(err, data) {
 //            console.log('>>> args in browser', err, data);
-            Session.set('queryResults', err ? [] : data);
+                         var queryResults = data.map(function(cur) {
+                                 return {
+                                     '_id': cur._id,
+                                     'index': cur._index,
+                                     'title': cur._source.title,
+                                     'abstract': cur._source.abstract,
+                                     'authors': cur._source.authors
+                                 }
+                             });
+
+            Session.set('queryResults', err ? [] : queryResults);
             Session.set('searchLoading', false);
             Session.set('searchLoaded', true);
         });

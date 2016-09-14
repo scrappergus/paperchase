@@ -257,6 +257,7 @@ if (Meteor.isClient) {
 
 
     Template.registerHelper('wrapInParagraphTag', function(str){
+        if(str === undefined) return '';
         if(str.indexOf('<p>') === -1){
             return '<p>' + str + '</p>';
         }else{

@@ -1,9 +1,6 @@
 <template name="Search">
-
 	<div class="row">
-        <div class="col s12 m4 hide-on-large-only">
-            {{> AdvancedSearch mobile=true}}
-        </div>
+
         <div class="search page-content col s12 m8">
 
     		{{#if searchLoaded}}
@@ -16,7 +13,8 @@
                 {{#each queryResults}}
                 <li class="item search-item toc-info">
                     <h2 class="title"><a href="/article/{{_id}}">{{{title}}}</a></h2>
-                    <h6 class="desc">{{>AuthorsList}}</h6>
+                    <h6 class="desc">{{index}}</h6>
+                    <h6 class="desc">{{authors}}</h6>
 					<h5 class="article-header">
 						{{>ArticleHeaderPieces}}
 					</h5>
@@ -60,10 +58,17 @@
     <div class="card sidebar-card {{#unless mobile}}fixed-scroll-card{{/unless}}">
         <div class="form-container">
             <h6 class="card-title">Advanced Search</h6>
-            <form id="search-terms">
+            <form id="search-terms" action="#">
                 <input placeholder="title" type="text" name="title">
                 <input placeholder="abstract" type="text" name="abstract" value="{{terms}}">
                 <input placeholder="authors" type="text" name="authors">
+                <input placeholder="keywords" type="text" name="keywords">
+                <div class="input-field">
+                <input type="checkbox" name="impactSearch" id="impactSearchCheck"/>
+                <label for="impactSearchCheck">Search all Impact publications</label>
+                </div>
+                <br>
+                
                 <button class="full-width teal button">Search</button>
             </form>
         </div>
