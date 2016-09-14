@@ -9,12 +9,12 @@ Meteor.methods({
         res = Meteor.http.get(requestURL);
 
         if(res){
-            var articleIdList = res.data.result[articlePMID]['articleids'];
+            var articleIdList = res.data.result[articlePMID].articleids;
             var articleIdListL = articleIdList.length;
             for(var i = 0 ; i < articleIdListL ; i ++){
-                if(articleIdList[i]['idtype'] === 'pmc'){
-                    // console.log(articleIdList[i]['value']);
-                    pmcId = articleIdList[i]['value'];
+                if(articleIdList[i].idtype === 'pmc'){
+                    // console.log(articleIdList[i].value);
+                    pmcId = articleIdList[i].value;
                 }
             }
         }
@@ -27,7 +27,7 @@ Meteor.methods({
         res = Meteor.http.get(requestURL);
 
         if(res){
-            var doi = res.data.result[articlePMID]['elocationid'];
+            var doi = res.data.result[articlePMID].elocationid;
             if(doi){
                 return doi;
             }
@@ -40,12 +40,12 @@ Meteor.methods({
         res = Meteor.http.get(requestURL);
 
         if(res){
-            var articleIdList = res.data.result[articlePMID]['articleids'];
+            var articleIdList = res.data.result[articlePMID].articleids;
             var articleIdListL = articleIdList.length;
             for(var i = 0 ; i < articleIdListL ; i ++){
-                if(articleIdList[i]['idtype'] === 'doi'){
+                if(articleIdList[i].idtype === 'doi'){
                     //fix for articles misindexed at pubmed
-                    var val = articleIdList[i]['value'];
+                    var val = articleIdList[i].value;
                     console.log(val);
                     return val;
                 }
@@ -59,8 +59,8 @@ Meteor.methods({
         res = Meteor.http.get(requestURL);
 
         if(res){
-            if(res.data.result[articlePMID]['pubdate']){
-                return res.data.result[articlePMID]['pubdate'];
+            if(res.data.result[articlePMID].pubdate){
+                return res.data.result[articlePMID].pubdate;
             }else{
                 console.log("NO PUB DATE");
             }
@@ -78,9 +78,9 @@ Meteor.methods({
 
         if(res){
             // console.log(res.data);
-            var articleIdList = res.data['esearchresult']['idlist'];
+            var articleIdList = res.data.esearchresult.idlist;
             // console.log(articleIdList);
-            fut['return'](articleIdList);
+            fut.return(articleIdList);
         }else{
             throw new Meteor.Error(500, 'getAllArticlesFromPubMed: Cannot get list of PMID from PubMed based on ISSN' , error);
         }
@@ -92,12 +92,12 @@ Meteor.methods({
         res = Meteor.http.get(requestURL);
 
         if(res){
-            var articleIdList = res.data.result[articlePMID]['articleids'];
+            var articleIdList = res.data.result[articlePMID].articleids;
             var articleIdListL = articleIdList.length;
             for(var i = 0 ; i < articleIdListL ; i ++){
-                if(articleIdList[i]['idtype'] === 'pii'){
+                if(articleIdList[i].idtype === 'pii'){
                     //fix for articles misindexed at pubmed
-                    var val = articleIdList[i]['value'];
+                    var val = articleIdList[i].value;
                     if(val.indexOf('html') != -1){
                         var valPieces = val.split('/');
                         val = valPieces[valPieces.length -1].replace('.html','');
@@ -123,6 +123,8 @@ Meteor.methods({
         // console.log('--pubMedCiteCheck');
         var fut = new future();
         var url = 'http://www.ncbi.nlm.nih.gov';
+        var validationResult = {};
+
 
         //post xml string to pubmed, response will provide redirect url. In the redirect, we check the content for valid message
         Meteor.http.post(url + '/pubmed/citcheck/',{
@@ -131,26 +133,28 @@ Meteor.methods({
             }
         }, function(error,result){
             if(error){
-                console.log('ERROR - pubMedCiteCheck');
-                console.log(error);
+                console.error('ERROR - pubMedCiteCheck', error);
             }else{
                 var goToUrl = url + result.headers.location;
                 Meteor.http.get(goToUrl, function(e,r){
                     if(e){
-                        console.log('pubMedCiteCheck get: ERROR - pubMedCiteCheck follow location');
-                        console.log(e);
-                        throw new Meteor.Error('pubMedCiteCheck get: COULD NOT follow location', result.headers.location);
+                        console.error('pubMedCiteCheck follow location', e);
+                        // throw new Meteor.Error('pubMedCiteCheck get: COULD NOT follow location', result.headers.location);
+                        fut.throw(e);
                     }else{
+                        // console.log('PUBMED',r.content);
                         var validXml = r.content.indexOf('Your document is valid');
                         if(validXml != -1){
-                            fut['return'](true);
+                            validationResult.valid = true;
+                            fut.return(validationResult);
                         }else{
-                            console.log('NOT valid');
-                            fut['return'](false);
+                            validationResult.valid = false;
+                            validationResult.pubMedPath = result.headers.location;
+                            fut.return(validationResult);
                             throw new Meteor.Error('pubMedCiteCheck get: ERROR - Article Set Failed Validation', result.headers.location);
                         }
                     }
-                })
+                });
             }
         });
         return fut.wait();
@@ -180,7 +184,7 @@ Meteor.methods({
 
                 query.push(v);
             }
-            query = query.join('+').replace(/\s+/g, '+');;
+            query = query.join('+').replace(/\s+/g, '+');
             // console.log('query');console.log(query);
             Meteor.http.get(pubMedUrl + '?term=' + query, function(error,result){
                 if(error){
@@ -204,19 +208,19 @@ Meteor.methods({
                         if(pmid){
                             pmidVerified = Meteor.call('verifyPmid',pmid,article.title);
                             if(pmidVerified){
-                                fut['return'](pmid);
+                                fut.return(pmid);
                             }else{
-                                fut['return'](false);
+                                fut.return(false);
                             }
                         }else{
-                            fut['return'](false);
+                            fut.return(false);
                         }
 
                     }
                 }else{
                     // return false;
                     // initial query using article data did not return a pmid
-                    fut['return'](false);
+                    fut.return(false);
                 }
             });
         }
@@ -228,9 +232,9 @@ Meteor.methods({
         res = Meteor.http.get(requestURL);
 
         if(res){
-            if(res.data.result[pmid]['pubdate']){
-                // console.log('title = ' + res.data.result[pmid]['title']);
-                return res.data.result[pmid]['title'];
+            if(res.data.result[pmid].pubdate){
+                // console.log('title = ' + res.data.result[pmid].title);
+                return res.data.result[pmid].title;
             }else{
                 console.log('NO TITLE: ' + pmid);
             }
@@ -243,8 +247,7 @@ Meteor.methods({
         var resultTitle = '',
             resultHtml,
             doc,
-            resultTitleElement,
-            resultTitle;
+            resultTitleElement;
         title = title.replace('.','');
         // after querying PubMed for ID, verify that titles match
         console.log(pubMedUrl + encodeURIComponent(title));
@@ -261,10 +264,10 @@ Meteor.methods({
                 resultTitle = resultTitleElement[0].firstChild.nodeValue.replace('.  - PubMed - NCBI\n','');
                 if(title == resultTitle){
                     // console.log('MATCH! = ' + pmid);console.log(resultTitle);
-                    fut['return'](true);
+                    fut.return(true);
                 }else{
                     // console.log('NO MATCH');
-                    fut['return'](false);
+                    fut.return(false);
                 }
 
             }
@@ -278,8 +281,7 @@ Meteor.methods({
         var resultTitle = '',
             resultHtml,
             doc,
-            resultTitleElement,
-            resultTitle;
+            resultTitleElement;
         // after querying PubMed for ID, verify that titles match
         Meteor.http.get(pubMedUrl + pmid, function(error,result){
             if(error){
@@ -294,9 +296,9 @@ Meteor.methods({
                 resultTitle = resultTitleElement[0].firstChild.nodeValue.replace('.  - PubMed - NCBI\n','');
                 if(title == resultTitle){
                     // console.log('MATCH! = ' + pmid);console.log(resultTitle);
-                    fut['return'](true);
+                    fut.return(true);
                 }else{
-                    fut['return'](false);
+                    fut.return(false);
                 }
 
             }

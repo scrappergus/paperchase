@@ -27,16 +27,26 @@ Meteor.methods({
     },
     createArticlePubMedXml: function(articleMongo){
         // console.log('..createArticlePubMedXml ',articleMongo);
+        // console.log('settings', Meteor.settings);
         var article = articles.findOne({_id :articleMongo});
         var journalSettings = Meteor.call('getConfigJournal');
         var pubType = 'Journal Article';
+        var journalName = Meteor.settings.public.journal.name;
+        if(Meteor.settings.public.journal.nameExtra){
+            journalName += ' ' + Meteor.settings.public.journal.nameExtra;
+        }
         if(article.length === 0){
             throw new Meteor.Error('xml-generation failed', 'Could not create article XML');
         }else{
+            var vol = article.volume ? article.volume : '';
+            var iss = article.issue ? article.issue : '';
+            var fPage = article.page_start ? article.page_start : '';
+            var lPage = article.page_end ? article.page_end : '';
+
             // console.log(article);
-            var xmlString = '<Article><Journal><PublisherName>' + journalSettings.publisher.name + '</PublisherName><JournalTitle>' + journalSettings.name + '</JournalTitle><Issn>' + journalSettings.issn + '</Issn>';
-            xmlString += '<Volume>' + article.volume + '</Volume>';
-            xmlString += '<Issue>' + article.issue + '</Issue>';
+            var xmlString = '<Article><Journal><PublisherName>' + journalSettings.publisher.name + '</PublisherName><JournalTitle>' + journalName + '</JournalTitle><Issn>' + journalSettings.issn + '</Issn>';
+            xmlString += '<Volume>' + vol + '</Volume>';
+            xmlString += '<Issue>' + iss + '</Issue>';
 
             //status and date
             if(article.pub_status === 'epublish' || article.pub_status === 'ppublish'){
@@ -44,9 +54,14 @@ Meteor.methods({
             }else{
                 xmlString += '<PubDate PubStatus="aheadofprint">';
             }
-            xmlString += Meteor.call('generateDateXml',article.dates.epub);
-            xmlString += '</PubDate>';
 
+            if(article.dates.epub){
+                xmlString += Meteor.call('generateDateXml', article.dates.epub);
+            }else if(article.pub_status != 'epublish' || article.pub_status != 'ppublish'){
+                xmlString += Meteor.call('generateDateXml', new Date());
+            }
+
+            xmlString += '</PubDate>';
 
             xmlString += '</Journal>';
 
@@ -62,11 +77,16 @@ Meteor.methods({
 
             //pages
             xmlString += '<FirstPage>';
-            xmlString += article.page_start;
+            xmlString += fPage;
             xmlString += '</FirstPage>';
             xmlString += '<LastPage>';
-            xmlString += article.page_end;
+            xmlString += lPage;
             xmlString += '</LastPage>';
+
+            //doi
+            if(article.ids && article.ids.doi){
+                xmlString += '<ELocationID EIdType="doi">'+article.ids.doi+'</ELocationID>';
+            }
 
             xmlString += '<Language>EN</Language>';
 
@@ -78,7 +98,10 @@ Meteor.methods({
                         xmlString += '<FirstName>';
                         xmlString += article.authors[a].name_first;
                         xmlString += '</FirstName>';
+                    }else if(article.authors[a].name_middle || article.authors[a].name_last){
+                        xmlString += '<FirstName EmptyYN="Y"></FirstName>';
                     }
+
                     if(article.authors[a].name_middle){
                         xmlString += '<MiddleName>';
                         xmlString += article.authors[a].name_middle;
@@ -90,14 +113,13 @@ Meteor.methods({
                         xmlString += '</LastName>';
                     }
                     if(article.authors[a].affiliations_numbers && article.authors[a].affiliations_numbers.length > 0){
-                        xmlString += '<Affiliation>';
+
                         for(var aff = 0 ; aff < article.authors[a].affiliations_numbers.length ; aff++){
                             var authorAffNumber = article.authors[a].affiliations_numbers[aff];
                             var authorAff = article.affiliations[authorAffNumber];
                             authorAff = Meteor.call('xmlStringFix',authorAff);
-                            xmlString += authorAff;
+                            xmlString += '<AffiliationInfo><Affiliation>' + authorAff + '</Affiliation></AffiliationInfo>';
                         }
-                        xmlString += '</Affiliation>';
                     } else if(article.affiliations && article.affiliations.length === 1){
                         xmlString += '<Affiliation>' + article.affiliations[0] + '</Affiliation>';
                     }
@@ -119,6 +141,7 @@ Meteor.methods({
                 xmlString += '<PublicationType>' + pubType + '</PublicationType>';
             }
 
+
             //article ids
             xmlString += '<ArticleIdList>';
             var articleIds = article.ids;
@@ -129,10 +152,9 @@ Meteor.methods({
                     articleIdType = 'pubmed';
                 }else if(articleIdType === 'pmc'){
                     articleIdType = 'pmcid';
+                }else if(articleIdType !== 'publisher'){
+                    xmlString += '<ArticleId IdType="' + articleIdType + '">' + articleIds[articleId] + '</ArticleId>';
                 }
-
-                xmlString += '<ArticleId IdType="' + articleIdType + '">' + articleIds[articleId] + '</ArticleId>';
-
             }
             xmlString += '</ArticleIdList>';
 
@@ -145,6 +167,22 @@ Meteor.methods({
                 xmlString += '</PubDate>';
             }
             xmlString += '</History>';
+
+
+            if(article.abstract){
+                console.log(article.abstract);
+                xmlString += '<Abstract>';
+                xmlString += article.abstract.replace(/<p>/g,'').replace(/<\/p>/g,'');
+                xmlString += '</Abstract>';
+            }
+
+            if(article.keywords){
+                xmlString += '<ObjectList>';
+                article.keywords.forEach(function(kw){
+                    xmlString +='<Object Type="keyword"><Param Name="value">' + kw + '</Param></Object>';
+                });
+                xmlString += '</ObjectList>';
+            }
 
             xmlString += '</Article>';
             // console.log(xmlString);
@@ -182,8 +220,10 @@ Meteor.methods({
                 Meteor.call('pubMedCiteCheck', xmlSet, function(citeCheckError, r){
                     if(citeCheckError){
                         console.error('ERROR - pubMedCiteCheck', citeCheckError);
-                        throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation', result.headers.location);
-                    } else if(r){
+                        fut.throw(citeCheckError);
+                        // throw new Meteor.Error('pubMedCiteCheck: ERROR - Article Set Failed Validation');
+                    } else if(r.valid){
+                        result.valid = true;
                         //all valid. save the xml set
                         var today = new Date();
                         var dd = today.getDate();
@@ -218,8 +258,10 @@ Meteor.methods({
                             }
                         });
                     }else{
+                        result.valid = false;
+                        result.pubMedPath = r.pubMedPath;
                         console.log('ERROR: XML Set NOT valid.');
-                        fut.return('invalid');
+                        fut.return(result);
                     }
                 });
             }
@@ -229,7 +271,7 @@ Meteor.methods({
             return fut.wait();
         }
         catch(err) {
-            throw new Meteor.Error(error);
+            throw new Meteor.Error(err);
         }
     },
     saveXmlCiteSet: function(xml,fileName){

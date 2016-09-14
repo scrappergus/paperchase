@@ -5,7 +5,7 @@ Template.AdminDataSubmissions.events({
         e.preventDefault();
         Meteor.dataSubmissions.resetPage(template);
     },
-    'click #download-set-xml': function(e, template){
+    'click #submit-set-xml': function(e, template){
         e.preventDefault();
         Meteor.dataSubmissions.validatePubMedXmlSet(template);
     },

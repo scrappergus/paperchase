@@ -69,7 +69,7 @@ Meteor.startup(function () {
     if (Meteor.isServer) {
         Meteor.call('getConfigSenderEmail', function(error, emailSettings){
             if(emailSettings){
-                var connection = 'smtp://' + encodeURIComponent(emailSettings.address) +':' + encodeURIComponent(emailSettings.pw) + '@smtp.gmail.com:587/';
+                var connection = 'smtp://' + encodeURIComponent(emailSettings.address) +':' + encodeURIComponent(emailSettings.pw) + '@smtp.mailgun.org:587/';
                 process.env.MAIL_URL = connection;
             }
         });
