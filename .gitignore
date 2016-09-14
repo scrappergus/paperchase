@@ -59,3 +59,9 @@ dump/prod/aging/volumes.metadata.json
 dump/prod/aging/xml.bson
 dump/prod/aging/xml.metadata.json
 packages/npm-container/.npm/package/npm-shrinkwrap.json
+settings-aging.json
+settings-aging-stage-1.json
+settings-aging-stage-2.json
+settings-aging-admin.json
+settings-oncotarget-stage.json
+settings-oncotarget.json
