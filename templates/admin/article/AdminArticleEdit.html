@@ -431,26 +431,35 @@
                                             </div>
                                         </div>
                                         <div class="row no-margin">
+
                                             <div class="col s12 m6 left-align">
                                                 <label>Affiliations</label>
                                                 <div class="clearfix"></div>
+                                                {{#if affiliations_list}}
                                                 {{#each affiliations_list}}
                                                 <span class="margin-right-lg">
                                                     <input type="checkbox" class="author-affiliation filled-in" id="affiliation-{{@index}}-{{author_mongo_id}}" checked="{{author_aff}}" />
                                                     <label for="affiliation-{{@index}}-{{author_mongo_id}}">{{affiliationNumber @index}}</label>
                                                 </span>
                                                 {{/each}}
+                                                {{else}}
+                                                None
+                                                {{/if}}
                                             </div>
 
                                             <div class="col s12 m3 left-align">
                                                 <label>Author Notes</label>
                                                 <div class="clearfix"></div>
+                                                {{#if author_notes_list}}
                                                 {{#each author_notes_list}}
                                                 <span class="margin-right-lg">
                                                     <input type="checkbox" class="author-note filled-in" id="author-note-{{@index}}-{{author_mongo_id}}" data-note-id="{{id}}" checked="{{author_note}}" />
                                                     <label for="author-note-{{@index}}-{{author_mongo_id}}">{{authorNoteNumber @index}}</label>
                                                 </span>
                                                 {{/each}}
+                                                {{else}}
+                                                None
+                                                {{/if}}
                                             </div>
 
                                             <div class="hide">
