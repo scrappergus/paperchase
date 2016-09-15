@@ -193,8 +193,8 @@ Meteor.adminArticle = {
         // -------
         // result is used for: duplicate article found, or if saved. Use result flag to determine (duplicate or saved).
         if(articleUpdateObj){
-            Meteor.call('validateArticle', mongoId, articleUpdateObj, files, function(error,result){
-                if(error && error.reason != 'duplicate' && error.details){
+            Meteor.call('validateArticle', mongoId, articleUpdateObj, files, function(error, result){
+                if(error && error.error.reason != 'duplicate' && error.details){
                     console.error('validateArticle',error);
 
                     // TODO: move this to template data
@@ -213,13 +213,13 @@ Meteor.adminArticle = {
                     }
 
                     Meteor.formActions.invalidMessage(error.reason + formErrorsMessage, error.details);
-                } else if(error  && error.reason === 'duplicate'){
+                } else if(error && error.error.reason === 'duplicate'){
                     console.error('validateArticle: duplicate',error);
-                    if(error.details._id){
-                        duplicateId = error.details._id;
+                    if(error.error.article._id){
+                        duplicateId = error.error.article._id;
                     }
-                    if(error.details.title){
-                        duplicateTitle = error.details.title;
+                    if(error.error.article.title){
+                        duplicateTitle = error.error.article.title;
                     }
                     Meteor.formActions.errorMessage('Duplicate Article Found: ' + '<a href="/admin/article/' + duplicateId + '">' + duplicateTitle + '</a>');
                 }
