@@ -575,7 +575,7 @@ Meteor.methods({
                 exists.forEach(function(article){
                     if(mongoId && article._id != mongoId){
                         duplicate = article;
-                    }else if(articleData.title && article.title && Meteor.clean.removeSpaces(articleData.title) === Meteor.clean.removeSpaces(article.title)){
+                    }else if(!duplicate && articleData.title && article.title && Meteor.clean.removeSpaces(articleData.title) === Meteor.clean.removeSpaces(article.title)){
                         // for when uploading AOP XML, will not have a mongoId passed to the function
                         duplicate = article;
                     }
