@@ -573,19 +573,32 @@ Meteor.methods({
 
             if(exists && exists.length > 1){
                 exists.forEach(function(article){
-                    if(mongoId && article._id != mongoId){
-                        duplicate = article;
-                    }else if(!duplicate && articleData.title && article.title && Meteor.clean.removeSpaces(articleData.title) === Meteor.clean.removeSpaces(article.title)){
+                    if(!duplicate && mongoId && article._id != mongoId){
+                        Meteor.adminArticle.samePii(articleData, article, function(piiMatch){
+                            if(piiMatch){
+                                duplicate = article;
+                            }
+                        });
+                    }else if(!duplicate && article._id != mongoId && articleData.title && article.title && Meteor.clean.removeSpaces(articleData.title) === Meteor.clean.removeSpaces(article.title)){
                         // for when uploading AOP XML, will not have a mongoId passed to the function
-                        duplicate = article;
+                        Meteor.adminArticle.samePii(articleData, article, function(piiMatch){
+                            if(piiMatch){
+                                duplicate = article;
+                            }
+                        });
                     }
                 });
-                // throw new Meteor.Error(400, 'duplicate', duplicate);
-                fut.throw(duplicate);
             }else if(exists && !mongoId && exists.length == 1){
                 // for when uploading AOP XML, will not have a mongoId passed to the function
-                // throw new Meteor.Error(400, 'duplicate',exists[0]);
-                duplicate = exists[0];
+                // still need to make sure PIIs do not match, if they do not match then ok to create, because erratums can have same title
+                Meteor.adminArticle.samePii(articleData, exists[0], function(piiMatch){
+                    if(piiMatch){
+                        duplicate = exists[0];
+                    }
+                });
+            }
+
+            if(duplicate){
                 fut.throw(duplicate);
             }else{
                 fut.return(true);

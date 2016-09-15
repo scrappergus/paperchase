@@ -1,4 +1,19 @@
 Meteor.adminArticle = {
+    samePii: function(article1, article2, cb){
+        // used to verify no duplicates. Erratum articles might have the same title, and so verify pii not the same
+        var samePii = false;
+
+        if(article1.ids && article2.ids){
+            if(article1.ids.pii && article2.ids.pii){
+                if(article1.ids.pii === article2.ids.pii){
+                    console.log(article1.ids.pii , article2.ids.pii);
+                    samePii = true;
+                }
+            }
+        }
+
+        cb(samePii);
+    },
     updateAffiliationsOrder: function(newIndex){
         var originalIndex = Session.get('affIndex');
         var article = Session.get('article-form');
