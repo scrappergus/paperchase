@@ -332,6 +332,7 @@ if (Meteor.isClient) {
     Session.setDefault('article-id',null);// Article Overview, Article Full Text, Article Purchase
     Session.setDefault('article-files',null);
     Session.setDefault('article-text',null);
+    Session.setDefault('article-text-modified',null);
     Session.setDefault('affIndex',null);
     Session.setDefault('missingPii',null);
     Session.setDefault('preprocess-article',false);
@@ -431,14 +432,14 @@ if (Meteor.isClient) {
         });
 
     Router.route('/current', {
-            name: 'Current', 
+            name: 'Current',
             waitOn: function() {
                 return[
                     Meteor.subscribe('currentIssue'),
                 ]
             },
             action: function() {
-                var current = issues.findOne(); 
+                var current = issues.findOne();
                 if(current){
                     Router.go("/issue/v"+current['volume']+"i"+current['issue']);
                 }

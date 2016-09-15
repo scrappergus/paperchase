@@ -2,6 +2,7 @@
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         var fut = new future();
+        var result = {};
         var articleJson,
             articleInfo,
             xml;
@@ -22,7 +23,9 @@ Meteor.methods({
                                 fut.throw(convertXmlError);
                             }else{
                                 convertedXml.mongo = mongoId;
-                                fut.return(convertedXml);
+                                result.convertedXml = convertedXml;
+                                result.lastModified = xmlRes.headers['last-modified'];
+                                fut.return(result);
                             }
                         });
                     }
@@ -731,23 +734,6 @@ Meteor.fullText = {
                     }
                     else if(referencePartName == 'name' || referencePartName == 'string_name'){
                         if(referencePart.childNodes){
-                            var referencePartCount = referencePart.childNodes.length;
-                            for(var part = 0 ; part < referencePartCount ; part++){
-                                var refTemp = '';
-                                if(referencePart.childNodes[part].localName == 'surname') {
-                                    if(first_author === false) {
-                                        refTemp += ', ';
-                                    }
-                                    else {
-                                        first_author = false;
-                                    }
-
-                                    refTemp += referencePart.childNodes[part].childNodes[0].nodeValue + ' ';
-                                }
-                                else if(referencePart.childNodes[part].localName == 'given-names'){
-                                    refTemp += referencePart.childNodes[part].childNodes[0].nodeValue;
-                                }
-                            }
                             referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
                         }
                     }
