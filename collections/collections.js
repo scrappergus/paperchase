@@ -521,7 +521,8 @@ if (Meteor.isServer) {
           'assets_supplemental': 1,
           'assets_figures': 1,
           'visitor': 1,
-          's3': 1
+          's3': 1,
+          'api': 1
         }});
         return siteConfig;
     });
