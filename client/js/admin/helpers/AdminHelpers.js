@@ -202,6 +202,19 @@ Template.AdminArticleButtons.helpers({
         return Session.get('journal');
     }
 });
+Template.ArticleDoiRegisterButton.helpers({
+    journalShort: function(){
+        if(Session.get('journal')){
+            return Session.get('journal').journal.short_name;
+        }
+    },
+    doiLink: function(){
+        if(Session.get('journal')){
+            return Session.get('journal').api.doi;
+        }
+        // return 'http://localhost:3003/';
+    }
+});
 Template.AdminArticleOverview.helpers({
     article : function(){
         return Session.get('article');

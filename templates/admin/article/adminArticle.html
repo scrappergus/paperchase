@@ -93,6 +93,17 @@
     <h2 id="article-title">{{{title}}}</h2>
 </template>
 
+<template name="ArticleDoiRegisterButton">
+    {{#with ids}}
+    {{#if pii}}
+    {{#if doi}}
+    {{else}}
+    <a id="register-article-doi" href="{{doiLink}}?journal={{journalShort}}&pii={{pii}}" class="btn btn-primary" target="_BLANK">{{>AdminSendIcon}} Register DOI</a>
+    {{/if}}
+    {{/if}}
+    {{/with}}
+</template>
+
 <template name="AdminArticleButtons">
     <div class="row">
         <div class="col s12">
@@ -112,6 +123,10 @@
                 {{#if journal}}
                 <li><a href="{{journal.visitor}}article/{{article._id}}" class="btn" target="_BLANK">{{>AdminFwdIcon}} Visitor Site</a></li>
                 {{/if}}
+
+                {{#with article}}
+                <li>{{>ArticleDoiRegisterButton ids=ids}}</li>
+                {{/with}}
             </ul>
         </div>
     </div>
