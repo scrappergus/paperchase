@@ -96,10 +96,7 @@
 <template name="ArticleDoiRegisterButton">
     {{#with ids}}
     {{#if pii}}
-    {{#if doi}}
-    {{else}}
     <a id="register-article-doi" href="{{doiLink}}?journal={{journalShort}}&pii={{pii}}" class="btn btn-primary" target="_BLANK">{{>AdminSendIcon}} Register DOI</a>
-    {{/if}}
     {{/if}}
     {{/with}}
 </template>
