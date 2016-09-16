@@ -6,7 +6,7 @@ Meteor.dataSubmissions = {
             var piiList = Meteor.dataSubmissions.getPiiList();
 
             if(piiList.indexOf(pii) === -1){
-                $('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii + ' <i class="material-icons" data-pii="' + pii + '">&#xE5CD;</i></span>');
+                $('#search_pii_list').append('<span class="data-submission-pii chip grey lighten-2 left" id="chip-' + pii + '" data-pii="' + pii + '">' + pii);
             }else{
                 alert('PII already in list');
             }
@@ -55,6 +55,9 @@ Meteor.dataSubmissions = {
         template.queryForDisplay.set();
         template.invalidLink.set();
         template.errorMessage.set();
+
+        var piiListEl = document.getElementById( 'search_pii_list' );
+        piiListEl.parentNode.removeChild( piiListEl );
     },
     closeEditView: function(){
         var articleId = Session.get('articleId');
