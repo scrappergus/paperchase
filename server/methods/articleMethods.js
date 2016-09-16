@@ -239,7 +239,7 @@ Meteor.methods({
         if(!article && articleId){
             // when editing an article
             article = articles.findOne({'_id': articleId});
-        }else{
+        }else if(articleId){
             // Check for duplicates
             Meteor.call('articleExistenceCheck', articleId, article, function(duplicateFound){
                 if(duplicateFound){
@@ -379,7 +379,7 @@ Meteor.methods({
             if(article.section){
                 selectedSectionId = article.section;
             }
-            if(!selectedSectionId && selectedSectionId != 0 && article.section_id || article.section_id === 0) {
+            if(!selectedSectionId && selectedSectionId !== 0 && article.section_id || article.section_id === 0) {
                 // For OJS
                 selectedSectionId = article.section_id;
             }

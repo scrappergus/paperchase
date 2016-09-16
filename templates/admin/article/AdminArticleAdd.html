@@ -3,7 +3,9 @@
     <div class="row">
         <div class="col s12">
             {{#if articleProcessed}}
-            {{>ArticleForm}}
+            {{>ArticleFormContainer}}
+            {{else}}
+            {{>Loading}}
             {{/if}}
         </div>
     </div>
