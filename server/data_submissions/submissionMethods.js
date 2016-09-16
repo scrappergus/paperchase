@@ -170,7 +170,7 @@ Meteor.methods({
 
 
             if(article.abstract){
-                console.log(article.abstract);
+                // console.log(article.abstract);
                 xmlString += '<Abstract>';
                 xmlString += article.abstract.replace(/<p>/g,'').replace(/<\/p>/g,'');
                 xmlString += '</Abstract>';
