@@ -172,7 +172,7 @@ Meteor.methods({
             if(article.abstract){
                 // console.log(article.abstract);
                 xmlString += '<Abstract>';
-                xmlString += article.abstract.replace(/<p>/g,'').replace(/<\/p>/g,'');
+                xmlString += Meteor.call('readyAbstractForPubMed', article.abstract);
                 xmlString += '</Abstract>';
             }
 
@@ -275,10 +275,11 @@ Meteor.methods({
         }
     },
     saveXmlCiteSet: function(xml,fileName){
-        // console.log('.....saveXmlCiteSet');
+        // console.log('.....saveXmlCiteSet', fileName);
         var fut = new future();
         var journal = journalConfig.findOne();
-        var bucket = journalConfig.findOne({}).s3.bucket + '/' + journal.s3.folders.pubmed_xml_sets;
+        var folder = process.env.NODE_ENV === 'development' ? 'pubmed_xml_sets_test' : journal.s3.folders.pubmed_xml_sets;
+        var bucket = journalConfig.findOne({}).s3.bucket + '/' + folder;
         var params = {Bucket: bucket, Body: xml, Key: fileName};
         S3.aws.upload(params, function(err, xmlUploaded) {
             if(err){
@@ -349,6 +350,12 @@ Meteor.methods({
         // console.log('...submitPubMedXmlSet',fileName);
         var fut = new future();
         var journal = journalConfig.findOne();
+
+        var toRemotePath,
+            host,
+            user,
+            pw;
+
         if(journal){
 
             // S3
@@ -357,35 +364,39 @@ Meteor.methods({
             var params = {Bucket: bucket, Key: fileName};
 
             // PubMed FTP
-            var toRemotePath = journal.pubmed.ftp.directory + '/' + fileName;
-            var host = journal.pubmed.ftp.host;
-            var user = journal.pubmed.ftp.user;
-            var pw = journal.pubmed.ftp.pw;
+            if (process.env.NODE_ENV != 'development'){
+                toRemotePath = journal.pubmed.ftp.directory + '/' + fileName;
+                host = journal.pubmed.ftp.host;
+                user = journal.pubmed.ftp.user;
+                pw = journal.pubmed.ftp.pw;
+                S3.aws.getObject(params, function(getSetErr, xmlSetData) {
+                    if (getSetErr){
+                        console.error('Get PubMed XML Set for Submission', getSetErr);
+                    } else if(xmlSetData){
+                        var connectionProps = {
+                            host: host,
+                            user: user,
+                            password: pw
+                        };
 
-            S3.aws.getObject(params, function(getSetErr, xmlSetData) {
-                if (getSetErr){
-                    console.error('Get PubMed XML Set for Submission', getSetErr);
-                } else if(xmlSetData){
-                    var connectionProps = {
-                        host: host,
-                        user: user,
-                        password: pw
-                    };
-
-                    var c = new Client();
-                    c.on('ready', function() {
-                        c.put(xmlSetData.Body, toRemotePath, function(err) {
-                            if (err){
-                                fut.throw(err);
-                            }else{
-                                fut.return(true);
-                            }
-                            c.end();
+                        var c = new Client();
+                        c.on('ready', function() {
+                            c.put(xmlSetData.Body, toRemotePath, function(err) {
+                                if (err){
+                                    fut.throw(err);
+                                }else{
+                                    fut.return(true);
+                                }
+                                c.end();
+                            });
                         });
-                    });
-                    c.connect(connectionProps);
-                }
-            });
+                        c.connect(connectionProps);
+                    }
+                });
+            } else {
+                // console.log('NOT LIVE FTP');
+                fut.return(true);
+            }
         }
         try {
             return fut.wait();
@@ -393,5 +404,12 @@ Meteor.methods({
         catch(err) {
             throw new Meteor.Error(err);
         }
+    },
+    readyAbstractForPubMed: function(abstract){
+        abstract = abstract.replace(/<p>/g,'').replace(/<\/p>/g,'');
+        abstract = abstract.replace(/<underline>/g,'<u>').replace(/<\/underline>/g,'</u>');
+        abstract = abstract.replace(/<bold>/g, '<b>').replace(/<\/bold>/g, '</b>');
+        abstract = abstract.replace(/<italic>/g, '<i>').replace(/<\/italic>/g, '</i>');
+        return abstract;
     }
 });
