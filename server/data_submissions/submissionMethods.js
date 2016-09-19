@@ -320,31 +320,33 @@ Meteor.methods({
     },
     dataSubmissionsNotifyByEmail: function(submissionId, user){
         this.unblock();
-        var submissionData = submissions.findOne({_id : submissionId});
-        var journal = journalConfig.findOne();
-        var message = 'New PubMed submission for ' + journal.journal.name + '\n';
-        if(submissionData){
-            message += submissionData.file_name + '\n';
-            message += 'sent by ' + submissionData.created_by.user_email + '\n\n';
-            message += 'XML set:\n';
-            message += journal.assets + journal.s3.folders.pubmed_xml_sets + '/' + submissionData.file_name;
-        }
-
-        Meteor.call('getDataSubmissionsEmails', function(error, emails){
-            if(error){
-                console.error('getConfigSenderEmail', error);
-            } else if(emails){
-                if(emails.to.indexOf(user.emails[0].address) === -1){
-                    emails.to.push(user.emails[0].address);
-                }
-                Email.send({
-                   to: emails.to,
-                   from: emails.from,
-                   subject: 'New Data Submission',
-                   text: message
-                });
+        if(process.env.NODE_ENV != 'development'){
+            var submissionData = submissions.findOne({_id : submissionId});
+            var journal = journalConfig.findOne();
+            var message = 'New PubMed submission for ' + journal.journal.name + '\n';
+            if(submissionData){
+                message += submissionData.file_name + '\n';
+                message += 'sent by ' + submissionData.created_by.user_email + '\n\n';
+                message += 'XML set:\n';
+                message += journal.assets + journal.s3.folders.pubmed_xml_sets + '/' + submissionData.file_name;
             }
-        });
+
+            Meteor.call('getDataSubmissionsEmails', function(error, emails){
+                if(error){
+                    console.error('getConfigSenderEmail', error);
+                } else if(emails){
+                    if(emails.to.indexOf(user.emails[0].address) === -1){
+                        emails.to.push(user.emails[0].address);
+                    }
+                    Email.send({
+                       to: emails.to,
+                       from: emails.from,
+                       subject: 'New Data Submission',
+                       text: message
+                    });
+                }
+            });    
+        }
     },
     submitPubMedXmlSet: function(fileName){
         // console.log('...submitPubMedXmlSet',fileName);
