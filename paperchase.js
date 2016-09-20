@@ -1055,6 +1055,27 @@ if (Meteor.isClient) {
         }
     });
 
+    Router.route('/search-alt', {
+        name: 'SearchAlt',
+        layoutTemplate: 'SearchAlt',
+        title: function() {
+            var pageTitle = '';
+            if(Session.get('journal')){
+                pageTitle = Session.get('journal').journal.name + ' | ';
+            }
+            return pageTitle + 'Search';
+        },
+        onBeforeAction: function(){
+            if(Meteor.settings.public.journal && Meteor.settings.public.journal.name === 'Aging'){
+                Router.go('/search');
+            }
+        },
+        onAfterAction: function() {
+        },
+        data: function() {
+        }
+    });
+
 // INTERVIEWS PAGE
     Router.route('/interviews', {
         name: 'Interviews',

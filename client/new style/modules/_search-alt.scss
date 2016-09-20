@@ -1,0 +1,254 @@
+#search-alt-container{
+    font-family: "Arial", sans-serif;
+    font-size: 11px;
+    color: #333;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background-color: #EEE;
+    text-align: center;
+}
+
+#search-alt{
+    display: inline-block;
+    width: 965px;
+    position: relative;
+    margin: 10px auto;
+    padding: 5px;
+    background-color:#fff !important;
+    // border: solid 5px #fff;
+    box-shadow: 3px 3px 10px #888;
+    background-position:bottom;
+    background-repeat:repeat-x;
+
+    .clear-alt{
+        height: 12px;
+    }
+
+    #header-alt{
+        padding: 0;
+        margin: 0;
+        height: 100px;
+
+        small.label-alt {
+        	position: absolute;
+        	top: 35px;
+        	right: 10px;
+        	font-size: 1.2em;
+        	font-weight: bold;
+        	color: #FFF;
+        	padding: 3px 7px 3px 7px;
+        	text-align:left;
+        }
+
+        small.label1-alt {
+        	margin:0px;
+
+        	display: block;
+        	position: absolute;
+        	top: 9px;
+        	left: 20px;
+        	font-size: 1em;
+        	font-weight: bold;
+        	color: #ccc;
+        	padding: 3px 7px 3px 7px;
+        	background-color: #7E012D;
+        	border: thin ridge #FFF;
+        }
+
+        #headertext-alt {
+        	float: right;
+        	position: absolute;
+        	color:#fff;
+        	margin-top:-18px;
+        	font-weight:bold;
+        	letter-spacing:-2px;
+        	font-size: 60px;
+        	right:35%;
+        	top:40px;
+        	cursor:pointer;
+        }
+
+        #search-alt-input{
+            float: right;
+            position: absolute;
+            right: 0px;
+            top: 55px;
+            padding-right: 10px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            padding-left: 4px;
+            width:220px;
+            overflow:hidden;
+
+            input{
+                padding: 0;
+                background: #ffffff;
+                height: auto;
+            }
+        }
+
+    }
+
+    #threecolcontainer-alt{
+        display: block;
+        width: 100%;
+        float: left;
+        background: #fff;
+        #nav-alt{
+            width: 176px;
+            position: relative;
+            float: left;
+            margin: 0px;
+            padding: 0px;
+            background-repeat: repeat-y;
+            ul{
+                margin: 0;
+                padding: 0;
+                text-align: left;
+            }
+            div.menunav-alt {
+            	border-top-width: 0px;
+            	background-color: #FFF;
+            	border-style: solid;
+            	border-color: #ecf0f1;
+            	margin: 15px 15px 15px 10px;
+            	padding: 10px 4px 10px 0px;
+            	border-width:1px;
+            	font-size: 11px;
+            	-moz-box-shadow: 1px 1px 3px #444;
+            	-webkit-box-shadow: 1px 1px 3px #444;
+            	box-shadow: 1px 1px 3px #444;
+            }
+            .menunav-alt ul {
+            	background-color: #FFF;
+            	padding-top: 10px;
+            }
+
+            .menunav-alt ul li {
+                list-style: none;
+                margin: 0;
+                margin-bottom: 0.6em;
+                padding: 0;
+                padding-left: 15px;
+            	font-size:1.15em;
+            }
+
+            .menunav-alt ul li a {
+            	text-decoration: none;
+            	font-weight: bold;
+
+            	font-family: tahoma, sans-serif;
+            }
+
+            .menunav-alt ul li a:hover {
+            	text-decoration: underline;
+                color: #2ecc71;
+            }
+            .menunav-alt ul li a.oncoscience-link:hover {
+                color: #2ecc71!important;
+            }
+        }
+
+        #column2and3-alt{
+            margin: 0px;
+            padding: 0px;
+            float: right;
+            width: 770px;
+            #maincontentsolo-alt{
+                background-color:#FFF;
+            	border-width:1px;
+            	margin-top:0px;
+            	padding:14px;
+            	border-color:#888;
+            	width: 485px;
+            	float:left;
+            	position:relative;
+            	margin-bottom:14px;
+                text-align: left;
+                h1{
+                    color: #464646;
+	                font-size: 2em;
+                    margin: 0;
+                }
+                h2{
+                    font-size: medium;
+                    font-weight: bold;
+                    font-size:14px;
+                }
+                h3{
+                    margin-top: 1em;
+                	padding-left: 1.5em;
+                	color: #FFF;
+                	background-color: #999;
+                	margin-bottom: 1em;
+                	background-image: url(../images/corner.gif);
+                	background-repeat: no-repeat;
+                	background-position: right top;
+                	border-left-width: thick;
+                	border-left-style: solid;
+                	border-left-color: #666;
+                	border-bottom-width: thin;
+                	border-bottom-style: solid;
+                	border-bottom-color: #666;
+                }
+                h7{
+                    font-size:1.4em;
+                	font-weight:bold;
+                	color:#333;
+                	text-decoration: underline;
+                	line-height: 3em;
+                }
+                p{
+                    padding-bottom: 5px;
+                	padding-top: 5px;
+                	font-size: 1.2em;
+                }
+                table{
+                    width: auto;
+                    tr{
+                        display: table-row;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    td{
+                        padding: 0;
+                        margin: 0;
+                        p{
+                            margin-top: 0.2em;
+                            margin-bottom: 0.2em;
+                            font-size: 11px;
+                        }
+                        input{
+                            margin: 0 0 0 1em;
+                            padding: 2px;
+                            border: 1px solid black;
+                            height: auto;
+                            background-color: #ecf0f1;
+                        }
+                    }
+                }
+                form{
+                    input[type="submit"]{
+                        padding:2px;
+                        border: 1px solid black;
+                        background: none repeat scroll 0% 0% rgb(236, 240, 241);
+                    }
+                }
+            }
+        }
+
+    }
+
+    #footer-alt{
+    	color:#FFF;
+    	padding:5px;
+        display: block;
+        width: 100%;
+        margin: 1px 0 0 0;
+        float: left;
+    }
+    #footer-alt a{
+    	color:#fff;
+    }
+}

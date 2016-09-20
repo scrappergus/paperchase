@@ -1,0 +1,96 @@
+<!-- used for other journals -->
+
+<template name="HeaderAlt">
+    <div id="header-alt" style="background-color: {{mainColor}}">
+        <small class="label-alt" style="background-color: {{lighterMainColor}}">Online ISSN: {{issn}}</small>
+        <small id="headertext-alt" onclick="window.location='{{homeHref}}';">
+          <span>{{journal}}</span>
+        </small>
+        <div id="search-alt-input" style="display:none;">
+            <input type="text" placeholder="search" />
+        </div>
+    </div>
+</template>
+
+<template name="NavAlt">
+    <div id="nav-alt" style="background-color: {{mainColor}}">
+        <div class="menunav-alt">
+            <ul>
+                {{#each links}}
+                <li>
+                    <a class="{{journalShort}}-link" href="{{path}}" style="color: {{darkerMainColor}}">{{text}}</a>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="menunav-alt">
+            <ul>
+                <li>
+                    <a class="{{journalShort}}-link" href="{{contactHref}}" style="color: {{darkerMainColor}}">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template name="SearchAlt">
+    <div id="search-alt-container">
+        <div id="search-alt">
+            {{>HeaderAlt}}
+            <div class="clear-alt"></div>
+            <div id="threecolcontainer-alt">
+                {{>NavAlt}}
+                <div id="column2and3-alt">
+                    <div id="maincontentsolo-alt">
+                        {{>SearchFormAlt}}
+                    </div>
+                </div>
+            </div>
+            {{>FooterAlt}}
+        </div>
+    </div>
+</template>
+
+<Template name="SearchFormAlt">
+    <h1>Search</h1>
+    <form action="" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <p>By Author</p>
+                    </td>
+                    <td>
+                        <input type="text" name="name">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>By Title</p>
+                    </td>
+                    <td>
+                        <input type="text" name="title">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>By Pii</p>
+                    </td>
+                    <td>
+                        <input type="text" name="poo">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <input type="submit">
+    </form>
+</Template>
+
+<template name="FooterAlt">
+    <div id="footer-alt" style="background-color: {{bgColor}}">
+        {{#each copyright}}
+            {{.}}<br/>
+        {{/each}}
+     </div>
+</template>
