@@ -53,9 +53,7 @@
 
                                     {{#if asString}}
                                         {{{asString}}}
-                                    {{else}}
-                                    {{#each textContent}}{{#if equals type 'ext_link'}}{{{content}}}{{/if}}{{#if equals type 'pmid'}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{content}}" target="_BLANK">PubMed</a>]</span>{{/if}}{{#if equals type 'doi'}}<span>doi: {{content}}</span>{{/if}}{{#if equals type 'text'}}{{{content}}}{{/if}}{{/each}}
-                                    {{/if}}
+                                        {{else}}{{#each textContent}}{{#if equals type 'ext_link'}}{{{content}}}{{/if}}{{#if equals type 'authorList'}}{{{content}}}{{#if equals ../citationType 'element_citation'}}. {{/if}}{{/if}}{{#if equals type 'title'}}{{{content}}}{{/if}}{{#if equals type 'source'}}{{{content}}}{{#if equals ../citationType 'element_citation'}}.{{/if}}{{/if}}{{#if equals type 'year'}}{{{content}}}{{#if equals ../citationType 'element_citation'}};{{/if}}{{/if}}{{#if equals type 'volume'}}{{{content}}}{{#if equals ../citationType 'element_citation'}}:{{/if}}{{/if}}{{#if equals type 'issue'}}{{{content}}}{{referenceColonCheck reference=this}}{{/if}}{{#if equals type 'fpage'}}{{{content}}}{{/if}}{{#if equals type 'lpage'}}{{#if equals ../citationType 'element_citation'}}-{{/if}}{{{content}}}{{#if equals ../citationType 'element_citation'}}.{{/if}}{{/if}}{{#if equals type 'comment'}}{{{content}}}{{/if}}{{#if equals type 'doi'}}<span>doi: {{content}}</span>{{/if}}{{#if equals type 'pmid'}}<span> [<a href="http://www.ncbi.nlm.nih.gov/pubmed/{{content}}" target="_BLANK">PubMed</a>]</span>{{/if}}{{#if equals type 'text'}}{{{content}}}{{/if}}{{#if equals type 'name'}}{{{content}}}{{/if}}{{/each}}{{/if}}
 
                                     {{#if fakevar}}
                                     {{#if equals type 'journal'}}
