@@ -2,7 +2,8 @@
 
 <template name="HeaderAlt">
     <div id="header-alt" style="background-color: {{mainColor}}">
-        <small class="label-alt" style="background-color: {{lighterMainColor}}">Online ISSN: {{issn}}</small>
+        {{>HeaderAltSocial}}
+        <small class="label-alt label-{{journalShort}}" style="background-color: {{lighterMainColor}}">Online ISSN: {{issn}}</small>
         <small id="headertext-alt" onclick="window.location='{{homeHref}}';">
           <span>{{journal}}</span>
         </small>
@@ -10,6 +11,16 @@
             <input type="text" placeholder="search" />
         </div>
     </div>
+</template>
+
+<template name="HeaderAltSocial">
+    {{#if socialList}}
+    <ul class="social-list-alt">
+        {{#each socialList}}
+        <li class="social-links-alt"><a href="{{href}}" target="_BLANK"><i class="{{icon}}"></i></a></li>
+        {{/each}}
+    </ul>
+    {{/if}}
 </template>
 
 <template name="NavAlt">

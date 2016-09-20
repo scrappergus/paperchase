@@ -41,6 +41,10 @@
         	text-align:left;
         }
 
+        .label-genesandcancer{
+            top: 50px!important;
+        }
+
         small.label1-alt {
         	margin:0px;
 
@@ -88,6 +92,25 @@
             }
         }
 
+
+        .social-list-alt{
+            margin: 0;
+            padding: 0;
+            float: right;
+            list-style-type: none;
+            li{
+                position: relative;
+                display: inline-block;
+                padding: 0 5px 5px;
+                margin: 0;
+                font-size: 16px;
+                top:.5em;
+                a{
+                    color: #ffffff;
+                    font-size: 20px;
+                }
+            }
+        }
     }
 
     #threecolcontainer-alt{
@@ -147,6 +170,9 @@
             }
             .menunav-alt ul li a.oncoscience-link:hover {
                 color: #2ecc71!important;
+            }
+            .menunav-alt ul li a.genesandcancer-link:hover {
+                color: #9B59B6!important;
             }
         }
 
