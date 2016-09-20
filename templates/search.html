@@ -21,9 +21,14 @@
 						{{>ArticleHeaderPieces}}
 					</h5>
 
+                    {{#if abstract}}
+                    {{#if equals abstract ''}}
+                    {{else}}
 					<div class="abstract article-text">
 						{{{wrapInParagraphTag abstract}}}
 					</div>
+                    {{/if}}
+                    {{/if}}
                 </li>
                 {{/each}}
             </ul>
