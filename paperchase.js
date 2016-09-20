@@ -1065,6 +1065,11 @@ if (Meteor.isClient) {
             }
             return pageTitle + 'Search';
         },
+        onBeforeAction: function(){
+            if(Meteor.settings.public.journal && Meteor.settings.public.journal.name === 'Aging'){
+                Router.go('/search');
+            }
+        },
         onAfterAction: function() {
         },
         data: function() {
