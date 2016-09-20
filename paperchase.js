@@ -1059,11 +1059,7 @@ if (Meteor.isClient) {
         name: 'SearchAlt',
         layoutTemplate: 'SearchAlt',
         title: function() {
-            var pageTitle = '';
-            if(Session.get('journal')){
-                pageTitle = Session.get('journal').journal.name + ' | ';
-            }
-            return pageTitle + 'Search';
+            return Meteor.settings.public.journal.name + ' | ' + 'Search';
         },
         onBeforeAction: function(){
             if(Meteor.settings.public.journal && Meteor.settings.public.journal.name === 'Aging'){
