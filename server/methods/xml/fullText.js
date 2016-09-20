@@ -265,13 +265,13 @@ Meteor.methods({
 
                 var elementCitation = xpath.select("mixed-citation | element-citation", reference);
 
-                // console.log('elementCitation',elementCitation);
                 // Reference content and type
                 // --------------------------
                 if(elementCitation){
                     elementCitation = elementCitation[0];
                     // Reference content
                     referenceObj = Meteor.fullText.convertReference(elementCitation);
+
                     // Reference type
                     var citationAttributes = elementCitation.attributes;
                     for(var cAttr=0; cAttr<citationAttributes.length; cAttr++){
@@ -709,32 +709,50 @@ Meteor.fullText = {
         referenceObj.authors = '';
         var first_author = true;
 
-        var referenceObj = {'textContent':[]};
+
+        var referenceObj = {'textContent':[], citationType: reference.nodeName.replace("-", "_")};
 
         for(var r = 0; r < reference.childNodes.length; r++){
-            // console.log('r = ' + r);
-            // console.log(reference.childNodes[r].localName);
+
             if(reference.childNodes[r].childNodes){
                 var referencePart,
                 referencePartName;
+
                 // Reference Title, Source, Pages, Year, Authors
                 // -------
                 if(reference.childNodes[r].localName){
                     referencePart = reference.childNodes[r];
                     referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
-                    // console.log(referencePartName);
+
                     if(referencePartName == 'person_group'){
                         var attr = xpath.select('@person-group-type', referencePart);
                         if(attr.length && attr[0].value == 'editor') {
-                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart, {addPunctuation: true}), type:'authorList'});
                         }
                         else {
-                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart, {addPunctuation: true}), type:'authorList'});
                         }
                     }
                     else if(referencePartName == 'name' || referencePartName == 'string_name'){
                         if(referencePart.childNodes){
-                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+                            if(referenceObj.citationType == 'mixed_citation') {
+                                referenceObj.textContent.push({content:referencePart.childNodes.toString().replace(/<(\/)?(surname|given-names)>/g, ''), type:'text'});
+                            }
+                            else {
+                                var comma = '';
+                                var period = '';
+                                if(referencePart.previousSibling.previousSibling && referencePart.nextSibling.nextSibling) {
+                                    if(referencePart.previousSibling.previousSibling.nodeName == 'name' && referencePart.nextSibling.nextSibling.nodeName != 'name') {
+                                        comma = ' and ';
+                                        period = ".";
+                                    }
+                                    else if(referencePart.previousSibling.previousSibling.nodeName == 'name') {
+                                        comma = ', ';
+                                    }
+                                }
+
+                                referenceObj.textContent.push({content:comma + referencePart.childNodes.toString().replace(/(\s)?<(\/)?(surname)>/g, '').replace(/<(\/)?(given-names)>(\s)?/g, '').trim() + period, type:'name'});
+                            }
                         }
                     }
                     else if(referencePartName == 'pub_id'){
@@ -750,7 +768,11 @@ Meteor.fullText = {
                     }                                   
                     else if(referencePartName == 'article_title'){
                         if(referencePart.childNodes){
-                            referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'text'});
+                            var content = Meteor.fullText.convertContent(referencePart);
+                            if(content.slice(-1) != '.') {
+                                content += '.';
+                            }
+                            referenceObj.textContent.push({content:content, type:'title'});
                         }
                     }
                     else if(referencePartName == 'ext_link'){
@@ -786,12 +808,13 @@ Meteor.fullText = {
                                     }
                                 }
                             }
-                            referenceObj.textContent.push([{content:comment, type:'text'}]);
+                            referenceObj.textContent.push([{content:comment, type:'comment'}]);
                         }
                     }
                     else if(referencePartName){
                         // source, year, pages, issue, volume, chapter_title
                         var refTemp = '';
+                        var type = referencePartName || 'text';
                         if(referencePart.childNodes){
                             for(var part = 0 ; part < referencePart.childNodes.length ; part++){
                                 if(referencePart.childNodes[part].nodeValue){
@@ -805,14 +828,50 @@ Meteor.fullText = {
                                     }
                                 }
                             }
-                            referenceObj.textContent.push({content: refTemp, type:'text'}); 
+
+                            referenceObj.textContent.push({content: refTemp, type:type}); 
                         }
                     }
                 }
             }
             else {
-                referenceObj.textContent.push({content:reference.childNodes[r].nodeValue, type:'text'});
+                var referencePart = reference.childNodes[r];
+                if(referencePart.nodeValue.length > 1) {
+                    referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
+                }
+                else if((referencePart.previousSibling && referencePart.nextSibling) && (referencePart.previousSibling.nodeName != 'name' && referencePart.nextSibling.nodeName != 'name')) {
+                    referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
+                }
+                else if((referencePart.previousSibling && referencePart.nextSibling) && referencePart.nextSibling.nodeName == 'article-title'){
+                    referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
+                }
+                else {
+//                    console.log("Missed this: -->"+referencePart.nodeValue+"<--");
+                }
             }
+        }
+
+        if(referenceObj.textContent) {
+            var prior = {};
+            var result;
+            referenceObj.textContent = referenceObj.textContent.map(function(cur) {
+                    if(cur.content == ' ') {
+                        if(['fpage', 'volume'].indexOf(prior.type) > -1){
+                            result = null;
+                        }
+                        else {
+                            result = cur;
+                        }
+
+                    }
+                    else {
+                        result = cur;
+                    }
+
+                    prior = cur; 
+                    return result;
+                });
+
         }
 
         return referenceObj;
@@ -896,7 +955,8 @@ Meteor.fullText = {
         }
         return result;
     },
-    traverseAuthors: function(node){
+    traverseAuthors: function(node, options){
+        options = options || {};
         // console.log('..traverseNode');
         // first creating an array, so that we can ignore empty nodes
         // then using a string,
@@ -930,13 +990,13 @@ Meteor.fullText = {
         }
 
         // now join array
-        if(authors.length > 2){
-            authors = authors.join(', ');
-        }else if(authors.length == 2){
+        if(authors.length == 2){
             authors = authors.join(' and ');
+        }else if(authors.length > 2){
+            authors = authors.join(', ');
         }else if(authors.length > 1){
             authors = authors.join('');
-        }
+        } 
 
         authors += etal;
 
