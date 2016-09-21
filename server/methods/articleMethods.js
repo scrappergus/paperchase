@@ -347,7 +347,9 @@ Meteor.methods({
 
             // Pub Status
             // ----------
-            article.pub_status_list = pubStatusTranslate;
+            var copiedPubStatusTranslate = JSON.parse(JSON.stringify(pubStatusTranslate));
+            article.pub_status_list = copiedPubStatusTranslate;
+
             var statusIndex = null;
             for(var statOptIdx = pubStatusTranslate.length-1; statOptIdx >= 0; statOptIdx--){
                 if (article.pub_status && article.pub_status_list[statOptIdx].abbrev == article.pub_status){
