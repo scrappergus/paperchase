@@ -248,8 +248,11 @@ html,body{
 		pointer-events: none;
 	}
 	.toc-signup-button{
-		text-align: left!important;
+		text-align: left! important;
 	}
+    .home-submission-button {
+		font-size: $font-lg !important;
+    }
 
 /* Issue --------------------------*/
 .issue-article{
