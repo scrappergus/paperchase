@@ -389,62 +389,60 @@ if (Meteor.isClient) {
         }
     });
 
-
     Router.route('/papers/:v/:n/:full/:pii', function() {
-            if(this.params.pii.match('.html')) {
-                var pii = this.params.pii.replace('.html', '').replace('a', '');
-                if(Meteor.subscribe('articleByPii', pii)) {
-                    var articleByPii = articles.findOne({"ids.pii": pii});
-                    // check if :_id is a pii and not Mongo ID
-                    if(articleByPii){
-                        Router.go("/article/"+articleByPii._id+"/text");
-                    }
+        if(this.params.pii.match('.html')) {
+            var pii = this.params.pii.replace('.html', '').replace('a', '');
+            if(Meteor.subscribe('articleByPii', pii)) {
+                var articleByPii = articles.findOne({"ids.pii": pii});
+                // check if :_id is a pii and not Mongo ID
+                if(articleByPii){
+                    Router.go("/article/"+articleByPii._id+"/text");
                 }
             }
-        });
+        }
+    });
 
     Router.route('/papers/:v/:n/:full/:pii/:file', function() {
-            window.location.href = "http://archive.impactaging.com"+document.location.pathname;
-        });
+        window.location.href = "http://archive.impactaging.com"+document.location.pathname;
+    });
 
     Router.route('/full/:pii', function() {
-            var pii = this.params.pii;
-            Meteor.subscribe('articleByPii', pii, function() {
-                    var articleByPii = articles.findOne({"ids.pii": pii});
-                    if(articleByPii){
-                        Router.go("/article/"+articleByPii._id+"/text");
-                    }
-                });
-        });
-
-
-    Router.route('/full/:volume/:page_start', function() {
-                var volume = parseInt(this.params.volume);
-                var page_start = parseInt(this.params.page_start);
-
-                Meteor.subscribe('articleByVolumePage', volume, page_start, function() {
-                        var article = articles.findOne({'volume': volume, page_start: page_start});
-
-                        if(article){
-                            Router.go("/article/"+article._id+"/text");
-                        }
-                    });
-        });
-
-    Router.route('/current', {
-            name: 'Current',
-            waitOn: function() {
-                return[
-                    Meteor.subscribe('currentIssue'),
-                ]
-            },
-            action: function() {
-                var current = issues.findOne();
-                if(current){
-                    Router.go("/issue/v"+current['volume']+"i"+current['issue']);
-                }
+        var pii = this.params.pii;
+        Meteor.subscribe('articleByPii', pii, function() {
+            var articleByPii = articles.findOne({"ids.pii": pii});
+            if(articleByPii){
+                Router.go("/article/"+articleByPii._id+"/text");
             }
         });
+    });
+
+    Router.route('/full/:volume/:page_start', function() {
+        var volume = parseInt(this.params.volume);
+        var page_start = parseInt(this.params.page_start);
+
+        Meteor.subscribe('articleByVolumePage', volume, page_start, function() {
+            var article = articles.findOne({'volume': volume, page_start: page_start});
+
+            if(article){
+                Router.go("/article/"+article._id+"/text");
+            }
+        });
+    });
+
+    Router.route('/current', {
+        name: 'Current',
+        waitOn: function() {
+            return [
+                Meteor.subscribe('currentIssue'),
+            ];
+        },
+        action: function() {
+            var current = issues.findOne();
+            if(current){
+                Router.go("/issue/v" + current.volume + "i" + current.issue);
+            }
+        }
+    });
 
     Router.route('/', {
         name: 'Home',
@@ -466,7 +464,6 @@ if (Meteor.isClient) {
                 Meteor.subscribe('newsListDisplay'),
                 Meteor.subscribe('currentIssue'),
                 Meteor.subscribe('mostRecentInterview')
-
             ];
         },
         data: function(){
@@ -489,7 +486,6 @@ if (Meteor.isClient) {
             }
         }
     });
-
 
     Router.route('/advance', {
         name: 'Advance',
@@ -735,8 +731,7 @@ if (Meteor.isClient) {
         }
     });
 
-    // Article
-    // -------
+    // Begin Article
     Router.route('/article/:_id', {
          name: 'Article',
          parent: function() {
@@ -923,6 +918,7 @@ if (Meteor.isClient) {
             return pageTitle + '404: Article Not Found';
         },
     });
+    // End Article
 
     Router.route('/recommend', {
         name: 'Recommend',
@@ -1038,15 +1034,14 @@ if (Meteor.isClient) {
             }
             Meteor.call('search', {
                     abstract: terms
-//                    ,authors: terms
-//                    ,title: terms
+                //    ,authors: terms
+                //    ,title: terms
                 }, function(err, data) {
                     //            console.log('>>> args in browser', err, data);
                     Session.set('searchLoading', false);
                     Session.set('searchLoaded', true);
                     Session.set('queryResults', err ? [] : data);
                 });
-
         },
         data: function() {
             return {
