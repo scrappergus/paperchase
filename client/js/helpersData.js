@@ -4,6 +4,9 @@ Template.Visitor.helpers({
     bannerLogo: function(){
         return Meteor.settings.public.journal.logo.banner;
     },
+    journalName: function(){
+        return Meteor.settings.public.journal.name;
+    },
     nameExtra: function(){
         return Meteor.settings.public.journal.nameExtra;
     },
@@ -48,6 +51,18 @@ Template.SocialLinks.helpers({
     }
 });
 
+Template.FeaturedNobelArticlesSidebar.helpers({
+    alt: function() {
+        return Meteor.impact.altInstance();
+    }
+});
+
+Template.SearchBox.helpers({
+    alt: function() {
+        return Meteor.impact.altInstance();
+    }
+});
+
 // SubNav
 Template.subNav.helpers({
     issn : function(){
@@ -72,6 +87,9 @@ Template.SubscribeModal.helpers({
 // Navigation
 // -------------
 Template.LeftNav.helpers({
+    alt: function() {
+        return Meteor.impact.altInstance();
+    },
     links: function(){
         if(Session.get('journal')){
             return Session.get('journal').site.side_nav;
