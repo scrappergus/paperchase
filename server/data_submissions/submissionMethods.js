@@ -179,7 +179,7 @@ Meteor.methods({
             if(article.keywords){
                 xmlString += '<ObjectList>';
                 article.keywords.forEach(function(kw){
-                    xmlString +='<Object Type="keyword"><Param Name="value">' + kw + '</Param></Object>';
+                    xmlString +='<Object Type="keyword"><Param Name="value">' + kw.replace(/<i>|<\/i>|<u>|<\/u>|<b>|<\/b>/g, '') + '</Param></Object>';
                 });
                 xmlString += '</ObjectList>';
             }
@@ -345,7 +345,7 @@ Meteor.methods({
                        text: message
                     });
                 }
-            });    
+            });
         }
     },
     submitPubMedXmlSet: function(fileName){
