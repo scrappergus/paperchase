@@ -376,18 +376,18 @@ if (Meteor.isClient) {
 
 
     Router.route('/contents', {
-            waitOn: function(){
-                return[
-                    Meteor.subscribe('issueByVolNum', this.params.query.volumeId, this.params.query.issueId),
-                ];
-            },
-            action: function() {
-                var issue = issues.find().fetch();
-                issue = issue[0];
-                var route = "/issue/v"+issue.volume+"i"+issue.issue;
-                Router.go(route);
-            }
-        });
+        waitOn: function(){
+            return[
+                Meteor.subscribe('issueByVolNum', this.params.query.volumeId, this.params.query.issueId),
+            ];
+        },
+        action: function() {
+            var issue = issues.find().fetch();
+            issue = issue[0];
+            var route = "/issue/v"+issue.volume+"i"+issue.issue;
+            Router.go(route);
+        }
+    });
 
 
     Router.route('/papers/:v/:n/:full/:pii', function() {
