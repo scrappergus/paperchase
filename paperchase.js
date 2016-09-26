@@ -1135,9 +1135,8 @@ if (Meteor.isClient) {
             return Meteor.settings.public.journal.name + ' | ' + 'Search';
         },
         onBeforeAction: function(){
-            if(Meteor.settings.public.journal && Meteor.settings.public.journal.name === 'Aging'){
-                Router.go('/search');
-            }
+            Meteor.impact.redirectForAlt();
+            this.next();
         },
         onAfterAction: function() {
         },
