@@ -372,10 +372,14 @@ if (Meteor.isClient) {
     Router.route('/about.html', function() {
             Router.go('/about');
         });
-
+    // End Redirects
 
 
     Router.route('/contents', {
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         waitOn: function(){
             return[
                 Meteor.subscribe('issueByVolNum', this.params.query.volumeId, this.params.query.issueId),
@@ -389,8 +393,10 @@ if (Meteor.isClient) {
         }
     });
 
+    // Begin Legacy LinkOut
     Router.route('/papers/:v/:n/:full/:pii', function() {
-        if(this.params.pii.match('.html')) {
+        if (this.params.pii.match('.html')) {
+            Meteor.impact.redirectForAlt();
             var pii = this.params.pii.replace('.html', '').replace('a', '');
             if(Meteor.subscribe('articleByPii', pii)) {
                 var articleByPii = articles.findOne({"ids.pii": pii});
@@ -399,6 +405,8 @@ if (Meteor.isClient) {
                     Router.go("/article/"+articleByPii._id+"/text");
                 }
             }
+        } else {
+            Meteor.impact.redirectForAlt();
         }
     });
 
@@ -407,6 +415,7 @@ if (Meteor.isClient) {
     });
 
     Router.route('/full/:pii', function() {
+        Meteor.impact.redirectForAlt();
         var pii = this.params.pii;
         Meteor.subscribe('articleByPii', pii, function() {
             var articleByPii = articles.findOne({"ids.pii": pii});
@@ -417,6 +426,7 @@ if (Meteor.isClient) {
     });
 
     Router.route('/full/:volume/:page_start', function() {
+        Meteor.impact.redirectForAlt();
         var volume = parseInt(this.params.volume);
         var page_start = parseInt(this.params.page_start);
 
@@ -428,9 +438,14 @@ if (Meteor.isClient) {
             }
         });
     });
+    // End Legacy LinkOut
 
     Router.route('/current', {
         name: 'Current',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         waitOn: function() {
             return [
                 Meteor.subscribe('currentIssue'),
@@ -490,6 +505,10 @@ if (Meteor.isClient) {
     Router.route('/advance', {
         name: 'Advance',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -498,6 +517,7 @@ if (Meteor.isClient) {
             return pageTitle + 'Advance Articles';
         },
         waitOn: function(){
+            Meteor.impact.redirectForAlt();
             return[
                 Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
@@ -517,6 +537,10 @@ if (Meteor.isClient) {
     Router.route('/account', {
         name: 'Account',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -537,6 +561,7 @@ if (Meteor.isClient) {
             return pageTitle + 'Archive';
         },
         onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
             Meteor.call('archive',function(error,result){
                 if(error){
                     console.error('Archive Error', error);
@@ -551,6 +576,10 @@ if (Meteor.isClient) {
     Router.route('/editorial-board', {
         name: 'EdBoard',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -576,6 +605,10 @@ if (Meteor.isClient) {
         name: 'ForAuthors',
         title: 'For Authors',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         waitOn: function(){
             return[
                 Meteor.subscribe('forAuthorsPublic'),
@@ -597,6 +630,10 @@ if (Meteor.isClient) {
         name: 'About',
         title: 'About the Journal',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         waitOn: function(){
             return[
                 Meteor.subscribe('aboutPublic'),
@@ -618,6 +655,10 @@ if (Meteor.isClient) {
         name: 'Ethics',
         title: 'Publication Ethics and Publication Malpractice Statements',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         waitOn: function(){
             return[
                 Meteor.subscribe('ethicsPublic'),
@@ -638,6 +679,10 @@ if (Meteor.isClient) {
     Router.route('/contact', {
         name: 'Contact',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -663,6 +708,10 @@ if (Meteor.isClient) {
     Router.route('/recent-breakthroughs', {
         name: 'RecentBreakthroughs',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -699,7 +748,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-
+            Meteor.impact.redirectForAlt();
             var pieces = Meteor.issue.urlPieces(this.params.vi);
             // TODO: add redirect if no issue
             if(pieces && pieces.volume){
@@ -747,6 +796,7 @@ if (Meteor.isClient) {
             return pageTitle + articleTitle;
         },
         onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
             // check if article exists
             var articleExistsExists = articles.findOne({'_id': this.params._id});
             if(!articleExistsExists){
@@ -785,6 +835,7 @@ if (Meteor.isClient) {
         },
         layoutTemplate: 'Visitor',
         onBeforeAction: function() {
+            Meteor.impact.redirectForAlt();
             // check if article exists
             var article = articles.findOne({
                 '_id': this.params._id
@@ -844,6 +895,7 @@ if (Meteor.isClient) {
             return pageTitle + articleTitle;
         },
         waitOn: function(){
+            Meteor.impact.redirectForAlt();
             return[
                 Meteor.subscribe('articleInfo',this.params._id)
             ];
@@ -859,6 +911,7 @@ if (Meteor.isClient) {
             }
         }
     });
+
     Router.route('/figure(.*)', {
         name: 'ArticleFigureViewer',
         layoutTemplate: 'ArticleFigureViewer',title: function() {
@@ -869,6 +922,7 @@ if (Meteor.isClient) {
             return pageTitle + 'Figure Viewer';
         },
         waitOn: function(){
+            Meteor.impact.redirectForAlt();
             return[
                 Meteor.subscribe('articleInfo', this.params.query.article),
                 Meteor.subscribe('articleTypes')
@@ -907,9 +961,14 @@ if (Meteor.isClient) {
             }
         }
     });
+
     Router.route('/404/article', {
         name: 'ArticleNotFound',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -923,6 +982,10 @@ if (Meteor.isClient) {
     Router.route('/recommend', {
         name: 'Recommend',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -947,6 +1010,7 @@ if (Meteor.isClient) {
         name: 'SectionPapers',
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
             Meteor.call('preprocessSectionArticles',articles.find().fetch(), function(error,result){
                 if(error){
                     console.log('ERROR - preprocessSectionArticles');
@@ -974,6 +1038,7 @@ if (Meteor.isClient) {
             return pageTitle + sectionName;
         },
         waitOn: function(){
+            Meteor.impact.redirectForAlt();
             return [
                 Meteor.subscribe('sectionPapersByDashName', this.params._section_dash_name)
             ];
@@ -991,6 +1056,10 @@ if (Meteor.isClient) {
     Router.route('/subscribe', {
         name: 'Subscribe',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -1017,6 +1086,10 @@ if (Meteor.isClient) {
     Router.route('/search', {
         name: 'Search',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
@@ -1071,6 +1144,10 @@ if (Meteor.isClient) {
     Router.route('/interviews', {
         name: 'Interviews',
         layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         title: function() {
             var pageTitle = '';
             if(Session.get('journal')){
