@@ -469,7 +469,12 @@ if (Meteor.isClient) {
             }
             return pageTitle;
         },
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
         waitOn: function(){
+            Meteor.impact.redirectForAlt();
             return[
                 Meteor.subscribe('homePagePublic'),
                 Meteor.subscribe('sortedList','homePage'),
