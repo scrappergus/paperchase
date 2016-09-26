@@ -412,5 +412,10 @@ if (Meteor.isClient) {
         }
     });
 
+    // Altmetric
+    // ---------
+    Template.registerHelper('altMetricReady', function(){
+            return Session.get('altMetricReady');
+    });
 
 }

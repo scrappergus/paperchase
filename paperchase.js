@@ -70,7 +70,20 @@ Meteor.startup(function () {
             process.env.MAIL_URL = 'smtp://' + emailSettings.address +':' + emailSettings.pw + '@smtp.gmail.com:465/';
         }
     }
+
 });
+
+// Altmetric
+// ---------
+if (Meteor.isClient) {
+    Session.set('altMetricReady', false);
+    Meteor.startup(function () {
+        $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(){
+                Session.set('altMetricReady', true);
+            });
+    });
+}
+
 
 
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
