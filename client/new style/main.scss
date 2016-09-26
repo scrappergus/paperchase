@@ -140,6 +140,11 @@ h4.blue-divider + .toc-info {
     }
 }
 
+.issue-altmetric {
+    float:right;
+}
+
+
 /** Issue Scroller (Prev / Next)
  ---------------------------------------------------------*/
 .issue-scroller {
@@ -337,7 +342,6 @@ h2.dates {
     td p { margin: 0; }
     .full-text-image-container { margin: 0; padding:0;}
 }
-
 
 /** Article Figure Viewers
  ---------------------------------------------------------*/

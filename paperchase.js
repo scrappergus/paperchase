@@ -78,8 +78,10 @@ Meteor.startup(function () {
 if (Meteor.isClient) {
     Session.set('altMetricReady', false);
     Meteor.startup(function () {
-        $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(){
-                Session.set('altMetricReady', true);
+        $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a,b,c){
+                if(b == 'success') {
+                    Session.set('altMetricReady', true);
+                }
             });
     });
 }

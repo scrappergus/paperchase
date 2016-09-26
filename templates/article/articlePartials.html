@@ -27,6 +27,13 @@
     {{/if}}
 
     {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
+
+    {{#if altMetricReady}}
+    {{#if ids.doi}}
+    <span data-badge-popover="right" data-badge-type="4" data-doi="{{ids.doi}}" data-hide-no-mentions="false" data-hide-less-than="1" data-condensed="true" class="article-altmetric right-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></span>
+    {{/if}}
+    {{/if}}
+
 </template>
 
 <template name="ArticlePages">
@@ -38,11 +45,6 @@
     {{>AuthorsRefList }}
     {{#if dates}} {{>ArticleDates}} {{/if}}
     {{#if ids.doi}}<span><a href="http://dx.doi.org/{{ids.doi}}">{{ids.doi}}</a></span>{{/if}}
-    {{#if altMetricReady}}
-    <div style="text-align:right;">
-        <div data-badge-type="donut" data-doi="{{ids.doi}}" data-hide-no-mentions="true" data-hide-less-than="1" data-condensed="true" class="altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
-    </div>
-    {{/if}}
 
     
     <!--{{#if ids.pmc}}<span class="right"><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC{{ids.pmc}}" target="_BLANK">PMC</a></span>{{/if}}-->
