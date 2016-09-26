@@ -1,5 +1,11 @@
 // General
 // -------------
+Template.Home.helpers({
+    submitLink : function(){
+        return Meteor.settings.public.journal.submissionsLink;
+    }
+});
+
 Template.Visitor.helpers({
     bannerLogo: function(){
         return Meteor.settings.public.journal.logo.banner;
