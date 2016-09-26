@@ -156,7 +156,7 @@ Meteor.impact = {
     redirectForAlt: function() {
         // For instances that are only using alt search page
         if(Meteor.settings.public && Meteor.settings.public.alt === true){
-            Router.go('/');
+            Router.go('/search-alt');
         }
     }
 };
