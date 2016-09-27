@@ -158,14 +158,14 @@
     }
 }
 
-// .submit-article{
-//     a{
-//         background-color: $accent!important;
-//         &:hover{
-//             background-color: $darkaccent!important;
-//         }
-//     }
-// }
+.submit-article{
+    a{
+        background-color: $accent!important;
+        &:hover{
+            background-color: $darkaccent!important;
+        }
+    }
+}
 
 /** Navigation | Sub Nav
  ---------------------------------------------------------*/
