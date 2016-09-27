@@ -251,7 +251,11 @@ html,body{
 		text-align: left! important;
 	}
     .home-submission-button {
-		font-size: $font-lg !important;
+		font-size: $font-md !important;
+		margin-top: 0.5rem;
+		.icon{
+			font-size: $font-md !important;
+		}
     }
 
 /* Issue --------------------------*/
