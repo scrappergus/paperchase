@@ -12,7 +12,7 @@
     <!-- ========= Navigation ========= -->
     <div class="navigation">
         <div class="nav-sidebar">
-            <a href="/"><img src="{{bannerLogo}}" class="logo left" alt="Aging"><span class="journal-name-extra white-text left">{{nameExtra}}</span></a>
+            <a href="/"><img src="{{bannerLogo}}" class="logo left" alt="{{journalName}}"><span class="journal-name-extra white-text left">{{nameExtra}}</span></a>
         </div>
         <div class="nav-content">
             <ul>
@@ -81,10 +81,13 @@
 </template>
 
 <template name="SearchBox">
+    {{#if alt}}
+    {{else}}
     <div class="search-box">
         <span class="searchbox-button icon icon-search"></span>
         <input class="searchbox-field" type="search" placeholder="Search the Journal">
     </div>
+    {{/if}}
 </template>
 
 <template name="PageHeader">

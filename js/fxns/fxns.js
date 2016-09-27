@@ -146,6 +146,18 @@ Meteor.impact = {
             }
         }
         return;
+    },
+    altInstance: function(){
+        if(Meteor.settings.public && Meteor.settings.public.alt === true){
+            return true;
+        }
+        return false;
+    },
+    redirectForAlt: function() {
+        // For instances that are only using alt search page
+        if(Meteor.settings.public && Meteor.settings.public.alt === true){
+            Router.go('/search-alt');
+        }
     }
 };
 
