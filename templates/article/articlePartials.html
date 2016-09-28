@@ -2,8 +2,20 @@
     <h5 class="article-header">
         {{>ArticleHeaderPieces}}
     </h5>
-
-    <h1 id="article-title">{{{title}}}</h1>
+    <div style="width:100%;float:left;">
+        {{#if altMetricReady}}
+        {{#if ids.doi}}
+        {{#with ids}}
+        {{>AltmetricBadge doi=doi}}
+        {{/with}}
+        {{/if}}
+        {{/if}}
+        <div id="article-container">
+            <h1 id="article-title" class="{{titleClass}}">
+                {{{title}}}
+            </h1>
+        </div>
+    </div>
 </template>
 
 <template name="ArticleHeaderPieces">
@@ -27,13 +39,10 @@
     {{/if}}
 
     {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
+</template>
 
-    {{#if altMetricReady}}
-    {{#if ids.doi}}
-    <span data-badge-popover="right" data-badge-type="4" data-doi="{{ids.doi}}" data-hide-no-mentions="false" data-hide-less-than="1" data-condensed="true" class="article-altmetric right-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></span>
-    {{/if}}
-    {{/if}}
-
+<template name="AltmetricBadge">
+    <div data-badge-type="donut" data-doi="{{doi}}" data-hide-no-mentions="true" data-hide-less-than="50" data-condensed="true" class="article-altmetric left-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
 </template>
 
 <template name="ArticlePages">
@@ -46,7 +55,7 @@
     {{#if dates}} {{>ArticleDates}} {{/if}}
     {{#if ids.doi}}<span><a href="http://dx.doi.org/{{ids.doi}}">{{ids.doi}}</a></span>{{/if}}
 
-    
+
     <!--{{#if ids.pmc}}<span class="right"><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC{{ids.pmc}}" target="_BLANK">PMC</a></span>{{/if}}-->
 
     <!-- todo: implement featured photo -->

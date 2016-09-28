@@ -52,12 +52,19 @@ Template.ArticleFigureViewerViewer.onRendered(function() {
                     increment: 0.1
                 }).panzoom('zoom', true);
 });
-Template.ArticleText.onRendered(function() {
+// Template.ArticleText.onRendered(function() {
+    // _altmetric_embed_init();
     // $('.materialboxed').materialbox();
+// });
+Template.AltmetricBadge.onRendered(function() {
+    _altmetric_embed_init();
+    $('div.altmetric-embed').on('altmetric:show', function () {
+        Session.set('badge-visible', true);
+   });
 });
-Template.ArticleFullText.onRendered(function() {
+// Template.ArticleFullText.onRendered(function() {
     // $('.materialboxed').materialbox(); // popup image
-});
+// });
 
 // Scrollspy
 // --------

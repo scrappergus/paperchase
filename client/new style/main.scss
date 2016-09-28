@@ -259,6 +259,20 @@ h2.dates {
         word-wrap: break-word;
     }
 }
+#article-title{
+    // padding-left: 42px;
+}
+#article-title.badge-visible{
+    padding-left: 42px;
+}
+.article-altmetric{
+    float: left;
+    margin-right: 10px;
+    img{
+        width: 32px;
+        height: 32px;
+    }
+}
 /*end hide commas*/
 
 .featured-photo {

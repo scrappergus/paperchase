@@ -79,10 +79,10 @@ if (Meteor.isClient) {
     Session.set('altMetricReady', false);
     Meteor.startup(function () {
         $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a,b,c){
-                if(b == 'success') {
-                    Session.set('altMetricReady', true);
-                }
-            });
+            if(b == 'success') {
+                Session.set('altMetricReady', true);
+            }
+        });
     });
 }
 
@@ -360,6 +360,8 @@ if (Meteor.isClient) {
     // for archive.
     Session.setDefault('archive',null);
     Session.setDefault('article-visitor',null);
+    // altmetrics badge
+    Session.setDefault('badge-visible', false);
 
     // Redirects
     // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.
@@ -446,14 +448,14 @@ if (Meteor.isClient) {
         });
 
     Router.route('/current', {
-            name: 'Current', 
+            name: 'Current',
             waitOn: function() {
                 return[
                     Meteor.subscribe('currentIssue'),
                 ]
             },
             action: function() {
-                var current = issues.findOne(); 
+                var current = issues.findOne();
                 if(current){
                     Router.go("/issue/v"+current['volume']+"i"+current['issue']);
                 }
