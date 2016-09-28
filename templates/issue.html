@@ -86,11 +86,14 @@
 
                 <div class="toc-info">
                     <h2 class="title">{{{title}}}</h2>
-                    {{#if altMetricReady}}
-                    {{#if ids.doi}}
-                        <div data-badge-popover="right" data-badge-type="donut" data-doi="{{ids.doi}}" data-hide-no-mentions="false" data-hide-less-than="1" data-condensed="true" class="issue-altmetric right-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
-                    {{/if}}
-                    {{/if}}
+        {{#if altMetricReady}}
+        {{#if ids.doi}}
+        {{#with ids}}
+        {{>AltmetricBadge doi=doi}}
+        {{/with}}
+        {{/if}}
+        {{/if}}
+                    
 
                     {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
 
