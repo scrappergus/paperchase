@@ -209,7 +209,8 @@ Template.Search.events({
                                      'index': cur._index,
                                      'title': cur._source.title,
                                      'abstract': cur._source.abstract,
-                                     'authors': cur._source.authors
+                                     'authors': cur._source.authors,
+                                     'url': cur._source.url
                                  }
                              });
 

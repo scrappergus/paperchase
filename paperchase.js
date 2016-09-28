@@ -1040,14 +1040,15 @@ if (Meteor.isClient) {
 //                    ,authors: terms
 //                    ,title: terms
                 }, function(err, data) {
-                         //       console.log('>>> args in browser', err, data);
+//                                console.log('>>> args in browser', err, data);
                          var queryResults = data.map(function(cur) {
                                  return {
                                      '_id': cur._id,
                                      'index': cur._index,
                                      'title': cur._source.title,
                                      'abstract': cur._source.abstract,
-                                     'authors': cur._source.authors
+                                     'authors': cur._source.authors,
+                                     'url': cur._source.url
                                  }
                              });
                     Session.set('searchLoading', false);
