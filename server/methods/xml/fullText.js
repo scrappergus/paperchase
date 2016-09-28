@@ -2,15 +2,18 @@
 Meteor.methods({
     getFilesForFullText: function(mongoId){
         var fut = new future();
+        var result = {};
         var articleJson,
             articleInfo,
-            xml;
+            xml,
+            xmlUrl;
         articleInfo = articles.findOne({'_id' : mongoId});
         if(articleInfo){
             articleInfo = Meteor.article.readyData(articleInfo);
 
             if(articleInfo.files && articleInfo.files.xml && articleInfo.files.xml.url){
-                Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
+                xmlUrl = articleInfo.files.xml.url;
+                Meteor.http.get(xmlUrl, function(getXmlError, xmlRes){
                     if(getXmlError){
                         console.error('getXmlError',getXmlError);
                         fut.throw(getXmlError);
@@ -22,7 +25,9 @@ Meteor.methods({
                                 fut.throw(convertXmlError);
                             }else{
                                 convertedXml.mongo = mongoId;
-                                fut.return(convertedXml);
+                                result.convertedXml = convertedXml;
+                                result.lastModified = xmlRes.headers['last-modified'];
+                                fut.return(result);
                             }
                         });
                     }
@@ -47,7 +52,7 @@ Meteor.methods({
 
         // Article Content
         // ---------------
-        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote | //body/table-wrap', doc);
+        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote | //body/table-wrap | //body/disp-formula', doc);
         if(sections[0]){
             for(var section = 0; section<sections.length; section++){
                 var sectionObject = {},
@@ -81,6 +86,16 @@ Meteor.methods({
                         tbl.contentType = 'table';
                         sectionObject.content.push(tbl);
                     }
+                }else if(sections[section].localName === 'disp-formula'){
+                    sectionObject.content = [];
+                    var secAttr = Meteor.fullText.traverseAttributes(sections[section].attributes);
+                    if(secAttr && secAttr.id){
+                        sectionObject.id = secAttr.id;
+                    }
+                    sectionObject.content.push({
+                        contentType: 'formula',
+                        content: Meteor.fullText.convertFormula(sections[section].childNodes)
+                    });
                 }
 
                 articleObject.sections.push(sectionObject);
@@ -262,13 +277,13 @@ Meteor.methods({
 
                 var elementCitation = xpath.select("mixed-citation | element-citation", reference);
 
-                // console.log('elementCitation',elementCitation);
                 // Reference content and type
                 // --------------------------
                 if(elementCitation){
                     elementCitation = elementCitation[0];
                     // Reference content
                     referenceObj = Meteor.fullText.convertReference(elementCitation);
+
                     // Reference type
                     var citationAttributes = elementCitation.attributes;
                     for(var cAttr=0; cAttr<citationAttributes.length; cAttr++){
@@ -353,7 +368,7 @@ Meteor.fullText = {
         // console.log('sectionObject',sectionObject);
         return sectionObject;
     },
-    sectionId: function( section, primarySection ){
+    sectionId: function(section, primarySection){
         // console.log('..sectionId',primarySection);
         var sectionIdObject = {},
             sectAttr;
@@ -391,26 +406,30 @@ Meteor.fullText = {
         var content,
             contentType;
         // Different processing for different node types
-        if(sec.localName === 'table-wrap'){
-            sectionPartObject = Meteor.fullText.convertTableWrap( sec, files );
-        }
-        else if(sec.localName === 'fig'){
+        if (sec.localName === 'table-wrap'){
+            sectionPartObject = Meteor.fullText.convertTableWrap(sec, files);
+        } else if (sec.localName === 'fig'){
             content = Meteor.fullText.convertFigure(sec,files,mongoId);
             contentType = 'figure';
-        }
-        else if(sec.localName === 'supplementary-material'){
-            var suppConverted = Meteor.fullText.convertSupplement(sec,files,mongoId);
+        } else if (sec.localName === 'supplementary-material'){
+            var suppConverted = Meteor.fullText.convertSupplement(sec, files, mongoId);
             if(suppConverted){
                 sectionPartObject.contentType = 'supplement';
                 sectionPartObject.supps = suppConverted;
             }
-        }
-        else{
+        } else if(sec.localName === 'disp-formula') {
+            contentType = 'formula';
+            var secAttr = Meteor.fullText.traverseAttributes(sec.attributes);
+            if(secAttr && secAttr.id){
+                sectionPartObject.id = secAttr.id;
+            }
+            content = Meteor.fullText.convertFormula(sec.childNodes);
+        } else{
             content = Meteor.fullText.convertContent(sec);
             contentType = 'p';
         }
 
-        if(content){
+        if (content){
             content = Meteor.fullText.fixTags(content);
             sectionPartObject.content = content;
             sectionPartObject.contentType = contentType;
@@ -492,13 +511,12 @@ Meteor.fullText = {
             // Section: Content
             // --------
             if( node.localName && node.localName === 'list' ){
-                content += Meteor.fullText.convertList(node)
-            }
-            else{
+                content += Meteor.fullText.convertList(node);
+            } else{
                 for(var cc = 0 ; cc < node.childNodes.length ; cc++){
                     var childNode = node.childNodes[cc];
                     if(childNode){
-                        content += Meteor.fullText.convertContentChild(childNode)
+                        content += Meteor.fullText.convertContentChild(childNode);
                     }
                 }
             }
@@ -506,9 +524,9 @@ Meteor.fullText = {
 
         content = Meteor.fullText.fixTags(content);
 
-        if(content.length === 0){
+        if (content.length === 0){
             return;
-        }else{
+        } else{
             return content;
         }
     },
@@ -565,6 +583,47 @@ Meteor.fullText = {
             }
         }
         return content;
+    },
+    convertFormula: function(nodes){
+        var formula = '';
+        for(var child = 0; child < nodes.length; child++){
+            var childNode = nodes[child];
+            if(childNode){
+                var attributes;
+                var attributesInclude = '';
+                if(childNode.attributes){
+                    attributes = Meteor.fullText.traverseAttributes(childNode.attributes);
+                }
+
+                // tag attributes
+                if(attributes){
+                    for(var attributeKey in attributes){
+                        attributesInclude += ' ' + attributeKey + '="' + attributes[attributeKey] + '"';
+                    }
+                }
+
+                if(childNode.nodeName != '#text'){
+                    if(childNode.localName === 'math'){
+                        attributesInclude += ' xmlns="http://www.w3.org/1998/Math/MathML"';
+                    }
+                    // start tag
+                    formula += '<' + childNode.localName + attributesInclude + '>';
+
+                    // tag content
+                    if(childNode.childNodes){
+                        formula += Meteor.fullText.convertFormula(childNode.childNodes);
+                    }
+
+                    // close tag
+                    formula += '</' + childNode.localName + '>';
+                } else{
+                    // text
+                    formula += childNode.nodeValue;
+                }
+            }
+        }
+        
+        return formula;
     },
     linkXref: function(xrefNode){
         // console.log('linkXref',xrefNode.childNodes);
@@ -706,133 +765,171 @@ Meteor.fullText = {
         referenceObj.authors = '';
         var first_author = true;
 
-        var referenceObj = {'textContent':[]};
 
-        if(reference.childNodes.length == 1) {
-            referenceObj.textContent = [{content:reference.childNodes[0].nodeValue, type:'text'}];
-        }
-        else {
-            for(var r = 0; r < reference.childNodes.length; r++){
-                // console.log('r = ' + r);
-                // console.log(reference.childNodes[r].localName);
-                if(reference.childNodes[r].childNodes){
-                    var referencePart,
-                    referencePartName;
-                    // Reference Title, Source, Pages, Year, Authors
-                    // -------
-                    if(reference.childNodes[r].localName){
-                        referencePart = reference.childNodes[r];
-                        referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
-                        // console.log(referencePartName);
-                        if(referencePartName == 'person_group'){
-                            var attr = xpath.select('@person-group-type', referencePart);
-                            if(attr.length && attr[0].value == 'editor') {
-                                referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
+        var referenceObj = {'textContent':[], citationType: reference.nodeName.replace("-", "_")};
+
+        for(var r = 0; r < reference.childNodes.length; r++){
+
+            if(reference.childNodes[r].childNodes){
+                var referencePart,
+                referencePartName;
+
+                // Reference Title, Source, Pages, Year, Authors
+                // -------
+                if(reference.childNodes[r].localName){
+                    referencePart = reference.childNodes[r];
+                    referencePartName = reference.childNodes[r].localName.replace('-','_'); // cannot use dash in handlebars template variable
+
+                    if(referencePartName == 'person_group'){
+                        var attr = xpath.select('@person-group-type', referencePart);
+                        if(attr.length && attr[0].value == 'editor') {
+                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart, {addPunctuation: true}), type:'authorList'});
+                        }
+                        else {
+                            referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart, {addPunctuation: true}), type:'authorList'});
+                        }
+                    }
+                    else if(referencePartName == 'name' || referencePartName == 'string_name'){
+                        if(referencePart.childNodes){
+                            if(referenceObj.citationType == 'mixed_citation') {
+                                referenceObj.textContent.push({content:referencePart.childNodes.toString().replace(/<(\/)?(surname|given-names)>/g, ''), type:'text'});
                             }
                             else {
-                                referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
-                            }
-                        }
-                        else if(referencePartName == 'name' || referencePartName == 'string_name'){
-                            if(referencePart.childNodes){
-                                var referencePartCount = referencePart.childNodes.length;
-                                for(var part = 0 ; part < referencePartCount ; part++){
-                                    var refTemp = '';
-                                    if(referencePart.childNodes[part].localName == 'surname') {
-                                        if(first_author === false) {
-                                            refTemp += ', ';
-                                        }
-                                        else {
-                                            first_author = false;
-                                        }
+                                var comma = '';
+                                var period = '';
+                                if(referencePart.previousSibling.previousSibling && referencePart.nextSibling.nextSibling) {
+                                    if(referencePart.previousSibling.previousSibling.nodeName == 'name' && referencePart.nextSibling.nextSibling.nodeName != 'name') {
+                                        comma = ' and ';
+                                        period = ".";
+                                    }
+                                    else if(referencePart.previousSibling.previousSibling.nodeName == 'name') {
+                                        comma = ', ';
+                                    }
+                                }
 
-                                        refTemp += referencePart.childNodes[part].childNodes[0].nodeValue + ' ';
-                                    }
-                                    else if(referencePart.childNodes[part].localName == 'given-names'){
-                                        refTemp += referencePart.childNodes[part].childNodes[0].nodeValue;
-                                    }
-                                }
-                                referenceObj.textContent.push({content:Meteor.fullText.traverseAuthors(referencePart), type:'text'});
-                            }
-                        }
-                        else if(referencePartName == 'pub_id'){
-                            // make sure attribute has pmid
-                            var pmid = false;
-                            for(var attr=0; attr<referencePart.attributes.length; attr++){
-                                if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'pmid'){
-                                    referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'pmid'});
-                                }else if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'doi'){
-                                    referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'doi'});
-                                }
-                            }
-                        }                                   
-                        else if(referencePartName == 'article_title'){
-                            if(referencePart.childNodes){
-                                referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'text'});
-                            }
-                        }
-                        else if(referencePartName == 'ext_link'){
-                            if(referencePart.childNodes){
-                                referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'ext_link'});
-                            }
-                        }
-                        else if(referencePartName == 'comment'){
-                            if(referencePart.childNodes){
-                                var comment = '';
-                                for(var part=0; part<referencePart.childNodes.length; part++){
-                                    // console.log(referencePart.childNodes[part].localName);
-                                    if(referencePart.childNodes[part].nodeValue){
-                                        comment += referencePart.childNodes[part].nodeValue;
-                                    }
-                                    else if(referencePart.childNodes[part].localName == 'ext-link') {
-                                        var href = '';
-                                        for(var attrIdx=0; attrIdx<referencePart.childNodes[part].attributes.length; attrIdx++) {
-                                            var attr = referencePart.childNodes[part].attributes[attrIdx];
-                                            if(attr.localName == 'href') {
-                                                var href = attr.nodeValue;
-                                            }
-                                        }
-                                        link_content = href || referencePart.childNodes[part].nodeValue;
-                                        comment += '<a href="'+href+'" target="_BLANK">'+link_content+'</a>';
-
-                                    }
-                                    else if(referencePart.childNodes[part].localName == 'uri') {
-                                        if(referencePart.childNodes[part].childNodes[0] && referencePart.childNodes[part].childNodes[0].nodeValue){
-                                            var link = referencePart.childNodes[part].childNodes[0].nodeValue;
-                                            link = Meteor.clean.removeSpaces(link);
-                                            comment += '<a href="'+link+'" target="_BLANK">'+link+'</a>';
-                                        }
-                                    }
-                                }
-                                referenceObj.textContent.push([{content:comment, type:'text'}]);
-                            }
-                        }
-                        else if(referencePartName){
-                            // source, year, pages, issue, volume, chapter_title
-                            var refTemp = '';
-                            if(referencePart.childNodes){
-                                for(var part = 0 ; part < referencePart.childNodes.length ; part++){
-                                    if(referencePart.childNodes[part].nodeValue){
-                                        if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String ) {
-                                            if(referencePartName != 'fpage' && referencePartName != 'lpage'){
-                                                refTemp += '. ' + referencePart.childNodes[part].nodeValue;
-                                            }
-                                        }
-                                        else {
-                                            refTemp = referencePart.childNodes[part].nodeValue;
-                                        }
-                                    }
-                                }
-                                referenceObj.textContent.push({content: refTemp, type:'text'}); 
+                                referenceObj.textContent.push({content:comma + referencePart.childNodes.toString().replace(/(\s)?<(\/)?(surname)>/g, '').replace(/<(\/)?(given-names)>(\s)?/g, '').trim() + period, type:'name'});
                             }
                         }
                     }
+                    else if(referencePartName == 'pub_id'){
+                        // make sure attribute has pmid
+                        var pmid = false;
+                        for(var attr=0; attr<referencePart.attributes.length; attr++){
+                            if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'pmid'){
+                                referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'pmid'});
+                            }else if(referencePart.attributes[attr].nodeName == 'pub-id-type' && referencePart.attributes[attr].nodeValue == 'doi'){
+                                referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'doi'});
+                            }
+                        }
+                    }
+                    else if(referencePartName == 'article_title'){
+                        if(referencePart.childNodes){
+                            var content = Meteor.fullText.convertContent(referencePart);
+                            if(content.slice(-1) != '.') {
+                                content += '.';
+                            }
+                            referenceObj.textContent.push({content:content, type:'title'});
+                        }
+                    }
+                    else if(referencePartName == 'ext_link'){
+                        if(referencePart.childNodes){
+                            referenceObj.textContent.push({content:Meteor.fullText.convertContent(referencePart), type:'ext_link'});
+                        }
+                    }
+                    else if(referencePartName == 'comment'){
+                        if(referencePart.childNodes){
+                            var comment = '';
+                            for(var part=0; part<referencePart.childNodes.length; part++){
+                                // console.log(referencePart.childNodes[part].localName);
+                                if(referencePart.childNodes[part].nodeValue){
+                                    comment += referencePart.childNodes[part].nodeValue;
+                                }
+                                else if(referencePart.childNodes[part].localName == 'ext-link') {
+                                    var href = '';
+                                    for(var attrIdx=0; attrIdx<referencePart.childNodes[part].attributes.length; attrIdx++) {
+                                        var attr = referencePart.childNodes[part].attributes[attrIdx];
+                                        if(attr.localName == 'href') {
+                                            var href = attr.nodeValue;
+                                        }
+                                    }
+                                    link_content = href || referencePart.childNodes[part].nodeValue;
+                                    comment += '<a href="'+href+'" target="_BLANK">'+link_content+'</a>';
+
+                                }
+                                else if(referencePart.childNodes[part].localName == 'uri') {
+                                    if(referencePart.childNodes[part].childNodes[0] && referencePart.childNodes[part].childNodes[0].nodeValue){
+                                        var link = referencePart.childNodes[part].childNodes[0].nodeValue;
+                                        link = Meteor.clean.removeSpaces(link);
+                                        comment += '<a href="'+link+'" target="_BLANK">'+link+'</a>';
+                                    }
+                                }
+                            }
+                            referenceObj.textContent.push([{content:comment, type:'comment'}]);
+                        }
+                    }
+                    else if(referencePartName){
+                        // source, year, pages, issue, volume, chapter_title
+                        var refTemp = '';
+                        var type = referencePartName || 'text';
+                        if(referencePart.childNodes){
+                            for(var part = 0 ; part < referencePart.childNodes.length ; part++){
+                                if(referencePart.childNodes[part].nodeValue){
+                                    if (typeof referenceObj[referencePartName] === 'string' || referenceObj[referencePartName] instanceof String ) {
+                                        if(referencePartName != 'fpage' && referencePartName != 'lpage'){
+                                            refTemp += '. ' + referencePart.childNodes[part].nodeValue;
+                                        }
+                                    }
+                                    else {
+                                        refTemp = referencePart.childNodes[part].nodeValue;
+                                    }
+                                }
+                            }
+
+                            referenceObj.textContent.push({content: refTemp, type:type});
+                        }
+                    }
+                }
+            }
+            else {
+                var referencePart = reference.childNodes[r];
+                if(referencePart.nodeValue.length > 1) {
+                    referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
+                }
+                else if((referencePart.previousSibling && referencePart.nextSibling) && (referencePart.previousSibling.nodeName != 'name' && referencePart.nextSibling.nodeName != 'name')) {
+                    referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
+                }
+                else if((referencePart.previousSibling && referencePart.nextSibling) && referencePart.nextSibling.nodeName == 'article-title'){
+                    referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
                 }
                 else {
-                    referenceObj.textContent.push({content:reference.childNodes[r].nodeValue, type:'text'});
+                //    console.log("Missed this: -->"+referencePart.nodeValue+"<--");
                 }
             }
         }
+
+        if(referenceObj.textContent) {
+            var prior = {};
+            var result;
+            referenceObj.textContent = referenceObj.textContent.map(function(cur) {
+                    if(cur.content == ' ') {
+                        if(['fpage', 'volume'].indexOf(prior.type) > -1){
+                            result = null;
+                        }
+                        else {
+                            result = cur;
+                        }
+
+                    }
+                    else {
+                        result = cur;
+                    }
+
+                    prior = cur;
+                    return result;
+                });
+
+        }
+
         return referenceObj;
     },
     convertTableWrap: function(sec, files){
@@ -914,7 +1011,8 @@ Meteor.fullText = {
         }
         return result;
     },
-    traverseAuthors: function(node){
+    traverseAuthors: function(node, options){
+        options = options || {};
         // console.log('..traverseNode');
         // first creating an array, so that we can ignore empty nodes
         // then using a string,
@@ -948,10 +1046,10 @@ Meteor.fullText = {
         }
 
         // now join array
-        if(authors.length > 2){
-            authors = authors.join(', ');
-        }else if(authors.length == 2){
+        if(authors.length == 2){
             authors = authors.join(' and ');
+        }else if(authors.length > 2){
+            authors = authors.join(', ');
         }else if(authors.length > 1){
             authors = authors.join('');
         }

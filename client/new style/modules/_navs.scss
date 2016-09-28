@@ -158,6 +158,13 @@
     }
 }
 
+.submit-article{
+    a{
+        background-color: $accent!important;
+        @include get-bg-hover($accent, 3%);
+    }
+}
+
 /** Navigation | Sub Nav
  ---------------------------------------------------------*/
 .sub-nav {

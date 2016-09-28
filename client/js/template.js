@@ -63,6 +63,14 @@ Template.AltmetricBadge.onRendered(function() {
    });
 });
 // Template.ArticleFullText.onRendered(function() {
+
+//     // $('.materialboxed').materialbox();
+//     MeteorMathJax.require(function (MathJax) {
+//         // this is a force download. The package will download if needed, so this is commented out
+//         MeteorMathJax.ready();
+//     });
+// });
+// Template.ArticleFullText.onRendered(function() {
     // $('.materialboxed').materialbox(); // popup image
 // });
 

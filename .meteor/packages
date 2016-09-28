@@ -57,3 +57,4 @@ standard-minifier-css@1.2.0
 standard-minifier-js@1.2.0
 fourseven:scss
 shell-server
+mrt:mathjax
