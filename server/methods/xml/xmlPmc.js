@@ -581,17 +581,17 @@ Meteor.xmlPmc = {
     keyword: function(keyword){
         var result = '';
         if(typeof keyword == 'object'){
-
             for(var kwKey in  keyword){
                 if(kwKey === '_'){
                     // should be just a normal string
                     if(typeof keyword[kwKey] === 'string'){
-                        result += keyword[kwKey];
+                        result += keyword[kwKey] + ' ';
                     }
                 }else{
-                    result += Meteor.xmlPmc.keywordStyled(kwKey,keyword[kwKey]);
+                    result += Meteor.xmlPmc.keywordStyled(kwKey,keyword[kwKey]) + ' ';
                 }
             }
+            result = Meteor.clean.cleanString(result);
         }else if(typeof keyword == 'string'){
             result = keyword;
         }
