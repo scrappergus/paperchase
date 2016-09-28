@@ -182,11 +182,18 @@
                 {{/if}}
             {{/if}}
 
+
             {{#if equals contentType 'figure'}}
             <!-- Figure -->
                 {{#with content}}
                 {{>FullTextFigure}}
                 {{/with}}
+            {{/if}}
+
+
+            {{#if equals contentType 'formula'}}
+            <!-- Formula -->
+                {{>FullTextFormula content=content}}
             {{/if}}
 
             {{#if equals contentType 'table'}}
@@ -226,6 +233,12 @@
             {{/if}}
         {{/each}}
     </div>
+</template>
+
+<template name="FullTextFormula">
+    {{#mathjax}}
+    <p>{{{content}}}</p>
+    {{/mathjax}}
 </template>
 
 <template name="FullTextFigureText">
