@@ -85,16 +85,15 @@
                 {{/if}}
 
                 <div class="toc-info">
-                    <h2 class="title">{{{title}}}</h2>
-        {{#if altMetricReady}}
-        {{#if ids.doi}}
-        {{#with ids}}
-        {{>AltmetricBadge doi=doi}}
-        {{/with}}
-        {{/if}}
-        {{/if}}
-                    
+                    {{#if altMetricReady}}
+                    {{#if ids.doi}}
+                    {{#with ids}}
+                    {{>AltmetricBadge doi=doi}}
+                    {{/with}}
+                    {{/if}}
+                    {{/if}}
 
+                    <h2 class="title">{{{title}}}</h2>
                     {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
 
                     <!-- Desc Info -->
