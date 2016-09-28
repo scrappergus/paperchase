@@ -521,6 +521,10 @@ Meteor.methods({
             articleUpdate.legacy_files.html_galley_id = article.html_galley_id;
         }
 
+        if(article.keywords){
+            articleUpdate.keywords = article.keywords;
+        }
+
         // TODO: Affiliations
         // articleUpdate.affiliations = [];
 
