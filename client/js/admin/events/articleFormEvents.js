@@ -190,7 +190,6 @@ Template.ArticleForm.events({
         }
         article.keywords.push('');
         Session.set('article-form',article);
-        Meteor.general.scrollToLastChild('kw');
     },
     'click .remove-kw': function(e,t){
         e.preventDefault();
