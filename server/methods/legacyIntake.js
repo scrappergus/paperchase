@@ -108,69 +108,77 @@ Meteor.methods({
         if(legacyPlatform){
             legacyPlatform = legacyPlatform.legacy_platform;
             legacyPlatformApi = legacyPlatform.mini_api;
-            // Check if article exists by query for ID. Allow multiple types of ID (PMID, PII, etc)
-            paperchaseQueryParams = '{"' + 'ids.' + idType + '" : "' + idValue + '"}';
-            paperchaseQueryParams = JSON.parse(paperchaseQueryParams);
-            article = articles.findOne(paperchaseQueryParams);
 
-            // Get the article JSON from the legacy platform
-            if(legacyPlatform.short_name === 'ojs'){
-                Meteor.call('ojsGetArticlesJson', idType, idValue, journal, legacyPlatformApi, function(error,articleJson){
-                    if(articleJson){
-                        articleJson = JSON.parse(articleJson);
-                        articleJson = articleJson.articles[0];
-                        // Process article info for Paperchase DB
-                        Meteor.call('ojsProcessArticleJson', articleJson, function(error,processedArticleJson){
-                            if(processedArticleJson){
-                                if(advance){
-                                    processedArticleJson.advance = true;
-                                }
-                                if(ojsUser){
-                                    processedArticleJson.ojsUser = ojsUser;
-                                }
-                                if(article){
-                                    articleMongoId = article._id;
-                                    if(article.section_id == 0){
-                                        processedArticleJson.section_id = 0; // Keep in Recent Research Papers
-                                    }
+            var ids = idValue.split(',').map(function(val) {return val.trim()});
 
-                                    Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){
-                                        if(result && processedArticleJson.advance === true){
-                                            Meteor.call('sorterAddItem','advance',articleMongoId);
-                                        }
-                                    });
+            ids.forEach(function(id) {
 
-                                }else{
-                                    processedArticleJson.doc_updates = {} ;
-                                    processedArticleJson.doc_updates.created_by = 'OJS Intake';
-                                    if(processedArticleJson.article_type.type == 'Research Papers'){
-                                        processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
-                                    }
-                                    Meteor.call('addArticle',processedArticleJson, function(error,result){
-                                        if(result){
-                                            Meteor.call('sorterAddItem','advance',articleMongoId);
-                                        }
-                                    });
+                    console.log("----------->  "+ id);
+
+                    // Check if article exists by query for ID. Allow multiple types of ID (PMID, PII, etc)
+                    paperchaseQueryParams = '{"' + 'ids.' + idType + '" : "'+id+'"}';
+                    paperchaseQueryParams = JSON.parse(paperchaseQueryParams);
+                    article = articles.findOne(paperchaseQueryParams);
+
+                    // Get the article JSON from the legacy platform
+                    if(legacyPlatform.short_name === 'ojs'){
+                        Meteor.call('ojsGetArticlesJson', idType, id, journal, legacyPlatformApi, function(error,articleJson){
+                                console.log(articleJson);
+                                if(articleJson){
+                                    articleJson = JSON.parse(articleJson);
+                                    articleJson = articleJson.articles[0];
+                                    // Process article info for Paperchase DB
+                                    Meteor.call('ojsProcessArticleJson', articleJson, function(error,processedArticleJson){
+                                            if(processedArticleJson){
+                                                if(advance){
+                                                    processedArticleJson.advance = true;
+                                                }
+                                                if(ojsUser){
+                                                    processedArticleJson.ojsUser = ojsUser;
+                                                }
+                                                if(article){
+                                                    articleMongoId = article._id;
+                                                    if(article.section_id == 0){
+                                                        processedArticleJson.section_id = 0; // Keep in Recent Research Papers
+                                                    }
+
+                                                    Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){
+                                                            if(result && processedArticleJson.advance === true){
+                                                                Meteor.call('sorterAddItem','advance',articleMongoId);
+                                                            }
+                                                        });
+
+                                                }else{
+                                                    processedArticleJson.doc_updates = {} ;
+                                                    processedArticleJson.doc_updates.created_by = 'OJS Intake';
+                                                    if(processedArticleJson.article_type && processedArticleJson.article_type.type == 'Research Papers'){
+                                                        processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
+                                                    }
+                                                    Meteor.call('addArticle',processedArticleJson, function(error,result){
+                                                            if(result){
+                                                                Meteor.call('sorterAddItem','advance',articleMongoId);
+                                                            }
+                                                        });
+                                                }
+                                            }
+                                        });
                                 }
-                            }
-                        });
+                            });
+                    }
+
+                    if(articleMongoId){
+                        console.log('updated article: ',articleMongoId);
+                        if(articleParams.ip){
+                            console.log('updated article: ',articleMongoId, '| IP:',articleParams.ip);
+                        }else{
+                            console.log('updated article: ',articleMongoId);
+                        }
+                        //                        return true; // DO we need a response to Legacy platform?
+                    }
+                    else {
+                        //                        throw new Meteor.Error('Article ('+idType+': '+ id +') was not added to Paperchase.');
                     }
                 });
-            }
-
-            if(articleMongoId){
-                console.log('updated article: ',articleMongoId);
-                if(articleParams.ip){
-                    console.log('updated article: ',articleMongoId, '| IP:',articleParams.ip);
-                }else{
-                    console.log('updated article: ',articleMongoId);
-                }
-                return true; // DO we need a response to Legacy platform?
-            }
-            else {
-                throw new Meteor.Error('Article ('+idType+': '+ idValue +') was not added to Paperchase.');
-            }
-
         }
         else {
             return false;
@@ -343,7 +351,7 @@ Meteor.methods({
             // console.log('...ojsGetJson');
             // TODO: Add journal param?
             // requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
-            requestUrl += '?' + idType + '=' + idValue;
+            requestUrl += '?journal='+journal+'&' + idType + '=' + idValue;
             // console.log(requestUrl);
             var res;
             res = Meteor.http.get(requestUrl);
@@ -511,6 +519,10 @@ Meteor.methods({
         }
         if(article.html_galley_id){
             articleUpdate.legacy_files.html_galley_id = article.html_galley_id;
+        }
+
+        if(article.keywords){
+            articleUpdate.keywords = article.keywords;
         }
 
         // TODO: Affiliations
