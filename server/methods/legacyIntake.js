@@ -406,8 +406,8 @@ Meteor.methods({
             // Abstract
             abs = article.abstract.indexOf('<p class=\"BodyText\">');
             abs = parseInt(abs + 20);
-            abstract = article.abstract.substring(abs, article.abstract.length);
-            articleUpdate.abstract = '<p>' + abstract;
+            abstract = article.abstract.substring(abs, article.abstract.length).replace("</p> \n   </div>", '').trim();
+            articleUpdate.abstract = abstract;
 
             // Dates and Keywords
             datesAndKw = article.abstract.match(/<span class=\"CorespondanceBold\">(.*?)<\/p>/g); //will return 2 items - kw and dates list. need to then separate dates.
