@@ -13,6 +13,9 @@ Meteor.methods({
 
             if(articleInfo.files && articleInfo.files.xml && articleInfo.files.xml.url){
                 xmlUrl = articleInfo.files.xml.url;
+                // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                // }
                 Meteor.http.get(xmlUrl, function(getXmlError, xmlRes){
                     if(getXmlError){
                         console.error('getXmlError',getXmlError);
@@ -20,10 +23,10 @@ Meteor.methods({
                     }else if(xmlRes){
                         xml = xmlRes.content;
                         Meteor.call('fullTextToJson', xml, articleInfo.files, mongoId, function(convertXmlError, convertedXml){
-                            if(convertXmlError){
+                            if (convertXmlError) {
                                 console.error('..convertXmlError',convertXmlError);
                                 fut.throw(convertXmlError);
-                            }else{
+                            } else {
                                 convertedXml.mongo = mongoId;
                                 result.convertedXml = convertedXml;
                                 result.lastModified = xmlRes.headers['last-modified'];
@@ -332,15 +335,13 @@ Meteor.fullText = {
         for(var c = 0; c < section.childNodes.length; c++){
             var sec = section.childNodes[c];
 
-            if(sec.localName != null){
+            if(sec.localName !== null){
                 // console.log(sec.localName);
                 if(sec.localName === 'label'){
                     sectionObject.label = Meteor.fullText.convertContent(sec);
-                }
-                else if(sec.localName === 'title'){
+                } else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.fixSectionTitle(Meteor.fullText.convertContent(sec));
-                }
-                else if(sec.localName === 'sec'){
+                } else if(sec.localName === 'sec'){
                     var subSectionObject,
                         sectionIdObject;
 
@@ -355,9 +356,8 @@ Meteor.fullText = {
                         }
                         sectionObject.content.push(subSectionObject);
                     }
-                }
-                else{
-                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
+                } else{
+                    subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
                     // Add the content object to the section object
                     if(subSectionObject){
                         sectionObject.content.push(subSectionObject);
@@ -405,6 +405,7 @@ Meteor.fullText = {
         var sectionPartObject = {};
         var content,
             contentType;
+        var formulaInParagraph;
         // Different processing for different node types
         if (sec.localName === 'table-wrap'){
             sectionPartObject = Meteor.fullText.convertTableWrap(sec, files);
@@ -424,6 +425,20 @@ Meteor.fullText = {
                 sectionPartObject.id = secAttr.id;
             }
             content = Meteor.fullText.convertFormula(sec.childNodes);
+        } else if(sec.localName === 'p'){
+            formulaInParagraph = xpath.select('disp-formula', sec);
+            if(formulaInParagraph && formulaInParagraph[0] && formulaInParagraph[0].localName === 'disp-formula'){
+                // extyles puts equations in paragraph tags
+                contentType = 'formula';
+                var formulaAttr = Meteor.fullText.traverseAttributes(formulaInParagraph[0].attributes);
+                if(formulaAttr && formulaAttr.id){
+                    sectionPartObject.id = formulaAttr.id;
+                }
+                content = Meteor.fullText.convertFormula(formulaInParagraph[0].childNodes);
+            } else{
+                content = Meteor.fullText.convertContent(sec);
+                contentType = 'p';
+            }
         } else{
             content = Meteor.fullText.convertContent(sec);
             contentType = 'p';
@@ -622,7 +637,7 @@ Meteor.fullText = {
                 }
             }
         }
-        
+
         return formula;
     },
     linkXref: function(xrefNode){

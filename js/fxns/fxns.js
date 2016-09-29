@@ -333,6 +333,7 @@ Meteor.article = {
             '_id': mongoId
         });
         var files;
+        var xmlUrl;
 
         if(article){
             if(article.articleJson) {
@@ -387,12 +388,15 @@ Meteor.article = {
                     if(article.files && article.files.xml){
                         files = Meteor.article.linkFiles(article.files, mongoId);
                         if(files && files.xml && files.xml.url){
-                            Meteor.http.get( files.xml.url,function(getXmlError, xmlRes){
+                            xmlUrl = files.xml.url;
+                            // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                            //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                            // }
+                            Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
                                 // just check header for modified date
                                 if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
                                     Meteor.article.setFullTextVariable(article, result);
                                 }
-
                             });
                         }
                     }
