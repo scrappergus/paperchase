@@ -13,8 +13,20 @@ Meteor.methods({
             authors: getAuthorNameString(doc.authors),
             abstract: doc.abstract,
             keywords: getKeywordNameString(doc.keywords),
+            volume: doc.volume,
+            issue: doc.issue, 
+            articleType: getArticleType(doc.article_type),
             url: getURLString(doc.ids.pii)
           });
+        }
+
+        function getArticleType(type) {
+            if(type && type.name) {
+                return type.name;
+            }
+            else {
+                return null;
+            }
         }
 
         function getURLString(pii) {
@@ -132,10 +144,21 @@ Meteor.methods({
                 volume: doc.volume,
                 issue: doc.issue, 
                 keywords: getKeywordString(doc.keywords),
+                articleType: getArticleType(doc.article_type),
                 url: getURLString(doc.ids.pii)
             };
 
             return superagent.put(INDEX_URL + 'article/' + doc._id).send(esObj);
+        }
+
+
+        function getArticleType(type) {
+            if(type && type.name) {
+                return type.name;
+            }
+            else {
+                return null;
+            }
         }
 
         function getURLString(pii) {
