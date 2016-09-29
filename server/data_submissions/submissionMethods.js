@@ -179,7 +179,8 @@ Meteor.methods({
             if(article.keywords){
                 xmlString += '<ObjectList>';
                 article.keywords.forEach(function(kw){
-                    xmlString +='<Object Type="keyword"><Param Name="value">' + kw.replace(/<i>|<\/i>|<u>|<\/u>|<b>|<\/b>/g, '') + '</Param></Object>';
+                    var kwForPubMed = kw.replace(/<i>|<\/i>|<u>|<\/u>|<b>|<\/b>|<sup>|<\/sup>|<sub>|<\/sub>/g, '');
+                    xmlString +='<Object Type="keyword"><Param Name="value">' + kwForPubMed + '</Param></Object>';
                 });
                 xmlString += '</ObjectList>';
             }
