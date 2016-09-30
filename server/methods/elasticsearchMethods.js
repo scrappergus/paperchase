@@ -4,14 +4,33 @@ Meteor.methods({
         var asPromised = Meteor.npmRequire('superagent-as-promised');
         var superagent = asPromised(Meteor.npmRequire('superagent'));
         var mongoClient = Meteor.npmRequire('mongodb').MongoClient;
+        var articleURLTemplate = journalConfig.findOne().elasticsearch.articleURLTemplate;
+
 
         function indexArticle(doc) {
           return superagent.put(INDEX_URL + 'article/' + doc._id).send({
             title: doc.title,
             authors: getAuthorNameString(doc.authors),
             abstract: doc.abstract,
-            keywords: getKeywordNameString(doc.keywords)
+            keywords: getKeywordNameString(doc.keywords),
+            volume: doc.volume,
+            issue: doc.issue, 
+            articleType: getArticleType(doc.article_type),
+            url: getURLString(doc.ids.pii)
           });
+        }
+
+        function getArticleType(type) {
+            if(type && type.name) {
+                return type.name;
+            }
+            else {
+                return null;
+            }
+        }
+
+        function getURLString(pii) {
+            return articleURLTemplate.replace("[pii]", pii);
         }
 
         function getAuthorNameString(authors) {
@@ -71,6 +90,7 @@ Meteor.methods({
         var asPromised = Meteor.npmRequire('superagent-as-promised');
         var superagent = asPromised(Meteor.npmRequire('superagent'));
         var mongoClient = Meteor.npmRequire('mongodb').MongoClient;
+        var articleURLTemplate = journalConfig.findOne().elasticsearch.articleURLTemplate;
 
         var settings = {
           "settings": {
@@ -123,14 +143,26 @@ Meteor.methods({
                 abstract: doc.abstract,
                 volume: doc.volume,
                 issue: doc.issue, 
-                keywords: getKeywordString(doc.keywords)
+                keywords: getKeywordString(doc.keywords),
+                articleType: getArticleType(doc.article_type),
+                url: getURLString(doc.ids.pii)
             };
 
             return superagent.put(INDEX_URL + 'article/' + doc._id).send(esObj);
         }
 
-        function getArticleUrl(ids) {
-            return '';
+
+        function getArticleType(type) {
+            if(type && type.name) {
+                return type.name;
+            }
+            else {
+                return null;
+            }
+        }
+
+        function getURLString(pii) {
+            return articleURLTemplate.replace("[pii]", pii);
         }
 
         function getAuthorNameString(authors) {
@@ -138,7 +170,7 @@ Meteor.methods({
             .map(function(author) {
               return Object.keys(author)
                 .map(function(key) {
-                        if(['name_first', 'name_last'].indexOf(key)) {
+                        if(['name_last', 'name_first', 'name_middle', 'first_name', 'last_name', 'middle_name'].indexOf(key) > -1 && author[key] != '') {
                             return author[key];
                         }
                 })

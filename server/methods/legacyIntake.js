@@ -113,8 +113,6 @@ Meteor.methods({
 
             ids.forEach(function(id) {
 
-                    console.log("----------->  "+ id);
-
                     // Check if article exists by query for ID. Allow multiple types of ID (PMID, PII, etc)
                     paperchaseQueryParams = '{"' + 'ids.' + idType + '" : "'+id+'"}';
                     paperchaseQueryParams = JSON.parse(paperchaseQueryParams);
@@ -123,7 +121,6 @@ Meteor.methods({
                     // Get the article JSON from the legacy platform
                     if(legacyPlatform.short_name === 'ojs'){
                         Meteor.call('ojsGetArticlesJson', idType, id, journal, legacyPlatformApi, function(error,articleJson){
-                                console.log(articleJson);
                                 if(articleJson){
                                     articleJson = JSON.parse(articleJson);
                                     articleJson = articleJson.articles[0];
@@ -409,8 +406,8 @@ Meteor.methods({
             // Abstract
             abs = article.abstract.indexOf('<p class=\"BodyText\">');
             abs = parseInt(abs + 20);
-            abstract = article.abstract.substring(abs, article.abstract.length);
-            articleUpdate.abstract = '<p>' + abstract;
+            abstract = article.abstract.substring(abs, article.abstract.length).replace("</p> \n   </div>", '').trim();
+            articleUpdate.abstract = abstract;
 
             // Dates and Keywords
             datesAndKw = article.abstract.match(/<span class=\"CorespondanceBold\">(.*?)<\/p>/g); //will return 2 items - kw and dates list. need to then separate dates.
@@ -468,6 +465,11 @@ Meteor.methods({
 
         if(article.section_id){
             articleUpdate.section_id = parseInt(article.section_id); // TODO: remove this because it is the same as article type
+        }
+
+        if(article.section){
+            articleUpdate.article_type = {};
+            articleUpdate.article_type.name = article.section; 
         }
 
         // TODO: Add other ID types. (PMC, PMID, etc)
