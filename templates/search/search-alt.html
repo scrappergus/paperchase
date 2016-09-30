@@ -55,8 +55,61 @@
                     <div id="maincontentsolo-alt">
                         {{>SearchFormAlt}}
                     </div>
+
                 </div>
+
+        <div class="search page-content col s12 m8">
+
+    		{{#if searchLoaded}}
+            <h4 class="blue-divider">Search Results</h4>
+
+    	 	<p class="lighten" style=""><i>{{queryResults.length}} results found</i></p>
+
+            {{#if queryResults}}
+            <ul class="divided-list">
+                {{#each queryResults}}
+                <li class="item search-item toc-info">
+                    <h2 class="title"><a href="/article/{{_id}}">{{{title}}}</a></h2>
+                    <h6 class="desc">{{>AuthorsList}}</h6>
+					<h5 class="article-header">
+						{{>ArticleHeaderPieces}}
+					</h5>
+
+                    {{#if abstract}}
+                    {{#if equals abstract ''}}
+                    {{else}}
+					<div class="abstract article-text">
+						{{{wrapInParagraphTag abstract}}}
+					</div>
+                    {{/if}}
+                    {{/if}}
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+                <div class="row no-margin">
+                    <div class="col s12">
+                        <div class="result-box" style="margin-bottom:40px;">
+                            <h5>There are no results for these search terms.</h5>
+                            <p>For assistance finding a paper that was published in Aging, please contact <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a> </p>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+
+
+            {{else}}
+                {{#if searchLoading}}
+                    {{>Loading}}
+                {{else}}
+                <h4 class="blue-divider">Search</h4>
+                    <p>To search the journal, enter a term in the search bar. If you'd like to find specific authors, titles, or abstracts, use the advanced search to the right. </p>
+                {{/if}}
+    		{{/if}}
+        </div>
+
             </div>
+
             {{>FooterAlt}}
         </div>
     </div>
@@ -64,7 +117,7 @@
 
 <Template name="SearchFormAlt">
     <h1>Search</h1>
-    <form action="" method="post">
+    <form id="search-terms">
         <table>
             <tbody>
                 <tr>
@@ -96,6 +149,8 @@
         <br>
         <input type="submit">
     </form>
+
+
 </Template>
 
 <template name="FooterAlt">

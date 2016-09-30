@@ -208,6 +208,26 @@ Template.Search.events({
     }
 });
 
+Template.SearchAlt.events({
+    'submit #search-terms': function(e) {
+        e.preventDefault();
+        Session.set('queryResults', null);
+        Session.set('searchLoaded', false);
+        Session.set('searchLoading', true);
+        Meteor.call('search', {
+            authors: e.target.authors && e.target.authors.value,
+            abstract: e.target.abstract && e.target.abstract.value,
+            title: e.target.title && e.target.title.value
+        }, function(err, data) {
+//            console.log('>>> args in browser', err, data);
+            Session.set('queryResults', err ? [] : data);
+            Session.set('searchLoading', false);
+            Session.set('searchLoaded', true);
+        });
+    }
+});
+
+
 // Scrollspy
 // ------
 Template.scrollspyCard.events({
