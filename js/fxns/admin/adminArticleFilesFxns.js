@@ -295,6 +295,8 @@ Meteor.processXml = {
         if(abstract){
             // abstract = abstract.replace(/<\/p>/g,'');
             // abstract = abstract.replace(/<p>/g,'');
+            abstract = abstract.replace(/<bold>/g,'<b>');
+            abstract = abstract.replace(/<\/bold>/g,'</b>');
             abstract = abstract.replace(/<sec>/g,'');
             abstract = abstract.replace(/<\/sec>/g,'');
             abstract = abstract.replace(/<title>/g,'<p><b>');
