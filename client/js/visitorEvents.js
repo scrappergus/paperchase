@@ -203,14 +203,18 @@ Template.Search.events({
             impactSearch : e.target.impactSearch && e.target.impactSearch.checked
         }, function(err, data) {
 //            console.log('>>> args in browser', err, data);
+var indeces = {'aging': 'Aging', 'oncoscience': 'Oncoscience', 'oncotarget': 'Oncotarget', 'genesandcancer': 'Genes & Cancer' };
                          var queryResults = data.map(function(cur) {
                                  return {
                                      '_id': cur._id,
-                                     'index': cur._index,
+                                     'index': indeces[cur._index],
                                      'title': cur._source.title,
                                      'abstract': cur._source.abstract,
                                      'authors': cur._source.authors,
-                                     'url': cur._source.url
+                                     'url': cur._source.url,
+                                     'article_type':{name:cur._source.articleType},
+                                     'issue': cur._source.issue,
+                                     'volume': cur._source.volume 
                                  }
                              });
 

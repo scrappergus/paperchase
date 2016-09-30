@@ -13,15 +13,17 @@
                 {{#each queryResults}}
                 <li class="item search-item toc-info">
                     <h2 class="title"><a href="{{url}}">{{{title}}}</a></h2>
-                    <h6 class="desc">{{index}}</h6>
+                    <h6 class="desc">Published in <em>{{index}}</em></h6>
                     <h6 class="desc">{{authors}}</h6>
 					<h5 class="article-header">
 						{{>ArticleHeaderPieces}}
 					</h5>
 
+                    {{#if abstract}}
 					<div class="abstract article-text">
 						{{{wrapInParagraphTag abstract}}}
 					</div>
+                    {{/if}}
                 </li>
                 {{/each}}
             </ul>
