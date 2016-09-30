@@ -189,7 +189,13 @@
 ---------------------------------------------------------*/
 .featured-nobel {
     margin-top: 40px;
+    p {
+        text-align: justify;
+    }
     ul.featured-items {
+        li {
+            text-align: justify;
+        }
         li:hover {
             background: none;
             border-color: #fff;

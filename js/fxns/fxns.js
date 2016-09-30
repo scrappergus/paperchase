@@ -126,12 +126,14 @@ Meteor.impact = {
     limitedTocForPaperTypes: function(article, fullText) {
         if( article && article.article_type && article.article_type._id ){
             if( article.article_type._id === 'zBhBSXX5HTpDN2Wyb' || article.article_type._id === 'quAmLJarW5DBMWXXB'){
-                fullText.sections.forEach(function(section){
-                    var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/;
-                    if(section.title && !section.title.match(titleDisplayPattern)){
-                        section.hideTitleInToc = true;
-                    }
-                });
+                if(fullText.sections){
+                    fullText.sections.forEach(function(section){
+                        var titleDisplayPattern = /(Acknowledgements|Conflict of Interests Statement|References)/;
+                        if(section.title && !section.title.match(titleDisplayPattern)){
+                            section.hideTitleInToc = true;
+                        }
+                    });
+                }
             }
         }
 
@@ -144,6 +146,18 @@ Meteor.impact = {
             }
         }
         return;
+    },
+    altInstance: function(){
+        if(Meteor.settings.public && Meteor.settings.public.alt === true){
+            return true;
+        }
+        return false;
+    },
+    redirectForAlt: function() {
+        // For instances that are only using alt search page
+        if(Meteor.settings.public && Meteor.settings.public.alt === true){
+            Router.go('/search-alt');
+        }
     }
 };
 
@@ -293,15 +307,38 @@ Meteor.article = {
         var articleData = articles.findOne({'_id':mongoId});
         Session.set('articleData',articleData);
     },
+    setFullTextVariable: function(article, result){
+        var mongoId = article._id;
+        Session.set('article-text', null);
+        Meteor.call('getFilesForFullText', mongoId, function(error, xmlResult) {
+            result = xmlResult.convertedXml || {};
+            if(xmlResult && xmlResult.lastModified){
+                Session.set('article-text-modified', xmlResult.lastModified);
+            }
+
+            result.abstract = article.abstract;
+            if(article.advanceContent) {
+                result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
+            }
+
+            result = Meteor.impact.limitedTocForPaperTypes(article, result);
+
+            Session.set('article-text', result);
+        });
+    },
     readyFullText: function(mongoId){
+        // console.log('...readyFullText',mongoId);
+        var result = {};
         var article = articles.findOne({
             '_id': mongoId
         });
+        var files;
+        var xmlUrl;
 
         if(article){
             if(article.articleJson) {
                 Session.set('article-text', null);
-                var result = article.articleJson;
+                result = article.articleJson;
                 result.abstract = article.abstract;
                 if(result && result.sections) {
                     var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
@@ -334,27 +371,38 @@ Meteor.article = {
                 }
 
                 Session.set('article-text', result);
-            }
-            else {
+            } else {
                 if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
-                    Session.set('article-text', null);
-                    Meteor.call('getFilesForFullText', mongoId, function(error, result) {
-                            result = result || {};
-                            result.abstract = article.abstract;
-                        //    if(article.articleJson !== undefined) {
-                        //        console.log("====>" + article.articleJson);
-                        //        result.sections = article.articleJson.sections;
-                        //        result.acks = article.articleJson.acks;
-                        //        result.references = article.articleJson.references;
-                        //    }
-                            if(article.advanceContent) {
-                                result.advanceContent = Spacebars.SafeString(article.advanceContent).string;
-                            }
+                    // Will SET full text session variable and article-text-modified session variable
+                    // this conditional checks if the session variable for full text matches the request, if not then reparse XML OR session variable for full text does not exist
+                    Meteor.article.setFullTextVariable(article, result);
+                } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === mongoId){
+                    // Will SET full text session variable and article-text-modified session variable ONLY IF last-modified date has changed
+                    // this conditional is for when the request matches the exisiting session variable for full text.
+                    // Now make sure that the last-modified date has not changed, if so then reset session variable
 
-                            result = Meteor.impact.limitedTocForPaperTypes(article, result);
+                    // option 1: use DB last_update
+                    // use the last_update property in the article doc to determine if we should reparse. This will get reset when new XML is uploaded. possible problem - timezone
 
-                            Session.set('article-text', result);
-                        });
+                    // option 2: Go directly to XML to get last-modified
+                    if(article.files && article.files.xml){
+                        files = Meteor.article.linkFiles(article.files, mongoId);
+                        if(files && files.xml && files.xml.url){
+                            xmlUrl = files.xml.url;
+                            // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                            //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                            // }
+                            Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
+                                // just check header for modified date
+                                if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
+                                    Meteor.article.setFullTextVariable(article, result);
+                                }
+                            });
+                        }
+                    }
+                    // option 3: add last-modified property to xml in article doc
+                } else {
+                    // requested matches exting session variable for full text
                 }
             }
         }

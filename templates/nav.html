@@ -1,4 +1,6 @@
 <template name="LeftNav">
+	{{#if alt}}
+	{{else}}
 	<ul class="nav-links">
 		<li class="nav-title"><span class="title-content">Navigate<span class="sidebar-toggle icon icon-close"></span></span></li>
 		{{#each links}}
@@ -15,7 +17,7 @@
 			{{>SocialLinks}}
 		</ul></li>
 	</ul>
-
+	{{/if}}
 </template>
 
 <template name="MobileMenu">

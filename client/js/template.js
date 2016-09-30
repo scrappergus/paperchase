@@ -52,9 +52,13 @@ Template.ArticleFigureViewerViewer.onRendered(function() {
                     increment: 0.1
                 }).panzoom('zoom', true);
 });
-Template.ArticleText.onRendered(function() {
-    // $('.materialboxed').materialbox();
-});
+// Template.ArticleText.onRendered(function() {
+//     // $('.materialboxed').materialbox();
+//     MeteorMathJax.require(function (MathJax) {
+//         // this is a force download. The package will download if needed, so this is commented out
+//         MeteorMathJax.ready();
+//     });
+// });
 Template.ArticleFullText.onRendered(function() {
     // $('.materialboxed').materialbox(); // popup image
 });
