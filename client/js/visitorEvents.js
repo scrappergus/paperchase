@@ -187,43 +187,15 @@ Template.ForAuthors.events({
     }
 });
 
+
 // Search
 // ------
 Template.Search.events({
-    'submit #search-terms': function(e) {
-        e.preventDefault();
-        Session.set('queryResults', null);
-        Session.set('searchLoaded', false);
-        Session.set('searchLoading', true);
-        Meteor.call('search', {
-            authors: e.target.authors && e.target.authors.value,
-            abstract: e.target.abstract && e.target.abstract.value,
-            title: e.target.title && e.target.title.value,
-            keywords: e.target.keywords && e.target.keywords.value,
-            impactSearch : e.target.impactSearch && e.target.impactSearch.checked
-        }, function(err, data) {
-//            console.log('>>> args in browser', err, data);
-var indeces = {'aging': 'Aging', 'oncoscience': 'Oncoscience', 'oncotarget': 'Oncotarget', 'genesandcancer': 'Genes & Cancer' };
-                         var queryResults = data.map(function(cur) {
-                                 return {
-                                     '_id': cur._id,
-                                     'index': indeces[cur._index],
-                                     'title': cur._source.title,
-                                     'abstract': cur._source.abstract,
-                                     'authors': cur._source.authors,
-                                     'url': cur._source.url,
-                                     'article_type':{name:cur._source.articleType},
-                                     'issue': cur._source.issue,
-                                     'volume': cur._source.volume 
-                                 }
-                             });
-
-            Session.set('queryResults', err ? [] : queryResults);
-            Session.set('searchLoading', false);
-            Session.set('searchLoaded', true);
-        });
-    }
+        'submit #search-terms': function(e) {
+            Meteor.search.searchLoad(e);
+        }                              
 });
+
 
 // Scrollspy
 // ------

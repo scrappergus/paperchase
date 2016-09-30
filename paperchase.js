@@ -1027,39 +1027,8 @@ if (Meteor.isClient) {
             }
             return pageTitle + 'Search';
         },
-        onAfterAction: function() {
-            var terms = this.params.query.terms;
-            $(".search-abstract").val(terms);
-            Session.set('queryResults', null);
-            Session.set('searchLoaded', false);
-            if(terms) {
-                Session.set('searchLoading', true);
-            }
-            Meteor.call('search', {
-                    abstract: terms
-//                    ,authors: terms
-//                    ,title: terms
-                }, function(err, data) {
-//                                console.log('>>> args in browser', err, data);
-var indeces = {'aging': 'Aging', 'oncoscience': 'Oncoscience', 'oncotarget': 'Oncotarget', 'genesandcancer': 'Genes & Cancer' };
-                         var queryResults = data.map(function(cur) {
-                                 return {
-                                     '_id': cur._id,
-                                     'index': indeces[cur._index],
-                                     'title': cur._source.title,
-                                     'abstract': cur._source.abstract,
-                                     'authors': cur._source.authors,
-                                     'url': cur._source.url,
-                                     'article_type':{name:cur._source.articleType},
-                                     'issue': cur._source.issue,
-                                     'volume': cur._source.volume
-                                 }
-                             });
-                    Session.set('searchLoading', false);
-                    Session.set('searchLoaded', true);
-                    Session.set('queryResults', err ? [] : queryResults);
-                });
-
+        onAfterAction: function(e) {
+            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms});
         },
         data: function() {
             return {

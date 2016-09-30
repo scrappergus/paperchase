@@ -50,7 +50,7 @@
         </div>
 
         <div class="page-sidebar col s12 m4 hide-on-med-and-down">
-            {{> AdvancedSearch mobile=false}}
+            {{> AdvancedSearch mobile=false terms=terms}}
         </div>
 	 </div>
 
@@ -61,8 +61,8 @@
         <div class="form-container">
             <h6 class="card-title">Advanced Search</h6>
             <form id="search-terms" action="#">
-                <input placeholder="title" type="text" name="title">
-                <input placeholder="abstract" type="text" name="abstract" value="{{terms}}">
+                <input placeholder="title" type="text" name="title" value="{{terms}}">
+                <input placeholder="abstract" type="text" name="abstract">
                 <input placeholder="authors" type="text" name="authors">
                 <input placeholder="keywords" type="text" name="keywords">
                 <div class="input-field">

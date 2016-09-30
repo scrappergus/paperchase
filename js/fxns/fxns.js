@@ -1205,7 +1205,44 @@ Meteor.advance = {
 Meteor.search = {
     bounceTo: function(args) {
         Router.go("/search/?terms="+args.terms);
-    }
+    },
+    searchLoad: function(e, args) {
+        if(e && e.preventDefault) {
+            console.log('preventDefault');
+            e.preventDefault();    
+        }
+        Session.set('queryResults', null);
+        Session.set('searchLoaded', false);
+        Session.set('searchLoading', true);
+        var generalTerm = (args && args.generalTerm) ? args.generalTerm : '';
+        Meteor.call('search', {
+                authors: (e && e.target && e.target.authors) ? e.target.authors.value : null,
+                abstract: (e && e.target && e.target.abstract) ? e.target.abstract.value : null,
+                title: (e && e.target && e.target.title) ? e.target.title.value : generalTerm,
+                keywords: (e && e.target && e.target.keywords) ? e.target.keywords.value : null,
+                impactSearch : e && e.target && e.target.impactSearch && e.target.impactSearch.checked
+            }, function(err, data) {
+                //            console.log('>>> args in browser', err, data);
+                var indeces = {'aging': 'Aging', 'oncoscience': 'Oncoscience', 'oncotarget': 'Oncotarget', 'genesandcancer': 'Genes & Cancer' };
+                var queryResults = data.map(function(cur) {
+                        return {
+                            '_id': cur._id,
+                            'index': indeces[cur._index],
+                            'title': cur._source.title,
+                            'abstract': cur._source.abstract,
+                            'authors': cur._source.authors,
+                            'url': cur._source.url,
+                            'article_type':{name:cur._source.articleType},
+                            'issue': cur._source.issue,
+                            'volume': cur._source.volume 
+                        }
+                    });
+
+                Session.set('queryResults', err ? [] : queryResults);
+                Session.set('searchLoading', false);
+                Session.set('searchLoaded', true);
+            });
+    } 
 };
 
 Meteor.googleAnalytics = {
