@@ -1256,7 +1256,6 @@ Meteor.search = {
     },
     searchLoad: function(e, args) {
         if(e && e.preventDefault) {
-            console.log('preventDefault');
             e.preventDefault();    
         }
         Session.set('queryResults', null);

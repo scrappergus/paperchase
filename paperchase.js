@@ -1118,11 +1118,7 @@ if (Meteor.isClient) {
         title: function() {
             return Meteor.settings.public.journal.name + ' | ' + 'Search';
         },
-        onBeforeAction: function(){
-            Meteor.impact.redirectForAlt();
-            this.next();
-        },
-        onAfterAction: function() {
+        onAfterAction: function(e) {
             Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms});
         },
         data: function() {

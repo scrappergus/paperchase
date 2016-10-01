@@ -54,14 +54,11 @@
                 <div id="column2and3-alt">
                     <div id="maincontentsolo-alt">
                         {{>SearchFormAlt}}
-                    </div>
 
-                </div>
-
-        <div class="search page-content col s12 m8">
+        <div>
 
     		{{#if searchLoaded}}
-            <h4 class="blue-divider">Search Results</h4>
+            <h4 class="black-divider">Search Results</h4>
 
     	 	<p class="lighten" style=""><i>{{queryResults.length}} results found</i></p>
 
@@ -69,8 +66,9 @@
             <ul class="divided-list">
                 {{#each queryResults}}
                 <li class="item search-item toc-info">
-                    <h2 class="title"><a href="/article/{{_id}}">{{{title}}}</a></h2>
-                    <h6 class="desc">{{>AuthorsList}}</h6>
+                    <h2 class="title"><a href="{{url}}">{{{title}}}</a></h2>
+                    <h6 class="desc">Published in <em>{{index}}</em></h6>
+                    <h6 class="desc">{{authors}}</h6>
 					<h5 class="article-header">
 						{{>ArticleHeaderPieces}}
 					</h5>
@@ -108,6 +106,13 @@
     		{{/if}}
         </div>
 
+                    </div>
+
+
+
+                </div>
+
+
             </div>
 
             {{>FooterAlt}}
@@ -117,33 +122,51 @@
 
 <Template name="SearchFormAlt">
     <h1>Search</h1>
+
     <form id="search-terms">
         <table>
             <tbody>
                 <tr>
                     <td>
-                        <p>By Author</p>
-                    </td>
-                    <td>
-                        <input type="text" name="name">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <p>By Title</p>
                     </td>
                     <td>
-                        <input type="text" name="title">
+                        <input placeholder="title" type="text" name="title" value="{{terms}}">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>By Pii</p>
+                        <p>By Abstract</p>
                     </td>
                     <td>
-                        <input type="text" name="poo">
+                        <input placeholder="abstract" type="text" name="abstract">
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <p>By Author</p>
+                    </td>
+                    <td>
+                        <input placeholder="authors" type="text" name="authors">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>By Keywords</p>
+                    </td>
+                    <td>
+                        <input placeholder="keywords" type="text" name="keywords">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="impactSearch" id="impactSearchCheck"/>
+                        <label for="impactSearchCheck">Search all Impact publications</label>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
         <br>

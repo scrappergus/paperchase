@@ -52,3 +52,16 @@ Template.FooterAlt.helpers({
         return Meteor.settings.public.journal.site.copyright;
     }
 });
+
+Template.SearchAlt.helpers({
+    searchLoading: function(){
+        return Session.get('searchLoading');
+    },
+    searchLoaded: function() {
+        return Session.get('searchLoaded');
+    },
+    queryResults: function() {
+        return Session.get("queryResults");
+    }
+});
+
