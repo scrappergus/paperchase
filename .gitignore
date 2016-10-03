@@ -2,6 +2,8 @@
 .meteor/meteorite
 mup.json
 public/images/covers/
+settings-gc.json
+settings-oncoscience.json
 settings.json
 node_modules/
 server/awsConfig.js
