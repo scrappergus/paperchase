@@ -41,7 +41,7 @@ Meteor.methods({
             aReturn.title = article.title;
             aReturn.url = '';
             if (article.doi) {
-                if(article.doi.indexOf('http') != -1){
+                if(article.doi.indexOf('http') === -1){
                     aReturn.url += 'http://dx.doi.org/';
                 }
                 aReturn.url += article.doi;
