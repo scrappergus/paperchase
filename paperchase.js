@@ -78,9 +78,19 @@ Meteor.startup(function () {
 if (Meteor.isClient) {
     Session.set('altMetricReady', false);
     Meteor.startup(function () {
+        // Ready Altmetric library
         $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a,b,c){
             if(b == 'success') {
                 Session.set('altMetricReady', true);
+            }
+        });
+
+        // Get top 100 articles
+        Meteor.call('getAltmetricTopHundred', function(altmetricError, altmetricResult){
+            if (altmetricError) {
+                console.error('altmetricError', altmetricError);
+            } else if (altmetricResult) {
+                Session.set('altmetric-top-100', altmetricResult);
             }
         });
     });
@@ -364,6 +374,7 @@ if (Meteor.isClient) {
     // altmetrics badge
     Session.setDefault('altMetricReady', false);
     Session.setDefault('badge-visible', false);
+    Session.setDefault('altmetric-top-100', false);
 
     // Redirects
     // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.

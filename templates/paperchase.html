@@ -15,6 +15,18 @@
                 {{/each}}
             </ul>
 
+            {{#if altmetricTop100}}
+                <h3 class="section-heading new-section">Top 100 Articles</h3>
+                <ul id="altmetric-top-100" class="card">
+                    {{#each altmetricTop100}}
+                    <li>
+                        <a href="{{details_url}}" class="altmetric-list-badge" target="_BLANK"><img src="{{images.small}}"/></a>
+                        <a href="{{url}}" class="altmetric-title-link" target="_blank">{{{title}}}</a>
+                    </li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+
             {{#if news}}
                 {{> LatestNews}}
             {{/if}}
