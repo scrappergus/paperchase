@@ -105,7 +105,7 @@ Meteor.article = {
                     article.equal_contribs = availableLabels[0];
                     article.authors[authIdx].equal_contrib = availableLabels[0];
                 }
-            }    
+            }
         }
         return article;
     },
