@@ -539,7 +539,56 @@ Meteor.methods({
                 result[duplicateType] = null; //for templating
             }
         }
-        // console.log(result.pii);
+
+        // var csvStr = 'PII, Mongo ID, Created By, Created Date, First Record';
+        //
+        // result.pii.forEach(function(duplicateList){
+        //     var previousDate;
+        //     for(var i=0; i<duplicateList.mongo_ids.length; i++){
+        //         var article = articles.findOne({_id: duplicateList.mongo_ids[i]});
+        //         var createdBy = 'N/A',
+        //             createdDate = 'N/A';
+        //         var userData,
+        //             firstRecord = '';
+        //         if (article){
+        //             if(article.doc_updates && article.doc_updates.updates && article.doc_updates.updates[0]){
+        //                 if (article.doc_updates.updates[0].user){
+        //                     userData = Meteor.users.findOne({_id : article.doc_updates.updates[0].user});
+        //                     if(userData){
+        //                         createdBy = userData.emails[0].address;
+        //                     }
+        //                 } else if(article.doc_updates.created_by){
+        //                     createdBy = article.doc_updates.created_by;
+        //                 }
+        //
+        //                 if (article.doc_updates.updates[0].date){
+        //                     createdDate = article.doc_updates.updates[0].date;
+        //                 }
+        //             } else if(article.doc_updates && article.doc_updates.created_by){
+        //                 createdBy = article.doc_updates.created_by;
+        //             }
+        //
+        //             if(createdDate != 'N/A' && previousDate) {
+        //                 if( createdDate < previousDate ){
+        //                     firstRecord = 'Yes';
+        //                 } else {
+        //                     console.log('No', createdDate , '>', previousDate);
+        //                     firstRecord = 'No';
+        //                 }
+        //             }
+        //
+        //             if(createdDate != 'N/A') {
+        //                 previousDate = createdDate;
+        //             }
+        //
+        //             csvStr += '\n' + article.ids.pii + ',' + article._id + ',' + createdBy + ',' + createdDate + ',' + firstRecord;
+        //         } else{
+        //             console.log('Not Found', duplicateList.mongo_ids[i]);
+        //         }
+        //     }
+        // });
+        // // console.log(csvStr);
+        // result.csv = csvStr;
         return result;
     },
     articleExistenceCheck: function(mongoId, articleData){
