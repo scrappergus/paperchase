@@ -196,11 +196,11 @@ Template.Article.helpers({
     }
 });
 
-Template.ArticleHeaderTitle.helpers({
-    titleClass: function(){
-        return Session.get('badge-visible') ? 'badge-visible' : '';
-    }
-});
+// Template.ArticleHeaderTitle.helpers({
+//     titleClass: function(){
+//         return Session.get('badge-visible') ? 'badge-visible' : '';
+//     }
+// });
 
 Template.FullTextFigure.helpers({
     articleId: function() {
