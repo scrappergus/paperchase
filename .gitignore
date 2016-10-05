@@ -7,6 +7,9 @@ node_modules/
 server/awsConfig.js
 xml-sets/
 settings-aging.json
+settings-oncotarget-admin.json
+settings-oncoscience.json
+settings-gc.json
 settings-aging-stage-1.json
 settings-aging-stage-2.json
 settings-aging-admin.json
