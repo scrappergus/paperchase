@@ -39,9 +39,34 @@ Meteor.methods({
             throw new Meteor.Error(err);
         }
     },
-    sorterRemoveItem: function(listName,mongoId){
-        var res = sorters.update({name : listName}, {$pull : {'order' : mongoId}});
-        return res;
+    sorterRemoveItem: function(listName, mongoId){
+        var fut = new future();
+        sorters.update({name : listName}, {$pull : {'order' : mongoId}}, function(errorSorter, resultSorter){
+            if(resultSorter && listName === 'advance'){
+                var articleUpdateObj = { advance : false };
+                if (Meteor.settings.public.journal.name === 'Oncotarget') {
+                    articleUpdateObj.debug_sorter_remove_article = true;
+                }
+                Meteor.call('updateArticle', mongoId, articleUpdateObj, function(errorArticle, resultArticle){
+                    if (resultArticle) {
+                        fut.return(true);
+                    } else {
+                        fut.throw(errorArticle);
+                    }
+                });
+            } else if(resultSorter) {
+                fut.return(true);
+            } else {
+                fut.throw(errorSorter);
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
     },
     batchSorterRemoveItem: function(listName,idList){
         var removed = idList.map(function(mongoId){
