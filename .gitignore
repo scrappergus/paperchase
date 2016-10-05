@@ -4,6 +4,7 @@ mup.json
 public/images/covers/
 settings-gc.json
 settings-oncoscience.json
+settings-oncotarget-admin.json
 settings.json
 node_modules/
 server/awsConfig.js
