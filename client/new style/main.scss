@@ -123,6 +123,10 @@
     h6.desc {
         margin: 0 0 10px 0;
         padding: 0;
+        .authors{
+            clear: left;
+            display: block;
+        }
     }
 
     span.meta {
@@ -262,6 +266,16 @@ h2.dates {
         word-wrap: break-word;
     }
 }
+#article-title-and-badge-container{
+    float:left;
+    margin: 0 0 1.68rem 0;
+    width:100%;
+}
+#article-container{
+    h1{
+        margin: 0!important;
+    }
+}
 #article-title{
     // padding-left: 42px;
 }
@@ -270,7 +284,9 @@ h2.dates {
 }
 .article-altmetric{
     float: left;
-    margin-right: 10px;
+    a > img{
+        margin-right: 10px!important;
+    }
 }
 /*end hide commas*/
 
@@ -755,6 +771,12 @@ ul.sectioned-list {
 		float: left;
 		margin: 1em 0;
 		width: 100%;
+        &:first-child{
+            margin-top: 0px;
+        }
+        p{
+            margin: 0px!important;
+        }
 	}
 }
 
@@ -773,7 +795,7 @@ ul.sectioned-list {
 .altmetric-list-badge{
 	display: block;
 	float: left;
-	margin: 0 10px 10px 0;
+	margin: 0 10px 0 0;
 }
 .altmetric-title-link{
 	display: table;
