@@ -56,6 +56,8 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
+    modifier.$set.previous = articles.findOne({_id : doc._id}); // to do - article advance false because sorter updates.
+
     // maintain IDs
     // causes bug when removing an ID on purpose
     // if(modifier.$set && modifier.$set.ids){
@@ -143,7 +145,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
 
 articles.after.update(function (userId, doc, fieldNames, modifier, options) {
     var journal = journalConfig.findOne();
-    // Advance article. Update sorters colleciton.
+    // Advance article. Update sorters collection.
     if(journal.journal.short_name != 'oncotarget'){
         if(doc.advance && !this.previous.advance){
             Meteor.call('sorterAddItem', 'advance', doc._id);
@@ -259,11 +261,11 @@ sections.after.update(function (userId, doc, fieldNames, modifier, options){
 // Sorters
 // -------
 sorters.after.update(function (userId, doc, fieldNames, modifier, options){
-    if(modifier.$pull !== undefined) {
-        var article_id = modifier.$pull;
-        article_id = article_id.order;
-        if(article_id){
-            articles.direct.update({_id:article_id}, {$set: {advance:false}});
-        }
-    }
+    // if(modifier.$pull !== undefined) {
+        // var article_id = modifier.$pull;
+        // article_id = article_id.order;
+        // if(article_id){
+        //     articles.direct.update({_id:article_id}, {$set: {advance:false}});
+        // }
+    // }
 });
