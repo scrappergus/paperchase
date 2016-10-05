@@ -47,6 +47,11 @@ Meteor.methods({
         }
     },
     addArticle: function(articleData){
+        // console.log('....addArticle');
+        if(articleData.ids && articleData.ids.pii){
+            console.log('....addArticle', articleData.ids.pii);
+        }
+
         Meteor.authorizeCheck.articles();
 
         if(articleData.volume && articleData.issue){
@@ -540,7 +545,9 @@ Meteor.methods({
             }
         }
 
-        // var csvStr = 'PII, Mongo ID, Created By, Created Date, First Record';
+        // Below is for debugging duplicates
+        // var advanceArray = sorters.findOne({ name: 'advance' }).order;
+        // var csvStr = 'PII, Mongo ID, Created By, Created Date, First Record, Advance in Article Doc, In Advance Array';
         //
         // result.pii.forEach(function(duplicateList){
         //     var previousDate;
@@ -572,7 +579,7 @@ Meteor.methods({
         //                 if( createdDate < previousDate ){
         //                     firstRecord = 'Yes';
         //                 } else {
-        //                     console.log('No', createdDate , '>', previousDate);
+        //                     // console.log('No', createdDate , '>', previousDate);
         //                     firstRecord = 'No';
         //                 }
         //             }
@@ -581,7 +588,11 @@ Meteor.methods({
         //                 previousDate = createdDate;
         //             }
         //
-        //             csvStr += '\n' + article.ids.pii + ',' + article._id + ',' + createdBy + ',' + createdDate + ',' + firstRecord;
+        //             var inAdvanceArray = advanceArray.indexOf(article._id) != -1 ? 'Yes' : 'No';
+        //
+        //             var advanceInArticleDoc = article.advance ? 'Yes' : 'No';
+        //
+        //             csvStr += '\n' + article.ids.pii + ',' + article._id + ',' + createdBy + ',' + createdDate + ',' + firstRecord + ',' + advanceInArticleDoc + ',' + inAdvanceArray;
         //         } else{
         //             console.log('Not Found', duplicateList.mongo_ids[i]);
         //         }
