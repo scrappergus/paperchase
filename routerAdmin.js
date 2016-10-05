@@ -1058,7 +1058,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
             this.next();
@@ -1102,7 +1102,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
             Meteor.call('compareWithLegacy', function(error,result){
@@ -1123,7 +1123,7 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
-            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
             this.next();
