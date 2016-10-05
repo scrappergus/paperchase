@@ -29,9 +29,7 @@ Template.AdminNav.helpers({
 
 Template.AdminNavLinksCollapse.helpers({
     ojs: function(){
-        if(Session.get('journal')){
-            return Session.get('journal').journal.short_name === 'oncotarget';
-        }
+        return Meteor.settings.public.journal.name === 'Oncotarget';
     }
 });
 
