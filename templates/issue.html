@@ -85,15 +85,18 @@
                 {{/if}}
 
                 <div class="toc-info">
-                    {{#if altMetricReady}}
-                    {{#if ids.doi}}
-                    {{#with ids}}
-                    {{>AltmetricBadge doi=doi}}
-                    {{/with}}
-                    {{/if}}
-                    {{/if}}
+                    <div class="valign-wrapper">
+                        {{#if altMetricReady}}
+                        {{#if ids.doi}}
+                        {{#with ids}}
+                        {{>AltmetricBadge doi=doi}}
+                        {{/with}}
+                        {{/if}}
+                        {{/if}}
 
-                    <h2 class="title">{{{title}}}</h2>
+                        <h2 class="title valign">{{{title}}}</h2>
+                    </div>
+
                     {{#if authors}} <h6 class="desc">{{>AuthorsList}}</h6> {{/if}}
 
                     <!-- Desc Info -->
