@@ -2,7 +2,7 @@
     <h5 class="article-header">
         {{>ArticleHeaderPieces}}
     </h5>
-    <div style="width:100%;float:left;">
+    <div id="article-title-and-badge-container" class="valign-wrapper">
         {{#if altMetricReady}}
         {{#if ids.doi}}
         {{#with ids}}
@@ -11,7 +11,7 @@
         {{/if}}
         {{/if}}
         <div id="article-container">
-            <h1 id="article-title" class="{{titleClass}}">
+            <h1 id="article-title" class="valign">
                 {{{title}}}
             </h1>
         </div>
@@ -42,7 +42,7 @@
 </template>
 
 <template name="AltmetricBadge">
-    <div data-badge-type="donut" data-doi="{{doi}}" data-hide-no-mentions="true" data-hide-less-than="1" data-condensed="true" class="article-altmetric left-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
+    <div data-badge-type="donut" data-doi="{{doi}}" data-hide-no-mentions="true" data-hide-less-than="1" data-condensed="true" class="valign article-altmetric left-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
 </template>
 
 <template name="ArticlePages">
