@@ -20,8 +20,10 @@
                 <ul id="altmetric-top-100" class="card">
                     {{#each altmetricTop100}}
                     <li>
-                        <a href="{{details_url}}" class="altmetric-list-badge" target="_BLANK"><img src="{{images.small}}"/></a>
-                        <a href="{{url}}" class="altmetric-title-link" target="_blank">{{{title}}}</a>
+                        <p class="valign-wrapper">
+                            <a href="{{details_url}}" class="valign altmetric-list-badge" target="_BLANK"><img src="{{images.small}}"/></a>
+                            <a href="{{url}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
+                        </p>
                     </li>
                     {{/each}}
                 </ul>
