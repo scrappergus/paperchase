@@ -197,7 +197,11 @@
                                     {{ids.pii}}
                                 </td>
                                 <td>
+                                    {{#if article_type.type}}
                                     {{article_type.type}}
+                                    {{else}}
+                                    {{article_type.name}}
+                                    {{/if}}
                                 </td>
                                 <td>
                                     <a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a>
