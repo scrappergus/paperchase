@@ -469,7 +469,7 @@ Meteor.methods({
 
         if(article.section){
             articleUpdate.article_type = {};
-            articleUpdate.article_type.name = article.section; 
+            articleUpdate.article_type.name = article.section;
         }
 
         // TODO: Add other ID types. (PMC, PMID, etc)
@@ -553,15 +553,16 @@ Meteor.methods({
         }
     },
     ojsAddMissingAdvance: function(missing){
-        // console.log('ojsAddMissingAdvance',missing.length);
+        // console.log('...ojsAddMissingAdvance', missing.length);
         var added = [];
         var journalInfo = journalConfig.findOne();
         missing.map(function(article){
             Meteor.call('ojsProcessArticleJson', article.data, function(processError,processedArticleJson){
-                if(processError) {
+                if (processError) {
                     console.error('legacyArticleIntake via ojsAddMissingAdvance',processError);
-                }else if(processedArticleJson){
-                    Meteor.call('addArticle',processedArticleJson, function(addError,result){
+                } else if (processedArticleJson) {
+                    var dataForDb = Object.assign({'debug_added_via_all_ojs_btn': true}, processedArticleJson);
+                    Meteor.call('addArticle', dataForDb, function(addError,result){
                         if(addError){
                             console.error('addError via ojsAddMissingAdvance',addError);
                         }else if(result){
