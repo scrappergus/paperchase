@@ -11,7 +11,8 @@
     <div class="row">
         <div class="col s12">
             <h4>OJS Count: {{ojsCount}}</h4>
-            <h4>Paperchase Count: {{paperchaseCount}}</h4>
+            <h4>Paperchase Advance Count: {{paperchaseCount}}</h4>
+            <h4>Paperchase Not Advance Count: {{countItems paperchaseNotAdvance}}</h4>
             <h4>Total Count: {{allPiiCount}}</h4>
         </div>
     </div>
@@ -35,6 +36,32 @@
                     </table></div></div>
                     {{else}}
                     No missing articles
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <div class="card-title">Paperchase Not Advance{{#if paperchaseNotAdvance}}: {{countItems paperchaseNotAdvance}} Articles{{/if}}</div>
+                    {{#if paperchaseNotAdvance}}
+                    <div class="row"><div class="col s12"><button class="btn btn-add" id="add-all-existing">Add all <u>Paperchase Not Advance</u> to <u>Advance</u></button></div></div>
+                    <div class="row"><div class="col s12"><table class="striped">
+                        <tbody>
+                            {{#each paperchaseNotAdvance}}
+                            <tr>
+                                <td>{{ids.pii}}</td>
+                                <td><a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&page=editor&op=submission&path[]={{ids.pii}}">OJS</a></td>
+                                <!-- <td><a href="{{pathFor 'AdminArticle' _id=_id}}">View in Paperchase</a></td> -->
+                                <td><a class="add-ojs-to-advance" href="{{pathFor 'AddLegacyAdvanceArticle' query=query}}">Add to Advance and update via OJS</a></td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table></div></div>
+                    {{else}}
+                    No articles in Paperchase not set to advance that are in OJS advance
                     {{/if}}
                 </div>
             </div>

@@ -92,6 +92,33 @@ Template.AdminAdvanceArticlesDiff.events({
             }
         });
     },
+    'click #add-all-existing': function(e){
+        Meteor.formActions.saving();
+        e.preventDefault();
+        var diff = Session.get('advanceDiff');
+        var beforePaperchaseNotAdvance = diff.paperchaseNotAdvance;
+        var afterPaperchaseNotAdvance = [];
+        console.log(beforePaperchaseNotAdvance);
+        Meteor.call('ojsAddMissingAdvanceButInPaperchase', beforePaperchaseNotAdvance, function(error,addedResult){
+            if(error){
+                console.error('ojsAddMissingAdvance for beforePaperchaseNotAdvance',error);
+                Meteor.formActions.errorMessage('Could not add articles to advance');
+            } else if(addedResult) {
+                console.log('addedResult',addedResult);
+                // // do not use compareWithLegacy() because takes too long. Instead use result of updated to update session variable
+                // beforePaperchaseNotAdvance.forEach(function(article){
+                //     if(addedResult.indexOf(article.pii) === -1){
+                //         afterPaperchaseNotAdvance.push(ojsArticle);
+                //     }
+                // });
+                //
+                // diff.paperchaseNotAdvance = afterPaperchaseNotAdvance;
+                // diff.paperchaseCount = parseInt(diff.paperchaseCount + addedResult.length);
+                // Session.set('advanceDiff',diff);
+                // Meteor.formActions.successMessage(addedResult.length + ' articles added to advance');
+            }
+        });
+    },
     'click #remove-all-paperchase': function(e){
         Meteor.formActions.saving();
         e.preventDefault();

@@ -12,10 +12,10 @@ Meteor.methods({
         }
 
         return publish.insert({
-                name: 'advance'
-                ,pubtime: new Date
-                ,data: out
-            });
+            name: 'advance',
+            pubtime: new Date(),
+            data: out
+        });
     },
     compareWithLegacy: function(){
         // console.log('..compareWithLegacy');
@@ -23,20 +23,21 @@ Meteor.methods({
         var allPii = {};
         var result = {};
         result.paperchaseOnly = [];
+        result.paperchaseNotAdvance = [];
         result.ojsOnly = [];
         result.allPiiCount = 0;
         Meteor.call('ojsGetAdvanceArticles',function(error,legacyArticles){
-            if(error){
+            if (error) {
                 console.error('ojsGetAdvanceArticles via compareWithLegacy',error);
                 throw new Meteor.Error(500, 'ojsGetAdvanceArticles' , error);
-            }else if(legacyArticles){
+            } else if (legacyArticles) {
                 // OJS Articles
                 result.ojsCount = legacyArticles.length;
                 legacyArticles.forEach(function(ojsA){
                     allPii[ojsA.pii] = {
                         ojs : true,
                         data: ojsA
-                    }
+                    };
                 });
                 // Paperchase Articles
                 var order = sorters.findOne({name:'advance'});
@@ -54,19 +55,32 @@ Meteor.methods({
                 for(var pii in allPii){
                     // console.log(pii, allPii[pii]);
                     result.allPiiCount++;
-                    if(allPii[pii].paperchase != true){
+                    if(allPii[pii].paperchase !== true){
+                        var existenceInPaperchase = articles.findOne({ 'ids.pii': pii });
+                        var queryObj = {
+                            id : pii,
+                            journal: 'oncotarget',
+                            id_type: 'pii',
+                            advance: true
+                        };
+
                         var ojsObj = {
                             pii: pii,
-                            query: {
-                                id : pii,
-                                journal: 'oncotarget',
-                                id_type: 'pii',
-                                advance: true
-                            },
+                            query: queryObj,
                             data: allPii[pii].data
-                        }
+                        };
 
-                        result.ojsOnly.push(ojsObj);
+                        // possible that PII is in Paperchase, but not in advance
+                        if (existenceInPaperchase) {
+                            var existingDataForUser = {};
+                            for (var key in existenceInPaperchase){
+                                existingDataForUser[key] = existenceInPaperchase[key];
+                            }
+                            existingDataForUser.query = queryObj;
+                            result.paperchaseNotAdvance.push(existingDataForUser);
+                        } else {
+                            result.ojsOnly.push(ojsObj);
+                        }
                     }
                 }
                 fut.return(result);
@@ -141,7 +155,7 @@ Meteor.methods({
         var order = sorters.findOne({name:'advance'});
         var orderBySectionId = Meteor.call('orderBySectionId',order.articles);
         var total = 0;
-        for(var article in articles){
+        for(var a in articles){
             total++;
         }
         // update all article docs
@@ -171,7 +185,8 @@ Meteor.methods({
             if(updateArticle){
                 Meteor.call('advanceMoveArticle', article, updateObj.section_id, function(error,result){
                     if(result){
-                        Meteor.call('updateArticle',article, updateObj, function(error,result){
+                        updateObj.debug_moved_recent_research = updateObj.section_id === 5 ? 'Out of Recent' : 'Into Recent';
+                        Meteor.call('updateArticle', article, updateObj, function(error,result){
                             if(result){
                                 updated++;
                             }
@@ -186,12 +201,9 @@ Meteor.methods({
                     recent: recent,
                     updated: updated
                 };
-                fut['return'](result);
+                fut.return(result);
             }
         }
-
-
-
 
         return fut.wait();
     },

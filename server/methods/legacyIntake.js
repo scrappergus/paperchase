@@ -344,6 +344,7 @@ Meteor.methods({
     // },
     ojsGetArticlesJson: function(idType, idValue, journal, requestUrl){
         // JSON response can contain multiple articles
+        // console.log('...ojsGetArticlesJson');
         if(requestUrl){
             // console.log('...ojsGetJson');
             // TODO: Add journal param?
@@ -552,6 +553,31 @@ Meteor.methods({
             throw new Meteor.Error(error);
         }
     },
+    ojsAddMissingAdvanceButInPaperchase: function(paperchaseArticles){
+        var legacyPlatformApi;
+        var legacyPlatform = journalConfig.findOne();
+        if(legacyPlatform){
+            legacyPlatform = legacyPlatform.legacy_platform;
+            legacyPlatformApi = legacyPlatform.mini_api;
+        }
+        if(legacyPlatformApi){
+            paperchaseArticles.map(function(article){
+                if (article.ids && article.ids.pii) {
+                    // console.log(article.ids.pii);
+                    Meteor.call('ojsGetArticlesJson', 'pii', article.ids.pii, Meteor.settings.public.journal.name, legacyPlatformApi, function(error, ojsJson){
+                        if (error) {
+                            console.error('ojsGetArticlesJson', error);
+                        } else {
+                            // console.log(ojsJson);
+                            return ojsJson;
+                        }
+                    });
+                } else{
+                    return;
+                }
+            });
+        }
+    },
     ojsAddMissingAdvance: function(missing){
         // console.log('...ojsAddMissingAdvance', missing.length);
         var added = [];
@@ -562,6 +588,7 @@ Meteor.methods({
                     console.error('legacyArticleIntake via ojsAddMissingAdvance',processError);
                 } else if (processedArticleJson) {
                     var dataForDb = Object.assign({'debug_added_via_all_ojs_btn': true}, processedArticleJson);
+
                     Meteor.call('addArticle', dataForDb, function(addError,result){
                         if(addError){
                             console.error('addError via ojsAddMissingAdvance',addError);
