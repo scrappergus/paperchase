@@ -270,6 +270,14 @@ h2.dates {
     float:left;
     margin: 0 0 1.68rem 0;
     width:100%;
+    .altmetric-badge{
+        height: 80px;
+        a > img{
+            height: 80px;
+            width: 80px;
+            margin-right: 12px!important;
+        }
+    }
 }
 #article-container{
     h1{
