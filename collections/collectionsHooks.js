@@ -56,7 +56,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-    modifier.$set.previous = articles.findOne({_id : doc._id}); // to do - article advance false because sorter updates.
+    modifier.$set.previous = articles.findOne({_id : doc._id});
 
     // maintain IDs
     // causes bug when removing an ID on purpose

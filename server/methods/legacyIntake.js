@@ -19,7 +19,7 @@ Meteor.methods({
                     params.journal = journalShortName,
                     params.batch = true;
 
-                Meteor.call('legacyArticleIntake',params, function(error,result){
+                Meteor.call('legacyArticleIntake', params, function(error,result){
                     if(error){
                         console.error('legacyArticleIntake',error);
                         notUpdated++;
@@ -89,6 +89,7 @@ Meteor.methods({
         // console.log('...legacyArticleIntake');
         // console.log(articleParams);
         // only using for batch update now
+        var fut = new future();
         var idType = articleParams.id_type,
             idValue = articleParams.id,
             journal = articleParams.journal,
@@ -164,21 +165,24 @@ Meteor.methods({
                     }
 
                     if(articleMongoId){
-                        console.log('updated article: ',articleMongoId);
                         if(articleParams.ip){
-                            console.log('updated article: ',articleMongoId, '| IP:',articleParams.ip);
+                            console.log('updated article via legacy intake: ',articleMongoId, '| IP:',articleParams.ip);
                         }else{
-                            console.log('updated article: ',articleMongoId);
+                            console.log('updated article via legacy intake: ',articleMongoId);
                         }
-                        //                        return true; // DO we need a response to Legacy platform?
-                    }
-                    else {
+                        fut.return(true);
+                    } else {
+                        fut.throw({error: 'cannot update advance ' + id});
                         //                        throw new Meteor.Error('Article ('+idType+': '+ id +') was not added to Paperchase.');
                     }
                 });
         }
-        else {
-            return false;
+
+        try {
+            return fut.wait();
+        }
+        catch(error) {
+            throw new Meteor.Error(error.message);
         }
     },
     legacyArticleReadyForIntake: function(articleParams){
@@ -360,8 +364,6 @@ Meteor.methods({
         }
     },
     ojsProcessArticleJson: function(article){
-        // console.log('...ojsProcessArticleJson');
-        // console.log(article);
         var articleUpdate = {},
             pagePieces,
             authors,
@@ -554,6 +556,8 @@ Meteor.methods({
         }
     },
     ojsAddMissingAdvanceButInPaperchase: function(paperchaseArticles){
+        // console.log('...ojsAddMissingAdvanceButInPaperchase', paperchaseArticles.length);
+        var added = [];
         var legacyPlatformApi;
         var legacyPlatform = journalConfig.findOne();
         if(legacyPlatform){
@@ -561,22 +565,26 @@ Meteor.methods({
             legacyPlatformApi = legacyPlatform.mini_api;
         }
         if(legacyPlatformApi){
-            paperchaseArticles.map(function(article){
+            paperchaseArticles.forEach(function(article){
                 if (article.ids && article.ids.pii) {
-                    // console.log(article.ids.pii);
-                    Meteor.call('ojsGetArticlesJson', 'pii', article.ids.pii, Meteor.settings.public.journal.name, legacyPlatformApi, function(error, ojsJson){
-                        if (error) {
-                            console.error('ojsGetArticlesJson', error);
-                        } else {
-                            // console.log(ojsJson);
-                            return ojsJson;
+                    Meteor.call('legacyArticleIntake', {
+                        id_type: 'pii',
+                        id: article.ids.pii,
+                        journal: Meteor.settings.public.journal.name,
+                        advance: true
+                    }, function(intakeError, intakeResult){
+                        if (intakeError) {
+                            console.error(intakeError);
+                            return;
+                        } else if(intakeResult){
+                            added.push(article.ids.pii);
                         }
                     });
-                } else{
-                    return;
                 }
             });
         }
+    
+        return added;
     },
     ojsAddMissingAdvance: function(missing){
         // console.log('...ojsAddMissingAdvance', missing.length);

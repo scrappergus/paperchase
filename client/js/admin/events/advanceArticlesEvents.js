@@ -98,24 +98,24 @@ Template.AdminAdvanceArticlesDiff.events({
         var diff = Session.get('advanceDiff');
         var beforePaperchaseNotAdvance = diff.paperchaseNotAdvance;
         var afterPaperchaseNotAdvance = [];
-        console.log(beforePaperchaseNotAdvance);
         Meteor.call('ojsAddMissingAdvanceButInPaperchase', beforePaperchaseNotAdvance, function(error,addedResult){
             if(error){
                 console.error('ojsAddMissingAdvance for beforePaperchaseNotAdvance',error);
                 Meteor.formActions.errorMessage('Could not add articles to advance');
             } else if(addedResult) {
-                console.log('addedResult',addedResult);
                 // // do not use compareWithLegacy() because takes too long. Instead use result of updated to update session variable
-                // beforePaperchaseNotAdvance.forEach(function(article){
-                //     if(addedResult.indexOf(article.pii) === -1){
-                //         afterPaperchaseNotAdvance.push(ojsArticle);
-                //     }
-                // });
-                //
-                // diff.paperchaseNotAdvance = afterPaperchaseNotAdvance;
-                // diff.paperchaseCount = parseInt(diff.paperchaseCount + addedResult.length);
-                // Session.set('advanceDiff',diff);
-                // Meteor.formActions.successMessage(addedResult.length + ' articles added to advance');
+                beforePaperchaseNotAdvance.forEach(function(article){
+                    console.log(article.ids.pii);
+                    if(addedResult.indexOf(article.ids.pii) === -1){
+                        console.log('..still missing');
+                        afterPaperchaseNotAdvance.push(article);
+                    }
+                });
+
+                diff.paperchaseNotAdvance = afterPaperchaseNotAdvance;
+                diff.paperchaseCount = parseInt(diff.paperchaseCount + addedResult.length);
+                Session.set('advanceDiff',diff);
+                Meteor.formActions.successMessage(addedResult.length + ' articles added to advance');
             }
         });
     },
@@ -131,7 +131,7 @@ Template.AdminAdvanceArticlesDiff.events({
             if(removedResult){
                 Meteor.call('compareWithLegacy', function(error,result){
                     if(result){
-                        Session.set('advanceDiff',result)
+                        Session.set('advanceDiff',result);
                     }
                     if(removedResult.length == removeMongoIds.length){
                         Meteor.formActions.successMessage(removeMongoIds.length + ' Articles Removed');
