@@ -145,7 +145,10 @@ if (Meteor.isClient) {
     // Count
     // --------
     Template.registerHelper('countItems', function(items) {
-        return items.length;
+        if (items) {
+            return items.length;
+        }
+        return;
     });
     Template.registerHelper('countKeys', function(object) {
         var count = 0;
