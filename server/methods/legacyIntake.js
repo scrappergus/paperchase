@@ -583,7 +583,7 @@ Meteor.methods({
                 }
             });
         }
-    
+
         return added;
     },
     ojsAddMissingAdvance: function(missing){
@@ -597,19 +597,40 @@ Meteor.methods({
                 } else if (processedArticleJson) {
                     var dataForDb = Object.assign({'debug_added_via_all_ojs_btn': true}, processedArticleJson);
 
-                    Meteor.call('addArticle', dataForDb, function(addError,result){
-                        if(addError){
-                            console.error('addError via ojsAddMissingAdvance',addError);
-                        }else if(result){
-                            Meteor.call('sorterAddItem','advance',result, function(sorterError,sorterRes){
-                                if(sorterError){
-                                    console.error('sorterAddItem via ojsAddMissingAdvance',sorterError);
-                                }else if(sorterRes){
-                                    added.push(processedArticleJson.ids.pii);
+                    // verify not in DB, possible that someone on OJS added article right before this action triggered
+                    if (dataForDb.ids && dataForDb.ids.pii) {
+                        var exists  = articles.findOne({ 'ids.pii': dataForDb.ids.pii});
+                        if (exists) {
+                            Meteor.call('updateArticle', exists._id, dataForDb, function(addError,result){
+                                if(addError){
+                                    console.error('addError via ojsAddMissingAdvance',addError);
+                                }else if(result){
+                                    Meteor.call('sorterAddItem','advance',result, function(sorterError,sorterRes){
+                                        if(sorterError){
+                                            console.error('sorterAddItem via ojsAddMissingAdvance',sorterError);
+                                        }else if(sorterRes){
+                                            added.push(processedArticleJson.ids.pii);
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            // verified new article, not in db
+                            Meteor.call('addArticle', dataForDb, function(addError,result){
+                                if(addError){
+                                    console.error('addError via ojsAddMissingAdvance',addError);
+                                }else if(result){
+                                    Meteor.call('sorterAddItem','advance',result, function(sorterError,sorterRes){
+                                        if(sorterError){
+                                            console.error('sorterAddItem via ojsAddMissingAdvance',sorterError);
+                                        }else if(sorterRes){
+                                            added.push(processedArticleJson.ids.pii);
+                                        }
+                                    });
                                 }
                             });
                         }
-                    });
+                    }
                 }
             });
         });
