@@ -15,6 +15,20 @@ Meteor.organize = {
         }
         return diff;
     },
+    arrayDuplicates: function(arr) {
+        var len=arr.length,
+            out=[],
+            counts={};
+
+        for (var i=0;i<len;i++) {
+            var item = arr[i];
+            counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
+            if (counts[item] === 2) {
+                out.push(item);
+            }
+        }
+        return out;
+    },
     getIssueArticlesByID: function(id){
         // console.log('getIssueArticlesByID');
         var issueArticles = articles.find({'issue_id' : id},{sort : {page_start:1}}).fetch();

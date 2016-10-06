@@ -268,4 +268,25 @@ sorters.after.update(function (userId, doc, fieldNames, modifier, options){
         //     articles.direct.update({_id:article_id}, {$set: {advance:false}});
         // }
     // }
+    var advanceArray, duplicates;
+
+    if(Meteor.settings.public && Meteor.settings.public.journal && Meteor.settings.public.journal.name && Meteor.settings.public.journal.name === 'Oncotarget'){
+        advanceArray = sorters.findOne({ name : 'advance' }).order;
+        if (advanceArray) {
+            duplicates = Meteor.organize.arrayDuplicates(advanceArray);
+            if (duplicates && duplicates.lengh > 0){
+
+            }
+
+            // duplicate found, notify via emails
+            var message = 'Duplicate Mongo ID found for ' + Meteor.settings.public.journal.name + ' advance \n' + duplicates.toString();
+
+            Email.send({
+               to: Meteor.settings.it.email,
+               from: Meteor.settings.it.email,
+               subject: 'Duplicate Advance Mongo ID',
+               text: message
+            });
+        }
+    }
 });
