@@ -51,17 +51,17 @@ html, body {
 /** Headings | Font Sizes
 ---------------------------------------------------------*/
 h1, .h1 {
-    font-size: 22px;
+    font-size: 20px;
 }
 h2, .h2 {
-    font-size: 20px;
+    font-size: 18px;
     color: $kashmir;
 }
 h3, .h3 {
-    font-size: 18px;
+    font-size: 16px;
 }
 h4, .h4 {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 h5, .h5, h6, .h6,
@@ -127,10 +127,10 @@ a {
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
     h1, .h1 {
-        font-size: 24px;
+        font-size: 22px;
     }
     h2, .h2 {
-        font-size: 22px;
+        font-size: 20px;
         // color: $kashmir; //redundant
     }
     // h3, .h3 {
@@ -212,7 +212,7 @@ h5.supporting {
 /** Paragraphs
 ---------------------------------------------------------*/
 p {
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1.4;
     &.justify {
         text-align: justify;
@@ -239,7 +239,7 @@ p.small-font{
 
 // tiny
 .tiny-font{
-    font-size: 13px;
+    font-size: 12px;
 }
 .super-tiny-font{
     font-size: 11px;
