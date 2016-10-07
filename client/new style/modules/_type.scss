@@ -51,17 +51,17 @@ html, body {
 /** Headings | Font Sizes
 ---------------------------------------------------------*/
 h1, .h1 {
-    font-size: 26px;
+    font-size: 22px;
 }
 h2, .h2 {
-    font-size: 22px;
+    font-size: 20px;
     color: $kashmir;
 }
 h3, .h3 {
-    font-size: 20px;
+    font-size: 18px;
 }
 h4, .h4 {
-    font-size: 17px;
+    font-size: 16px;
 }
 
 h5, .h5, h6, .h6,
@@ -127,23 +127,26 @@ a {
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
     h1, .h1 {
-        font-size: 30px;
+        font-size: 24px;
     }
     h2, .h2 {
-        font-size: 24px;
-        color: $kashmir;
+        font-size: 22px;
+        // color: $kashmir; //redundant
     }
-    h3, .h3 {
-        font-size: 20px;
-    }
-    h4, .h4 {
-        font-size: 17px;
-    }
+    // h3, .h3 {
+    // redundant
+    //     font-size: 20px;
+    // }
+    // h4, .h4 {
+    // redundant
+    //     font-size: 17px;
+    // }
 
-    h5, .h5, h6, .h6,
-    span.meta {
-        font-size: 14px;
-    }
+    // h5, .h5, h6, .h6,
+    // redundant
+    // span.meta {
+    //     font-size: 14px;
+    // }
 }
 
 // Large Screens (+ 1170px)
@@ -154,7 +157,7 @@ a {
 /** Special Headings
 ---------------------------------------------------------*/
 h3.section-heading {
-    font-size: 17px;
+    // font-size: 17px;
     padding: 0 0 10px;
     margin: 0 0 30px;
     font-weight: 700;
@@ -183,7 +186,7 @@ h3.section-heading {
 h3.blue-background {
     background: lighten($electric, 5%);
     color: #fff;
-    font-size: 17px;
+    // font-size: 17px;
     padding: 8px 10px;
     @include border-radius(2px);
     margin: 40px 0 0;
@@ -193,6 +196,7 @@ h3.blue-background {
 }
 
 h3.gray-background {
+    // this appears to not be in use
     @extend h3.blue-background;
     background: $lightgray;
     color: $electric;
@@ -208,29 +212,34 @@ h5.supporting {
 /** Paragraphs
 ---------------------------------------------------------*/
 p {
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1.4;
     &.justify {
         text-align: justify;
     }
 }
 
-// Tablets
-@include at-query($min, $small) {
-    p {
-        font-size: 15px;
-    }
-}
-
-// Tablets
-@include at-query($min, $medium) {
-    p {
-        font-size: 17px;
-    }
-}
+// // Tablets
+// @include at-query($min, $small) {
+//     p {
+//         // font-size: 13px;
+//     }
+// }
+//
+// // Tablets
+// @include at-query($min, $medium) {
+//     p {
+//         font-size: 13px;
+//     }
+// }
 
 p.small-font{
     font-size: small;
+}
+
+// tiny
+.tiny-font{
+    font-size: 13px;
 }
 
 /** Buttons
