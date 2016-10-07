@@ -263,7 +263,6 @@ Meteor.methods({
 
 
           return new Promise(function(resolve, reject) {
-                  console.log(query.impactSearch);
             esClient.search({
               size: 1000,
               index: query.impactSearch ? Meteor.settings.publisherIndex : Meteor.settings.index,

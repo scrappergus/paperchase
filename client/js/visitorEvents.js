@@ -196,6 +196,11 @@ Template.Search.events({
         }                              
 });
 
+Template.SearchAlt.events({
+    'submit #search-terms': function(e) {
+        Meteor.search.searchLoad(e);
+    }
+});
 
 // Scrollspy
 // ------

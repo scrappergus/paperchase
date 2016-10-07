@@ -1,11 +1,15 @@
 <template name="Home">
     <div class="row">
         <div class="page-content col s12 m7 l8">
-
+            <!-- <div style="text-align:center;">
+                <a href="{{submitLink}}" target="_blank" class="primary button home-submission-button">
+                    <span class="icon icon-file"></span> Submit an Article
+                </a>
+            </div> -->
             <ul class="sectioned-list">
                 {{#each sections}}
                 <li id="{{convertToID title}}">
-                    <h2 class="heavy blue-accented">{{{title}}}</h2>
+                    {{#if title}}<h2 class="heavy blue-accented">{{{title}}}</h2>{{/if}}
                     <p class="justify">{{{content}}}</p>
                 </li>
                 {{/each}}
@@ -132,6 +136,8 @@
 </template>
 
 <template name="FeaturedNobelArticlesSidebar">
+    {{#if alt}}
+    {{else}}
     <div class="card sidebar-card featured-nobel">
         <h6 class="card-title">Featured Nobel Articles</h6>
         <ul class="featured-items">
@@ -142,6 +148,7 @@
             <li><a href="http://www.nobelprize.org/nobel_prizes/medicine/laureates/2012/yamanaka.html" target="_blank">Shinya Yamanaka</a> won the Nobel Prize in Physiology and Medicine 2012. Shinya Yamanaka co-authored a <a href="article/djTrvzxXyJB8pzPfj">paper</a> published in Aging.</li>
         </ul>
     </div>
+    {{/if}}
 </template>
 
 <template name="FeaturedInterviewSidebar">
