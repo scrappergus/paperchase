@@ -208,6 +208,15 @@ Meteor.methods({
         function queryElasticsearch(query) {
           var must = [];
 
+          if (query.general) {
+              must.push({
+                      multi_match: {
+                          query: query.general,
+                          fields: ['title', 'abstract', 'authors', 'keywords']
+                      }
+                  });
+          }
+
           if (query.title) {
             must.push({
               match: {

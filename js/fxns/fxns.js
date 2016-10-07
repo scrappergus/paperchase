@@ -1216,9 +1216,10 @@ Meteor.search = {
         Session.set('searchLoading', true);
         var generalTerm = (args && args.generalTerm) ? args.generalTerm : '';
         Meteor.call('search', {
+                general: (e && e.target && e.target.general) ? e.target.general.value : generalTerm,
                 authors: (e && e.target && e.target.authors) ? e.target.authors.value : null,
                 abstract: (e && e.target && e.target.abstract) ? e.target.abstract.value : null,
-                title: (e && e.target && e.target.title) ? e.target.title.value : generalTerm,
+                title: (e && e.target && e.target.title) ? e.target.title.value : null,
                 keywords: (e && e.target && e.target.keywords) ? e.target.keywords.value : null,
                 impactSearch : e && e.target && e.target.impactSearch && e.target.impactSearch.checked
             }, function(err, data) {
