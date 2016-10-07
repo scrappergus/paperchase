@@ -795,6 +795,7 @@ ul.sectioned-list {
         }
         p{
             margin: 0px!important;
+            line-height: $paragraphFontSize!important; 
         }
 	}
 }
