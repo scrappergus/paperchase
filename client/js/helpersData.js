@@ -4,8 +4,8 @@ Template.Home.helpers({
     submitLink : function(){
         return Meteor.settings.public.journal.submissionsLink;
     },
-    altmetricTop100: function() {
-        return Session.get('altmetric-top-100');
+    altmetricTop: function() {
+        return Session.get('altmetric-top');
     }
 });
 

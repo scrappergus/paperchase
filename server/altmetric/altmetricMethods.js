@@ -1,8 +1,9 @@
 Meteor.methods({
-    getAltmetricTopHundred : function(){
+    getAltmetricTop : function(numberToGet){
+        var number = numberToGet ? numberToGet : 50;
         var fut = new future();
         var altmetricApi = 'https://www.altmetric.com/api/v1/citations/at';
-        var queryParams = '?num_results=100&key=' + Meteor.settings.altmetric.key + '&journals=' + Meteor.settings.altmetric.journalId + '&citation_type=news%2Carticle%2Cclinical_trial_study_record%2Cdataset%2Cgeneric&order_by=at_score';
+        var queryParams = '?num_results=' + number + '&key=' + Meteor.settings.altmetric.key + '&journals=' + Meteor.settings.altmetric.journalId + '&citation_type=news%2Carticle%2Cclinical_trial_study_record%2Cdataset%2Cgeneric&order_by=at_score';
         var altmetricUrl = altmetricApi + queryParams;
         Meteor.http.get(altmetricUrl , function(error, altmetricResult){
             if (error){

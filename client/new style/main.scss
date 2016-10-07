@@ -778,7 +778,7 @@ ul.sectioned-list {
 
 }
 /* Altmetric -------------------*/
-#altmetric-top-100{
+#altmetric-top{
 	height: 400px;
 	overflow-x: hidden;
 	overflow-y: scroll;
@@ -799,13 +799,13 @@ ul.sectioned-list {
 	}
 }
 
-#altmetric-top-100::-webkit-scrollbar {
+#altmetric-top::-webkit-scrollbar {
 	-webkit-appearance: none;
 	width: 10px;
 	background-color: $lightgray;
 }
 
-#altmetric-top-100::-webkit-scrollbar-thumb {
+#altmetric-top::-webkit-scrollbar-thumb {
 	border-radius: 5px;
 	background-color: $cello;
 	-webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
