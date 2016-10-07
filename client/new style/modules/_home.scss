@@ -204,6 +204,9 @@
     ul.featured-items {
         li {
             text-align: justify;
+            p{
+                margin: 0!important;
+            }
         }
         li:hover {
             background: none;
