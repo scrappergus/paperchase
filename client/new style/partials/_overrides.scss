@@ -22,7 +22,7 @@
         color: $kashmir;
         text-decoration: none;
         text-transform: capitalize;
-        font-size: 11px;
+        @extend .super-tiny-font;
         font-weight: 500;
         margin: 5px 0 0;
     }
@@ -31,7 +31,7 @@
         text-transform: uppercase;
         font-weight: 700;
         color: $electric;
-        font-size: 14px;
+        @extend .tiny-font;
         margin-bottom: 10px;
     }
 
@@ -44,7 +44,7 @@
         text-transform: capitalize;
         @include border-radius(2px);
         @include padding-vertical(9px);
-        font-size: 14px;
+        @extend .tiny-font;
     }
 
     #login-email-label-and-input,
