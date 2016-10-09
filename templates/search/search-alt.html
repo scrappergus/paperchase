@@ -53,7 +53,7 @@
                 {{>NavAlt}}
                 <div id="column2and3-alt">
                     <div id="maincontentsolo-alt">
-                        {{>SearchFormAlt}}
+                        {{>SearchFormAlt terms=terms indexes=indexes primaryIndex=primaryIndex}}
 
         <div>
 
@@ -128,15 +128,24 @@
             <tbody>
                 <tr>
                     <td>
-                        <p>By Title</p>
+                        <p>General search</p>
                     </td>
                     <td>
-                        <input placeholder="title" type="text" name="title" value="{{terms}}">
+                        <input placeholder="general" type="text" name="general" value="{{terms}}">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p>Title</p>
+                    </td>
+                    <td>
+                        <input placeholder="title" type="text" name="title">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>By Abstract</p>
+                        <p>Abstract</p>
                     </td>
                     <td>
                         <input placeholder="abstract" type="text" name="abstract">
@@ -144,7 +153,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>By Author</p>
+                        <p>Author</p>
                     </td>
                     <td>
                         <input placeholder="authors" type="text" name="authors">
@@ -152,7 +161,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>By Keywords</p>
+                        <p>Keywords</p>
                     </td>
                     <td>
                         <input placeholder="keywords" type="text" name="keywords">
@@ -162,8 +171,10 @@
                     <td>
                     </td>
                     <td>
-                        <input type="checkbox" name="impactSearch" id="impactSearchCheck"/>
-                        <label for="impactSearchCheck">Search all Impact publications</label>
+                        {{#each indexes}}
+                        <div class="input-field"> <input type="checkbox" name="{{index}}Search" id="{{index}}SearchCheck" checked="{{#if equals index ../primaryIndex}}true{{/if}}"/><label for="{{index}}SearchCheck">Search {{label}}</label></div>
+                        {{/each}}
+                        
                     </td>
                 </tr>
 

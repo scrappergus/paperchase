@@ -265,7 +265,7 @@ Meteor.methods({
           return new Promise(function(resolve, reject) {
                   var index = (query.agingSearch ? 'aging,' : '')
                   + (query.oncotargetSearch ? 'oncotarget,' : '')
-                  + (query.genesSearch ? 'genes,' : '')
+                  + (query.genesandcancerSearch ? 'genesandcancer,' : '')
                   + (query.oncoscienceSearch ? 'oncoscience,' : '');
                   if (index !== '') {
                       index = index.slice(0, -1);

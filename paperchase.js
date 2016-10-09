@@ -1103,7 +1103,7 @@ if (Meteor.isClient) {
             return pageTitle + 'Search';
         },
         onAfterAction: function(e) {
-            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms, agingSearch:true});
+            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms, primaryIndex:Session.get('journal').elasticsearch.primaryIndex});
         },
         waitOn: function(){
             return[
@@ -1127,12 +1127,21 @@ if (Meteor.isClient) {
             return Meteor.settings.public.journal.name + ' | ' + 'Search';
         },
         onAfterAction: function(e) {
-            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms});
+            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms, primaryIndex:Session.get('journal').elasticsearch.primaryIndex});
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('journalConfig')
+            ];
         },
         data: function() {
-            return {
-                terms:this.params.query.terms
-            };
+            if(this.ready()){
+                return {
+                    terms:this.params.query.terms,
+                    indexes: Session.get('journal').elasticsearch.indexes,
+                    primaryIndex: Session.get('journal').elasticsearch.primaryIndex
+                };
+            }
         }
     });
 
