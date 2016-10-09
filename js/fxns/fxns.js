@@ -1268,7 +1268,10 @@ Meteor.search = {
                 abstract: (e && e.target && e.target.abstract) ? e.target.abstract.value : null,
                 title: (e && e.target && e.target.title) ? e.target.title.value : null,
                 keywords: (e && e.target && e.target.keywords) ? e.target.keywords.value : null,
-                impactSearch : e && e.target && e.target.impactSearch && e.target.impactSearch.checked
+                agingSearch: (e && e.target && e.target.agingSearch && e.target.agingSearch.checked) ? true : (args && args.agingSearch),
+                oncotargetSearch: e && e.target && e.target.oncotargetSearch && e.target.oncotargetSearch.checked,
+                genesSearch: e && e.target && e.target.genesSearch && e.target.genesSearchchecked,
+                oncoscienceSearch: e && e.target && e.target.oncoscienceSearch && e.target.oncoscienceSearch.checked
             }, function(err, data) {
                 //            console.log('>>> args in browser', err, data);
                 var indeces = {'aging': 'Aging', 'oncoscience': 'Oncoscience', 'oncotarget': 'Oncotarget', 'genesandcancer': 'Genes & Cancer' };

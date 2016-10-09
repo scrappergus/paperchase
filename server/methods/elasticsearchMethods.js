@@ -263,9 +263,17 @@ Meteor.methods({
 
 
           return new Promise(function(resolve, reject) {
+                  var index = (query.agingSearch ? 'aging,' : '')
+                  + (query.oncotargetSearch ? 'oncotarget,' : '')
+                  + (query.genesSearch ? 'genes,' : '')
+                  + (query.oncoscienceSearch ? 'oncoscience,' : '');
+                  if (index !== '') {
+                      index = index.slice(0, -1);
+                  }
+
             esClient.search({
               size: 1000,
-              index: query.impactSearch ? Meteor.settings.publisherIndex : Meteor.settings.index,
+              index: index,
               body: {
                 query: {
                   bool: {

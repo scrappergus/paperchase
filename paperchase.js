@@ -1103,12 +1103,20 @@ if (Meteor.isClient) {
             return pageTitle + 'Search';
         },
         onAfterAction: function(e) {
-            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms});
+            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms, agingSearch:true});
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('journalConfig')
+            ];
         },
         data: function() {
-            return {
-                terms:this.params.query.terms
-            };
+            if(this.ready()){
+                return {
+                    terms:this.params.query.terms,
+                    indexes: Session.get('journal').elasticsearch.indexes
+                };
+            }
         }
     });
 

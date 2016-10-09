@@ -50,7 +50,7 @@
         </div>
 
         <div class="page-sidebar col s12 m4 hide-on-med-and-down">
-            {{> AdvancedSearch mobile=false terms=terms}}
+            {{> AdvancedSearch mobile=false terms=terms indexes=indexes}}
         </div>
 	 </div>
 
@@ -66,10 +66,9 @@
                 <input placeholder="abstract" type="text" name="abstract">
                 <input placeholder="authors" type="text" name="authors">
                 <input placeholder="keywords" type="text" name="keywords">
-                <div class="input-field">
-                <input type="checkbox" name="impactSearch" id="impactSearchCheck"/>
-                <label for="impactSearchCheck">Search all Impact publications</label>
-                </div>
+                {{#each indexes}}
+                <div class="input-field"> <input type="checkbox" name="{{index}}Search" id="{{index}}SearchCheck" checked="{{primary}}"/><label for="{{index}}SearchCheck">Search {{label}}</label></div>
+                {{/each}}
                 <br>
                 
                 <button class="full-width teal button">Search</button>
