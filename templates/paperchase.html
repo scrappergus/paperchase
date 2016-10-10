@@ -16,7 +16,8 @@
             </ul>
 
             {{#if altmetricTop}}
-                <h3 class="section-heading new-section">Top 50 Articles</h3>
+                <h3 class="section-heading new-section">Top 20 Articles by <a href="https://help.altmetric.com/support/solutions/articles/6000060969-how-is-the-altmetric-attention-score-calculated-" target="_BLANK">Altmetric Attention Score</a></h3>
+                <!-- <p><a href="{{pathFor 'TopArticles'}}" style="margin-bottom:10px">View All Top {{altmetricTopCount}} Articles</a></p> -->
                 <ul id="altmetric-top" class="card">
                     {{#each altmetricTop}}
                     <li>
@@ -26,6 +27,11 @@
                         </p>
                     </li>
                     {{/each}}
+                    <li>
+                        <p class="valign-wrapper">
+                            <a href="{{pathFor 'TopArticles'}}" >View All Top {{altmetricTopCount}} Articles</a>
+                        </p>
+                    </li>
                 </ul>
             {{/if}}
 

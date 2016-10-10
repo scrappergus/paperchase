@@ -1,10 +1,13 @@
 Meteor.methods({
     getAltmetricTop : function(numberToGet){
+        // console.log('GET = ', numberToGet);
         var number = numberToGet ? numberToGet : 50;
         var fut = new future();
         var altmetricApi = 'https://www.altmetric.com/api/v1/citations/at';
         var queryParams = '?num_results=' + number + '&key=' + Meteor.settings.altmetric.key + '&journals=' + Meteor.settings.altmetric.journalId + '&citation_type=news%2Carticle%2Cclinical_trial_study_record%2Cdataset%2Cgeneric&order_by=at_score';
         var altmetricUrl = altmetricApi + queryParams;
+        var result = {};
+
         Meteor.http.get(altmetricUrl , function(error, altmetricResult){
             if (error){
                 console.error('Altmetric Top 100: ',error);
@@ -15,7 +18,23 @@ Meteor.methods({
                         console.error('errorProcessing', errorProcessing);
                         fut.throw(errorProcessing);
                     } else if(processingResult) {
-                        fut.return(processingResult);
+                        Meteor.call('altmetricCheckForTiesAtEnd', numberToGet, processingResult, function(tieError, tieResult){
+                            if (tieError) {
+                                console.error(tieError);
+                                fut.throw(tieError);
+                            } else if(tieResult.get != numberToGet){
+                                Meteor.call('getAltmetricTop', tieResult.get, function(newTopError, newTopResult){
+                                    if (newTopError) {
+                                        console.error(newTopError);
+                                        fut.throw(newTopError);
+                                    } else {
+                                        fut.return(newTopResult);
+                                    }
+                                });
+                            } else {
+                                fut.return(tieResult);
+                            }
+                        });
                     } else {
                         fut.throw('Cannot process');
                     }
@@ -33,6 +52,16 @@ Meteor.methods({
         catch(error) {
             throw new Meteor.Error(error);
         }
+    },
+    altmetricCheckForTiesAtEnd: function(count, articles) {
+        var returnArticles = [];
+        if (Math.ceil(articles[articles.length-1].score) === Math.ceil(articles[articles.length-2].score)) {
+            count++;
+            returnArticles = articles;
+        } else{
+            returnArticles = articles.slice(0, articles.length-1);
+        }
+        return {get: count, articles: returnArticles};
     },
     processAltmetricResponse: function(articles) {
         return articles.map(function(article){

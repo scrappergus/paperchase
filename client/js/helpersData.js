@@ -5,7 +5,24 @@ Template.Home.helpers({
         return Meteor.settings.public.journal.submissionsLink;
     },
     altmetricTop: function() {
+        // only list first 10 on homepage
+        if (Session.get('altmetric-top')) {
+            return Meteor.general.getFirstXFromArray(10, Session.get('altmetric-top'));
+        } else{
+            return;
+        }
+    },
+    altmetricTopCount: function() {
+        return Session.get('altmetric-count');
+    }
+});
+
+Template.TopArticles.helpers({
+    altmetricTop: function() {
         return Session.get('altmetric-top');
+    },
+    altmetricTopCount: function() {
+        return Session.get('altmetric-count');
     }
 });
 

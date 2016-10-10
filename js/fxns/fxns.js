@@ -5,7 +5,7 @@ Meteor.organize = {
         for(var i=0 ; i < a1.length ; i++){
             a[a1[i]]=true;
         }
-        for(var i=0 ; i<a2.length ; i++){
+        for(var i=0 ; i<a2.length; i++){
             if(a[a2[i]]) delete a[a2[i]];
             else a[a2[i]]=true;
         }
@@ -1103,8 +1103,11 @@ Meteor.general = {
         return string.replace(urlRegex, function(url) {
             return '<a href="' + url + '" target="_BLANK">' + url + '</a>';
         });
+    },
+    getFirstXFromArray: function(x, array){
+        return array.slice(0, x);
     }
-}
+};
 
 Meteor.sorter = {
     sort: function(unordered,order){

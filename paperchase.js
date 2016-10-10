@@ -85,12 +85,14 @@ if (Meteor.isClient) {
             }
         });
 
-        // Get top 100 articles
+        // Get top articles
         Meteor.call('getAltmetricTop', 50, function(altmetricError, altmetricResult){
             if (altmetricError) {
                 console.error('altmetricError', altmetricError);
             } else if (altmetricResult) {
-                Session.set('altmetric-top', altmetricResult);
+                // do not use altmetricResult.get because very possible that last article was not a tie with previous article and altmetricResult.get will not reduce based on that.
+                Session.set('altmetric-count', altmetricResult.articles.length);
+                Session.set('altmetric-top', altmetricResult.articles);
             }
         });
     });
@@ -374,7 +376,8 @@ if (Meteor.isClient) {
     // altmetrics badge
     Session.setDefault('altMetricReady', false);
     Session.setDefault('badge-visible', false);
-    Session.setDefault('altmetric-top', false);
+    Session.setDefault('altmetric-top', null);
+    Session.setDefault('altmetric-count', 50);
 
     // Redirects
     // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.
@@ -581,6 +584,28 @@ if (Meteor.isClient) {
                 pageTitle = Session.get('journal').journal.name + ' | ';
             }
             return pageTitle + 'Account';
+        },
+    });
+
+    Router.route('/top-articles', {
+        name: 'TopArticles',
+        layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
+        waitOn: function(){
+            Meteor.impact.redirectForAlt();
+            return[
+                Meteor.subscribe('currentIssue'),
+            ];
+        },
+        title: function() {
+            var pageTitle = '';
+            if(Session.get('journal')){
+                pageTitle = Session.get('journal').journal.name + ' | ';
+            }
+            return pageTitle + 'Top Articles';
         },
     });
 
@@ -1182,7 +1207,7 @@ if (Meteor.isClient) {
         }
     });
 
-// INTERVIEWS PAGE
+    // INTERVIEWS PAGE
     Router.route('/interviews', {
         name: 'Interviews',
         layoutTemplate: 'Visitor',

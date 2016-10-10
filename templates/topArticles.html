@@ -1,0 +1,18 @@
+<template name="TopArticles">
+    <div class="row">
+        <div class="page-content col s12 m7 l8">
+            <h1>Top {{altmetricTopCount}} Articles</h1>
+            <ul id="altmetric-top-full">
+                {{#each altmetricTop}}
+                <li>
+                    <p class="valign-wrapper">
+                        <a href="{{details_url}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img src="{{images.small}}"/></a>
+                        <a href="{{url}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
+                    </p>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{> MainSideBar}}
+    </div>
+</template>
