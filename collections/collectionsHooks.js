@@ -281,12 +281,14 @@ sorters.after.update(function (userId, doc, fieldNames, modifier, options){
             // duplicate found, notify via emails
             var message = 'Duplicate Mongo ID found for ' + Meteor.settings.public.journal.name + ' advance \n' + duplicates.toString();
 
-            Email.send({
-               to: Meteor.settings.it.email,
-               from: Meteor.settings.it.email,
-               subject: 'Duplicate Advance Mongo ID',
-               text: message
-            });
+            if(duplicates.length > 0){
+                Email.send({
+                   to: Meteor.settings.it.email,
+                   from: Meteor.settings.it.email,
+                   subject: 'Duplicate Advance Mongo ID',
+                   text: message
+                });    
+            }
         }
     }
 });
