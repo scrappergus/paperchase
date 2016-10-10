@@ -27,12 +27,10 @@
                         </p>
                     </li>
                     {{/each}}
-                    <li>
-                        <p class="valign-wrapper">
-                            <a href="{{pathFor 'TopArticles'}}" >View All Top {{altmetricTopCount}} Articles</a>
-                        </p>
-                    </li>
                 </ul>
+                <p>
+                    <a href="{{pathFor 'TopArticles'}}">View Top {{altmetricTopCount}} Articles</a>
+                </p>
             {{/if}}
 
             {{#if news}}
