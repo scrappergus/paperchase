@@ -804,6 +804,18 @@ ul.sectioned-list {
 	}
 }
 
+#altmetric-top, #altmetric-top-full{
+    li{
+        p{
+            a{
+                img{
+                    height: 54px!important;
+                }
+            }
+        }
+    }
+}
+
 #altmetric-top::-webkit-scrollbar {
 	-webkit-appearance: none;
 	width: 10px;
