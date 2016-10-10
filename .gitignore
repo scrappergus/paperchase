@@ -11,7 +11,11 @@ settings-oncotarget-admin.json
 settings-oncoscience.json
 settings-gc.json
 settings-aging-stage-1.json
+settings-aging-stage-1-db.json
 settings-aging-stage-2.json
+settings-aging-stage-2-db.json
+settings-aging-stage-3.json
+settings-aging-stage-3-db.json
 settings-aging-admin.json
 settings-oncotarget.json
 settings-oncotarget-stage.json
