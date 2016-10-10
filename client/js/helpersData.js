@@ -7,7 +7,7 @@ Template.Home.helpers({
     altmetricTop: function() {
         // only list first 10 on homepage
         if (Session.get('altmetric-top')) {
-            return Meteor.general.getFirstXFromArray(10, Session.get('altmetric-top'));
+            return Meteor.general.getFirstXFromArray(5, Session.get('altmetric-top'));
         } else{
             return;
         }
