@@ -74,7 +74,9 @@
 .nav-content {
     height: $navbar-height;
     background-color: $nav-color;
-    padding: 11px 20px 0 20px;
+    padding: 0;
+    display: flex;
+    align-items: center;
 
     ul {
         display: none;
@@ -172,6 +174,11 @@
     cursor: pointer;
     font-weight: 700;
     text-transform: uppercase;
+}
+.top-submit-button{
+    float: right;
+    padding: 15px!important;
+    top: -15px;
 }
 
 
@@ -467,7 +474,11 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
 // Social Links
 #top-social-links{
+    display: block;
+    height: 20px;
     // margin-right: 13px;
+    position: absolute;
+    right: 35px;
 }
 .social-links{
     font-size: 20px!important;
@@ -508,12 +519,20 @@ $secondary-subnav-color: darken(#00387A, 1%);
     .mobile-social-links{
         display: block;
     }
+
+    .nav-content{
+        display: block;
+        padding: 11px 20px 0 20px;
+    }
+    #top-social-links{
+        display: none!important;
+    }
 }
 
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
     .nav-sidebar {
-        width: 20%;
+        width: 50%;
         padding: 15px 0 0 35px;
     }
     .nav-content .sidebar-toggle-mobile { display: none; }
@@ -526,6 +545,11 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
     ul.nav-links #login-buttons {
         display: none;
+    }
+
+    .top-submit-button{
+        padding: 10px!important;
+        top: -10px;
     }
 
     /*
