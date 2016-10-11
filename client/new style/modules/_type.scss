@@ -13,7 +13,7 @@ body {
     background-color: $faintgray !important;
 }
 
-$paragraphFontSize: 13px;
+$paragraphFontSize: 15px;
 
 html{
     font-size: $paragraphFontSize;
@@ -57,17 +57,17 @@ html, body {
 /** Headings | Font Sizes
 ---------------------------------------------------------*/
 h1, .h1 {
-    font-size: 20px;
+    font-size: 22px;
 }
 h2, .h2 {
-    font-size: 18px;
+    font-size: 20px;
     color: $kashmir;
 }
 h3, .h3 {
-    font-size: 16px;
+    font-size: 18px;
 }
 h4, .h4 {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 h5, .h5, h6, .h6,
@@ -133,10 +133,10 @@ a {
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
     h1, .h1 {
-        font-size: 22px;
+        font-size: 24px;
     }
     h2, .h2 {
-        font-size: 20px;
+        font-size: 22px;
         // color: $kashmir; //redundant
     }
     // h3, .h3 {

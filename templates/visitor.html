@@ -15,8 +15,9 @@
             <a href="/"><img src="{{bannerLogo}}" class="logo left" alt="{{journalName}}"><span class="journal-name-extra white-text left">{{nameExtra}}</span></a>
         </div>
         <div class="nav-content">
-            <ul id="top-social-links" class="valign">
+            <ul id="top-social-links">
                 {{>SocialLinks}}
+                <li class="has-icon button"><a href="{{submitLink}}" target="_blank" class="submit-article"><span class="icon icon-file"></span> Submit an Article</a></li>
                 <!--<li>{{> loginButtons align="right"}}</li>-->
             </ul>
 
@@ -53,9 +54,9 @@
         <div class="row">
             {{> breadcrumbs}}
 
-            <div class="issn col s5">
-                <a href="{{submitLink}}" target="_blank" class="button primary submit-article top-submit-button">Submit an Article</a>
-                <!-- {{#if issn}}<span class="meta">Online ISSN: {{issn}}</span>{{/if}} -->
+            <div class="issn col s4">
+                <!-- <a href="{{submitLink}}" target="_blank" class="button primary submit-article top-submit-button">Submit an Article</a> -->
+                {{#if issn}}<span class="meta">Online ISSN: {{issn}}</span>{{/if}}
             </div>
         </div>
     </div>
@@ -63,7 +64,7 @@
 </template>
 
 <template name="breadcrumbs">
-    <div class="breadcrumbs col s12 m7">
+    <div class="breadcrumbs col s12 m8">
         <span class="sidebar-toggle icon icon-menu"></span>
         <ul>
             <li><a href="/">Home</a></li>
@@ -97,7 +98,7 @@
 <template name="Footer">
     <div class="row">
         <div class="footer col s12">
-            <footer>{{#if issn}}<div class="meta">Online ISSN: {{issn}}</div>{{/if}}<span>Copyright © 2016 {{publisher}}<br /> Impact Journals is a registered trademark of Impact Journals, LLC</span></footer>
+            <footer><span>Copyright © 2016 {{publisher}}<br /> Impact Journals is a registered trademark of Impact Journals, LLC</span></footer>
         </div>
     </div>
     <!--

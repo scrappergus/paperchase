@@ -16,11 +16,10 @@
             </ul>
 
             {{#if altmetricTop}}
-                <h3 class="section-heading new-section" style="margin-bottom: 0;">Top 5 Articles by <a href="https://help.altmetric.com/support/solutions/articles/6000060969-how-is-the-altmetric-attention-score-calculated-" target="_BLANK">Altmetric Attention Score</a></h3>
-                <!-- <p><a href="{{pathFor 'TopArticles'}}" style="margin-bottom:10px">View All Top {{altmetricTopCount}} Articles</a></p> -->
-                <p style="margin: 10px 0;">
+                <h3 class="section-heading new-section">Top 20 Articles by <a href="https://help.altmetric.com/support/solutions/articles/6000060969-how-is-the-altmetric-attention-score-calculated-" target="_BLANK">Altmetric Attention Score</a></h3>
+                <!-- <p style="margin: 10px 0;">
                     <a href="{{pathFor 'TopArticles'}}">View Top {{altmetricTopCount}} Articles</a>
-                </p>
+                </p> -->
                 <ul id="altmetric-top" class="card">
                     {{#each altmetricTop}}
                     <li>
@@ -31,6 +30,9 @@
                     </li>
                     {{/each}}
                 </ul>
+                <p>
+                    <a href="{{pathFor 'TopArticles'}}">View Top {{altmetricTopCount}} Articles</a>
+                </p>
             {{/if}}
             <div class="clearfix"></div>
 

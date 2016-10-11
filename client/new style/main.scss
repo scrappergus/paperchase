@@ -779,11 +779,11 @@ ul.sectioned-list {
 }
 /* Altmetric -------------------*/
 #altmetric-top{
-	// height: 400px;
-	// overflow-x: hidden;
-	// overflow-y: scroll;
-    float: left;
-	margin-top: 0;
+	height: 400px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+    // float: left;
+	// margin-top: 0;
 	padding: 1em;
 	list-style: none;
 	li{
@@ -809,7 +809,7 @@ ul.sectioned-list {
         p{
             a{
                 img{
-                    height: 54px!important;
+                    // height: 54px!important;
                 }
             }
         }
