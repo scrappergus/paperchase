@@ -162,15 +162,16 @@
 }
 
 .submit-article{
-    background-color: $accent!important;
     @include get-bg-hover($accent, 3%);
+    background-color: $accent!important;
     cursor: pointer;
-    text-transform: uppercase;
     font-weight: 700;
+    text-transform: uppercase;
 }
 .toc-signup-button{
-    text-transform: uppercase;
+    cursor: pointer;
     font-weight: 700;
+    text-transform: uppercase;
 }
 
 
