@@ -32,7 +32,14 @@ Meteor.methods({
                                     }
                                 });
                             } else {
-                                fut.return(tieResult);
+                                Meteor.call('removeAltmetricBelowThreshold', tieResult.articles, function(thresholdError, thresholdResult){
+                                    if (thresholdError) {
+                                        console.error(thresholdError);
+                                        fut.throw(thresholdError);
+                                    } else {
+                                        fut.return(thresholdResult);
+                                    }
+                                });
                             }
                         });
                     } else {
@@ -81,5 +88,15 @@ Meteor.methods({
             aReturn.images = article.images;
             return aReturn;
         });
+    },
+    removeAltmetricBelowThreshold:  function(articles) {
+        var threshold = 10;
+        var result = [];
+        articles.forEach(function(article){
+            if (Math.ceil(article.score) >= threshold) {
+                result.push(article);
+            }
+        });
+        return result;
     }
 });
