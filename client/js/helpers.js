@@ -254,6 +254,15 @@ if (Meteor.isClient) {
         return Meteor.clean.removeEndPeriod(string);
     });
 
+    // news
+    Template.registerHelper('conferenceDateCheckPass', function(item){
+        if (item && item.conference_date_start){
+            if (item.conference_date_start < new Date()){
+                return false;
+            }
+        }
+        return true;
+    });
 
 
     Template.registerHelper('wrapInParagraphTag', function(str){

@@ -7,13 +7,22 @@ Template.Home.helpers({
     altmetricTop: function() {
         // only list first 10 on homepage
         if (Session.get('altmetric-top')) {
-            return Meteor.general.getFirstXFromArray(20, Session.get('altmetric-top'));
+            return Meteor.general.getFirstXFromArray(5, Session.get('altmetric-top'));
         } else{
             return;
         }
     },
     altmetricTopCount: function() {
         return Session.get('altmetric-count');
+    }
+});
+
+Template.Conferences.helpers({
+    past: function() {
+        return Session.get('conferences') &&  Session.get('conferences').past ? Session.get('conferences').past : false;
+    },
+    future: function() {
+        return Session.get('conferences') &&  Session.get('conferences').future ? Session.get('conferences').future : false;
     }
 });
 
