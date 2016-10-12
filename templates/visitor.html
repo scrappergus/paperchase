@@ -17,7 +17,7 @@
         <div class="nav-content">
             <ul id="top-social-links">
                 {{>SocialLinks}}
-                <li class="has-icon button"><a href="{{submitLink}}" target="_blank" class="submit-article"><span class="icon icon-file"></span> Submit an Article</a></li>
+                <!-- <li class="has-icon button"><a href="{{submitLink}}" target="_blank" class="submit-article"><span class="icon icon-file"></span> Submit an Article</a></li> -->
                 <!--<li>{{> loginButtons align="right"}}</li>-->
             </ul>
 
@@ -54,9 +54,9 @@
         <div class="row">
             {{> breadcrumbs}}
 
-            <div class="issn col s4">
-                <!-- <a href="{{submitLink}}" target="_blank" class="button primary submit-article top-submit-button">Submit an Article</a> -->
-                {{#if issn}}<span class="meta">Online ISSN: {{issn}}</span>{{/if}}
+            <div class="issn col s5">
+                <a href="{{submitLink}}" target="_blank" class="button primary submit-article top-submit-button">Submit an Article</a>
+                <!-- {{#if issn}}<span class="meta">Online ISSN: {{issn}}</span>{{/if}} -->
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
 </template>
 
 <template name="breadcrumbs">
-    <div class="breadcrumbs col s12 m8">
+    <div class="breadcrumbs col s12 m7">
         <span class="sidebar-toggle icon icon-menu"></span>
         <ul>
             <li><a href="/">Home</a></li>
