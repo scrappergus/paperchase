@@ -90,9 +90,8 @@ if (Meteor.isClient) {
             if (altmetricError) {
                 console.error('altmetricError', altmetricError);
             } else if (altmetricResult) {
-                // do not use altmetricResult.get because very possible that last article was not a tie with previous article and altmetricResult.get will not reduce based on that.
-                Session.set('altmetric-count', altmetricResult.articles.length);
-                Session.set('altmetric-top', altmetricResult.articles);
+                Session.set('altmetric-count', altmetricResult.length);
+                Session.set('altmetric-top', altmetricResult);
             }
         });
     });
@@ -378,6 +377,8 @@ if (Meteor.isClient) {
     Session.setDefault('badge-visible', false);
     Session.setDefault('altmetric-top', null);
     Session.setDefault('altmetric-count', 50);
+    // conferences
+    Session.setDefault('conferences', false);
 
     // Redirects
     // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.
@@ -585,6 +586,34 @@ if (Meteor.isClient) {
             }
             return pageTitle + 'Account';
         },
+    });
+
+    Router.route('/conferences', {
+        name: 'Conferences',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            return [
+                Meteor.subscribe('currentIssue')
+            ];
+        },
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            Meteor.call('conferencesPastAndFuture', function(error, result){
+                if (error) {
+                    console.error(error);
+                } else {
+                    Session.set('conferences', result);
+                }
+            });
+            this.next();
+        },
+        title: function() {
+            var pageTitle = '';
+            if(Session.get('journal')){
+                pageTitle = Session.get('journal').journal.name + ' | ';
+            }
+            return pageTitle + 'Conferences';
+        }
     });
 
     Router.route('/top-articles', {
