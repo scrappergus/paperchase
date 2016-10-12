@@ -98,7 +98,7 @@
 <template name="Footer">
     <div class="row">
         <div class="footer col s12">
-            <footer><span>Copyright © 2016 {{publisher}}<br /> Impact Journals is a registered trademark of Impact Journals, LLC</span></footer>
+            <footer><{{#if issn}}<div class="meta">Online ISSN: {{issn}}</div>{{/if}}span>Copyright © 2016 {{publisher}}<br /> Impact Journals is a registered trademark of Impact Journals, LLC</span></footer>
         </div>
     </div>
     <!--
