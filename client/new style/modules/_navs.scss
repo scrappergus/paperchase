@@ -172,9 +172,13 @@
     text-transform: uppercase;
 }
 .toc-signup-button{
+    color: $accent!important;
     cursor: pointer;
     font-weight: 700;
-    text-transform: uppercase;
+    text-align: left! important;
+    &:hover{
+        color: $white!important;
+    }
 }
 .top-submit-button{
     float: right;
