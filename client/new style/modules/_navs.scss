@@ -172,18 +172,17 @@
     text-transform: uppercase;
 }
 .toc-signup-button{
-    color: $accent!important;
+    color: $white!important;
     cursor: pointer;
     font-weight: 700;
     text-align: left! important;
+    text-transform: none!important;
     &:hover{
         color: $white!important;
     }
 }
 .top-submit-button{
-    float: right;
     padding: 15px!important;
-    top: -15px;
 }
 
 
@@ -479,11 +478,22 @@ $secondary-subnav-color: darken(#00387A, 1%);
 
 // Social Links
 #top-social-links{
-    display: block;
-    height: 20px;
-    // margin-right: 13px;
+    // display: block;
     position: absolute;
     right: 35px;
+    // top: 20px;
+    // i{
+    //     position: relative;
+    //     top: 4px
+    // }
+    li{
+        display: inline-block;
+        padding: 0 10px;
+    }
+    .submit-article{
+        position: relative;
+        top: -2px;
+    }
 }
 .social-links{
     font-size: 20px!important;
@@ -552,10 +562,10 @@ $secondary-subnav-color: darken(#00387A, 1%);
         display: none;
     }
 
-    .top-submit-button{
-        padding: 10px!important;
-        top: -10px;
-    }
+    // .top-submit-button{
+    //     // padding: 10px!important;
+    //     // top: -10px;
+    // }
 
     /*
      * Sidebar Selective Styles

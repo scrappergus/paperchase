@@ -17,7 +17,7 @@
         <div class="nav-content">
             <ul id="top-social-links">
                 {{>SocialLinks}}
-                <!-- <li class="has-icon button"><a href="{{submitLink}}" target="_blank" class="submit-article"><span class="icon icon-file"></span> Submit an Article</a></li> -->
+                <li class="button"><a href="{{submitLink}}" target="_blank" class="submit-article"><span class="icon icon-file"></span> Submit an Article</a></li>
                 <!--<li>{{> loginButtons align="right"}}</li>-->
             </ul>
 
@@ -55,8 +55,7 @@
             {{> breadcrumbs}}
 
             <div class="issn col s5">
-                <a href="{{submitLink}}" target="_blank" class="button primary submit-article top-submit-button">Submit an Article</a>
-                <!-- {{#if issn}}<span class="meta">Online ISSN: {{issn}}</span>{{/if}} -->
+                {{#if issn}}<span class="meta">Online ISSN: {{issn}}</span>{{/if}}
             </div>
         </div>
     </div>
@@ -99,7 +98,6 @@
     <div class="row">
         <div class="footer col s12">
             <footer>
-                {{#if issn}}<div class="meta">Online ISSN: {{issn}}</div>{{/if}}
                 <span>Copyright © 2016 {{publisher}}<br /> Impact Journals is a registered trademark of Impact Journals, LLC</span>
             </footer>
         </div>
