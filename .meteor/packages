@@ -16,12 +16,12 @@ gandev:server-eval
 momentjs:moment
 meteor-base@1.0.4
 mobile-experience@1.0.4
-mongo@1.1.12
+mongo@1.1.12_1
 blaze-html-templates@1.0.4
 session@1.1.6
 jquery@1.11.9
 tracker@1.1.0
-logging@1.1.15
+logging@1.1.15_1
 reload@1.1.10
 random@1.0.10
 ejson@1.0.12
@@ -29,7 +29,7 @@ spacebars@1.0.12
 check@1.2.3
 ostrio:cookies
 reactive-var@1.0.10
-email@1.1.17
+email@1.1.17_1
 aslagle:reactive-table
 aldeed:template-extension
 zimme:active-route
@@ -46,9 +46,9 @@ mvrx:bluebird
 meteorhacks:picker
 meteorhacks:npm
 npm-container
-http@1.2.9
+http@1.2.9_1
 alanning:roles
 aldeed:simple-schema
-standard-minifier-css@1.2.0
-standard-minifier-js@1.2.0
-shell-server
+standard-minifier-css@1.2.0_1
+standard-minifier-js@1.2.0_1
+shell-server@0.2.1
