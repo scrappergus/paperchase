@@ -125,6 +125,7 @@ Meteor.methods({
         }
     },
     pushArticle: function(mongoId, field, articleData){
+        // THIS WILL NOT RECORD PREVIOUS VERSION OF ARTICLE DOC IN THE DB
         Meteor.authorizeCheck.articles();
         var updateObj = {};
         updateObj[field] = articleData;
