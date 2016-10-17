@@ -56,7 +56,9 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-    modifier.$set.previous = articles.findOne({_id : doc._id});
+    if(modifier.$set && modifier.$set.previous){
+        modifier.$set.previous = articles.findOne({_id : doc._id});
+    }
 
     // maintain IDs
     // causes bug when removing an ID on purpose
@@ -287,7 +289,7 @@ sorters.after.update(function (userId, doc, fieldNames, modifier, options){
                    from: Meteor.settings.it.email,
                    subject: 'Duplicate Advance Mongo ID',
                    text: message
-                });    
+                });
             }
         }
     }
