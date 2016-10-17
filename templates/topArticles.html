@@ -1,7 +1,15 @@
 <template name="TopArticles">
     <div class="row">
         <div class="page-content col s12 m7 l8">
-            <h1>Top {{altmetricTopCount}} Articles</h1>
+            <h1>Top {{altmetricTopCount}} {{journal}} publications in the media</h1>
+            <p>Our brand new Altmetric article reports offer instant and real-time feedback that demonstrate the value of any given piece of research by tracking and monitoring each publication from the moment of DOI assignment.  <i>This report will even return results before there is a chance to accrue traditional citations.</i></p>
+
+            <p>As an academic, practitioner or a member of the general public you can sign up to receive email notifications when a publication receives attention - this can help you effectively manage the reputation of your research, build a stronger case or consensus, find future supporters, funders and collaborators - even as simple as updating your academic profile, NIH Biosketch or CV.</p>
+
+            <p>All reports contain an "at a glance" multi-channel overview to help assess and compare levels of awareness in target groups.  Int breaks down demographic and geographic details to show where, and who, in the world is giving your article attention.  This allows you to tune your research, societal engagement, influence and broader impacts.</p>
+
+            <p style="margin-bottom: 2em;">Whether you are a doctor trying to stay current on your area of expertise, an author trying to publish their first paper, or a seasoned researcher trying to find information for your next big discovery - our new Altmetric article reports will help you make data driven decisions from the moment you are published.</p>
+
             <ul id="altmetric-top-full">
                 {{#each altmetricTop}}
                 <li>

@@ -2,11 +2,13 @@ Meteor.methods({
     getAltmetricTop : function(numberToGet){
         // console.log('GET = ', numberToGet);
         var number = numberToGet ? numberToGet : 50;
+        var totalToTheNearest = 5;
         var fut = new future();
         var altmetricApi = 'https://www.altmetric.com/api/v1/citations/at';
         var queryParams = '?num_results=' + number + '&key=' + Meteor.settings.altmetric.key + '&journals=' + Meteor.settings.altmetric.journalId + '&citation_type=news%2Carticle%2Cclinical_trial_study_record%2Cdataset%2Cgeneric&order_by=at_score';
         var altmetricUrl = altmetricApi + queryParams;
         var result = {};
+        var total;
 
         Meteor.http.get(altmetricUrl , function(error, altmetricResult){
             if (error){
@@ -37,7 +39,8 @@ Meteor.methods({
                                         console.error(thresholdError);
                                         fut.throw(thresholdError);
                                     } else {
-                                        fut.return(thresholdResult);
+                                        total = Math.floor(thresholdResult.length/totalToTheNearest)*totalToTheNearest;
+                                        fut.return(thresholdResult.slice(0, total));
                                     }
                                 });
                             }
@@ -63,7 +66,7 @@ Meteor.methods({
     altmetricCheckForTiesAtEnd: function(count, articles) {
         var returnArticles = [];
         if (Math.ceil(articles[articles.length-1].score) === Math.ceil(articles[articles.length-2].score)) {
-            count++;
+            count = count++;
             returnArticles = articles;
         } else{
             returnArticles = articles.slice(0, articles.length-1);

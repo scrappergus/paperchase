@@ -16,11 +16,9 @@
             </ul>
 
             {{#if altmetricTop}}
-                <h3 class="section-heading new-section" style="margin-bottom: 0;">Top 5 Articles by <a href="https://help.altmetric.com/support/solutions/articles/6000060969-how-is-the-altmetric-attention-score-calculated-" target="_BLANK">Altmetric Attention Score</a></h3>
-               <!-- <p><a href="{{pathFor 'TopArticles'}}" style="margin-bottom:10px">View All Top {{altmetricTopCount}} Articles</a></p> -->
-                <p style="margin: 10px 0;">
-                   <a href="{{pathFor 'TopArticles'}}">View Top {{altmetricTopCount}} Articles</a>
-                </p>
+                <h3 class="section-heading new-section">
+                    Top {{altmetricTopCount}} {{journal}} publications in the media - <a href="{{pathFor 'TopArticles'}}">view all</a>
+                </h3>
                 <ul id="altmetric-top" class="card">
                     {{#each altmetricTop}}
                     <li>
