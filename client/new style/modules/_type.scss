@@ -13,7 +13,8 @@ body {
     background-color: $faintgray !important;
 }
 
-$paragraphFontSize: 13px;
+$paragraphFontSize: 15px;// stage 2
+// $paragraphFontSize: 17px;// previous
 
 html{
     font-size: $paragraphFontSize;
@@ -57,22 +58,27 @@ html, body {
 /** Headings | Font Sizes
 ---------------------------------------------------------*/
 h1, .h1 {
-    font-size: 20px;
+    font-size: 22px;// stage 2
+    // font-size: 26px; //previous
 }
 h2, .h2 {
-    font-size: 18px;
+    font-size: 20px;// stage 2
+    // font-size: 22px; //previous
     color: $kashmir;
 }
 h3, .h3 {
-    font-size: 16px;
+    font-size: 18px;// stage 2
+    // font-size: 20px;// previous
 }
 h4, .h4 {
-    font-size: 14px;
+    font-size: 16px;// stage 2
+    // font-size: 17px;// previous
 }
 
 h5, .h5, h6, .h6,
 span.meta {
-    font-size: 14px;
+    font-size: 14px;// stage 2
+    // font-size: 14px;// previous
 }
 
 h1, .h1 {
@@ -133,10 +139,12 @@ a {
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
     h1, .h1 {
-        font-size: 22px;
+        font-size: 24px; // stage 2
+        // font-size: 30px; //previous
     }
     h2, .h2 {
-        font-size: 20px;
+        font-size: 22px; // stage 2
+        // font-size: 24px; //previous
         // color: $kashmir; //redundant
     }
     // h3, .h3 {
