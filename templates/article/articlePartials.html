@@ -1,4 +1,4 @@
-<template name="ArticleHeaderTitle">
+<!-- <template name="ArticleHeaderTitle">
     <h5 class="article-header">
         {{>ArticleHeaderPieces}}
     </h5>
@@ -10,6 +10,18 @@
         {{/with}}
         {{/if}}
         {{/if}}
+        <div id="article-container">
+            <h1 id="article-title" class="valign">
+                {{{title}}}
+            </h1>
+        </div>
+    </div>
+</template> -->
+<template name="ArticleHeaderTitle">
+    <h5 class="article-header">
+        {{>ArticleHeaderPieces}}
+    </h5>
+    <div id="article-title-and-badge-container" class="valign-wrapper">
         <div id="article-container">
             <h1 id="article-title" class="valign">
                 {{{title}}}
