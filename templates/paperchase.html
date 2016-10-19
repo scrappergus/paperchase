@@ -17,14 +17,14 @@
 
             {{#if altmetricTop}}
                 <h3 class="section-heading new-section">
-                    Top 5 {{journal}} Publications Rated by Altmetric Attention Score
+                    Top Five {{journal}} Publications Rated by Altmetric Attention Score
                 </h3>
                 <ul id="altmetric-top" class="card">
                     {{#each altmetricTop}}
                     <li>
                         <p class="valign-wrapper">
                             <a href="{{details_url}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img src="{{images.small}}"/></a>
-                            <a href="{{url}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
+                            <a href="{{details_url}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
                         </p>
                     </li>
                     {{/each}}
