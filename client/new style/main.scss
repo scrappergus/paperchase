@@ -795,7 +795,7 @@ ul.sectioned-list {
         }
         p{
             margin: 0px!important;
-            line-height: $paragraphFontSize!important;
+            // line-height: $paragraphFontSize!important;
         }
         &:last-child{
             margin-bottom: 0;

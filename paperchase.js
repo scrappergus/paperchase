@@ -616,27 +616,27 @@ if (Meteor.isClient) {
         }
     });
 
-    Router.route('/top-articles', {
-        name: 'TopArticles',
-        layoutTemplate: 'Visitor',
-        onBeforeAction: function(){
-            Meteor.impact.redirectForAlt();
-            this.next();
-        },
-        waitOn: function(){
-            Meteor.impact.redirectForAlt();
-            return[
-                Meteor.subscribe('currentIssue'),
-            ];
-        },
-        title: function() {
-            var pageTitle = '';
-            if(Session.get('journal')){
-                pageTitle = Session.get('journal').journal.name + ' | ';
-            }
-            return pageTitle + 'Top Articles';
-        },
-    });
+    // Router.route('/top-articles', {
+    //     name: 'TopArticles',
+    //     layoutTemplate: 'Visitor',
+    //     onBeforeAction: function(){
+    //         Meteor.impact.redirectForAlt();
+    //         this.next();
+    //     },
+    //     waitOn: function(){
+    //         Meteor.impact.redirectForAlt();
+    //         return[
+    //             Meteor.subscribe('currentIssue'),
+    //         ];
+    //     },
+    //     title: function() {
+    //         var pageTitle = '';
+    //         if(Session.get('journal')){
+    //             pageTitle = Session.get('journal').journal.name + ' | ';
+    //         }
+    //         return pageTitle + 'Top Articles';
+    //     },
+    // });
 
     Router.route('/archive', {
         name: 'Archive',
