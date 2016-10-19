@@ -67,6 +67,11 @@ packages/npm-container/.npm/package/npm-shrinkwrap.json
 settings-aging.json
 settings-aging-stage-1.json
 settings-aging-stage-2.json
+settings-aging-stage-2-db.json
+settings-aging-stage-3-db.json
 settings-aging-admin.json
 settings-oncotarget-stage.json
 settings-oncotarget.json
+settings-oncotarget-admin.json
+settings-gc.json
+settings-oncoscience.json
