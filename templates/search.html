@@ -50,7 +50,7 @@
         </div>
 
         <div class="page-sidebar col s12 m4 hide-on-med-and-down">
-            {{> AdvancedSearch mobile=false terms=terms indexes=indexes}}
+            {{> AdvancedSearch mobile=false terms=terms indexes=indexes primaryIndex=primaryIndex}}
         </div>
 	 </div>
 
@@ -67,7 +67,7 @@
                 <input placeholder="authors" type="text" name="authors">
                 <input placeholder="keywords" type="text" name="keywords">
                 {{#each indexes}}
-                <div class="input-field"> <input type="checkbox" name="{{index}}Search" id="{{index}}SearchCheck" checked="{{primary}}"/><label for="{{index}}SearchCheck">Search {{label}}</label></div>
+                <div class="input-field"> <input type="checkbox" name="{{index}}Search" id="{{index}}SearchCheck" checked="{{#if equals index ../primaryIndex}}true{{/if}}"/><label for="{{index}}SearchCheck">Search {{label}}</label></div>
                 {{/each}}
                 <br>
                 

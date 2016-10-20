@@ -1275,11 +1275,18 @@ Meteor.search = {
                 oncoscienceSearch: (e && e.target && e.target.oncoscienceSearch && e.target.oncoscienceSearch.checked) ? true : (args.primaryIndex == 'oncoscience')
             }, function(err, data) {
                 //            console.log('>>> args in browser', err, data);
-                var indeces = {'aging': 'Aging', 'oncoscience': 'Oncoscience', 'oncotarget': 'Oncotarget', 'genesandcancer': 'Genes & Cancer' };
+
+                var siteConfig = journalConfig.findOne({}, {fields: {elasticsearch: 1}});
+                console.log(siteConfig);
+                var indexes = {};
+                _.each(siteConfig.elasticsearch.indexes, function(element, index, list) {
+                        indexes[element.index] = element.label;
+                    });
+
                 var queryResults = data.map(function(cur) {
                         return {
                             '_id': cur._id,
-                            'index': indeces[cur._index],
+                            'index': indexes[cur._index],
                             'title': cur._source.title,
                             'abstract': cur._source.abstract,
                             'authors': cur._source.authors,
