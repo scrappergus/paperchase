@@ -173,4 +173,10 @@ if (Meteor.isClient) {
     Template.registerHelper('articleDataReady', function() {
         return Session.get('article-form');
     });
+    Template.registerHelper('submittedAndMissingPmid', function(ids) {
+        if(!ids.pmid){
+            return true;
+        }
+        return false;
+    });
 }

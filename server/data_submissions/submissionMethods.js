@@ -414,5 +414,35 @@ Meteor.methods({
         abstract = abstract.replace(/<bold>/g, '<b>').replace(/<\/bold>/g, '</b>');
         abstract = abstract.replace(/<italic>/g, '<i>').replace(/<\/italic>/g, '</i>');
         return abstract;
+    },
+    submissionSetDataProcess: function(articles) {
+        var fut = new future();
+        if (articles && articles.length > 0){
+            articles.forEach(function(article, index){
+                if (article.ids && !article.ids.pmid){
+                    Meteor.call('getPubMedId', article, function(error, pubmedResult){
+                        if (error) {
+                            console.error('getPubMedId', error);
+                        } else if (pubmedResult) {
+                            article.ids.pmid = pubmedResult;
+                            Meteor.call('updateArticle', article._id, {ids : article.ids});
+                        }
+                    });
+                }
+
+                if (index === articles.length - 1) {
+                    fut.return(true);
+                }
+            });
+        } else {
+            fut.return(true);
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
     }
 });

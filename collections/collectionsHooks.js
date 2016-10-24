@@ -56,7 +56,7 @@ articles.before.update(function (userId, doc, fieldNames, modifier, options) {
         }
     }
 
-    if(modifier.$set && modifier.$set.previous){
+    if(modifier.$set){
         modifier.$set.previous = articles.findOne({_id : doc._id});
     }
 
@@ -276,9 +276,6 @@ sorters.after.update(function (userId, doc, fieldNames, modifier, options){
         advanceArray = sorters.findOne({ name : 'advance' }).order;
         if (advanceArray) {
             duplicates = Meteor.organize.arrayDuplicates(advanceArray);
-            if (duplicates && duplicates.lengh > 0){
-
-            }
 
             // duplicate found, notify via emails
             var message = 'Duplicate Mongo ID found for ' + Meteor.settings.public.journal.name + ' advance \n' + duplicates.toString();

@@ -62,6 +62,18 @@ Template.AdminDataSubmissions.helpers({
     ppubAlreadySubmitted: function(){
         return Meteor.dataSubmissions.ppubAlreadySubmitted(Template.instance());
     },
+    noPmidAndSubmitted: function() {
+        var submissionArticles = articles.find({},{sort : {page_start:1}}).fetch();
+        var result = [];
+
+        submissionArticles.forEach(function(article){
+            if (article.submissions && article.submissions.length > 0 && article.ids && !article.ids.pmid){
+                result.push(article);
+            }
+        });
+
+        return result;
+    },
     submitCount: function(){
         var okToSubmit = Meteor.dataSubmissions.articleOkToSubmit(Template.instance());
         if(okToSubmit){

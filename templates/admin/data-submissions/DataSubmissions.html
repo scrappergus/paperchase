@@ -43,8 +43,7 @@
             {{>ProcessingNotHidden}}
         </div>
     </div>
-    {{/if}}
-
+    {{else}}
     {{#if noneFound}}
     <div class="row">
         <div class="col s12">
@@ -76,13 +75,35 @@
         <div class="col s12">
             <div class="card z-depth-0 red">
                 <div class="card-content">
+                    <h3 class="white-text">Error</h3>
                     <h4 class="white-text">Cannot submit these articles, they were already submitted as PPublish</h4>
                     <p class="white-text">
                         When creating XML, these articles will not be included in the submission set.
                     </p>
                     <ul>
                         {{#each ppubAlreadySubmitted}}
-                        <li><a class="white-text" href="{pathFor 'AdminArticleOverview'}" target="_BLANK">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}</a></li>
+                        <li class="white-text">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}<a class="white-text" href="{{pathFor 'AdminArticleOverview'}}" target="_BLANK"> - View</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if notEmpty noPmidAndSubmitted}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red">
+                <div class="card-content">
+                    <h3 class="white-text">Error</h3>
+                    <h4 class="white-text">Cannot find PMID for these submitted articles</h4>
+                    <p class="white-text">
+                        These articles will be INCLUDED in the submission set.
+                    </p>
+                    <ul>
+                        {{#each noPmidAndSubmitted}}
+                        <li class="white-text">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}<a class="white-text" href="{{pathFor 'AdminArticleOverview'}}" target="_BLANK"> - View</a></li>
                         {{/each}}
                     </ul>
                 </div>
@@ -206,16 +227,33 @@
                             <div class="col s12">
                                 <div class="card z-depth-0 blue-grey lighten-5 no-margin">
                                     <div class="card-content">
+                                        {{#if submissions}}
+                                        {{#if notEmpty submissions}}
+                                        {{#if submittedAndMissingPmid ids}}
+                                        <div class="row">
+                                            <div class="col s12 red">
+                                                <h3 class="white-text">Missing PMID</h3>
+                                                <h4 class="white-text">Article has been submitted to PubMed but no PMID found</h4>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                        {{/if}}
+                                        {{/if}}
+
+                                        {{#if submissions}}
+                                        {{#if pubMedPpubOk pub_status submissions}}
+                                        {{else}}
+                                        <div class="row">
+                                            <div class="col s12 red">
+                                                <h3 class="white-text">Cannot submit this article. Article was already submitted as PPublish</h3>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                        {{/if}}
+
                                         <div class="row no-margin">
                                             <div class="col s6">
                                                 <label>Pub Status:</label> {{#if pub_status}}{{pub_status}}{{else}}<span class="red-type">N/A</span>{{/if}}
-
-                                                {{#if submissions}}
-                                                {{#if pubMedPpubOk pub_status submissions}}
-                                                {{else}}
-                                                <h3 class="red-type">Cannot submit this article. Article was already submitted as PPublish</h3>
-                                                {{/if}}
-                                                {{/if}}
 
                                                 {{#if pub_status}}
                                                 {{else}}
@@ -295,6 +333,7 @@
         </div>
         {{/if}}
         {{/if}}
+    {{/if}}
     {{/if}}
 </template>
 

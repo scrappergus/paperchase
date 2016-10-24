@@ -126,9 +126,13 @@ Template.AdminDataSubmissions.onCreated(function () {
 
     template.autorun( function() {
         template.subscribe( 'submissionSet', template.queryType.get(), template.queryParams.get(), function() {
-            setTimeout( function() {
-                template.processing.set( false );
-            }, 300 );
+            Meteor.call('submissionSetDataProcess', articles.find().fetch(), function(error, articlesProcessedResult){
+                if (error) {
+                    console.error('submissionSetDataProcess', error);
+                } else if(articlesProcessedResult) {
+                    template.processing.set( false );
+                }
+            });
         });
     });
 });

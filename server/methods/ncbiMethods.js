@@ -162,43 +162,41 @@ Meteor.methods({
     getPubMedId: function(article){
         // console.log('...getPubMedId ');
         var fut = new future();
-        var pubMedUrl = 'http://www.ncbi.nlm.nih.gov/pubmed/';
+        var pubMedUrl = 'https://www.ncbi.nlm.nih.gov/pubmed/';
         var pmidVerified,
             query = [],
             pmid = '',
             resultHtml,
             doc,
             pmidElement;
-        // console.log(article.title);
-        // using title, authors, etc query PubMed to get article PMID, which will then be the URL for the article
         if(article.title){
-            // title = for double check
-            // require title because this is what we will use to verify that the PMID retrieved is correct.
 
-            for(var key in article){
-                var v = article[key];
-                // console.log(v);
-                if(typeof v == Array){
-                    v = v.join('+');
-                }
+            query.push(Meteor.settings.public.journal.issn + '%5BISSN%5D');
 
-                query.push(v);
+            query.push(article.title + '%5BTitle%5D');
+
+            if (article.authors) {
+                article.authors.forEach(function(author){
+                    var authorQueryStr = '';
+                    if (author.name_last){
+                        authorQueryStr += author.name_last;
+                    }
+                    authorQueryStr += '%5BAuthor%5D';
+                    query.push(authorQueryStr);
+                });
             }
+
             query = query.join('+').replace(/\s+/g, '+');
-            // console.log('query');console.log(query);
             Meteor.http.get(pubMedUrl + '?term=' + query, function(error,result){
                 if(error){
-                    console.log('error');
-                    console.log(error);
+                    console.error('getPubMedId', error);
                 }
                 if(result){
                     resultHtml = result.content;
                     doc = new dom().parseFromString(resultHtml);
                     pmidElement = doc.getElementById('absid');
                     if(pmidElement){
-                        for(var attr=0 ; attr < pmidElement.attributes.length ; attr++){
-                            // if()
-                            // console.log(pmid.attributes[attr].localName);
+                        for(var attr=0; attr<pmidElement.attributes.length; attr++){
                             if(pmidElement.attributes[attr].localName == 'value' && pmidElement.attributes[attr].nodeValue){
                                 pmid = pmidElement.attributes[attr].nodeValue;
                             }
@@ -206,7 +204,7 @@ Meteor.methods({
 
                         // Verify that PMID is correct
                         if(pmid){
-                            pmidVerified = Meteor.call('verifyPmid',pmid,article.title);
+                            pmidVerified = Meteor.call('verifyPmid',pmid, article.ids);
                             if(pmidVerified){
                                 fut.return(pmid);
                             }else{
@@ -216,9 +214,10 @@ Meteor.methods({
                             fut.return(false);
                         }
 
+                    } else {
+                        fut.return(false);
                     }
                 }else{
-                    // return false;
                     // initial query using article data did not return a pmid
                     fut.return(false);
                 }
@@ -253,8 +252,7 @@ Meteor.methods({
         console.log(pubMedUrl + encodeURIComponent(title));
         Meteor.http.get(pubMedUrl + encodeURIComponent(title), function(error,result){
             if(error){
-                console.log('error');
-                console.log(error);
+                console.error('getPmidByTitleAtPubMed', error);
             }
             if(result){
                 // title match check
@@ -274,30 +272,38 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    verifyPmid: function(pmid,title){
+    verifyPmid: function(pmid, ids){
         // console.log('..verifyPmid = ' + pmid);
         var fut = new future();
-        var pubMedUrl = 'http://www.ncbi.nlm.nih.gov/pubmed/';
+        var pubMedUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=';
         var resultTitle = '',
             resultHtml,
             doc,
             resultTitleElement;
-        // after querying PubMed for ID, verify that titles match
+        var pubMedJson;
+        var pubMedIdsByKey = {};
+        // after querying PubMed for ID, verify that IDs match
         Meteor.http.get(pubMedUrl + pmid, function(error,result){
-            if(error){
-                console.log('error');
-                console.log(error);
-            }
-            if(result){
-                // title match check
-                resultHtml = result.content;
-                doc = new dom().parseFromString(resultHtml);
-                resultTitleElement = doc.getElementsByTagName('title');
-                resultTitle = resultTitleElement[0].firstChild.nodeValue.replace('.  - PubMed - NCBI\n','');
-                if(title == resultTitle){
-                    // console.log('MATCH! = ' + pmid);console.log(resultTitle);
+            if (error){
+                console.error('verifyPmid', error);
+            } else if (result){
+                pubMedJson = JSON.parse(result.content);
+
+                if (pubMedJson.result[pmid].articleids) {
+                    pubMedJson.result[pmid].articleids.forEach(function(articleId){
+                        pubMedIdsByKey[articleId.idtype] = articleId.value;
+                    });
+                } else{
+                    fut.return(false);
+                }
+
+                if (pubMedIdsByKey.pii && ids.pii && pubMedIdsByKey.pii === ids.pii){
                     fut.return(true);
-                }else{
+                } else if(pubMedIdsByKey.pii && ids.publisher && pubMedIdsByKey.pii === ids.publisher){
+                    fut.return(true);
+                } else if(pubMedIdsByKey.doi && ids.doi && pubMedIdsByKey.doi === ids.doi){
+                    fut.return(true);
+                } else{
                     fut.return(false);
                 }
 
