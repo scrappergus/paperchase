@@ -169,24 +169,26 @@ Meteor.methods({
             resultHtml,
             doc,
             pmidElement;
-        if(article.title){
+        if(article.ids && article.ids.doi){
 
             query.push(Meteor.settings.public.journal.issn + '%5BISSN%5D');
+            query.push(article.ids.doi + '%5BISSN%5D');
 
-            query.push(article.title + '%5BTitle%5D');
-
-            if (article.authors) {
-                article.authors.forEach(function(author){
-                    var authorQueryStr = '';
-                    if (author.name_last){
-                        authorQueryStr += author.name_last;
-                    }
-                    authorQueryStr += '%5BAuthor%5D';
-                    query.push(authorQueryStr);
-                });
-            }
+            // query.push(article.title + '%5BTitle%5D');
+            //
+            // if (article.authors) {
+            //     article.authors.forEach(function(author){
+            //         var authorQueryStr = '';
+            //         if (author.name_last){
+            //             authorQueryStr += author.name_last;
+            //         }
+            //         authorQueryStr += '%5BAuthor%5D';
+            //         query.push(authorQueryStr);
+            //     });
+            // }
 
             query = query.join('+').replace(/\s+/g, '+');
+            // console.log(query);
             Meteor.http.get(pubMedUrl + '?term=' + query, function(error,result){
                 if(error){
                     console.error('getPubMedId', error);
@@ -222,6 +224,8 @@ Meteor.methods({
                     fut.return(false);
                 }
             });
+        } else {
+            fut.return();
         }
         return fut.wait();
     },
