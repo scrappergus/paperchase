@@ -76,6 +76,7 @@ Meteor.methods({
     processAltmetricResponse: function(articles) {
         return articles.map(function(article){
             var aReturn = {};
+            aReturn.altmetric_id = article.altmetric_id;
             aReturn.score = article.score;
             aReturn.details_url = article.details_url;
             aReturn.title = article.title;

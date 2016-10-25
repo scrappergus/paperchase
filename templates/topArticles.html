@@ -9,15 +9,16 @@
 
             <p>All reports contain an "at a glance" summary to help assess and compare levels of awareness from different platforms and groups. Demographic and geographic details show who and where your article is receiving attention from, and the full text of all mentions can be viewed via the individual tabs. These insights enable you build effective strategies for your research, societal engagement, influence and broader impacts.</p>
 
-            <p style="margin-bottom: 2em;">Whether you are a doctor trying to stay current on your area of expertise, an author trying to publish their first paper, or a seasoned researcher trying to find information for your next big discovery - our new Altmetric article reports will help you make data driven decisions from the moment you are published.</p>
+            <p>Whether you are a doctor trying to stay current on your area of expertise, an author trying to publish their first paper, or a seasoned researcher trying to find information for your next big discovery - our new Altmetric article reports will help you make data driven decisions from the moment you are published.</p>
 
+            <p style="margin-bottom: 2em;"><i>Please click on the Publication Title or the Altmetric badge to view the Article Report.</i></p>
 
             <ul id="altmetric-top">
                 {{#each altmetricTop}}
                 <li>
                     <p class="valign-wrapper">
-                        <a href="{{details_url}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img src="{{images.small}}"/></a>
-                        <a href="{{details_url}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
+                        <a href="{{altmetricDetailsLink}}{{altmetric_id}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img src="{{images.small}}"/></a>
+                        <a href="{{altmetricDetailsLink}}{{altmetric_id}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
                     </p>
                 </li>
                 {{/each}}

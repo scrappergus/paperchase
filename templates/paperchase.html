@@ -23,8 +23,8 @@
                     {{#each altmetricTop}}
                     <li>
                         <p class="valign-wrapper">
-                            <a href="{{details_url}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img src="{{images.small}}"/></a>
-                            <a href="{{details_url}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
+                            <a href="{{altmetricDetailsLink}}{{altmetric_id}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img src="{{images.small}}"/></a>
+                            <a href="{{altmetricDetailsLink}}{{altmetric_id}}" class="valign altmetric-title-link" target="_blank">{{{title}}}</a>
                         </p>
                     </li>
                     {{/each}}

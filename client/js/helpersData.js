@@ -15,6 +15,9 @@ Template.Home.helpers({
     altmetricTopCount: function() {
         return Meteor.general.numberToWord(Session.get('altmetric-count'));
     },
+    altmetricDetailsLink: function() {
+        return Meteor.settings.public.journal.altmetricDetailsLink;
+    },
     journal: function() {
         return Meteor.settings.public.journal.name;
     }
@@ -35,6 +38,9 @@ Template.TopArticles.helpers({
     },
     altmetricTopCount: function() {
         return Meteor.general.numberToWord(Session.get('altmetric-count'));
+    },
+    altmetricDetailsLink: function() {
+        return Meteor.settings.public.journal.altmetricDetailsLink;
     },
     journal: function() {
         return Meteor.settings.public.journal.name;
