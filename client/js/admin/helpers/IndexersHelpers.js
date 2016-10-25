@@ -62,6 +62,12 @@ Template.AdminDataSubmissions.helpers({
     ppubAlreadySubmitted: function(){
         return Meteor.dataSubmissions.ppubAlreadySubmitted(Template.instance());
     },
+    noDoi: function(){
+        return Meteor.dataSubmissions.noDoi(Template.instance());
+    },
+    noPubStatus: function(){
+        return Meteor.dataSubmissions.noPubStatus(Template.instance());
+    },
     noPmidAndSubmitted: function() {
         var submissionArticles = articles.find({},{sort : {page_start:1}}).fetch();
         var result = [];

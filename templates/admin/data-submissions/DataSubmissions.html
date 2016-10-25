@@ -52,7 +52,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <div class="card z-depth-0 red">
+            <div class="card z-depth-0 red lighten-1">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12 center">
@@ -70,18 +70,33 @@
     </div>
     {{/if}}
 
-    {{#if ppubAlreadySubmitted}}
+    {{#if notEmpty ppubAlreadySubmitted}}
     <div class="row">
         <div class="col s12">
-            <div class="card z-depth-0 red">
+            <div class="card z-depth-0 red lighten-1">
                 <div class="card-content">
-                    <h3 class="white-text">Error</h3>
+                    <span class="card-title white-text">PPublish</span>
                     <h4 class="white-text">Cannot submit these articles, they were already submitted as PPublish</h4>
-                    <p class="white-text">
-                        When creating XML, these articles will not be included in the submission set.
-                    </p>
                     <ul>
                         {{#each ppubAlreadySubmitted}}
+                        <li class="white-text">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}<a class="white-text" href="{{pathFor 'AdminArticleOverview'}}" target="_BLANK"> - View</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if notEmpty noDoi}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red lighten-1">
+                <div class="card-content">
+                    <span class="card-title white-text">DOI</span>
+                    <h4 class="white-text">Cannot submit these articles, they are missing DOI</h4>
+                    <ul>
+                        {{#each noDoi}}
                         <li class="white-text">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}<a class="white-text" href="{{pathFor 'AdminArticleOverview'}}" target="_BLANK"> - View</a></li>
                         {{/each}}
                     </ul>
@@ -94,15 +109,30 @@
     {{#if notEmpty noPmidAndSubmitted}}
     <div class="row">
         <div class="col s12">
-            <div class="card z-depth-0 red">
+            <div class="card z-depth-0 red lighten-1">
                 <div class="card-content">
-                    <h3 class="white-text">Error</h3>
-                    <h4 class="white-text">Cannot find PMID for these submitted articles</h4>
-                    <p class="white-text">
-                        These articles will be INCLUDED in the submission set.
-                    </p>
+                    <span class="card-title white-text">No PMID</span>
+                    <h4 class="white-text">Cannot submit these articles, these are submitted articles without a PMID</h4>
                     <ul>
                         {{#each noPmidAndSubmitted}}
+                        <li class="white-text">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}<a class="white-text" href="{{pathFor 'AdminArticleOverview'}}" target="_BLANK"> - View</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if notEmpty noPubStatus}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0 red lighten-1">
+                <div class="card-content">
+                    <span class="card-title white-text">No Pub Status</span>
+                    <h4 class="white-text">Cannot submit these articles, articles are missing publication status</h4>
+                    <ul>
+                        {{#each noPubStatus}}
                         <li class="white-text">{{#with ids}}{{#if pii}}{{pii}} | {{/if}}{{/with}}{{{title}}}<a class="white-text" href="{{pathFor 'AdminArticleOverview'}}" target="_BLANK"> - View</a></li>
                         {{/each}}
                     </ul>
@@ -121,11 +151,10 @@
                         <div class="row no-margin valign-wrapper">
                             <div class="col s4 valign">
                                 {{#if equals submitCount 0 }}
-                                <h4>No Articles To Submit</h4>
-                                <p>Either previously submitted PPublish, or articles missing pub status</p>
+                                <h4 style="margin: 0;">No Articles To Submit</h4>
                                 {{else}}
                                 <h4>Article Count: {{submitCount}}</h4>
-                                <span style="font-size: x-small;">* Count reflects removing previously submitted PPublish & any without a pub status</span>
+                                <span style="font-size: x-small; margin: 0 0 15px 0;">* Count reflects removing previously submitted PPublish, those without a pub status, and those without DOI</span>
                                 {{#if creatingXml}}
                                 <h4>Sending...</h4>
                                 {{else}}
@@ -153,7 +182,7 @@
         {{#if piiNotFound}}
         <div class="row">
             <div class="col s12">
-                <div class="card z-depth-0 red">
+                <div class="card z-depth-0 red lighten-1">
                     <div class="card-content">
                         <div class="row no-margin center">
                             <h4 class="white-text">PII not Found:<br>{{piiNotFound}}</h4>
@@ -167,7 +196,7 @@
         {{#if invalidLink}}
         <div class="row">
             <div class="col s12">
-                <div class="card z-depth-0 red">
+                <div class="card z-depth-0 red lighten-1">
                     <div class="card-content">
                         <a class="btn" href="http://www.ncbi.nlm.nih.gov/{{invalidLink}}" target="_BLANK">View PubMed Validation</a>
                     </div>
@@ -179,7 +208,7 @@
         {{#if errorMessage}}
         <div class="row">
             <div class="col s12">
-                <div class="card z-depth-0 red">
+                <div class="card z-depth-0 red lighten-1">
                     <div class="card-content">
                         <h4 class="white-text">{{errorMessage}}</h4>
                     </div>
@@ -231,34 +260,66 @@
                                         {{#if notEmpty submissions}}
                                         {{#if submittedAndMissingPmid ids}}
                                         <div class="row">
-                                            <div class="col s12 red">
-                                                <h3 class="white-text">Missing PMID</h3>
-                                                <h4 class="white-text">Article has been submitted to PubMed but no PMID found</h4>
+                                            <div class="col s12">
+                                                <div class="card z-depth-0 red lighten-1">
+                                                    <div class="card-content">
+                                                        <span class="card-title white-text">Missing PMID</span>
+                                                        <h4 class="white-text">Article has been submitted to PubMed but no PMID found</h4>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         {{/if}}
                                         {{/if}}
+                                        {{/if}}
+
+
+                                        {{#if missingDoi ids}}
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <div class="card z-depth-0 red lighten-1">
+                                                    <div class="card-content">
+                                                        <span class="card-title white-text">Cannot Submit</span>
+                                                        <h4 class="white-text">Missing DOI</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{/if}}
 
                                         {{#if submissions}}
                                         {{#if pubMedPpubOk pub_status submissions}}
                                         {{else}}
                                         <div class="row">
-                                            <div class="col s12 red">
-                                                <h3 class="white-text">Cannot submit this article. Article was already submitted as PPublish</h3>
+                                            <div class="col s12">
+                                                <div class="card z-depth-0 red lighten-1">
+                                                    <div class="card-content">
+                                                        <span class="card-title white-text">Cannot Submit</span>
+                                                        <h4 class="white-text">Article was already submitted as PPublish</h4>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         {{/if}}
                                         {{/if}}
 
+                                        {{#if pub_status}}
+                                        {{else}}
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <div class="card z-depth-0 red lighten-1">
+                                                    <div class="card-content">
+                                                        <span class="card-title white-text">Cannot Submit</span>
+                                                        <h4 class="white-text">Pub Status Required</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+
                                         <div class="row no-margin">
                                             <div class="col s6">
                                                 <label>Pub Status:</label> {{#if pub_status}}{{pub_status}}{{else}}<span class="red-type">N/A</span>{{/if}}
-
-                                                {{#if pub_status}}
-                                                {{else}}
-                                                <h3 class="red-type">Pub Status Required</h3>
-                                                {{/if}}
                                             </div>
                                             <div class="col s6">
                                                 <button id="edit-{{_id}}" class="edit-article btn btn-floating waves-effect waves-light btn-edit right" alt="Edit Article">{{>AdminEditIcon}}</button>

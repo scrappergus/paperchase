@@ -24,13 +24,37 @@ Meteor.dataSubmissions = {
         });
         return ppubAlreadySubmitted;
     },
+    noDoi: function(template){
+        var articlesList = Meteor.dataSubmissions.getArticles(template);
+        var noDoi = [];
+        articlesList.forEach(function(article){
+            if(article.ids && !article.ids.doi){
+                noDoi.push(article);
+            } else if(!article.ids) {
+                noDoi.push(article);
+            }
+        });
+        return noDoi;
+    },
+    noPubStatus: function(template){
+        var articlesList = Meteor.dataSubmissions.getArticles(template);
+        var noStat = [];
+        articlesList.forEach(function(article){
+            if(!article.pub_status){
+                noStat.push(article);
+            }
+        });
+        return noStat;
+    },
     articleOkToSubmit: function(template){
-        // all articles with a pub status and without previously submitted ppub
+        // all articles with a pub status and with a DOI, with a PMID if previously submitted, and without previously submitted ppub
         var articlesList = Meteor.dataSubmissions.getArticles(template);
         var okToSubmit = [];
         articlesList.forEach(function(article){
             if(article.pub_status && article.pub_status === 'ppublish' && article.submissions && article.submissions[article.submissions.length - 1].pub_status === 'ppublish'){
-            } else if(article.pub_status){
+            } else if(article.submissions && article.submissions.length > 0 && article.ids && article.ids.pmid  && article.ids.doi){
+                okToSubmit.push(article);
+            } else if(!article.submissions && article.pub_status && article.ids && article.ids.doi){
                 okToSubmit.push(article);
             }
         });

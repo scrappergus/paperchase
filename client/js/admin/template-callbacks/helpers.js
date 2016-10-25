@@ -179,4 +179,12 @@ if (Meteor.isClient) {
         }
         return false;
     });
+    Template.registerHelper('missingDoi', function(ids) {
+        if(ids && !ids.doi){
+            return true;
+        } else if (!ids) {
+            return true;
+        }
+        return false;
+    });
 }
