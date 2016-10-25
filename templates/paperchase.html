@@ -16,9 +16,12 @@
             </ul>
 
             {{#if altmetricTop}}
-                <h3 class="section-heading new-section">
-                    Top {{altmetricTopCount}} {{journal}} Publications Rated by Altmetric Attention Score - <a href="{{pathFor 'TopArticles'}}">View All</a>
+                <h3 class="section-heading new-section" style="margin-bottom:0px">
+                    Top {{altmetricTopCount}} {{journal}} publications rated by Altmetric attention score
                 </h3>
+                <p style="margin-bottom:30px">
+                    <a href="{{pathFor 'TopArticles'}}">View All</a>
+                </p>
                 <ul id="altmetric-top" class="card">
                     {{#each altmetricTop}}
                     <li>
