@@ -1125,9 +1125,9 @@ Meteor.general = {
         //http://stackoverflow.com/questions/14766951/convert-digits-into-words-with-javascript
         if (int === 0) return 'zero';
 
-        var ONES  = ['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
-        var TENS  = ['','','twenty','thirty','fourty','fifty','sixty','seventy','eighty','ninety'];
-        var SCALE = ['','thousand','million','billion','trillion','quadrillion','quintillion','sextillion','septillion','octillion','nonillion'];
+        var ONES  = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+        var TENS  = ['','','Twenty','Thirty','Fourty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+        var SCALE = ['','Thousand','Million','Billion','Trillion','Quadrillion','Quintillion','Sextillion','Septillion','Octillion','Nonillion'];
 
         // Return string of first three digits, padded with zeros if needed
         function get_first(str) {
