@@ -414,6 +414,20 @@ Meteor.article = {
         }else{
            return 'Issue';
         }
+    },
+    altmetric: function(article) {
+        if (Session.get('article-altmetric') && Session.get('article-altmetric').mongo != article._id || !Session.get('article-altmetric')){
+            if (article.ids && article.ids.doi) {
+                Meteor.call('getAltmetricForArticle', article._id, article.ids.doi, function(altmetricError, altmetricResult){
+                    if (altmetricError){
+                        console.error(altmetricError);
+                        Session.set('article-altmetric', null);
+                    } else if (altmetricResult){
+                        Session.set('article-altmetric', altmetricResult);
+                    }
+                });
+            }
+        }
     }
 };
 

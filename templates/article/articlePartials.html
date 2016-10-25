@@ -3,12 +3,8 @@
         {{>ArticleHeaderPieces}}
     </h5>
     <div id="article-title-and-badge-container" class="valign-wrapper">
-        {{#if altMetricReady}}
-        {{#if ids.doi}}
-        {{#with ids}}
-        {{>AltmetricBadge doi=doi}}
-        {{/with}}
-        {{/if}}
+        {{#if altmetric}}
+        {{>AltmetricBadge altmetric=altmetric}}
         {{/if}}
         <div id="article-container">
             <h1 id="article-title" class="valign">
@@ -17,18 +13,6 @@
         </div>
     </div>
 </template>
-<!-- <template name="ArticleHeaderTitle">
-    <h5 class="article-header">
-        {{>ArticleHeaderPieces}}
-    </h5>
-    <div id="article-title-and-badge-container" class="valign-wrapper">
-        <div id="article-container">
-            <h1 id="article-title" class="valign">
-                {{{title}}}
-            </h1>
-        </div>
-    </div>
-</template> -->
 
 <template name="ArticleHeaderPieces">
     {{#if article_type.name}}
@@ -54,7 +38,7 @@
 </template>
 
 <template name="AltmetricBadge">
-    <div data-badge-type="donut" data-doi="{{doi}}" data-hide-no-mentions="true" data-hide-less-than="10" data-condensed="true" class="altmetric-badge valign article-altmetric left-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
+    <a href="{{altmetricDetailsLink}}{{altmetric.altmetric_id}}" class="valign altmetric-list-badge altmetric-badge" target="_BLANK"><img class="altmetric-badge" src="{{altmetric.images.small}}"/></a>
 </template>
 
 <template name="ArticlePages">

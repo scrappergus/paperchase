@@ -15,7 +15,7 @@ Meteor.methods({
                 console.error('Altmetric Top 100: ',error);
                 fut.throw(error);
             } else if (altmetricResult && altmetricResult.statusCode === 200) {
-                Meteor.call('processAltmetricResponse', altmetricResult.data.results, function(errorProcessing, processingResult){
+                Meteor.call('processAltmetricArticlesResponse', altmetricResult.data.results, function(errorProcessing, processingResult){
                     if (errorProcessing){
                         console.error('errorProcessing', errorProcessing);
                         fut.throw(errorProcessing);
@@ -63,6 +63,48 @@ Meteor.methods({
             throw new Meteor.Error(error);
         }
     },
+    getAltmetricForArticle: function(mongoId, doi){
+        // console.log('...getAltmetricForArticle', mongoId, doi);
+        var fut = new future();
+        var result = {};
+        result.mongo = mongoId;
+        var threshold = Meteor.settings.public.journal.altmetric.threshold;
+        doi = doi.indexOf('http://dx.doi.org/') !== -1 ? doi.replace('http://dx.doi.org/', '') : doi;
+        var altmetricUrl = 'https://www.altmetric.com/api/v1/doi/' + doi;
+
+        Meteor.http.get(altmetricUrl , function(error, altmetricResult){
+            if (error && error.response.statusCode === 404) {
+                // console.error('getAltmetricForArticle 404: ' + mongoId);
+                fut.return();
+            } else if (error) {
+                console.error('getAltmetricForArticle', error);
+                fut.throw(error);
+            } else if (altmetricResult) {
+                Meteor.call('processAltmetricArticleResponse', altmetricResult.data, function(processError, processResult){
+                    if (processError) {
+                        console.error('getAltmetricForArticle - processAltmetricResponse', processError);
+                        fut.throw(processError);
+                    } else if (processResult) {
+                        for(var key in processResult) {
+                            result[key] = processResult[key];
+                        }
+                        if (result.score >= threshold) {
+                            fut.return(result);
+                        } else {
+                            fut.return();
+                        }
+                    }
+                });
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(error) {
+            throw new Meteor.Error(error);
+        }
+    },
     altmetricCheckForTiesAtEnd: function(count, articles) {
         var returnArticles = [];
         if (Math.ceil(articles[articles.length-1].score) === Math.ceil(articles[articles.length-2].score)) {
@@ -73,28 +115,31 @@ Meteor.methods({
         }
         return {get: count, articles: returnArticles};
     },
-    processAltmetricResponse: function(articles) {
+    processAltmetricArticlesResponse: function(articles) {
         return articles.map(function(article){
-            var aReturn = {};
-            aReturn.altmetric_id = article.altmetric_id;
-            aReturn.score = article.score;
-            aReturn.details_url = article.details_url;
-            aReturn.title = article.title;
-            aReturn.url = '';
-            if (article.doi) {
-                if(article.doi.indexOf('http') === -1){
-                    aReturn.url += 'http://dx.doi.org/';
-                }
-                aReturn.url += article.doi;
-            } else if (article.url) {
-                aReturn.url = article.url;
-            }
-            aReturn.images = article.images;
-            return aReturn;
+            return Meteor.call('processAltmetricArticleResponse', article);
         });
     },
+    processAltmetricArticleResponse: function(article){
+        var result = {};
+        result.altmetric_id = article.altmetric_id;
+        result.score = article.score;
+        result.details_url = article.details_url;
+        result.title = article.title;
+        result.url = '';
+        if (article.doi) {
+            if(article.doi.indexOf('http') === -1){
+                result.url += 'http://dx.doi.org/';
+            }
+            result.url += article.doi;
+        } else if (article.url) {
+            result.url = article.url;
+        }
+        result.images = article.images;
+        return result;
+    },
     removeAltmetricBelowThreshold:  function(articles) {
-        var threshold = 10;
+        var threshold = Meteor.settings.public.journal.altmetric.threshold;
         var result = [];
         articles.forEach(function(article){
             if (Math.ceil(article.score) >= threshold) {

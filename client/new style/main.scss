@@ -116,9 +116,12 @@
 
     .title {
         // font-size: 19px;
-        margin: 0 0 5px 0;
         font-weight: 700;
         color: $cello;
+        margin: 0;
+    }
+    .title-container{
+        margin: 0 0 5px 0;
     }
 
     .desc {
@@ -777,6 +780,11 @@ ul.sectioned-list {
 
 }
 /* Altmetric -------------------*/
+.toc-info{
+    .altmetric-badge{
+        height: $smallAltmetricBadge!important;
+    }
+}
 #altmetric-top{
     li{
         &:first-child{
@@ -791,8 +799,8 @@ ul.sectioned-list {
         }
         p{
             a{
-                img{
-                    height: 54px!important;
+                .altmetric-badge{
+                    height: $smallAltmetricBadge!important;
                 }
             }
         }
