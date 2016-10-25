@@ -419,7 +419,7 @@ Meteor.methods({
         var fut = new future();
         if (articles && articles.length > 0){
             articles.forEach(function(article, index){
-                if (article.ids && !article.ids.pmid){
+                if (article.ids && !article.ids.pmid && article.submissions && article.submissions.length > 0){
                     Meteor.call('getPubMedId', article, function(error, pubmedResult){
                         if (error) {
                             console.error('getPubMedId', error);
