@@ -110,7 +110,7 @@ Meteor.methods({
             legacyPlatform = legacyPlatform.legacy_platform;
             legacyPlatformApi = legacyPlatform.mini_api;
 
-            var ids = idValue.split(',').map(function(val) {return val.trim()});
+            var ids = idValue.split(',').map(function(val) {return val.trim();});
 
             ids.forEach(function(id) {
 
@@ -136,7 +136,7 @@ Meteor.methods({
                                                 }
                                                 if(article){
                                                     articleMongoId = article._id;
-                                                    if(article.section_id == 0){
+                                                    if(article.section_id === 0){
                                                         processedArticleJson.section_id = 0; // Keep in Recent Research Papers
                                                     }
 
@@ -230,7 +230,7 @@ Meteor.methods({
                                     }
                                     if(article){
                                         processedArticleJson._id = article._id;
-                                        if(article.section_id == 0){
+                                        if(article.section_id === 0){
                                             processedArticleJson.section_id = 0; // Keep in Recent Research Papers
                                         }
                                         if(article.issue_id){
@@ -328,31 +328,10 @@ Meteor.methods({
 
 // OJS
 Meteor.methods({
-    // ojsBatchUpdate: function(articles){ //TODO. FIX STACK ERROR. FOR click #ojs-batch-update
-    //  console.log('..ojsBatchUpdateAll');
-    //  var journalInfo = journalConfig.findOne();
-    //  var journalShortName = journalInfo.journal.short_name;
-    //  var articlesList = articles.find().fetch();
-    //  for(var a=0 ; a < articlesList.length ; a++){
-    //      var article = articlesList[a];
-    //      if(article.ids.pii){
-    //          console.log(article.ids.pii);
-    //          var params = {};
-    //              params.id_type = 'pii',
-    //              params.id = article.ids.pii,
-    //              params.journal = journalShortName;
-    //          Meteor.call('legacyArticleIntake',params);
-    //      }
-    //  }
-    //  return true;
-    // },
     ojsGetArticlesJson: function(idType, idValue, journal, requestUrl){
         // JSON response can contain multiple articles
         // console.log('...ojsGetArticlesJson');
         if(requestUrl){
-            // console.log('...ojsGetJson');
-            // TODO: Add journal param?
-            // requestUrl += '?type=' + idType + '&id=' + idValue + '&journal=' + journal;
             requestUrl += '?journal='+journal+'&' + idType + '=' + idValue;
             // console.log(requestUrl);
             var res;
@@ -385,7 +364,7 @@ Meteor.methods({
             articleUpdate.volume = parseInt(article.volume);
         }
 
-        if(article.issue && article.issue !=0 ){
+        if(article.issue && article.issue !==0 ){
             articleUpdate.issue = parseInt(article.issue);
         }
 
@@ -393,7 +372,7 @@ Meteor.methods({
             articleUpdate.vi  = Meteor.issue.createIssueParam(articleUpdate.volume,articleUpdate.issue);
         }
 
-        if(article.pages && article.pages != null){
+        if(article.pages && article.pages !== null){
             pagePieces = article.pages.split('-');
             articleUpdate.page_start = pagePieces[0];
             if(pagePieces.length > 1){
@@ -424,7 +403,7 @@ Meteor.methods({
                         var kwList = datesAndKw[dd].match(/<\/span>(.*?)<\/p>/g);
                         kwList = kwList[0].replace(/<\/span>: /g,'').replace(/<\/span>/g,'').replace(/<\/p>/g,'').replace(/^\s+|\s+$/g, '');
                         kwList = kwList.split(', '); // leave space when splitting to trim whitespace
-                        articleUpdate.keywords = kwList
+                        articleUpdate.keywords = kwList;
                     }else{
                         // separate list of dates
                         var dateString = datesAndKw[dd];
