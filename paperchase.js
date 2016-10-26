@@ -1102,29 +1102,22 @@ if (Meteor.isClient) {
             }
             return pageTitle + 'Search';
         },
-        onAfterAction: function() {
-            var terms = this.params.query.terms;
-            $(".search-abstract").val(terms);
-            Session.set('queryResults', null);
-            Session.set('searchLoaded', false);
-            if(terms) {
-                Session.set('searchLoading', true);
-            }
-            Meteor.call('search', {
-                    abstract: terms
-                //    ,authors: terms
-                //    ,title: terms
-                }, function(err, data) {
-                    //            console.log('>>> args in browser', err, data);
-                    Session.set('searchLoading', false);
-                    Session.set('searchLoaded', true);
-                    Session.set('queryResults', err ? [] : data);
-                });
+        onAfterAction: function(e) {
+            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms, primaryIndex:Session.get('journal').elasticsearch.primaryIndex});
+        },
+        waitOn: function(){
+            return[
+                Meteor.subscribe('journalConfig')
+            ];
         },
         data: function() {
-            return {
-                terms:this.params.query.terms
-            };
+            if(this.ready()){
+                return {
+                    terms:this.params.query.terms,
+                    indexes: Session.get('journal').elasticsearch.indexes,
+                    primaryIndex: Session.get('journal').elasticsearch.primaryIndex
+                };
+            }
         }
     });
 
@@ -1134,13 +1127,22 @@ if (Meteor.isClient) {
         title: function() {
             return Meteor.settings.public.journal.name + ' | ' + 'Search';
         },
-        onBeforeAction: function(){
-            Meteor.impact.redirectForAlt();
-            this.next();
+        onAfterAction: function(e) {
+            Meteor.search.searchLoad(e,{generalTerm:this.params.query.terms, primaryIndex:Session.get('journal').elasticsearch.primaryIndex});
         },
-        onAfterAction: function() {
+        waitOn: function(){
+            return[
+                Meteor.subscribe('journalConfig')
+            ];
         },
         data: function() {
+            if(this.ready()){
+                return {
+                    terms:this.params.query.terms,
+                    indexes: Session.get('journal').elasticsearch.indexes,
+                    primaryIndex: Session.get('journal').elasticsearch.primaryIndex
+                };
+            }
         }
     });
 

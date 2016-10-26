@@ -53,10 +53,68 @@
                 {{>NavAlt}}
                 <div id="column2and3-alt">
                     <div id="maincontentsolo-alt">
-                        {{>SearchFormAlt}}
+                        {{>SearchFormAlt terms=terms indexes=indexes primaryIndex=primaryIndex}}
+
+        <div>
+
+    		{{#if searchLoaded}}
+            <h4 class="black-divider">Search Results</h4>
+
+    	 	<p class="lighten" style=""><i>{{queryResults.length}} results found</i></p>
+
+            {{#if queryResults}}
+            <ul class="divided-list">
+                {{#each queryResults}}
+                <li class="item search-item toc-info">
+                    <h2 class="title"><a href="{{url}}">{{{title}}}</a></h2>
+                    <h6 class="desc">Published in <em>{{index}}</em></h6>
+                    <h6 class="desc">{{authors}}</h6>
+					<h5 class="article-header">
+						{{>ArticleHeaderPieces}}
+					</h5>
+
+                    {{#if abstract}}
+                    {{#if equals abstract ''}}
+                    {{else}}
+					<div class="abstract article-text">
+						{{{wrapInParagraphTag abstract}}}
+					</div>
+                    {{/if}}
+                    {{/if}}
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+                <div class="row no-margin">
+                    <div class="col s12">
+                        <div class="result-box" style="margin-bottom:40px;">
+                            <h5>There are no results for these search terms.</h5>
+                            <p>For assistance finding a paper that was published in Aging, please contact <a href="mailto:krasnova@impactaging.com">krasnova@impactaging.com</a> </p>
+                        </div>
                     </div>
                 </div>
+            {{/if}}
+
+
+            {{else}}
+                {{#if searchLoading}}
+                    {{>Loading}}
+                {{else}}
+                <h4 class="blue-divider">Search</h4>
+                    <p>To search the journal, enter a term in the search bar. If you'd like to find specific authors, titles, or abstracts, use the advanced search to the right. </p>
+                {{/if}}
+    		{{/if}}
+        </div>
+
+                    </div>
+
+
+
+                </div>
+
+
             </div>
+
             {{>FooterAlt}}
         </div>
     </div>
@@ -64,38 +122,69 @@
 
 <Template name="SearchFormAlt">
     <h1>Search</h1>
-    <form action="" method="post">
+
+    <form id="search-terms">
         <table>
             <tbody>
                 <tr>
                     <td>
-                        <p>By Author</p>
+                        <p>General search</p>
                     </td>
                     <td>
-                        <input type="text" name="name">
+                        <input placeholder="general" type="text" name="general" value="{{terms}}">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p>Title</p>
+                    </td>
+                    <td>
+                        <input placeholder="title" type="text" name="title">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>By Title</p>
+                        <p>Abstract</p>
                     </td>
                     <td>
-                        <input type="text" name="title">
+                        <input placeholder="abstract" type="text" name="abstract">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>By Pii</p>
+                        <p>Author</p>
                     </td>
                     <td>
-                        <input type="text" name="poo">
+                        <input placeholder="authors" type="text" name="authors">
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <p>Keywords</p>
+                    </td>
+                    <td>
+                        <input placeholder="keywords" type="text" name="keywords">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        {{#each indexes}}
+                        <div class="input-field"> <input type="checkbox" name="{{index}}Search" id="{{index}}SearchCheck" checked="{{#if equals index ../primaryIndex}}true{{/if}}"/><label for="{{index}}SearchCheck">Search {{label}}</label></div>
+                        {{/each}}
+                        
+                    </td>
+                </tr>
+
             </tbody>
         </table>
         <br>
         <input type="submit">
     </form>
+
+
 </Template>
 
 <template name="FooterAlt">

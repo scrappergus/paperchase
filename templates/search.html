@@ -1,9 +1,6 @@
 <template name="Search">
-
 	<div class="row">
-        <div class="col s12 m4 hide-on-large-only">
-            {{> AdvancedSearch mobile=true}}
-        </div>
+
         <div class="search page-content col s12 m8">
 
     		{{#if searchLoaded}}
@@ -15,19 +12,17 @@
             <ul class="divided-list">
                 {{#each queryResults}}
                 <li class="item search-item toc-info">
-                    <h2 class="title"><a href="/article/{{_id}}">{{{title}}}</a></h2>
-                    <h6 class="desc">{{>AuthorsList}}</h6>
+                    <h2 class="title"><a href="{{url}}">{{{title}}}</a></h2>
+                    <h6 class="desc">Published in <em>{{index}}</em></h6>
+                    <h6 class="desc">{{authors}}</h6>
 					<h5 class="article-header">
 						{{>ArticleHeaderPieces}}
 					</h5>
 
                     {{#if abstract}}
-                    {{#if equals abstract ''}}
-                    {{else}}
 					<div class="abstract article-text">
 						{{{wrapInParagraphTag abstract}}}
 					</div>
-                    {{/if}}
                     {{/if}}
                 </li>
                 {{/each}}
@@ -55,7 +50,7 @@
         </div>
 
         <div class="page-sidebar col s12 m4 hide-on-med-and-down">
-            {{> AdvancedSearch mobile=false}}
+            {{> AdvancedSearch mobile=false terms=terms indexes=indexes primaryIndex=primaryIndex}}
         </div>
 	 </div>
 
@@ -65,10 +60,17 @@
     <div class="card sidebar-card {{#unless mobile}}fixed-scroll-card{{/unless}}">
         <div class="form-container">
             <h6 class="card-title">Advanced Search</h6>
-            <form id="search-terms">
+            <form id="search-terms" action="#">
+                <input placeholder="general search" type="text" name="general" value="{{terms}}">
                 <input placeholder="title" type="text" name="title">
-                <input placeholder="abstract" type="text" name="abstract" value="{{terms}}">
+                <input placeholder="abstract" type="text" name="abstract">
                 <input placeholder="authors" type="text" name="authors">
+                <input placeholder="keywords" type="text" name="keywords">
+                {{#each indexes}}
+                <div class="input-field"> <input type="checkbox" name="{{index}}Search" id="{{index}}SearchCheck" checked="{{#if equals index ../primaryIndex}}true{{/if}}"/><label for="{{index}}SearchCheck">Search {{label}}</label></div>
+                {{/each}}
+                <br>
+                
                 <button class="full-width teal button">Search</button>
             </form>
         </div>

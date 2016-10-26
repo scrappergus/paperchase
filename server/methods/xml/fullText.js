@@ -5,23 +5,28 @@ Meteor.methods({
         var result = {};
         var articleJson,
             articleInfo,
-            xml;
+            xml,
+            xmlUrl;
         articleInfo = articles.findOne({'_id' : mongoId});
         if(articleInfo){
             articleInfo = Meteor.article.readyData(articleInfo);
 
             if(articleInfo.files && articleInfo.files.xml && articleInfo.files.xml.url){
-                Meteor.http.get(articleInfo.files.xml.url,function(getXmlError, xmlRes){
+                xmlUrl = articleInfo.files.xml.url;
+                // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                // }
+                Meteor.http.get(xmlUrl, function(getXmlError, xmlRes){
                     if(getXmlError){
                         console.error('getXmlError',getXmlError);
                         fut.throw(getXmlError);
                     }else if(xmlRes){
                         xml = xmlRes.content;
                         Meteor.call('fullTextToJson', xml, articleInfo.files, mongoId, function(convertXmlError, convertedXml){
-                            if(convertXmlError){
+                            if (convertXmlError) {
                                 console.error('..convertXmlError',convertXmlError);
                                 fut.throw(convertXmlError);
-                            }else{
+                            } else {
                                 convertedXml.mongo = mongoId;
                                 result.convertedXml = convertedXml;
                                 result.lastModified = xmlRes.headers['last-modified'];
@@ -50,7 +55,7 @@ Meteor.methods({
 
         // Article Content
         // ---------------
-        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote | //body/table-wrap', doc);
+        var sections = xpath.select('//body/sec | //body/p | //body/fig | //body/disp-quote | //body/table-wrap | //body/disp-formula', doc);
         if(sections[0]){
             for(var section = 0; section<sections.length; section++){
                 var sectionObject = {},
@@ -84,6 +89,16 @@ Meteor.methods({
                         tbl.contentType = 'table';
                         sectionObject.content.push(tbl);
                     }
+                }else if(sections[section].localName === 'disp-formula'){
+                    sectionObject.content = [];
+                    var secAttr = Meteor.fullText.traverseAttributes(sections[section].attributes);
+                    if(secAttr && secAttr.id){
+                        sectionObject.id = secAttr.id;
+                    }
+                    sectionObject.content.push({
+                        contentType: 'formula',
+                        content: Meteor.fullText.convertFormula(sections[section].childNodes)
+                    });
                 }
 
                 articleObject.sections.push(sectionObject);
@@ -320,15 +335,13 @@ Meteor.fullText = {
         for(var c = 0; c < section.childNodes.length; c++){
             var sec = section.childNodes[c];
 
-            if(sec.localName != null){
+            if(sec.localName !== null){
                 // console.log(sec.localName);
                 if(sec.localName === 'label'){
                     sectionObject.label = Meteor.fullText.convertContent(sec);
-                }
-                else if(sec.localName === 'title'){
+                } else if(sec.localName === 'title'){
                     sectionObject.title = Meteor.fullText.fixSectionTitle(Meteor.fullText.convertContent(sec));
-                }
-                else if(sec.localName === 'sec'){
+                } else if(sec.localName === 'sec'){
                     var subSectionObject,
                         sectionIdObject;
 
@@ -343,9 +356,8 @@ Meteor.fullText = {
                         }
                         sectionObject.content.push(subSectionObject);
                     }
-                }
-                else{
-                    var subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
+                } else{
+                    subSectionObject = Meteor.fullText.sectionPartsToJson(sec, files, mongoId);
                     // Add the content object to the section object
                     if(subSectionObject){
                         sectionObject.content.push(subSectionObject);
@@ -356,7 +368,7 @@ Meteor.fullText = {
         // console.log('sectionObject',sectionObject);
         return sectionObject;
     },
-    sectionId: function( section, primarySection ){
+    sectionId: function(section, primarySection){
         // console.log('..sectionId',primarySection);
         var sectionIdObject = {},
             sectAttr;
@@ -393,27 +405,46 @@ Meteor.fullText = {
         var sectionPartObject = {};
         var content,
             contentType;
+        var formulaInParagraph;
         // Different processing for different node types
-        if(sec.localName === 'table-wrap'){
-            sectionPartObject = Meteor.fullText.convertTableWrap( sec, files );
-        }
-        else if(sec.localName === 'fig'){
+        if (sec.localName === 'table-wrap'){
+            sectionPartObject = Meteor.fullText.convertTableWrap(sec, files);
+        } else if (sec.localName === 'fig'){
             content = Meteor.fullText.convertFigure(sec,files,mongoId);
             contentType = 'figure';
-        }
-        else if(sec.localName === 'supplementary-material'){
-            var suppConverted = Meteor.fullText.convertSupplement(sec,files,mongoId);
+        } else if (sec.localName === 'supplementary-material'){
+            var suppConverted = Meteor.fullText.convertSupplement(sec, files, mongoId);
             if(suppConverted){
                 sectionPartObject.contentType = 'supplement';
                 sectionPartObject.supps = suppConverted;
             }
-        }
-        else{
+        } else if(sec.localName === 'disp-formula') {
+            contentType = 'formula';
+            var secAttr = Meteor.fullText.traverseAttributes(sec.attributes);
+            if(secAttr && secAttr.id){
+                sectionPartObject.id = secAttr.id;
+            }
+            content = Meteor.fullText.convertFormula(sec.childNodes);
+        } else if(sec.localName === 'p'){
+            formulaInParagraph = xpath.select('disp-formula', sec);
+            if(formulaInParagraph && formulaInParagraph[0] && formulaInParagraph[0].localName === 'disp-formula'){
+                // extyles puts equations in paragraph tags
+                contentType = 'formula';
+                var formulaAttr = Meteor.fullText.traverseAttributes(formulaInParagraph[0].attributes);
+                if(formulaAttr && formulaAttr.id){
+                    sectionPartObject.id = formulaAttr.id;
+                }
+                content = Meteor.fullText.convertFormula(formulaInParagraph[0].childNodes);
+            } else{
+                content = Meteor.fullText.convertContent(sec);
+                contentType = 'p';
+            }
+        } else{
             content = Meteor.fullText.convertContent(sec);
             contentType = 'p';
         }
 
-        if(content){
+        if (content){
             content = Meteor.fullText.fixTags(content);
             sectionPartObject.content = content;
             sectionPartObject.contentType = contentType;
@@ -495,13 +526,12 @@ Meteor.fullText = {
             // Section: Content
             // --------
             if( node.localName && node.localName === 'list' ){
-                content += Meteor.fullText.convertList(node)
-            }
-            else{
+                content += Meteor.fullText.convertList(node);
+            } else{
                 for(var cc = 0 ; cc < node.childNodes.length ; cc++){
                     var childNode = node.childNodes[cc];
                     if(childNode){
-                        content += Meteor.fullText.convertContentChild(childNode)
+                        content += Meteor.fullText.convertContentChild(childNode);
                     }
                 }
             }
@@ -509,9 +539,9 @@ Meteor.fullText = {
 
         content = Meteor.fullText.fixTags(content);
 
-        if(content.length === 0){
+        if (content.length === 0){
             return;
-        }else{
+        } else{
             return content;
         }
     },
@@ -568,6 +598,47 @@ Meteor.fullText = {
             }
         }
         return content;
+    },
+    convertFormula: function(nodes){
+        var formula = '';
+        for(var child = 0; child < nodes.length; child++){
+            var childNode = nodes[child];
+            if(childNode){
+                var attributes;
+                var attributesInclude = '';
+                if(childNode.attributes){
+                    attributes = Meteor.fullText.traverseAttributes(childNode.attributes);
+                }
+
+                // tag attributes
+                if(attributes){
+                    for(var attributeKey in attributes){
+                        attributesInclude += ' ' + attributeKey + '="' + attributes[attributeKey] + '"';
+                    }
+                }
+
+                if(childNode.nodeName != '#text'){
+                    if(childNode.localName === 'math'){
+                        attributesInclude += ' xmlns="http://www.w3.org/1998/Math/MathML"';
+                    }
+                    // start tag
+                    formula += '<' + childNode.localName + attributesInclude + '>';
+
+                    // tag content
+                    if(childNode.childNodes){
+                        formula += Meteor.fullText.convertFormula(childNode.childNodes);
+                    }
+
+                    // close tag
+                    formula += '</' + childNode.localName + '>';
+                } else{
+                    // text
+                    formula += childNode.nodeValue;
+                }
+            }
+        }
+
+        return formula;
     },
     linkXref: function(xrefNode){
         // console.log('linkXref',xrefNode.childNodes);
@@ -765,7 +836,7 @@ Meteor.fullText = {
                                 referenceObj.textContent.push({content:referencePart.childNodes[0].nodeValue, type:'doi'});
                             }
                         }
-                    }                                   
+                    }
                     else if(referencePartName == 'article_title'){
                         if(referencePart.childNodes){
                             var content = Meteor.fullText.convertContent(referencePart);
@@ -829,7 +900,7 @@ Meteor.fullText = {
                                 }
                             }
 
-                            referenceObj.textContent.push({content: refTemp, type:type}); 
+                            referenceObj.textContent.push({content: refTemp, type:type});
                         }
                     }
                 }
@@ -846,7 +917,7 @@ Meteor.fullText = {
                     referenceObj.textContent.push({content:referencePart.nodeValue, type:'text'});
                 }
                 else {
-//                    console.log("Missed this: -->"+referencePart.nodeValue+"<--");
+                //    console.log("Missed this: -->"+referencePart.nodeValue+"<--");
                 }
             }
         }
@@ -868,7 +939,7 @@ Meteor.fullText = {
                         result = cur;
                     }
 
-                    prior = cur; 
+                    prior = cur;
                     return result;
                 });
 
@@ -996,7 +1067,7 @@ Meteor.fullText = {
             authors = authors.join(', ');
         }else if(authors.length > 1){
             authors = authors.join('');
-        } 
+        }
 
         authors += etal;
 

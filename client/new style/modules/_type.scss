@@ -75,6 +75,14 @@ h4 {
     border-bottom: 3px solid $electric;
   }
 
+  &.black-divider {
+    color: black;
+    padding: 0 0 10px;
+    margin: 40px 0 20px;
+    border-bottom: 3px solid black;
+  }
+
+
   &.accent-divider {
     color: $accent;
     padding: 0 0 10px;

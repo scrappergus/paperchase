@@ -333,6 +333,7 @@ Meteor.article = {
             '_id': mongoId
         });
         var files;
+        var xmlUrl;
 
         if(article){
             if(article.articleJson) {
@@ -387,12 +388,15 @@ Meteor.article = {
                     if(article.files && article.files.xml){
                         files = Meteor.article.linkFiles(article.files, mongoId);
                         if(files && files.xml && files.xml.url){
-                            Meteor.http.get( files.xml.url,function(getXmlError, xmlRes){
+                            xmlUrl = files.xml.url;
+                            // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                            //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                            // }
+                            Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
                                 // just check header for modified date
                                 if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
                                     Meteor.article.setFullTextVariable(article, result);
                                 }
-
                             });
                         }
                     }
@@ -1249,7 +1253,55 @@ Meteor.advance = {
 Meteor.search = {
     bounceTo: function(args) {
         Router.go("/search/?terms="+args.terms);
-    }
+    },
+    searchLoad: function(e, args) {
+        if(e && e.preventDefault) {
+            e.preventDefault();    
+        }
+        Session.set('queryResults', null);
+        Session.set('searchLoaded', false);
+        Session.set('searchLoading', true);
+        var args = args || {};
+        var generalTerm = (args && args.generalTerm) ? args.generalTerm : '';
+        Meteor.call('search', {
+                general: (e && e.target && e.target.general) ? e.target.general.value : generalTerm,
+                authors: (e && e.target && e.target.authors) ? e.target.authors.value : null,
+                abstract: (e && e.target && e.target.abstract) ? e.target.abstract.value : null,
+                title: (e && e.target && e.target.title) ? e.target.title.value : null,
+                keywords: (e && e.target && e.target.keywords) ? e.target.keywords.value : null,
+                agingSearch: (e && e.target && e.target.agingSearch && e.target.agingSearch.checked) ? true : (args.primaryIndex == 'aging'),
+                oncotargetSearch: (e && e.target && e.target.oncotargetSearch && e.target.oncotargetSearch.checked) ? true : (args.primaryIndex == 'oncotarget'),
+                genesandcancerSearch: (e && e.target && e.target.genesandcancerSearch && e.target.genesandcancerSearch.checked) ? true : (args.primaryIndex == 'genesandcancer'),
+                oncoscienceSearch: (e && e.target && e.target.oncoscienceSearch && e.target.oncoscienceSearch.checked) ? true : (args.primaryIndex == 'oncoscience')
+            }, function(err, data) {
+                //            console.log('>>> args in browser', err, data);
+
+                var siteConfig = journalConfig.findOne({}, {fields: {elasticsearch: 1}});
+                console.log(siteConfig);
+                var indexes = {};
+                _.each(siteConfig.elasticsearch.indexes, function(element, index, list) {
+                        indexes[element.index] = element.label;
+                    });
+
+                var queryResults = data.map(function(cur) {
+                        return {
+                            '_id': cur._id,
+                            'index': indexes[cur._index],
+                            'title': cur._source.title,
+                            'abstract': cur._source.abstract,
+                            'authors': cur._source.authors,
+                            'url': cur._source.url,
+                            'article_type':{name:cur._source.articleType},
+                            'issue': cur._source.issue,
+                            'volume': cur._source.volume 
+                        }
+                    });
+
+                Session.set('queryResults', err ? [] : queryResults);
+                Session.set('searchLoading', false);
+                Session.set('searchLoaded', true);
+            });
+    } 
 };
 
 Meteor.googleAnalytics = {

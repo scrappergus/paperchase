@@ -25,11 +25,12 @@ Meteor.methods({
             .join(', ');
         }
 
-        function getArticle(pii) {
+        function getArticle(hit) {
           return new Promise(function(resolve, reject) {
             mongoClient.connect(Meteor.settings.mongodb, function(err, db) {
               if (err) return reject(err);
-              db.collection('articles').findOne({'ids.pii': pii}, function (err, doc) {
+              db.collection('articles').findOne({'ids.pii': hit.pii}, function (err, doc) {
+                      db.close();
                 err? reject(err): resolve(doc);
               })
             });
@@ -125,9 +126,11 @@ Meteor.methods({
 
         function getArticlestream() {
           return new Promise(function(resolve, reject) {
+
             mongoClient.connect(Meteor.settings.mongodb, function(err, db) {
               if (err) return reject(err);
               db.collection('articles', function(err, articles) {
+                      console.log('====> getArticleStream');
                 if (err) return reject(err);
                 resolve(articles.find({}).stream());
               });
@@ -191,16 +194,28 @@ Meteor.methods({
         function getArticles(ids) {
           return mongoClient.connect(Meteor.settings.mongodb)
             .then(function(db) {
-              return db.collection('articles').find({
-                _id: {
-                  $in: ids
-                }
-              }).toArray();
+                    var output = db.collection('articles').find({
+                            _id: {
+                                $in: ids
+                            }
+                        }).toArray(); 
+                    db.close();
+
+                    return output;
             });
         }
 
         function queryElasticsearch(query) {
           var must = [];
+
+          if (query.general) {
+              must.push({
+                      multi_match: {
+                          query: query.general,
+                          fields: ['title', 'abstract', 'authors', 'keywords']
+                      }
+                  });
+          }
 
           if (query.title) {
             must.push({
@@ -235,10 +250,30 @@ Meteor.methods({
             });
           }
 
+          if (query.keywords) {
+            must.push({
+              match: {
+                keywords: {
+                  query: query.keywords,
+                  operator: 'and'
+                }
+              }
+            });
+          }
+
+
           return new Promise(function(resolve, reject) {
+                  var index = (query.agingSearch ? 'aging,' : '')
+                  + (query.oncotargetSearch ? 'oncotarget,' : '')
+                  + (query.genesandcancerSearch ? 'genesandcancer,' : '')
+                  + (query.oncoscienceSearch ? 'oncoscience,' : '');
+                  if (index !== '') {
+                      index = index.slice(0, -1);
+                  }
+
             esClient.search({
-              size: 100,
-              index: Meteor.settings.index,
+              size: 1000,
+              index: index,
               body: {
                 query: {
                   bool: {
@@ -255,11 +290,13 @@ Meteor.methods({
         function search(query, cb) {
           return queryElasticsearch(query)
             .then(function(results) {
-              var ids = results.hits.hits.map(function(result) {
-                return result._id;
+              var hits = results.hits.hits.map(function(result) {
+                      return result;
               });
+          return hits;
+          //look at not needing to connect to the mongo db, so short circuiting this.
 
-              return getArticles(ids);
+              return getArticles(hits);
             })
             .then(function(results) {
               cb(null, results);

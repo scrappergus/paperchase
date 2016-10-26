@@ -22,7 +22,15 @@
         <span><a href="/volume/v{{volume}}i{{issue}}" style="cursor: pointer;">Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</a></span>
     {{/if}}
     {{/if}}
+    {{else}}
+    {{#if volume}}
+    {{#if issue}}
+        <span>Volume {{volume}}{{#if issue}}, Issue {{issue}}{{/if}}</span>
     {{/if}}
+    {{/if}}
+
+    {{/if}}
+
     {{/if}}
     {{/if}}
 
