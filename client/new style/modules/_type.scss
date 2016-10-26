@@ -9,14 +9,21 @@
 /** Document-Level
 ---------------------------------------------------------*/
 body {
-  color: $cello;
-  background-color: $faintgray !important;
+    color: $cello;
+    background-color: $faintgray !important;
+}
+
+$paragraphFontSize: 15px;// stage 2
+// $paragraphFontSize: 17px;// previous
+
+html{
+    font-size: $paragraphFontSize;
 }
 
 html, body {
-  font-family: $futura;
-  line-height: 1.35;
-  letter-spacing: 0.15px;
+    font-family: $futura;
+    line-height: 1.35;
+    letter-spacing: 0.15px;
 
   //  ???? not working, something is overriding rem
   // font-size: 17px;
@@ -28,79 +35,100 @@ html, body {
 ---------------------------------------------------------*/
  h1,h2,h3,h4,h5,h6,
 .h1,.h2,.h3,.h4,.h5,.h6 {
-  color: $cello;
+    color: $cello;
 
-  &.accented { color: $accent; }
-  &.blue-accented { color: $electric; background: none; }
-  &.heavy { font-weight: 700; }
-  &.caps { @extend .uppercase-titles; }
-  &.clean { margin-top: 0 !important; }
+    &.accented {
+        color: $accent;
+    }
+    &.blue-accented {
+        color: $electric;
+        background: none;
+    }
+    &.heavy {
+        font-weight: 700;
+    }
+    &.caps {
+        @extend .uppercase-titles;
+    }
+    &.clean {
+        margin-top: 0 !important;
+    }
 }
 
 /** Headings | Font Sizes
 ---------------------------------------------------------*/
-h1, .h1 { font-size: 26px; }
-h2, .h2 { font-size: 22px;
-          color: $kashmir; }
-h3, .h3 { font-size: 20px; }
-h4, .h4 { font-size: 17px; }
+h1, .h1 {
+    font-size: 22px;// stage 2
+    // font-size: 26px; //previous
+}
+h2, .h2 {
+    font-size: 20px;// stage 2
+    // font-size: 22px; //previous
+    color: $kashmir;
+}
+h3, .h3 {
+    font-size: 18px;// stage 2
+    // font-size: 20px;// previous
+}
+h4, .h4 {
+    font-size: 16px;// stage 2
+    // font-size: 17px;// previous
+}
 
 h5, .h5, h6, .h6,
 span.meta {
-  font-size: 14px;
+    font-size: 14px;// stage 2
+    // font-size: 14px;// previous
 }
 
 h1, .h1 {
-  color: $midnight;
-  line-height: 1.1;
-  font-weight: 700;
-  margin-top: 0;
+    color: $midnight;
+    line-height: 1.1;
+    font-weight: 700;
+    margin-top: 0;
 }
 
 h3 {
-  color: lighten($cello, 5%);
-  font-weight: 700;
-  margin-bottom: 0;
+    color: lighten($cello, 5%);
+    font-weight: 700;
+    margin-bottom: 0;
 }
 h3:not(#abstract) {
-  + p { margin: 5px 0 33px; }
+    + p {
+        margin: 5px 0 33px;
+    }
 }
 
 h4 {
+    &.blue-divider {
+        color: $electric;
+        padding: 0 0 10px;
+        margin: 40px 0 20px;
+        border-bottom: 3px solid $electric;
+    }
 
-  &.blue-divider {
-    color: $electric;
-    padding: 0 0 10px;
-    margin: 40px 0 20px;
-    border-bottom: 3px solid $electric;
-  }
-
-  &.black-divider {
-    color: black;
-    padding: 0 0 10px;
-    margin: 40px 0 20px;
-    border-bottom: 3px solid black;
-  }
-
-
-  &.accent-divider {
-    color: $accent;
-    padding: 0 0 10px;
-    margin: 30px 0 20px;
-    border-bottom: 3px solid $accent;
-  }
+    &.accent-divider {
+        color: $accent;
+        padding: 0 0 10px;
+        margin: 30px 0 20px;
+        border-bottom: 3px solid $accent;
+    }
 }
 
 h5, .h5, span.meta {
-  color: $kashmir;
-  &.reg { font-weight: 500; }
+    color: $kashmir;
+    &.reg {
+        font-weight: 500;
+    }
 }
 
 a {
-  color: $link;
-  @include transition(color 0.25s ease-out);
+    color: $link;
+    @include transition(color 0.25s ease-out);
 
-  &:hover { color: lighten($link, 10%); }
+    &:hover {
+        color: lighten($link, 10%);
+    }
 }
 
 .small-font{
@@ -110,14 +138,29 @@ a {
 
 // Medium Screens (+ 970px)
 @include at-query($min, $medium) {
-    h1, .h1 { font-size: 30px; }
-    h2, .h2 { font-size: 24px;
-              color: $kashmir; }
-    h3, .h3 { font-size: 20px; }
-    h4, .h4 { font-size: 17px; }
+    h1, .h1 {
+        font-size: 24px; // stage 2
+        // font-size: 30px; //previous
+    }
+    h2, .h2 {
+        font-size: 22px; // stage 2
+        // font-size: 24px; //previous
+        // color: $kashmir; //redundant
+    }
+    // h3, .h3 {
+    // redundant
+    //     font-size: 20px;
+    // }
+    // h4, .h4 {
+    // redundant
+    //     font-size: 17px;
+    // }
 
-    h5, .h5, h6, .h6,
-    span.meta { font-size: 14px; }
+    // h5, .h5, h6, .h6,
+    // redundant
+    // span.meta {
+    //     font-size: 14px;
+    // }
 }
 
 // Large Screens (+ 1170px)
@@ -128,7 +171,7 @@ a {
 /** Special Headings
 ---------------------------------------------------------*/
 h3.section-heading {
-    font-size: 17px;
+    // font-size: 17px;
     padding: 0 0 10px;
     margin: 0 0 30px;
     font-weight: 700;
@@ -157,14 +200,17 @@ h3.section-heading {
 h3.blue-background {
     background: lighten($electric, 5%);
     color: #fff;
-    font-size: 17px;
+    // font-size: 17px;
     padding: 8px 10px;
     @include border-radius(2px);
     margin: 40px 0 0;
-    &:first-child { margin-top: 10px; }
+    &:first-child {
+        margin-top: 10px;
+    }
 }
 
 h3.gray-background {
+    // this appears to not be in use
     @extend h3.blue-background;
     background: $lightgray;
     color: $electric;
@@ -180,101 +226,129 @@ h5.supporting {
 /** Paragraphs
 ---------------------------------------------------------*/
 p {
-  font-size: 17px;
-  line-height: 1.4;
-  &.justify { text-align: justify; }
+    font-size: $paragraphFontSize;
+    line-height: 1.4;
+    &.justify {
+        text-align: justify;
+    }
 }
 
-// Tablets
-@include at-query($min, $small) {
-  p { font-size: 15px; }
-}
-
-// Tablets
-@include at-query($min, $medium) {
-  p { font-size: 17px; }
-}
+// // Tablets
+// @include at-query($min, $small) {
+//     p {
+//         // font-size: 13px;
+//     }
+// }
+//
+// // Tablets
+// @include at-query($min, $medium) {
+//     p {
+//         font-size: 13px;
+//     }
+// }
 
 p.small-font{
     font-size: small;
+}
+
+// tiny
+.tiny-font{
+    font-size: 12px;
+}
+.super-tiny-font{
+    font-size: 11px;
 }
 
 /** Buttons
 ---------------------------------------------------------*/
 a.button,
 button.button {
-  position: relative;
-  display: inline-block;
-  padding: 20px 38px 19px;
-  @include border-radius(2px);
-  margin-bottom: 20px;
-  color: #fff;
-  text-align: center;
-  font-size: 15px;
-  @extend .uppercase-titles;
-  letter-spacing: 0.58px;
-  @include transition(background 0.25s ease-out);
-  @include get-bg-hover($deepgray, 10%);
-
-  span.icon { font-size: 25px; }
-
-  &.full-width {
-    display: block;
-    width: 100%;
-  }
-
-  &:active {
-    top: 1px;
-  }
-
-  /**
-   * Colors
-   */
-  &.primary { @include get-bg-hover($accent, 3%); }
-  &.secondary { @include get-bg-hover($electric, 7%); }
-  &.teal { @include get-bg-hover($teal, 4%); }
-
-  &.small {
-    text-transform: none;
-    font-weight: 500;
-    margin: 0 5px 10px 0;
-    padding: 7px 10px;
-  }
-
-  &.end-cap {
-    padding: 20px 28px 19px 68px;
+    position: relative;
+    display: inline-block;
+    padding: 20px 38px 19px;
+    @include border-radius(2px);
+    margin-bottom: 20px;
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    @extend .uppercase-titles;
+    letter-spacing: 0.58px;
+    @include transition(background 0.25s ease-out);
+    @include get-bg-hover($deepgray, 10%);
 
     span.icon {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: $darkaccent;
-      @include transition(background 0.25s ease-out)
-      padding: 15px 16px;
-      border-top-left-radius: 2px;
+        font-size: 25px;
     }
 
-    &:hover span.icon {
-      background: lighten($darkaccent, 2%);
+    &.full-width {
+        display: block;
+        width: 100%;
     }
-  }
 
-  &.minimal {
-    background: transparent;
-    border: 2px solid $deepgray;
-    color: $deepgray;
-  }
+    &:active {
+        top: 1px;
+    }
 
-  &.large {
-    font-weight: 500;
-    font-size: 21px;
-    text-transform: none;
-    letter-spacing: 0.15px;
+    /**
+       * Colors
+       */
+    &.primary {
+       @include get-bg-hover($accent, 3%);
+    }
+    &.secondary {
+        @include get-bg-hover($electric, 7%);
+    }
+    &.teal {
+        @include get-bg-hover($teal, 4%);
+    }
 
-    span.icon { font-size: 15px; }
-    span.icon-angle-right { margin-left: 6px; }
-    span.icon-angle-left { margin-right: 6px; }
-  }
+    &.small {
+        text-transform: none;
+        font-weight: 500;
+        margin: 0 5px 10px 0;
+        padding: 7px 10px;
+    }
+
+    &.end-cap {
+        padding: 20px 28px 19px 68px;
+
+        span.icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: $darkaccent;
+            @include transition(background 0.25s ease-out)
+            padding: 15px 16px;
+            border-top-left-radius: 2px;
+        }
+
+        &:hover span.icon {
+            background: lighten($darkaccent, 2%);
+        }
+    }
+
+    &.minimal {
+        background: transparent;
+        border: 2px solid $deepgray;
+        color: $deepgray;
+    }
+
+    &.large {
+        font-weight: 500;
+        font-size: 21px;
+        text-transform: none;
+        letter-spacing: 0.15px;
+
+        span.icon {
+            font-size: 15px;
+        }
+        span.icon-angle-right {
+            margin-left: 6px;
+        }
+        span.icon-angle-left {
+            margin-right: 6px;
+        }
+    }
 }
 
 button.button {
@@ -284,49 +358,49 @@ button.button {
 /** Buttons | Toggles
 ---------------------------------------------------------*/
 .button-toggle {
-  border: 2px solid $faintgray;
-  @include border-radius(2px);
-  position: relative;
-  margin-bottom: 20px;
-  @include clearfix;
+    border: 2px solid $faintgray;
+    @include border-radius(2px);
+    position: relative;
+    margin-bottom: 20px;
+    @include clearfix;
 }
 
 .button-toggle .button {
-  @include border-radius(0);
-  padding: 18px 15px 17px;
-  margin-bottom: 0;
-  width: 49.2%;
-  display: inline-block;
-  text-transform: capitalize;
-  font-weight: 500;
-  background: $faintgray;
-  color: $kashmir;
-
-  &.active {
-    font-weight: 700;
-    background: transparent;
-  }
-
-  &:hover {
-    background: $faintgray;
-  }
-
-  &:first-child {
-    float: left;
-  }
-  &:last-child {
-    float: right;
-  }
-
-  span {
+    @include border-radius(0);
+    padding: 18px 15px 17px;
+    margin-bottom: 0;
+    width: 49.2%;
     display: inline-block;
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    top: 15px;
-  }
+    text-transform: capitalize;
+    font-weight: 500;
+    background: $faintgray;
+    color: $kashmir;
+
+    &.active {
+        font-weight: 700;
+        background: transparent;
+    }
+
+    &:hover {
+        background: $faintgray;
+    }
+
+    &:first-child {
+        float: left;
+    }
+    &:last-child {
+        float: right;
+    }
+
+    span {
+        display: inline-block;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        top: 15px;
+    }
 }
 
 /** Media Queries

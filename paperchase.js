@@ -70,7 +70,33 @@ Meteor.startup(function () {
             process.env.MAIL_URL = 'smtp://' + emailSettings.address +':' + emailSettings.pw + '@smtp.gmail.com:465/';
         }
     }
+
 });
+
+// Altmetric
+// ---------
+if (Meteor.isClient) {
+    Session.set('altMetricReady', false);
+    Meteor.startup(function () {
+        // Ready Altmetric library
+        $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a,b,c){
+            if(b == 'success') {
+                Session.set('altMetricReady', true);
+            }
+        });
+
+        // Get top articles
+        Meteor.call('getAltmetricTop', 50, function(altmetricError, altmetricResult){
+            if (altmetricError) {
+                console.error('altmetricError', altmetricError);
+            } else if (altmetricResult) {
+                Session.set('altmetric-count', altmetricResult.length);
+                Session.set('altmetric-top', altmetricResult);
+            }
+        });
+    });
+}
+
 
 
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
@@ -346,6 +372,13 @@ if (Meteor.isClient) {
     // for archive.
     Session.setDefault('archive',null);
     Session.setDefault('article-visitor',null);
+    // altmetrics badge
+    Session.setDefault('altMetricReady', false);
+    Session.setDefault('badge-visible', false);
+    Session.setDefault('altmetric-top', null);
+    Session.setDefault('altmetric-count', 50);
+    // conferences
+    Session.setDefault('conferences', false);
 
     // Redirects
     // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.
@@ -554,6 +587,56 @@ if (Meteor.isClient) {
             return pageTitle + 'Account';
         },
     });
+
+    Router.route('/conferences', {
+        name: 'Conferences',
+        layoutTemplate: 'Visitor',
+        waitOn: function(){
+            return [
+                Meteor.subscribe('currentIssue')
+            ];
+        },
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            Meteor.call('conferencesPastAndFuture', function(error, result){
+                if (error) {
+                    console.error(error);
+                } else {
+                    Session.set('conferences', result);
+                }
+            });
+            this.next();
+        },
+        title: function() {
+            var pageTitle = '';
+            if(Session.get('journal')){
+                pageTitle = Session.get('journal').journal.name + ' | ';
+            }
+            return pageTitle + 'Conferences';
+        }
+    });
+
+    // Router.route('/top-articles', {
+    //     name: 'TopArticles',
+    //     layoutTemplate: 'Visitor',
+    //     onBeforeAction: function(){
+    //         Meteor.impact.redirectForAlt();
+    //         this.next();
+    //     },
+    //     waitOn: function(){
+    //         Meteor.impact.redirectForAlt();
+    //         return[
+    //             Meteor.subscribe('currentIssue'),
+    //         ];
+    //     },
+    //     title: function() {
+    //         var pageTitle = '';
+    //         if(Session.get('journal')){
+    //             pageTitle = Session.get('journal').journal.name + ' | ';
+    //         }
+    //         return pageTitle + 'Top Articles';
+    //     },
+    // });
 
     Router.route('/archive', {
         name: 'Archive',
@@ -1146,7 +1229,7 @@ if (Meteor.isClient) {
         }
     });
 
-// INTERVIEWS PAGE
+    // INTERVIEWS PAGE
     Router.route('/interviews', {
         name: 'Interviews',
         layoutTemplate: 'Visitor',

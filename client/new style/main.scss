@@ -41,8 +41,9 @@
     }
 
     span.issue-pages {
-        @extend h2;
-        font-size: 15px;
+        @extend p;
+        color: $kashmir;
+        // font-size: 15px;
         display: inline-block;
         margin: 4px 0 10px;
     }
@@ -56,8 +57,8 @@
 
 .page-desc.toc{
     display: block;
-    font-size: 14px;
-    margin: 12px 0 15px;
+    @extend .tiny-font;
+    margin: 12px 0 15px!important;
     @extend .uppercase-titles;
     color: $accent;
 }
@@ -104,25 +105,29 @@
         padding-top: 20px;
     }
 
-    h2.title, h6.desc {
+    .title, .desc {
         line-height: 1.3;
     }
 
-    h6.desc, span.meta {
-        font-size: 15px;
+    .desc, span.meta {
+        // font-size: 15px;
         color: darken($kashmir, 10%);
     }
 
-    h2.title {
-        font-size: 19px;
+    .title {
+        // font-size: 19px;
         margin: 0 0 5px 0;
         font-weight: 700;
         color: $cello;
     }
 
-    h6.desc {
+    .desc {
         margin: 0 0 10px 0;
         padding: 0;
+        .authors{
+            clear: left;
+            display: block;
+        }
     }
 
     span.meta {
@@ -143,6 +148,11 @@ h4.blue-divider + .toc-info {
     }
 }
 
+.issue-altmetric {
+    float:right;
+}
+
+
 /** Issue Scroller (Prev / Next)
  ---------------------------------------------------------*/
 .issue-scroller {
@@ -156,7 +166,8 @@ h4.blue-divider + .toc-info {
     span {
         display: inline-block;
         @extend .uppercase-titles;
-        font-size: 14px;
+        // font-size: 14px;
+        @extend .tiny-font;
 
         &.prev a,
         &.next a {
@@ -191,10 +202,11 @@ h5.article-header {
     }
 }
 
-h2.authors,
-h2.dates {
+h4.authors,
+h4.dates {
+    color: $kashmir;
     line-height: 1.4;
-    font-size: 17px;
+    font-weight: normal;
 
     span.author,
     span.date {
@@ -210,7 +222,6 @@ h2.dates {
 
     // superscript
     sup.author-affiliations a {
-        font-size: 13px;
         color: $kashmir;
         font-weight: 500;
         margin: 0;
@@ -255,6 +266,40 @@ h2.dates {
     .correspondence-text,
     .correspondence-email{
         word-wrap: break-word;
+    }
+}
+#article-title-and-badge-container{
+    float:left;
+    margin: 0 0 1.68rem 0;
+    width:100%;
+    .altmetric-badge{
+        a > img{
+            height: 80px;
+            width: 80px;
+            margin-right: 12px!important;
+        }
+    }
+}
+#article-container{
+    h1{
+        margin: 0!important;
+    }
+}
+#article-title{
+    // padding-left: 42px;
+}
+#article-title.badge-visible{
+    padding-left: 74px;
+}
+.article-altmetric{
+    float: left;
+    a > img{
+        margin-right: 10px!important;
+    }
+}
+.altmetric-badge{
+    img{
+        height: 64px;
     }
 }
 /*end hide commas*/
@@ -341,7 +386,6 @@ h2.dates {
     .full-text-image-container { margin: 0; padding:0;}
 }
 
-
 /** Article Figure Viewers
  ---------------------------------------------------------*/
  .figure-range{
@@ -399,7 +443,7 @@ h2.dates {
 /** Full Text Article
  ---------------------------------------------------------*/
 .full-text-image-container {
-    label { font-size: 15px; }
+    // label { font-size: 15px; } // this does not seem to be in use
     width: 100%;
     margin: 50px auto;
     padding: 30px 40px;
@@ -420,7 +464,8 @@ h2.dates {
 
 h3#references + ul li {
     margin-bottom: 15px;
-    font-size: 15px;
+    // font-size: 15px;
+    @extend p;
 }
 
 /*================ Sidebar Article Content | Article-Level Modules ================*/
@@ -486,12 +531,13 @@ ul.divided-list {
 
     h3 { margin: 0; }
 
-    h4.title {
-      text-transform: none;
-      font-size: 21px;
-      margin: 0;
-      padding: 0;
-    }
+    // h4.title {
+    // this does not appear to be in use
+    //   text-transform: none;
+    //   font-size: 21px;
+    //   margin: 0;
+    //   padding: 0;
+    // }
 
     h5.meta {
       font-weight: 700;
@@ -599,9 +645,10 @@ $cubic: cubic-bezier(.64,.09,.08,1);
 }
 
 .tag {
+    @extend p;
     display: inline-block;
-    font-size: 15px;
-    margin: 0 5px 10px 0;
+    // font-size: 15px;
+    margin: 0 5px 10px 0!important;
     padding: 4px 10px;
     background: $lightgray;
     color: $kashmir;
@@ -624,15 +671,16 @@ a.tag {
 }
 
 // inline tags
-p > .tag {
-    cursor: default;
-    font-size: 17px;
-    margin: 0;
-    padding: 1px 4px;
-
-    // background: $electric;
-    color: $electric;
-}
+// appears to not be in use
+// p > .tag {
+//     cursor: default;
+//     font-size: 17px;
+//     margin: 0;
+//     padding: 1px 4px;
+//
+//     // background: $electric;
+//     color: $electric;
+// }
 
 // lists
 ol {
@@ -700,7 +748,7 @@ ul.sectioned-list {
 @include at-query($min, $small) {
     ul.divided-list {
         li.item { padding: 25px 0; }
-        h4.title { font-size: 17px; }
+        // h4.title { font-size: 17px; } // appears to not be in use
     }
 }
 // Medium Screens (+ 970px)
@@ -720,11 +768,70 @@ ul.sectioned-list {
 
     ul.divided-list {
         li.item { padding: 40px 0; }
-        h4.title { font-size: 21px; }
+        // h4.title { font-size: 21px; } // appears to not be in use
     }
 }
 
 // Large Screens (+ 1170px)
 @include at-query($min, $large) {
 
+}
+/* Altmetric -------------------*/
+#altmetric-top{
+	// height: 400px;
+	// overflow-x: hidden;
+	// overflow-y: scroll;
+    float: left;
+	margin-top: 0;
+	padding: 1em;
+	// list-style: none;
+	li{
+		display: table;
+		float: left;
+		margin: 1em 0;
+		width: 100%;
+        &:first-child{
+            margin-top: 0px;
+        }
+        p{
+            margin: 0px!important;
+            // line-height: $paragraphFontSize!important;
+        }
+        &:last-child{
+            margin-bottom: 0;
+        }
+	}
+}
+
+#altmetric-top, #altmetric-top-full{
+    li{
+        p{
+            a{
+                img{
+                    height: 54px!important;
+                }
+            }
+        }
+    }
+}
+
+#altmetric-top::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 10px;
+	background-color: $lightgray;
+}
+
+#altmetric-top::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	background-color: $cello;
+	-webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+.altmetric-list-badge{
+	display: block;
+	float: left;
+	margin: 0 10px 0 0;
+}
+.altmetric-title-link{
+	display: table;
 }

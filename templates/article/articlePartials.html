@@ -1,9 +1,33 @@
+<!-- <template name="ArticleHeaderTitle">
+    <h5 class="article-header">
+        {{>ArticleHeaderPieces}}
+    </h5>
+    <div id="article-title-and-badge-container" class="valign-wrapper">
+        {{#if altMetricReady}}
+        {{#if ids.doi}}
+        {{#with ids}}
+        {{>AltmetricBadge doi=doi}}
+        {{/with}}
+        {{/if}}
+        {{/if}}
+        <div id="article-container">
+            <h1 id="article-title" class="valign">
+                {{{title}}}
+            </h1>
+        </div>
+    </div>
+</template> -->
 <template name="ArticleHeaderTitle">
     <h5 class="article-header">
         {{>ArticleHeaderPieces}}
     </h5>
-
-    <h1 id="article-title">{{{title}}}</h1>
+    <div id="article-title-and-badge-container" class="valign-wrapper">
+        <div id="article-container">
+            <h1 id="article-title" class="valign">
+                {{{title}}}
+            </h1>
+        </div>
+    </div>
 </template>
 
 <template name="ArticleHeaderPieces">
@@ -37,6 +61,10 @@
     {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
 </template>
 
+<template name="AltmetricBadge">
+    <div data-badge-type="donut" data-doi="{{doi}}" data-hide-no-mentions="true" data-hide-less-than="10" data-condensed="true" class="altmetric-badge valign article-altmetric left-align altmetric-embed" data-uuid="85f0f879-6f2e-dbf5-06d5-ec49e920a3ed"></div>
+</template>
+
 <template name="ArticlePages">
     pp {{page_start}}{{#if page_end}}{{#if equals page_end page_start}}{{else}}&mdash;{{page_end}}{{/if}}{{/if}}
 </template>
@@ -46,6 +74,8 @@
     {{>AuthorsRefList }}
     {{#if dates}} {{>ArticleDates}} {{/if}}
     {{#if ids.doi}}<span><a href="http://dx.doi.org/{{ids.doi}}">{{ids.doi}}</a></span>{{/if}}
+
+
     <!--{{#if ids.pmc}}<span class="right"><a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC{{ids.pmc}}" target="_BLANK">PMC</a></span>{{/if}}-->
 
     <!-- todo: implement featured photo -->
@@ -97,13 +127,13 @@
 </template>
 
 <template name="AuthorsRefList">
-    <h2 class="authors">
+    <h4 class="authors">
         {{#each authors }}
             <span class="author">
                 {{name_first}} {{#if name_middle}} {{name_middle}}{{/if}}{{#if name_last}} {{name_last}}{{/if}}{{#if name_suffix}} {{name_suffix}}{{/if}}{{#if affiliations_numbers}}{{>AuthorAffsAndNotes}}{{/if}}<span class="author-comma">,</span>
             </span>
         {{/each}}
-    </h2>
+    </h4>
 
     <span>
     <ul>
@@ -133,7 +163,7 @@
 
 
 <template name="ArticleDates">
-    <h2 class="dates">
+    <h4 class="dates">
         {{#each arrayify history}}
             <span class="date">
                 {{name}}: {{articleDate value}} <span class="comma">; </span>
@@ -149,7 +179,7 @@
             {{/if}}
             </span>
         {{/each}}
-    </h2>
+    </h4>
 </template>
 
 <template name="ArticleSidebar">
@@ -206,6 +236,7 @@
             {{> ArticleCorrespondence}}
         {{/if}}
         {{/with}}
+
 
         {{#if related}}
             {{> ArticleRelatedArticles}}

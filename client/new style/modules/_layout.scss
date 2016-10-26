@@ -40,7 +40,8 @@ footer {
     @include clearfix;
 
     span {
-        font-size: 14px;
+        // font-size: 14px;
+        @extend .tiny-font;
     }
 }
 

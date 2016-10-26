@@ -19,7 +19,8 @@
     .button { margin-bottom: 0; }
 
     h6.card-title {
-        font-size: 14px;
+        // font-size: 14px;
+        @extend h6; // materialize has very large headers, so need to override
         @extend .uppercase-titles;
         font-weight: 700;
         color: $kashmir;

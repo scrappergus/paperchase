@@ -8,136 +8,145 @@
 
 /** Small Home Hero
  ---------------------------------------------------------*/
-.home-hero {
-    @include clearfix;
-    background-image: url('/images/bg-base.jpg');
-    background-size: cover;
-    // box-shadow: inset 0 0 0 1000px rgba(0, 102, 163, .82);
-    box-shadow: inset 0 0 0 1000px rgba(0, 148, 206, .82);
-    // box-shadow: inset 0 0 0 1000px rgba(0, 156, 159, .82);
-    padding: 90px 0 70px;
+// .home-hero {
+//     @include clearfix;
+//     background-image: url('/images/bg-base.jpg');
+//     background-size: cover;
+//     // box-shadow: inset 0 0 0 1000px rgba(0, 102, 163, .82);
+//     box-shadow: inset 0 0 0 1000px rgba(0, 148, 206, .82);
+//     // box-shadow: inset 0 0 0 1000px rgba(0, 156, 159, .82);
+//     padding: 90px 0 70px;
+//
+//     /**
+//      * Headline Text
+//      */
+//
+//     h1.head, h2.subhead {
+//         color: #fff;
+//         margin: 0;
+//         padding: 0;
+//         line-height: 1.2;
+//     }
+//
+//     h1.head {
+//         margin-bottom: 20px;
+//         span {
+//             line-height: 1.75;
+//             padding: 5px 0;
+//             background: darken($accent, 2%);
+//             box-shadow: 15px 0 0px 0px darken($accent, 2%), -15px 0 0px 0px darken($accent, 2%);
+//         }
+//     }
+//
+//     // h2.subhead { line-height: 1.3; }// appears not in use
+//
+//
+//     /**
+//      * Media Queries
+//      */
+//
+//     @include at-query($min, $large) {
+//         // h1.head { font-size: 36px; }
+//         // h2.subhead { font-size: 18px; } // appears not in use
+//     }
+//
+//     @include at-query($min, $wide) {
+//         h1.head { font-size: 42px; }
+//     }
+// } // class not found in templates
 
-    /**
-     * Headline Text
-     */
 
-    h1.head, h2.subhead {
-        color: #fff;
-        margin: 0;
-        padding: 0;
-        line-height: 1.2;
-    }
-
-    h1.head {
-        margin-bottom: 20px;
-        span {
-            line-height: 1.75;
-            padding: 5px 0;
-            background: darken($accent, 2%);
-            box-shadow: 15px 0 0px 0px darken($accent, 2%), -15px 0 0px 0px darken($accent, 2%);
-        }
-    }
-
-    h2.subhead { line-height: 1.3; }
-
-
-    /**
-     * Media Queries
-     */
-
-    @include at-query($min, $large) {
-        h1.head { font-size: 36px; }
-        h2.subhead { font-size: 18px; }
-    }
-
-    @include at-query($min, $wide) {
-        h1.head { font-size: 42px; }
+/** News list
+ ---------------------------------------------------------*/
+.news-list{
+    a{
+        word-break: break-all;
     }
 }
 
 /** Featured New Item
  ---------------------------------------------------------*/
-.featured-news-item {
-    @include clearfix;
-    background-color: rgba(4, 13, 23,1);
-    background-image: url('/images/static-bg.jpg');
-    background-size: cover;
-    box-shadow: inset 0 0 0 1000px rgba(4, 13, 23, .51);
-    padding: 110px 0;
-    margin-bottom: 75px;
-
-
-    /**
-     * Headline Text
-     */
-
-    h1.head, h2.subhead {
-        color: #fff;
-        margin: 0;
-        padding: 0;
-    }
-
-    h1.head {
-        margin-bottom: 15px;
-    }
-
-    h2.subhead {
-        line-height: 1.3;
-    }
-
-    .news-info {
-        text-align: center;
-    }
-
-
-    /**
-     * Buttons
-     */
-
-    .news-info .minimal.button {
-        margin-top: 35px;
-        border-color: rgba(249, 249, 249, .39);
-        color: #fff;
-        padding: 20px 34px 19px;
-    }
-
-    /**
-     * Media Queries
-     */
-
-    @include at-query($min, $large) {
-        h1.head { font-size: 42px; }
-        h2.subhead { font-size: 21px; }
-    }
-
-    @include at-query($min, $wide) {
-        h1.head { font-size: 46px; }
-    }
-}
-
-/** About the Journal
- ---------------------------------------------------------*/
-.journal-topics {
-    @include clearfix;
-    @extend p;
-    width: 48%;
-    margin-right: 3%;
-    float: left;
-    &:nth-child(even) { margin-right: 0; }
-
-    li {
-        margin-bottom: 15px;
-        border-bottom: 2px solid $electric;
-        padding: 0 0 15px;
-    }
-
-    li > span.sub {
-        display: block;
-        font-weight: 300;
-        opacity: .6;
-        font-size: 14px;
-    }
-}
+// .featured-news-item {
+//     @include clearfix;
+//     background-color: rgba(4, 13, 23,1);
+//     background-image: url('/images/static-bg.jpg');
+//     background-size: cover;
+//     box-shadow: inset 0 0 0 1000px rgba(4, 13, 23, .51);
+//     padding: 110px 0;
+//     margin-bottom: 75px;
+//
+//
+//     /**
+//      * Headline Text
+//      */
+//
+//     h1.head, h2.subhead {
+//         color: #fff;
+//         margin: 0;
+//         padding: 0;
+//     }
+//
+//     h1.head {
+//         margin-bottom: 15px;
+//     }
+//
+//     h2.subhead {
+//         line-height: 1.3;
+//     }
+//
+//     .news-info {
+//         text-align: center;
+//     }
+//
+//
+//     /**
+//      * Buttons
+//      */
+//
+//     .news-info .minimal.button {
+//         margin-top: 35px;
+//         border-color: rgba(249, 249, 249, .39);
+//         color: #fff;
+//         padding: 20px 34px 19px;
+//     }
+//
+//     /**
+//      * Media Queries
+//      */
+//
+//     @include at-query($min, $large) {
+//         h1.head { font-size: 42px; }
+//         h2.subhead { font-size: 21px; }
+//     }
+//
+//     @include at-query($min, $wide) {
+//         h1.head { font-size: 46px; }
+//     }
+// }
+//
+// /** About the Journal
+//  ---------------------------------------------------------*/
+// .journal-topics {
+//     @include clearfix;
+//     @extend p;
+//     width: 48%;
+//     margin-right: 3%;
+//     float: left;
+//     &:nth-child(even) { margin-right: 0; }
+//
+//     li {
+//         margin-bottom: 15px;
+//         border-bottom: 2px solid $electric;
+//         padding: 0 0 15px;
+//     }
+//
+//     li > span.sub {
+//         display: block;
+//         font-weight: 300;
+//         opacity: .6;
+//         font-size: 14px;
+//     }
+// } // not found in used templates
 
 /** Featured Articles
  ---------------------------------------------------------*/
@@ -195,6 +204,9 @@
     ul.featured-items {
         li {
             text-align: justify;
+            p{
+                margin: 0!important;
+            }
         }
         li:hover {
             background: none;

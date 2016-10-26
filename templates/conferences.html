@@ -1,0 +1,28 @@
+<template name="Conferences">
+    <div class="row">
+        <div class="page-content col s12 m7 l8">
+            <h1>Conferences</h1>
+
+            <h2 class="heavy blue-accented">Upcoming</h2>
+            {{#if future}}
+            <ul class="divided-list news-list">
+                {{#each future}}
+                    {{>NewsListItem .}}
+                {{/each}}
+            </ul>
+            {{else}}
+            <h3>Check back for upcoming conferences.</h3>
+            {{/if}}
+
+            {{#if past}}
+            <h2 class="heavy blue-accented">Past</h2>
+            <ul class="divided-list news-list">
+                {{#each past}}
+                    {{>NewsListItem .}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+        {{> MainSideBar}}
+    </div>
+</template>

@@ -25,6 +25,9 @@
     &.secondary {
         background-color: $lightgray;
     }
+    .nav-submit-button{
+        text-align: left;
+    }
 }
 
 /**
@@ -71,7 +74,10 @@
 .nav-content {
     height: $navbar-height;
     background-color: $nav-color;
-    padding: 11px 20px 0 20px;
+    // padding: 11px 20px 0 20px;
+    padding: 0;
+    display: flex;
+    align-items: center;
 
     ul {
         display: none;
@@ -159,13 +165,26 @@
 }
 
 .submit-article{
-    a{
-        background-color: $accent!important;
-        &:hover{
-            background-color: $darkaccent!important;
-        }
+    @include get-bg-hover($accent, 3%);
+    background-color: $accent!important;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.toc-signup-button{
+    color: $white!important;
+    cursor: pointer;
+    font-weight: 700;
+    text-align: left! important;
+    text-transform: none!important;
+    &:hover{
+        color: $white!important;
     }
 }
+.top-submit-button{
+    padding: 15px!important;
+}
+
 
 /** Navigation | Sub Nav
  ---------------------------------------------------------*/
@@ -377,6 +396,12 @@
         opacity: 1;
         right: 20px;
     }
+
+    .button{
+        -webkit-border-radius: 0px!important;
+        -moz-border-radius: 0px!important;
+        border-radius: 0px!important;
+    }
 }
 
 
@@ -386,7 +411,7 @@ $secondary-subnav-color: darken(#00387A, 1%);
 .main .sidebar.secondary {
     background: #fff;
     ul.nav-links {
-        a:not(.toc-signup-button) {
+        a:not(.nav-submit-button) {
             color: $cello;
         }
         a:hover {
@@ -452,6 +477,24 @@ $secondary-subnav-color: darken(#00387A, 1%);
 }
 
 // Social Links
+#top-social-links{
+    // display: block;
+    position: absolute;
+    right: 35px;
+    // top: 20px;
+    // i{
+    //     position: relative;
+    //     top: 4px
+    // }
+    li{
+        display: inline-block;
+        padding: 0 10px;
+    }
+    .submit-article{
+        position: relative;
+        top: -2px;
+    }
+}
 .social-links{
     font-size: 20px!important;
 }
@@ -491,6 +534,14 @@ $secondary-subnav-color: darken(#00387A, 1%);
     .mobile-social-links{
         display: block;
     }
+
+    .nav-content{
+        display: block;
+        padding: 11px 20px 0 20px;
+    }
+    #top-social-links{
+        display: none!important;
+    }
 }
 
 // Medium Screens (+ 970px)
@@ -510,6 +561,11 @@ $secondary-subnav-color: darken(#00387A, 1%);
     ul.nav-links #login-buttons {
         display: none;
     }
+
+    // .top-submit-button{
+    //     // padding: 10px!important;
+    //     // top: -10px;
+    // }
 
     /*
      * Sidebar Selective Styles

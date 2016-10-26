@@ -1,0 +1,36 @@
+{
+	"nodeVersion" : "5.2.0",
+	"galaxy.meteor.com":{
+		"env": {
+			"ROOT_URL": "http://stage3.aging-us.com",
+			"MONGO_URL": "mongodb://paperchase:T1nat1na@ds017616-a0.mlab.com:17616,ds017616-a1.mlab.com:17616/aging?replicaSet=rs-ds017616",
+			"MONGO_OPLOG_URL": "mongodb://paperchase-oplog:T1nat1na@ds017616-a0.mlab.com:17616,ds017616-a1.mlab.com:17616/local?replicaSet=rs-ds017616&authSource=admin"
+		}
+	},
+    "elasticsearch" : "http://5e961f1879b9c4318cea5cfe011224ec.us-east-1.aws.found.io:9200",
+    "mongodb" : "mongodb://paperchase:T1nat1na@ds017616-a0.mlab.com:17616,ds017616-a1.mlab.com:17616/aging?replicaSet=rs-ds017616",
+    "index" : "aging",
+	"altmetric": {
+		"key" : "b1236a09d165130705639691bef55e91",
+		"journalId": "4f6fa81e3cf058f61000bbbe"
+	},
+	"public": {
+	    "journal": {
+	        "issn": "1945-4589",
+	        "logo": {
+	            "banner": "/images/aging-logo-new.png"
+	        },
+	        "name": "Aging",
+	        "nameExtra": "(Albany, NY)",
+	        "site": {
+	            "spec" : {
+	                "color" : {
+	                    "main_hex" : "0a588f",
+	                    "main_rgb" : "55, 71, 79"
+	                }
+	            }
+	        },
+	        "submissionsLink": "http://aging.msubmit.net/"
+	    }
+	}
+}
