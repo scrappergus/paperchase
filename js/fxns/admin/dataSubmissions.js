@@ -126,6 +126,7 @@ Meteor.dataSubmissions = {
                 Session.set('creatingXml', false);
                 Meteor.call('dataSubmissionsNotifyByEmail', result.submissionId, Meteor.user());
                 alert('Submission Sent. Please check your email for a download link of the XML.');
+                Meteor.dataSubmissions.resetPage(template);
             }
         });
     }
