@@ -1018,6 +1018,14 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+            // User roles redirect
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'advance'])){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
+
+            // Journal redirect
             if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
                 Router.go('AdminAop');
             }
@@ -1059,6 +1067,14 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+            // User roles redirect
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'advance'])){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
+
+            // Journal redirect
             if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
@@ -1103,15 +1119,30 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+            // User roles redirect
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'advance'])){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
+
+            // Journal redirect
             if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
+
+            // Get the data
             Meteor.call('compareWithLegacy', function(error,result){
                 if(result){
                     Session.set('advanceDiff',result);
                 }
             });
             this.next();
+        },
+        waitOn: function(){
+            return [
+                Meteor.subscribe('advance')
+            ];
         }
     });
     Router.route('/admin/articles/advance/remove',{
@@ -1124,6 +1155,14 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         onBeforeAction: function(){
+            // User roles redirect
+            if(!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'advance'])){
+                Router.go('AdminDashboard');
+            }else{
+                this.next();
+            }
+
+            // Journal redirect
             if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
