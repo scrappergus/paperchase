@@ -6,7 +6,6 @@ if (Meteor.isServer) {
     });
 }
 
-
 //Redirects
 // Redirect to the ROOT_URL if it doesn't match where we're at
 if (Meteor.isServer) {
@@ -22,25 +21,6 @@ if (Meteor.isServer) {
         });
 }
 
-// async loader for fonts
-// https://github.com/typekit/webfontloader
-// if (Meteor.isClient) {
-//     WebFontConfig = {
-//         google: { families: [ 'Lora:400,400italic,700,700italic:latin' , 'Open Sans'] }
-//     };
-//     (function() {
-//             var wf = document.createElement('script');
-//             wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-//                 '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-//             wf.type = 'text/javascript';
-//             wf.async = 'true';
-//             var s = document.getElementsByTagName('script')[0];
-//             s.parentNode.insertBefore(wf, s);
-//             //console.log("async fonts loaded", WebFontConfig);
-//     })();
-//     // var journal = journalConfig.findOne();
-//     // Session.setDefault('journal',journal);
-// }
 Router.configure({
     loadingTemplate: 'Loading'
 });
@@ -76,7 +56,6 @@ Meteor.startup(function () {
     }
 });
 
-
 institutionUpdateInsertHook = function(userId, doc, fieldNames, modifier, options) {
     var iprnew = [];
     var iprid = ipranges.find({institutionID: doc._id});
@@ -105,24 +84,6 @@ institutions.after.remove(function(userId, doc) {
         ipranges.remove({_id: rec._id});
     });
 });
-
-
-// DOWNLOAD ROUTES
-// Router.route('/pdf/:_filename',{
-//  where: 'server',
-//  action: function(){
-//      var name = this.params._filename;
-//      var filePath = process.env.PWD + '/uploads/pdf/' + name;
-//      var fs = Meteor.npmRequire('fs');
-//      var data = fs.readFileSync(filePath);
-//      this.response.writeHead(200, {
-//        'Content-Type': 'application/pdf',
-//        'Content-Disposition': 'attachment; filename=' + name
-//      });
-//      this.response.write(data);
-//      this.response.end();
-//  }
-// });
 
 // INTAKE ROUTES
 Router.route('/admin/add-legacy-platform-article/',{
@@ -182,7 +143,6 @@ Router.route('/get-advance-articles/',{
         ];
     },
     action: function(){
-        // var htmlString = '<head><meta charset="UTF-8"></head><body>';
         var htmlString = "<html><head><meta name=\"robots\" content=\"noindex\"><meta name=\"google-site-verification\" content=\"63uPoFYXoHVMKO4Sp4sx5nmxlbDH0fBgMyk9rMiB68A\" /></head><body>";
         var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
         if(advance){
@@ -211,15 +171,6 @@ Router.route('/get-advance-articles/',{
                 if(i > 0) {
                     prevSection = advanceList[last_index].section_name;
                 }
-                if(articleInfo.section_start){
-                    // if(prevSection){
-                    //  htmlString += '</div>';
-                    // }
-
-                    // htmlString += '<h4 class="tocSectionTitle" style="width:100%;clear:both;float:left;font-family:Arial, sans-serif;margin-top: 1em;padding-left: 1.5em;color: #FFF;background-color: #999;margin-bottom: 1em;border-left-width: thick;border-left-style: solid;border-left-color: #666;border-bottom-width: thin;border-bottom-style: solid;border-bottom-color: #666;text-transform: none !important; ">' + articleInfo['section_name'] + '</h4>';
-                    // htmlString += '<div class="articlewrapper">';
-                }
-
 
                 if(articleInfo.section_name != prevSection) {
                     if(i !== 0) {
@@ -235,8 +186,7 @@ Router.route('/get-advance-articles/',{
 
                     htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
                     parity = 1;
-                }
-                else if(parity%2==1) {
+                } else if(parity%2==1) {
                     htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
 
                 }
@@ -245,9 +195,6 @@ Router.route('/get-advance-articles/',{
                 htmlString += '<span class="tocTitle">' + articleInfo.title + '</span>';
 
                 if(articleInfo.authors && articleInfo.authors.length > 0){
-                    // htmlString += '<tr>';
-                    // htmlString += '<td class="tocAuthors">';
-
                     htmlString += '<span class="tocAuthors">';
 
                     if(articleInfo.ids.doi){
@@ -319,7 +266,6 @@ Router.route('/get-advance-articles/',{
     }
 });
 
-
 Router.route('/article/:_id/doi', {
         where: 'server',
         action: function() {
@@ -330,15 +276,12 @@ Router.route('/article/:_id/doi', {
                 htmlString = articleExistsExists.ids.doi || '';
             }
 
-
             var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
             this.response.writeHead(200, headers);
             this.response.end(htmlString);
 
         }
     });
-
-
 
 Router.route('/get-interviews/',{
     where: 'server',
