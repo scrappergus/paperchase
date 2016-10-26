@@ -140,11 +140,7 @@ Meteor.methods({
                                             processedArticleJson.section_id = 0; // Keep in Recent Research Papers
                                         }
 
-                                        Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){
-                                            if(result && processedArticleJson.advance === true){
-                                                Meteor.call('sorterAddItem','advance',articleMongoId);
-                                            }
-                                        });
+                                        Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){});
 
                                     }else{
                                         processedArticleJson.doc_updates = {} ;
@@ -152,11 +148,7 @@ Meteor.methods({
                                         if(processedArticleJson.article_type && processedArticleJson.article_type.type == 'Research Papers'){
                                             processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
                                         }
-                                        Meteor.call('addArticle',processedArticleJson, function(error,result){
-                                            if(result){
-                                                Meteor.call('sorterAddItem','advance',articleMongoId);
-                                            }
-                                        });
+                                        Meteor.call('addArticle',processedArticleJson, function(error,result){});
                                     }
                                 }
                             });
