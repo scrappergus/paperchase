@@ -5,8 +5,8 @@ Meteor.methods({
         var out = [];
         for (var i = 0; i < list.length; i++){
             var article = list[i];
-            var section = sections.findOne({'section_id' : article['section_id']});
-              article['section_name'] = section['section_name'];
+            var section = sections.findOne({'section_id' : article.section_id});
+              article.section_name = section.section_name;
 
             out.push(article);
         }
@@ -126,7 +126,7 @@ Meteor.methods({
             mongoIdsBySection[articleSection] = [];
             articlesBySection[articleSection].forEach(function(article){
                 mongoIdsBySection[articleSection].push(article._id);
-            })
+            });
         }
             // console.log(mongoIdsBySection);
 
