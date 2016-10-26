@@ -179,7 +179,7 @@ Router.route('/get-advance-articles/',{
     waitOn: function(){
         return[
             Meteor.subscribe('publish'),
-        ]
+        ];
     },
     action: function(){
         // var htmlString = '<head><meta charset="UTF-8"></head><body>';
@@ -189,27 +189,29 @@ Router.route('/get-advance-articles/',{
             var advanceList = advance.data;
             var prevSection;
             var last_index;
+            var rangeStart,
+                rangeEnd;
 
             if(this.params.query.rangeStart !== undefined) {
                 var rangeSize = this.params.query.rangeSize*1 || 3;
-                var rangeStart = this.params.query.rangeStart*rangeSize
-                var rangeEnd = rangeStart + rangeSize;
+                rangeStart = this.params.query.rangeStart*rangeSize;
+                rangeEnd = rangeStart + rangeSize;
                 if(rangeEnd > advanceList.length) rangeEnd = advanceList.length;
             }
             else {
-                var rangeStart = 0;
-                var rangeEnd = advanceList.length;
+                rangeStart = 0;
+                rangeEnd = advanceList.length;
             }
 
             var parity=0;
             for(var i = rangeStart ; i < rangeEnd; i++){
                 parity++;
                 var articleInfo = advanceList[i];
-                last_index = i-1
+                last_index = i-1;
                 if(i > 0) {
-                    prevSection = advanceList[last_index]['section_name'];
+                    prevSection = advanceList[last_index].section_name;
                 }
-                if(articleInfo['section_start']){
+                if(articleInfo.section_start){
                     // if(prevSection){
                     //  htmlString += '</div>';
                     // }
@@ -219,16 +221,16 @@ Router.route('/get-advance-articles/',{
                 }
 
 
-                if(articleInfo['section_name'] != prevSection) {
-                    if(i != 0) {
+                if(articleInfo.section_name != prevSection) {
+                    if(i !== 0) {
                         htmlString += '</div>';
                     }
 
-                    if(i<40 && articleInfo['section_name'] == 'Research Papers') {
-                        htmlString += "<h4 id=\"recent_"+articleInfo['section_name']+"\" class=\"tocSectionTitle\">Recent "+articleInfo['section_name']+"</h4>";
+                    if(i<40 && articleInfo.section_name == 'Research Papers') {
+                        htmlString += "<h4 id=\"recent_"+articleInfo.section_name+"\" class=\"tocSectionTitle\">Recent "+articleInfo.section_name+"</h4>";
                     }
                     else {
-                        htmlString += "<h4 id=\""+articleInfo['section_name']+"\" class=\"tocSectionTitle\">"+articleInfo['section_name']+"</h4>";
+                        htmlString += "<h4 id=\""+articleInfo.section_name+"\" class=\"tocSectionTitle\">"+articleInfo.section_name+"</h4>";
                     }
 
                     htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
@@ -240,7 +242,7 @@ Router.route('/get-advance-articles/',{
                 }
 
                 htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
-                htmlString += '<span class="tocTitle">' + articleInfo['title'] + '</span>';
+                htmlString += '<span class="tocTitle">' + articleInfo.title + '</span>';
 
                 if(articleInfo.authors && articleInfo.authors.length > 0){
                     // htmlString += '<tr>';
@@ -248,24 +250,24 @@ Router.route('/get-advance-articles/',{
 
                     htmlString += '<span class="tocAuthors">';
 
-                    if(articleInfo['ids']['doi']){
-                        htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo['ids']['pii'] + '</b></p>';
+                    if(articleInfo.ids.doi){
+                        htmlString += '<p><b>DOI: 10.18632/oncotarget.' + articleInfo.ids.pii + '</b></p>';
                     }
                     var authors = articleInfo.authors;
                     var authorsCount = authors.length;
                     htmlString += '<p>';
                     for(var a = 0 ; a < authorsCount ; a++){
-                        if(authors[a]['name_first']){
-                            htmlString += ' ' + authors[a]['name_first'];
+                        if(authors[a].name_first){
+                            htmlString += ' ' + authors[a].name_first;
                         }
-                        if(authors[a]['name_middle']){
-                            htmlString += ' ' + authors[a]['name_middle'];
+                        if(authors[a].name_middle){
+                            htmlString += ' ' + authors[a].name_middle;
                         }
-                        if(authors[a]['name_last']){
-                            htmlString += ' ' + authors[a]['name_last'];
+                        if(authors[a].name_last){
+                            htmlString += ' ' + authors[a].name_last;
                         }
                         if(a != parseInt(authorsCount - 1)){
-                            if(authors[a]['name_first'] || authors[a]['name_middle'] || authors[a]['name_last']){
+                            if(authors[a].name_first || authors[a].name_middle || authors[a].name_last){
                                 htmlString += ', ';
                             }
                         }
@@ -304,7 +306,7 @@ Router.route('/get-advance-articles/',{
 
                 htmlString += '</div>';
 
-                if(parity%2==0) {
+                if(parity%2===0) {
                     htmlString += '</div>';
                 }
             }
@@ -363,7 +365,7 @@ Router.route('/get-interviews/',{
             }
 
             htmlString+='</div>';
-        };
+        }
         htmlString += '</body></html>';
         var headers = {'Content-type': 'text/html', 'charset' : 'UTF-8'};
         this.response.writeHead(200, headers);
