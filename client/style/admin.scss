@@ -48,7 +48,6 @@ html{
             padding: 0;
             &:hover{
                 a{
-                    color: $black-0!important;
                     transition: all .3s ease-out;
                 }
             }
@@ -56,6 +55,9 @@ html{
         li:hover a{
             color: $black-0;
         }
+    }
+    .collapsible-accordion > li:hover > a{
+        color: $gray-2!important;
     }
 
 /* Advance ------------------------*/
