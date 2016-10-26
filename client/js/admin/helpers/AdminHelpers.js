@@ -13,10 +13,7 @@ Template.AdminDashboard.helpers({
 
 Template.AdminNav.helpers({
     mainColor: function(){
-        var journalSettings = journalConfig.findOne();
-        if(journalSettings){
-            return journalSettings.site.spec.color.main_rgb;
-        }
+        return Meteor.settings.public.journal.site.spec.color.main_rgb;
     },
     bannerLogo: function(){
         var journalSettings = journalConfig.findOne();
