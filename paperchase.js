@@ -13,8 +13,7 @@ if (Meteor.isServer) {
     .use(function(req, res, next) {
             if(Meteor.absoluteUrl().match(req.headers.host) ) {
                 return next();
-            }
-            else {
+            } else {
                 res.writeHead(307, { 'Location': Meteor.absoluteUrl() });
                 res.end();
             }
@@ -157,8 +156,7 @@ Router.route('/get-advance-articles/',{
                 rangeStart = this.params.query.rangeStart*rangeSize;
                 rangeEnd = rangeStart + rangeSize;
                 if(rangeEnd > advanceList.length) rangeEnd = advanceList.length;
-            }
-            else {
+            } else {
                 rangeStart = 0;
                 rangeEnd = advanceList.length;
             }
@@ -179,8 +177,7 @@ Router.route('/get-advance-articles/',{
 
                     if(i<40 && articleInfo.section_name == 'Research Papers') {
                         htmlString += "<h4 id=\"recent_"+articleInfo.section_name+"\" class=\"tocSectionTitle\">Recent "+articleInfo.section_name+"</h4>";
-                    }
-                    else {
+                    } else {
                         htmlString += "<h4 id=\""+articleInfo.section_name+"\" class=\"tocSectionTitle\">"+articleInfo.section_name+"</h4>";
                     }
 
