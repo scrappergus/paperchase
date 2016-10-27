@@ -320,6 +320,7 @@ button.button {
             @include transition(background 0.25s ease-out)
             padding: 15px 16px;
             border-top-left-radius: 2px;
+            width: 57.95px; // need to declare because of different icons
         }
 
         &:hover span.icon {

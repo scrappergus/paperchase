@@ -213,6 +213,7 @@
                 {{/if}}
                 {{/with}}
             {{/if}}
+
         {{else}}
             <!-- not subscribed -->
             {{#if fullText}}
@@ -228,6 +229,15 @@
                     <span class="icon icon-file"></span> View Full Text
                 </a>
             {{/if}}
+        {{/if}}
+
+        {{#if files.pdf.file}}
+        {{#if files.pdf.display}}
+        <a class="full-width end-cap button order-button" href="{{reprintMailto ids}}">
+            <span class="icon fi-mail"></span>
+            Order a Reprint
+        </a>
+        {{/if}}
         {{/if}}
         {{/with}}
 
@@ -348,7 +358,6 @@
             <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
             {{/if}}
 
-
         {{else}}
             {{#with files}}
 
@@ -368,8 +377,13 @@
             <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
             {{/if}}
 
-
             {{/with}}
+        {{/if}}
+
+        {{#if files.pdf.file}}
+        {{#if files.pdf.display}}
+        <a class="small button" href="{{reprintMailto ids}}">Order a Reprint</a>
+        {{/if}}
         {{/if}}
     </div>
 </template>

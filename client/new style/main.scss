@@ -386,6 +386,13 @@ h4.dates {
     .full-text-image-container { margin: 0; padding:0;}
 }
 
+.order-button{
+    overflow: hidden;
+    .icon{
+        background: $darkgray!important;
+    }
+}
+
 /** Article Figure Viewers
  ---------------------------------------------------------*/
  .figure-range{

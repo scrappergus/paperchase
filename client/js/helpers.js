@@ -65,6 +65,21 @@ if (Meteor.isClient) {
     Template.registerHelper('prettyDoi', function(doi) {
       return doi.replace('http://dx.doi.org/', '');
     });
+    Template.registerHelper('reprintMailto', function(ids) {
+        var id;
+        if (ids && ids.doi){
+            id = ids.doi;
+        } else if (ids && ids.pii) {
+            console.log(ids.pii);
+            id = ids.pii;
+        }
+        
+        if (id) {
+            id = ': ' + id;
+        }
+        var subject = Meteor.settings.public.journal.nameExtra ? Meteor.settings.public.journal.name + ' ' + Meteor.settings.public.journal.nameExtra + ' Reprint' + id : Meteor.settings.public.journal.name + 'Reprint' + id ;
+        return id && subject ?  'mailto:' + Meteor.settings.public.journal.reprintEmail + '?subject=' + subject : 'mailto:' + Meteor.settings.public.journal.reprintEmail;
+    });
     // References
     Template.registerHelper('punctuationCheck', function(string) {
         if(string.charAt(string.length - 1) != '.' && string.charAt(string.length - 1) != '?' ){
