@@ -80,7 +80,7 @@ Meteor.methods({
                 console.error('getAltmetricForArticle', error);
                 fut.throw(error);
             } else if (altmetricResult) {
-                Meteor.call('processAltmetricArticleResponse', altmetricResult.data, function(processError, processResult){
+                Meteor.call('processAltmetricArticleResponse', altmetricResult.data, mongoId, function(processError, processResult){
                     if (processError) {
                         console.error('getAltmetricForArticle - processAltmetricResponse', processError);
                         fut.throw(processError);
@@ -117,26 +117,63 @@ Meteor.methods({
     },
     processAltmetricArticlesResponse: function(articles) {
         return articles.map(function(article){
-            return Meteor.call('processAltmetricArticleResponse', article);
+            return Meteor.call('processAltmetricArticleResponse', article, null);
         });
     },
-    processAltmetricArticleResponse: function(article){
+    processAltmetricArticleResponse: function(article, mongoId){
+        var fut = new future();
         var result = {};
+        var query = [];
         result.altmetric_id = article.altmetric_id;
         result.score = article.score;
         result.details_url = article.details_url;
         result.title = article.title;
         result.url = '';
         if (article.doi) {
+            query.push({'ids.doi' : article.doi});
+
             if(article.doi.indexOf('http') === -1){
                 result.url += 'http://dx.doi.org/';
+
+                query.push({'ids.doi' : 'http://dx.doi.org/' + article.doi});
+            } else {
+                query.push({'ids.doi' : article.doi.replace('http://dx.doi.org/', '')});
             }
+
             result.url += article.doi;
         } else if (article.url) {
             result.url = article.url;
         }
         result.images = article.images;
-        return result;
+
+        if (article.pmid) {
+            query.push({'ids.pmid' : article.pmid});
+        }
+
+        if (article.pmc) {
+            query.push({'ids.pmc' : article.pmc});
+        }
+
+        if (mongoId) {
+            result.mongoId = mongoId;
+            fut.return(result);
+        } else {
+            Meteor.call('articlesFindOneWhere', {'$or': query}, function(error, articleInDb){
+                if (articleInDb && articleInDb._id) {
+                    result.mongoId = articleInDb._id;
+                } else {
+                    console.error('Cannot associate Altmetric article in Mongo DB');
+                }
+                fut.return(result);
+            });
+        }
+
+        try {
+            return fut.wait();
+        }
+        catch(error) {
+            throw new Meteor.Error(error);
+        }
     },
     removeAltmetricBelowThreshold:  function(articles) {
         var threshold = Meteor.settings.public.journal.altmetric.threshold;

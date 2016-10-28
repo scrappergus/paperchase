@@ -235,7 +235,6 @@ Template.Article.helpers({
 });
 Template.ArticleHeaderTitle.helpers({
     altmetric: function(){
-        console.log(Session.get('article-altmetric'));
         return Session.get('article-altmetric');
     }
 });

@@ -27,7 +27,11 @@
                     <li>
                         <p class="valign-wrapper">
                             {{>AltmetricBadge altmetric=.}}
+                            {{#if mongoId}}
+                            <a href="{{pathFor 'ArticleText' _id=mongoId}}" class="valign altmetric-title-link">{{{title}}}</a>
+                            {{else}}
                             <a href="{{altmetricDetailsLink}}{{altmetric_id}}" class="valign altmetric-title-link" target="_BLANK">{{{title}}}</a>
+                            {{/if}}
                         </p>
                     </li>
                     {{/each}}
