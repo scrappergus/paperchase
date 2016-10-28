@@ -270,7 +270,7 @@ Meteor.article = {
         }
         return files;
     },
-    pageTitle: function(articleId){
+    pageTitle: function(articleId, titleExtra){
         var articleTitle = '',
             articleTitlePlain = '',
             article,
@@ -282,6 +282,11 @@ Meteor.article = {
             tmp.innerHTML = articleTitle;
             articleTitlePlain = tmp.textContent || tmp.innerText || '';
         }
+
+        if (titleExtra) {
+            articleTitlePlain += titleExtra;
+        }
+
         return articleTitlePlain;
     },
     affiliationsNumbers: function(article){
@@ -1259,7 +1264,7 @@ Meteor.search = {
     },
     searchLoad: function(e, args) {
         if(e && e.preventDefault) {
-            e.preventDefault();    
+            e.preventDefault();
         }
         Session.set('queryResults', null);
         Session.set('searchLoaded', false);
@@ -1296,7 +1301,7 @@ Meteor.search = {
                             'url': cur._source.url,
                             'article_type':{name:cur._source.articleType},
                             'issue': cur._source.issue,
-                            'volume': cur._source.volume 
+                            'volume': cur._source.volume
                         }
                     });
 
@@ -1304,7 +1309,7 @@ Meteor.search = {
                 Session.set('searchLoading', false);
                 Session.set('searchLoaded', true);
             });
-    } 
+    }
 };
 
 Meteor.googleAnalytics = {
