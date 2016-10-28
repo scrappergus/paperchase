@@ -1214,35 +1214,35 @@ if (Meteor.isClient) {
     // End Article
 
     // Recommend template does not exist
-    // Router.route('/recommend', {
-    //     name: 'Recommend',
-    //     layoutTemplate: 'Visitor',
-    //     onBeforeAction: function(){
-    //         Meteor.impact.redirectForAlt();
-    //         this.next();
-    //     },
-    //     waitOn: function(){
-    //         Meteor.subscribe('currentUser');
-    //     },
-    //     data: function(){
-    //         if(Meteor.user()){
-    //             var u =  Meteor.users.findOne();
-    //             return {
-    //                 user: u
-    //             };
-    //         }
-    //     },
-    //     onAfterAction: function() {
-    //         if (!Meteor.isClient) {
-    //             return;
-    //         }
-    //         var title = Meteor.settings.public.journal.name + ' | Recommend';
-    //
-    //         SEO.set({
-    //             title: title
-    //         });
-    //     }
-    // });
+    Router.route('/recommend', {
+        name: 'Recommend',
+        layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
+        waitOn: function(){
+            Meteor.subscribe('currentUser');
+        },
+        data: function(){
+            if(Meteor.user()){
+                var u =  Meteor.users.findOne();
+                return {
+                    user: u
+                };
+            }
+        },
+        onAfterAction: function() {
+            if (!Meteor.isClient) {
+                return;
+            }
+            var title = Meteor.settings.public.journal.name + ' | Recommend';
+
+            SEO.set({
+                title: title
+            });
+        }
+    });
 
     Router.route('/section/:_section_dash_name', {
         name: 'SectionPapers',
