@@ -558,6 +558,9 @@ Meteor.methods({
             legacyPlatform = legacyPlatform.legacy_platform;
             legacyPlatformApi = legacyPlatform.mini_api;
         }
+
+        var paperchase_user = Meteor.user() ? Meteor.user()._id : null;
+
         if(legacyPlatformApi){
             paperchaseArticles.forEach(function(article){
                 if (article.ids && article.ids.pii) {
@@ -565,7 +568,8 @@ Meteor.methods({
                         id_type: 'pii',
                         id: article.ids.pii,
                         journal: Meteor.settings.public.journal.name,
-                        advance: true
+                        advance: true,
+                        paperchase_user: paperchase_user
                     }, function(intakeError, intakeResult){
                         if (intakeError) {
                             console.error(intakeError);
