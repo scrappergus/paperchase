@@ -57,11 +57,13 @@ Meteor.methods({
                     result.allPiiCount++;
                     if(allPii[pii].paperchase !== true){
                         var existenceInPaperchase = articles.findOne({ 'ids.pii': pii });
+                        paperchase_user = Meteor.user() ? Meteor.user()._id : null;
                         var queryObj = {
                             id : pii,
                             journal: 'oncotarget',
                             id_type: 'pii',
-                            advance: true
+                            advance: true,
+                            paperchase_user: paperchase_user
                         };
 
                         var ojsObj = {

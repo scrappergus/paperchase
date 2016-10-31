@@ -139,8 +139,19 @@ Meteor.methods({
                                         if(article.section_id === 0){
                                             processedArticleJson.section_id = 0; // Keep in Recent Research Papers
                                         }
-
-                                        Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){});
+                                        Meteor.call('updateArticle', articleMongoId, processedArticleJson, batch, function(error,result){
+                                            if (result && articleParams.paperchase_user && Roles.userIsInRole(articleParams.paperchase_user, ['super-admin', 'advance'])) {
+                                    			Meteor.call('sorterAddItem', 'advance', articleMongoId, function(error, sorterUpdated){
+                                    				if(error){
+                                    					console.error(error);
+                                    				}else if(sorterUpdated){
+                                                        fut.return(true);
+                                    				}
+                                    			});
+                                            } else if (result) {
+                                                fut.return(true);
+                                            }
+                                        });
 
                                     }else{
                                         processedArticleJson.doc_updates = {} ;
@@ -148,7 +159,20 @@ Meteor.methods({
                                         if(processedArticleJson.article_type && processedArticleJson.article_type.type == 'Research Papers'){
                                             processedArticleJson.section_id = 0; // Put new Research Paper into Recent Research Papers
                                         }
-                                        Meteor.call('addArticle',processedArticleJson, function(error,result){});
+                                        Meteor.call('addArticle',processedArticleJson, function(error,result){
+                                            if (result && articleParams.paperchase_user && Roles.userIsInRole(articleParams.paperchase_user, ['super-admin', 'advance'])) {
+                                    			Meteor.call('sorterAddItem', 'advance', result, function(error, sorterUpdated){
+                                    				if(error){
+                                    					console.error(error);
+                                    				}else if(sorterUpdated){
+                                                        fut.return(true);
+                                    				}
+                                    			});
+
+                                            } else if (result) {
+                                                fut.return(true);
+                                            }
+                                        });
                                     }
                                 }
                             });
