@@ -262,6 +262,20 @@ sections.after.update(function (userId, doc, fieldNames, modifier, options){
 
 // Sorters
 // -------
+sorters.before.update(function (userId, doc, fieldNames, modifier, options) {
+    if (Meteor.settings.public && Meteor.settings.public.journal && Meteor.settings.public.journal.name && Meteor.settings.public.journal.name === 'Oncotarget'){
+        var advanceList = sorters.findOne({ name : 'advance' }).order;
+        if (modifier && modifier.$push && modifier.$push.order && modifier.$push.order.$each){
+            var verifiedOk = [];
+            modifier.$push.order.$each.forEach(function(mongoId){
+                if(advanceList.indexOf(mongoId) === -1){
+                    verifiedOk.push(mongoId);
+                }
+            });
+            modifier.$push.order.$each = verifiedOk;
+        }
+    }
+});
 sorters.after.update(function (userId, doc, fieldNames, modifier, options){
     // if(modifier.$pull !== undefined) {
         // var article_id = modifier.$pull;

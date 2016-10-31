@@ -182,11 +182,10 @@ Meteor.methods({
 
                 if(articleMongoId){
                     if(articleParams.ip){
-                        console.log('updated article via legacy intake: ',articleMongoId, '| IP:',articleParams.ip);
+                        console.log('updated article: ',articleMongoId, '| IP:',articleParams.ip);
                     }else{
-                        console.log('updated article via legacy intake: ',articleMongoId);
+                        console.log('updated article: ',articleMongoId);
                     }
-                    fut.return(true);
                 } else {
                     fut.throw({error: 'cannot update advance ' + id});
                 }
