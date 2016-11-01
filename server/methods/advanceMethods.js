@@ -242,6 +242,28 @@ Meteor.methods({
                 $position: position
         }}});
     },
+    advanceAddArticleListToSection: function(mongoIdList, sectionId){
+        // console.log('advanceAddArticleToSection',mongoIdList.length, sectionId);
+        if (typeof sectionId === String){
+            sectionId = parseInt(sectionId);
+        }
+
+        var sorts = sorters.findOne({'name': 'advance'});
+        var position = sorts.order.length;
+        for(var i=0; i < sorts.order.length; i++) {
+            match = articles.findOne({ _id:sorts.order[i], section_id:sectionId });
+            if(match) {
+                position = i;
+                i = sorts.order.length;
+            }
+        }
+
+        return sorters.update({name : 'advance'}, {$push : {
+            'order': {
+                $each: mongoIdList,
+                $position: position
+        }}});
+    },
     advanceMoveArticle: function(mongoId, newSectionId){
         // console.log('advanceMoveArticle',mongoId,newSectionId)
         var fut = new future();

@@ -69,15 +69,35 @@ Meteor.methods({
         }
     },
     batchSorterRemoveItem: function(listName,idList){
-        var removed = idList.map(function(mongoId){
-            Meteor.call('sorterRemoveItem',listName, mongoId, function(error,result){
-                if(result){
-                    return mongoId;
-                }
-            });
+        // console.log('..batchSorterRemoveItem',listName,idList.length);
+        var fut = new future();
+        var removed = [];
+
+        sorters.update({name : listName}, {$pull : {'order' : { $in: idList }}}, function(errorSorter, resultSorter){
+            if (errorSorter) {
+                fut.throw(errorSorter);
+            } else if(resultSorter) {
+                idList.map(function(mongoId, idx){
+                    Meteor.call('updateArticle', mongoId, { advance: false }, function(errorArticle, resultArticle){
+                        if (resultArticle) {
+                            removed.push(mongoId);
+                        }
+                    });
+
+                    if (idx === idList.length-1){
+                        fut.return(removed);
+                    }
+                });
+            }
         });
         // return fut.wait();
-        return removed;
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
     },
     updateList: function(listName, list){
         // console.log('... sorterUpdateList = ' + listName );

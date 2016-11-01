@@ -550,9 +550,13 @@ Meteor.methods({
     },
     ojsAddMissingAdvanceButInPaperchase: function(paperchaseArticles){
         // console.log('...ojsAddMissingAdvanceButInPaperchase', paperchaseArticles.length);
+        var fut = new future();
         var added = [];
         var legacyPlatformApi;
         var legacyPlatform = journalConfig.findOne();
+        var ojsAdvanceByPii = {};
+        var articlesBySection = {}; // will use to update sorters
+
         if(legacyPlatform){
             legacyPlatform = legacyPlatform.legacy_platform;
             legacyPlatformApi = legacyPlatform.mini_api;
@@ -561,27 +565,105 @@ Meteor.methods({
         var paperchase_user = Meteor.user() ? Meteor.user()._id : null;
 
         if(legacyPlatformApi){
-            paperchaseArticles.forEach(function(article){
-                if (article.ids && article.ids.pii) {
-                    Meteor.call('legacyArticleIntake', {
-                        id_type: 'pii',
-                        id: article.ids.pii,
-                        journal: Meteor.settings.public.journal.name,
-                        advance: true,
-                        paperchase_user: paperchase_user
-                    }, function(intakeError, intakeResult){
-                        if (intakeError) {
-                            console.error(intakeError);
-                            return;
-                        } else if(intakeResult){
-                            added.push(article.ids.pii);
+            Meteor.call('ojsGetAdvanceArticles', function(error, ojsAdvance){
+                if (error) {
+                    console.error('ojsGetAdvanceArticles in ojsAddMissingAdvanceButInPaperchase', error);
+                    fut.throw(error);
+                } else if(ojsAdvance) {
+                    ojsAdvance.forEach(function(article){
+                        if (article.pii) {
+                            ojsAdvanceByPii[article.pii] = article;
+                        } else {
+                            console.error('cannot sort by PII for advance ', article);
                         }
                     });
+
+                    paperchaseArticles.forEach(function(pcArticle, idx){
+                        // first update the articles collection
+                        if (pcArticle.ids && pcArticle.ids.pii && ojsAdvanceByPii[pcArticle.ids.pii]) {
+                            Meteor.call('updateArticleUsingOjsData', pcArticle, ojsAdvanceByPii[pcArticle.ids.pii], paperchase_user, function(updateError, updateResult){
+                                if (updateError) {
+                                    console.error('updateError in ojsAddMissingAdvanceButInPaperchase', updateError);
+                                } else if (updateResult) {
+                                    added.push(pcArticle.ids.pii);
+
+                                    if (!articlesBySection[ojsAdvanceByPii[pcArticle.ids.pii].section_id]) {
+                                        articlesBySection[ojsAdvanceByPii[pcArticle.ids.pii].section_id] = [];
+                                    }
+
+                                    articlesBySection[ojsAdvanceByPii[pcArticle.ids.pii].section_id].push(pcArticle._id);
+                                }
+                            });
+                        } else {
+                            console.error('Cannot match OJS and Paperchase. MongoID: ', pcArticle._id);
+                        }
+
+
+                        // now update the sorters list. Doing it by section type to speed up sorters updating
+                        if(idx === paperchaseArticles.length-1) {
+                            Meteor.call('updateAdvanceSortersBySections', articlesBySection, function(errorSorters, resultSorters){
+                                if(errorSorters) {
+                                    fut.throw('Articles updated in the database but could not update advance list');
+                                } else if(resultSorters) {
+                                    fut.return(added);
+                                }
+                            });
+                        }
+                    });
+
+                } else {
+                    fut.throw('Cannot update advance. OJS is not responding.');
                 }
             });
         }
 
-        return added;
+
+        try {
+            return fut.wait();
+        }catch(err) {
+            throw new Meteor.Error(error);
+        }
+    },
+    updateAdvanceSortersBySections: function(articlesBySection){
+        for(var sectionId in articlesBySection){
+            Meteor.call('advanceAddArticleListToSection', articlesBySection[sectionId], sectionId, function(error, result){
+                if (error) {
+                    console.error('updateAdvanceSortersBySections', error);
+                } else if(result){
+                    console.log('updated sorters by section. Section ID:', sectionId);
+                }
+            });
+        }
+        return true;
+
+    },
+    updateArticleUsingOjsData: function(pcArticle, ojsArticle, paperchase_user){
+        var fut = new future();
+
+        Meteor.call('ojsProcessArticleJson', ojsArticle, function(processError, processedArticleJson){
+            if (processError) {
+                console.error('processError PII:', pcArticle.ids.pii, processError);
+                fut.throw(processError);
+            } else if(processedArticleJson){
+                processedArticleJson.advance = true;
+
+                Meteor.call('updateArticle', pcArticle._id, processedArticleJson, function(errorUpdate, resultUpdate){
+                    if (resultUpdate) {
+                        fut.return(true);
+                    } else {
+                        fut.throw('updateArticleUsingOjsData Cannot update in Paperchase', pcArticle._id);
+                    }
+                });
+            } else {
+                fut.throw('updateArticleUsingOjsData. Cannot process', pcArticle._id);
+            }
+        });
+
+        try {
+            return fut.wait();
+        }catch(err) {
+            throw new Meteor.Error(error);
+        }
     },
     ojsAddMissingAdvance: function(missing){
         // console.log('...ojsAddMissingAdvance', missing.length);
