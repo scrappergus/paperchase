@@ -1124,13 +1124,13 @@ if (Meteor.isClient) {
         }
     });
 
-    Router.route('/figure(.*)', {
+    Router.route('/figure/:article/:figureId', {
         name: 'ArticleFigureViewer',
         layoutTemplate: 'ArticleFigureViewer',
         waitOn: function(){
             Meteor.impact.redirectForAlt();
             return[
-                Meteor.subscribe('articleInfo', this.params.query.article),
+                Meteor.subscribe('articleInfo', this.params.article),
                 Meteor.subscribe('articleTypes')
             ];
         },
@@ -1138,25 +1138,33 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var article,
                     figure;
-                var articleId = this.params.query.article;
-                var figureId = this.params.query.figure;
+                var articleId = this.params.article;
+                var figureId = this.params.figureId;
+
 
                 article = articles.findOne({'_id': articleId});
-                article = Meteor.article.readyData(article);
 
-                Session.set('article',article);
-                Session.set('article-id',articleId);
+                if (article) {
+                    article = Meteor.article.readyData(article);
 
-                if(article && figureId && article.files && article.files.figures){
-                    article.files.figures.forEach(function(fig){
-                        if(fig.id.toLowerCase() === figureId.toLowerCase()){
-                            figure = fig;
-                        }
-                    });
-                }
+                    Session.set('article',article);
+                    Session.set('article-id',articleId);
 
-                if(!figure && articleId){
-                    Router.go('Article',{_id : articleId});
+                    if(article && figureId && article.files && article.files.figures){
+                        article.files.figures.forEach(function(fig){
+                            if(fig.id.toLowerCase() === figureId.toLowerCase()){
+                                figure = fig;
+                            }
+                        });
+                    } else if(articleId){
+                         Router.go('Article',{_id : articleId});
+                    }
+
+                    if(!figure && articleId){
+                        Router.go('Article',{_id : articleId});
+                    }
+                } else {
+                    Router.go('ArticleNotFound')
                 }
 
 
@@ -1214,35 +1222,35 @@ if (Meteor.isClient) {
     // End Article
 
     // Recommend template does not exist
-    // Router.route('/recommend', {
-    //     name: 'Recommend',
-    //     layoutTemplate: 'Visitor',
-    //     onBeforeAction: function(){
-    //         Meteor.impact.redirectForAlt();
-    //         this.next();
-    //     },
-    //     waitOn: function(){
-    //         Meteor.subscribe('currentUser');
-    //     },
-    //     data: function(){
-    //         if(Meteor.user()){
-    //             var u =  Meteor.users.findOne();
-    //             return {
-    //                 user: u
-    //             };
-    //         }
-    //     },
-    //     onAfterAction: function() {
-    //         if (!Meteor.isClient) {
-    //             return;
-    //         }
-    //         var title = Meteor.settings.public.journal.name + ' | Recommend';
-    //
-    //         SEO.set({
-    //             title: title
-    //         });
-    //     }
-    // });
+    Router.route('/recommend', {
+        name: 'Recommend',
+        layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
+        waitOn: function(){
+            Meteor.subscribe('currentUser');
+        },
+        data: function(){
+            if(Meteor.user()){
+                var u =  Meteor.users.findOne();
+                return {
+                    user: u
+                };
+            }
+        },
+        onAfterAction: function() {
+            if (!Meteor.isClient) {
+                return;
+            }
+            var title = Meteor.settings.public.journal.name + ' | Recommend';
+
+            SEO.set({
+                title: title
+            });
+        }
+    });
 
     Router.route('/section/:_section_dash_name', {
         name: 'SectionPapers',

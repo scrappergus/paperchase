@@ -38,6 +38,8 @@ email@1.1.17
 fastclick@1.0.12
 fourseven:scss@3.9.0
 gadicohen:headers@0.0.31
+gadicohen:robots-txt@0.0.10
+gadicohen:sitemaps@0.0.26
 gandev:server-eval@0.6.6
 geojson-utils@1.0.9
 hitchcott:panzoom@1.0.1
