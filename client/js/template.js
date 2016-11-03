@@ -52,6 +52,9 @@ Template.ArticleFigureViewerViewer.onRendered(function() {
                     increment: 0.1
                 }).panzoom('zoom', true);
 });
+Template.AltmetricBadge.onRendered(function() {
+    $('.tooltipped').tooltip({delay: 50});
+});
 // Template.ArticleText.onRendered(function() {
     // _altmetric_embed_init();
     // $('.materialboxed').materialbox();
