@@ -544,14 +544,14 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             Meteor.impact.redirectForAlt();
-            return[
+            return [
                 Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
         },
         data: function(){
-            if(this.ready()){
+            if (this.ready()) {
                 var sorted  = sorters.findOne({'name':'advance'});
                 return {
                     articles : sorted.ordered
@@ -949,6 +949,8 @@ if (Meteor.isClient) {
             var articleExistsExists = articles.findOne({'_id': this.params._id});
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
             } else{
                 Meteor.article.altmetric(articleExistsExists);
             }
@@ -1015,6 +1017,8 @@ if (Meteor.isClient) {
             var articleExistsExists = articles.findOne({'_id': this.params._id});
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
             } else{
                 Meteor.article.altmetric(articleExistsExists);
             }
@@ -1082,6 +1086,19 @@ if (Meteor.isClient) {
             return[
                 Meteor.subscribe('articleInfo',this.params._id)
             ];
+        },
+        onBeforeAction: function() {
+            Meteor.impact.redirectForAlt();
+            // check if article exists
+            var articleExistsExists = articles.findOne({'_id': this.params._id});
+            if(!articleExistsExists){
+                Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
+            }
+
+            Session.set('article-id',this.params._id);
+            this.next();
         },
         data: function(){
             if(this.ready()){
@@ -1168,6 +1185,19 @@ if (Meteor.isClient) {
                     figure: figure
                 };
             }
+        },
+        onBeforeAction: function() {
+            Meteor.impact.redirectForAlt();
+            // check if article exists
+            var articleExistsExists = articles.findOne({'_id': this.params.article});
+            if(!articleExistsExists){
+                Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
+            }
+
+            Session.set('article-id',this.params._id);
+            this.next();
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {
