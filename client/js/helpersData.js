@@ -13,7 +13,10 @@ Template.Home.helpers({
         }
     },
     altmetricTopCount: function() {
-        return Session.get('altmetric-count');
+        return Meteor.general.numberToWord(Session.get('altmetric-count'));
+    },
+    altmetricDetailsLink: function() {
+        return Meteor.settings.public.journal.altmetric.reportLink;
     },
     journal: function() {
         return Meteor.settings.public.journal.name;
@@ -34,7 +37,10 @@ Template.TopArticles.helpers({
         return Session.get('altmetric-top');
     },
     altmetricTopCount: function() {
-        return Session.get('altmetric-count');
+        return Meteor.general.numberToWord(Session.get('altmetric-count'));
+    },
+    altmetricDetailsLink: function() {
+        return Meteor.settings.public.journal.altmetric.reportLink;
     },
     journal: function() {
         return Meteor.settings.public.journal.name;
@@ -225,6 +231,16 @@ Template.ArticleText.helpers({
 Template.Article.helpers({
     fullText: function(){
         return Session.get('article-text');
+    }
+});
+Template.ArticleHeaderTitle.helpers({
+    altmetric: function(){
+        return Session.get('article-altmetric');
+    }
+});
+Template.AltmetricBadge.helpers({
+    altmetricDetailsLink: function() {
+        return Meteor.settings.public.journal.altmetric.reportLink;
     }
 });
 

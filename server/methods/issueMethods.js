@@ -38,9 +38,38 @@ Meteor.methods({
         return volumesList;
     },
     getDisplayArticlesByIssueId: function(issueId){
+        var fut = new future();
+        var result = [];
         var issueArticles = articles.find({'issue_id' : issueId, display: true},{sort : {page_start:1}}).fetch();
         issueArticles = Meteor.organize.groupArticles(issueArticles);
-        return issueArticles;
+        // return issueArticles;
+
+        issueArticles.forEach(function(article){
+            // console.log(article._id);
+            if (article.ids && article.ids.doi) {
+                Meteor.call('getAltmetricForArticle', article._id, article.ids.doi, function(altmetricError, altmetricResult){
+                    if (altmetricError){
+                        console.error('getAltmetricForArticle for issue', altmetricError);
+                        result.push(article);
+                    } else if (altmetricResult){
+                        // console.log(article._id);
+                        article.altmetric = altmetricResult;
+                        result.push(article);
+                    } else {
+                        result.push(article);
+                    }
+                });
+            }
+        });
+
+        fut.return(result);
+
+        try {
+            return fut.wait();
+        }
+        catch(error) {
+            throw new Meteor.Error(error);
+        }
     },
     getIssueAndFiles: function(volume, issue, admin){
         // console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
@@ -177,7 +206,7 @@ Meteor.methods({
                 issue.largeCover = true;
             }
         }
-        
+
         return issue;
     }
 });

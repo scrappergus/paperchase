@@ -116,9 +116,12 @@
 
     .title {
         // font-size: 19px;
-        margin: 0 0 5px 0;
         font-weight: 700;
         color: $cello;
+        margin: 0;
+    }
+    .title-container{
+        margin: 0 0 5px 0;
     }
 
     .desc {
@@ -799,38 +802,27 @@ ul.sectioned-list {
 
 }
 /* Altmetric -------------------*/
+.toc-info{
+    .altmetric-badge{
+        height: $smallAltmetricBadge!important;
+    }
+}
 #altmetric-top{
-	// height: 400px;
-	// overflow-x: hidden;
-	// overflow-y: scroll;
-    float: left;
-	margin-top: 0;
-	padding: 1em;
-	// list-style: none;
-	li{
-		display: table;
-		float: left;
-		margin: 1em 0;
-		width: 100%;
+    li{
         &:first-child{
-            margin-top: 0px;
-        }
-        p{
-            margin: 0px!important;
-            // line-height: $paragraphFontSize!important;
+            p{
+                margin-top: 0px;
+            }
         }
         &:last-child{
-            margin-bottom: 0;
+            p{
+                margin-bottom: 0;
+            }
         }
-	}
-}
-
-#altmetric-top, #altmetric-top-full{
-    li{
         p{
             a{
-                img{
-                    height: 54px!important;
+                .altmetric-badge{
+                    height: $smallAltmetricBadge!important;
                 }
             }
         }
