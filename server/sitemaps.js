@@ -5,13 +5,15 @@ sitemaps.add('/sitemap.xml', function() {
         sitemapArray = sitemapJson.urlset.url;
     }
 
+    var today = new Date();
+
     // Articles
     var allArticles = articles.find({ display: true }).fetch();
     if (allArticles) {
         allArticles.forEach(function(article){
             article = Meteor.impact.hideFullText(article);
             // figures, abstract, full text URLs
-            var lastmod = new Date();
+            var lastmod = today;
             lastmod = lastmod.toLocaleDateString().replace(/\//g,'-');
             var changefreq =  article.issue_id ? 'monthly' : 'daily';
 
@@ -57,7 +59,7 @@ sitemaps.add('/sitemap.xml', function() {
     var allIssues = issues.find({ display: true }).fetch();
     if (allIssues) {
         allIssues.forEach(function(iss){
-            var issLastmod = iss.pub_date ? iss.pub_date : new Date();
+            var issLastmod = iss.pub_date ? iss.pub_date : today;
             if (iss.last_update) {
                 issLastmod = iss.last_update;
             }
@@ -74,6 +76,14 @@ sitemaps.add('/sitemap.xml', function() {
             });
         });
     }
+
+    // Advance
+    sitemapArray.push({
+        page: siteUrl + '/advance',
+        lastmod: today.toLocaleDateString().replace(/\//g,'-'),
+        changefreq: 'daily',
+        priority: 1
+    });
 
     return sitemapArray;
 });
