@@ -76,15 +76,7 @@ Meteor.startup(function () {
 // Altmetric
 // ---------
 if (Meteor.isClient) {
-    Session.set('altMetricReady', false);
     Meteor.startup(function () {
-        // Ready Altmetric library
-        $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a,b,c){
-            if(b == 'success') {
-                Session.set('altMetricReady', true);
-            }
-        });
-
         // Get top articles
         Meteor.call('getAltmetricTop', 50, function(altmetricError, altmetricResult){
             if (altmetricError) {
@@ -373,10 +365,10 @@ if (Meteor.isClient) {
     Session.setDefault('archive',null);
     Session.setDefault('article-visitor',null);
     // altmetrics badge
-    Session.setDefault('altMetricReady', false);
     Session.setDefault('badge-visible', false);
     Session.setDefault('altmetric-top', null);
     Session.setDefault('altmetric-count', 50);
+    Session.setDefault('article-altmetric', null); // for single article
     // conferences
     Session.setDefault('conferences', false);
 
@@ -628,27 +620,27 @@ if (Meteor.isClient) {
         }
     });
 
-    // Router.route('/top-articles', {
-    //     name: 'TopArticles',
-    //     layoutTemplate: 'Visitor',
-    //     onBeforeAction: function(){
-    //         Meteor.impact.redirectForAlt();
-    //         this.next();
-    //     },
-    //     waitOn: function(){
-    //         Meteor.impact.redirectForAlt();
-    //         return[
-    //             Meteor.subscribe('currentIssue'),
-    //         ];
-    //     },
-    //     title: function() {
-    //         var pageTitle = '';
-    //         if(Session.get('journal')){
-    //             pageTitle = Session.get('journal').journal.name + ' | ';
-    //         }
-    //         return pageTitle + 'Top Articles';
-    //     },
-    // });
+    Router.route('/top-articles', {
+        name: 'TopArticles',
+        layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+            this.next();
+        },
+        waitOn: function(){
+            Meteor.impact.redirectForAlt();
+            return[
+                Meteor.subscribe('currentIssue'),
+            ];
+        },
+        title: function() {
+            var pageTitle = '';
+            if(Session.get('journal')){
+                pageTitle = Session.get('journal').journal.name + ' | ';
+            }
+            return pageTitle + 'Top Articles';
+        },
+    });
 
     Router.route('/archive', {
         name: 'Archive',
@@ -957,9 +949,12 @@ if (Meteor.isClient) {
             var articleExistsExists = articles.findOne({'_id': this.params._id});
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
+            } else{
+                Meteor.article.altmetric(articleExistsExists);
             }
 
             Meteor.article.readyFullText(this.params._id);
+
 
             this.next();
         },
@@ -1017,15 +1012,15 @@ if (Meteor.isClient) {
         onBeforeAction: function() {
             Meteor.impact.redirectForAlt();
             // check if article exists
-            var article = articles.findOne({
-                '_id': this.params._id
-            });
-
-            if (!article) {
-                return Router.go('ArticleNotFound');
+            var articleExistsExists = articles.findOne({'_id': this.params._id});
+            if(!articleExistsExists){
+                Router.go('ArticleNotFound');
+            } else{
+                Meteor.article.altmetric(articleExistsExists);
             }
 
             Meteor.article.readyFullText(this.params._id);
+
             Session.set('article-id',this.params._id);
             this.next();
         },
