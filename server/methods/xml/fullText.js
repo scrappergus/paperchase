@@ -196,7 +196,7 @@ Meteor.methods({
 
         // Footnotes
         // ----------
-        var footnotes = xpath.select('//back/fn-group/fn', doc);
+        var footnotes = xpath.select('//back/fn-group/fn | //author-notes/fn', doc);
         if(footnotes){
             articleObject.footnotes = [];
 
