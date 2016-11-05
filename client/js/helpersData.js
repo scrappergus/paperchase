@@ -315,6 +315,14 @@ Template.ArticleSidebar.helpers({
                 sections.push( { title: 'Abbreviations'} );
             }
 
+            if ( footnotes ) {
+                for ( i = 0; i < footnotes.length; i++ ) {
+                    if(footnotes[i].title == 'Author Contributions') {
+                        sections.push( { title: footnotes[i].title} );
+                    }
+                }
+            }
+
             if ( acks ) {
                 for ( i = 0; i < acks.length; i++ ) {
                     sections.push( { title: acks[i].title} );
@@ -323,7 +331,9 @@ Template.ArticleSidebar.helpers({
 
             if ( footnotes ) {
                 for ( i = 0; i < footnotes.length; i++ ) {
-                    sections.push( { title: footnotes[i].title} );
+                    if(footnotes[i].title != 'Author Contributions') {
+                        sections.push( { title: footnotes[i].title} );
+                    }
                 }
             }
 

@@ -250,7 +250,12 @@ Meteor.methods({
                 }
 
                 if(Object.keys(footObj).length!=0 && footObj.title){
-                    articleObject.footnotes.push(footObj);
+                    if(footObj.title == 'Author Contributions') {
+                        articleObject.footnotes.unshift(footObj);
+                    }
+                    else {
+                        articleObject.footnotes.push(footObj);
+                    }
                 }
             }
 

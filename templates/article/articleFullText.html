@@ -23,6 +23,18 @@
                         {{>ArticleGlossary}}
                     {{/if}}
 
+                    {{#if footnotes}}
+                        {{#each footnotes}}
+                        {{#if equals title 'Author Contributions'}}
+                        <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
+                            {{#each content}}
+                            <p>{{#if label}}<sup>{{{label}}}</sup>{{/if}}{{{content_part}}}</p>
+                            {{/each}}
+                        {{/if}}
+                        {{/each}}
+                    {{/if}}
+
+
                     {{#if acks}}
                         {{#each acks}}
                         <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
@@ -37,10 +49,13 @@
 
                     {{#if footnotes}}
                         {{#each footnotes}}
+                        {{#if equals title 'Author Contributions'}}
+                        {{else}}
                         <h3 id="{{convertToID title}}" class="article-header-1">{{title}}</h3>
                             {{#each content}}
                             <p>{{#if label}}<sup>{{{label}}}</sup>{{/if}}{{{content_part}}}</p>
                             {{/each}}
+                        {{/if}}
                         {{/each}}
                     {{/if}}
 
