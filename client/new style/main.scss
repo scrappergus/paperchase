@@ -26,6 +26,15 @@
     color: $kashmir;
 }
 
+/** News
+ ---------------------------------------------------------*/
+ .news-list{
+    li:last-child{
+        margin-bottom: 0px!important;
+        padding-bottom: 0px!important;
+    }
+ }
+
 /** Issue Page Titles
  ---------------------------------------------------------*/
 .page-title {

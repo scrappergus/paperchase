@@ -15,6 +15,12 @@
                 {{/each}}
             </ul>
 
+            <div class="clearfix"></div>
+
+            {{#if news}}
+                {{> LatestNews}}
+            {{/if}}
+
             {{#if altmetricTop}}
                 <h3 class="section-heading new-section" style="margin-bottom:0px">
                     Top {{altmetricTopCount}} {{journal}} Publications Rated by Altmetric Attention Score
@@ -37,12 +43,6 @@
                     {{/each}}
                 </ul>
             {{/if}}
-            <div class="clearfix"></div>
-
-            {{#if news}}
-                {{> LatestNews}}
-            {{/if}}
-
             <!-- {{> FeaturedNobelArticles}} -->
         </div>
 
