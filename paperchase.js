@@ -947,10 +947,19 @@ if (Meteor.isClient) {
             Meteor.impact.redirectForAlt();
             // check if article exists
             var articleExistsExists = articles.findOne({'_id': this.params._id});
+
+            // Redirect if not set to display
+            // if(!articleExistsExists){
+            //     Router.go('ArticleNotFound');
+            // } else if (!articleExistsExists.display){
+            //     Router.go('Home');
+            // } else{
+            //     Meteor.article.altmetric(articleExistsExists);
+            // }
+
+            // DO NOT Redirect if not set to display. Uncomment above & remove below when ready
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
-            } else if (!articleExistsExists.display){
-                Router.go('Home');
             } else{
                 Meteor.article.altmetric(articleExistsExists);
             }
@@ -1015,10 +1024,19 @@ if (Meteor.isClient) {
             Meteor.impact.redirectForAlt();
             // check if article exists
             var articleExistsExists = articles.findOne({'_id': this.params._id});
+
+            // Redirect if not set to display
+            // if(!articleExistsExists){
+            //     Router.go('ArticleNotFound');
+            // } else if (!articleExistsExists.display){
+            //     Router.go('Home');
+            // } else{
+            //     Meteor.article.altmetric(articleExistsExists);
+            // }
+
+            // DO NOT Redirect if not set to display. Uncomment above & remove below when ready
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
-            } else if (!articleExistsExists.display){
-                Router.go('Home');
             } else{
                 Meteor.article.altmetric(articleExistsExists);
             }
@@ -1190,10 +1208,20 @@ if (Meteor.isClient) {
             Meteor.impact.redirectForAlt();
             // check if article exists
             var articleExistsExists = articles.findOne({'_id': this.params.article});
+            // Redirect if not set to display
+            // if(!articleExistsExists){
+            //     Router.go('ArticleNotFound');
+            // } else if (!articleExistsExists.display){
+            //     Router.go('Home');
+            // } else{
+            //     Meteor.article.altmetric(articleExistsExists);
+            // }
+
+            // DO NOT Redirect if not set to display. Uncomment above & remove below when ready
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
-            } else if (!articleExistsExists.display){
-                Router.go('Home');
+            } else{
+                Meteor.article.altmetric(articleExistsExists);
             }
 
             Session.set('article-id',this.params._id);

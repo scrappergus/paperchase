@@ -31,7 +31,7 @@ Meteor.organize = {
         types = Meteor.organize.articleTypesById(articles);
 
         for(var i = 0 ; i < articles.length ; i++){
-            if (articles[i].display) {
+            // if (articles[i].display) {
                 var article = articles[i];
                 article = Meteor.impact.hideFullText(article);
 
@@ -76,9 +76,9 @@ Meteor.organize = {
                     }
                 }
                 result.push(article);
-            } else {
-                console.log('HIDE!', articles[i]._id, articles[i].title);
-            }
+            // } else {
+            //     console.log('HIDE!', articles[i]._id, articles[i].title);
+            // }
         }
 
         return result;
@@ -86,7 +86,7 @@ Meteor.organize = {
     articleTypesById: function(articles) {
         var result = {};
         articles.forEach(function(article){
-            if (article.display) {
+            // if (article.display) {
                 if(article.article_type._id && !result[article.article_type._id]){
                     result[article.article_type._id] = article.article_type;
                     result[article.article_type._id].count = 1;
@@ -96,7 +96,7 @@ Meteor.organize = {
                 }else if(article.article_type._id){
                     result[article.article_type._id].count++;
                 }
-            }
+            // }
         });
         return result;
     }
