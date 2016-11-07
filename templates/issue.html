@@ -105,7 +105,11 @@
             {{/each}}
         </div>
     {{else}}
+        {{#if notEmpty articles}}
         {{>Loading}}
+        {{else}}
+        <h3>Please check back for articles.</h3>
+        {{/if}}
     {{/if}}
 </template>
 

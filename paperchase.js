@@ -544,14 +544,14 @@ if (Meteor.isClient) {
         },
         waitOn: function(){
             Meteor.impact.redirectForAlt();
-            return[
+            return [
                 Meteor.subscribe('journalConfig'),
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
         },
         data: function(){
-            if(this.ready()){
+            if (this.ready()) {
                 var sorted  = sorters.findOne({'name':'advance'});
                 return {
                     articles : sorted.ordered
@@ -949,6 +949,8 @@ if (Meteor.isClient) {
             var articleExistsExists = articles.findOne({'_id': this.params._id});
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
             } else{
                 Meteor.article.altmetric(articleExistsExists);
             }
@@ -1015,6 +1017,8 @@ if (Meteor.isClient) {
             var articleExistsExists = articles.findOne({'_id': this.params._id});
             if(!articleExistsExists){
                 Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
             } else{
                 Meteor.article.altmetric(articleExistsExists);
             }
@@ -1083,6 +1087,19 @@ if (Meteor.isClient) {
                 Meteor.subscribe('articleInfo',this.params._id)
             ];
         },
+        onBeforeAction: function() {
+            Meteor.impact.redirectForAlt();
+            // check if article exists
+            var articleExistsExists = articles.findOne({'_id': this.params._id});
+            if(!articleExistsExists){
+                Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
+            }
+
+            Session.set('article-id',this.params._id);
+            this.next();
+        },
         data: function(){
             if(this.ready()){
                 var id = this.params._id;
@@ -1119,13 +1136,13 @@ if (Meteor.isClient) {
         }
     });
 
-    Router.route('/figure(.*)', {
+    Router.route('/figure/:article/:figureId', {
         name: 'ArticleFigureViewer',
         layoutTemplate: 'ArticleFigureViewer',
         waitOn: function(){
             Meteor.impact.redirectForAlt();
             return[
-                Meteor.subscribe('articleInfo', this.params.query.article),
+                Meteor.subscribe('articleInfo', this.params.article),
                 Meteor.subscribe('articleTypes')
             ];
         },
@@ -1133,25 +1150,33 @@ if (Meteor.isClient) {
             if(this.ready()){
                 var article,
                     figure;
-                var articleId = this.params.query.article;
-                var figureId = this.params.query.figure;
+                var articleId = this.params.article;
+                var figureId = this.params.figureId;
+
 
                 article = articles.findOne({'_id': articleId});
-                article = Meteor.article.readyData(article);
 
-                Session.set('article',article);
-                Session.set('article-id',articleId);
+                if (article) {
+                    article = Meteor.article.readyData(article);
 
-                if(article && figureId && article.files && article.files.figures){
-                    article.files.figures.forEach(function(fig){
-                        if(fig.id.toLowerCase() === figureId.toLowerCase()){
-                            figure = fig;
-                        }
-                    });
-                }
+                    Session.set('article',article);
+                    Session.set('article-id',articleId);
 
-                if(!figure && articleId){
-                    Router.go('Article',{_id : articleId});
+                    if(article && figureId && article.files && article.files.figures){
+                        article.files.figures.forEach(function(fig){
+                            if(fig.id.toLowerCase() === figureId.toLowerCase()){
+                                figure = fig;
+                            }
+                        });
+                    } else if(articleId){
+                         Router.go('Article',{_id : articleId});
+                    }
+
+                    if(!figure && articleId){
+                        Router.go('Article',{_id : articleId});
+                    }
+                } else {
+                    Router.go('ArticleNotFound')
                 }
 
 
@@ -1160,6 +1185,19 @@ if (Meteor.isClient) {
                     figure: figure
                 };
             }
+        },
+        onBeforeAction: function() {
+            Meteor.impact.redirectForAlt();
+            // check if article exists
+            var articleExistsExists = articles.findOne({'_id': this.params.article});
+            if(!articleExistsExists){
+                Router.go('ArticleNotFound');
+            } else if (!articleExistsExists.display){
+                Router.go('Home');
+            }
+
+            Session.set('article-id',this.params._id);
+            this.next();
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {

@@ -56,6 +56,8 @@
             {{> HomePageLatestIssue}}
         {{/with}}
 
+		{{>tocSignupBtn}}
+
         {{> FeaturedInterviewSidebar}}
 
         {{> FeaturedNobelArticlesSidebar}}
@@ -196,7 +198,7 @@
 
 <template name="FeaturedInterviewSidebar">
     {{#with interview}}
-    <div class="card sidebar-card featured-nobel">
+    <div class="card sidebar-card">
         <h6 class="card-title"><a href="/interviews">Interviews with outstanding authors</a></h6>
         <span>{{title}}</span>
         {{{removeLink content}}}

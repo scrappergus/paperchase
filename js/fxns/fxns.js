@@ -24,67 +24,78 @@ Meteor.organize = {
     groupArticles: function(articles) {
         // organize for issue and add file links
         // console.log('groupArticles');
+        var result = [];
         var grouped = [],
             types = {};
 
         types = Meteor.organize.articleTypesById(articles);
 
         for(var i = 0 ; i < articles.length ; i++){
-            // type organization
-            // ---------
-            var type = ''; //for articles without a type
-            if(articles[i].article_type){
-                type = articles[i].article_type.short_name;
-            }
+            if (articles[i].display) {
+                var article = articles[i];
+                article = Meteor.impact.hideFullText(article);
 
-            if(!grouped[type]){
-                grouped[type] = [];
-                articles[i].start_group = true;
-                if(articles[i].article_type._id && types[articles[i].article_type._id].count > 1){
-                    articles[i].article_type.pluralize = true;
+                // type organization
+                // ---------
+                var type = ''; //for articles without a type
+                if(article.article_type){
+                    type = article.article_type.short_name;
                 }
-            }
 
-            // files
-            // ---------
-            articles[i] = Meteor.impact.hideFullText(articles[i]);
-            if(articles[i].files){
-                articles[i].files = Meteor.article.linkFiles(articles[i].files, articles[i]._id);
-            }
-
-            // Abstract hiding
-            // ---------
-            // certain paper types should not display abstract buttons
-            var hiddenAbstractPaperTypeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
-            if( articles[i].article_type && articles[i].article_type._id &&  hiddenAbstractPaperTypeIds.indexOf(articles[i].article_type._id) != -1){
-                articles[i].abstract = null;
-            }
-
-            if(articles[i].ids.doi && _.isString(articles[i].ids.doi)) {
-                articles[i].ids.doi = articles[i].ids.doi.replace(/http:\/\/dx\.doi\.org\//,""); // TODO: remove link part from DB
-            }
-
-            var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
-
-            if(articles[i] && articles[i].article_type && articles[i].article_type._id && (articles[i].articleJson !== undefined || articles[i].advanceContent !== undefined)) {
-                if( typeIds.indexOf(articles[i].article_type._id) == -1 ) {
-                    articles[i].showCrawledText = true;
+                if(!grouped[type]){
+                    grouped[type] = [];
+                    article.start_group = true;
+                    if(article.article_type._id && types[article.article_type._id].count > 1){
+                        article.article_type.pluralize = true;
+                    }
                 }
+
+                // files
+                // ---------
+                if(article.files){
+                    article.files = Meteor.article.linkFiles(article.files, article._id);
+                }
+
+                // Abstract hiding
+                // ---------
+                // certain paper types should not display abstract buttons
+                var hiddenAbstractPaperTypeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+                if (article.article_type && article.article_type._id &&  hiddenAbstractPaperTypeIds.indexOf(article.article_type._id) != -1){
+                    article.abstract = null;
+                }
+
+                if(article.ids.doi && _.isString(article.ids.doi)) {
+                    article.ids.doi = article.ids.doi.replace(/http:\/\/dx\.doi\.org\//,""); // TODO: remove link part from DB
+                }
+
+                var typeIds = Meteor.impact.getCommentariesAndEditorialTypeIds();
+
+                if(article.article_type &&article.article_type._id && (article.articleJson !== undefined ||article.advanceContent !== undefined)) {
+                    if( typeIds.indexOf(article.article_type._id) == -1 ) {
+                        article.showCrawledText = true;
+                    }
+                }
+                result.push(article);
+            } else {
+                console.log('HIDE!', articles[i]._id, articles[i].title);
             }
         }
-        return articles;
+
+        return result;
     },
     articleTypesById: function(articles) {
         var result = {};
         articles.forEach(function(article){
-            if(article.article_type._id && !result[article.article_type._id]){
-                result[article.article_type._id] = article.article_type;
-                result[article.article_type._id].count = 1;
-                if(!result[article.article_type._id].plural){
-                    result[article.article_type._id].plural = result[article.article_type._id].name;
+            if (article.display) {
+                if(article.article_type._id && !result[article.article_type._id]){
+                    result[article.article_type._id] = article.article_type;
+                    result[article.article_type._id].count = 1;
+                    if(!result[article.article_type._id].plural){
+                        result[article.article_type._id].plural = result[article.article_type._id].name;
+                    }
+                }else if(article.article_type._id){
+                    result[article.article_type._id].count++;
                 }
-            }else if(article.article_type._id){
-                result[article.article_type._id].count++;
             }
         });
         return result;
