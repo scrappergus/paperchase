@@ -4,7 +4,7 @@ var piiFail = [];
 Meteor.methods({
     getPmcIdFromPmid: function(articlePMID){
         var pmcId;
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -22,7 +22,7 @@ Meteor.methods({
     },
     getElocationIdFromPmid: function(articlePMID){
         // console.log('..getElocationIdFromPmid: ' + articlePMID);
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -35,7 +35,7 @@ Meteor.methods({
     },
     getDoiFromPmid: function(articlePMID){
         console.log('..getDoiFromPmid: ' + articlePMID);
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -54,7 +54,7 @@ Meteor.methods({
     },
     getPubDateFromPmid: function(articlePMID){
         // console.log('..getPubDateFromPmid: ' + articlePMID);
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -72,7 +72,7 @@ Meteor.methods({
         var issn = journalConfig.findOne().journal.issn;
         issn = '1949-2553';
         console.log('...getAllArticlesFromPubMed: ' + issn);
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&RetMax=90000000&term=' + issn;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&RetMax=90000000&term=' + issn;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -87,7 +87,7 @@ Meteor.methods({
         return fut.wait();
     },
     getPiiFromPmid: function(articlePMID){
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + articlePMID;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -109,7 +109,7 @@ Meteor.methods({
     },
     getPubStatusFromPmid: function(pmid){
         // console.log('--getPubStatusFromPmid');
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=' + pmid;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=' + pmid;
         var res;
         res = Meteor.http.get(requestURL);
         if(res){
@@ -122,7 +122,7 @@ Meteor.methods({
     pubMedCiteCheck: function(xml){
         // console.log('--pubMedCiteCheck');
         var fut = new future();
-        var url = 'http://www.ncbi.nlm.nih.gov';
+        var url = 'https://www.ncbi.nlm.nih.gov';
         var validationResult = {};
 
 
@@ -230,7 +230,7 @@ Meteor.methods({
         return fut.wait();
     },
     getTitleByPmidAtPubMed: function(pmid){
-        var requestURL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + pmid;
+        var requestURL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=' + pmid;
         var res;
         res = Meteor.http.get(requestURL);
 
@@ -246,7 +246,7 @@ Meteor.methods({
     getPmidByTitleAtPubMed: function(title){
         // console.log('..verifyPmid = ' + pmid);
         var fut = new future();
-        var pubMedUrl = 'http://www.ncbi.nlm.nih.gov/pubmed/?term=';
+        var pubMedUrl = 'https://www.ncbi.nlm.nih.gov/pubmed/?term=';
         var resultTitle = '',
             resultHtml,
             doc,
