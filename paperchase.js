@@ -372,7 +372,7 @@ if (Meteor.isClient) {
     Session.setDefault('article-visitor',null);
     // altmetrics badge
     Session.setDefault('altmetric-ready', false);
-    Session.setDefault('badge-visible', false);
+    // Session.setDefault('badge-visible', false);
     Session.setDefault('altmetric-top', null);
     Session.setDefault('altmetric-count', 50);
     Session.setDefault('article-altmetric', null); // for single article

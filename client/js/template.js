@@ -57,9 +57,9 @@ Template.ArticleFigureViewerViewer.onRendered(function() {
 // });
 Template.AltmetricBadgeWithReport.onRendered(function() {
     _altmetric_embed_init();
-    $('div.altmetric-embed').on('altmetric:show', function () {
-        Session.set('badge-visible', true);
-    });
+    // $('div.altmetric-embed').on('altmetric:show', function () {
+        // Session.set('badge-visible', true);
+    // });
 });
 // Template.ArticleText.onRendered(function() {
     // _altmetric_embed_init();
