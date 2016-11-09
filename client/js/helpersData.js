@@ -238,11 +238,11 @@ Template.ArticleHeaderTitle.helpers({
         return Session.get('article-altmetric');
     }
 });
-Template.AltmetricBadge.helpers({
-    altmetricDetailsLink: function() {
-        return Meteor.settings.public.journal.altmetric.reportLink;
-    }
-});
+// Template.AltmetricBadge.helpers({
+//     altmetricDetailsLink: function() {
+//         return Meteor.settings.public.journal.altmetric.reportLink;
+//     }
+// });
 
 // Template.ArticleHeaderTitle.helpers({
 //     titleClass: function(){
