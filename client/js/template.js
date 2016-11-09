@@ -52,8 +52,14 @@ Template.ArticleFigureViewerViewer.onRendered(function() {
                     increment: 0.1
                 }).panzoom('zoom', true);
 });
-Template.AltmetricBadge.onRendered(function() {
-    $('.tooltipped').tooltip({delay: 50});
+// Template.AltmetricBadge.onRendered(function() {
+    // $('.tooltipped').tooltip({delay: 50});
+// });
+Template.AltmetricBadgeWithReport.onRendered(function() {
+    _altmetric_embed_init();
+    $('div.altmetric-embed').on('altmetric:show', function () {
+        Session.set('badge-visible', true);
+    });
 });
 // Template.ArticleText.onRendered(function() {
     // _altmetric_embed_init();

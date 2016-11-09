@@ -286,9 +286,8 @@ h4.dates {
     width:100%;
     .altmetric-badge{
         a > img{
-            height: 80px;
-            width: 80px;
-            margin-right: 12px!important;
+            height: $largeAltmetricBadge;
+            width: $largeAltmetricBadge;
         }
     }
 }
@@ -297,24 +296,32 @@ h4.dates {
         margin: 0!important;
     }
 }
-#article-title{
+// #article-title{
     // padding-left: 42px;
-}
-#article-title.badge-visible{
-    padding-left: 74px;
-}
-.article-altmetric{
-    float: left;
-    a > img{
-        margin-right: 10px!important;
+// }
+// #article-title.badge-visible{
+//     padding-left: 74px;
+// }
+// .article-altmetric{
+//     float: left;
+//     a > img{
+//         margin-right: 10px!important;
+//     }
+// }
+// .altmetric-badge{
+//     img{
+//         height: $largeAltmetricBadge;
+//     }
+// }
+.altmetric-embed {
+    a {
+        img {
+            height: $smallAltmetricBadge;
+            width: $smallAltmetricBadge;
+            margin-right: 10px!important;
+        }
     }
 }
-.altmetric-badge{
-    img{
-        height: 64px;
-    }
-}
-/*end hide commas*/
 
 .featured-photo {
     width: 100%;

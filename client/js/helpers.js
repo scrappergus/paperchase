@@ -1,4 +1,11 @@
 if (Meteor.isClient) {
+    // Altmetric
+    // -------
+    Template.registerHelper('altmetricReady', function(bool) {
+      return Session.get('altmetric-ready');
+    });
+
+
     // General
     // -------
     Template.registerHelper('adminNotFound', function(bool) {
@@ -73,7 +80,7 @@ if (Meteor.isClient) {
             console.log(ids.pii);
             id = ids.pii;
         }
-        
+
         if (id) {
             id = ': ' + id;
         }
