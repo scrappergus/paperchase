@@ -76,13 +76,13 @@ Meteor.startup(function () {
 // Altmetric
 // ---------
 if (Meteor.isClient) {
-    Session.set('altmetric-ready', false);
+    // Session.set('altmetric-ready', false);
     Meteor.startup(function () {
-        $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a, b, c){
-            if(b == 'success') {
-                Session.set('altmetric-ready', true);
-            }
-        });
+        // $.getScript('https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js', function(a, b, c){
+        //     if(b == 'success') {
+        //         Session.set('altmetric-ready', true);
+        //     }
+        // });
         // Get top articles
         Meteor.call('getAltmetricTop', 50, function(altmetricError, altmetricResult){
             if (altmetricError) {
@@ -371,7 +371,7 @@ if (Meteor.isClient) {
     Session.setDefault('archive',null);
     Session.setDefault('article-visitor',null);
     // altmetrics badge
-    Session.setDefault('altmetric-ready', false);
+    // Session.setDefault('altmetric-ready', false);
     // Session.setDefault('badge-visible', false);
     Session.setDefault('altmetric-top', null);
     Session.setDefault('altmetric-count', 50);
