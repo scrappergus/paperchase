@@ -280,17 +280,6 @@ h4.dates {
         word-wrap: break-word;
     }
 }
-#article-title-and-badge-container{
-    float:left;
-    margin: 0 0 1.68rem 0;
-    width:100%;
-    .altmetric-badge{
-        a > img{
-            height: $largeAltmetricBadge;
-            width: $largeAltmetricBadge;
-        }
-    }
-}
 #article-container{
     h1{
         margin: 0!important;
@@ -314,11 +303,31 @@ h4.dates {
 //     }
 // }
 .article-altmetric {
+    height: $smallAltmetricBadge;
     a {
+        height: $smallAltmetricBadge;
+        width: $smallAltmetricBadge;
+        margin-right: 10px!important;
         img {
             height: $smallAltmetricBadge;
             width: $smallAltmetricBadge;
-            margin-right: 10px!important;
+        }
+    }
+}
+
+#article-title-and-badge-container{
+    float:left;
+    margin: 0 0 1.68rem 0;
+    width:100%;
+    .article-altmetric {
+        height: $largeAltmetricBadge;
+        a {
+            height: $largeAltmetricBadge;
+            width: $largeAltmetricBadge;
+            img{
+                height: $largeAltmetricBadge;
+                width: $largeAltmetricBadge;
+            }
         }
     }
 }
