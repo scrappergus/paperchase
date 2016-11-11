@@ -1,10 +1,9 @@
 if (Meteor.isClient) {
     // Altmetric
     // -------
-    // Template.registerHelper('altmetricReady', function(bool) {
-    //   return Session.get('altmetric-ready');
-    // });
-
+    Template.registerHelper('altmetricReady', function(bool) {
+      return Session.get('altmetric-ready');
+    });
 
     // General
     // -------
