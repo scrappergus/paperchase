@@ -49,7 +49,7 @@
 
 <template name="AltmetricBadgeWithReport">
     {{#with ids}}
-    <div id="article-{{doi}}" data-badge-type="donut" data-badge-popover="left" data-hide-less-than="10" data-doi="{{doi}}" data-pmid={{pmid}} data-hide-no-mentions="true" data-condensed="true" class="article-altmetric altmetric-embed left-align"></div>
+    <div id="article-{{doi}}" data-badge-type="donut" data-template="{{altmetricTemplate}}" data-link-target="_blank" data-badge-popover="left" data-hide-less-than="10" data-doi="{{doi}}" data-pmid={{pmid}} data-hide-no-mentions="true" data-condensed="true" class="article-altmetric altmetric-embed valign"></div>
     {{/with}}
 </template>
 
