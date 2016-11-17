@@ -257,6 +257,7 @@ if (Meteor.isClient) {
     });
     // Not equals
     Template.registerHelper('notEmpty', function (a) {
+        console.log(a);
         if(!a){
             return false;
         }else if(a.length > 0){
@@ -279,6 +280,31 @@ if (Meteor.isClient) {
     });
 
     // news
+    Template.registerHelper('notEmptyNews', function (a) {
+        var anyPass = 0;
+        if(!a){
+            return false;
+        }else if(a.length > 0){
+            a.forEach(function(item){
+                if (item && item.conference_date_start){
+                    if (item.conference_date_start < new Date()){
+                        return false;
+                    } else {
+                        anyPass++;
+                    }
+                } else{
+                    anyPass++;
+                }
+            });
+            if (anyPass > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }else{
+            return false;
+        }
+    });
     Template.registerHelper('conferenceDateCheckPass', function(item){
         if (item && item.conference_date_start){
             if (item.conference_date_start < new Date()){

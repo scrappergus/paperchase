@@ -117,7 +117,9 @@
 </template>
 
 <template name="LatestNews">
+    {{#if notEmptyNews news}}
     <h3 class="section-heading new-section">Latest News</h3>
+    {{/if}}
 
     <ul class="divided-list news-list">
         {{#each news}}
