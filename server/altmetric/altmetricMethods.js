@@ -129,7 +129,11 @@ Meteor.methods({
         result.details_url = article.details_url;
         result.title = article.title;
         result.url = '';
+        result.ids = {};
+
         if (article.doi) {
+            result.ids.doi = article.doi;
+
             query.push({'ids.doi' : article.doi});
 
             if(article.doi.indexOf('http') === -1){
@@ -147,6 +151,7 @@ Meteor.methods({
         result.images = article.images;
 
         if (article.pmid) {
+            result.ids.pmid = article.pmid;
             query.push({'ids.pmid' : article.pmid});
         }
 
@@ -162,7 +167,7 @@ Meteor.methods({
                 if (articleInDb && articleInDb._id) {
                     result.mongoId = articleInDb._id;
                 } else {
-                    console.error('Cannot associate Altmetric article in Mongo DB');
+                    console.error('Cannot associate Altmetric article in Mongo DB', article.doi, article.title);
                 }
                 fut.return(result);
             });

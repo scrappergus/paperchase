@@ -1457,3 +1457,17 @@ Meteor.ux = {
         }
     }
 };
+
+Meteor.altmetric = {
+    idFromUrl: function(url){
+        var altmetricId;
+        var urlPieces = url.split('=');
+        if (urlPieces && urlPieces.length > 0) {
+            // check that the last piece is the number, use == because will be different types
+            if (parseInt(urlPieces[urlPieces.length - 1]) == urlPieces[urlPieces.length - 1]) {
+                altmetricId = urlPieces[urlPieces.length - 1];
+            }
+        }
+        return altmetricId;
+    }
+};

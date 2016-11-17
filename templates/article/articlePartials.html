@@ -3,9 +3,7 @@
         {{>ArticleHeaderPieces}}
     </h5>
     <div id="article-title-and-badge-container" class="valign-wrapper">
-        {{#if altmetric}}
-        {{>AltmetricBadge altmetric=altmetric}}
-        {{/if}}
+        {{>AltmetricBadgeWithReport ids=ids}}
         <div id="article-container">
             <h1 id="article-title" class="valign">
                 {{{title}}}
@@ -45,8 +43,14 @@
     {{#if page_start}}<span>{{>ArticlePages}}</span>{{/if}}
 </template>
 
-<template name="AltmetricBadge">
+<!-- <template name="AltmetricBadge">
     <a href="{{altmetricDetailsLink}}{{altmetric.altmetric_id}}" data-tooltip="View Report" data-position="top" class="valign altmetric-list-badge altmetric-badge tooltipped" target="_BLANK"><img class="altmetric-badge" src="{{altmetric.images.small}}"/></a>
+</template> -->
+
+<template name="AltmetricBadgeWithReport">
+    {{#with ids}}
+    <div id="article-{{doi}}" data-badge-type="donut" data-template="{{altmetricTemplate}}" data-link-target="_blank" data-badge-popover="left" data-hide-less-than="10" data-doi="{{doi}}" data-pmid={{pmid}} data-hide-no-mentions="true" data-condensed="true" class="article-altmetric altmetric-embed valign"></div>
+    {{/with}}
 </template>
 
 <template name="ArticlePages">

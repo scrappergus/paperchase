@@ -233,16 +233,16 @@ Template.Article.helpers({
         return Session.get('article-text');
     }
 });
-Template.ArticleHeaderTitle.helpers({
-    altmetric: function(){
-        return Session.get('article-altmetric');
-    }
-});
-Template.AltmetricBadge.helpers({
-    altmetricDetailsLink: function() {
-        return Meteor.settings.public.journal.altmetric.reportLink;
-    }
-});
+// Template.ArticleHeaderTitle.helpers({
+//     altmetric: function(){
+//         return Session.get('article-altmetric');
+//     }
+// });
+// Template.AltmetricBadge.helpers({
+//     altmetricDetailsLink: function() {
+//         return Meteor.settings.public.journal.altmetric.reportLink;
+//     }
+// });
 
 // Template.ArticleHeaderTitle.helpers({
 //     titleClass: function(){

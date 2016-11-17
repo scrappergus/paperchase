@@ -293,41 +293,57 @@ h4.dates {
         word-wrap: break-word;
     }
 }
-#article-title-and-badge-container{
-    float:left;
-    margin: 0 0 1.68rem 0;
-    width:100%;
-    .altmetric-badge{
-        a > img{
-            height: 80px;
-            width: 80px;
-            margin-right: 12px!important;
-        }
-    }
-}
 #article-container{
     h1{
         margin: 0!important;
     }
 }
-#article-title{
+// #article-title{
     // padding-left: 42px;
-}
-#article-title.badge-visible{
-    padding-left: 74px;
-}
-.article-altmetric{
-    float: left;
-    a > img{
+// }
+// #article-title.badge-visible{
+//     padding-left: 74px;
+// }
+// .article-altmetric{
+//     float: left;
+//     a > img{
+//         margin-right: 10px!important;
+//     }
+// }
+// .altmetric-badge{
+//     img{
+//         height: $largeAltmetricBadge;
+//     }
+// }
+.article-altmetric {
+    height: $smallAltmetricBadge;
+    a {
+        height: $smallAltmetricBadge;
+        width: $smallAltmetricBadge;
         margin-right: 10px!important;
+        img {
+            height: $smallAltmetricBadge;
+            width: $smallAltmetricBadge;
+        }
     }
 }
-.altmetric-badge{
-    img{
-        height: 64px;
+
+#article-title-and-badge-container{
+    float:left;
+    margin: 0 0 1.68rem 0;
+    width:100%;
+    .article-altmetric {
+        height: $largeAltmetricBadge;
+        a {
+            height: $largeAltmetricBadge;
+            width: $largeAltmetricBadge;
+            img{
+                height: $largeAltmetricBadge;
+                width: $largeAltmetricBadge;
+            }
+        }
     }
 }
-/*end hide commas*/
 
 .featured-photo {
     width: 100%;

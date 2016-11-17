@@ -1,7 +1,16 @@
 if (Meteor.isClient) {
+    // Altmetric
+    // -------
+    Template.registerHelper('altmetricReady', function() {
+      return Session.get('altmetric-ready');
+    });
+    Template.registerHelper('altmetricTemplate', function() {
+      return Meteor.settings.public.journal.altmetric.template;
+    });
+
     // General
     // -------
-    Template.registerHelper('adminNotFound', function(bool) {
+    Template.registerHelper('adminNotFound', function() {
       return Session.get('admin-not-found');
     });
 
@@ -73,7 +82,7 @@ if (Meteor.isClient) {
             console.log(ids.pii);
             id = ids.pii;
         }
-        
+
         if (id) {
             id = ': ' + id;
         }

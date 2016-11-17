@@ -22,17 +22,17 @@
             {{/if}}
 
             {{#if altmetricTop}}
-                <h3 class="section-heading new-section" style="margin-bottom:0px">
+                <h3 class="section-heading new-section" style="margin-bottom: 0.5rem;">
                     Top {{altmetricTopCount}} {{journal}} Publications Rated by Altmetric Attention Score
                 </h3>
-                <p style="margin-bottom:30px">
-                    <a href="{{pathFor 'TopArticles'}}">View All</a>
+                <p style="margin: 0px">
+                    <a href="{{pathFor 'TopArticles'}}" class="button primary" style="margin: 0px; padding-top: 10px; padding-bottom: 10px;">View All</a>
                 </p>
                 <ul id="altmetric-top" class="card">
                     {{#each altmetricTop}}
                     <li>
                         <p class="valign-wrapper">
-                            {{>AltmetricBadge altmetric=.}}
+                            {{>AltmetricBadgeWithReport ids=ids}}
                             {{#if mongoId}}
                             <a href="{{pathFor 'ArticleText' _id=mongoId}}" class="valign altmetric-title-link">{{{title}}}</a>
                             {{else}}

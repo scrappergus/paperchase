@@ -86,8 +86,10 @@
 
                 <div class="toc-info">
                     <div class="valign-wrapper title-container">
-                        {{#if altmetric}}
-                        {{>AltmetricBadge altmetric=altmetric}}
+                        {{#if altmetricReady}}
+                        {{#if ids}}
+                        {{>AltmetricBadgeWithReport ids=ids}}
+                        {{/if}}
                         {{/if}}
 
                         <h3 class="title valign">{{{title}}}</h3>
