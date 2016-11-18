@@ -272,7 +272,10 @@ if (Meteor.isClient) {
     // -------
     Template.registerHelper('arrayify',function(obj){
         result = [];
-        for (var key in obj) result.push({name:key,value:obj[key]});
+        for (var key in obj) {
+            console.log(key);
+            result.push({name:key,value:obj[key]})
+        };
         return result;
     });
     Template.registerHelper('removePunctuation',function(string){

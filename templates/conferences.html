@@ -15,10 +15,10 @@
             {{/if}}
 
             {{#if past}}
-            {{#each arrayify past}}
-            <h2 class="heavy blue-accented">Past {{name}}</h2>
+            {{#each past}}
+            <h2 class="heavy blue-accented">Past {{year}}</h2>
             <ul class="divided-list news-list">
-                {{#each value}}
+                {{#each conferences}}
                     {{>NewsListItem .}}
                 {{/each}}
             </ul>
