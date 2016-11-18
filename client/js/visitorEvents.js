@@ -1,3 +1,12 @@
+// Home
+// ------------
+Template.Home.events({
+    'click .view-all-top-home': function(e){
+        Meteor.googleAnalytics.sendEvent('View All - Via Homepage',e);
+    }
+});
+
+
 // Recommend
 // -------
 Template.Recommend.events({
@@ -193,7 +202,7 @@ Template.ForAuthors.events({
 Template.Search.events({
         'submit #search-terms': function(e) {
             Meteor.search.searchLoad(e);
-        }                              
+        }
 });
 
 Template.SearchAlt.events({
