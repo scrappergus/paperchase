@@ -178,7 +178,7 @@ Meteor.methods({
                 }
             }else{
                 // recent NOT checked
-                if(orderBySectionId[0].indexOf(article) != -1 ){
+                if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) != -1 ){
                     // article was in Recent Research Papers but now removed
                     updateArticle = true;
                 }
