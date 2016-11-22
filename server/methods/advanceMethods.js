@@ -172,7 +172,7 @@ Meteor.methods({
                 // recent checked
                 updateObj.section_id = 0;
                 recent++;
-                if(orderBySectionId[0].indexOf(article) == -1 ){
+                if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) == -1 ){
                     // article was added to Recent Research Papers
                     updateArticle = true;
                 }
