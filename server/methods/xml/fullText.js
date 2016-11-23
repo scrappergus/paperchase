@@ -43,7 +43,6 @@ Meteor.methods({
     },
     fullTextToJson: function(xml, files, mongoId){
         // Full XML processing. Content, and References
-        // console.log('... fullTextToJson');
         xml = Meteor.clean.newLinesToSpace(xml);
         xml = Meteor.clean.removeExtraSpaces(xml);
         // console.log('---xml',xml);
@@ -410,7 +409,8 @@ Meteor.fullText = {
         var sectionPartObject = {};
         var content,
             contentType;
-        var formulaInParagraph;
+        var formulaInParagraph,
+            inlineFormulaInParagraph;
         // Different processing for different node types
         if (sec.localName === 'table-wrap'){
             sectionPartObject = Meteor.fullText.convertTableWrap(sec, files);
@@ -430,17 +430,22 @@ Meteor.fullText = {
                 sectionPartObject.id = secAttr.id;
             }
             content = Meteor.fullText.convertFormula(sec.childNodes);
-        } else if(sec.localName === 'p'){
+        } else if (sec.localName === 'p') {
             formulaInParagraph = xpath.select('disp-formula', sec);
-            if(formulaInParagraph && formulaInParagraph[0] && formulaInParagraph[0].localName === 'disp-formula'){
+            inlineFormulaInParagraph = xpath.select('inline-formula', sec);
+            if (formulaInParagraph && formulaInParagraph[0] && formulaInParagraph[0].localName === 'disp-formula') {
                 // extyles puts equations in paragraph tags
                 contentType = 'formula';
                 var formulaAttr = Meteor.fullText.traverseAttributes(formulaInParagraph[0].attributes);
-                if(formulaAttr && formulaAttr.id){
+                if (formulaAttr && formulaAttr.id) {
                     sectionPartObject.id = formulaAttr.id;
                 }
                 content = Meteor.fullText.convertFormula(formulaInParagraph[0].childNodes);
-            } else{
+            } else if (inlineFormulaInParagraph && inlineFormulaInParagraph[0] && inlineFormulaInParagraph[0].localName === 'inline-formula') {
+                // inline formula
+                content = Meteor.fullText.convertContent(sec);
+                contentType = 'formula';
+            } else {
                 content = Meteor.fullText.convertContent(sec);
                 contentType = 'p';
             }
