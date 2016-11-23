@@ -257,7 +257,6 @@ if (Meteor.isClient) {
     });
     // Not equals
     Template.registerHelper('notEmpty', function (a) {
-        console.log(a);
         if(!a){
             return false;
         }else if(a.length > 0){
@@ -273,7 +272,6 @@ if (Meteor.isClient) {
     Template.registerHelper('arrayify',function(obj){
         result = [];
         for (var key in obj) {
-            console.log(key);
             result.push({name:key,value:obj[key]})
         };
         return result;
