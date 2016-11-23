@@ -68,7 +68,7 @@ if (Meteor.isClient) {
     });
     Template.registerHelper('pubStatusAbbrev', function(number) {
       if (pubStatusTranslate[parseInt(number - 1)]) {
-        return pubStatusTranslate[parseInt(number - 1)]['abbrev'];
+        return pubStatusTranslate[parseInt(number - 1)].abbrev;
       }
     });
     Template.registerHelper('prettyDoi', function(doi) {
@@ -129,7 +129,7 @@ if (Meteor.isClient) {
     });
     Template.registerHelper('dateDayExists', function(date) {
       //if the date object should have a day value associated with it
-      if (moment(date).format('HH') == 0) {
+      if (moment(date).format('HH') === 0) {
         return true;
       } else {
         return false;
@@ -272,8 +272,8 @@ if (Meteor.isClient) {
     Template.registerHelper('arrayify',function(obj){
         result = [];
         for (var key in obj) {
-            result.push({name:key,value:obj[key]})
-        };
+            result.push({name:key,value:obj[key]});
+        }
         return result;
     });
     Template.registerHelper('removePunctuation',function(string){
@@ -354,7 +354,7 @@ if (Meteor.isClient) {
 
     Template.registerHelper('convertToID', function(str) {
       if(str) {
-        return str = str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
+        return str.replace(/[^A-Z0-9]/ig, '').toLowerCase();
       } else {
         return;
       }
@@ -391,7 +391,7 @@ if (Meteor.isClient) {
     Template.registerHelper('isSubscribed', function() {
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            if(journalSettings['journal']['access'] == "open") { return true; }
+            if(journalSettings.journal.access == "open") { return true; }
         }
 
 
