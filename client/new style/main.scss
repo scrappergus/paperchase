@@ -530,6 +530,12 @@ h3#references + ul li {
     // font-size: 15px;
     @extend p;
 }
+.full-text-formula{
+    label{
+        color: $midgray;
+        font-size: 1rem;
+    }
+}
 
 /*================ Sidebar Article Content | Article-Level Modules ================*/
 
