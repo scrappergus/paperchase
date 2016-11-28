@@ -147,8 +147,6 @@ Meteor.methods({
         return fut.wait();
     },
     updateAdvanceResearch: function(articles){
-        // console.log('updateAdvanceResearch');
-        // console.log(articles);
         var fut = new future();
         var track = 0;
         var recent = 0;
@@ -174,6 +172,8 @@ Meteor.methods({
                 recent++;
                 if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) == -1 ){
                     // article was added to Recent Research Papers
+                    updateArticle = true;
+                } else if(!orderBySectionId[0]){
                     updateArticle = true;
                 }
             }else{
