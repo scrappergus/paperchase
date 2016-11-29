@@ -105,6 +105,10 @@
 
     {{>AdminAdvanceNav}}
     {{>StatusModal what='Advance Articles - Research Papers' action=statusAction details=modalMessage}}
+
+    {{#if saving}}
+    {{else}}
+    {{#if articles}}
     <div class="row">
         <div class="col s12"><div class="card z-depth-0">
             <div class="card-content">
@@ -154,6 +158,8 @@
             </div>
         </div></div>
     </div>
+    {{/if}}
+    {{/if}}
 </template>
 
 

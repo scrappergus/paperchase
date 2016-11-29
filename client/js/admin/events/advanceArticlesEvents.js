@@ -4,6 +4,7 @@ Template.AdminAdvanceArticlesResearch.events({
     'submit form': function(e){
         e.preventDefault();
         Meteor.formActions.saving();
+        Session.set('ojsAdvanceResearch', null);
         var researchPapers = {};
         var regular = [];
         $('.recent-research').each(function(){
@@ -17,7 +18,8 @@ Template.AdminAdvanceArticlesResearch.events({
             if(error){
                 console.error('updateAdvanceResearch', error);
             }else if(result){
-                // console.log('result',result);
+                Meteor.advanceOjs.research();
+                Meteor.formActions.doneSaving();
                 Meteor.formActions.successMessage(result.recent + ' Recent Articles<br>' + result.updated + ' Articles Updated');
             }
         });

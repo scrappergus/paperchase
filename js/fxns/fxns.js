@@ -208,6 +208,7 @@ Meteor.formActions = {
     saving: function(message){
         Session.set('statusModalAction','Saving');
         Session.set('statusModalDetails',message);
+        Session.set('saving', true);
 
         // inline messages
         $('.save-btn').addClass('hide');
@@ -252,6 +253,9 @@ Meteor.formActions = {
         $('textarea').removeClass('invalid');
         $('input').removeClass('valid');
         $('textarea').removeClass('valid');
+    },
+    doneSaving: function(){
+        Session.set('saving', false);
     },
     processing: function(message){
         Session.set('statusModalAction','Processing');

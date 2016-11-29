@@ -750,3 +750,11 @@ Template.AdminAdvanceArticlesRemove.helpers({
         return Session.get('advanceArticles');
     }
 });
+Template.AdminAdvanceArticlesResearch.helpers({
+    articles: function() {
+        return Session.get('ojsAdvanceResearch');
+    },
+    saving: function() {
+        return Session.get('saving');
+    }
+});

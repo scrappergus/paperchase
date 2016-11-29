@@ -153,7 +153,7 @@ Meteor.methods({
         var updated = 0;
         var result = {};
         var order = sorters.findOne({name:'advance'});
-        var orderBySectionId = Meteor.call('orderBySectionId',order.articles);
+        var orderBySectionId = Meteor.call('orderBySectionId', order.articles);
         var total = 0;
         for(var a in articles){
             total++;

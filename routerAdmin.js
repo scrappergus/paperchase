@@ -151,12 +151,14 @@ if (Meteor.isClient) {
     Session.setDefault('advanceDiff',null);
     Session.setDefault('advanceLegacy',null);
     Session.setDefault('advanceArticles',null);
+    Session.setDefault('ojsAdvanceResearch', null); //for ojs
     // forms
     Session.setDefault('savedMessage',null);
     Session.setDefault('error',null);
     Session.setDefault('errorMessage',null);
     Session.setDefault('statusModalAction',null);
     Session.setDefault('statusModalDetails',null);
+    Session.setDefault('saving', false);
     // Article
     Session.setDefault('article',null);
     Session.setDefault('xml-verify',null);
@@ -1078,6 +1080,10 @@ if (Meteor.isClient) {
             if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
+
+            // data for page
+            Meteor.advanceOjs.research();
+
             this.next();
         },
         layoutTemplate: 'Admin',
@@ -1088,24 +1094,6 @@ if (Meteor.isClient) {
                 Meteor.subscribe('advance'),
                 Meteor.subscribe('sortedList','advance')
             ];
-        },
-        data: function(){
-            var sorted  = sorters.findOne({name:'advance'});
-            if(this.ready() && sorted && sorted.articles){
-                var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
-                var res;
-
-                if(advanceSections['Recent Research Papers']){
-                    res = advanceSections['Recent Research Papers'];
-                    res = res.concat(advanceSections['Research Papers']);
-                }else{
-                    res = advanceSections['Research Papers'];
-                }
-
-                return{
-                    articles: res
-                };
-            }
         }
     });
     Router.route('/admin/articles/advance-diff',{
