@@ -6,6 +6,7 @@ settings.json
 node_modules/
 server/awsConfig.js
 xml-sets/
+settings/
 settings-aging.json
 settings-oncotarget-admin.json
 settings-oncoscience.json
