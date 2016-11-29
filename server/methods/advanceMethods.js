@@ -147,65 +147,139 @@ Meteor.methods({
         return fut.wait();
     },
     updateAdvanceResearch: function(articles){
-        // console.log('...updateAdvanceResearch');
         var fut = new future();
-        var track = 0;
-        var recent = 0;
-        var updated = 0;
-        var result = {};
+
         var order = sorters.findOne({name:'advance'});
         var orderBySectionId = Meteor.call('orderBySectionId', order.articles);
-        var total = 0;
-        for(var a in articles){
-            total++;
-        }
-        // update article docs if in/out of recent and also update sorters order
-        for(var article in articles){
-            track++;
-            var updateObj = {};
-                updateObj.advance = true; // below the method advanceMoveArticle will pull from sorters, which will then set article advance to false (via sorters upddate collection hook), so for the updateArticle after, reset to advance
-            var updateArticle = false;
-            if(articles[article] === true){
-                // recent checked
-                updateObj.section_id = 0;
-                recent++;
-                if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) == -1 ){
-                    // article was added to Recent Research Papers
-                    updateArticle = true;
-                } else if(!orderBySectionId[0]){
-                    updateArticle = true;
+        var addRecent = [];
+        var removeRecent = [];
+        var allRecent = 0;
+
+        // Find which articles need to be updated
+        for (var article in articles) {
+            if (articles[article] === true) {
+                allRecent++;
+                // recent checked. article was added to Recent Research Papers
+                if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) == -1 ) {
+                    addRecent.push(article);
+                } else if(!orderBySectionId[0]) {
+                    addRecent.push(article);
                 }
-            }else{
-                // recent NOT checked
-                if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) != -1 ){
-                    // article was in Recent Research Papers but now removed
-                    updateArticle = true;
-                }
-                updateObj.section_id = 5;
+            } else if(orderBySectionId[0] && orderBySectionId[0].indexOf(article) != -1 ) {
+                // recent NOT checked. article was in Recent Research Papers but now removed
+                removeRecent.push(article);
             }
-            if(updateArticle){
-                Meteor.call('advanceMoveArticle', article, updateObj.section_id, function(error,result){
-                    if(result){
-                        updateObj.debug_moved_recent_research = updateObj.section_id === 5 ? 'Out of Recent' : 'Into Recent';
-                        Meteor.call('updateArticle', article, updateObj, function(error,result){
-                            if(result){
-                                updated++;
+        }
+
+        // Update articles and sorters collections. First update the article records with the correct section id, then update the sorters in 1 batch add of Mongo IDs to correct section in array
+        Meteor.call('addResearchAdvance', addRecent, function(addErr, addRes){
+            if (addErr) {
+                console.error(addErr.error);
+                if (addErr.error) {
+                    fut.throw(addErr.error);
+                } else {
+                    fut.throw(addErr);
+                }
+            } else if (addRes) {
+                if (removeRecent.length > 0) {
+                    Meteor.call('removeResearchAdvance', removeRecent, function(removeErr, removeRes) {
+                        if (removeErr) {
+                            console.error(removeErr.error);
+                            if (removeErr.error) {
+                                fut.throw(removeErr.error);
+                            } else {
+                                fut.throw(removeErr);
                             }
-                        });
+                        } else if (removeRes) {
+                            fut.return({
+                                allRecent: allRecent,
+                                added: addRecent.length,
+                                removed: removeRecent.length
+                            });
+                        }
+                    });
+                } else {
+                    fut.return({
+                        allRecent: allRecent,
+                        added: addRecent.length,
+                        removed: removeRecent.length
+                    });
+                }
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
+    },
+    addResearchAdvance: function(addRecent) {
+        var fut = new future();
+
+        async.each(addRecent, function (articleId, cb) {
+            Meteor.call('updateArticle', articleId, { advance: true, section_id: 0 }, function(updateError, updateRes) {
+                if (updateError) {
+                    cb('Failed at adding article to recent: ' + articleId);
+                } else if(updateRes) {
+                    cb();
+                }
+            });
+        }, function (err) {
+            if (err) {
+                fut.throw(err);
+            } else {
+                // now update the sorters array - move articles to recent research papers
+                Meteor.call('advanceAddArticleToSection', addRecent, 0, function(sorterError, sorterResult){
+                    if (sorterError) {
+                        fut.throw(sorterError);
+                    } else if (sorterResult) {
+                        fut.return(true);
                     }
                 });
             }
+        });
 
-            if(track == total){
-                result = {
-                    recent: recent,
-                    updated: updated
-                };
-                fut.return(result);
-            }
+        try {
+            return fut.wait();
         }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
+    },
+    removeResearchAdvance: function(removeRecent) {
+        var fut = new future();
 
-        return fut.wait();
+        async.each(removeRecent, function (articleId, cb) {
+            Meteor.call('updateArticle', articleId, { advance: true, section_id: 5 }, function(updateError, updateRes) {
+                if (updateError) {
+                    cb('Failed at removing article from recent: ' + articleId);
+                } else if(updateRes) {
+                    cb();
+                }
+            });
+        }, function (err) {
+            if (err) {
+                fut.throw(err);
+            } else {
+                // now update the sorters array - move articles to research papers
+                Meteor.call('advanceAddArticleToSection', removeRecent, 5, function(sorterError, sorterResult){
+                    if (sorterError) {
+                        fut.throw(sorterError);
+                    } else if (sorterResult) {
+                        fut.return(true);
+                    }
+                });
+            }
+        });
+
+        try {
+            return fut.wait();
+        }
+        catch(err) {
+            throw new Meteor.Error(err);
+        }
     },
     orderBySectionId: function(articles){
         var byId = {};
@@ -218,8 +292,7 @@ Meteor.methods({
         // console.log('byId',byId);
         return byId;
     },
-    advanceAddArticleToSection: function(mongoId, sectionId){
-        check(mongoId, String);
+    advanceAddArticleToSection: function(mongoIdArray, sectionId){
         check(sectionId, Number);
 
         var advanceIdList = sorters.findOne({'name': 'advance'});
@@ -236,10 +309,8 @@ Meteor.methods({
         }
 
         return sorters.update({name : 'advance'}, {$push : {
-            'order': {
-                $each: [mongoId],
-                $position: position
-        }}});
+            'order': { $each: mongoIdArray, $position: position }
+        }});
     },
     advanceAddArticleListToSection: function(mongoIdList, sectionId){
         // console.log('advanceAddArticleToSection',mongoIdList.length, sectionId);
@@ -262,23 +333,5 @@ Meteor.methods({
                 $each: mongoIdList,
                 $position: position
         }}});
-    },
-    advanceMoveArticle: function(mongoId, newSectionId){
-        // console.log('advanceMoveArticle', mongoId, newSectionId)
-        var fut = new future();
-        Meteor.call('sorterRemoveItem', 'advance', mongoId, function(error,result){
-            if (error) {
-                fut.return(error);
-            } else if (result) {
-                Meteor.call('advanceAddArticleToSection', mongoId, newSectionId, function(error,result){
-                    if(error){
-                        fut.return(error);
-                    }else if(result){
-                        fut.return(true);
-                    }
-                });
-            }
-        });
-        return fut.wait();
     }
 });

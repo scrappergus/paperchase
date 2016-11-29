@@ -4,9 +4,10 @@ Template.AdminAdvanceArticlesResearch.events({
     'submit form': function(e){
         e.preventDefault();
         Meteor.formActions.saving();
-        Session.set('ojsAdvanceResearch', null);
         var researchPapers = {};
         var regular = [];
+        var errorMessage = 'Unable to complete update.';
+
         $('.recent-research').each(function(){
             if($(this).prop('checked')) {
                 researchPapers[$(this).attr('data-article-id')] = true;
@@ -15,12 +16,16 @@ Template.AdminAdvanceArticlesResearch.events({
             }
         });
         Meteor.call('updateAdvanceResearch', researchPapers, function(error,result){
-            if(error){
+            if (error) {
+                if (error.error) {
+                    errorMessage += '<br>' + error.error;
+                }
+                Meteor.formActions.errorMessage(errorMessage);
                 console.error('updateAdvanceResearch', error);
-            }else if(result){
+            } else if(result){
                 Meteor.advanceOjs.research();
                 Meteor.formActions.doneSaving();
-                Meteor.formActions.successMessage(result.recent + ' Recent Articles<br>' + result.updated + ' Articles Updated');
+                Meteor.formActions.successMessage(result.allRecent + ' Recent Articles<br><hr>' + result.added + ' Recent Added<br>' + result.removed + ' Recent Removed');
             }
         });
     }

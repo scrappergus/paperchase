@@ -506,6 +506,7 @@ Meteor.formActions = {
     errorMessage: function(message){
         Session.set('statusModalAction','<i class="material-icons">&#xE000;</i> Error');
         Session.set('statusModalDetails',message);
+        Session.set('saving', false);
 
         $('.save-btn').removeClass('hide');
         $('.saving').addClass('hide');
