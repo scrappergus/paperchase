@@ -16,10 +16,7 @@ Template.AdminNav.helpers({
         return Meteor.settings.public.journal.site.spec.color.main_rgb;
     },
     bannerLogo: function(){
-        var journalSettings = journalConfig.findOne();
-        if(journalSettings){
-            return journalSettings.journal.logo.banner;
-        }
+        return Meteor.settings.public.journal.logo.banner;
     }
 });
 
