@@ -141,7 +141,7 @@ Meteor.methods({
                 throw new Meteor.Error(error);
             }else if(result){
                 // console.log('success!');
-                fut['return'](true);
+                fut.return(true);
             }
         });
         return fut.wait();
@@ -158,11 +158,9 @@ Meteor.methods({
         for(var a in articles){
             total++;
         }
-        // update all article docs
-        // and get order ready to update
+        // update article docs if in/out of recent and also update sorters order
         for(var article in articles){
             track++;
-            // console.log(article, articles[articles]);
             var updateObj = {};
                 updateObj.advance = true; // below the method advanceMoveArticle will pull from sorters, which will then set article advance to false (via sorters upddate collection hook), so for the updateArticle after, reset to advance
             var updateArticle = false;
@@ -269,13 +267,13 @@ Meteor.methods({
         var fut = new future();
         Meteor.call('sorterRemoveItem', 'advance', mongoId, function(error,result){
             if(error){
-                fut['return'](error);
+                fut.return(error);
             }else if(result){
                 Meteor.call('advanceAddArticleToSection', mongoId, newSectionId, function(error,result){
                     if(error){
-                        fut['return'](error);
+                        fut.return(error);
                     }else if(result){
-                        fut['return'](true);
+                        fut.return(true);
                     }
                 });
             }
