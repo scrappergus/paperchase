@@ -211,7 +211,7 @@ Meteor.methods({
                 // Footnote title via fn-type attribute
                 attributes = Meteor.fullText.traverseAttributes(footnotes[i].attributes);
                 if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'conflict'){
-                    footObj.title = 'Conflict of Interests Statement';
+                    footObj.title = 'Conflicts of Interest';
                 }else if(attributes && attributes['fn-type'] && attributes['fn-type'] === 'con'){
                     footObj.title = 'Author Contributions';
                 }else if(attributes && attributes['fn-type'] && (attributes['fn-type'] === 'supported-by' || attributes['fn-type'] === 'financial-disclosure')){
