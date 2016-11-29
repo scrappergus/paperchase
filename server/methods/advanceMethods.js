@@ -147,6 +147,7 @@ Meteor.methods({
         return fut.wait();
     },
     updateAdvanceResearch: function(articles){
+        // console.log('...updateAdvanceResearch');
         var fut = new future();
         var track = 0;
         var recent = 0;
@@ -193,7 +194,6 @@ Meteor.methods({
                         });
                     }
                 });
-
             }
 
             if(track == total){
@@ -219,18 +219,19 @@ Meteor.methods({
         return byId;
     },
     advanceAddArticleToSection: function(mongoId, sectionId){
-        // console.log('advanceAddArticleToSection',mongoId, sectionId);
-
         check(mongoId, String);
         check(sectionId, Number);
 
-        var sorts = sorters.findOne({'name': 'advance'});
-        var position = sorts.order.length;
-        for(var i=0; i < sorts.order.length; i++) {
-            match = articles.findOne({_id:sorts.order[i], section_id:sectionId});
-            if(match) {
+        var advanceIdList = sorters.findOne({'name': 'advance'});
+        var position = advanceIdList.order.length;
+        var advanceArticles = articles.find({ '_id': { '$in': advanceIdList.order } }).fetch();
+        var advanceArticlesById = Meteor.organize.articlesByMongoId(advanceArticles);
+
+        // go through all the Mongo IDs in the advance list and find the first article with the section id for the article to insert
+        for (var i=0; i<advanceIdList.order.length; i++) {
+            if (advanceArticlesById[advanceIdList.order[i]] && advanceArticlesById[advanceIdList.order[i]].section_id === sectionId) {
                 position = i;
-                i = sorts.order.length;
+                i = advanceIdList.order.length;
             }
         }
 
@@ -263,12 +264,12 @@ Meteor.methods({
         }}});
     },
     advanceMoveArticle: function(mongoId, newSectionId){
-        // console.log('advanceMoveArticle',mongoId,newSectionId)
+        // console.log('advanceMoveArticle', mongoId, newSectionId)
         var fut = new future();
         Meteor.call('sorterRemoveItem', 'advance', mongoId, function(error,result){
-            if(error){
+            if (error) {
                 fut.return(error);
-            }else if(result){
+            } else if (result) {
                 Meteor.call('advanceAddArticleToSection', mongoId, newSectionId, function(error,result){
                     if(error){
                         fut.return(error);
