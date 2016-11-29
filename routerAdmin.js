@@ -1026,7 +1026,7 @@ if (Meteor.isClient) {
             }
 
             // Journal redirect
-            if(Session.get('journal') && Session.get('journal').journal.short_name != 'oncotarget'){
+            if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
             this.next();
