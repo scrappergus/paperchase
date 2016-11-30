@@ -23,6 +23,38 @@ Template.Home.helpers({
     }
 });
 
+Template.Contact.helpers({
+        contact: function() {
+            if(Session.get('contact')){
+                return Session.get('contact');
+            }
+        }
+    });
+
+Template.Ethics.helpers({
+        sections: function() {
+            if(Session.get('ethics')){
+                return Session.get('ethics');
+            }
+        }
+    });
+
+Template.ForAuthors.helpers({
+        sections: function() {
+            if(Session.get('forAuthors')){
+                return Session.get('forAuthors');
+            }
+        }
+    });
+
+Template.About.helpers({
+        sections: function() {
+            if(Session.get('about')){
+                return Session.get('about');
+            }
+        }
+    });
+
 Template.Conferences.helpers({
     past: function() {
         return Session.get('conferences') &&  Session.get('conferences').past ? Session.get('conferences').past : false;
