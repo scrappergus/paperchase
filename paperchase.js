@@ -671,19 +671,20 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            Meteor.call('getEIC', function(error, result){
+                    if (result) {
+                        Session.set('eic', result);
+                    }
+                });
+
+            Meteor.call('getFullBoard', function(error, result){
+                    if (result) {
+                        Session.set('fullBoard', result);
+                    }
+                });
+
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('eic'),
-                Meteor.subscribe('fullBoard')
-            ];
-        },
-        data: function(){
-            return {
-                eic: edboard.find({role:"Editor-in-Chief"},{sort : {name_last:-1}}),
-                fullBoard: edboard.find({$or: [{role:"Founding Editorial Board"}, {role:"Editorial Board"}]},{sort : {name_last:1}})
-            };
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {

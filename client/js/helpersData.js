@@ -260,6 +260,17 @@ Template.EdBoard.helpers({
         if(journalSettings){
             return journalSettings.journal.name;
         }
+    },
+    eic: function() {
+        if(Session.get('eic')){
+            return Session.get('eic');
+        }
+
+    },
+    fullBoard: function() {
+        if(Session.get('fullBoard')){
+            return Session.get('fullBoard');
+        }
     }
 });
 
