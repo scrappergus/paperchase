@@ -376,6 +376,8 @@ if (Meteor.isClient) {
     Session.setDefault('article-altmetric', null); // for single article
     // conferences
     Session.setDefault('conferences', false);
+    // Advance
+    Session.setDefault('advance', null);
 
     // Redirects
     // Currently making this the section for puttincg all redirect code. If there's a better way to do this, let's try it out.
@@ -545,23 +547,14 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            Meteor.call('getAdvance', function(error, result){
+                if (result) {
+                    Session.set('advance', result);
+                }
+            });
+
             this.next();
-        },
-        waitOn: function(){
-            Meteor.impact.redirectForAlt();
-            return [
-                Meteor.subscribe('journalConfig'),
-                Meteor.subscribe('advance'),
-                Meteor.subscribe('sortedList','advance')
-            ];
-        },
-        data: function(){
-            if (this.ready()) {
-                var sorted  = sorters.findOne({'name':'advance'});
-                return {
-                    articles : sorted.ordered
-                };
-            }
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {
@@ -897,8 +890,6 @@ if (Meteor.isClient) {
                         Session.set('issueMeta', issueMeta);
                     }
                 });
-
-
 
                 if( !Session.get('issue') || Session.get('issue') && Session.get('issue').issue != pieces.issue || Session.get('issue') && Session.get('issue').volume != pieces.volume){
                     Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
