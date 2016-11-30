@@ -5,7 +5,11 @@
 		<div class="page-content col s12 m12 l8">
 			<h2 class="h1">Advance Online Publications</h2>
 
+			{{#if articles}}
 			{{>ArticlesList articles=articles}}
+            {{else}}
+            {{>Loading}}
+			{{/if}}
 		</div>
 	</div>
 </template>
