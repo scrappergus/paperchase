@@ -723,22 +723,14 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            Meteor.call('getForAuthors', function(error, result){
+                    if (result) {
+                        Session.set('forAuthors', result);
+                    }
+                });
+
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('forAuthorsPublic'),
-                Meteor.subscribe('sortedList','forAuthors')
-            ];
-        },
-        data: function(){
-            if(this.ready()){
-                var sections = forAuthors.find().fetch();
-                var sorted  = sorters.findOne();
-                return {
-                    sections : sorted.ordered
-                };
-            }
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {
@@ -757,22 +749,14 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            Meteor.call('getAbout', function(error, result){
+                    if (result) {
+                        Session.set('about', result);
+                    }
+                });
+
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('aboutPublic'),
-                Meteor.subscribe('sortedList','about')
-            ];
-        },
-        data: function(){
-            if(this.ready()){
-                var sections = about.find().fetch();
-                var sorted  = sorters.findOne();
-                return {
-                    sections : sorted.ordered
-                };
-            }
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {
@@ -791,22 +775,14 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            Meteor.call('getEthics', function(error, result){
+                    if (result) {
+                        Session.set('ethics', result);
+                    }
+                });
+
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('ethicsPublic'),
-                Meteor.subscribe('sortedList','ethics')
-            ];
-        },
-        data: function(){
-            if(this.ready()){
-                var sections = ethics.find().fetch();
-                var sorted  = sorters.findOne();
-                return {
-                    sections : sorted.ordered
-                };
-            }
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {
@@ -825,20 +801,14 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            Meteor.call('getContact', function(error, result){
+                    if (result) {
+                        Session.set('contact', result);
+                    }
+                });
+
             this.next();
-        },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('contact')
-            ];
-        },
-        data: function(){
-            if(this.ready()){
-                var contactInfo = contact.findOne();
-                return {
-                    contact: contactInfo
-                };
-            }
         },
         onAfterAction: function() {
             if (!Meteor.isClient) {
