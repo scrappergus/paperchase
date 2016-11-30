@@ -226,7 +226,7 @@ Template.EdBoard.helpers({
     journalName: function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['name'];
+            return journalSettings.journal.name;
         }
     }
 });
