@@ -39,30 +39,8 @@ Meteor.methods({
     },
     getDisplayArticlesByIssueId: function(issueId){
         var fut = new future();
-        // var result = [];
         var issueArticles = articles.find({'issue_id' : issueId, display: true},{sort : {page_start:1}}).fetch();
         issueArticles = Meteor.organize.groupArticles(issueArticles);
-        // return issueArticles;
-
-        // issueArticles.forEach(function(article){
-            // console.log(article._id);
-            // if (article.ids && article.ids.doi) {
-                // Meteor.call('getAltmetricForArticle', article._id, article.ids.doi, function(altmetricError, altmetricResult){
-                //     if (altmetricError){
-                //         console.error('getAltmetricForArticle for issue', altmetricError);
-                //         result.push(article);
-                //     } else if (altmetricResult){
-                //         // console.log(article._id);
-                //         article.altmetric = altmetricResult;
-                //         result.push(article);
-                //     } else {
-                //         result.push(article);
-                //     }
-                // });
-        //     }
-        // });
-        // fut.return(result);
-        // commneted out above because staged using JS library from Altmetric for badges. No need to query before page load for badge data.
 
         fut.return(issueArticles);
 
@@ -157,7 +135,7 @@ Meteor.methods({
                 prevVolume = parseInt(volume) - 1;
                 prevVolumeData = volumes.findOne({volume : prevVolume });
                 if(prevVolumeData && prevVolumeData.issues && prevVolumeData.issues.length > 0){
-                    prevIssueId = prevVolumeData.issues[prevVolumeData.issues.length - 1]
+                    prevIssueId = prevVolumeData.issues[prevVolumeData.issues.length - 1];
                 }
             }
 
@@ -166,7 +144,7 @@ Meteor.methods({
                 nextVolume = parseInt(volume) + 1;
                 nextVolumeData = volumes.findOne({volume : nextVolume});
                 if(nextVolumeData && nextVolumeData.issues && nextVolumeData.issues.length > 0){
-                    nextIssueId = nextVolumeData.issues[0]
+                    nextIssueId = nextVolumeData.issues[0];
                 }
             }
         }
@@ -194,8 +172,7 @@ Meteor.methods({
         return result;
     },
     getIssueMeta: function(volume, issue){
-        var issue,
-            journal,
+        var journal,
             assetUrl;
 
         journal = journalConfig.findOne({}).journal.short_name;
