@@ -78,13 +78,13 @@ Template.Footer.helpers({
     publisher : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['publisher']['name'];
+            return journalSettings.journal.publisher.name;
         }
     },
     issn : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['issn'];
+            return journalSettings.journal.issn;
         }
     }
 });
@@ -115,7 +115,7 @@ Template.subNav.helpers({
     issn : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['issn'];
+            return journalSettings.journal.issn;
         }
     }
 });
@@ -189,7 +189,7 @@ Template.Contact.helpers({
     submitLink : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['submission']['url'];
+            return journalSettings.submission.url;
         }
     }
 });
