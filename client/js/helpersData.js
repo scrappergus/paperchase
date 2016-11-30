@@ -226,7 +226,7 @@ Template.EdBoard.helpers({
     journalName: function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['name'];
+            return journalSettings.journal.name;
         }
     }
 });
@@ -276,10 +276,10 @@ Template.ArticleSidebar.helpers({
     fullTextAvailable: function() {
         var articleData = Template.parentData(1).article;
         if(articleData.files && articleData.files.xml && articleData.files.xml.url && articleData.files.xml.display) {
-            return true
+            return true;
         }
         if(articleData.articleJson) {
-            return true
+            return true;
         }
 
         return;
@@ -352,7 +352,7 @@ Template.AuthorAffsAndNotes.helpers({
             return '';
         }
     }
-})
+});
 
 // Issue
 // ------
@@ -395,7 +395,7 @@ Template.SectionPapers.helpers({
     articles: function(){
         return Session.get('article-list');
     }
-})
+});
 
 // Sections
 Template.Search.helpers({
