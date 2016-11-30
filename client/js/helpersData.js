@@ -173,6 +173,16 @@ Template.MainSideBar.helpers({
     }
 });
 
+// Advance
+// -------
+Template.Advance.helpers({
+    articles: function() {
+        if(Session.get('advance')){
+            return Session.get('advance');
+        }
+    }
+});
+
 // Contact
 // -------------
 Template.Contact.helpers({
