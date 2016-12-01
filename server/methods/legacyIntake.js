@@ -638,6 +638,7 @@ Meteor.methods({
 
     },
     updateArticleUsingOjsData: function(pcArticle, ojsArticle, paperchase_user){
+        // only for adding existing articles in Paperchase to advance. Will also ensure research papers are set to recent
         var fut = new future();
 
         Meteor.call('ojsProcessArticleJson', ojsArticle, function(processError, processedArticleJson){
@@ -646,6 +647,9 @@ Meteor.methods({
                 fut.throw(processError);
             } else if(processedArticleJson){
                 processedArticleJson.advance = true;
+                if (processedArticleJson.section_id && processedArticleJson.section_id  === 5 ){
+                    processedArticleJson.section_id = 0;
+                }
 
                 Meteor.call('updateArticle', pcArticle._id, processedArticleJson, function(errorUpdate, resultUpdate){
                     if (resultUpdate) {
