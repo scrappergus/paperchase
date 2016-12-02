@@ -1177,6 +1177,7 @@ if (Meteor.isClient) {
                 var figureId = this.params.figureId;
 
 
+
                 article = articles.findOne({'_id': articleId});
 
                 if (article) {
@@ -1192,16 +1193,15 @@ if (Meteor.isClient) {
                             }
                         });
                     } else if(articleId){
-                         Router.go('Article',{_id : articleId});
+                        Router.go('Article',{_id : articleId});
                     }
 
                     if(!figure && articleId){
                         Router.go('Article',{_id : articleId});
                     }
                 } else {
-                    Router.go('ArticleNotFound')
+                    Router.go('ArticleNotFound');
                 }
-
 
                 return {
                     article: article,

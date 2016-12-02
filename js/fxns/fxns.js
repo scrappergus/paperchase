@@ -263,15 +263,17 @@ Meteor.article = {
                 if(files[file] !== null){
                     if(files[file].file){
                         files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
-                    }else if(file === 'supplemental'){
+                    } else if (file === 'supplemental'){
                         for(var f in files[file]){
                             if(files[file][f].file)
                             files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
                         }
-                    }else if(file === 'figures' || file === 'tables'){
-                        for(var f in files[file]){
-                            if(files[file][f].file)
-                            files[file][f].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][f].file;
+                    } else if (file === 'figures' || file === 'tables') {
+                        for(var fi in files[file]){
+                            if(files[file][fi].file){
+                                var url = journalConfig.findOne({}).assets_figures + '/' + files[file][fi].file;
+                                files[file][fi].url = files[file][fi].version ? url + '?v=' + files[file][fi].version : url;
+                            }
                         }
                     }
                 }
