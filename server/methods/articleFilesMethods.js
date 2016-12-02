@@ -129,10 +129,10 @@ Meteor.methods({
                         if(asset.id && asset.id == assetId){
                             asset.file = newFileName;
 
-                            if (asset.version || asset.version === 0) {
+                            if (asset.version) {
                                 asset.version++;
                             } else {
-                                asset.version = 0;
+                                asset.version = 1;
                             }
                         }
                     });
