@@ -56,7 +56,6 @@ Template.AdminArticleButtons.events({
             Meteor.formActions.successMessage('crawled article ' + mid);
         });
     },
-
     'click .crawl-pdf': function (e) {
         e.preventDefault();
         var pii = e.target.dataset.pii;

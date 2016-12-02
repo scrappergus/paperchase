@@ -86,7 +86,7 @@ Meteor.methods({
         return fut.wait();
     },
     renameArticleAsset: function(articleMongoId, originalFileName, assetId, assetType){
-        console.log('renameArticleAsset', articleMongoId, originalFileName, assetId, assetType);
+        // console.log('renameArticleAsset', articleMongoId, originalFileName, assetId, assetType);
         // Now rename the asset if the name was not in standard format (articlemongoid_assetId)
         var fut = new future();
         var journal,
@@ -114,7 +114,6 @@ Meteor.methods({
             fileType = originalFilePieces[parseInt(originalFilePieces.length - 1)];
 
             newFileName = articleMongoId + '_' + assetIdLowercase + '.' + fileType;
-            // result.renamedFile = newFileName;
             source = s3Folder + '/' + originalFileName;
             dest = s3Folder + '/' + newFileName;
 
@@ -126,13 +125,17 @@ Meteor.methods({
                 else if(res){
                     // asset was renamed on S3
                     // now create Asset list with new info
-
                     articleDbAssets.forEach(function(asset){
                         if(asset.id && asset.id == assetId){
                             asset.file = newFileName;
+
+                            if (asset.version || asset.version === 0) {
+                                asset.version++;
+                            } else {
+                                asset.version = 0;
+                            }
                         }
                     });
-                    // result[assetType] = articleDbAssets;
                     fut.return(articleDbAssets);
                 }
             });
