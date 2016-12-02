@@ -144,13 +144,34 @@ Router.route('/xml-cite-set/:_filename',{
     }
 });
 
+if (Meteor.isServer) {
+    // Image Proxy
+    WebApp.connectHandlers.use(function(req, res, next) {
+        // via @satyavh on Medium
+        var img, queryData, request, url, x;
+        request = Meteor.npmRequire('request');
+        url = Meteor.npmRequire('url');
+        if (url.parse(req.url, true).pathname !== '/img') {
+            return next();
+        }
+        queryData = url.parse(req.url, true).query;
+        if (!((queryData.img !== null) && (queryData.user !== null))) {
+            return next();
+        }
+        img = journalConfig.findOne({}).assets_figures + '/' + queryData.img;
+
+        x = request(img);
+        return req.pipe(x).pipe(res);
+    });
+}
+
 // OUTTAKE ROUTES
 Router.route('/get-advance-articles/',{
     where: 'server',
     waitOn: function(){
         return[
             Meteor.subscribe('publish'),
-        ]
+        ];
     },
     action: function(){
         // var htmlString = '<head><meta charset="UTF-8"></head><body>';

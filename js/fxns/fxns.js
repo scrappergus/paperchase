@@ -271,8 +271,7 @@ Meteor.article = {
                     } else if (file === 'figures' || file === 'tables') {
                         for(var fi in files[file]){
                             if(files[file][fi].file){
-                                var url = journalConfig.findOne({}).assets_figures + '/' + files[file][fi].file;
-                                files[file][fi].url = files[file][fi].version ? url + '?v=' + files[file][fi].version : url;
+                                files[file][fi].url = files[file][fi].version ? '/img?img=' + files[file][fi].file + '&v=' + files[file][fi].version : '/img?img=' + files[file][fi].file ;
                             }
                         }
                     }
