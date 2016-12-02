@@ -17,6 +17,7 @@
 		{{>ArticleFigureViewerViewer}}
 		{{/with}}
 
+		{{#if figure}}
 		<div class="row">
 			<div class="col s12 center-align">
 				<div class="figure-range">
@@ -25,6 +26,9 @@
 				<button class="reset btn grey">Reset</button>
 			</div>
 		</div>
+		{{else}}
+		{{>Loading}}
+		{{/if}}
 
 		{{#with figure}}
 		<div class="row">
