@@ -537,6 +537,16 @@ h3#references + ul li {
     }
 }
 
+p.full-text-formula label:before {
+    content: "\A";
+    white-space: pre; 
+}
+
+disp-formula label:after {
+    content: "\A";
+    white-space: pre; 
+}
+
 /*================ Sidebar Article Content | Article-Level Modules ================*/
 
 //

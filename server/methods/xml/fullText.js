@@ -59,7 +59,6 @@ Meteor.methods({
             for(var section = 0; section<sections.length; section++){
                 var sectionObject = {},
                     sectionIdObject = {};
-                // console.log(sections[section].localName);
                 if(sections[section].localName === 'sec'){
                     sectionObject = Meteor.fullText.sectionToJson(sections[section], files, mongoId);
                     sectionIdObject = Meteor.fullText.sectionId(sections[section], true);
@@ -440,7 +439,7 @@ Meteor.fullText = {
                 if (formulaAttr && formulaAttr.id) {
                     sectionPartObject.id = formulaAttr.id;
                 }
-                content = Meteor.fullText.convertFormula(formulaInParagraph[0].childNodes);
+                content = Meteor.fullText.convertContent(sec);
             } else if (inlineFormulaInParagraph && inlineFormulaInParagraph[0] && inlineFormulaInParagraph[0].localName === 'inline-formula') {
                 // inline formula
                 content = Meteor.fullText.convertContent(sec);
@@ -570,6 +569,9 @@ Meteor.fullText = {
         }
         else if( node.localName === 'ext-link' ){
             content += Meteor.fullText.linkExtLink(node);
+        }
+        else if( node.localName === 'disp-formula' ) {
+            content += Meteor.fullText.convertFormula([node]); 
         }
         else {
             //Open tag
