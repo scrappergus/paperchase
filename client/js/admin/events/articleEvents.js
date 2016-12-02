@@ -218,52 +218,6 @@ Template.AdminArticleFigures.events({
         assetId = $(e.target).closest('button').attr('data-id');
         Meteor.articleFiles.editAsset(assetId, 'figures', false);
     }
-    // 'click .article-figure-delete': function(e){
-        // e.preventDefault();
-        // Meteor.formActions.saving();
-        // var articleMongoId,
-        //     figId,
-        //     figures,
-        //     newFigures = [],
-        //     figToDelete,
-        //     userMessage;
-
-        // articleMongoId = Session.get('article')._id;
-        // fileSettings = Session.get('article').files;
-        // figId = $(e.target).closest('button').attr('data-id');
-        // figures = articles.findOne({_id : articleMongoId}).files.figures; // use DB data instead of session variable because this will get used to update the DB again with removed figure
-
-        // figures.forEach(function(fig){
-        //     if(fig.id == figId || fig.temp_id == figId){
-        //         console.log('match!',fig);
-        //         figToDelete = fig.file;
-        //     }else{
-        //         newFigures.push(fig);
-        //     }
-        // });
-        // if(figToDelete){
-        //     // console.log('figToDelete',figToDelete);
-        //     // Delete from AWS
-        //     S3.delete('paper_figures/' + figToDelete, function(error,result){
-        //         if(error){
-        //             console.error('Could not delete figure file: ' + figToDelete);
-        //         }else if(result){
-        //             console.log('figures',figures);
-        //             // Delete from DB
-        //             Meteor.call('updateArticleDbFigures', articleMongoId, figures, function(error,result){
-        //                 if(error){
-        //                     console.error('updateArticleDbFigures',error);
-        //                     userMessage = 'Figure ' + figToDelete + ' deleted, but could not update the database. Contact IT and request DB update.' ;
-        //                     Meteor.formActions.errorMessage(userMessage);
-        //                 }else if(result){
-        //                     Meteor.formActions.successMessage('Figure' + figToDelete + ' deleted.');
-        //                 }
-        //             });
-        //             Meteor.formActions.successMessage(result);
-        //         }
-        //     });
-        // }
-    // }
 });
 Template.AdminArticleSupplemental.events({
     'click .article-supp-edit': function(e){
