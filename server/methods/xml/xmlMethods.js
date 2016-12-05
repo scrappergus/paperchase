@@ -44,50 +44,58 @@ Meteor.methods({
         // console.log('..processXmlString');
         var fut = new future();
         Meteor.call('xmlDtd',xml, function(error,dtd){
-            if(error){
+            if (error) {
                 console.error('DTD',error);
-            }else if(dtd && dtd === 'V2'){
+            } else if (dtd && dtd === 'V2') {
                 Meteor.call('processPmcXml',xml, function(error,result){
                     if(error){
                         console.error('processPmcXml',error);
+                        fut.throw(error);
                     }else if(result){
-                        // console.log('processXmlString',result.dates);
                         fut.return(result);
                     }
                 });
-            }else if(dtd && dtd === 'V3'){
+            } else if (dtd && dtd === 'V3') {
                 Meteor.call('processV3Xml',xml, function(error,result){
                     if(error){
                         console.error('processPmcXml',error);
+                        fut.throw(error);
                     }else if(result){
-                        // console.log('processXmlString',result.dates);
                         fut.return(result);
                     }
                 });
-            }else if(dtd && dtd === 'JATS'){
+            } else if (dtd && dtd === 'JATS') {
                 Meteor.call('processV3Xml',xml, function(error,result){
                     if(error){
                         console.error('processPmcXml',error);
+                        if (error instanceof TypeError) {
+                            fut.throw(error.message);
+                        } else {
+                            fut.throw(error);
+                        }
                     }else if(result){
-                        // console.log('processXmlString',result.dates);
                         fut.return(result);
                     }
                 });
-            }else if(dtd && dtd === 'AOP'){
+            } else if (dtd && dtd === 'AOP') {
                 Meteor.call('processAopXml',xml, function(error,result){
                     if(error){
                         console.error('processAopXml',error);
                     }else if(result){
-                        // console.log('processXmlString',result.dates);
                         fut.return(result);
                     }
                 });
-            }else{
+            } else {
                 fut.throw('Could not process XML.');
             }
         });
 
-        return fut.wait();
+
+        try {
+            return fut.wait();
+        } catch(error) {
+            throw new Meteor.Error(error);
+        }
     },
     parseXmltoJson: function(xml){
         // console.log('..parseXmltoJson');

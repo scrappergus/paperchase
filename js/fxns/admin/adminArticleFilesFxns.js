@@ -10,6 +10,7 @@ Meteor.articleFiles = {
             assetBaseUrl,
             assetUrl,
             xmlFileName;
+        var errorMessage = 'Could not process XML for verification';
 
         if(!files || files.length === 0) {
             // only for when reprocessing XML already on S3
@@ -22,8 +23,7 @@ Meteor.articleFiles = {
                 Meteor.call('getXml',assetUrl, function(xmlError,xmlString){
                     if(xmlError){
                         console.error('xmlError',xmlError);
-                    }
-                    else if(xmlString){
+                    } else if(xmlString){
                         Meteor.call('processXmlString',xmlString, function(error,result){
                             if(error){
                                 console.error('process XML for DB', error);
@@ -48,25 +48,24 @@ Meteor.articleFiles = {
                     }
                 });
             }
-        }
-        else {
+        } else {
             file = files[0];
             reader.onload = function(e) {
                 xmlString = e.target.result;
-
                 Meteor.call('processXmlString',xmlString, function(error,result){
                     if(error){
                         console.error('process XML for DB', error);
-                        Meteor.formActions.errorMessage('Could not process XML for verification');
-                    }
-                    else if(result){
+                        if (error.error) {
+                            errorMessage = error.error;
+                        }
+                        Meteor.formActions.errorMessage(errorMessage);
+                    } else if(result){
                         Meteor.formActions.closeModal();
 
                         Meteor.call('preProcessArticle',articleMongoId,result,function(error,result){
                             if(error){
                                 console.error('ERROR - preProcessArticle',error);
-                            }
-                            else if(result){
+                            } else if(result){
                                 Session.set('xml-verify',true);
                                 result._id = articleMongoId;
                                 Session.set('article-form',result);
@@ -84,16 +83,18 @@ Meteor.articleFiles = {
         var file = files[0];
         var reader = new FileReader();
         var xmlString;
+        var errorMessage = 'Could not process XML for verification';
 
         reader.onload = function(e) {
             xmlString = e.target.result;
-
             Meteor.call('processXmlString',xmlString, function(error,processedXml){
                 if(error){
-                    console.error('process XML for DB', error);
-                    Meteor.formActions.errorMessage('Could not process XML for verification');
-                }
-                else if(processedXml){
+                    console.error('process XML for DB');
+                    if (error.error) {
+                        errorMessage = error.error;
+                    }
+                    Meteor.formActions.errorMessage(errorMessage);
+                } else if(processedXml){
                     // check for duplicates
                     Meteor.call('articleExistenceCheck',null,processedXml,function(duplicateFound){
                         if(duplicateFound){
