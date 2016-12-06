@@ -537,15 +537,13 @@ h3#references + ul li {
     }
 }
 
-p.full-text-formula label:before {
-    content: "\A";
-    white-space: pre; 
+p.full-text-formula label, disp-formula label {
+    display:block;
+    text-align:right;
+    position:relative;
+    top:-22px;
 }
 
-disp-formula label:after {
-    content: "\A";
-    white-space: pre; 
-}
 
 /*================ Sidebar Article Content | Article-Level Modules ================*/
 
