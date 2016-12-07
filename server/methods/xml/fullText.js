@@ -573,6 +573,9 @@ Meteor.fullText = {
         else if( node.localName === 'disp-formula' ) {
             content += Meteor.fullText.convertFormula([node]); 
         }
+        else if( node.localName === 'inline-formula' ) {
+            content += Meteor.fullText.convertFormula([node]); 
+        }
         else {
             //Open tag
             if(node.localName != null){
