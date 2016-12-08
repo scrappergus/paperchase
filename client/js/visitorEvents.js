@@ -10,7 +10,7 @@ Template.Home.events({
 // ------------
 Template.LatestNews.events({
     'click .almetric-news-link': function(e){
-        Meteor.googleAnalytics.sendEvent('almetric-news-link',e);
+        Meteor.googleAnalytics.sendEvent('Almetric News Link',e);
     }
 });
 
