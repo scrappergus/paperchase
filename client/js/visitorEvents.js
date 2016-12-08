@@ -6,6 +6,13 @@ Template.Home.events({
     }
 });
 
+// News
+// ------------
+Template.LatestNews.events({
+    'click .almetric-news-link': function(e){
+        Meteor.googleAnalytics.sendEvent('almetric-news-link',e);
+    }
+});
 
 // Recommend
 // -------
