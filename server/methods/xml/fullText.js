@@ -313,7 +313,8 @@ Meteor.methods({
                 // ------------------
                 for(var refAttr = 0; refAttr < refAttributes.length; refAttr++){
                     if(refAttributes[refAttr].localName === 'id' && refAttributes[refAttr].nodeValue){
-                        referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','');
+                        referenceObj.id = refAttributes[refAttr].nodeValue;
+                        referenceObj.number = refAttributes[refAttr].nodeValue.replace('R','').replace('r',''); // for when no <label>
                     }
                 }
 
@@ -578,7 +579,7 @@ Meteor.fullText = {
         }
         else {
             //Open tag
-            if(node.localName != null){
+            if(node.localName !== null){
                 content += '<' + node.localName;
 
                 if(node.localName === 'table'){
@@ -589,7 +590,7 @@ Meteor.fullText = {
             }
 
             //Tag content
-            if(node.nodeType == 3 && node.nodeValue && node.nodeValue.replace(/^\s+|\s+$/g, '').length != 0){
+            if(node.nodeType == 3 && node.nodeValue && node.nodeValue.replace(/^\s+|\s+$/g, '').length !== 0){
                 //plain text or external link
                 if(node.nodeValue && node.nodeValue.indexOf('http') != -1 || node.nodeValue.indexOf('https') != -1 ){
                     // console.log(node.nodeValue);
@@ -608,7 +609,7 @@ Meteor.fullText = {
             }
 
             //Close tag
-            if(node.localName != null){
+            if(node.localName !== null){
                 content += '</' + node.localName + '>';
             }
         }
@@ -662,18 +663,18 @@ Meteor.fullText = {
             nodeAnchor = '';
         if(xrefNode.childNodes[0]){
             nValue = xrefNode.childNodes[0].nodeValue;
-            if(nValue == null){
+            if(nValue === null){
                 // there is styling withing the xref, for ex <sup>a</sup>
                 nValue = Meteor.fullText.convertContent(xrefNode);
             }
             var attributes = xrefNode.attributes;
             // tagName should be replace with figure or reference id. nodeValue would return F1C, but rid will return F1.
             for(var attr = 0 ; attr < attributes.length ; attr++){
-                // console.log('      ' +attributes[attr].nodeName + ' = ' + attributes[attr].nodeValue);
                 if(attributes[attr].nodeName === 'rid'){
                     nodeAnchor = attributes[attr].nodeValue;
                 }
             }
+
             content += '<a href="#' + nodeAnchor + '"  class="anchor">';
             content += nValue;
             content += '</a>';
@@ -686,7 +687,7 @@ Meteor.fullText = {
             attributes;
         if(linkNode.childNodes[0]){
             nValue = linkNode.childNodes[0].nodeValue;
-            if(nValue == null){
+            if(nValue === null){
               nValue = Meteor.fullText.convertContent(linkNode);
             }
             attributes = Meteor.fullText.traverseAttributes(linkNode.attributes);
@@ -795,8 +796,7 @@ Meteor.fullText = {
         referenceObj.authors = '';
         var first_author = true;
 
-
-        var referenceObj = {'textContent':[], citationType: reference.nodeName.replace("-", "_")};
+        referenceObj = {'textContent':[], citationType: reference.nodeName.replace("-", "_")};
 
         for(var r = 0; r < reference.childNodes.length; r++){
 
@@ -1056,7 +1056,7 @@ Meteor.fullText = {
                 if(n.tagName == 'etal') {
                     etal = ',<em> et al</em>';
                 }
-                else if(n.nodeValue != ''){
+                else if(n.nodeValue !== ''){
                     var author = '';
                     // Get the author name
                     if(n.nodeType == 3){
@@ -1067,7 +1067,7 @@ Meteor.fullText = {
 
                     // trim author name
                     author = author.replace(/^\s+|\s+$/g, '');
-                    if(author.length != 0){
+                    if(author.length !== 0){
                         // if not empty node
                         authors.push(author);
                     }
@@ -1098,8 +1098,7 @@ Meteor.fullText = {
             tableFooter = '',
             tableLabel = '',
             tableTitle = '',
-            tableCaption = '',
-            tableTitle = '';
+            tableCaption = '';
         for(var c = 0 ; c < node.childNodes.length ; c++){
             var elAttr;
 
@@ -1108,10 +1107,10 @@ Meteor.fullText = {
             var elType = n.localName;
 
             // console.log(elType);
-            if(elType != null){
+            if(elType !== null){
                 elType = Meteor.fullText.fixTableTags(elType);
             }
-            if(elType != null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic' && elType != 'break' && elType != 'list' ){
+            if(elType !== null && elType != 'title' && elType != 'label' && elType != 'caption' && elType != 'table' && elType != 'table-wrap-foot' && elType != 'xref' && elType != 'graphic' && elType != 'break' && elType != 'list' ){
                 // table tag added in sectionToJson()
                 if(n.attributes){
                     elAttr = Meteor.fullText.traverseAttributes(n.attributes);
@@ -1139,7 +1138,7 @@ Meteor.fullText = {
 
                 //id
                 if(elAttr && elAttr.id){
-                    tableString += ' id="' + elAttr.id + '"';;
+                    tableString += ' id="' + elAttr.id + '"';
                 }
 
                 tableString += '>';

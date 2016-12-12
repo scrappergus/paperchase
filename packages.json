@@ -8,5 +8,7 @@
     "mongodb": "2.1.11",
     "superagent": "1.8.3",
     "superagent-as-promised": "4.0.0",
-    "phantom": "2.1.11"
+    "phantom": "2.1.11",
+	"request": "2.79.0",
+	"url" : "0.11.0"
 }
