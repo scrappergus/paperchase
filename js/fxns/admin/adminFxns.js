@@ -638,7 +638,9 @@ Meteor.adminSections = {
         e.preventDefault();
         var forDb = {};
         var invalidData = [];
-        forDb.name = $('#section-name').val();
+        var name = $('#section-name').val();
+        forDb.name = name;
+        forDb.section_name = name; // for OJS advance
         forDb.display = $('#section-display').is(':checked');
 
         if(!forDb.name){
@@ -647,14 +649,14 @@ Meteor.adminSections = {
                 'message' : 'Section Name Is Empty'
             });
             Meteor.formActions.invalid(invalidData);
-        }
-        else{
+        } else{
             forDb.short_name = forDb.name.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
                 if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
                 return index === 0 ? match.toLowerCase() : match.toUpperCase();
             }); // based on http://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
 
             forDb.dash_name = forDb.name.toLowerCase().replace(/\s/g,'-').replace(':','');
+
 
             // Check if section exists via Mongo ID hidden input
             mongoId = $('#section-mongo-id').val();
