@@ -144,13 +144,34 @@ Router.route('/xml-cite-set/:_filename',{
     }
 });
 
+if (Meteor.isServer) {
+    // Image Proxy
+    WebApp.connectHandlers.use(function(req, res, next) {
+        // via @satyavh on Medium
+        var img, queryData, request, url, x;
+        request = Meteor.npmRequire('request');
+        url = Meteor.npmRequire('url');
+        if (url.parse(req.url, true).pathname !== '/img') {
+            return next();
+        }
+        queryData = url.parse(req.url, true).query;
+        if (!((queryData.img !== null) && (queryData.user !== null))) {
+            return next();
+        }
+        img = journalConfig.findOne({}).assets_figures + '/' + queryData.img;
+
+        x = request(img);
+        return req.pipe(x).pipe(res);
+    });
+}
+
 // OUTTAKE ROUTES
 Router.route('/get-advance-articles/',{
     where: 'server',
     waitOn: function(){
         return[
             Meteor.subscribe('publish'),
-        ]
+        ];
     },
     action: function(){
         // var htmlString = '<head><meta charset="UTF-8"></head><body>';
@@ -1177,6 +1198,7 @@ if (Meteor.isClient) {
                 var figureId = this.params.figureId;
 
 
+
                 article = articles.findOne({'_id': articleId});
 
                 if (article) {
@@ -1192,16 +1214,15 @@ if (Meteor.isClient) {
                             }
                         });
                     } else if(articleId){
-                         Router.go('Article',{_id : articleId});
+                        Router.go('Article',{_id : articleId});
                     }
 
                     if(!figure && articleId){
                         Router.go('Article',{_id : articleId});
                     }
                 } else {
-                    Router.go('ArticleNotFound')
+                    Router.go('ArticleNotFound');
                 }
-
 
                 return {
                     article: article,

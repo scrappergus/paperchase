@@ -233,22 +233,6 @@ Template.Article.helpers({
         return Session.get('article-text');
     }
 });
-// Template.ArticleHeaderTitle.helpers({
-//     altmetric: function(){
-//         return Session.get('article-altmetric');
-//     }
-// });
-// Template.AltmetricBadge.helpers({
-//     altmetricDetailsLink: function() {
-//         return Meteor.settings.public.journal.altmetric.reportLink;
-//     }
-// });
-
-// Template.ArticleHeaderTitle.helpers({
-//     titleClass: function(){
-//         return Session.get('badge-visible') ? 'badge-visible' : '';
-//     }
-// });
 
 Template.FullTextFigure.helpers({
     articleId: function() {
@@ -282,10 +266,10 @@ Template.ArticleSidebar.helpers({
     fullTextAvailable: function() {
         var articleData = Template.parentData(1).article;
         if(articleData.files && articleData.files.xml && articleData.files.xml.url && articleData.files.xml.display) {
-            return true
+            return true;
         }
         if(articleData.articleJson) {
-            return true
+            return true;
         }
 
         return;
@@ -358,7 +342,7 @@ Template.AuthorAffsAndNotes.helpers({
             return '';
         }
     }
-})
+});
 
 // Issue
 // ------
@@ -401,7 +385,7 @@ Template.SectionPapers.helpers({
     articles: function(){
         return Session.get('article-list');
     }
-})
+});
 
 // Sections
 Template.Search.helpers({
