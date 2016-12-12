@@ -538,6 +538,14 @@ h3#references + ul li {
     }
 }
 
+p.full-text-formula label, disp-formula label {
+    display:block;
+    text-align:right;
+    position:relative;
+    top:-22px;
+}
+
+
 /*================ Sidebar Article Content | Article-Level Modules ================*/
 
 //
