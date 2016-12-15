@@ -63,7 +63,7 @@
                         <h3 id="references">References</h3>
                         <ul>
                             {{#each references}}
-                                <li id="R{{number}}">
+                                <li id="{{id}}">
                                     <b>{{#if label}}{{label}}{{else}}{{number}}{{/if}}.</b>
 
                                     {{#if asString}}
@@ -263,7 +263,9 @@
 <template name="FullTextFigure">
     <div class="full-text-image-container" id="{{id}}">
         {{#if url}}<a href="/figure/{{articleId}}/{{id}}" target="_blank"><img alt={{label}} class="full-text-image" src="{{url}}"/></a>{{/if}}
+        {{#mathjax}}
         {{>FullTextFigureText}}
+        {{/mathjax}}
     </div>
 </template>
 
