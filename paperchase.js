@@ -1001,13 +1001,9 @@ if (Meteor.isClient) {
             }
             var meta = {};
             var title = Meteor.settings.public.journal.name;
-            var doi;
 
             if (this.data() && this.data().article) {
-                if (this.data().article.ids && this.data().article.ids.doi){
-                    doi = this.data().article.ids.doi.replace('http://dx.doi.org/', '');
-                    meta.citation_doi = 'doi:' + doi;
-                }
+                meta = Meteor.article.metaTags(this.data().article, false);
 
                 if (this.data().article.title) {
                     title += ' | ' +  Meteor.article.pageTitle(this.params._id, null);
@@ -1102,13 +1098,9 @@ if (Meteor.isClient) {
             }
             var meta = {};
             var title = Meteor.settings.public.journal.name;
-            var doi;
 
             if (this.data() && this.data().article) {
-                if (this.data().article.ids && this.data().article.ids.doi){
-                    doi = this.data().article.ids.doi.replace('http://dx.doi.org/', '');
-                    meta.citation_doi = 'doi:' + doi;
-                }
+                meta = Meteor.article.metaTags(this.data().article, true);
 
                 if (this.data().article.title) {
                     title += ' | ' +  Meteor.article.pageTitle(this.params._id, ' - Full Text');
