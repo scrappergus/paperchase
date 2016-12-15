@@ -1119,6 +1119,9 @@ Meteor.clean = {
             }
         }
         return string;
+    },
+    stripHtml: function(string){
+        return string.replace(/(<([^>]+)>)/ig,'');
     }
 };
 
