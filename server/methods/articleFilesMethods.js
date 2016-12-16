@@ -201,15 +201,13 @@ Meteor.methods({
                 error.userMessage = 'File not uploaded. Please try again.';
                 console.error('renameArticleAsset',error);
                 fut.throw(error);// though it was actually uploaded, it was not renamed to standard convention. So this file cannot be used.
-            }
-            else if(renamedResult){
+            } else if(renamedResult){
                 Meteor.call('updateArticleDbAssets', articleMongoId, renamedResult, assetType, function(error, dbUpdateResult){
                     if(error){
                         error.userMessage = 'Asset uploaded, but could not update the database. Contact IT and request DB update.' ;
                         fut.throw(error);
                         console.error('updateArticleDbAssets',error);
-                    }
-                    else if(dbUpdateResult){
+                    } else if(dbUpdateResult){
                         fut.return(renamedResult);
                     }
                 });
