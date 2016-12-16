@@ -257,8 +257,7 @@ Meteor.upload = {
         Meteor.s3.upload(files, s3Folder, function(error,result){
             if(error){
                 Meteor.formActions.errorMessage('File not upload.');
-            }
-            else if(result){
+            } else if(result){
                 // filenamePieces = for testing if we need to rename the uploaded image, if standard naming convention then do not delete
                 filenamePieces = uploadedFilename.split('_');
                 filenameLastPiecePieces = filenamePieces[filenamePieces.length - 1].split('.'); // to remove .jpg etc
@@ -269,8 +268,7 @@ Meteor.upload = {
                     // now delete original poorly named file, which needs to happen on client, happens below via deletAsset()
                     if(error){
                         Meteor.formActions.errorMessage(error.error);
-                    }
-                    else if(result){
+                    } else if(result){
 
                         S3.collection.remove({});
 
