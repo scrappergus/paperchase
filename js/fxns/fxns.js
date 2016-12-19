@@ -343,12 +343,9 @@ Meteor.article = {
             Session.set('article-text', result);
         });
     },
-    readyFullText: function(mongoId){
-        // console.log('...readyFullText',mongoId);
+    readyFullText: function(article){
+        // console.log('...readyFullText',article._id);
         var result = {};
-        var article = articles.findOne({
-            '_id': mongoId
-        });
         var files;
         var xmlUrl;
 
@@ -389,11 +386,11 @@ Meteor.article = {
 
                 Session.set('article-text', result);
             } else {
-                if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+                if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != article._id|| !Session.get('article-text')){
                     // Will SET full text session variable and article-text-modified session variable
                     // this conditional checks if the session variable for full text matches the request, if not then reparse XML OR session variable for full text does not exist
                     Meteor.article.setFullTextVariable(article, result);
-                } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === mongoId){
+                } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === article._id){
                     // Will SET full text session variable and article-text-modified session variable ONLY IF last-modified date has changed
                     // this conditional is for when the request matches the exisiting session variable for full text.
                     // Now make sure that the last-modified date has not changed, if so then reset session variable
@@ -403,10 +400,10 @@ Meteor.article = {
 
                     // option 2: Go directly to XML to get last-modified
                     if(article.files && article.files.xml){
-                        files = Meteor.article.linkFiles(article.files, mongoId);
+                        files = Meteor.article.linkFiles(article.files, article._id);
                         if(files && files.xml && files.xml.url){
                             xmlUrl = files.xml.url;
-                            // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                            // if(article._id === 'MHpmpbTNuNqLnCN9g'){
                             //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
                             // }
                             Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
@@ -426,7 +423,14 @@ Meteor.article = {
 
     },
     breadcrumbParent: function(data) {
-        if(data && data.article && data.article.advance === true) {
+        if(data === undefined) {
+            var article = Session.get('article');
+        }
+        else {
+            var article = data.article;
+        }
+
+        if(article && article.advanceInfo === true) {
            return 'Advance';
         }else{
            return 'Issue';
