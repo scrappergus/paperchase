@@ -449,6 +449,110 @@ Meteor.article = {
                 });
             }
         }
+    },
+    metaTags: function(articleData, fullText){
+        var meta = {};
+        var epub;
+        var cleanedAbstract = '';
+
+        // journal name
+        if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal){
+            if ( Meteor.settings.public.journal.issn) {
+                meta.citation_issn = Meteor.settings.public.journal.issn;
+            }
+            if ( Meteor.settings.public.journal.name) {
+                meta.citation_journal_title = Meteor.settings.public.journal.nameExtra ?
+                Meteor.settings.public.journal.name + ' ' + Meteor.settings.public.journal.nameExtra
+                : Meteor.settings.public.journal.name;
+            }
+        }
+
+        // article title
+        if (articleData.title) {
+            meta.citation_title = articleData.title;
+        }
+
+        // ids
+        if (articleData.ids){
+            if (articleData.ids.doi) {
+                var doi = articleData.ids.doi.replace('http://dx.doi.org/', '');
+                meta.citation_doi = 'doi:' + doi;
+            }
+
+            if (articleData.ids.pmid) {
+                meta.citation_pmid = articleData.ids.pmid;
+            }
+        }
+
+        // article volume, issue, pages
+        if (articleData.volume) {
+            meta.citation_volume = articleData.volume;
+        }
+        if (articleData.issue) {
+            meta.citation_issue = articleData.issue;
+        }
+        if (articleData.page_start) {
+            meta.citation_firstpage = articleData.page_start;
+        }
+        if (articleData.page_end) {
+            meta.citation_lastpage = articleData.page_end;
+        }
+
+        // pub date
+        if (articleData.dates.epub) {
+            epub = Meteor.dates.article(articleData.dates.epub);
+            meta.citation_date = epub;
+            meta.citation_publication_date = epub;
+        }
+
+        // description
+        if (articleData.abstract) {
+            cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract);
+            meta.description = fullText ? 'Full Text - ' + cleanedAbstract : cleanedAbstract;
+            if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl){
+                meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData._id;
+            }
+        }
+
+        // keywords
+        if (articleData.keywords && articleData.keywords.length > 0) {
+            articleData.keywords.forEach(function(keyword){
+                if (meta.keywords) {
+                    meta.keywords += ', ' + keyword;
+                } else {
+                    meta.keywords = keyword;
+                }
+            });
+
+            if (meta.keywords) {
+                meta.citation_keywords = meta.keywords;
+            }
+        }
+
+        // pdf
+        if (articleData.files && articleData.files.pdf && articleData.files.pdf.url){
+            meta.citation_pdf_url = articleData.files.pdf.url;
+        }
+
+        // authors
+        if (articleData.authors && articleData.authors.length > 0) {
+            meta.citation_author = [];
+            articleData.authors.forEach(function(author){
+                var fullName = '';
+                if (author.name_first) {
+                    fullName = author.name_first;
+                }
+                if (author.name_middle) {
+                    fullName += author.name_first ? ' ' + author.name_middle : author.name_middle;
+                }
+                if (author.name_last) {
+                    fullName += author.name_first || author.name_middle ? ' ' + author.name_last : author.name_last;
+                }
+                meta.citation_author.push(fullName);
+            });
+        }
+
+        return meta;
     }
 };
 
@@ -1019,6 +1123,9 @@ Meteor.clean = {
             }
         }
         return string;
+    },
+    stripHtml: function(string){
+        return string.replace(/(<([^>]+)>)/ig,'');
     }
 };
 
