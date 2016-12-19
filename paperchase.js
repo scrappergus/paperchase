@@ -981,37 +981,37 @@ if (Meteor.isClient) {
                 meta: meta
             });
         },
-        waitOn: function(){
-            return[
-                Meteor.subscribe('articleInfo',this.params._id),
-                Meteor.subscribe('articleIssue',this.params._id),
-                Meteor.subscribe('articleTypes'),
-                Meteor.subscribe('journalConfig')
-            ];
-        },
-        data: function(){
-            if(this.ready()){
-                var article = articles.findOne({'_id': this.params._id});
-                if(article){
-                    article = Meteor.article.readyData(article);
-                    return {
-                        article: article
-                    };
-                }
-            }
-        }
+//        waitOn: function(){
+//            return[
+//                Meteor.subscribe('articleInfo',this.params._id),
+//                Meteor.subscribe('articleIssue',this.params._id),
+//                Meteor.subscribe('articleTypes'),
+//                Meteor.subscribe('journalConfig')
+//            ];
+//        },
+//        data: function(){
+//            if(this.ready()){
+//                var article = articles.findOne({'_id': this.params._id});
+//                if(article){
+//                    article = Meteor.article.readyData(article);
+//                    return {
+//                        article: article
+//                    };
+//                }
+//            }
+//        }
     });
 
     Router.route('/article/:_id/text', {
         name: 'ArticleText',
         parent: function() {
-            return Meteor.article.breadcrumbParent(this.data());
+            return Meteor.article.breadcrumbParent();
         },
         layoutTemplate: 'Visitor',
         onBeforeAction: function() {
             Meteor.impact.redirectForAlt();
             // check if article exists
-            var articleExistsExists = articles.findOne({'_id': this.params._id});
+//            var articleExistsExists = articles.findOne({'_id': this.params._id});
 
             // Redirect if not set to display
             // if(!articleExistsExists){
@@ -1023,41 +1023,68 @@ if (Meteor.isClient) {
             // }
 
             // DO NOT Redirect if not set to display. Uncomment above & remove below when ready
-            if(!articleExistsExists){
-                Router.go('ArticleNotFound');
-            } else{
-                Meteor.article.altmetric(articleExistsExists);
-            }
+//            if(!articleExistsExists){
+//                Router.go('ArticleNotFound');
+//            } else{
+//                Meteor.article.altmetric(articleExistsExists);
+//            }
 
-            Meteor.article.readyFullText(this.params._id);
+//            Meteor.article.readyFullText(this.params._id);
 
             Session.set('article-id',this.params._id);
+
+
+            Meteor.call('getArticle', {_id:this.params._id}, function(error, result){
+                    if (result) {
+                        Session.set('article', result.article);
+                        Meteor.article.readyFullText(result.article);
+                    }
+                });
+
+            Meteor.call('getArticleInfo', {_id:this.params._id}, function(error, result){
+                    if (result) {
+                        Session.set('articleInfo', result);
+                    }
+                });
+
+            Meteor.call('getArticleIssue', {_id:this.params._id}, function(error, result){
+                    if (result) {
+                        Session.set('articleIssue', result);
+                    }
+                });
+
+            Meteor.call('getArticleTypes', function(error, result){
+                    if (result) {
+                        Session.set('articleTypes', result);
+                    }
+                });
+
             this.next();
         },
-        waitOn: function() {
-            return [
-                Meteor.subscribe('articleInfo', this.params._id),
-                Meteor.subscribe('articleIssue', this.params._id),
-                Meteor.subscribe('articleTypes'),
-                Meteor.subscribe('journalConfig')
-            ];
-        },
-        data: function() {
-            if (this.ready()) {
-                var article = articles.findOne({
-                    '_id': this.params._id
-                });
-                if (article) {
-                    article = Meteor.article.readyData(article);
-                    if(article && article.files && article.files.xml && !article.files.xml.display){
-                        Router.go('Article', {_id : this.params._id});
-                    }
-                    return {
-                        article: article
-                    };
-                }
-            }
-        },
+//        waitOn: function() {
+//            return [
+//                Meteor.subscribe('articleInfo', this.params._id),
+//                Meteor.subscribe('articleIssue', this.params._id),
+//                Meteor.subscribe('articleTypes'),
+//                Meteor.subscribe('journalConfig')
+//            ];
+//        },
+//        data: function() {
+//            if (this.ready()) {
+//                var article = articles.findOne({
+//                    '_id': this.params._id
+//                });
+//                if (article) {
+//                    article = Meteor.article.readyData(article);
+//                    if(article && article.files && article.files.xml && !article.files.xml.display){
+//                        Router.go('Article', {_id : this.params._id});
+//                    }
+//                    return {
+//                        article: article
+//                    };
+//                }
+//            }
+//        },
         onAfterAction: function() {
             if (!Meteor.isClient) {
                 return;
@@ -1066,13 +1093,15 @@ if (Meteor.isClient) {
             var title = Meteor.settings.public.journal.name;
             var doi;
 
-            if (this.data() && this.data().article) {
-                if (this.data().article.ids && this.data().article.ids.doi){
-                    doi = this.data().article.ids.doi.replace('http://dx.doi.org/', '');
+            var article = Session.get('article');
+
+            if (article) {
+                if (article.ids && article.ids.doi){
+                    doi = article.ids.doi.replace('http://dx.doi.org/', '');
                     meta.citation_doi = 'doi:' + doi;
                 }
 
-                if (this.data().article.title) {
+                if (article.title) {
                     title += ' | ' +  Meteor.article.pageTitle(this.params._id, ' - Full Text');
                 }
             }

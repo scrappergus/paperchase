@@ -277,15 +277,22 @@ Template.EdBoard.helpers({
 // Article
 // -------
 Template.ArticleText.helpers({
-    fullText: function(){
-        return Session.get('article-text');
-    }
-});
+        article:function() {
+            return Session.get('article');
+        },
+        fullText: function(){
+            return Session.get('article-text');
+        }
+    });
 Template.Article.helpers({
-    fullText: function(){
-        return Session.get('article-text');
-    }
-});
+        article:function() {
+            return Session.get('article');
+        },
+
+        fullText: function(){
+            return Session.get('article-text');
+        }
+    });
 
 Template.FullTextFigure.helpers({
     articleId: function() {
@@ -396,6 +403,8 @@ Template.AuthorAffsAndNotes.helpers({
         }
     }
 });
+
+
 
 // Issue
 // ------
