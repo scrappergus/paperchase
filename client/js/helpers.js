@@ -366,18 +366,27 @@ if (Meteor.isClient) {
         }
         return str;
     });
-    Template.registerHelper('issueLinkViaTitle', function(issueTitle) {
-        // TODO: instead customize package to return more data in the breadcrumb object
-        var journalName = '';
-        if(journalConfig.findOne()){
-            journalName = journalConfig.findOne().journal.name;
+    Template.registerHelper('issueBreadcrumbPath', function() {
+        var path = '';
+
+        if (Session.get('article') && Session.get('article').vi){
+            path = 'issue/' + Session.get('article').vi;
+        } else if (Session.get('article') && Session.get('article').advance) {
+            path = 'advance';
         }
-        issueTitle = issueTitle.replace(journalName + ' | ','');
-        issueTitle = issueTitle.replace(',','');
-        issueTitle = issueTitle.replace('Volume','v');
-        issueTitle = issueTitle.replace('Issue','i');
-        issueTitle = issueTitle.replace(/\s+/g,'');
-        return issueTitle;
+
+        return path;
+    });
+    Template.registerHelper('issueBreadcrumb', function() {
+        var issueBreadcrumb = '';
+
+        if (Session.get('article') && Session.get('article').issue && Session.get('article').volume){
+            issueBreadcrumb = 'Volume ' + Session.get('article').volume + ', Issue ' + Session.get('article').issue;
+        } else if (Session.get('article') && Session.get('article').advance) {
+            issueBreadcrumb = 'Advance';
+        }
+
+        return issueBreadcrumb;
     });
 
 
