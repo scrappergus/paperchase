@@ -24,36 +24,36 @@ Template.Home.helpers({
 });
 
 Template.Contact.helpers({
-        contact: function() {
-            if(Session.get('contact')){
-                return Session.get('contact');
-            }
+    contact: function() {
+        if(Session.get('contact')){
+            return Session.get('contact');
         }
-    });
+    }
+});
 
 Template.Ethics.helpers({
-        sections: function() {
-            if(Session.get('ethics')){
-                return Session.get('ethics');
-            }
+    sections: function() {
+        if(Session.get('ethics')){
+            return Session.get('ethics');
         }
-    });
+    }
+});
 
 Template.ForAuthors.helpers({
-        sections: function() {
-            if(Session.get('forAuthors')){
-                return Session.get('forAuthors');
-            }
+    sections: function() {
+        if(Session.get('forAuthors')){
+            return Session.get('forAuthors');
         }
-    });
+    }
+});
 
 Template.About.helpers({
-        sections: function() {
-            if(Session.get('about')){
-                return Session.get('about');
-            }
+    sections: function() {
+        if(Session.get('about')){
+            return Session.get('about');
         }
-    });
+    }
+});
 
 Template.Conferences.helpers({
     past: function() {
@@ -277,22 +277,21 @@ Template.EdBoard.helpers({
 // Article
 // -------
 Template.ArticleText.helpers({
-        article:function() {
-            return Session.get('article');
-        },
-        fullText: function(){
-            return Session.get('article-text');
-        }
-    });
+    article:function() {
+        return Session.get('article');
+    },
+    fullText: function(){
+        return Session.get('article-text');
+    }
+});
 Template.Article.helpers({
-        article:function() {
-            return Session.get('article');
-        },
-
-        fullText: function(){
-            return Session.get('article-text');
-        }
-    });
+    article:function() {
+        return Session.get('article');
+    },
+    fullText: function(){
+        return Session.get('article-text');
+    }
+});
 
 Template.FullTextFigure.helpers({
     articleId: function() {
@@ -404,8 +403,6 @@ Template.AuthorAffsAndNotes.helpers({
     }
 });
 
-
-
 // Issue
 // ------
 Template.Issue.helpers({
@@ -460,5 +457,4 @@ Template.Search.helpers({
     queryResults: function() {
         return Session.get("queryResults");
     }
-
 });

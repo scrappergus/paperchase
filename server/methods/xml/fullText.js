@@ -572,10 +572,10 @@ Meteor.fullText = {
             content += Meteor.fullText.linkExtLink(node);
         }
         else if( node.localName === 'disp-formula' ) {
-            content += Meteor.fullText.convertFormula([node]); 
+            content += Meteor.fullText.convertFormula([node]);
         }
         else if( node.localName === 'inline-formula' ) {
-            content += Meteor.fullText.convertFormula([node]); 
+            content += Meteor.fullText.convertFormula([node]);
         }
         else {
             //Open tag
@@ -703,12 +703,26 @@ Meteor.fullText = {
     convertFigure: function(node, files, mongoId){
         // console.log('..convertFigure',node);
         var figObj;
+        var captionPieces;
 
         // get the figure id, label, title, caption
         //------------------
         Meteor.xmlPmc.figure(node, function(figInfo){
             if(figInfo){
                 figObj = figInfo;
+
+                // alt tag
+                if (figInfo.title) {
+                    figObj.alt = Meteor.clean.stripHtml(figInfo.title);
+                } else if (figInfo.caption) {
+                    captionPieces = figInfo.caption.split(/_(.+)/);
+                    if (captionPieces && captionPieces[0]) {
+                        figObj.alt = Meteor.clean.stripHtml(captionPieces[0]);
+                    }
+                } else if (figInfo.label) {
+                    figObj.alt = figInfo.label;
+                }
+
                 // match to db file info
                 if(files.figures)
                 for(var f = 0; f<files.figures.length; f++){

@@ -282,14 +282,11 @@ Meteor.article = {
         }
         return files;
     },
-    pageTitle: function(articleId, titleExtra){
-        var articleTitle = '',
-            articleTitlePlain = '',
+    pageTitle: function(articleTitle, titleExtra){
+        var articleTitlePlain = '',
             article,
             tmp;
-        article = articles.findOne({'_id': articleId});
-        if(article){
-            articleTitle = article.title;
+        if(articleTitle){
             tmp = document.createElement('DIV');
             tmp.innerHTML = articleTitle;
             articleTitlePlain = tmp.textContent || tmp.innerText || '';
@@ -343,98 +340,95 @@ Meteor.article = {
             Session.set('article-text', result);
         });
     },
-    readyFullText: function(article){
-        // console.log('...readyFullText',article._id);
+    readyFullText: function(mongoId){
+        // console.log('...readyFullText',mongoId);
+        // TODO: add redirect for when article set to display: false. this was put on hold by Ilya, wanted to make sure production understood.
+
         var result = {};
         var files;
         var xmlUrl;
+        var article;
 
-        if(article){
-            if(article.articleJson) {
-                Session.set('article-text', null);
-                result = article.articleJson;
-                result.abstract = article.abstract;
-                if(result && result.sections) {
-                    var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
-                    var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
+        Meteor.call('getArticle', {_id : mongoId}, function(error, articleResult){
+            if (error) {
+                console.error('via readyFullText', error);
+            } else if (articleResult) {
+                article = articleResult.article;
+                Session.set('article', article);
+                Meteor.article.altmetric(article);
 
-                    for(var idx=0; idx < result.sections.length; idx++) {
-                        str = result.sections[idx].title;
-                        if(str){
-                            if(str.match(/MATERIALS AND METHOD(S*)/)){
-                                str = 'Materials and Methods';
-                            }
-                            else if(str.match(casePattern)){
-                                str = str.toLowerCase();
-                                str = str.charAt(0).toUpperCase() + str.slice(1);
-                            }
-                            else if(str.match(suppCasePattern)){
-                                str = 'Supplementary Materials';
-                            }
-                            else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
-                                str = 'Materials and Methods';
-                            }
-                            else if(str.match(/ACKNOWLEDGEMENTS/i)){
-                                str = 'Acknowledgements';
-                            }
+                if(article.articleJson) {
+                    Session.set('article-text', null);
+                    result = article.articleJson;
+                    result.abstract = article.abstract;
+                    if(result && result.sections) {
+                        var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
+                        var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
 
-                        }
-
-                        result.sections[idx].title = str;
-                    }
-                }
-
-                Session.set('article-text', result);
-            } else {
-                if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != article._id|| !Session.get('article-text')){
-                    // Will SET full text session variable and article-text-modified session variable
-                    // this conditional checks if the session variable for full text matches the request, if not then reparse XML OR session variable for full text does not exist
-                    Meteor.article.setFullTextVariable(article, result);
-                } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === article._id){
-                    // Will SET full text session variable and article-text-modified session variable ONLY IF last-modified date has changed
-                    // this conditional is for when the request matches the exisiting session variable for full text.
-                    // Now make sure that the last-modified date has not changed, if so then reset session variable
-
-                    // option 1: use DB last_update
-                    // use the last_update property in the article doc to determine if we should reparse. This will get reset when new XML is uploaded. possible problem - timezone
-
-                    // option 2: Go directly to XML to get last-modified
-                    if(article.files && article.files.xml){
-                        files = Meteor.article.linkFiles(article.files, article._id);
-                        if(files && files.xml && files.xml.url){
-                            xmlUrl = files.xml.url;
-                            // if(article._id === 'MHpmpbTNuNqLnCN9g'){
-                            //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
-                            // }
-                            Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
-                                // just check header for modified date
-                                if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
-                                    Meteor.article.setFullTextVariable(article, result);
+                        for(var idx=0; idx < result.sections.length; idx++) {
+                            str = result.sections[idx].title;
+                            if(str){
+                                if(str.match(/MATERIALS AND METHOD(S*)/)){
+                                    str = 'Materials and Methods';
                                 }
-                            });
+                                else if(str.match(casePattern)){
+                                    str = str.toLowerCase();
+                                    str = str.charAt(0).toUpperCase() + str.slice(1);
+                                }
+                                else if(str.match(suppCasePattern)){
+                                    str = 'Supplementary Materials';
+                                }
+                                else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
+                                    str = 'Materials and Methods';
+                                }
+                                else if(str.match(/ACKNOWLEDGEMENTS/i)){
+                                    str = 'Acknowledgements';
+                                }
+                            }
+
+                            result.sections[idx].title = str;
                         }
                     }
-                    // option 3: add last-modified property to xml in article doc
+
+                    Session.set('article-text', result);
                 } else {
-                    // requested matches exting session variable for full text
+                    if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+                        // Will SET full text session variable and article-text-modified session variable
+                        // this conditional checks if the session variable for full text matches the request, if not then reparse XML OR session variable for full text does not exist
+                        Meteor.article.setFullTextVariable(article, result);
+                    } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === mongoId){
+                        // Will SET full text session variable and article-text-modified session variable ONLY IF last-modified date has changed
+                        // this conditional is for when the request matches the exisiting session variable for full text.
+                        // Now make sure that the last-modified date has not changed, if so then reset session variable
+
+                        // option 1: use DB last_update
+                        // use the last_update property in the article doc to determine if we should reparse. This will get reset when new XML is uploaded. possible problem - timezone
+
+                        // option 2: Go directly to XML to get last-modified
+                        if(article.files && article.files.xml){
+                            files = Meteor.article.linkFiles(article.files, mongoId);
+                            if(files && files.xml && files.xml.url){
+                                xmlUrl = files.xml.url;
+                                // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                                //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                                // }
+                                Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
+                                    // just check header for modified date
+                                    if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
+                                        Meteor.article.setFullTextVariable(article, result);
+                                    }
+                                });
+                            }
+                        }
+                        // option 3: add last-modified property to xml in article doc
+                    } else {
+                        // requested matches exting session variable for full text
+                    }
                 }
+            } else {
+                Router.go('ArticleNotFound');
             }
-        }
-
-    },
-    breadcrumbParent: function(data) {
-        if(data === undefined) {
-            var article = Session.get('article');
-        }
-        else {
-            var article = data.article;
-        }
-
-        if(article && article.advanceInfo === true) {
-           return 'Advance';
-        }else{
-           return 'Issue';
-        }
+        });
     },
     altmetric: function(article) {
         if (Session.get('article-altmetric') && Session.get('article-altmetric').mongo != article._id || !Session.get('article-altmetric')){
@@ -449,6 +443,110 @@ Meteor.article = {
                 });
             }
         }
+    },
+    metaTags: function(articleData, fullText){
+        var meta = {};
+        var epub;
+        var cleanedAbstract = '';
+
+        // journal name
+        if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal){
+            if ( Meteor.settings.public.journal.issn) {
+                meta.citation_issn = Meteor.settings.public.journal.issn;
+            }
+            if ( Meteor.settings.public.journal.name) {
+                meta.citation_journal_title = Meteor.settings.public.journal.nameExtra ?
+                Meteor.settings.public.journal.name + ' ' + Meteor.settings.public.journal.nameExtra
+                : Meteor.settings.public.journal.name;
+            }
+        }
+
+        // article title
+        if (articleData.title) {
+            meta.citation_title = articleData.title;
+        }
+
+        // ids
+        if (articleData.ids){
+            if (articleData.ids.doi) {
+                var doi = articleData.ids.doi.replace('http://dx.doi.org/', '');
+                meta.citation_doi = 'doi:' + doi;
+            }
+
+            if (articleData.ids.pmid) {
+                meta.citation_pmid = articleData.ids.pmid;
+            }
+        }
+
+        // article volume, issue, pages
+        if (articleData.volume) {
+            meta.citation_volume = articleData.volume;
+        }
+        if (articleData.issue) {
+            meta.citation_issue = articleData.issue;
+        }
+        if (articleData.page_start) {
+            meta.citation_firstpage = articleData.page_start;
+        }
+        if (articleData.page_end) {
+            meta.citation_lastpage = articleData.page_end;
+        }
+
+        // pub date
+        if (articleData.dates.epub) {
+            epub = Meteor.dates.article(articleData.dates.epub);
+            meta.citation_date = epub;
+            meta.citation_publication_date = epub;
+        }
+
+        // description
+        if (articleData.abstract) {
+            cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract);
+            meta.description = fullText ? 'Full Text - ' + cleanedAbstract : cleanedAbstract;
+            if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl){
+                meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData._id;
+            }
+        }
+
+        // keywords
+        if (articleData.keywords && articleData.keywords.length > 0) {
+            articleData.keywords.forEach(function(keyword){
+                if (meta.keywords) {
+                    meta.keywords += ', ' + keyword;
+                } else {
+                    meta.keywords = keyword;
+                }
+            });
+
+            if (meta.keywords) {
+                meta.citation_keywords = meta.keywords;
+            }
+        }
+
+        // pdf
+        if (articleData.files && articleData.files.pdf && articleData.files.pdf.url){
+            meta.citation_pdf_url = articleData.files.pdf.url;
+        }
+
+        // authors
+        if (articleData.authors && articleData.authors.length > 0) {
+            meta.citation_author = [];
+            articleData.authors.forEach(function(author){
+                var fullName = '';
+                if (author.name_first) {
+                    fullName = author.name_first;
+                }
+                if (author.name_middle) {
+                    fullName += author.name_first ? ' ' + author.name_middle : author.name_middle;
+                }
+                if (author.name_last) {
+                    fullName += author.name_first || author.name_middle ? ' ' + author.name_last : author.name_last;
+                }
+                meta.citation_author.push(fullName);
+            });
+        }
+
+        return meta;
     }
 };
 
@@ -1019,6 +1117,9 @@ Meteor.clean = {
             }
         }
         return string;
+    },
+    stripHtml: function(string){
+        return string.replace(/(<([^>]+)>)/ig,'');
     }
 };
 
