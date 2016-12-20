@@ -400,3 +400,11 @@ Template.Search.helpers({
     }
 
 });
+
+//Reprint Request form
+Template.PrintRequest.helpers({
+    submitted: function(){
+        return Session.get('submitted');
+    }
+});
+

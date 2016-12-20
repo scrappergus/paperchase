@@ -131,3 +131,9 @@ Template.AdvancedSearch.onRendered(function() {
     $('.fixed-scroll-card').css('width', $('.page-sidebar').width());
   });
 });
+
+//Fix the overlapping labels and placeholders on the print request form
+Template.PrintRequest.rendered = function(){
+    Materialize.updateTextFields();
+    $('select').material_select();
+}

@@ -414,6 +414,13 @@ if (Meteor.isServer) {
         return articles.find({'ids.pii':pii},{});
     });
 
+    // Retrieve multiple articles by PII array
+    Meteor.publish('articlesById', function(pii) {
+        check(pii, Array);
+        return articles.find({'_id': {"$in":pii}},{});
+    });
+
+
     Meteor.publish('articleByVolumePage', function(volume, page_start) {
         check(volume, Number);
         check(page_start, Number);

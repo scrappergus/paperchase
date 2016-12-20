@@ -1331,6 +1331,51 @@ if (Meteor.isClient) {
         }
     });
 
+
+    // Print request form
+    Router.route('/print-request/:ids', {
+        name: 'PrintRequest',
+        parent: function() {
+            return Meteor.article.breadcrumbParent(this.data());
+        },
+        layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+
+            this.next();
+        },
+        waitOn: function(){
+            ids = this.params.ids.split(',');
+            return[
+                Meteor.subscribe('articlesById',ids),
+            ];
+        },
+        data: function(){
+            var article = {
+                title:''
+            };
+            if(this.ready()){
+                var ids = this.params.ids.split(',');
+                var arts = articles.find({'_id': {"$in":ids}});
+                if(arts){
+                    article.titles = [];
+                    article.piis = [];
+                    article.urls = [];
+                    arts.forEach(function(art) {
+                            article.titles.push(art.title);
+                            article.piis.push(art.ids.pii);
+                            article.urls.push("http://boston.impactaging.com/admin/article/"+art._id);
+                        });
+                }
+
+                return {
+                    article: article
+                };
+            }
+        }
+    });
+
+
     Router.route('/section/:_section_dash_name', {
         name: 'SectionPapers',
         layoutTemplate: 'Visitor',
