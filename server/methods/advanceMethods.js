@@ -29,5 +29,11 @@ Meteor.methods({
         }
         // console.log('byId',byId);
         return byId;
+    },
+    getAdvance: function(){
+        var sorted  = sorters.findOne({ 'name': 'advance' });
+        if (sorted && sorted.ordered) {
+            return sorted.ordered;
+        }
     }
 });

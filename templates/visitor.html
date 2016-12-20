@@ -69,7 +69,13 @@
             {{#each Breadcrumb}}
                 <li>
                     {{#if equals path 'Issue'}}
-                        {{#if showLink}}<a href="/issue/{{issueLinkViaTitle title}}">{{#with stripTitle title}} {{truncate this 40}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 48}} {{/with}} {{/if}}
+                        {{#if showLink}}
+                            <a href="/issue/{{issueBreadcrumbPath}}">
+                            {{issueBreadcrumb}}
+                            </a>
+                        {{else}}
+                            {{#with stripTitle title}} {{truncate this 48}} {{/with}}
+                        {{/if}}
                     {{else}}
                         {{#if showLink}}<a href="{{url}}">{{#with stripTitle title}} {{truncate this 40}} {{/with}}</a>{{else}}{{#with stripTitle title}} {{truncate this 48}} {{/with}} {{/if}}
                     {{/if}}

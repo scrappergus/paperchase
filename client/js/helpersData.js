@@ -23,6 +23,38 @@ Template.Home.helpers({
     }
 });
 
+Template.Contact.helpers({
+    contact: function() {
+        if(Session.get('contact')){
+            return Session.get('contact');
+        }
+    }
+});
+
+Template.Ethics.helpers({
+    sections: function() {
+        if(Session.get('ethics')){
+            return Session.get('ethics');
+        }
+    }
+});
+
+Template.ForAuthors.helpers({
+    sections: function() {
+        if(Session.get('forAuthors')){
+            return Session.get('forAuthors');
+        }
+    }
+});
+
+Template.About.helpers({
+    sections: function() {
+        if(Session.get('about')){
+            return Session.get('about');
+        }
+    }
+});
+
 Template.Conferences.helpers({
     past: function() {
         return Session.get('conferences') &&  Session.get('conferences').past ? Session.get('conferences').past : false;
@@ -78,13 +110,13 @@ Template.Footer.helpers({
     publisher : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['publisher']['name'];
+            return journalSettings.journal.publisher.name;
         }
     },
     issn : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['issn'];
+            return journalSettings.journal.issn;
         }
     }
 });
@@ -115,7 +147,7 @@ Template.subNav.helpers({
     issn : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['issn'];
+            return journalSettings.journal.issn;
         }
     }
 });
@@ -173,13 +205,23 @@ Template.MainSideBar.helpers({
     }
 });
 
+// Advance
+// -------
+Template.Advance.helpers({
+    articles: function() {
+        if(Session.get('advance')){
+            return Session.get('advance');
+        }
+    }
+});
+
 // Contact
 // -------------
 Template.Contact.helpers({
     submitLink : function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['submission']['url'];
+            return journalSettings.submission.url;
         }
     }
 });
@@ -216,7 +258,18 @@ Template.EdBoard.helpers({
     journalName: function(){
         var journalSettings = journalConfig.findOne();
         if(journalSettings){
-            return journalSettings['journal']['name'];
+            return journalSettings.journal.name;
+        }
+    },
+    eic: function() {
+        if(Session.get('eic')){
+            return Session.get('eic');
+        }
+
+    },
+    fullBoard: function() {
+        if(Session.get('fullBoard')){
+            return Session.get('fullBoard');
         }
     }
 });
@@ -224,11 +277,17 @@ Template.EdBoard.helpers({
 // Article
 // -------
 Template.ArticleText.helpers({
+    article:function() {
+        return Session.get('article');
+    },
     fullText: function(){
         return Session.get('article-text');
     }
 });
 Template.Article.helpers({
+    article:function() {
+        return Session.get('article');
+    },
     fullText: function(){
         return Session.get('article-text');
     }
@@ -398,5 +457,4 @@ Template.Search.helpers({
     queryResults: function() {
         return Session.get("queryResults");
     }
-
 });

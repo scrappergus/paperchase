@@ -298,25 +298,8 @@ h4.dates {
         margin: 0!important;
     }
 }
-// #article-title{
-    // padding-left: 42px;
-// }
-// #article-title.badge-visible{
-//     padding-left: 74px;
-// }
-// .article-altmetric{
-//     float: left;
-//     a > img{
-//         margin-right: 10px!important;
-//     }
-// }
-// .altmetric-badge{
-//     img{
-//         height: $largeAltmetricBadge;
-//     }
-// }
 .article-altmetric {
-    height: $smallAltmetricBadge;
+    max-height: $smallAltmetricBadge;
     a {
         height: $smallAltmetricBadge;
         width: $smallAltmetricBadge;

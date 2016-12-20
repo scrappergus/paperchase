@@ -282,14 +282,11 @@ Meteor.article = {
         }
         return files;
     },
-    pageTitle: function(articleId, titleExtra){
-        var articleTitle = '',
-            articleTitlePlain = '',
+    pageTitle: function(articleTitle, titleExtra){
+        var articleTitlePlain = '',
             article,
             tmp;
-        article = articles.findOne({'_id': articleId});
-        if(article){
-            articleTitle = article.title;
+        if(articleTitle){
             tmp = document.createElement('DIV');
             tmp.innerHTML = articleTitle;
             articleTitlePlain = tmp.textContent || tmp.innerText || '';
@@ -345,92 +342,93 @@ Meteor.article = {
     },
     readyFullText: function(mongoId){
         // console.log('...readyFullText',mongoId);
+        // TODO: add redirect for when article set to display: false. this was put on hold by Ilya, wanted to make sure production understood.
+
         var result = {};
-        var article = articles.findOne({
-            '_id': mongoId
-        });
         var files;
         var xmlUrl;
+        var article;
 
-        if(article){
-            if(article.articleJson) {
-                Session.set('article-text', null);
-                result = article.articleJson;
-                result.abstract = article.abstract;
-                if(result && result.sections) {
-                    var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
-                    var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
+        Meteor.call('getArticle', {_id : mongoId}, function(error, articleResult){
+            if (error) {
+                console.error('via readyFullText', error);
+            } else if (articleResult) {
+                article = articleResult.article;
+                Session.set('article', article);
+                Meteor.article.altmetric(article);
 
-                    for(var idx=0; idx < result.sections.length; idx++) {
-                        str = result.sections[idx].title;
-                        if(str){
-                            if(str.match(/MATERIALS AND METHOD(S*)/)){
-                                str = 'Materials and Methods';
-                            }
-                            else if(str.match(casePattern)){
-                                str = str.toLowerCase();
-                                str = str.charAt(0).toUpperCase() + str.slice(1);
-                            }
-                            else if(str.match(suppCasePattern)){
-                                str = 'Supplementary Materials';
-                            }
-                            else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
-                                str = 'Materials and Methods';
-                            }
-                            else if(str.match(/ACKNOWLEDGEMENTS/i)){
-                                str = 'Acknowledgements';
-                            }
+                if(article.articleJson) {
+                    Session.set('article-text', null);
+                    result = article.articleJson;
+                    result.abstract = article.abstract;
+                    if(result && result.sections) {
+                        var casePattern = /(INTRODUCTION|RESULTS|DISCUSSION|METHODS|CONCLUSION)/;
+                        var suppCasePattern = /(SUPPLEMENTAL|SUPPLEMENTARY|Supplementary|Supplemental|SUPPLEMETAL)/;
 
-                        }
-
-                        result.sections[idx].title = str;
-                    }
-                }
-
-                Session.set('article-text', result);
-            } else {
-                if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
-                    // Will SET full text session variable and article-text-modified session variable
-                    // this conditional checks if the session variable for full text matches the request, if not then reparse XML OR session variable for full text does not exist
-                    Meteor.article.setFullTextVariable(article, result);
-                } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === mongoId){
-                    // Will SET full text session variable and article-text-modified session variable ONLY IF last-modified date has changed
-                    // this conditional is for when the request matches the exisiting session variable for full text.
-                    // Now make sure that the last-modified date has not changed, if so then reset session variable
-
-                    // option 1: use DB last_update
-                    // use the last_update property in the article doc to determine if we should reparse. This will get reset when new XML is uploaded. possible problem - timezone
-
-                    // option 2: Go directly to XML to get last-modified
-                    if(article.files && article.files.xml){
-                        files = Meteor.article.linkFiles(article.files, mongoId);
-                        if(files && files.xml && files.xml.url){
-                            xmlUrl = files.xml.url;
-                            // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
-                            //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
-                            // }
-                            Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
-                                // just check header for modified date
-                                if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
-                                    Meteor.article.setFullTextVariable(article, result);
+                        for(var idx=0; idx < result.sections.length; idx++) {
+                            str = result.sections[idx].title;
+                            if(str){
+                                if(str.match(/MATERIALS AND METHOD(S*)/)){
+                                    str = 'Materials and Methods';
                                 }
-                            });
+                                else if(str.match(casePattern)){
+                                    str = str.toLowerCase();
+                                    str = str.charAt(0).toUpperCase() + str.slice(1);
+                                }
+                                else if(str.match(suppCasePattern)){
+                                    str = 'Supplementary Materials';
+                                }
+                                else if(str.match(/EXPERIMENTAL PROCEDURES/i)){
+                                    str = 'Materials and Methods';
+                                }
+                                else if(str.match(/ACKNOWLEDGEMENTS/i)){
+                                    str = 'Acknowledgements';
+                                }
+                            }
+
+                            result.sections[idx].title = str;
                         }
                     }
-                    // option 3: add last-modified property to xml in article doc
-                } else {
-                    // requested matches exting session variable for full text
-                }
-            }
-        }
 
-    },
-    breadcrumbParent: function(data) {
-        if(data && data.article && data.article.advance === true) {
-           return 'Advance';
-        }else{
-           return 'Issue';
-        }
+                    Session.set('article-text', result);
+                } else {
+                    if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo != mongoId || !Session.get('article-text')){
+                        // Will SET full text session variable and article-text-modified session variable
+                        // this conditional checks if the session variable for full text matches the request, if not then reparse XML OR session variable for full text does not exist
+                        Meteor.article.setFullTextVariable(article, result);
+                    } else if(Session.get('article-text') && Session.get('article-text').mongo && Session.get('article-text').mongo === mongoId){
+                        // Will SET full text session variable and article-text-modified session variable ONLY IF last-modified date has changed
+                        // this conditional is for when the request matches the exisiting session variable for full text.
+                        // Now make sure that the last-modified date has not changed, if so then reset session variable
+
+                        // option 1: use DB last_update
+                        // use the last_update property in the article doc to determine if we should reparse. This will get reset when new XML is uploaded. possible problem - timezone
+
+                        // option 2: Go directly to XML to get last-modified
+                        if(article.files && article.files.xml){
+                            files = Meteor.article.linkFiles(article.files, mongoId);
+                            if(files && files.xml && files.xml.url){
+                                xmlUrl = files.xml.url;
+                                // if(mongoId === 'MHpmpbTNuNqLnCN9g'){
+                                //     xmlUrl = 'https://s3-us-west-1.amazonaws.com/paperchase-aging/test/101047-p.xml';
+                                // }
+                                Meteor.http.get( xmlUrl,function(getXmlError, xmlRes){
+                                    // just check header for modified date
+                                    if(xmlRes && xmlRes.headers['last-modified'] && xmlRes.headers['last-modified'] != Session.get('article-text-modified')){
+                                        Meteor.article.setFullTextVariable(article, result);
+                                    }
+                                });
+                            }
+                        }
+                        // option 3: add last-modified property to xml in article doc
+                    } else {
+                        // requested matches exting session variable for full text
+                    }
+                }
+            } else {
+                Router.go('ArticleNotFound');
+            }
+        });
     },
     altmetric: function(article) {
         if (Session.get('article-altmetric') && Session.get('article-altmetric').mongo != article._id || !Session.get('article-altmetric')){
