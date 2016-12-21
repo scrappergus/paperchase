@@ -233,3 +233,38 @@ Template.Footer.events({
         ga('send', 'event', 'Archive Site');
     }
 });
+
+//Print Request
+Template.PrintRequest.events({
+    'submit #print-request': function(e,t) {
+        e.preventDefault();
+        var target = e.target;
+
+        var to = "gus@tina.company";
+        var from = target.email.value;
+        var subject = "Request for Reprint";
+        var pii = target.pii.value.replace(/(^\s*,)|(,\s*$)/g, '');
+        var url = target.url.value;
+        var title = target.title.value;
+        var name = target.name.value;
+        var phone = target.phone.value;
+        var institution = target.institution.value;
+        var shippingAddress = target.shippingAddress.value;
+        var specs = target.specs.value;
+        var number = target.number.value;
+        var color = target.color.checked ? 'Color' : 'B/W';
+        var supplements = target.supplements.checked ? 'Yes' : 'No';
+        var cover = target.cover.checked ? 'Yes' : 'No';
+
+        var text = '<b>Name:</b> '+name+' <br><b>Email:</b> '+from+' <br><b>Additional information / special instructions:</b> '+' <p>'+specs+'</p>'+' <br><b>Article Title(s):</b> '+'<p>'+title+'</p>'+' <br><b>Article Pii:</b> ' +pii+' <br><b>Article URLs:</b> ' +url+' <br><b>Phone Number:</b> '+phone+' <br><b>Institution:</b> '+institution+' <br><b>Shipping Address:</b> '+shippingAddress+' <br><b>Number of Copies:</b> '+number+' <br><b>Color/Black & White:</b> '+color+' <br><b>Include cover?:</b> '+cover+' <br><b>Include Supplementary Material?:</b> '+supplements;
+
+        Meteor.call('sendEmail', {
+                to : "gus@tina.company",
+                from : from,
+                subject : subject,
+                text: text
+            });
+
+        Router.go('PrintRequestComplete');
+    }
+});

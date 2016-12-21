@@ -1204,6 +1204,70 @@ if (Meteor.isClient) {
         }
     });
 
+
+    // Print request form
+    Router.route('/print-request/:ids', {
+        name: 'PrintRequest',
+        parent: function() {
+            return Meteor.article.breadcrumbParent(this.data());
+        },
+        layoutTemplate: 'Visitor',
+        onBeforeAction: function(){
+            Meteor.impact.redirectForAlt();
+
+            this.next();
+        },
+        waitOn: function(){
+            var ids = this.params.ids;
+            if(ids.substring(0,1) == 'v') {
+                var ids = [];
+            }
+            else {
+                var ids = ids.split(',');
+            }
+            return[
+                Meteor.subscribe('articlesById',ids),
+            ];
+        },
+        data: function(){
+            var article = {};
+            if(this.ready()){
+                var ids = this.params.ids;
+                if(ids.substring(0,1) == 'v') {
+                    ids = ids.substring(1).split('i');
+                    article.titles = ["Vol "+ids[0]+", Iss "+ids[1]];
+                    article.urls = ["http://aging-us.com/issue/"+this.params.ids];
+                }
+                else {
+                    ids = ids.split(',');
+                    var arts = articles.find({'_id': {"$in":ids}});
+                    if(arts){
+                        article.titles = [];
+                        article.piis = [];
+                        article.urls = [];
+                        arts.forEach(function(art) {
+                                article.titles.push(art.title);
+                                article.piis.push(art.ids.pii);
+                                article.urls.push("http://www.aging-us.com/article/"+art._id);
+                            });
+                    }
+                }
+                
+
+                return {
+                    article: article
+                };
+            }
+        }
+    });
+
+    Router.route('/print-request-complete', {
+        name: 'PrintRequestComplete',
+        layoutTemplate: 'Visitor'
+    });
+
+
+
     Router.route('/section/:_section_dash_name', {
         name: 'SectionPapers',
         layoutTemplate: 'Visitor',

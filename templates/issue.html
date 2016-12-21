@@ -41,6 +41,9 @@
                     <span class="issue-pages">{{>IssuePages}}</span>
                     {{/with}}
                     {{#if caption}}<div class="issue-caption"><h4>About the Cover</h4>{{{caption}}}</div>{{/if}}
+                    <br />
+                    <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/v{{volume}}i{{issue}}">Request Issue Reprint</a> 
+
                 </div>
             </div>
             {{/with}}

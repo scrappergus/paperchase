@@ -1,0 +1,127 @@
+<template name="PrintRequest">
+    <div class="row">
+        <div class="col s12">
+            <p>Dear Authors and Readers,</p> 
+
+            <p>We offer on demand printing for Aging (Albany, NY).</p>
+
+            <p>Our options range from a single copy of a black and white article with no cover all the way up to full-color copies of complete issues.<br />
+            Please provide the following information and we will prepare a purchase order for your review.</p>
+            <p>Sincerely, <br />
+            Aging (Albany, NY)<br />
+            Reprints Team</p>
+        </div>
+    </div>
+
+    <form id="print-request">
+        <input type="hidden" id="pii" value="{{#each article.piis}}{{.}}, {{/each}}">
+        <input type="hidden" id="url" value="{{#each article.urls}}{{.}} {{/each}}">
+        <div class="row">
+            <div class="col s6">
+                <div>
+                    <div class="input-field">
+                        <label for="specs">Paper(s) Requested *</label>
+                        <textarea id="title" class="materialize-textarea" placeholder="Enter titles you're requesting" required>{{#each article.titles}}{{{.}}}
+
+{{/each}}</textarea> 
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="input-field">
+                        <label for="specs">Any Specifications For Your Request</label>
+                        <textarea id="specs"  class="materialize-textarea" placeholder="Enter Specifcations for your request here"></textarea> 
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div style="float:left;">
+                        <h6 style="margin-top:22px;">Number of Copies? *</h6>
+                    </div>
+                    <div style="float:right; width:10%;">
+                        <input id="number" type="number" value="1" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div style="float:left; display:inline;">
+                        <span style="text-style:bold;">Print in Black/White or Color?</span>
+                    </div>
+                    <div style="float:right; display:inline;">
+                        <div class="switch">
+                            <label>
+                                B/W
+                                <input type="checkbox" id="color">
+                                <span class="lever"></span>
+                                Color
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div style="float:left; display:inline;">
+                        <span style="text-style:bold;">Include Supplementary Material?</span>
+                    </div>
+                    <div style="float:right; display:inline;">
+                        <div class="switch">
+                            <label>
+                                No
+                                <input type="checkbox" id="supplements">
+                                <span class="lever"></span>
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div style="float:left; display:inline;">
+                        <span style="text-style:bold;">Include Cover?</span>
+                    </div>
+                    <div style="float:right; display:inline;">
+                        <div class="switch">
+                            <label>
+                                No
+                                <input type="checkbox" id="cover">
+                                <span class="lever"></span>
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col s6">
+                <div class="input-field">
+                    <label for="name">Your name *</label>
+                    <input id="name" type="text"  placeholder="Enter your full name here" required>
+                </div>
+                <div class="input-field">
+                    <label for="email">Your Email Address *</label>
+                    <input id="email" type="email" placeholder="Enter a Valid email Address here" required>
+                </div>
+                <div class="input-field">
+                    <label for="phone">Phone Number</label>
+                    <input id="phone" type="text" placeholder="Enter your phone Number">
+                </div>
+                <div class="input-field">
+                    <label for="institution">Institution</label>
+                    <input id="institution" type="text" placeholder="Enter the Institution you are asscoiated with">
+                </div>
+                <div class="input-field">
+                    <label for="shippingAddress">Shipping Address *</label>
+                    <textarea id="shippingAddress" class="materialize-textarea" placeholder="Please Provide your full Shipping Address, including zip code" required></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <button class="full-width teal button">Submit request</button>
+                <span>* indicates a required field</span>
+            </div>
+        </div>
+    </form>
+</template>

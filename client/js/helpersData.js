@@ -458,3 +458,11 @@ Template.Search.helpers({
         return Session.get("queryResults");
     }
 });
+
+//Reprint Request form
+Template.PrintRequest.helpers({
+    submitted: function(){
+        return Session.get('submitted');
+    }
+});
+
