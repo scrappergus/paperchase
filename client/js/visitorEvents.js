@@ -265,6 +265,6 @@ Template.PrintRequest.events({
                 text: text
             });
 
-        Session.set('submitted', true);
+        Router.go('PrintRequestComplete');
     }
 });
