@@ -171,19 +171,28 @@ Meteor.methods({
         var fut = new future();
         var journal,
             assetUrl,
-            issueData;
+            issueData,
+            journalS3;
         var articlesToGet = 'getDisplayArticlesByIssueId';
 
         if(admin){
             articlesToGet = 'getAllArticlesByIssueId';
         }
         journal = journalConfig.findOne({}).journal.short_name;
+        journalS3 = journalConfig.findOne({}).s3;
         assetUrl =  journalConfig.findOne().assets;
         issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
 
         if(issueData){
             if(issueData.cover){
                 issueData.coverPath = Meteor.issue.coverPath(assetUrl,issueData.cover);
+            }
+
+            if (issueData.optimized && issueData.optimized_file) {
+                issueData.optimized_urls = {};
+                for (var size in issueData.optimized_sizes) {
+                    issueData.optimized_urls[size] = journalS3.domain + journalS3.bucket + '/' + journalS3.folders.issues.covers_optimized + '/' + size + '/' + issueData.optimized_file;
+                }
             }
 
             issueData.vi = Meteor.issue.createIssueParam( issueData.volume, issueData.issue );
@@ -373,6 +382,7 @@ Meteor.methods({
                         fut.throw(error);
                         console.error('updateIssue after cover',error);
                     }else if(result){
+                        Meteor.call('verifyImagesOptimized', issueMongoId, 'covers', null);
                         fut.return('Cover uploaded and database updated: ' + newFileName);
                     }
                 });
@@ -384,6 +394,27 @@ Meteor.methods({
         }
         catch(err) {
             throw new Meteor.Error(err.userMessage);
+        }
+    },
+    updateDbCoverOptimized: function(mongoId, verifiedFolders, convertedFile){
+        // console.log('updateDbCoverOptimized', mongoId, verifiedFolders, convertedFile);
+        var dataForDb = {};
+        if (verifiedFolders && verifiedFolders.length > 0){
+            dataForDb.optimized = true;
+            dataForDb.optimized_file = convertedFile;
+            dataForDb.optimized_sizes = {};
+            verifiedFolders.forEach(function(size){
+                dataForDb.optimized_sizes[size] = true;
+            });
+
+            Meteor.call('updateIssue', mongoId, dataForDb, function(dbErr, dbRes){
+                if (dbErr) {
+                    console.error(dbErr);
+                    // TODO: Email could not update DB.
+                }
+            });
+        } else {
+            // TODO: Email could not update DB.
         }
     },
     validateIssue: function(issueMongoId, issueData){
