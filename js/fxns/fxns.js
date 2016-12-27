@@ -124,22 +124,32 @@ Meteor.article = {
         return article;
     },
     linkFiles:function(files,articleMongoId){
+        var journal = journalConfig.findOne({});
         if(files === undefined) {
             files = {};
         }
 
         for(var file in files){
             if(files[file] && files[file].file){
-                files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
+                files[file].url =  journal.assets + file + '/' + files[file].file;
             }else if(file === 'supplemental'){
                 for(var f in files[file]){
                     if(files[file][f].file)
-                    files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
+                    files[file][f].url =  journal.assets_supplemental + '/' + files[file][f].file;
                 }
             }else if(file === 'figures'){
                 for(var ff in files[file]){
-                    if(files[file][ff].file)
-                    files[file][ff].url =  journalConfig.findOne({}).assets_figures + '/' + files[file][ff].file;
+                    if(files[file][ff].file){
+                        // not optimized
+                        files[file][ff].url =  journal.assets_figures + '/' + files[file][ff].file;
+                    }
+
+                    if (files[file][ff].optimized && files[file][ff].optimized_file && files[file][ff].optimized_sizes) {
+                        files[file][ff].optimized_urls = {};
+                        for (var size in files[file][ff].optimized_sizes) {
+                            files[file][ff].optimized_urls[size] = journal.s3.domain + journal.s3.bucket + '/' + journal.s3.folders.article.figures_optimized + '/' + size + '/' + files[file][ff].optimized_file;
+                        }
+                    }
                 }
             }
         }
