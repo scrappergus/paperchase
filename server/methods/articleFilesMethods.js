@@ -187,6 +187,7 @@ Meteor.methods({
         // console.log('..afterUploadArticleAsset', articleMongoId, originalFileName, assetId);
         // Article was already uploaded to S3. This needs to happen on the client.
         // Rename the uploaded file and update the database
+        // Verify AWS Lambda optimized after upload
         var fut = new future();
         var fileNamePieces,
             articleInfo,
@@ -208,6 +209,11 @@ Meteor.methods({
                         fut.throw(error);
                         console.error('updateArticleDbAssets',error);
                     } else if(dbUpdateResult){
+
+                        if ( assetType === 'figures' ) {
+                            Meteor.call('verifyImagesOptimized', articleMongoId, 'paper_figures', assetId ); // no callback because user will get emailed if there was an error
+                        }
+
                         fut.return(renamedResult);
                     }
                 });
@@ -219,6 +225,34 @@ Meteor.methods({
         }
         catch(err) {
             throw new Meteor.Error(err.userMessage);
+        }
+    },
+    updateDbArticleOptimized: function(mongoId, figId, verifiedFolders, convertedFile){
+        // console.log('updateDbArticleOptimized', mongoId, figId, verifiedFolders, convertedFile);
+        var article = articles.findOne({_id : mongoId});
+        var figures = [];
+
+        if (article && article.files && article.files && article.files.figures && verifiedFolders && verifiedFolders.length > 0){
+
+            article.files.figures.forEach(function(fig){
+                if(fig.id && fig.id == figId){
+                    fig.optimized = true;
+                    fig.optimized_file = convertedFile;
+                    fig.optimized_sizes = {};
+                    verifiedFolders.forEach(function(size){
+                        fig.optimized_sizes[size] = true;
+                    });
+                }
+                figures.push(fig);
+            });
+            Meteor.call('updateArticleDbAssets', mongoId, figures, 'figures', function(error, dbUpdateResult){
+                if(error){
+                    // TODO: Email could not update DB
+                    console.error('updateArticleDbAssets',error);
+                }
+            });
+        } else {
+            // TODO: Email could not update DB.
         }
     }
 });
