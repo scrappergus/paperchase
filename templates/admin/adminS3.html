@@ -96,7 +96,12 @@
     <div class="row">
         <div class="col s2">
         {{#if coverPath}}
+            {{#if optimized_urls}}
+            <img src="{{optimized_urls.medium}}" class="responsive-img materialboxed">
+            {{else}}
+            <h4>Not an optimized image.</h4>
             <img src="{{coverPath}}" class="responsive-img materialboxed">
+            {{/if}}
             {{else}}
             No Cover Saved
         {{/if}}
