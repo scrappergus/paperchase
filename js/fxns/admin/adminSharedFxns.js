@@ -29,20 +29,16 @@ Meteor.adminShared = {
 
 
 Meteor.s3 = {
-    upload: function(files,folder,cb){
-        var journalShortName = journalConfig.findOne().journal.short_name;
-        var journalBucket = 'paperchase-' + journalShortName;
-
+    upload: function(files, folder, cb){
         S3.upload({
-            Bucket: journalBucket,
             files: files,
             path: folder,
             unique_name: false
         },function(err,res){
-            if(err){
+            if (err) {
                 console.error('S3 upload error',err);
                 cb(err);
-            }else if(res){
+            } else if (res){
                 cb(null, res);
             }
         });
