@@ -1,5 +1,5 @@
 Meteor.methods({
-    verifyImagesOptimized: function(mongoId, s3Folder, figId){
+    verifyImagesOptimized: function(mongoId, s3Folder, userId, figId){
         // For paper figures and covers.
         // AWS Lambda converts files to png and also resizes. Here we verify this happened.
         // only papers will have figId. Covers will not have figId.
@@ -49,7 +49,8 @@ Meteor.methods({
                             if (getErr) {
                                 console.error(getErr);
                                 cb('Failed to verify ', optimizedPath);
-                                // TODO: Email that size failed to verify
+                                var emailMessage = 'Failed to optimize image for: ' + s3Folder + '/' + folder + '. Mongo ID: '  + mongoId;
+                                Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             } else if (getRes) {
                                 cb();
                                 verifiedFolders.push(folder);
@@ -60,23 +61,36 @@ Meteor.methods({
                             console.error(err);
                         } else {
                             if (s3Folder === 'paper_figures') {
-                                Meteor.call('updateDbArticleOptimized', mongoId, figId, verifiedFolders, convertedFile, function(dbErr, dbRes){
-                                    if (dbErr) {
-                                        // TODO: Email failed to update db but images exist
-                                    }
-                                });
+                                Meteor.call('updateDbArticleOptimized', mongoId, figId, verifiedFolders, convertedFile, userId);
                             } else if (s3Folder === 'covers') {
-                                Meteor.call('updateDbCoverOptimized', mongoId, verifiedFolders, convertedFile, function(dbErr, dbRes){
-                                    if (dbErr) {
-                                        // TODO: Email failed to update db but images exist
-                                    }
-                                });
+                                Meteor.call('updateDbCoverOptimized', mongoId, verifiedFolders, convertedFile, userId);
                             }
                         }
                     });
                 }, 3000);
             }
         }
+    },
+    optimizationFailedEmail: function(emailMessage, userId){
+        var fromEmail = Meteor.settings.it && Meteor.settings.it.email ? Meteor.settings.it.email : '';
+        var toEmails = '';
+
+        if (Meteor.settings.it && Meteor.settings.it.email){
+            toEmails += Meteor.settings.it.email;
+        }
+
+        var userData = Meteor.users.findOne({'_id':userId});
+
+        if (userData && userData.emails && userData.emails[0] && userData.emails[0].address) {
+            toEmails += ', ' + userData.emails[0].address;
+        }
+
+        Email.send({
+           to: toEmails,
+           from: fromEmail,
+           subject: 'Paperchase Image Optimization Failed',
+           text: emailMessage
+        });
     },
     getS3Object: function(objectPath) {
         var fut = new future();

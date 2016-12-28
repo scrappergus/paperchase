@@ -183,7 +183,7 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    afterUploadArticleAsset: function(articleMongoId, originalFileName, assetId, assetType){
+    afterUploadArticleAsset: function(articleMongoId, originalFileName, assetId, assetType, userId){
         // console.log('..afterUploadArticleAsset', articleMongoId, originalFileName, assetId);
         // Article was already uploaded to S3. This needs to happen on the client.
         // Rename the uploaded file and update the database
@@ -211,7 +211,7 @@ Meteor.methods({
                     } else if(dbUpdateResult){
 
                         if ( assetType === 'figures' ) {
-                            Meteor.call('verifyImagesOptimized', articleMongoId, 'paper_figures', assetId ); // no callback because user will get emailed if there was an error
+                            Meteor.call('verifyImagesOptimized', articleMongoId, 'paper_figures', userId, assetId ); // no callback because user will get emailed if there was an error
                         }
 
                         fut.return(renamedResult);
@@ -227,10 +227,11 @@ Meteor.methods({
             throw new Meteor.Error(err.userMessage);
         }
     },
-    updateDbArticleOptimized: function(mongoId, figId, verifiedFolders, convertedFile){
-        // console.log('updateDbArticleOptimized', mongoId, figId, verifiedFolders, convertedFile);
+    updateDbArticleOptimized: function(mongoId, figId, verifiedFolders, convertedFile, userId){
+        // console.log('updateDbArticleOptimized', mongoId, figId, verifiedFolders, convertedFile, userId);
         var article = articles.findOne({_id : mongoId});
         var figures = [];
+        var emailMessage = '';
 
         if (article && article.files && article.files && article.files.figures && verifiedFolders && verifiedFolders.length > 0){
 
@@ -247,12 +248,14 @@ Meteor.methods({
             });
             Meteor.call('updateArticleDbAssets', mongoId, figures, 'figures', function(error, dbUpdateResult){
                 if(error){
-                    // TODO: Email could not update DB
                     console.error('updateArticleDbAssets',error);
+                    emailMessage = 'Image was optimized on S3 but failed to update database for article. Mongo ID. Mongo ID: '  + mongoId;
+                    Meteor.call('optimizationFailedEmail', emailMessage, userId);
                 }
             });
         } else {
-            // TODO: Email could not update DB.
+            emailMessage = 'No optimized images on S3 so cannot update database for article. Mongo ID:'  + mongoId;
+            Meteor.call('optimizationFailedEmail', emailMessage, userId);
         }
     }
 });

@@ -132,7 +132,7 @@ Template.IssueCoverUploader.events({
                     Meteor.formActions.errorMessage('Cover not uploaded.');
                 }else if(result){
                     uploadedFilename = result.file.name;
-                    Meteor.call('afterUploadCover', issueMongoId, uploadedFilename, function(error,result){
+                    Meteor.call('afterUploadCover', issueMongoId, uploadedFilename, Meteor.user()._id, function(error,result){
                         if(error){
                             Meteor.formActions.errorMessage(error.error);
                         }else if(result){

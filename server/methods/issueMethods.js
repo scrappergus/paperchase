@@ -365,7 +365,7 @@ Meteor.methods({
         });
         return fut.wait();
     },
-    afterUploadCover: function(issueMongoId, originalFileName){
+    afterUploadCover: function(issueMongoId, originalFileName, userId){
         // console.log('afterUploadCover',issueMongoId, originalFileName);
         var fut = new future();
         // will rename the figure to issuemongoid and update the database with filenmae
@@ -382,7 +382,7 @@ Meteor.methods({
                         fut.throw(error);
                         console.error('updateIssue after cover',error);
                     }else if(result){
-                        Meteor.call('verifyImagesOptimized', issueMongoId, 'covers', null);
+                        Meteor.call('verifyImagesOptimized', issueMongoId, 'covers', userId, null);
                         fut.return('Cover uploaded and database updated: ' + newFileName);
                     }
                 });
@@ -396,9 +396,11 @@ Meteor.methods({
             throw new Meteor.Error(err.userMessage);
         }
     },
-    updateDbCoverOptimized: function(mongoId, verifiedFolders, convertedFile){
+    updateDbCoverOptimized: function(mongoId, verifiedFolders, convertedFile, userId){
         // console.log('updateDbCoverOptimized', mongoId, verifiedFolders, convertedFile);
         var dataForDb = {};
+        var emailMessage = '';
+
         if (verifiedFolders && verifiedFolders.length > 0){
             dataForDb.optimized = true;
             dataForDb.optimized_file = convertedFile;
@@ -410,11 +412,13 @@ Meteor.methods({
             Meteor.call('updateIssue', mongoId, dataForDb, function(dbErr, dbRes){
                 if (dbErr) {
                     console.error(dbErr);
-                    // TODO: Email could not update DB.
+                    emailMessage = 'Image was optimized on S3 but failed to update database for covers. Mongo ID: '  + mongoId;
+                    Meteor.call('optimizationFailedEmail', emailMessage, userId);
                 }
             });
         } else {
-            // TODO: Email could not update DB.
+            emailMessage = 'No optimized images on S3 so cannot update database for issue. Mongo ID: '  + mongoId;
+            Meteor.call('optimizationFailedEmail', emailMessage, userId);
         }
     },
     validateIssue: function(issueMongoId, issueData){

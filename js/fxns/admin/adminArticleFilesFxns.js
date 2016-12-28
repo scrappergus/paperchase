@@ -263,7 +263,7 @@ Meteor.upload = {
                 filenameLastPiecePieces = filenamePieces[filenamePieces.length - 1].split('.'); // to remove .jpg etc
                 filenameLastPieceWithoutType = filenameLastPiecePieces[0].toLowerCase();
 
-                Meteor.call('afterUploadArticleAsset', articleMongoId, uploadedFilename, assetId, assetType, function(error,result){
+                Meteor.call('afterUploadArticleAsset', articleMongoId, uploadedFilename, assetId, assetType, Meteor.user()._id, function(error,result){
                     // if result, then the file got renamed to the standard naming convention and the DB got updated with this name
                     // now delete original poorly named file, which needs to happen on client, happens below via deletAsset()
                     if(error){
