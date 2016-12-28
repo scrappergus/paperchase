@@ -1,5 +1,5 @@
 Meteor.methods({
-    verifyImagesOptimized: function(mongoId, folder, figId){
+    verifyImagesOptimized: function(mongoId, s3Folder, figId){
         // For paper figures and covers.
         // AWS Lambda converts files to png and also resizes. Here we verify this happened.
         // only papers will have figId. Covers will not have figId.
@@ -11,7 +11,7 @@ Meteor.methods({
         var dbData, imageFile;
 
 
-        if (folder === 'paper_figures') {
+        if (s3Folder === 'paper_figures') {
             dbData = articles.findOne(mongoId);
             if (dbData && dbData.files && dbData.files.figures) {
                 dbData.files.figures.forEach(function(fig){
@@ -20,7 +20,7 @@ Meteor.methods({
                     }
                 });
             }
-        } else if (folder === 'covers') {
+        } else if (s3Folder === 'covers') {
             dbData = issues.findOne(mongoId);
             if (dbData && dbData.cover) {
                 imageFile = dbData.cover;
@@ -37,9 +37,9 @@ Meteor.methods({
                 Meteor.setTimeout(function(){
                     var filePath = 'optimized/'; // a default path, not in use.
 
-                    if (folder === 'paper_figures') {
+                    if (s3Folder === 'paper_figures') {
                         filePath = journal.folders.article.figures_optimized + '/';
-                    } else if (folder === 'covers') {
+                    } else if (s3Folder === 'covers') {
                         filePath = journal.folders.issues.covers_optimized + '/';
                     }
 
@@ -59,13 +59,13 @@ Meteor.methods({
                         if (err) {
                             console.error(err);
                         } else {
-                            if (folder === 'paper_figures') {
+                            if (s3Folder === 'paper_figures') {
                                 Meteor.call('updateDbArticleOptimized', mongoId, figId, verifiedFolders, convertedFile, function(dbErr, dbRes){
                                     if (dbErr) {
                                         // TODO: Email failed to update db but images exist
                                     }
                                 });
-                            } else if (folder === 'covers') {
+                            } else if (s3Folder === 'covers') {
                                 Meteor.call('updateDbCoverOptimized', mongoId, verifiedFolders, convertedFile, function(dbErr, dbRes){
                                     if (dbErr) {
                                         // TODO: Email failed to update db but images exist
