@@ -71,6 +71,49 @@
 
     {{#if xmlFigures}}{{>AdminArticleFiguresXml}}{{/if}}
 
+    {{#with article}}
+    <div class="row">
+        <div class="col s12">
+            <div class="card z-depth-0">
+                <div class="card-content">
+                    <span class="card-title">Optimized Figures</span>
+                    {{#if files.figures}}
+                    {{#with files}}
+                    <ul class="collection">
+                        {{#each figures}}
+                        <li class="collection-item">
+                            <div class="row no-margin">
+                                <div class="col s12 m2">
+                                    {{id}}
+                                </div>
+                                {{#if optimized_urls}}
+                                    {{#each arrayify optimized_urls}}
+                                    <div class="col s12 m2">
+                                        <h4>{{name}}</h4>
+                                        <div class="card z-depth-0 blue-grey lighten-5">
+                                            <div class="card-content">
+                                                <img src="{{value}}" class="materialboxed responsive-img" alt="{{name}}" id="figure-{{name}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    No Optimized Image Saved
+                                {{/if}}
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                    {{/with}}
+                    {{else}}
+                    <h4>No Figures</h4>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/with}}
+
     {{else}}
 
     {{#if adminNotFound}}{{>Admin404 what="Article"}}{{/if}}
