@@ -9,7 +9,19 @@
                     <ul>
                         {{#each issues_data}}
                         <li class="archive-issue col s4 m2 l2">
-                            <a href="/issue/v{{volume}}i{{issue_linkable}}"><img src="{{coverPath}}"></a>
+                            <a href="/issue/v{{volume}}i{{issue_linkable}}">
+                                {{#if optimized_urls}}
+                                    {{#if optimized_urls.small}}
+                                        <img src="{{optimized_urls.small}}" alt="Cover Volume {{volume}}, Issue {{issue}}">
+                                        {{else}}
+                                        {{#if optimized_urls.medium}}
+                                        <img src="{{optimized_urls.medium}}" alt="Cover Volume {{volume}}, Issue {{issue}}">
+                                        {{/if}}
+                                    {{/if}}
+                                    {{else}}
+                                    <img src="{{coverPath}}" alt="Cover Volume {{volume}}, Issue {{issue}}">
+                                {{/if}}
+                            </a>
                             <a class="issue-info" href="/issue/v{{volume}}i{{issue_linkable}}">Volume {{volume}},<br/> Number {{issue}}</a>
                             {{#with pages}}<span class="page-span small-font">{{>IssuePages}}</span>{{/with}}
                         </li>

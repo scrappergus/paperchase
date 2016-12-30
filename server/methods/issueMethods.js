@@ -1,16 +1,24 @@
 Meteor.methods({
     archive: function(articleIssueId){
         //combine vol and issue collections
-        var journal,
+        var journalData,
+            journal,
             assetUrl,
             issuesList,
             volumesList;
         var issuesObj = {};
 
-        journal = journalConfig.findOne({}).journal.short_name;
-        assetUrl =  journalConfig.findOne().assets;
+        journalData = journalConfig.findOne({});
+        journal = journalData.journal.short_name;
+        assetUrl =  journalData.assets;
         issuesList = issues.find({display:true},{}).fetch();
         volumesList = volumes.find({},{sort : {volume:-1}}).fetch();
+
+        if (journalData.s3 && journalData.s3.domain && journalData.s3.bucket + journalData.s3.folders && journalData.s3.folders.issues && journalData.s3.folders.issues.covers_optimized) {
+            optimizedUrlPath = journalData.s3.domain + journalData.s3.bucket  + '/' + journalData.s3.folders.issues.covers_optimized + '/';
+        } else {
+            console.error('S3 optimized path not in the database.');
+        }
 
         for(var i=0; i<issuesList.length; i++){
             issuesObj[issuesList[i]._id] = issuesList[i];
@@ -27,6 +35,14 @@ Meteor.methods({
                         if(issuesObj[issueMongoId].cover){
                             // console.log(issueMongoId);
                             issuesObj[issueMongoId].coverPath = Meteor.issue.coverPath(assetUrl,issuesObj[issueMongoId].cover);
+                        }
+
+
+                        if (issuesObj[issueMongoId].optimized && issuesObj[issueMongoId].optimized_file && issuesObj[issueMongoId].optimized_sizes){
+                            issuesObj[issueMongoId].optimized_urls = {};
+                            for (var size in issuesObj[issueMongoId].optimized_sizes) {
+                                issuesObj[issueMongoId].optimized_urls[size] = optimizedUrlPath + size + '/' + issuesObj[issueMongoId].optimized_file ;
+                            }
                         }
 
                         volumesList[v].issues_data.push(issuesObj[issueMongoId]);
@@ -55,21 +71,37 @@ Meteor.methods({
         // console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
         // To Do: move to shared repo
         var fut = new future();
-        var journal,
+        var journalData,
+            journal,
             assetUrl,
             issueData;
+        var optimizedUrlPath = '';
         var articlesToGet = 'getDisplayArticlesByIssueId';
 
         if(admin){
             articlesToGet = 'getAllArticlesByIssueId';
         }
-        journal = journalConfig.findOne({}).journal.short_name;
-        assetUrl =  journalConfig.findOne().assets;
+        journalData = journalConfig.findOne({});
+        journal = journalData.journal.short_name;
+        assetUrl =  journalData.assets;
         issueData = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
+
+        if (journalData.s3 && journalData.s3.domain && journalData.s3.bucket + journalData.s3.folders && journalData.s3.folders.issues && journalData.s3.folders.issues.covers_optimized) {
+            optimizedUrlPath = journalData.s3.domain + journalData.s3.bucket  + '/' + journalData.s3.folders.issues.covers_optimized + '/';
+        } else {
+            console.error('S3 optimized path not in the database.');
+        }
 
         if(issueData){
             if(issueData.cover){
                 issueData.coverPath = Meteor.issue.coverPath(assetUrl,issueData.cover);
+            }
+
+            if (issueData.optimized && issueData.optimized_file && issueData.optimized_sizes){
+                issueData.optimized_urls = {};
+                for (var size in issueData.optimized_sizes) {
+                    issueData.optimized_urls[size] = optimizedUrlPath + size + '/' + issue.optimized_file;
+                }
             }
 
             Meteor.call(articlesToGet,issueData._id, function(error,issueArticles){
@@ -172,17 +204,33 @@ Meteor.methods({
         return result;
     },
     getIssueMeta: function(volume, issue){
-        var journal,
+        var journalData,
+            journal,
             assetUrl;
-
-        journal = journalConfig.findOne({}).journal.short_name;
-        assetUrl =  journalConfig.findOne().assets;
+        var optimizedUrlPath = '';
+        journalData = journalConfig.findOne({});
+        journal = journalData.journal.short_name;
+        assetUrl =  journalData.assets;
 
         issue = issues.findOne({'issue_linkable': issue, 'volume': parseInt(volume)});
+
+        if (journalData.s3 && journalData.s3.domain && journalData.s3.bucket + journalData.s3.folders && journalData.s3.folders.issues && journalData.s3.folders.issues.covers_optimized) {
+            optimizedUrlPath = journalData.s3.domain + journalData.s3.bucket  + '/' + journalData.s3.folders.issues.covers_optimized + '/';
+        } else {
+            console.error('S3 optimized path not in the database.');
+        }
+
         if(issue && issue.cover){
             issue.coverPath = Meteor.issue.coverPath(assetUrl,issue.cover);
             if(issue.volume == 8) {
                 issue.largeCover = true;
+            }
+
+            if (issue.optimized && issue.optimized_file && issue.optimized_sizes){
+                issue.optimized_urls = {};
+                for (var size in issue.optimized_sizes) {
+                    issue.optimized_urls[size] = optimizedUrlPath + size + '/' + issue.optimized_file ;
+                }
             }
         }
 

@@ -884,8 +884,8 @@ if (Meteor.isClient) {
                 Meteor.call('getIssueMeta', pieces.volume, pieces.issue, function(error, issueMeta){
                     if(error){
                         console.error('ERROR - getIssueAndFiles',error);
-                    }
-                    else if(issueMeta){
+                    } else if(issueMeta){
+                        console.log(issueMeta);
                         Session.set('issueMeta', issueMeta);
                     }
                 });
@@ -894,8 +894,7 @@ if (Meteor.isClient) {
                     Meteor.call('getIssueAndFiles', pieces.volume, pieces.issue, false, function(error,result){
                         if(error){
                             console.error('ERROR - getIssueAndFiles',error);
-                        }
-                        else if(result){
+                        } else if(result){
                             Session.set('issue',result);
                         }
                     });

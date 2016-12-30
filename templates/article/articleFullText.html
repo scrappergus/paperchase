@@ -263,7 +263,7 @@
 <template name="FullTextFigure">
     <div class="full-text-image-container" id="{{id}}">
         {{#if optimized_urls}}
-            {{#if optimized.medium}}
+            {{#if optimized_urls.medium}}
             <a href="/figure/{{articleId}}/{{id}}" target="_blank"><img alt={{alt}} class="full-text-image" src="{{optimized_urls.medium}}"/></a>
             {{else}}
             {{#if optimized_urls.large}}
