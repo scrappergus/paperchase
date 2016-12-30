@@ -728,6 +728,9 @@ Meteor.fullText = {
                 for(var f = 0; f<files.figures.length; f++){
                     if(files.figures[f].id.toLowerCase() === figObj.id.toLowerCase() && files.figures[f].url){
                         figObj.url = files.figures[f].url;
+                        if (files.figures[f].optimized_urls) {
+                            figObj.optimized_urls = files.figures[f].optimized_urls;
+                        }
                     }
                 }
             }

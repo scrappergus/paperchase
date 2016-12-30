@@ -145,6 +145,7 @@ Router.route('/xml-cite-set/:_filename',{
 });
 
 if (Meteor.isServer) {
+    var journal = journalConfig.findOne({});
     // Image Proxy
     WebApp.connectHandlers.use(function(req, res, next) {
         // via @satyavh on Medium
@@ -155,10 +156,16 @@ if (Meteor.isServer) {
             return next();
         }
         queryData = url.parse(req.url, true).query;
+
         if (!((queryData.img !== null) && (queryData.user !== null))) {
             return next();
         }
-        img = journalConfig.findOne({}).assets_figures + '/' + queryData.img;
+
+        if (queryData.size) {
+            img = journal.s3.domain + journal.s3.bucket + '/' + journal.s3.folders.article.figures_optimized + '/' + queryData.size + '/' + queryData.img;
+        } else {
+            img = journal.assets_figures + '/' + queryData.img;
+        }
 
         x = request(img);
         return req.pipe(x).pipe(res);
@@ -1252,7 +1259,7 @@ if (Meteor.isClient) {
                             });
                     }
                 }
-                
+
 
                 return {
                     article: article

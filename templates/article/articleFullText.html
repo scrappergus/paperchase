@@ -262,7 +262,19 @@
 
 <template name="FullTextFigure">
     <div class="full-text-image-container" id="{{id}}">
-        {{#if url}}<a href="/figure/{{articleId}}/{{id}}" target="_blank"><img alt={{alt}} class="full-text-image" src="{{url}}"/></a>{{/if}}
+        {{#if optimized_urls}}
+            {{#if optimized.medium}}
+            <a href="/figure/{{articleId}}/{{id}}" target="_blank"><img alt={{alt}} class="full-text-image" src="{{optimized_urls.medium}}"/></a>
+            {{else}}
+            {{#if optimized_urls.large}}
+            <a href="/figure/{{articleId}}/{{id}}" target="_blank"><img alt={{alt}} class="full-text-image" src="{{optimized_urls.large}}"/></a>
+            {{/if}}
+            {{/if}}
+        {{else}}
+            {{#if url}}
+            <a href="/figure/{{articleId}}/{{id}}" target="_blank"><img alt={{alt}} class="full-text-image" src="{{url}}"/></a>
+            {{/if}}
+        {{/if}}
         {{#mathjax}}
         {{>FullTextFigureText}}
         {{/mathjax}}

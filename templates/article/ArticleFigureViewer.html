@@ -43,8 +43,20 @@
 <template name="ArticleFigureViewerViewer">
 	<div class="row">
 		<div class="col s12 center-align">
-			<div class="figure" id="F2">
-				<img src="{{url}}" alt="{{alt}}" class="figure-viewer-img">
+			<div class="figure">
+				{{#if optimized_urls}}
+		            {{#if optimized_urls.original}}
+		            <img alt={{alt}} class="figure-viewer-img" src="{{optimized_urls.original}}"/>
+		            {{else}}
+		            {{#if optimized_urls.large}}
+		            <img alt={{alt}} class="figure-viewer-img" src="{{optimized_urls.large}}"/>
+		            {{/if}}
+		            {{/if}}
+		        {{else}}
+		            {{#if url}}
+		            <img alt={{alt}} class="figure-viewer-img" src="{{url}}"/>
+		            {{/if}}
+		        {{/if}}
 				<div class="buttons">
 					<button class="zoom-in btn-floating">+</button>
 					<button class="zoom-out btn-floating">&minus;</button>

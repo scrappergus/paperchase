@@ -254,7 +254,8 @@ Meteor.article = {
         return article;
     },
     linkFiles:function(files, articleMongoId){
-        if(journalConfig.findOne({})){
+        var journal = journalConfig.findOne({});
+        if(journal){
             if(files === undefined) {
                 files = {};
             }
@@ -262,22 +263,29 @@ Meteor.article = {
             for(var file in files){
                 if(files[file] !== null){
                     if(files[file].file){
-                        files[file].url =  journalConfig.findOne({}).assets + file + '/' + files[file].file;
+                        files[file].url =  journal.assets + file + '/' + files[file].file;
                     } else if (file === 'supplemental'){
                         for(var f in files[file]){
                             if(files[file][f].file)
-                            files[file][f].url =  journalConfig.findOne({}).assets_supplemental + '/' + files[file][f].file;
+                            files[file][f].url =  journal.assets_supplemental + '/' + files[file][f].file;
                         }
                     } else if (file === 'figures' || file === 'tables') {
                         for(var fi in files[file]){
                             if(files[file][fi].file){
+                                // not optimized
                                 files[file][fi].url = files[file][fi].version ? '/img?img=' + files[file][fi].file + '&v=' + files[file][fi].version : '/img?img=' + files[file][fi].file ;
+                            }
+                            if (files[file][fi].optimized && files[file][fi].optimized_file && files[file][fi].optimized_sizes) {
+                                files[file][fi].optimized_urls = {};
+                                for (var size in files[file][fi].optimized_sizes) {
+                                    files[file][fi].optimized_urls[size] = files[file][fi].version ? '/img?size=' + size + '&img=' + files[file][fi].optimized_file + '&v=' + files[file][fi].version : '/img?size=' + size + '&img=' + files[file][fi].optimized_file ;
+                                }
                             }
                         }
                     }
                 }
             }
-            files.journal = journalConfig.findOne({}).journal.short_name;
+            files.journal = journal.journal.short_name;
             files._id = articleMongoId;
         }
         return files;
