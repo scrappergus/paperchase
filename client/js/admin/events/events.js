@@ -3,6 +3,12 @@ Template.Admin.events({
         e.preventDefault();
         $('.overview').addClass('hide');
         $('.edit').removeClass('hide');
+    },
+    'click #optimized-images-check': function(){
+        Meteor.call('batchCheckOptimizedArticleFigures', Meteor.user()._id);
+    },
+    'click #optimized-covers-check': function(){
+        Meteor.call('batchCheckOptimizedCovers', Meteor.user()._id);
     }
 });
 

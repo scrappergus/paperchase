@@ -610,5 +610,21 @@ Meteor.methods({
                 // console.log('-- no type',article._id);
             }
         });
-    }
+    },
+    batchCheckOptimizedArticleFigures: function(userId){
+        var notOptimized = articles.find({optimized: {$exists: false}, 'files.figures': {$exists: true}}).fetch();
+        console.log(notOptimized.length + 'articles to check for optimized images');
+        notOptimized.forEach(function(article){
+            article.files.figures.forEach(function(fig){
+                Meteor.call('verifyImagesOptimized', article._id, 'paper_figures', userId, fig.id);
+            });
+        });
+    },
+    batchCheckOptimizedCovers: function(userId){
+        var notOptimized = issues.find({optimized: {$exists: false}}).fetch();
+        console.log(notOptimized.length + ' covers to check');
+        notOptimized.forEach(function(issue){
+            Meteor.call('verifyImagesOptimized', issue._id, 'covers', userId, null);
+        });
+    },
 });
