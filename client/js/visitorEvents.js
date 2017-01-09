@@ -268,3 +268,10 @@ Template.PrintRequest.events({
         Router.go('PrintRequestComplete');
     }
 });
+
+//Figure Viewer 
+Template.ArticleFigureViewer.events({
+    'click .figure-back-button': function(e,t) {
+        window.history.back();
+    }
+});
