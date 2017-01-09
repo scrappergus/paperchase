@@ -444,6 +444,23 @@ Meteor.article = {
             }
         }
     },
+    metaOGTags: function(articleData, fullText){
+        var og = {};
+
+        //$journal_name | $article_title
+
+        //description = $doi. $authors (truncated to limit)
+
+        //og:image:url
+
+        //these last two may not be available by our code yet
+        //image dimensions (hard coded to test values)
+
+        //og:image:type MIME type
+
+
+        return og;
+    },
     metaTags: function(articleData, fullText){
         var meta = {};
         var epub;

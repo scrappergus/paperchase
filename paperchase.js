@@ -942,10 +942,12 @@ if (Meteor.isClient) {
                 return;
             }
             var meta = {};
+            var meta_og = {};
             var title = Meteor.settings.public.journal.name;
 
             if (Session.get('article')) {
                 meta = Meteor.article.metaTags(Session.get('article'), false);
+                meta_og = Meteor.article.metaOGTags(Session.get('article'), false);
 
                 if (Session.get('article').title) {
                     title += ' | ' +  Meteor.article.pageTitle(Session.get('article').title, null);
@@ -954,7 +956,8 @@ if (Meteor.isClient) {
 
             SEO.set({
                 title: title,
-                meta: meta
+                meta: meta,
+                og: meta_og
             });
         }
     });
@@ -1252,7 +1255,7 @@ if (Meteor.isClient) {
                             });
                     }
                 }
-                
+
 
                 return {
                     article: article
