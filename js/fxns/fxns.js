@@ -450,20 +450,14 @@ Meteor.article = {
     metaOGTags: function(articleData, fullText, files, articleMongoId){
         var og = {};
 
-        //$journal_name | $article_title
-
-        //description = $doi. $authors (truncated to limit)
-
+        var description = '';
         if (articleData.ids){
+            var metaDoi;
             if (articleData.ids.doi) {
                 var doi = articleData.ids.doi.replace('http://dx.doi.org/', '');
-                // og.citation_doi = 'doi:' + doi;
                 metaDoi = 'doi:' + doi;
             }
-
-            if (articleData.ids.pmid) {
-                // og.citation_pmid = articleData.ids.pmid;
-            }
+            description = metaDoi + '. ';
         }
 
         if (articleData.authors && articleData.authors.length > 0) {
@@ -481,23 +475,21 @@ Meteor.article = {
                 }
                 authors.push(fullName);
             });
-            var authors_list =  authors.join(', ');
-
+            description += authors.join(', ');
         }
-        //og:image:url
 
-        //these last two may not be available by our code yet
-        //image dimensions (hard coded to test values)
+        if( description != '' ) {
+            og.description = description.substring(0,160);
+        }
 
-        //og:image:type MIME type
+        if( articleData.files.figures.length > 0 ) {
+            var img = articleData.files.figures[0];
+            var img_url = "http://www.aging-us.com" + img.url;
+            // var img_ext = img.file.split('.').pop();
+            // og['image:type'] = mimetype(img_ext);
+            og.image = img_url;
+        }
 
-        var description = metaDoi + '. ' + authors_list;
-        var mk_URL = "http://www.aging-us.com" + articleData.files.figures[0].url;
-        // var figFileOg = articleData.files.figures[0].file;
-        // var figFileOgExt = figFileOg.substring(999, figFileOg.indexOf(".")+1);
-        // og.image['type'] = "image/"+figFileOgExt;
-        og.description = description.substring(0,160);
-        og.image = mk_URL;
         return og;
     },
     metaTags: function(articleData, fullText){
