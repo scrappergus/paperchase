@@ -451,14 +451,44 @@ Meteor.article = {
 
         //description = $doi. $authors (truncated to limit)
 
+        if (articleData.ids){
+            if (articleData.ids.doi) {
+                var doi = articleData.ids.doi.replace('http://dx.doi.org/', '');
+                // og.citation_doi = 'doi:' + doi;
+                metaDoi = 'doi:' + doi;
+            }
+
+            if (articleData.ids.pmid) {
+                // og.citation_pmid = articleData.ids.pmid;
+            }
+        }
+
+        if (articleData.authors && articleData.authors.length > 0) {
+            var authors = [];
+            articleData.authors.forEach(function(author){
+                var fullName = '';
+                if (author.name_first) {
+                    fullName = author.name_first;
+                }
+                if (author.name_middle) {
+                    fullName += author.name_first ? ' ' + author.name_middle : author.name_middle;
+                }
+                if (author.name_last) {
+                    fullName += author.name_first || author.name_middle ? ' ' + author.name_last : author.name_last;
+                }
+                authors.push(fullName);
+            });
+            var authors_list =  authors.join(', ');
+
+        }
         //og:image:url
 
         //these last two may not be available by our code yet
         //image dimensions (hard coded to test values)
 
         //og:image:type MIME type
-
-
+        var description = metaDoi + '. ' + authors_list;
+        og.description = description;
         return og;
     },
     metaTags: function(articleData, fullText){
@@ -560,7 +590,10 @@ Meteor.article = {
                     fullName += author.name_first || author.name_middle ? ' ' + author.name_last : author.name_last;
                 }
                 meta.citation_author.push(fullName);
+
             });
+            // var description = meta.citation_doi + '. ' + meta.citation_author.join(', ');
+          //  console.log(description, "meta tags");
         }
 
         return meta;
