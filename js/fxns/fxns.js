@@ -496,7 +496,7 @@ Meteor.article = {
         // var figFileOg = articleData.files.figures[0].file;
         // var figFileOgExt = figFileOg.substring(999, figFileOg.indexOf(".")+1);
         // og.image['type'] = "image/"+figFileOgExt;
-        og.description = description;
+        og.description = description.substring(0,160);
         og.image = mk_URL;
         return og;
     },
@@ -557,7 +557,7 @@ Meteor.article = {
 
         // description
         if (articleData.abstract) {
-            cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract);
+            cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract.replace(/(<([^>]+)>)/ig, ""));
             meta.description = fullText ? 'Full Text - ' + cleanedAbstract : cleanedAbstract;
             if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl){
                 meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData._id;
