@@ -89,6 +89,7 @@ Router.route('/admin/add-legacy-platform-article/',{
     where: 'server',
     name: 'AddLegacyAdvanceArticle',
     action: function(){
+        var pii = this.params.query.id;
         if(this.request && this.request.connection && this.request.connection._peername && this.request.connection._peername.address){
             this.params.query.ip = this.request.connection._peername.address;
         }
@@ -98,8 +99,14 @@ Router.route('/admin/add-legacy-platform-article/',{
                 response.setHeader('Content-Type', 'application/json');
                 response.end(JSON.stringify({'success':false}));
             } else {
-                response.setHeader('Content-Type', 'application/json');
-                response.end(JSON.stringify({'success':true}));
+                try {
+                    var result = HTTP.call("GET", "http://doi.oncotarget.com/submit_pii/oncotarget/"+pii);
+                    response.setHeader('Content-Type', 'application/json');
+                    response.end(JSON.stringify({'success':true}));
+                } catch (e) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.end(JSON.stringify({'success':false, 'error':'Could not register DOI'}));
+                }
             }
         });
     }
