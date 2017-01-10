@@ -479,7 +479,7 @@ Meteor.article = {
         }
 
         if( description != '' ) {
-            if( desc.length > 160 ) {
+            if( description.length > 160 ) {
                 description = description.substring(0,157) + '...';
             }
             og.description = description;
