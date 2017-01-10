@@ -281,6 +281,9 @@ Meteor.article = {
             files._id = articleMongoId;
         }
         return files;
+
+
+
     },
     pageTitle: function(articleTitle, titleExtra){
         var articleTitlePlain = '',
@@ -444,7 +447,7 @@ Meteor.article = {
             }
         }
     },
-    metaOGTags: function(articleData, fullText){
+    metaOGTags: function(articleData, fullText, files, articleMongoId){
         var og = {};
 
         //$journal_name | $article_title
@@ -487,8 +490,14 @@ Meteor.article = {
         //image dimensions (hard coded to test values)
 
         //og:image:type MIME type
+
         var description = metaDoi + '. ' + authors_list;
+        var mk_URL = "http://www.aging-us.com" + articleData.files.figures[0].url;
+        // var figFileOg = articleData.files.figures[0].file;
+        // var figFileOgExt = figFileOg.substring(999, figFileOg.indexOf(".")+1);
+        // og.image['type'] = "image/"+figFileOgExt;
         og.description = description;
+        og.image = mk_URL;
         return og;
     },
     metaTags: function(articleData, fullText){

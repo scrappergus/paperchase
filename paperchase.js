@@ -948,7 +948,6 @@ if (Meteor.isClient) {
             if (Session.get('article')) {
                 meta = Meteor.article.metaTags(Session.get('article'), false);
                 meta_og = Meteor.article.metaOGTags(Session.get('article'), false);
-                console.log("!!!");
 
                 if (Session.get('article').title) {
                     title += ' | ' +  Meteor.article.pageTitle(Session.get('article').title, null);
