@@ -479,7 +479,10 @@ Meteor.article = {
         }
 
         if( description != '' ) {
-            og.description = description.substring(0,160);
+            if( desc.length > 160 ) {
+                description = description.substring(0,157) + '...';
+            }
+            og.description = description;
         }
 
         if( articleData.files.figures.length > 0 ) {
