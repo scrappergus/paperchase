@@ -556,7 +556,7 @@ if (Meteor.isClient) {
                 return;
             }
             var title = Meteor.settings.public.journal.name + " Journal";
-            var ogImageHome = "http://localhost:3000/images/ogImageHomeAging.png";
+            var ogImageHome = Meteor.settings.public.journal.siteUrl + "/images/ogImageHomeAging.png";
             var ogDescHome = "Since 2009, Aging (abbreviated by PubMed/Medline as Aging (Albany NY) and by Web of Science as Aging-US) has become a leading journal in the field. Aging publishes papers of outstanding significance, exceptional novelty, and high quality. The scope includes all organisms from yeast to humans, cellular and molecular biology, signal transduction pathways, physiology including cardiology and endocrinology and metabolism, age-related diseases, including cancer, treatment of diseases, and anti-aging interventions.";
             SEO.set({
               title: title,
@@ -686,7 +686,7 @@ if (Meteor.isClient) {
                 return;
             }
             var title = Meteor.settings.public.journal.name + ' | Archive';
-            var ogImageArchive = "http://localhost:3000/images/agingMetaArchive.png";
+            var ogImageArchive = Meteor.settings.public.journal.siteUrl + "/images/agingMetaArchive.png";
             var ogDescArchive = "Since 2009, Aging Journal has published eight volumes, amassing over 90 issues of scientific content";
             SEO.set({
                 title: title,
@@ -898,6 +898,7 @@ if (Meteor.isClient) {
                     var ogMetaIssue = issueMeta.issue;
                     var ogMetaVolume = issueMeta.volume;
                     SEO.set({
+                        title: 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue,
                         og: {
                         'description' : ogMetaDesc,
                         'image' : ogMetaImgUrl,
@@ -941,9 +942,9 @@ if (Meteor.isClient) {
                 title += ' | Volume ' + pieces.volume + ', Issue ' + pieces.issue;
             }
 
-            SEO.set({
-                title: title
-            });
+            // SEO.set({
+            //     title: title
+            // });
         }
     });
 
