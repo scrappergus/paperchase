@@ -508,10 +508,7 @@ if (Meteor.isClient) {
             var current = issues.findOne();
             if(current){
                 Router.go("/issue/v" + current.volume + "i" + current.issue);
-                // var currentIssueTitle = current.volume + "i" + current.issue;
-                // SEO.set({
-                //     title: currentIssueTitle,
-                // });
+
             }
         }
     });
@@ -539,7 +536,6 @@ if (Meteor.isClient) {
         data: function(){
             if(this.ready()){
                 var featureList = articles.find({'feature':true},{sort:{'_id':1}}).fetch();
-
                 var sections = homePage.find().fetch();
                 var sorted  = sorters.findOne();
 
@@ -560,8 +556,15 @@ if (Meteor.isClient) {
                 return;
             }
             var title = Meteor.settings.public.journal.name + " Journal";
+            var ogImageHome = "http://localhost:3000/images/ogImageHomeAging.png";
+            var ogDescHome = "Since 2009, Aging (abbreviated by PubMed/Medline as Aging (Albany NY) and by Web of Science as Aging-US) has become a leading journal in the field. Aging publishes papers of outstanding significance, exceptional novelty, and high quality. The scope includes all organisms from yeast to humans, cellular and molecular biology, signal transduction pathways, physiology including cardiology and endocrinology and metabolism, age-related diseases, including cancer, treatment of diseases, and anti-aging interventions.";
             SEO.set({
-                title: title,
+              title: title,
+              og : {
+                'title': title,
+                'image': ogImageHome,
+                'description': ogDescHome
+              }
             });
         }
     });
@@ -683,9 +686,15 @@ if (Meteor.isClient) {
                 return;
             }
             var title = Meteor.settings.public.journal.name + ' | Archive';
-
+            var ogImageArchive = "http://localhost:3000/images/agingMetaArchive.png";
+            var ogDescArchive = "Since 2009, Aging Journal has published eight volumes, amassing over 90 issues of scientific content";
             SEO.set({
-                title: title
+                title: title,
+                og : {
+                  'title': title,
+                  'image': ogImageArchive,
+                  'description': ogDescArchive
+                }
             });
         }
     });
@@ -883,9 +892,7 @@ if (Meteor.isClient) {
                     }
                     else if(issueMeta){
                         Session.set('issueMeta', issueMeta);
-                        console.log(issueMeta, "issuemeta");
                     }
-                    console.log(issueMeta, "issuemeta");
                     var ogMetaDesc = issueMeta.caption;
                     var ogMetaImgUrl = issueMeta.coverPath;
                     var ogMetaIssue = issueMeta.issue;
