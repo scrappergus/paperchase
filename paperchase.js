@@ -508,6 +508,10 @@ if (Meteor.isClient) {
             var current = issues.findOne();
             if(current){
                 Router.go("/issue/v" + current.volume + "i" + current.issue);
+                // var currentIssueTitle = current.volume + "i" + current.issue;
+                // SEO.set({
+                //     title: currentIssueTitle,
+                // });
             }
         }
     });
@@ -555,10 +559,9 @@ if (Meteor.isClient) {
             if (!Meteor.isClient) {
                 return;
             }
-            var title = Meteor.settings.public.journal.name;
-
+            var title = Meteor.settings.public.journal.name + " Journal";
             SEO.set({
-                title: title
+                title: title,
             });
         }
     });
@@ -880,7 +883,20 @@ if (Meteor.isClient) {
                     }
                     else if(issueMeta){
                         Session.set('issueMeta', issueMeta);
+                        console.log(issueMeta, "issuemeta");
                     }
+                    console.log(issueMeta, "issuemeta");
+                    var ogMetaDesc = issueMeta.caption;
+                    var ogMetaImgUrl = issueMeta.coverPath;
+                    var ogMetaIssue = issueMeta.issue;
+                    var ogMetaVolume = issueMeta.volume;
+                    SEO.set({
+                        og: {
+                        'description' : ogMetaDesc,
+                        'image' : ogMetaImgUrl,
+                        'title': 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue
+                      }
+                });
                 });
 
                 if( !Session.get('issue') || Session.get('issue') && Session.get('issue').issue != pieces.issue || Session.get('issue') && Session.get('issue').volume != pieces.volume){
