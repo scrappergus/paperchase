@@ -552,7 +552,7 @@ Meteor.article = {
 
         // description
         if (articleData.abstract) {
-            cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract.replace(/(<([^>]+)>)/ig, ""));
+            cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract);
             meta.description = fullText ? 'Full Text - ' + cleanedAbstract : cleanedAbstract;
             if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl){
                 meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData._id;
