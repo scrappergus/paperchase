@@ -559,8 +559,13 @@ if (Meteor.isClient) {
             var ogImageHome = Meteor.settings.public.journal.siteUrl + "/images/ogImageHomeAging.png";
             var ogDescHome = "Since 2009, Aging (abbreviated by PubMed/Medline as Aging (Albany NY) and by Web of Science as Aging-US) has become a leading journal in the field. Aging publishes papers of outstanding significance, exceptional novelty, and high quality. The scope includes all organisms from yeast to humans, cellular and molecular biology, signal transduction pathways, physiology including cardiology and endocrinology and metabolism, age-related diseases, including cancer, treatment of diseases, and anti-aging interventions.";
             SEO.set({
-              title: title,
+              // title: title,
               og : {
+                'title': title,
+                'image': ogImageHome,
+                'description': ogDescHome
+              },
+              twitter: {
                 'title': title,
                 'image': ogImageHome,
                 'description': ogDescHome
@@ -689,8 +694,13 @@ if (Meteor.isClient) {
             var ogImageArchive = Meteor.settings.public.journal.siteUrl + "/images/agingMetaArchive.png";
             var ogDescArchive = "Since 2009, Aging Journal has published eight volumes, amassing over 90 issues of scientific content";
             SEO.set({
-                title: title,
+                // title: title,
                 og : {
+                  'title': title,
+                  'image': ogImageArchive,
+                  'description': ogDescArchive
+                },
+                twitter : {
                   'title': title,
                   'image': ogImageArchive,
                   'description': ogDescArchive
@@ -898,12 +908,17 @@ if (Meteor.isClient) {
                     var ogMetaIssue = issueMeta.issue;
                     var ogMetaVolume = issueMeta.volume;
                     SEO.set({
-                        title: 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue,
+                        // title: 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue,
                         og: {
                         'description' : ogMetaDesc,
                         'image' : ogMetaImgUrl,
                         'title': 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue
-                      }
+                      },
+                      twitter: {
+                      'description' : ogMetaDesc,
+                      'image' : ogMetaImgUrl,
+                      'title': 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue
+                    }
                 });
                 });
 
@@ -972,12 +987,10 @@ if (Meteor.isClient) {
             if (Session.get('article')) {
                 meta = Meteor.article.metaTags(Session.get('article'), false);
                 meta_og = Meteor.article.metaOGTags(Session.get('article'), false);
-
                 if (Session.get('article').title) {
                     title += ' | ' +  Meteor.article.pageTitle(Session.get('article').title, null);
                 }
             }
-
             SEO.set({
                 title: title,
                 meta: meta,
@@ -1018,7 +1031,11 @@ if (Meteor.isClient) {
             SEO.set({
                 title: title,
                 meta: meta,
-                og: meta_og
+                og: meta_og,
+                twitter:{
+                  'description': meta_og.description,
+                  'image': meta_og.image
+                }
             });
         }
     });
