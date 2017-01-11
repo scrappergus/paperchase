@@ -559,14 +559,14 @@ if (Meteor.isClient) {
             var ogImageHome = Meteor.settings.public.journal.siteUrl + "/images/ogImageHomeAging.png";
             var ogDescHome = "Since 2009, Aging (abbreviated by PubMed/Medline as Aging (Albany NY) and by Web of Science as Aging-US) has become a leading journal in the field. Aging publishes papers of outstanding significance, exceptional novelty, and high quality. The scope includes all organisms from yeast to humans, cellular and molecular biology, signal transduction pathways, physiology including cardiology and endocrinology and metabolism, age-related diseases, including cancer, treatment of diseases, and anti-aging interventions.";
             SEO.set({
-              // title: title,
+              title: title,
               og : {
                 'title': title,
                 'image': ogImageHome,
                 'description': ogDescHome
               },
               twitter: {
-                'title': title,
+                // 'title': title,
                 'image': ogImageHome,
                 'description': ogDescHome
               }
@@ -694,14 +694,14 @@ if (Meteor.isClient) {
             var ogImageArchive = Meteor.settings.public.journal.siteUrl + "/images/agingMetaArchive.png";
             var ogDescArchive = "Since 2009, Aging Journal has published eight volumes, amassing over 90 issues of scientific content";
             SEO.set({
-                // title: title,
+                title: title,
                 og : {
                   'title': title,
                   'image': ogImageArchive,
                   'description': ogDescArchive
                 },
                 twitter : {
-                  'title': title,
+                //   'title': title,
                   'image': ogImageArchive,
                   'description': ogDescArchive
                 }
@@ -903,23 +903,6 @@ if (Meteor.isClient) {
                     else if(issueMeta){
                         Session.set('issueMeta', issueMeta);
                     }
-                    var ogMetaDesc = issueMeta.caption;
-                    var ogMetaImgUrl = issueMeta.coverPath;
-                    var ogMetaIssue = issueMeta.issue;
-                    var ogMetaVolume = issueMeta.volume;
-                    SEO.set({
-                        // title: 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue,
-                        og: {
-                        'description' : ogMetaDesc,
-                        'image' : ogMetaImgUrl,
-                        'title': 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue
-                      },
-                      twitter: {
-                      'description' : ogMetaDesc,
-                      'image' : ogMetaImgUrl,
-                      'title': 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue
-                    }
-                });
                 });
 
                 if( !Session.get('issue') || Session.get('issue') && Session.get('issue').issue != pieces.issue || Session.get('issue') && Session.get('issue').volume != pieces.volume){
@@ -943,6 +926,7 @@ if (Meteor.isClient) {
             var title = Meteor.settings.public.journal.name;
 
             var pieces = {};
+            var issueMeta = Session.get('issueMeta');
 
             if(this.data && this.data () && this.data().article && this.data().article.volume && this.data().article){
                 // for article breadcrumbs, which will try to use the issue mongo ID as the param, but we use vol/issue
@@ -952,14 +936,34 @@ if (Meteor.isClient) {
                 pieces = Meteor.issue.urlPieces(this.params.vi);
             }
 
-
             if(pieces && pieces.volume){
                 title += ' | Volume ' + pieces.volume + ', Issue ' + pieces.issue;
             }
 
-            // SEO.set({
-            //     title: title
-            // });
+            if( !issueMeta ) {
+                SEO.set({
+                    title: title
+                });
+            }
+            else {
+                var metatags = {
+                    'description' : issueMeta.caption,
+                    'image' : issueMeta.coverPath,
+                    'title': 'Aging Journal | Volume ' + issueMeta.volume + ' Issue ' + issueMeta.issue
+                };
+                SEO.set({
+                    title: 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue,
+                    og: {
+                        'title': metatags.title,
+                        'description': metatags.description,
+                        'image': metatags.image,
+                    },
+                    twitter: {
+                        'description': metatags.description,
+                        'image': metatags.image,
+                    }
+                });
+            }
         }
     });
 
