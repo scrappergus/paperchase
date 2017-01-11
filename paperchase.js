@@ -947,12 +947,12 @@ if (Meteor.isClient) {
             }
             else {
                 var metatags = {
-                    'description' : issueMeta.caption,
+                    'description' : Meteor.clean.stripHtml(issueMeta.caption),
                     'image' : issueMeta.coverPath,
                     'title': 'Aging Journal | Volume ' + issueMeta.volume + ' Issue ' + issueMeta.issue
                 };
                 SEO.set({
-                    title: 'Aging Journal | Volume '+ogMetaVolume+' Issue '+ogMetaIssue,
+                    title: metatags.title,
                     og: {
                         'title': metatags.title,
                         'description': metatags.description,
