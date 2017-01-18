@@ -612,11 +612,16 @@ Meteor.methods({
         });
     },
     batchCheckOptimizedArticleFigures: function(userId){
-        var notOptimized = articles.find({optimized: {$exists: false}, 'files.figures': {$exists: true}}).fetch();
-        console.log(notOptimized.length + 'articles to check for optimized images');
+        var notOptimized = articles.find({'files.figures' : {$elemMatch: {optimized : {$exists:false}}}}).fetch();
+        console.log(notOptimized.length + ' articles to check for optimized images');
+        var count = 0;
         notOptimized.forEach(function(article){
+            console.log('...', count, article._id);
+            count++;
             article.files.figures.forEach(function(fig){
-                Meteor.call('verifyImagesOptimized', article._id, 'paper_figures', userId, fig.id);
+                if (!fig.optimized) {
+                    Meteor.call('verifyImagesOptimized', article._id, 'paper_figures', userId, fig.id);
+                }
             });
         });
     },
