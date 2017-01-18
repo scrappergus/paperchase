@@ -612,7 +612,7 @@ Meteor.methods({
         });
     },
     batchCheckOptimizedArticleFigures: function(userId){
-        var notOptimized = articles.find({'files.figures' : {$elemMatch: {optimized : {$exists:false}}}}).fetch();
+        var notOptimized = articles.find({'files.figures' : {$elemMatch: {optimized : {$exists:false}}}, 'article_type._id' : {$ne : 'Fq3xv2AcTRYWQttsN'}}).fetch();
         console.log(notOptimized.length + ' articles to check for optimized images');
         var count = 0;
         notOptimized.forEach(function(article){
