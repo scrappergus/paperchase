@@ -387,6 +387,7 @@ if (Meteor.isClient) {
     Session.setDefault('missingPii',null);
     Session.setDefault('preprocess-article',false);
     Session.setDefault('issue',null);
+    Session.setDefault('current',null);
     Session.setDefault('issueMeta',null);
     Session.setDefault('issueParams',null);
     // for side navigation
@@ -524,6 +525,20 @@ if (Meteor.isClient) {
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
+
+            //Current
+            var current =  issues.findOne({current:true});
+            if (current) {
+                console.log(current);
+                Meteor.call('getIssueAndFiles', current.volume, current.issue, false, function(error,result){
+                    if(error){
+                        console.error('ERROR - getIssueAndFiles',error);
+                    } else if(result){
+                        console.log(result);
+                        Session.set('current', result);
+                    }
+                });
+            }
             this.next();
         },
         waitOn: function(){

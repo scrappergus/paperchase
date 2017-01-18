@@ -81,7 +81,19 @@
 
 <template name="HomePageLatestIssue">
     <div class="issue-highlight clean card">
-        <a href="/issue/v{{volume}}i{{issue}}"><img src="https://s3-us-west-1.amazonaws.com/paperchase-aging/covers/{{cover}}" class="cover"></a>
+        <a href="/issue/v{{volume}}i{{issue}}">
+            {{#if optimized_urls}}
+                {{#if optimized_urls.medium}}
+                    <img src="{{optimized_urls.medium}}" alt="Cover Volume {{volume}}, Issue {{issue}}" class="cover">
+                    {{else}}
+                    {{#if optimized_urls.small}}
+                    <img src="{{optimized_urls.small}}" alt="Cover Volume {{volume}}, Issue {{issue}}" class="cover">
+                    {{/if}}
+                {{/if}}
+                {{else}}
+                <img src="{{coverPath}}" alt="Cover Volume {{volume}}, Issue {{issue}}" class="cover">
+            {{/if}}
+        </a>
 
         <ul class="button-list">
             <li class="title">Latest Issue</li>

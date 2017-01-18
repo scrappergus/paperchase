@@ -100,7 +100,7 @@ Meteor.methods({
             if (issueData.optimized && issueData.optimized_file && issueData.optimized_sizes){
                 issueData.optimized_urls = {};
                 for (var size in issueData.optimized_sizes) {
-                    issueData.optimized_urls[size] = optimizedUrlPath + size + '/' + issue.optimized_file;
+                    issueData.optimized_urls[size] = optimizedUrlPath + size + '/' + issueData.optimized_file;
                 }
             }
 

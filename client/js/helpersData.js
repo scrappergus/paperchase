@@ -201,7 +201,7 @@ Template.scrollspyItems.helpers({
 // -------------
 Template.MainSideBar.helpers({
     latestIssue: function() {
-        return issues.findOne({current:true});
+        return Session.get('current');
     }
 });
 
@@ -465,4 +465,3 @@ Template.PrintRequest.helpers({
         return Session.get('submitted');
     }
 });
-
