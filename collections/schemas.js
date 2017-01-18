@@ -237,7 +237,15 @@ issues.schema = new SimpleSchema({
     'date_settings.month': {type: Boolean, optional: true},
     'date_settings.year': {type: Boolean, optional: true},
     display: {type: Boolean, optional: true},
-    cover: {type: String, optional: true}
+    cover: {type: String, optional: true},
+    optimized_file : {type: String, optional: true},
+    optimized: {type: Boolean, optional: true},
+    'optimized_sizes.original': {type: Boolean, optional: true},
+    'optimized_sizes.hero': {type: Boolean, optional: true},
+    'optimized_sizes.large': {type: Boolean, optional: true},
+    'optimized_sizes.medium': {type: Boolean, optional: true},
+    'optimized_sizes.small': {type: Boolean, optional: true},
+    'optimized_sizes.xsmall': {type: Boolean, optional: true}
 });
 // news
 newsList.schema = new SimpleSchema({
