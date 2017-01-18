@@ -527,18 +527,13 @@ if (Meteor.isClient) {
             Meteor.impact.redirectForAlt();
 
             //Current
-            var current =  issues.findOne({current:true});
-            if (current) {
-                console.log(current);
-                Meteor.call('getIssueAndFiles', current.volume, current.issue, false, function(error,result){
-                    if(error){
-                        console.error('ERROR - getIssueAndFiles',error);
-                    } else if(result){
-                        console.log(result);
-                        Session.set('current', result);
-                    }
-                });
-            }
+            Meteor.call('getCurrentIssueCover', function(error,result){
+                if(error){
+                    console.error('ERROR - getCurrentIssueCover',error);
+                } else if(result){
+                    Session.set('current', result);
+                }
+            });
             this.next();
         },
         waitOn: function(){

@@ -67,6 +67,50 @@ Meteor.methods({
             throw new Meteor.Error(error);
         }
     },
+    getCurrentIssueCover: function(){
+        var fut = new future();
+        var journalData,
+            journal,
+            assetUrl,
+            issueData;
+        var optimizedUrlPath = '';
+        journalData = journalConfig.findOne({});
+        journal = journalData.journal.short_name;
+        assetUrl =  journalData.assets;
+        issueData = issues.findOne({'current': true});
+
+        if (journalData.s3 && journalData.s3.domain && journalData.s3.bucket + journalData.s3.folders && journalData.s3.folders.issues && journalData.s3.folders.issues.covers_optimized) {
+            optimizedUrlPath = journalData.s3.domain + journalData.s3.bucket  + '/' + journalData.s3.folders.issues.covers_optimized + '/';
+        } else {
+            console.error('S3 optimized path not in the database.');
+        }
+
+        if (issueData) {
+            if(issueData.cover){
+                issueData.coverPath = Meteor.issue.coverPath(assetUrl,issueData.cover);
+            }
+
+            if (issueData.optimized && issueData.optimized_file && issueData.optimized_sizes){
+                issueData.optimized_urls = {};
+                for (var size in issueData.optimized_sizes) {
+                    issueData.optimized_urls[size] = optimizedUrlPath + size + '/' + issueData.optimized_file;
+                }
+            }
+
+            fut.return(issueData);
+
+        } else {
+            fut.return();
+        }
+
+
+        try {
+            return fut.wait();
+        }
+        catch(error) {
+            throw new Meteor.Error(error);
+        }
+    },
     getIssueAndFiles: function(volume, issue, admin){
         // console.log('...getIssueAndFiles v = ' + volume + ', i = ' + issue);
         // To Do: move to shared repo
