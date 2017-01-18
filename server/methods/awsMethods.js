@@ -68,11 +68,12 @@ Meteor.methods({
                             }
                         }
                     });
-                }, 60000);
+                }, 9000);
             }
         }
     },
     optimizationFailedEmail: function(emailMessage, userId){
+        // console.log(emailMessage);
         var fromEmail = Meteor.settings.it && Meteor.settings.it.email ? Meteor.settings.it.email : '';
         var toEmails = '';
 
