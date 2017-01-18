@@ -1,5 +1,6 @@
 Meteor.methods({
     verifyImagesOptimized: function(mongoId, s3Folder, userId, figId){
+        // console.log('... ', mongoId, figId);
         // For paper figures and covers.
         // AWS Lambda converts files to png and also resizes. Here we verify this happened.
         // only papers will have figId. Covers will not have figId.
@@ -67,7 +68,7 @@ Meteor.methods({
                             }
                         }
                     });
-                }, 9000);
+                }, 60000);
             }
         }
     },
@@ -93,14 +94,20 @@ Meteor.methods({
         });
     },
     getS3Object: function(objectPath) {
+        // console.log('..',objectPath);
         var fut = new future();
         var bucket = journalConfig.findOne({}).s3.bucket;
         var s3Object = {Bucket: bucket, Key: objectPath };
 
         S3.aws.getObject(s3Object, function(getErr, getRes) {
             if (getErr) {
+                console.error('failed to get', objectPath);
                 fut.throw(getErr);
             } else if (getRes) {
+                if (getRes.ContentLength == '0'){
+                    console.error('0 Bytes');
+                    console.error(s3Object.Key);
+                }
                 fut.return(true);
             }
         });
