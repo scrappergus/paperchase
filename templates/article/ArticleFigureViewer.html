@@ -46,15 +46,15 @@
 			<div class="figure">
 				{{#if optimized_urls}}
 		            {{#if optimized_urls.hero}}
-		            <img alt={{alt}} class="figure-viewer-img" src="{{optimized_urls.hero}}"/>
+					{{>ArticleFigureViewerFig src=optimized_urls.hero}}
 		            {{else}}
 		            {{#if optimized_urls.large}}
-		            <img alt={{alt}} class="figure-viewer-img" src="{{optimized_urls.large}}"/>
+					{{>ArticleFigureViewerFig src=optimized_urls.large}}
 		            {{/if}}
 		            {{/if}}
 		        {{else}}
 		            {{#if url}}
-		            <img alt={{alt}} class="figure-viewer-img" src="{{url}}"/>
+					{{>ArticleFigureViewerFig src=url}}
 		            {{/if}}
 		        {{/if}}
 				<div class="buttons">
@@ -64,4 +64,8 @@
 			</div>
 		</div>
 	</div>
+</template>
+
+<template name="ArticleFigureViewerFig">
+	<img alt={{alt}} class="figure-viewer-img" src="{{src}}"/>
 </template>
