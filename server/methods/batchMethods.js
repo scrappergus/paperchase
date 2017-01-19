@@ -612,7 +612,7 @@ Meteor.methods({
         });
     },
     batchCheckOptimizedArticleFigures: function(userId){
-        var notOptimized = articles.find({'files.figures' : {$elemMatch: {optimized : {$exists:false}}}, 'article_type._id' : {$ne : 'Fq3xv2AcTRYWQttsN'}}).fetch();
+        var notOptimized = articles.find({ 'files.figures' : {$elemMatch: {optimized : {$exists:false}}}, 'article_type._id' : {$nin : ['Fq3xv2AcTRYWQttsN', 'DtafcmBcwi5RKtfi6', 'dgGj6ck74AQzsurBr', 'dSRSmvMuYaX6tmBD7', 'YjFftFMsEayFrrPpk']}}).fetch();
         console.log(notOptimized.length + ' articles to check for optimized images');
         var count = 0;
         notOptimized.forEach(function(article){
