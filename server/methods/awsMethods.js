@@ -53,6 +53,7 @@ Meteor.methods({
                                 var emailMessage = 'Failed to optimize image for: ' + s3Folder + '/' + folder + '. Mongo ID: '  + mongoId;
                                 Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             } else if (getRes) {
+                                // console.log(optimizedPath);
                                 cb();
                                 verifiedFolders.push(folder);
                             }
@@ -100,7 +101,7 @@ Meteor.methods({
         var bucket = journalConfig.findOne({}).s3.bucket;
         var s3Object = {Bucket: bucket, Key: objectPath };
 
-        S3.aws.getObject(s3Object, function(getErr, getRes) {
+        S3.aws.headObject(s3Object, function(getErr, getRes) {
             if (getErr) {
                 console.error('failed to get', objectPath);
                 fut.throw(getErr);
