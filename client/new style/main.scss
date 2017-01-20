@@ -492,9 +492,11 @@ h4.dates {
  ---------------------------------------------------------*/
 .full-text-image-container {
     // label { font-size: 15px; } // this does not seem to be in use
-    width: 100%;
+    // width: 100%;
     margin: 50px auto;
+    max-width: 680px;
     padding: 30px 40px;
+    text-align: center;
     @extend .faint-shadow;
 
     h4 {
@@ -505,8 +507,9 @@ h4.dates {
     }
 
     .full-text-image {
-        width: 100%;
+        width: auto;
         margin: 25px 0;
+        max-width: 600px;
     }
 }
 
