@@ -730,7 +730,6 @@ Template.AdminAdvanceArticles.helpers({
         return  Session.get('savingOrder');
     },
     sections: function(){
-        console.log(Session.get('advanceAdmin'));
         return Session.get('advanceAdmin');
     }
 });

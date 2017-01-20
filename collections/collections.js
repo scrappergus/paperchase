@@ -39,7 +39,7 @@ sorters = new Mongo.Collection('sorters', {
             articlesList = articles.find({'_id':{'$in':order}}).fetch();
             articlesByMongoId = Meteor.organize.articlesByMongoId(articlesList);
 
-
+            // order is now only used to determine section order, and articles are sorted by date
             // make sure that order has mongo IDs sorted by date
             articlesList.forEach(function(article){
                 var sec = sections.findOne({'section_id' : article.section_id});
@@ -49,42 +49,41 @@ sorters = new Mongo.Collection('sorters', {
                     sectionsNameOrder.push(sec.section_name);
                 }
             });
-            console.log(sectionsNameOrder);
-            Meteor.call('sortAdvanceSectionsByDate', sectionsNameOrder, articlesList, function(error, articleIdsByDate){
-                if (articleIdsByDate) {
-                    console.log('articleIdsByDate');
 
-                        f.articles = [];
 
-                        var last_section;
+            var articleIdsByDate = Meteor.advance.sortAdvanceSectionsByDate(sectionsNameOrder, articlesList);
+            if (articleIdsByDate) {
+                f.articles = [];
 
-                        for(var i = 0; i < order.length; i++){
-                            var article;
-                            if (articlesByMongoId[order[i]]){
-                                article = articlesByMongoId[order[i]];
-                                if (article.section_id || article.section_id === 0) {
-                                    var section = sections.findOne({'section_id' : article.section_id});
-                                    if(section !== undefined && section.section_name) {
-                                        article.section_name = section.section_name;
-                                    } else if(section !== undefined && section.name) {
-                                        article.section_name = section.name;
-                                    }
-                                } else if (article.article_type) {
-                                    article.section_name = article.article_type.name;
-                                }
+                var last_section;
 
-                                if (i===0) {
-                                    article.section_start = true;
-                                } else if (last_section != article.section_name) {
-                                    article.section_start = true;
-                                }
-
-                                last_section = article.section_name;
-                                f.articles.push(article);
+                for(var i = 0; i < articleIdsByDate.length; i++){
+                    var article;
+                    if (articlesByMongoId[articleIdsByDate[i]]){
+                        article = articlesByMongoId[articleIdsByDate[i]];
+                        // console.log(article._id);
+                        if (article.section_id || article.section_id === 0) {
+                            var section = sections.findOne({'section_id' : article.section_id});
+                            if(section !== undefined && section.section_name) {
+                                article.section_name = section.section_name;
+                            } else if(section !== undefined && section.name) {
+                                article.section_name = section.name;
                             }
+                        } else if (article.article_type) {
+                            article.section_name = article.article_type.name;
                         }
+
+                        if (i===0) {
+                            article.section_start = true;
+                        } else if (last_section != article.section_name) {
+                            article.section_start = true;
+                        }
+
+                        last_section = article.section_name;
+                        f.articles.push(article);
+                    }
                 }
-            });
+            }
         }
         else if(f.name == 'advance'){
             var unordered = articles.find({'_id':{'$in':order}}).fetch();

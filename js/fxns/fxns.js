@@ -1033,16 +1033,16 @@ Meteor.advance = {
         return articlesBySection;
     },
     dataForSectionsPage: function(articles){
-        var articlesByDateInSection = [];
+        var articlesBySection = [];
 
         if (articles) {
             var advanceSections = Meteor.advance.articlesBySection(articles);
 
             for(var section in advanceSections){
-                articlesByDateInSection.push({section: section, articles_count: advanceSections[section].length, articles: advanceSections[section]});
+                articlesBySection.push({section: section, articles_count: advanceSections[section].length, articles: advanceSections[section]});
             }
         }
-        return articlesByDateInSection;
+        return articlesBySection;
     },
     orderViaAdmin: function(){
         var order = [];
@@ -1057,6 +1057,42 @@ Meteor.advance = {
             sectionsOrder.push($(this).attr('data-name'));
         });
         return sectionsOrder;
+    },
+    sortAdvanceSectionsByDate: function(sectionsOrder, articlesList){
+        var newOrder = [];
+        articlesList.sort(function(a,b){
+            var aDate;
+            var bDate;
+            if(!a.dates || !a.dates.epub){
+                aDate = new Date();
+            } else {
+                aDate = new Date(a.dates.epub);
+            }
+
+            if(!b.dates || !b.dates.epub){
+                bDate = new Date();
+            } else {
+                bDate = new Date(b.dates.epub);
+            }
+            return aDate.getTime() - bDate.getTime();
+        });
+        articlesList.reverse();
+
+        var articlesBySection = Meteor.advance.articlesBySection(articlesList);
+        var mongoIdsBySection = {};
+
+        for(var articleSection in articlesBySection){
+            mongoIdsBySection[articleSection] = [];
+            articlesBySection[articleSection].forEach(function(article){
+                mongoIdsBySection[articleSection].push(article._id);
+            });
+        }
+
+        sectionsOrder.forEach(function(section){
+            newOrder = newOrder.concat(mongoIdsBySection[section]);
+        });
+        // newOrder = array of Mongo IDs
+        return newOrder;
     }
 };
 
