@@ -728,15 +728,9 @@ Template.AdminAdvanceArticles.helpers({
     },
     savingOrder: function(){
         return  Session.get('savingOrder');
-    }
-});
-// Template.AdminAdvanceArticlesTypes.helpers({
-//  types: function(){
-//      return  Session.get('advanceAdmin');
-//  }
-// });
-Template.AdminAdvanceArticles.helpers({
+    },
     sections: function(){
+        console.log(Session.get('advanceAdmin'));
         return Session.get('advanceAdmin');
     }
 });

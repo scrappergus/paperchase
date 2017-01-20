@@ -1031,6 +1031,7 @@ if (Meteor.isClient) {
             if(Meteor.settings.public.journal.name != 'Oncotarget'){
                 Router.go('AdminAop');
             }
+
             this.next();
         },
         layoutTemplate: 'Admin',
@@ -1044,9 +1045,10 @@ if (Meteor.isClient) {
             ];
         },
         data: function(){
+            var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
             var sorted  = sorters.findOne({name:'advance'});
-            if(this.ready() && sorted && sorted.articles){
-                var advance = publish.findOne({name: 'advance'}, {sort:{'pubtime':-1}});
+
+            if(this.ready() && advance && sorted && sorted.articles){
                 var totalArticles = sorted.articles ? sorted.articles.length : null;
                 var sections = Meteor.advance.dataForSectionsPage(sorted.articles);
                 Session.set('advanceAdmin',sections);

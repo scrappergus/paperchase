@@ -106,10 +106,31 @@ Meteor.methods({
     },
     makeNewOrder: function(sectionsOrder){
         var fut = new future();
-        var newOrder = [];
 
         var articlesList = sorters.findOne({name:'advance'});
         articlesList = articlesList.articles;
+
+        Meteor.call('sortAdvanceSectionsByDate', sectionsOrder, articlesList, function(newOrderError, newOrder){
+            if (newOrderError) {
+                throw new Meteor.Error(newOrderError);
+            } else if (newOrder){
+                Meteor.call('updateList','advance', newOrder, function(error,result){
+                    if(error){
+                        // console.log('error!');
+                        throw new Meteor.Error(error);
+                    }else if(result){
+                        // console.log('success!');
+                        fut.return(true);
+                    }
+                });
+            }
+        });
+
+        return fut.wait();
+    },
+    sortAdvanceSectionsByDate: function(sectionsOrder, articlesList) {
+        console.log('sortAdvanceSectionsByDate', articlesList[0].section_name);
+        var newOrder = [];
         articlesList.sort(function(a,b){
             var aDate;
             var bDate;
@@ -137,21 +158,14 @@ Meteor.methods({
                 mongoIdsBySection[articleSection].push(article._id);
             });
         }
-            // console.log(mongoIdsBySection);
 
         sectionsOrder.forEach(function(section){
             newOrder = newOrder.concat(mongoIdsBySection[section]);
         });
-        Meteor.call('updateList','advance', newOrder, function(error,result){
-            if(error){
-                // console.log('error!');
-                throw new Meteor.Error(error);
-            }else if(result){
-                // console.log('success!');
-                fut.return(true);
-            }
-        });
-        return fut.wait();
+
+        // array of Mongo IDs
+        console.log('newOrder', newOrder);
+        return newOrder;
     },
     updateAdvanceResearch: function(articles){
         var fut = new future();

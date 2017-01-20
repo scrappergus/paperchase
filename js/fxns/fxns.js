@@ -1022,22 +1022,27 @@ Meteor.advance = {
         var articlesBySection = {};
         if (articlesList) {
             articlesList.forEach(function(article){
+                // console.log(article._id, article.section_id,  article.section_name);
                 if(!articlesBySection[article.section_name]){
                     articlesBySection[article.section_name] = [];
                 }
                 articlesBySection[article.section_name].push(article);
             });
         }
+
         return articlesBySection;
     },
-    dataForSectionsPage: function(){
-        var sorted  = sorters.findOne({name:'advance'});
-        var res = [];
-        var advanceSections = Meteor.advance.articlesBySection(sorted.articles);
-        for(var section in advanceSections){
-            res.push({section: section, articles_count: advanceSections[section].length, articles: advanceSections[section]});
+    dataForSectionsPage: function(articles){
+        var articlesByDateInSection = [];
+
+        if (articles) {
+            var advanceSections = Meteor.advance.articlesBySection(articles);
+
+            for(var section in advanceSections){
+                articlesByDateInSection.push({section: section, articles_count: advanceSections[section].length, articles: advanceSections[section]});
+            }
         }
-        return res;
+        return articlesByDateInSection;
     },
     orderViaAdmin: function(){
         var order = [];
