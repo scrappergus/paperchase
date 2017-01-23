@@ -889,3 +889,19 @@ ul.sectioned-list {
 .altmetric-title-link{
 	display: table;
 }
+
+/* Reprint Form -----------------------*/
+#print-request{
+    ::-webkit-input-placeholder {
+      color: $midgray;
+    }
+    ::-moz-placeholder {
+      color: $midgray;
+    }
+    :-ms-input-placeholder {
+      color: $midgray;
+    }
+    :-moz-placeholder {
+      color: $midgray;
+    }
+}
