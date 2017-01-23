@@ -50,7 +50,7 @@ Meteor.methods({
                             if (getErr) {
                                 console.error(getErr);
                                 cb('Failed to verify ', optimizedPath);
-                                var emailMessage = 'Failed to optimize image for: ' + s3Folder + '/' + folder + '. Mongo ID: '  + mongoId;
+                                var emailMessage = 'Failed to optimize image for: ' + s3Folder + '/' + folder + '/' + convertedFile + '. Mongo ID: '  + mongoId;
                                 Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             } else if (getRes) {
                                 // console.log(optimizedPath);
@@ -88,12 +88,12 @@ Meteor.methods({
             toEmails += ', ' + userData.emails[0].address;
         }
 
-        Email.send({
-           to: toEmails,
-           from: fromEmail,
-           subject: 'Paperchase Image Optimization Failed',
-           text: emailMessage
-        });
+        // Email.send({
+        //    to: toEmails,
+        //    from: fromEmail,
+        //    subject: 'Paperchase Image Optimization Failed',
+        //    text: emailMessage
+        // });
     },
     getS3Object: function(objectPath) {
         // console.log('..',objectPath);
