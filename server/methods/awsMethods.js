@@ -1,5 +1,5 @@
 Meteor.methods({
-    verifyImagesOptimized: function(mongoId, s3Folder, userId, figId){
+    verifyImagesOptimized: function(mongoId, s3Folder, userId, figId, timeout){
         // console.log('... ', mongoId, figId);
         // For paper figures and covers.
         // AWS Lambda converts files to png and also resizes. Here we verify this happened.
@@ -10,6 +10,7 @@ Meteor.methods({
         var optmizedFiletype = journal.optimized_filetype;
         var convertedFile, filesPieces;
         var dbData, imageFile;
+        var timeout = timeout ? timeout : 180000;
 
 
         if (s3Folder === 'paper_figures') {
@@ -73,7 +74,7 @@ Meteor.methods({
                             }
                         }
                     });
-                }, 180000);
+                }, timeout);
             }
         }
     },
