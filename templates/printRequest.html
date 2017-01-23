@@ -1,7 +1,7 @@
 <template name="PrintRequest">
     <div class="row">
         <div class="col s12">
-            <p>Dear Authors and Readers,</p> 
+            <p>Dear Authors and Readers,</p>
 
             <p>We offer on demand printing for Aging (Albany, NY).</p>
 
@@ -21,16 +21,14 @@
                 <div>
                     <div class="input-field">
                         <label for="specs">Paper(s) Requested *</label>
-                        <textarea id="title" class="materialize-textarea" placeholder="Enter titles you're requesting" required>{{#each article.titles}}{{{.}}}
-
-{{/each}}</textarea> 
+                        <textarea id="title" class="materialize-textarea" placeholder="Enter titles you're requesting" required>{{#each article.titles}}{{{.}}}{{/each}}</textarea> 
                     </div>
                 </div>
 
                 <div class="section">
                     <div class="input-field">
                         <label for="specs">Any Specifications For Your Request</label>
-                        <textarea id="specs"  class="materialize-textarea" placeholder="Enter Specifcations for your request here"></textarea> 
+                        <textarea id="specs"  class="materialize-textarea" placeholder="Enter Specifcations for your request here"></textarea>
                     </div>
                 </div>
 
