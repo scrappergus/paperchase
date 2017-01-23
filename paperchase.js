@@ -1233,9 +1233,6 @@ if (Meteor.isClient) {
     // Print request form
     Router.route('/print-request/:ids', {
         name: 'PrintRequest',
-        parent: function() {
-            return Meteor.article.breadcrumbParent(this.data());
-        },
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
