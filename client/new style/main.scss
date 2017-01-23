@@ -892,6 +892,13 @@ ul.sectioned-list {
 
 /* Reprint Form -----------------------*/
 #print-request{
+    label{
+        color: $deepgray;
+        font-weight: bold;
+    }
+    textarea{
+        padding-bottom: 0px;
+    }
     ::-webkit-input-placeholder {
       color: $midgray;
     }
