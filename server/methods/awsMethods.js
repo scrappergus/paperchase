@@ -50,10 +50,12 @@ Meteor.methods({
                             if (getErr) {
                                 console.error(getErr);
                                 cb('Failed to verify ', optimizedPath);
-                                var emailMessage = 'Failed to optimize image for: ' + s3Folder + '/' + folder + '/' + convertedFile + '. Mongo ID: '  + mongoId;
+                                var emailMessage = 'Failed to optimize image for: ' + optimizedPath + '. Mongo ID: '  + mongoId;
                                 Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             } else if (getRes) {
                                 // console.log(optimizedPath);
+                                var emailMessage = 'Failed to optimize image for: ' + optimizedPath + '. Mongo ID: '  + mongoId;
+                                Meteor.call('optimizationFailedEmail', emailMessage, userId);
                                 cb();
                                 verifiedFolders.push(folder);
                             }
@@ -85,7 +87,11 @@ Meteor.methods({
         var userData = Meteor.users.findOne({'_id':userId});
 
         if (userData && userData.emails && userData.emails[0] && userData.emails[0].address) {
-            toEmails += ', ' + userData.emails[0].address;
+            if (Roles.userIsInRole(userData, ['super-admin'])) {
+                toEmails = userData.emails[0].address;
+            } else {
+                toEmails += ', ' + userData.emails[0].address;
+            }
         }
 
         // Email.send({
