@@ -89,7 +89,7 @@ Meteor.methods({
         var userData = Meteor.users.findOne({'_id':userId});
 
         if (userData && userData.emails && userData.emails[0] && userData.emails[0].address) {
-            if (Roles.userIsInRole(userData, ['super-admin'])) {
+            if (Roles.userIsInRole(userData, ['dev'])) {
                 toEmails = userData.emails[0].address;
             } else {
                 toEmails += ', ' + userData.emails[0].address;
