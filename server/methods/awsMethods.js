@@ -56,6 +56,10 @@ Meteor.methods({
                                 // console.log(optimizedPath);
                                 cb();
                                 verifiedFolders.push(folder);
+                            } else {
+                                cb('Failed to verify ', optimizedPath);
+                                var emailMessage = 'Image saved as 0 Bytes.\r\n\r\nFailed to optimize image: ' + convertedFile + '\r\n' + 'Size: ' + folder + '\r\n' + 'Mongo ID: '  + mongoId;
+                                Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             }
                         });
                     }, function (err) {
@@ -114,14 +118,11 @@ Meteor.methods({
                 if (getRes.ContentLength == '0'){
                     console.error('0 Bytes');
                     console.error(s3Object.Key);
-                    emailMessage = 'There was a problem with: ' + s3Object.Key + '. This was saved as 0 Bytes.';
-                    Meteor.call('optimizationFailedEmail', emailMessage, userId, function(error, result){
-                        if (error) {
-                            console.error(error);
-                        }
-                    });
+                    fut.return(false);
+                } else {
+                    fut.return(true);
                 }
-                fut.return(true);
+
             }
         });
 
