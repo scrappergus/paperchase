@@ -46,16 +46,14 @@ Meteor.methods({
 
                     async.each(optimizedFolders, function (folder, cb) {
                         var optimizedPath = filePath + folder + '/' + convertedFile;
-                        Meteor.call('getS3Object', optimizedPath, function(getErr, getRes){
+                        Meteor.call('getS3Object', optimizedPath, userId, function(getErr, getRes){
                             if (getErr) {
                                 console.error(getErr);
                                 cb('Failed to verify ', optimizedPath);
-                                var emailMessage = 'Failed to optimize image for: ' + optimizedPath + '. Mongo ID: '  + mongoId;
+                                var emailMessage = 'Failed to optimize image: ' + convertedFile + '\r\n' + 'Size: ' + folder + '\r\n' + 'Mongo ID: '  + mongoId;
                                 Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             } else if (getRes) {
                                 // console.log(optimizedPath);
-                                var emailMessage = 'Failed to optimize image for: ' + optimizedPath + '. Mongo ID: '  + mongoId;
-                                Meteor.call('optimizationFailedEmail', emailMessage, userId);
                                 cb();
                                 verifiedFolders.push(folder);
                             }
@@ -76,7 +74,7 @@ Meteor.methods({
         }
     },
     optimizationFailedEmail: function(emailMessage, userId){
-        // console.log(emailMessage);
+        // console.log('optimizationFailedEmail', emailMessage);
         var fromEmail = Meteor.settings.it && Meteor.settings.it.email ? Meteor.settings.it.email : '';
         var toEmails = '';
 
@@ -101,11 +99,12 @@ Meteor.methods({
         //    text: emailMessage
         // });
     },
-    getS3Object: function(objectPath) {
+    getS3Object: function(objectPath, userId) {
         // console.log('..',objectPath);
         var fut = new future();
         var bucket = journalConfig.findOne({}).s3.bucket;
         var s3Object = {Bucket: bucket, Key: objectPath };
+        var emailMessage = '';
 
         S3.aws.headObject(s3Object, function(getErr, getRes) {
             if (getErr) {
@@ -115,6 +114,12 @@ Meteor.methods({
                 if (getRes.ContentLength == '0'){
                     console.error('0 Bytes');
                     console.error(s3Object.Key);
+                    emailMessage = 'There was a problem with: ' + s3Object.Key + '. This was saved as 0 Bytes.';
+                    Meteor.call('optimizationFailedEmail', emailMessage, userId, function(error, result){
+                        if (error) {
+                            console.error(error);
+                        }
+                    });
                 }
                 fut.return(true);
             }
