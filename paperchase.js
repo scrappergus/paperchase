@@ -939,11 +939,11 @@ if (Meteor.isClient) {
                     Meteor.article.readyFullText(articleByPii._id);
                 } else {
                     Meteor.subscribe('articleInfo', pii, function() {
-                            var articleExistsExists = articles.findOne({'_id': pii});
-                            if(articleExistsExists){
-                                Router.go("/article/"+articleExistsExists.ids.pii+"/text");
-                            }
-                        });
+                        var articleExistsExists = articles.findOne({'_id': pii});
+                        if(articleExistsExists){
+                            Router.go("/article/"+articleExistsExists.ids.pii+"/text");
+                        }
+                    });
                 }
             });
 
