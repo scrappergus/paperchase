@@ -1,0 +1,23 @@
+<template name="AdminElasticSearch">
+    {{>AdminHeader header="Elasticsearch Admin"}}
+    {{>StatusModal}}
+
+    <form action="#">
+        <p>
+        <input name="group1" type="radio" id="indexA" checked="{{indexAChecked}}"/>
+        <label for="indexA">Elasticsearch Index A</label>
+        </p>
+        <p>
+        <input name="group1" type="radio" id="indexB" checked="{{indexBChecked}}" />
+        <label for="indexB">Elasticsearch Index B</label>
+        </p>
+        <p>
+        {{#if elasticSearchIndexing}}
+        <p>Indexing {{elasticsearch.idleIndex}}</p>
+        {{else}}
+        <a id="reIndexButton" class="waves-effect waves-light btn">{{#if indexAChecked}}Re-index B{{else}}Re-index A{{/if}}</a>
+        {{/if}}
+        </p>
+    </form>
+</template>
+
