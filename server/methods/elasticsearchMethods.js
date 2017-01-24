@@ -156,6 +156,7 @@ Meteor.methods({
                 title: doc.title,
                 authors: getAuthorNameString(doc.authors),
                 abstract: doc.abstract,
+                journal: Meteor.settings.public.journal.name,
                 volume: doc.volume,
                 issue: doc.issue, 
                 keywords: getKeywordString(doc.keywords),
