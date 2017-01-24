@@ -934,19 +934,18 @@ if (Meteor.isClient) {
 
             var pii = this.params.pii;
             Meteor.subscribe('articleByPii', pii, function() {
-                    var articleByPii = articles.findOne({"ids.pii": pii});
-                    if(articleByPii){
-                        Meteor.article.readyFullText(articleByPii._id);
-                    }
-                    else {
-                        Meteor.subscribe('articleInfo', pii, function() {
-                                var articleExistsExists = articles.findOne({'_id': pii});
-                                if(articleExistsExists){
-                                    Router.go("/article/"+articleExistsExists.ids.pii+"/text");
-                                }
-                            });
-                    }
-                });
+                var articleByPii = articles.findOne({"ids.pii": pii});
+                if(articleByPii){
+                    Meteor.article.readyFullText(articleByPii._id);
+                } else {
+                    Meteor.subscribe('articleInfo', pii, function() {
+                            var articleExistsExists = articles.findOne({'_id': pii});
+                            if(articleExistsExists){
+                                Router.go("/article/"+articleExistsExists.ids.pii+"/text");
+                            }
+                        });
+                }
+            });
 
             this.next();
         },
@@ -983,20 +982,19 @@ if (Meteor.isClient) {
 
             var pii = this.params.pii;
             Meteor.subscribe('articleByPii', pii, function() {
-                    var articleByPii = articles.findOne({"ids.pii": pii});
-                    if(articleByPii){
-                        Meteor.article.readyFullText(articleByPii._id);
-                        Session.set('article-id',articleByPii._id);
-                    }
-                    else {
-                        Meteor.subscribe('articleInfo', pii, function() {
-                                var articleExistsExists = articles.findOne({'_id': pii});
-                                if(articleExistsExists){
-                                    Router.go("/article/"+articleExistsExists.ids.pii+"/text");
-                                }
-                            });
-                    }
-                });
+                var articleByPii = articles.findOne({"ids.pii": pii});
+                if(articleByPii){
+                    Meteor.article.readyFullText(articleByPii._id);
+                    Session.set('article-id',articleByPii._id);
+                } else {
+                    Meteor.subscribe('articleInfo', pii, function() {
+                        var articleExistsExists = articles.findOne({'_id': pii});
+                        if(articleExistsExists){
+                            Router.go("/article/"+articleExistsExists.ids.pii+"/text");
+                        }
+                    });
+                }
+            });
 
 
             this.next();
@@ -1281,7 +1279,7 @@ if (Meteor.isClient) {
                             });
                     }
                 }
-                
+
 
                 return {
                     article: article
