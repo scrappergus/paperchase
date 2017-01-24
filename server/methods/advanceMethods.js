@@ -112,9 +112,7 @@ Meteor.methods({
 
         var newOrder = Meteor.advance.sortAdvanceSectionsByDate(sectionsOrder, articlesList);
 
-        if (newOrderError) {
-            throw new Meteor.Error(newOrderError);
-        } else if (newOrder){
+        if (newOrder){
             Meteor.call('updateList','advance', newOrder, function(error,result){
                 if(error){
                     // console.log('error!');
@@ -124,6 +122,8 @@ Meteor.methods({
                     fut.return(true);
                 }
             });
+        } else {
+            fut.throw('Cannot update');
         }
 
         return fut.wait();

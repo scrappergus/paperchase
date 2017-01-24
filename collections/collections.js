@@ -41,15 +41,17 @@ sorters = new Mongo.Collection('sorters', {
 
             // order is now only used to determine section order, and articles are sorted by date
             // make sure that order has mongo IDs sorted by date
-            articlesList.forEach(function(article){
-                var sec = sections.findOne({'section_id' : article.section_id});
-                article.section_name = sec.section_name;
-                if (sectionsIdOrder.indexOf(article.section_id) === -1) {
-                    sectionsIdOrder.push(article.section_id);
-                    sectionsNameOrder.push(sec.section_name);
+            order.forEach(function(mongoId){
+                if (articlesByMongoId[mongoId]){
+                    var article = articlesByMongoId[mongoId];
+                    var sec = sections.findOne({'section_id' : article.section_id});
+                    article.section_name = sec.section_name;
+                    if (sectionsIdOrder.indexOf(article.section_id) === -1) {
+                        sectionsIdOrder.push(article.section_id);
+                        sectionsNameOrder.push(sec.section_name);
+                    }
                 }
             });
-
 
             var articleIdsByDate = Meteor.advance.sortAdvanceSectionsByDate(sectionsNameOrder, articlesList);
             if (articleIdsByDate) {
