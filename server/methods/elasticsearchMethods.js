@@ -8,8 +8,8 @@ Meteor.methods({
 
         return superagent.post(INDEX_URL).send({
                 "actions" : [
-                { "add" : { "index" : "oncotarget-"+config.currentIndex, "alias" : config.primaryIndex} },
-                { "remove" : { "index" : "oncotarget-"+config.idleIndex, "alias" : config.primaryIndex } }
+                { "add" : { "index" : config.indexPrefix+"-"+config.currentIndex, "alias" : config.primaryIndex} },
+                { "remove" : { "index" : config.indexPrefix+"-"+config.idleIndex, "alias" : config.primaryIndex } }
                 ]
             });
     },
