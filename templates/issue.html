@@ -105,7 +105,7 @@
                     {{#if page_start}}<span class="meta">{{>ArticlePages}}</span>{{/if}}
 
                     <!-- Links -->
-                    {{>ArticleButtons _id=_id abstract=abstract files=files showCrawledText=showCrawledText ids=ids}}
+                    {{>ArticleButtons _id=_id pii=ids.pii abstract=abstract files=files showCrawledText=showCrawledText ids=ids}}
                 </div>
             {{/each}}
         </div>

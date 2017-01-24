@@ -925,14 +925,28 @@ if (Meteor.isClient) {
     });
 
     // Begin Article
-    Router.route('/article/:_id', {
+    Router.route('/article/:pii', {
         name: 'Article',
         parent: 'Issue',
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
 
-            Meteor.article.readyFullText(this.params._id);
+            var pii = this.params.pii;
+            Meteor.subscribe('articleByPii', pii, function() {
+                    var articleByPii = articles.findOne({"ids.pii": pii});
+                    if(articleByPii){
+                        Meteor.article.readyFullText(articleByPii._id);
+                    }
+                    else {
+                        Meteor.subscribe('articleInfo', pii, function() {
+                                var articleExistsExists = articles.findOne({'_id': pii});
+                                if(articleExistsExists){
+                                    Router.go("/article/"+articleExistsExists.ids.pii+"/text");
+                                }
+                            });
+                    }
+                });
 
             this.next();
         },
@@ -959,7 +973,7 @@ if (Meteor.isClient) {
         }
     });
 
-    Router.route('/article/:_id/text', {
+    Router.route('/article/:pii/text', {
         name: 'ArticleText',
         parent: 'Issue',
         showLink: true,
@@ -967,9 +981,24 @@ if (Meteor.isClient) {
         onBeforeAction: function() {
             Meteor.impact.redirectForAlt();
 
-            Meteor.article.readyFullText(this.params._id);
+            var pii = this.params.pii;
+            Meteor.subscribe('articleByPii', pii, function() {
+                    var articleByPii = articles.findOne({"ids.pii": pii});
+                    if(articleByPii){
+                        Meteor.article.readyFullText(articleByPii._id);
+                        Session.set('article-id',articleByPii._id);
+                    }
+                    else {
+                        Meteor.subscribe('articleInfo', pii, function() {
+                                var articleExistsExists = articles.findOne({'_id': pii});
+                                if(articleExistsExists){
+                                    Router.go("/article/"+articleExistsExists.ids.pii+"/text");
+                                }
+                            });
+                    }
+                });
 
-            Session.set('article-id',this.params._id);
+
             this.next();
         },
         onAfterAction: function() {

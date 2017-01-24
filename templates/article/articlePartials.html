@@ -325,20 +325,18 @@
         {{#if abstract}}<a class="small button" href="{{pathFor 'Article'}}">View Abstract</a>{{/if}}
 
         {{#if isSubscribed}}
-            {{#with files}}
 
-                {{#if pdf.url}}
-                {{#if pdf.display}}
-                <a target="_BLANK" data-id="{{_id}}" class="download-pdf small button" href="{{pdf.url}}">PDF</a>
+                {{#if files.pdf.url}}
+                {{#if files.pdf.display}}
+                <a target="_BLANK" data-id="{{_id}}" class="download-pdf small button" href="{{files.pdf.url}}">PDF</a>
                 {{/if}}
                 {{/if}}
 
-                {{#if xml.url}}
-                {{#if xml.display}}
+                {{#if files.xml.url}}
+                {{#if files.xml.display}}
                 <a data-id="{{_id}}" class="view-html small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
                 {{/if}}
                 {{/if}}
-            {{/with}}
 
 
             {{#if showCrawledText}}
@@ -346,16 +344,15 @@
             {{/if}}
             <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/{{_id}}">Request Reprint</a> 
         {{else}}
-            {{#with files}}
 
-            {{#if pdf.file}}
-                {{#if pdf.display}}
+            {{#if files.pdf.file}}
+                {{#if files.pdf.display}}
                 <a data-id="{{_id}}" class="small button modal-trigger disabled" href="#subscribe-modal">PDF</a>
                 {{/if}}
             {{/if}}
 
-            {{#if xml.file}}
-                {{#if xml.display}}
+            {{#if files.xml.file}}
+                {{#if files.xml.display}}
                 <a data-id="{{_id}}" class="small button disabled modal-trigger" href="#subscribe-modal">Full-Text</a>
                 {{/if}}
             {{/if}}
@@ -366,7 +363,6 @@
 
             <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/{{_id}}">Request Reprint</a> 
 
-            {{/with}}
         {{/if}}
 
         {{#if files.pdf.file}}
