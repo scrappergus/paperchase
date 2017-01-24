@@ -1114,7 +1114,8 @@ if (Meteor.isClient) {
             if(this.ready()){
                 return {
                     terms:this.params.query.terms,
-                    indexes: Session.get('journal').elasticsearch.indexes
+                    indexes: Session.get('journal').elasticsearch.indexes,
+                    primaryIndex: Session.get('journal').elasticsearch.primaryIndex
                 };
             }
         }
