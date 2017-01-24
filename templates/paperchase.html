@@ -34,7 +34,7 @@
                         <p class="valign-wrapper">
                             {{>AltmetricBadgeWithReport ids=ids}}
                             {{#if mongoId}}
-                            <a href="{{pathFor 'ArticleText' _id=mongoId}}" class="valign altmetric-title-link">{{{title}}}</a>
+                            <a href="{{pathFor 'ArticleText' pii=mongoId}}" class="valign altmetric-title-link">{{{title}}}</a>
                             {{else}}
                             <a href="{{altmetricDetailsLink}}{{altmetric_id}}" class="valign altmetric-title-link" target="_BLANK">{{{title}}}</a>
                             {{/if}}
