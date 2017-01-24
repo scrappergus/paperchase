@@ -1,4 +1,18 @@
 Meteor.methods({
+    aliasIndex: function() {
+        var INDEX_URL = Meteor.settings.elasticsearch + '/_aliases';
+        var asPromised = Meteor.npmRequire('superagent-as-promised');
+        var superagent = asPromised(Meteor.npmRequire('superagent'));
+        var mongoClient = Meteor.npmRequire('mongodb').MongoClient;
+        var config = journalConfig.findOne().elasticsearch;
+
+        return superagent.post(INDEX_URL).send({
+                "actions" : [
+                { "add" : { "index" : config.indexPrefix+"-"+config.currentIndex, "alias" : config.primaryIndex} },
+                { "remove" : { "index" : config.indexPrefix+"-"+config.idleIndex, "alias" : config.primaryIndex } }
+                ]
+            });
+    },
     indexDoc: function(pii) {
         var INDEX_URL = Meteor.settings.elasticsearch + '/' + Meteor.settings.index + '/';
         var asPromised = Meteor.npmRequire('superagent-as-promised');
@@ -86,7 +100,8 @@ Meteor.methods({
     },
 
     indexJournal: function() {
-        var INDEX_URL = Meteor.settings.elasticsearch + '/' + Meteor.settings.index + '/';
+        var config = journalConfig.findOne();
+        var INDEX_URL = Meteor.settings.elasticsearch + '/' + config.elasticsearch.indexPrefix+'-'+ config.elasticsearch.idleIndex+ '/';
         var asPromised = Meteor.npmRequire('superagent-as-promised');
         var superagent = asPromised(Meteor.npmRequire('superagent'));
         var mongoClient = Meteor.npmRequire('mongodb').MongoClient;
@@ -141,6 +156,7 @@ Meteor.methods({
                 title: doc.title,
                 authors: getAuthorNameString(doc.authors),
                 abstract: doc.abstract,
+                journal: Meteor.settings.public.journal.name,
                 volume: doc.volume,
                 issue: doc.issue, 
                 keywords: getKeywordString(doc.keywords),

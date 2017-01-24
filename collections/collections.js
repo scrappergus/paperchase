@@ -541,7 +541,8 @@ if (Meteor.isServer) {
           'assets_figures': 1,
           'visitor': 1,
           's3': 1,
-          'api': 1
+          'api': 1,
+          'elasticsearch': 1
         }});
         return siteConfig;
     });

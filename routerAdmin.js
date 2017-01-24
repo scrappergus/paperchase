@@ -1909,4 +1909,31 @@ if (Meteor.isClient) {
             this.next();
         }
     });
+
+    // Search index management
+    Router.route('/admin/elasticsearch',{
+        name: 'AdminElasticSearch',
+        title: function() {
+            var pageTitle = 'Admin | Elasticsearch ';
+            return pageTitle;
+        },
+        layoutTemplate: 'Admin',
+        waitOn: function(){
+            return[
+                Meteor.subscribe('journalConfig'),
+            ];
+        },
+        data: function(){
+            if(this.ready()){
+                var config = journalConfig.findOne();
+                return{
+                    elasticsearch: config.elasticsearch,
+                    indexAChecked: config.elasticsearch.currentIndex == 'index-a',
+                    indexBChecked: config.elasticsearch.currentIndex == 'index-b', 
+                    elasticSearchIndexing: Session.get('elasticSearchIndexing') 
+                };
+            }
+        }
+    });
+
 }

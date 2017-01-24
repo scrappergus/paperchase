@@ -612,16 +612,17 @@ Meteor.methods({
         });
     },
     batchCheckOptimizedArticleFigures: function(userId){
-        var notOptimized = articles.find({ 'files.figures' : {$elemMatch: {optimized : {$exists:false}}}, 'article_type._id' : {$nin : ['Fq3xv2AcTRYWQttsN', 'DtafcmBcwi5RKtfi6', 'dgGj6ck74AQzsurBr', 'dSRSmvMuYaX6tmBD7', 'YjFftFMsEayFrrPpk']}}).fetch();
+        // var notOptimized = articles.find({ 'files.figures' : {$elemMatch: {optimized : {$exists:false}}}, 'article_type._id' : {$nin : ['Fq3xv2AcTRYWQttsN', 'DtafcmBcwi5RKtfi6', 'dgGj6ck74AQzsurBr', 'dSRSmvMuYaX6tmBD7', 'YjFftFMsEayFrrPpk']}}).fetch();
+        var notOptimized = articles.find({ 'files.figures' : {$exists: true}, 'article_type._id' : {$nin : ['Fq3xv2AcTRYWQttsN', 'DtafcmBcwi5RKtfi6', 'dgGj6ck74AQzsurBr', 'dSRSmvMuYaX6tmBD7', 'YjFftFMsEayFrrPpk']}}).fetch();
+        var timeout = 1;
+
         console.log(notOptimized.length + ' articles to check for optimized images');
         var count = 0;
         notOptimized.forEach(function(article){
-            console.log('...', count, article._id);
+            // console.log('...', count, article._id);
             count++;
             article.files.figures.forEach(function(fig){
-                if (!fig.optimized) {
-                    Meteor.call('verifyImagesOptimized', article._id, 'paper_figures', userId, fig.id);
-                }
+                Meteor.call('verifyImagesOptimized', article._id, 'paper_figures', userId, fig.id, timeout);
             });
         });
     },

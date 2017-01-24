@@ -1,5 +1,5 @@
 Meteor.methods({
-    verifyImagesOptimized: function(mongoId, s3Folder, userId, figId){
+    verifyImagesOptimized: function(mongoId, s3Folder, userId, figId, timeout){
         // console.log('... ', mongoId, figId);
         // For paper figures and covers.
         // AWS Lambda converts files to png and also resizes. Here we verify this happened.
@@ -10,6 +10,7 @@ Meteor.methods({
         var optmizedFiletype = journal.optimized_filetype;
         var convertedFile, filesPieces;
         var dbData, imageFile;
+        var timeout = timeout ? timeout : 180000;
 
 
         if (s3Folder === 'paper_figures') {
@@ -46,16 +47,20 @@ Meteor.methods({
 
                     async.each(optimizedFolders, function (folder, cb) {
                         var optimizedPath = filePath + folder + '/' + convertedFile;
-                        Meteor.call('getS3Object', optimizedPath, function(getErr, getRes){
+                        Meteor.call('getS3Object', optimizedPath, userId, function(getErr, getRes){
                             if (getErr) {
                                 console.error(getErr);
                                 cb('Failed to verify ', optimizedPath);
-                                var emailMessage = 'Failed to optimize image for: ' + s3Folder + '/' + folder + '. Mongo ID: '  + mongoId;
+                                var emailMessage = 'Failed to optimize image: ' + convertedFile + '\r\n' + 'Size: ' + folder + '\r\n' + 'Mongo ID: '  + mongoId;
                                 Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             } else if (getRes) {
                                 // console.log(optimizedPath);
                                 cb();
                                 verifiedFolders.push(folder);
+                            } else {
+                                cb('Failed to verify ', optimizedPath);
+                                var emailMessage = 'Image saved as 0 Bytes.\r\n\r\nFailed to optimize image: ' + convertedFile + '\r\n' + 'Size: ' + folder + '\r\n' + 'Mongo ID: '  + mongoId;
+                                Meteor.call('optimizationFailedEmail', emailMessage, userId);
                             }
                         });
                     }, function (err) {
@@ -69,12 +74,12 @@ Meteor.methods({
                             }
                         }
                     });
-                }, 60000);
+                }, timeout);
             }
         }
     },
     optimizationFailedEmail: function(emailMessage, userId){
-        // console.log(emailMessage);
+        // console.log('optimizationFailedEmail', emailMessage);
         var fromEmail = Meteor.settings.it && Meteor.settings.it.email ? Meteor.settings.it.email : '';
         var toEmails = '';
 
@@ -85,21 +90,26 @@ Meteor.methods({
         var userData = Meteor.users.findOne({'_id':userId});
 
         if (userData && userData.emails && userData.emails[0] && userData.emails[0].address) {
-            toEmails += ', ' + userData.emails[0].address;
+            if (Roles.userIsInRole(userData, ['dev'])) {
+                toEmails = userData.emails[0].address;
+            } else {
+                toEmails += ', ' + userData.emails[0].address;
+            }
         }
 
-        Email.send({
-           to: toEmails,
-           from: fromEmail,
-           subject: 'Paperchase Image Optimization Failed',
-           text: emailMessage
-        });
+        // Email.send({
+        //    to: toEmails,
+        //    from: fromEmail,
+        //    subject: 'Paperchase Image Optimization Failed',
+        //    text: emailMessage
+        // });
     },
-    getS3Object: function(objectPath) {
+    getS3Object: function(objectPath, userId) {
         // console.log('..',objectPath);
         var fut = new future();
         var bucket = journalConfig.findOne({}).s3.bucket;
         var s3Object = {Bucket: bucket, Key: objectPath };
+        var emailMessage = '';
 
         S3.aws.headObject(s3Object, function(getErr, getRes) {
             if (getErr) {
@@ -109,8 +119,11 @@ Meteor.methods({
                 if (getRes.ContentLength == '0'){
                     console.error('0 Bytes');
                     console.error(s3Object.Key);
+                    fut.return(false);
+                } else {
+                    fut.return(true);
                 }
-                fut.return(true);
+
             }
         });
 
