@@ -503,8 +503,8 @@ Meteor.article = {
         if (articleData.abstract) {
             cleanedAbstract = Meteor.clean.cleanWysiwyg(articleData.abstract);
             meta.description = fullText ? 'Full Text - ' + cleanedAbstract : cleanedAbstract;
-            if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl){
-                meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData._id;
+            if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl && articleData.ids && articleData.ids.pii){
+                meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData.ids.pii;
             }
         }
 
