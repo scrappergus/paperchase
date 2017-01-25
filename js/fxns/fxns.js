@@ -415,7 +415,7 @@ Meteor.formActions = {
         for(var i=0 ; i < invalidData.length ; i++){
             $('#' + invalidData[i].fieldset_id).addClass('invalid');
 
-            invalidString += invalidData[i].message + '    ';
+            invalidString += invalidData[i].message + '<br/>';
             if(i === 0){
                 var scrollToEl = 'body';
                 if(invalidData[i].fieldset_id && $('#' + invalidData[i].fieldset_id).length > 0){
