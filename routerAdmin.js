@@ -1929,8 +1929,8 @@ if (Meteor.isClient) {
                 return{
                     elasticsearch: config.elasticsearch,
                     indexAChecked: config.elasticsearch.currentIndex == 'index-a',
-                    indexBChecked: config.elasticsearch.currentIndex == 'index-b', 
-                    elasticSearchIndexing: Session.get('elasticSearchIndexing') 
+                    indexBChecked: config.elasticsearch.currentIndex == 'index-b',
+                    elasticSearchIndexing: Session.get('elasticSearchIndexing')
                 };
             }
         }
