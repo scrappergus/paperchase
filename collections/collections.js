@@ -46,6 +46,8 @@ sorters = new Mongo.Collection('sorters', {
                     var article = articlesByMongoId[mongoId];
                     var sec = sections.findOne({'section_id' : article.section_id});
                     article.section_name = sec.section_name;
+                    article.display_abstracts = sec.display_abstracts;
+
                     if (sectionsIdOrder.indexOf(article.section_id) === -1) {
                         sectionsIdOrder.push(article.section_id);
                         sectionsNameOrder.push(sec.section_name);
