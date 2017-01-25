@@ -174,12 +174,12 @@ Router.route('/get-advance-articles/',{
                 last_index = i-1;
                 prevSection = advanceList[last_index].section_name;
                 if(articleInfo.section_name != prevSection) {
-                    var parity = (i%2)-1;
+                    var parity = (i%2);
                     i = -1;
                 }
             }
 
-            for(var i = rangeStart ; i < rangeEnd; i++){
+            for(var i = rangeStart ; (i < (rangeEnd)); i++){
                 parity++;
                 var articleInfo = advanceList[i];
                 last_index = i-1;
@@ -189,8 +189,9 @@ Router.route('/get-advance-articles/',{
 
                 if(articleInfo.section_name != prevSection) {
                     if(i !== 0) {
-                        htmlString += '</div>';
+                        htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">&nbsp;</div>";
                     }
+
 
                     if(i<40 && articleInfo.section_name == 'Research Papers') {
                         htmlString += "<h4 id=\"recent_"+articleInfo.section_name+"\" class=\"tocSectionTitle\">Recent "+articleInfo.section_name+"</h4>";
@@ -198,11 +199,7 @@ Router.route('/get-advance-articles/',{
                         htmlString += "<h4 id=\""+articleInfo.section_name+"\" class=\"tocSectionTitle\">"+articleInfo.section_name+"</h4>";
                     }
 
-                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
                     parity = 1;
-                } else if(parity%2==1) {
-                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">";
-
                 }
 
                 htmlString += "<div style=\"width:360px; margin-right:15px; float:left;\" class=\"clearfix\">";
@@ -271,7 +268,7 @@ Router.route('/get-advance-articles/',{
                 htmlString += '</div>';
 
                 if(parity%2===0) {
-                    htmlString += '</div>';
+                    htmlString += "<div style=\"margin-bottom:30px;\" class=\"clearfix\">&nbsp;</div>";
                 }
             }
 
