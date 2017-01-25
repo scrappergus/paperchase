@@ -66,7 +66,7 @@ logging@1.1.16
 maibaum:foundation-icons@0.0.1
 manuelschoebel:ms-seo@0.4.1
 matb33:collection-hooks@0.8.4
-materialize:materialize@0.97.8
+materialize:materialize@0.98.0
 mdg:seo@1.1.0
 mdg:validation-error@0.5.1
 meteor@1.6.0

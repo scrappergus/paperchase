@@ -47,7 +47,6 @@ monbro:iron-router-breadcrumb
 accounts-ui@1.1.9
 okgrow:router-autoscroll
 alanning:roles
-materialize:materialize
 aldeed:simple-schema
 reywood:iron-router-ga
 mdg:seo
@@ -60,3 +59,4 @@ shell-server@0.2.1
 mrt:mathjax
 manuelschoebel:ms-seo
 gadicohen:sitemaps
+materialize:materialize
