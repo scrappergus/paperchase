@@ -271,7 +271,6 @@ sections.after.insert(function (userId, doc) {
 sections.before.update(function (userId, doc, fieldNames, modifier, options) {
     if(modifier.$set){
         modifier.$set.doc_updates = Meteor.db.trackUpdates(userId, doc, fieldNames, modifier, options);
-        console.log(modifier.$set.doc_updates);
     }
 });
 sections.after.update(function (userId, doc, fieldNames, modifier, options){
