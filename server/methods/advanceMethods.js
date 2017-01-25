@@ -5,17 +5,15 @@ Meteor.methods({
         var out = [];
         for (var i = 0; i < list.length; i++){
             var article = list[i];
-            var section = sections.findOne({'section_id' : article.section_id});
-              article.section_name = section.section_name;
 
             out.push({
-                    section_name: article.section_name,
-                    title: article.title,
-                    authors: article.authors,
-                    ids: article.ids,
-                    legacy_files: article.legacy_files,
-                    section_id: article.section_id
-                });
+                section_name: article.section_name,
+                title: article.title,
+                authors: article.authors,
+                ids: article.ids,
+                legacy_files: article.legacy_files,
+                section_id: article.section_id
+            });
         }
 
         return publish.insert({
