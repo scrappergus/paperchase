@@ -639,11 +639,13 @@ Meteor.adminSections = {
         var forDb = {};
         var invalidData = [];
         var name = $('#section-name').val();
+        var section_id = $('#section-id').val();
         forDb.name = name;
         forDb.section_name = name; // for OJS advance
+        forDb.section_id = parseInt(section_id); // for OJS advance
         forDb.display = $('#section-display').is(':checked');
 
-        if(!forDb.name){
+        if (!forDb.name){
             invalidData.push({
                 'input_class' : 'section-name',
                 'message' : 'Section Name Is Empty'
@@ -657,19 +659,18 @@ Meteor.adminSections = {
 
             forDb.dash_name = forDb.name.toLowerCase().replace(/\s/g,'-').replace(':','');
 
-
             // Check if section exists via Mongo ID hidden input
             mongoId = $('#section-mongo-id').val();
             if(!mongoId){
                 // Insert
                 success = sections.insert(forDb);
-            }
-            else{
+            } else{
                 // Update
                 success = sections.update({_id : mongoId} , {$set: forDb});
             }
             if(success){
                 Meteor.formActions.success();
+                Meteor.general.scrollToPosition(0);
             }
         }
     }

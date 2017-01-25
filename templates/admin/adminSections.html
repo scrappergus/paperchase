@@ -8,7 +8,8 @@
                     <table>
                         <thead>
                             <tr>
-                                <th data-field="email">Section</th>
+                                <th>Section</th>
+                                <th>ID</th>
                                 <th data-field="name-first">Display</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
@@ -18,6 +19,7 @@
                             {{#each sections}}
                             <tr>
                                 <td>{{name}}</td>
+                                <td>{{section_id}}</td>
                                 <td>{{#if display}}{{>AdminTrueIcon}}{{else}}{{>AdminFalseIcon}}{{/if}}</td>
                                 <td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminSectionPapers' _id=_id}}">Papers</a></td>
                                 <td><a class="waves-effect waves-light btn btn-edit" href="{{pathFor 'AdminSectionsEdit' _id=_id}}">Edit</a></td>
@@ -81,6 +83,15 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <input type="text" value="{{name}}" id="section-name" class="section-name" />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Section ID</legend>
+                    <h4>This MUST be unique. Please <a href="{{pathFor 'AdminSections'}}" target="_BLANK">verify</a> that no other section has this ID</h4>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input type="number" value="{{section_id}}" id="section-id" class="section-id" />
                         </div>
                     </div>
                 </fieldset>
