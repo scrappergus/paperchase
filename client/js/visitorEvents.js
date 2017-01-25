@@ -1,6 +1,3 @@
-import { Template } from 'meteor/templating'; .
-// var Template = Meteor.npmRequire('meteor/templating');
-
 if (Meteor.isClient) {
     // Home
     // ------------
