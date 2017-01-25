@@ -906,7 +906,7 @@ if (Meteor.isServer) {
     });
     Meteor.publish('sectionById', function(mongoId){
         check(mongoId, String);
-        return sections.findOne({_id : mongoId});
+        return sections.find({_id : mongoId});
     });
     Meteor.publish('sectionPapersByDashName', function(dashName){
         check(dashName, String);

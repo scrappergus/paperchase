@@ -15,7 +15,5 @@ Template.AdminSectionsForm.events({
     'submit form': function(e){
         Meteor.formActions.saving();
         Meteor.adminSections.formGetData(e);
-        // for when editing a section name on the sections list admin page
-        Session.set('paperSectionId',null); // hides form
     }
 });

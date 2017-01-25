@@ -643,7 +643,14 @@ Meteor.adminSections = {
         forDb.name = name;
         forDb.section_name = name; // for OJS advance
         forDb.section_id = parseInt(section_id); // for OJS advance
+        forDb.display_abstracts = true;
         forDb.display = $('#section-display').is(':checked');
+
+        if ($('#display-abstracts') && $('#display-abstracts').is(':checked')) {
+            forDb.display_abstracts = true;
+        } else if($('#display-abstracts')){
+            forDb.display_abstracts = false;
+        }
 
         if (!forDb.name){
             invalidData.push({

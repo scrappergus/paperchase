@@ -71,6 +71,12 @@
     {{>AdminSectionsForm}}
 </template>
 
+<template name="AdminSectionsEdit">
+    {{>AdminHeader header="Edit Section"}}
+    {{>AdminSectionsForm}}
+</template>
+
+
 <template name="AdminSectionsForm">
     {{#with section}}
     {{>successMessage what='Section'}}
@@ -96,13 +102,25 @@
                     </div>
                 </fieldset>
                 <fieldset>
+                    <legend>Display</legend>
+
+                    {{#if oncotarget}}
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input type="checkbox" checked="{{checked display_abstracts}}" id="display-abstracts"/>
+                            <label for="display-abstracts">Display Abstracts</label>
+                        </div>
+                    </div>
+                    {{/if}}
+
                     <div class="row">
                         <div class="input-field col s12">
                             <input type="checkbox" checked="{{checked display}}" id="section-display"/>
-                            <label for="section-display">Display</label>
+                            <label for="section-display">Display {{#if oncotarget}} <i>(Not in use for Oncotarget Advance Publication)</i>{{/if}}</label>
                         </div>
                     </div>
                 </fieldset>
+
                 <input type="hidden" value="{{_id}}" id="section-mongo-id">
 
                 <div class="row">

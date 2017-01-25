@@ -690,6 +690,11 @@ Template.AdminSectionsForm.helpers({
             section = sections.findOne({_id : Session.get('paperSectionId')});
         }
         return section;
+    },
+    oncotarget: function() {
+        if (Meteor.settings.public && Meteor.settings.public.journal && Meteor.settings.public.journal.name && Meteor.settings.public.journal.name === 'Oncotarget'){
+            return true;
+        }
     }
 });
 Template.AdminSectionPapers.helpers({

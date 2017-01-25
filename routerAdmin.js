@@ -1232,6 +1232,10 @@ if (Meteor.isClient) {
             return pageTitle;
         },
         layoutTemplate: 'Admin',
+        onBeforeAction: function(){
+            Session.set('paperSectionId',this.params._id);
+            this.next();
+        },
         waitOn: function(){
             return [
                 Meteor.subscribe('sectionById', this.params._id)
