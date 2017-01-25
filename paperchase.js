@@ -169,6 +169,16 @@ Router.route('/get-advance-articles/',{
             }
 
             var parity=0;
+            for(var i = rangeStart ; i > 0; i--){
+                var articleInfo = advanceList[i];
+                last_index = i-1;
+                prevSection = advanceList[last_index].section_name;
+                if(articleInfo.section_name != prevSection) {
+                    var parity = (i%2)-1;
+                    i = -1;
+                }
+            }
+
             for(var i = rangeStart ; i < rangeEnd; i++){
                 parity++;
                 var articleInfo = advanceList[i];
@@ -232,7 +242,7 @@ Router.route('/get-advance-articles/',{
                 // Abstract
                 if(articleInfo.legacy_files){
                     // if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
-                    if([2,10,12,14,16,20,21,34,35,40,36,30,54].indexOf(articleInfo.section_id) == -1) {
+                    if([2,10,12,14,16,20,21,34,35,40,36,30,54,55].indexOf(articleInfo.section_id) == -1) {
                         htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
                         htmlString += '&nbsp;';
                     }
