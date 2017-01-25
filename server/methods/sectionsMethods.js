@@ -27,7 +27,7 @@ Meteor.methods({
             fut.throw(errorMessage);
         } else {
             if (mongoId) {
-                fut.return(sections.update({'_id' : mongoId} , sectionData));
+                fut.return(sections.update({'_id' : mongoId} , {$set : sectionData}));
             } else {
                 fut.return(sections.insert(sectionData));
             }

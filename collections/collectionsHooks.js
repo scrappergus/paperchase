@@ -245,10 +245,33 @@ newsList.after.update(function (userId, doc, fieldNames, modifier, options) {
 
 // Papers Sections
 // ----------------
+sections.before.insert(function(userId, doc) {
+    var updatedBy = {};
+    // track updates
+    if(!doc.doc_updates){
+        doc.doc_updates = {};
+        doc.doc_updates.updates = [];
+    } else if(doc.doc_updates && !doc.doc_updates.updates){
+        doc.doc_updates.updates = [];
+    }
+
+    if(userId){
+        updatedBy.user = userId;
+    }
+
+    updatedBy.date = new Date();
+    doc.doc_updates.updates.push(updatedBy);
+});
 sections.after.insert(function (userId, doc) {
     // append to sorters collection if displaying
     if(doc.display){
         Meteor.call('sorterAddItem','sections',doc._id);
+    }
+});
+sections.before.update(function (userId, doc, fieldNames, modifier, options) {
+    if(modifier.$set){
+        modifier.$set.doc_updates = Meteor.db.trackUpdates(userId, doc, fieldNames, modifier, options);
+        console.log(modifier.$set.doc_updates);
     }
 });
 sections.after.update(function (userId, doc, fieldNames, modifier, options){

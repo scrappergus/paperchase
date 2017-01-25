@@ -656,7 +656,7 @@ Meteor.adminSections = {
                 'message' : 'Section Name Is Empty'
             });
         }
-        if (!forDb.section_id) {
+        if (!forDb.section_id && forDb.section_id !== 0) {
             invalidData.push({
                 'input_class' : 'section-id',
                 'message' : 'Section ID Is Empty'
