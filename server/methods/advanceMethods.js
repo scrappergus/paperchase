@@ -12,7 +12,8 @@ Meteor.methods({
                 authors: article.authors,
                 ids: article.ids,
                 legacy_files: article.legacy_files,
-                section_id: article.section_id
+                section_id: article.section_id,
+                display_abstracts: article.display_abstracts
             });
         }
 
