@@ -24,7 +24,6 @@ Meteor.admin = {
     }
 };
 
-
 Meteor.adminAdvance = {
     formGetData: function(e){
         e.preventDefault();
@@ -468,7 +467,6 @@ Meteor.adminIssue = {
     }
 };
 
-
 Meteor.adminEthics = {
     readyForm: function(){
         // Section title
@@ -631,7 +629,6 @@ Meteor.adminForAuthors = {
     }
 };
 
-
 Meteor.adminSections = {
     formGetData: function(e){
         // console.log('..formGetData adminSection');
@@ -640,6 +637,7 @@ Meteor.adminSections = {
         var invalidData = [];
         var name = $('#section-name').val();
         var section_id = $('#section-id').val();
+        var errorMessage = '<b>Could not save section</b>';
         forDb.name = name;
         forDb.section_name = name; // for OJS advance
         forDb.section_id = parseInt(section_id); // for OJS advance
@@ -657,8 +655,17 @@ Meteor.adminSections = {
                 'input_class' : 'section-name',
                 'message' : 'Section Name Is Empty'
             });
+        }
+        if (!forDb.section_id) {
+            invalidData.push({
+                'input_class' : 'section-id',
+                'message' : 'Section ID Is Empty'
+            });
+        }
+
+        if (invalidData.length !== 0){
             Meteor.formActions.invalid(invalidData);
-        } else{
+        } else {
             forDb.short_name = forDb.name.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
                 if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
                 return index === 0 ? match.toLowerCase() : match.toUpperCase();
@@ -668,17 +675,20 @@ Meteor.adminSections = {
 
             // Check if section exists via Mongo ID hidden input
             mongoId = $('#section-mongo-id').val();
-            if(!mongoId){
-                // Insert
-                success = sections.insert(forDb);
-            } else{
-                // Update
-                success = sections.update({_id : mongoId} , {$set: forDb});
-            }
-            if(success){
-                Meteor.formActions.success();
-                Meteor.general.scrollToPosition(0);
-            }
+
+            Meteor.call('updateSection', mongoId, forDb, Meteor.user(), function(error, result){
+                if (error) {
+                    console.error('updateSection', error.error);
+                    if (error.error && error.error.reason) {
+                        errorMessage += '<br/><br/>' + error.error.reason;
+                    }
+                    Meteor.formActions.errorMessage(errorMessage);
+                } else if (result) {
+                    Meteor.formActions.successMessage('Section Saved');
+                } else {
+                    Meteor.formActions.errorMessage(errorMessage);
+                }
+            });
         }
     }
 };

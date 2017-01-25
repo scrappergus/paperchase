@@ -252,11 +252,12 @@ sections.after.insert(function (userId, doc) {
     }
 });
 sections.after.update(function (userId, doc, fieldNames, modifier, options){
-    if(modifier.$set.display) {
-        Meteor.call('sorterAddItem','sections',doc._id);
-    }
-    else{
-        Meteor.call('sorterRemoveItem','sections',doc._id);
+    if (Meteor.settings.public && Meteor.settings.public.journal && Meteor.settings.public.journal.name && Meteor.settings.public.journal.name != 'Oncotarget'){
+        if(modifier.$set && modifier.$set.display) {
+            Meteor.call('sorterAddItem','sections',doc._id);
+        } else{
+            Meteor.call('sorterRemoveItem','sections',doc._id);
+        }
     }
 });
 
