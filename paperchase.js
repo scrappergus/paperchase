@@ -241,8 +241,11 @@ Router.route('/get-advance-articles/',{
                 htmlString += '<span class="tocGalleys">';
                 // Abstract
                 if(articleInfo.legacy_files){
-                    // if(articleInfo.legacy_files.abstract && articleInfo.legacy_files.abstract != ''){
-                    if([2,10,12,14,16,20,21,34,35,40,36,30,54,55].indexOf(articleInfo.section_id) == -1) {
+                    if (articleInfo.display_abstracts === true) {
+                        htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
+                        htmlString += '&nbsp;';
+                    } else if([2,10,12,14,16,20,21,34,35,40,36,30,54,55].indexOf(articleInfo.section_id) == -1) {
+                        // TODO: After next publication (after 1/25/2017), remove this ELSE ID block testing for section and only test for articleInfo.display_abstracts. We are now setting abstract display settings on the section doc in the DB.
                         htmlString += '<a href="http://www.impactjournals.com/oncotarget/index.php?journal=oncotarget&amp;page=article&amp;op=view&amp;path[]='+ articleInfo.ids.pii +'" class="file">Abstract</a>';
                         htmlString += '&nbsp;';
                     }
