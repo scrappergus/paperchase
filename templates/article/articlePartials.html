@@ -322,7 +322,7 @@
 
 <template name="ArticleButtons">
     <div class="article-links">
-        {{#if abstract}}<a class="small button" href="{{pathFor 'Article'}}">View Abstract</a>{{/if}}
+        {{#if abstract}}<a class="small button" href="{{pathFor 'Article' id=ids.pii}}">View Abstract</a>{{/if}}
 
         {{#if isSubscribed}}
 
@@ -334,15 +334,15 @@
 
                 {{#if files.xml.url}}
                 {{#if files.xml.display}}
-                <a data-id="{{_id}}" class="view-html small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+                <a data-id="{{_id}}" class="view-html small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText' id=ids.pii}}">Full-Text</a>
                 {{/if}}
                 {{/if}}
 
 
             {{#if showCrawledText}}
-            <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
+            <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText' id=ids.pii}}">Full-Text</a>
             {{/if}}
-            <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/{{_id}}">Request Reprint</a> 
+            <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/{{_id}}">Request Reprint</a>
         {{else}}
 
             {{#if files.pdf.file}}
@@ -361,7 +361,7 @@
             <a data-id="{{_id}}" class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="{{pathFor 'ArticleText'}}">Full-Text</a>
             {{/if}}
 
-            <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/{{_id}}">Request Reprint</a> 
+            <a class="small button {{isActiveRoute 'ArticleText'}} {{#if isActiveRoute 'ArticleText'}}darken-4{{else}}darken-1{{/if}}" href="/print-request/{{_id}}">Request Reprint</a>
 
         {{/if}}
 
