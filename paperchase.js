@@ -925,27 +925,20 @@ if (Meteor.isClient) {
     });
 
     // Begin Article
-    Router.route('/article/:pii', {
+    Router.route('/article/:id', {
         name: 'Article',
         parent: 'Issue',
         layoutTemplate: 'Visitor',
         onBeforeAction: function(){
             Meteor.impact.redirectForAlt();
 
-            var pii = this.params.pii;
-            Meteor.subscribe('articleByPii', pii, function() {
-                var articleByPii = articles.findOne({"ids.pii": pii});
-                if(articleByPii){
-                    Meteor.article.readyFullText(articleByPii._id);
-                } else {
-                    Meteor.subscribe('articleInfo', pii, function() {
-                        var articleExistsExists = articles.findOne({'_id': pii});
-                        if(articleExistsExists){
-                            Router.go("/article/"+articleExistsExists.ids.pii+"/text");
-                        }
-                    });
-                }
-            });
+            Meteor.article.readyFullText(this.params.id);
+
+            if (Session.get('article')) {
+                if (Session.get('article')._id === this.params.id && Session.get('article').ids && Session.get('article').ids.pii) {
+                    Router.go('/article/' + Session.get('article').ids.pii);
+                }  // redirect to PII route
+            }
 
             this.next();
         },
@@ -972,7 +965,7 @@ if (Meteor.isClient) {
         }
     });
 
-    Router.route('/article/:pii/text', {
+    Router.route('/article/:id/text', {
         name: 'ArticleText',
         parent: 'Issue',
         showLink: true,
@@ -980,22 +973,13 @@ if (Meteor.isClient) {
         onBeforeAction: function() {
             Meteor.impact.redirectForAlt();
 
-            var pii = this.params.pii;
-            Meteor.subscribe('articleByPii', pii, function() {
-                var articleByPii = articles.findOne({"ids.pii": pii});
-                if(articleByPii){
-                    Meteor.article.readyFullText(articleByPii._id);
-                    Session.set('article-id',articleByPii._id);
-                } else {
-                    Meteor.subscribe('articleInfo', pii, function() {
-                        var articleExistsExists = articles.findOne({'_id': pii});
-                        if(articleExistsExists){
-                            Router.go("/article/"+articleExistsExists.ids.pii+"/text");
-                        }
-                    });
-                }
-            });
+            Meteor.article.readyFullText(this.params.id);
 
+            if (Session.get('article')) {
+                if (Session.get('article')._id === this.params.id && Session.get('article').ids && Session.get('article').ids.pii) {
+                    Router.go('/article/' + Session.get('article').ids.pii);
+                }  // redirect to PII route
+            }
 
             this.next();
         },

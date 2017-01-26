@@ -2,16 +2,14 @@ Meteor.methods({
     articlesFindOneWhere : function(where){
         return articles.findOne(where);
     },
-    getArticle: function(args) {
-        var article = articles.findOne({
-                '_id': args._id
-            });
+    getArticle: function(articleId) {
+        var article = articles.findOne(
+            { $or: [ { _id: articleId }, { 'ids.pii': articleId } ] }
+        );
+
         if (article) {
             article = Meteor.article.readyData(article);
 
-//            if(article && article.files && article.files.xml && !article.files.xml.display){
-//                Router.go('Article', {_id : this.params._id});
-//            }
             return {
                 article: article
             };
