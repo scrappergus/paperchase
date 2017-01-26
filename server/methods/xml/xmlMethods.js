@@ -115,8 +115,8 @@ Meteor.methods({
 
 // Methods to compare XML with DB
 // -------------
-var ignoreConflicts = ['_id', 'last_update', 'duplicate', 'doc_updates', 'issue_id','batch', 'files', 'display', 'mongo_id', 'advance', 'feature', 'publisher', 'short_name', 'articleJson', 'advanceContent'];
-var ignoreConflictsViaXml = ['files', 'duplicate', 'publisher', 'issue_id', 'short_name']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
+var ignoreConflicts = ['_id', 'last_update', 'duplicate', 'doc_updates', 'issue_id','batch', 'files', 'display', 'mongo_id', 'advance', 'feature', 'publisher', 'short_name', 'articleJson', 'advanceContent', 'previous'];
+var ignoreConflictsViaXml = ['files', 'duplicate', 'publisher', 'issue_id', 'short_name', 'previous']; // want this separate because we actually want to include them from the XML, but do not want to compare with DB values
 
 Meteor.methods({
     compareProcessedXmlWithDb: function(xmlArticle, dbArticle){
