@@ -410,27 +410,36 @@ Meteor.xmlPmc = {
         // console.log('authorsCorresponding');
         // corresp is JSON from XML to get all correspondence elements
         var allCorrespondence = [];
+        var authorsFromString = [];
         for(var i=0 ; i < corresp.length ; i++){
             var correspondence = {};
+            var correspondenceEmails = [];
             for(var k in corresp[i]){
                 if(k != 'email' && typeof corresp[i][k] == 'string' && corresp[i][k] != '; '){
                     if(!correspondence.text){
                         correspondence.text = '';
                     }
                     correspondence.text += corresp[i][k];
-                }else if(k != 'email' && k != '$' && typeof corresp[i][k] == 'object'){
+                } else if(k != 'email' && k != '$' && typeof corresp[i][k] == 'object'){
                     if(!correspondence.text){
                         correspondence.text = '';
                     }
-                    correspondence.text += Meteor.xmlParse.traverseJson(corresp[i][k]);
-                }else if(k == 'email'){
-                    // console.log(corresp[i][k][0]);
-                    if(corresp[i][k][0]._){
-                        correspondence.email = corresp[i][k][0]._; //for when there are attributes in the email tag
-                    }else{
-                        correspondence.email = corresp[i][k][0];
+                    if (corresp[i][k][0] && corresp[i][k][0].email && corresp[i][k][0].email[0] && corresp[i][k][0].email[0]._){
+                        correspondenceEmails.push(corresp[i][k][0].email[0]._);
+                    }else {
+                        correspondence.text += Meteor.xmlParse.traverseJson(corresp[i][k]);
                     }
 
+                }else if(k == 'email'){
+                    if(corresp[i][k][0] && !corresp[i][k][0].$ && corresp[i][k][0]._){
+                        correspondence.email = corresp[i][k][0]._; //for when there are attributes in the email tag
+                    } else if(corresp[i][k][0] && corresp[i][k][0].$){
+                        corresp[i][k].forEach(function(email){
+                            correspondenceEmails.push(email._);
+                        });
+                    } else{
+                        correspondence.email = corresp[i][k][0];
+                    }
                 }
             }
             if(correspondence.text){
@@ -443,6 +452,9 @@ Meteor.xmlPmc = {
                 correspondence.text = correspondence.text.replace('Correspondence :','');
                 correspondence.text = correspondence.text.replace('Correspondence to','');
                 correspondence.text = correspondence.text.replace('at,','');
+                correspondence.text = correspondence.text.replace('; :email','');
+                correspondence.text = correspondence.text.replace('; Email','');
+                correspondence.text = correspondence.text.replace(':email:','');
 
                 // Trim and Replace
                 while(correspondence.text.slice(-1) === ' ' || correspondence.text.charAt(0) === ',' || correspondence.text.charAt(0) === ':' ){
@@ -463,10 +475,44 @@ Meteor.xmlPmc = {
                 if(correspondence.text === ''){
                     delete correspondence.text; //after all the replacing, check if there is actually text
                 }
+
+                if (correspondence.text && correspondence.text.indexOf(',') !== -1 || correspondence.text.indexOf(';') !== -1) {
+                    if (correspondence.text.indexOf(',') !== -1 ){
+                        authorsFromString = correspondence.text.split(',');
+                    } else if (correspondence.text.indexOf(';') !== -1 ){
+                        authorsFromString = correspondence.text.split(';');
+                    }
+
+                    if (authorsFromString.length > 1) {
+
+                        delete correspondence.text;
+
+                        for (var idx=0; idx<authorsFromString.length; idx++){
+                            var person = {};
+
+                            if (authorsFromString[idx].trim() !== '.') {
+                                person.text = authorsFromString[idx];
+                                if (correspondenceEmails[idx]){
+                                    person.email = correspondenceEmails[idx];
+                                }
+                                allCorrespondence.push(person);
+                            }
+                        }
+                    }
+
+                }
+
             }
 
-            allCorrespondence.push(correspondence);
+            if (correspondence.text) {
+                if (!correspondence.email && correspondenceEmails && correspondenceEmails[0]){
+                    correspondence.email = correspondenceEmails[0];
+                }
+
+                allCorrespondence.push(correspondence);
+            }
         }
+
         cb(allCorrespondence);
     },
     dates: function(dates,cb){
