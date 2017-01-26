@@ -2,6 +2,7 @@
 // -------
 Template.Visitor.onRendered(function () {
     $('.button-collapse').sideNav();
+    window.prerenderReady = true;
 });
 
 Template.Subscribe.onRendered(function () {
@@ -99,10 +100,15 @@ Template.AltmetricBadgeWithReport.onRendered(function() {
         // });
     // });
 });
-// Template.ArticleText.onRendered(function() {
-    // _altmetric_embed_init();
-    // $('.materialboxed').materialbox();
-// });
+Template.Article.onRendered(function() {
+    window.prerenderReady = false;
+});
+Template.ArticleText.onRendered(function() {
+    window.prerenderReady = false;
+});
+Template.ArticleHeader.onRendered(function() {
+    window.prerenderReady = true;
+});
 // Template.ArticleFullText.onRendered(function() {
 
 //     // $('.materialboxed').materialbox();
