@@ -63,7 +63,7 @@ Meteor.methods({
             throw new Meteor.Error(error);
         }
     },
-    getAltmetricForArticle: function(mongoId, doi){
+    getAltmetricForArticle: function(mongoId, doi, pii){
         // console.log('...getAltmetricForArticle', mongoId, doi);
         var fut = new future();
         var result = {};
@@ -80,7 +80,7 @@ Meteor.methods({
                 console.error('getAltmetricForArticle', error);
                 fut.throw(error);
             } else if (altmetricResult) {
-                Meteor.call('processAltmetricArticleResponse', altmetricResult.data, mongoId, function(processError, processResult){
+                Meteor.call('processAltmetricArticleResponse', altmetricResult.data, mongoId, pii, function(processError, processResult){
                     if (processError) {
                         console.error('getAltmetricForArticle - processAltmetricResponse', processError);
                         fut.throw(processError);
@@ -117,10 +117,10 @@ Meteor.methods({
     },
     processAltmetricArticlesResponse: function(articles) {
         return articles.map(function(article){
-            return Meteor.call('processAltmetricArticleResponse', article, null);
+            return Meteor.call('processAltmetricArticleResponse', article, null, null);
         });
     },
-    processAltmetricArticleResponse: function(article, mongoId){
+    processAltmetricArticleResponse: function(article, mongoId, pii){
         var fut = new future();
         var result = {};
         var query = [];
@@ -161,11 +161,13 @@ Meteor.methods({
 
         if (mongoId) {
             result.mongoId = mongoId;
+            result.pii = pii;
             fut.return(result);
         } else {
             Meteor.call('articlesFindOneWhere', {'$or': query}, function(error, articleInDb){
                 if (articleInDb && articleInDb._id) {
                     result.mongoId = articleInDb._id;
+                    result.pii = articleInDb.ids && articleInDb.ids.pii ? articleInDb.ids.pii : null;
                 } else {
                     console.error('Cannot associate Altmetric article in Mongo DB', article.doi, article.title);
                 }

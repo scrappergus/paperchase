@@ -340,7 +340,8 @@ Meteor.article = {
             Session.set('article-text', result);
         });
     },
-    readyFullText: function(mongoId){
+    readyFullText: function(articleId){
+        // articleId - could be mongoID if an old link was shared
         // console.log('...readyFullText',mongoId);
         // TODO: add redirect for when article set to display: false. this was put on hold by Ilya, wanted to make sure production understood.
 
@@ -348,12 +349,14 @@ Meteor.article = {
         var files;
         var xmlUrl;
         var article;
+        var mongoId;
 
-        Meteor.call('getArticle', {_id : mongoId}, function(error, articleResult){
+        Meteor.call('getArticle', articleId, function(error, articleResult){
             if (error) {
                 console.error('via readyFullText', error);
             } else if (articleResult) {
                 article = articleResult.article;
+                mongoId = article._id;
                 Session.set('article', article);
                 Meteor.article.altmetric(article);
 
@@ -433,7 +436,7 @@ Meteor.article = {
     altmetric: function(article) {
         if (Session.get('article-altmetric') && Session.get('article-altmetric').mongo != article._id || !Session.get('article-altmetric')){
             if (article.ids && article.ids.doi) {
-                Meteor.call('getAltmetricForArticle', article._id, article.ids.doi, function(altmetricError, altmetricResult){
+                Meteor.call('getAltmetricForArticle', article._id, article.ids.doi, article.ids.pii, function(altmetricError, altmetricResult){
                     if (altmetricError){
                         console.error(altmetricError);
                         Session.set('article-altmetric', null);
@@ -448,6 +451,7 @@ Meteor.article = {
         var meta = {};
         var epub;
         var cleanedAbstract = '';
+        var journalData = journalConfig.findOne({});
 
         // journal name
         if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal){
@@ -506,6 +510,8 @@ Meteor.article = {
             if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.journal &&  Meteor.settings.public.journal.siteUrl && articleData.ids && articleData.ids.pii){
                 meta.citation_abstract_html_url = Meteor.settings.public.journal.siteUrl + '/article/' + articleData.ids.pii;
             }
+
+            meta['twitter:description'] = meta.description;
         }
 
         // keywords
@@ -544,6 +550,13 @@ Meteor.article = {
                 }
                 meta.citation_author.push(fullName);
             });
+        }
+
+        // twitter
+        meta['twitter:card'] = 'summary_large_image';
+
+        if (journalData && articleData.files && articleData.files.figures && articleData.files.figures[0] && articleData.files.figures[0].url) {
+            meta['twitter:image:src'] = journalData.visitor.slice(0, -1) + articleData.files.figures[0].url;
         }
 
         return meta;
