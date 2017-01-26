@@ -554,6 +554,10 @@ Meteor.article = {
 
         // twitter
         meta['twitter:card'] = 'summary_large_image';
+        if (journalData) {
+            meta['twitter:site'] = journalData.journal.twitter_id;
+        }
+
 
         if (journalData && articleData.files && articleData.files.figures && articleData.files.figures[0] && articleData.files.figures[0].url) {
             meta['twitter:image:src'] = journalData.visitor.slice(0, -1) + articleData.files.figures[0].url;
