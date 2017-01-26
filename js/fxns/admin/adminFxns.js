@@ -640,7 +640,18 @@ Meteor.adminSections = {
         var errorMessage = '<b>Could not save section</b>';
         forDb.name = name;
         forDb.section_name = name; // for OJS advance
-        forDb.section_id = parseInt(section_id); // for OJS advance
+        // Beging - Section ID
+        if (Meteor.settings.public && Meteor.settings.public.journal && Meteor.settings.public.journal.name && Meteor.settings.public.journal.name === 'Oncotarget'){
+            forDb.section_id = parseInt(section_id); // for OJS advance
+
+            if (!forDb.section_id && forDb.section_id !== 0) {
+                invalidData.push({
+                    'input_class' : 'section-id',
+                    'message' : 'Section ID Is Empty'
+                });
+            }
+        }
+        // End - Section ID
         forDb.display_abstracts = true;
         forDb.display = $('#section-display').is(':checked');
 
@@ -654,12 +665,6 @@ Meteor.adminSections = {
             invalidData.push({
                 'input_class' : 'section-name',
                 'message' : 'Section Name Is Empty'
-            });
-        }
-        if (!forDb.section_id && forDb.section_id !== 0) {
-            invalidData.push({
-                'input_class' : 'section-id',
-                'message' : 'Section ID Is Empty'
             });
         }
 

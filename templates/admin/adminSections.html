@@ -9,7 +9,7 @@
                         <thead>
                             <tr>
                                 <th>Section</th>
-                                <th>ID</th>
+                                {{#if using_section_ids}}<th>ID</th>{{/if}}
                                 <th data-field="name-first">Display</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
@@ -19,7 +19,7 @@
                             {{#each sections}}
                             <tr>
                                 <td>{{name}}</td>
-                                <td>{{section_id}}</td>
+                                {{#if using_section_ids}}<td>{{section_id}}</td>{{/if}}
                                 <td>{{#if display}}{{>AdminTrueIcon}}{{else}}{{>AdminFalseIcon}}{{/if}}</td>
                                 <td><a class="waves-effect waves-light btn" href="{{pathFor 'AdminSectionPapers' _id=_id}}">Papers</a></td>
                                 <td><a class="waves-effect waves-light btn btn-edit" href="{{pathFor 'AdminSectionsEdit' _id=_id}}">Edit</a></td>
@@ -92,6 +92,7 @@
                         </div>
                     </div>
                 </fieldset>
+                {{#if using_section_ids}}
                 <fieldset>
                     <legend>{{>RequiredSymbol}} Section ID</legend>
                     <div class="row">
@@ -100,6 +101,7 @@
                         </div>
                     </div>
                 </fieldset>
+                {{/if}}
                 <fieldset>
                     <legend>Display</legend>
 

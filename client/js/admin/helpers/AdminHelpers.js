@@ -1,5 +1,11 @@
 // ADMIN HELPERS
 
+Template.registerHelper('using_section_ids', function() {
+    if (Meteor.settings.public && Meteor.settings.public.journal && Meteor.settings.public.journal.name && Meteor.settings.public.journal.name === 'Oncotarget'){
+        return true;
+    }
+});
+
 Template.AdminDashboard.helpers({
     processingPii: function(){
         return Session.get('processing-pii');

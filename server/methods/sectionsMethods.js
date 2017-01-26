@@ -18,8 +18,11 @@ Meteor.methods({
     updateSection: function(mongoId, sectionData){
         var fut = new future();
         var errorMessage = {};
-        // verify section_id is unique
-        var sectionExists = sections.findOne({ section_id : sectionData.section_id, _id : {$ne: mongoId}});
+        var sectionExists;
+        if (sectionData.section_id) {
+            // verify section_id is unique
+            sectionExists = sections.findOne({ section_id : sectionData.section_id, _id : {$ne: mongoId}});
+        }
 
         if (sectionExists) {
             console.error('updateSection: section already exists', sectionExists._id);
