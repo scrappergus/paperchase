@@ -343,7 +343,8 @@ if (Meteor.isServer) {
           'assets_figures': 1,
           'assets_supplemental': 1,
           'social': 1,
-          'elasticsearch': 1
+          'elasticsearch': 1,
+          'visitor': 1
         }});
         return siteConfig;
     });
